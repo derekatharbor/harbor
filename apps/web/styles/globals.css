@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap');
+
+@layer base {
+  body {
+    @apply bg-navy text-softgray font-body;
+    font-feature-settings: normal;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-white;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  /* Card styles */
+  .harbor-card {
+    @apply bg-navy-light rounded-card-lg p-6 shadow-card;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-coral text-white px-4 py-2 rounded-lg font-body font-medium;
+    @apply transition-all duration-150 hover:brightness-105 cursor-pointer;
+  }
+
+  .btn-primary:focus {
+    @apply outline-none ring-1 ring-coral;
+    box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.2);
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-white px-4 py-2 rounded-lg font-body font-medium;
+    @apply border border-white transition-all duration-150 hover:bg-white hover:bg-opacity-5 cursor-pointer;
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    @apply opacity-30 cursor-not-allowed;
+  }
+
+  /* Input styles */
+  .harbor-input {
+    @apply bg-navy-light text-white placeholder-softgray placeholder-opacity-60;
+    @apply rounded-lg px-4 py-2 border border-white border-opacity-10;
+    @apply focus:outline-none focus:ring-1 focus:ring-coral;
+  }
+
+  /* Table styles */
+  .harbor-table {
+    @apply w-full;
+  }
+
+  .harbor-table thead {
+    @apply text-left text-sm text-softgray text-opacity-75;
+  }
+
+  .harbor-table tbody tr {
+    @apply h-[52px] transition-colors hover:bg-white hover:bg-opacity-[0.02];
+  }
+
+  .harbor-table tbody tr:nth-child(even) {
+    @apply bg-white bg-opacity-[0.02];
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .transition-harbor {
+    transition: all 120ms ease-in-out;
+  }
+
+  /* Border utilities */
+  .border-harbor {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+}
