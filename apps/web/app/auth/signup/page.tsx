@@ -80,12 +80,12 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       {/* Left Side - Sign Up Form */}
-      <div className="flex-1 flex items-center justify-center bg-white p-8">
+      <div className="flex-1 flex items-center justify-center bg-white p-8 py-12">
         <div className="w-full max-w-md">
           {/* Logo */}
-          <div className="mb-12">
+          <div className="mb-8 lg:mb-12">
             <Image
               src="/images/harbor-logo.svg"
               alt="Harbor"
@@ -95,7 +95,7 @@ export default function SignUpPage() {
             />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6 lg:mb-8">
             <h1 className="text-3xl font-bold text-[#101A31] mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
               Get started with Harbor
             </h1>
@@ -104,7 +104,7 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSignUp} className="space-y-6">
+          <form onSubmit={handleSignUp} className="space-y-5">
             {error && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-800" style={{ fontFamily: 'Source Code Pro, monospace' }}>
@@ -190,7 +190,7 @@ export default function SignUpPage() {
             </p>
           </form>
 
-          <p className="mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+          <p className="mt-6 lg:mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
             Already have an account?{' '}
             <Link 
               href="/auth/login"

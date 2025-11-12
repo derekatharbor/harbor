@@ -48,12 +48,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       {/* Left Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-white p-8">
+      <div className="flex-1 flex items-center justify-center bg-white p-8 py-12">
         <div className="w-full max-w-md">
           {/* Logo - Replace /images/harbor-logo.svg with your logo path */}
-          <div className="mb-12">
+          <div className="mb-8 lg:mb-12">
             <Image
               src="/images/harbor-logo.svg"
               alt="Harbor"
@@ -63,7 +63,7 @@ export default function LoginPage() {
             />
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6 lg:mb-8">
             <h1 className="text-3xl font-bold text-[#101A31] mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
               Welcome back
             </h1>
@@ -150,7 +150,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+          <p className="mt-6 lg:mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
             Don't have an account?{' '}
             <Link 
               href="/auth/signup"
