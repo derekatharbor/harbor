@@ -1,174 +1,254 @@
 'use client'
 
-import { MetricCard } from '@/components/ui/MetricCard'
-import { ActionCard } from '@/components/ui/ActionCard'
-import { VisibilityChart } from '@/components/dashboard/VisibilityChart'
-import { RankingTable } from '@/components/dashboard/RankingTable'
-import { TimeRangeFilter } from '@/components/ui/TimeRangeFilter'
-import { ShoppingBag, Star, MessageSquare, Globe, Sparkles, TrendingUp, FileCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
-// Mock data
-const visibilityData = [
-  { date: 'Jan 29', score: 88, competitor: 92 },
-  { date: 'Jan 30', score: 87.5, competitor: 91 },
-  { date: 'Jan 31', score: 89, competitor: 90 },
-  { date: 'Feb 01', score: 88.5, competitor: 89 },
-  { date: 'Feb 02', score: 89.2, competitor: 88.5 },
-  { date: 'Feb 03', score: 89.5, competitor: 88 },
-  { date: 'Feb 04', score: 89.8, competitor: 87 },
-]
+export default function DashboardPage() {
+  const [loading, setLoading] = useState(true)
+  const [brandName, setBrandName] = useState('')
+  const [hasScans, setHasScans] = useState(false)
+  
+  const router = useRouter()
+  const supabase = createClientComponentClient()
 
-const brandRankings = [
-  { rank: 1, name: 'Chase', logo: '💳', score: 92, delta: 5, isCurrentUser: false },
-  { rank: 2, name: 'Demo Brand', logo: '🏢', score: 89.8, delta: 1, isCurrentUser: true },
-  { rank: 3, name: 'American Express', logo: '💎', score: 85.2, delta: -1, isCurrentUser: false },
-  { rank: 4, name: 'Capital on Tap', logo: '🏦', score: 78, delta: 5, isCurrentUser: false },
-  { rank: 5, name: 'US Bank', logo: '🏛️', score: 76.9, delta: -2, isCurrentUser: false },
-]
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        // Get current user
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session?.user) {
+          router.push('/auth/login')
+          return
+        }
 
-export default function OverviewPage() {
+        // Get user's dashboard
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('org_id')
+          .eq('user_id', session.user.id)
+          .single()
+
+        if (!userRole?.org_id) {
+          router.push('/onboarding')
+          return
+        }
+
+        const { data: dashboard } = await supabase
+          .from('dashboards')
+          .select('brand_name, id')
+          .eq('org_id', userRole.org_id)
+          .single()
+
+        if (!dashboard) {
+          router.push('/onboarding')
+          return
+        }
+
+        setBrandName(dashboard.brand_name)
+
+        // Check if they have any scans
+        const { data: scans } = await supabase
+          .from('scans')
+          .select('id')
+          .eq('dashboard_id', dashboard.id)
+          .limit(1)
+
+        setHasScans(scans && scans.length > 0)
+      } catch (error) {
+        console.error('Dashboard load error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDashboard()
+  }, [router, supabase])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
+        <div className="text-white" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+          Loading your dashboard...
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-navy p-8 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 text-softgray text-sm mb-2">
-          <span className="opacity-60">Demo Brand</span>
-          <span className="opacity-40">›</span>
-          <span>Overview</span>
+    <div className="min-h-screen bg-[#101A31]">
+      {/* Top Navigation */}
+      <nav className="border-b border-white/5 bg-[#101A31]">
+        <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+          <Image
+            src="/images/harbor-logo-white.svg"
+            alt="Harbor"
+            width={100}
+            height={33}
+            className="h-8 w-auto"
+          />
+          <button
+            onClick={handleSignOut}
+            className="text-sm text-white/60 hover:text-white transition-colors"
+            style={{ fontFamily: 'Source Code Pro, monospace' }}
+          >
+            Sign out
+          </button>
         </div>
-        <h1 className="text-4xl font-heading font-bold text-white mb-4">
-          Overview
-        </h1>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <p className="text-softgray opacity-75">
-              Last scan: 2 hours ago
-            </p>
-            <div className="relative flex items-center gap-2 px-3 py-1 bg-teal bg-opacity-10 rounded-full">
-              <div className="relative">
-                <div className="w-2 h-2 bg-teal rounded-full" />
-                <div className="absolute inset-0 w-2 h-2 bg-teal rounded-full animate-sonar" />
-              </div>
-              <span className="text-teal text-xs font-body">Live</span>
-            </div>
-          </div>
-          <TimeRangeFilter />
-        </div>
-      </div>
+      </nav>
 
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <MetricCard
-          title="Shopping Visibility"
-          value="89.8%"
-          delta={1}
-          icon={<ShoppingBag size={18} />}
-          onClick={() => console.log('Navigate to Shopping')}
-          tooltip="How often your products appear in AI shopping recommendations across ChatGPT, Claude, and Gemini"
-        />
-        <MetricCard
-          title="Brand Mentions"
-          value="2.7M"
-          delta={12}
-          description="Estimated monthly volume"
-          icon={<Star size={18} />}
-          onClick={() => console.log('Navigate to Brand')}
-          tooltip="Total estimated mentions of your brand across all AI model responses this month"
-        />
-        <MetricCard
-          title="Conversation Topics"
-          value="156"
-          delta={8}
-          description="Tracked keywords"
-          icon={<MessageSquare size={18} />}
-          onClick={() => console.log('Navigate to Conversations')}
-          tooltip="Number of distinct topics and questions users ask AI about your brand or category"
-        />
-        <MetricCard
-          title="Site Readability"
-          value="94%"
-          delta={3}
-          description="AI-optimized score"
-          icon={<Globe size={18} />}
-          onClick={() => console.log('Navigate to Website')}
-          tooltip="How well AI models can understand and extract information from your website content"
-        />
-      </div>
-
-      {/* Brand Visibility Section */}
-      <div className="mb-8">
-        <div className="mb-4">
-          <h2 className="text-2xl font-heading font-semibold text-white mb-2">
-            Brand Visibility
-          </h2>
-          <p className="text-softgray opacity-75 text-sm">
-            Percentage of AI answers about business credit cards that mention your brand
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-8 py-12">
+        {/* Welcome Header */}
+        <div className="mb-12">
+          <h1 
+            className="text-4xl font-bold text-white mb-3"
+            style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+          >
+            Welcome to Harbor, {brandName}
+          </h1>
+          <p 
+            className="text-lg text-white/70"
+            style={{ fontFamily: 'Source Code Pro, monospace' }}
+          >
+            Let's see how AI search engines understand your brand
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Visibility Chart */}
-          <div className="lg:col-span-2 harbor-card group hover:shadow-lg transition-all duration-200">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-sm font-body text-softgray opacity-75 uppercase tracking-wide mb-2">
-                  Visibility Score
-                </h3>
-                <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-heading font-bold text-white group-hover:text-cerulean transition-colors" style={{ fontVariantNumeric: 'tabular-nums' }}>
-                    89.8%
-                  </span>
-                  <span className="text-sm font-body flex items-center gap-1 text-cyan opacity-90">
-                    <span>↑</span>
-                    <span>1%</span>
-                    <span className="text-softgray opacity-60">vs last week</span>
-                  </span>
-                </div>
-              </div>
-              <button className="px-3 py-1 text-xs font-body text-teal border border-teal rounded-lg hover:bg-teal hover:text-white transition-colors">
-                Compare to Industry
-              </button>
+        {/* Empty State - First Scan CTA */}
+        <div className="bg-[#141E38] rounded-xl border border-white/5 p-12 text-center mb-8">
+          <div className="max-w-2xl mx-auto">
+            <div className="w-20 h-20 bg-[#FF6B4A]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg 
+                width="32" 
+                height="32" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="#FF6B4A" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
             </div>
-            <VisibilityChart data={visibilityData} height={250} />
-          </div>
 
-          {/* Rankings */}
-          <div>
-            <RankingTable data={brandRankings} />
+            <h2 
+              className="text-2xl font-bold text-white mb-4"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+            >
+              Run your first scan
+            </h2>
+            
+            <p 
+              className="text-white/70 mb-8 leading-relaxed"
+              style={{ fontFamily: 'Source Code Pro, monospace' }}
+            >
+              We'll analyze how ChatGPT, Claude, Gemini, and Perplexity understand your brand. 
+              You'll get visibility scores, product mentions, conversation insights, and optimization recommendations.
+            </p>
+
+            <button
+              className="px-8 py-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] transition-all inline-flex items-center gap-2"
+              style={{ fontFamily: 'Source Code Pro, monospace' }}
+            >
+              <svg 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start first scan
+            </button>
+
+            <p 
+              className="text-sm text-white/50 mt-4"
+              style={{ fontFamily: 'Source Code Pro, monospace' }}
+            >
+              First scan takes 2-3 minutes
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Action Cards - New Bottom Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-heading font-semibold text-white mb-6">
-          Recommended Actions
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ActionCard
-            title="Boost AI Shopping Presence"
-            description="Optimize product schema and descriptions to increase mentions in AI shopping results"
-            icon={<Sparkles size={20} />}
-            trend="+1.9% potential"
-            ctaText="View Optimization"
-            onClick={() => console.log('Navigate to Shopping optimization')}
-          />
-          <ActionCard
-            title="Understand How AI Describes You"
-            description="Deep dive into how AI describes your brand and identify sentiment patterns"
-            icon={<TrendingUp size={20} />}
-            trend="+12% growth"
-            ctaText="View Intelligence"
-            onClick={() => console.log('Navigate to Brand analysis')}
-          />
-          <ActionCard
-            title="Enhance Site Clarity for AI"
-            description="See which pages need optimization for better AI comprehension"
-            icon={<FileCheck size={20} />}
-            trend="3 issues found"
-            ctaText="View Report"
-            onClick={() => console.log('Navigate to Website report')}
-          />
+        {/* What You'll See - Preview Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: 'Shopping Visibility',
+              description: 'How your products appear in AI shopping recommendations',
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              )
+            },
+            {
+              title: 'Brand Visibility',
+              description: 'Your brand's presence and tone in AI-generated answers',
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                  <path d="M2 17l10 5 10-5"></path>
+                  <path d="M2 12l10 5 10-5"></path>
+                </svg>
+              )
+            },
+            {
+              title: 'Conversation Volumes',
+              description: 'What users ask AI about your brand and category',
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              )
+            },
+            {
+              title: 'Website Analytics',
+              description: 'How AI crawlers read and understand your site structure',
+              icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+              )
+            }
+          ].map((module, index) => (
+            <div 
+              key={index}
+              className="bg-[#141E38] rounded-lg border border-white/5 p-6"
+            >
+              <div className="w-12 h-12 bg-[#FF6B4A]/10 rounded-lg flex items-center justify-center mb-4 text-[#FF6B4A]">
+                {module.icon}
+              </div>
+              <h3 
+                className="text-white font-semibold mb-2"
+                style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+              >
+                {module.title}
+              </h3>
+              <p 
+                className="text-sm text-white/60"
+                style={{ fontFamily: 'Source Code Pro, monospace' }}
+              >
+                {module.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
