@@ -5,10 +5,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap');
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   body {
     @apply bg-navy text-softgray font-body;
     font-feature-settings: normal;
