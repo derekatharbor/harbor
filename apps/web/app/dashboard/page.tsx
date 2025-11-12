@@ -1,3 +1,5 @@
+// app/dashboard/page.tsx
+
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -59,6 +61,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [brandName, setBrandName] = useState('')
   const [hasScans, setHasScans] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const [scanError, setScanError] = useState<string | null>(null)
   
   const router = useRouter()
   const supabase = createClientComponentClient()
@@ -120,6 +124,32 @@ export default function DashboardPage() {
 
     loadDashboard()
   }, [router, supabase])
+
+  const handleStartScan = async () => {
+    setScanning(true)
+    setScanError(null)
+
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to start scan')
+      }
+
+      // Redirect to overview (or show success message)
+      // For now, we'll redirect to the shopping page to see the placeholder data
+      router.push('/dashboard/shopping')
+    } catch (error: any) {
+      console.error('Scan start error:', error)
+      setScanError(error.message || 'Failed to start scan')
+    } finally {
+      setScanning(false)
+    }
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -189,11 +219,36 @@ export default function DashboardPage() {
               You&apos;ll get visibility scores, product mentions, conversation insights, and optimization recommendations.
             </p>
 
-            <button className="px-8 py-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] transition-all inline-flex items-center gap-2" style={bodyStyle}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              Start first scan
+            {scanError && (
+              <div className="mb-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm" style={bodyStyle}>
+                  {scanError}
+                </p>
+              </div>
+            )}
+
+            <button
+              onClick={handleStartScan}
+              disabled={scanning}
+              className="px-8 py-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] transition-all inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={bodyStyle}
+            >
+              {scanning ? (
+                <>
+                  <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" opacity="0.25"></circle>
+                    <path d="M12 2a10 10 0 0 1 10 10" opacity="0.75"></path>
+                  </svg>
+                  Starting scan...
+                </>
+              ) : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  Start first scan
+                </>
+              )}
             </button>
 
             <p className="text-sm text-white/50 mt-4" style={bodyStyle}>
