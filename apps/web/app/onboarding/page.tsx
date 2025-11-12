@@ -144,7 +144,7 @@ export default function OnboardingPage() {
               value={brandName}
               onChange={(e) => setBrandName(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
+              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
               placeholder="Acme Inc"
             />
@@ -165,7 +165,7 @@ export default function OnboardingPage() {
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
+              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
               placeholder="acme.com"
             />
@@ -189,10 +189,10 @@ export default function OnboardingPage() {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white appearance-none"
+                className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white appearance-none"
                 style={{ 
                   fontFamily: 'Source Code Pro, monospace',
-                  backgroundImage: 'linear-gradient(to bottom, transparent 0%, transparent calc(100% - 20px), rgba(41, 121, 255, 0.05) 100%)'
+                  backgroundImage: 'linear-gradient(to bottom, transparent 0%, transparent calc(100% - 20px), rgba(255, 107, 74, 0.05) 100%)'
                 }}
               >
                 <option value="">Select a category</option>
@@ -230,7 +230,7 @@ export default function OnboardingPage() {
                     type="text"
                     value={product}
                     onChange={(e) => updateProduct(index, e.target.value)}
-                    className="flex-1 px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
+                    className="flex-1 px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
                     style={{ fontFamily: 'Source Code Pro, monospace' }}
                     placeholder={index === 0 ? "e.g., Business Credit Card" : `Product ${index + 1}`}
                   />
@@ -252,7 +252,7 @@ export default function OnboardingPage() {
               <button
                 type="button"
                 onClick={addProduct}
-                className="mt-3 text-sm text-[#2979FF] hover:text-[#1E5FCC] transition-colors"
+                className="mt-3 text-sm text-[#FF6B4A] hover:text-[#E55A3A] transition-colors"
                 style={{ fontFamily: 'Source Code Pro, monospace' }}
               >
                 + Add another product
