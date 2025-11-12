@@ -100,7 +100,7 @@ export default function OnboardingPage() {
         {/* Logo */}
         <div className="mb-12 text-center">
           <Image
-            src="/images/harbor-logo.svg"
+            src="/images/harbor-logo-white.svg"
             alt="Harbor"
             width={120}
             height={40}
@@ -144,7 +144,7 @@ export default function OnboardingPage() {
               value={brandName}
               onChange={(e) => setBrandName(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
+              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
               placeholder="Acme Inc"
             />
@@ -165,7 +165,7 @@ export default function OnboardingPage() {
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
+              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
               placeholder="acme.com"
             />
@@ -183,21 +183,32 @@ export default function OnboardingPage() {
             >
               Industry Category
             </label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              required
-              className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white"
-              style={{ fontFamily: 'Source Code Pro, monospace' }}
-            >
-              <option value="">Select a category</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+                className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white appearance-none"
+                style={{ 
+                  fontFamily: 'Source Code Pro, monospace',
+                  backgroundImage: 'linear-gradient(to bottom, transparent 0%, transparent calc(100% - 20px), rgba(41, 121, 255, 0.05) 100%)'
+                }}
+              >
+                <option value="">Select a category</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              {/* Dropdown arrow */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Products */}
@@ -206,10 +217,10 @@ export default function OnboardingPage() {
               className="block text-sm font-medium text-white mb-2 uppercase tracking-wide"
               style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
             >
-              Primary Products or Services
+              Key Products or Services (as customers would search them)
             </label>
             <p className="text-xs text-white/50 mb-3" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              Add 2-5 products to track in AI search results
+              Add 2–5 key products or services you want tracked in AI search results (e.g., "Business Checking Account", "Analytics Platform", "CRM Software")
             </p>
             
             <div className="space-y-3">
@@ -219,9 +230,9 @@ export default function OnboardingPage() {
                     type="text"
                     value={product}
                     onChange={(e) => updateProduct(index, e.target.value)}
-                    className="flex-1 px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/40"
+                    className="flex-1 px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2979FF] focus:border-transparent text-white placeholder-white/40"
                     style={{ fontFamily: 'Source Code Pro, monospace' }}
-                    placeholder={`Product ${index + 1}`}
+                    placeholder={index === 0 ? "e.g., Business Credit Card" : `Product ${index + 1}`}
                   />
                   {products.length > 1 && (
                     <button
@@ -241,7 +252,7 @@ export default function OnboardingPage() {
               <button
                 type="button"
                 onClick={addProduct}
-                className="mt-3 text-sm text-[#FF6B4A] hover:text-[#E55A3A] transition-colors"
+                className="mt-3 text-sm text-[#2979FF] hover:text-[#1E5FCC] transition-colors"
                 style={{ fontFamily: 'Source Code Pro, monospace' }}
               >
                 + Add another product
