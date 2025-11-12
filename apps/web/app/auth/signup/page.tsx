@@ -48,29 +48,36 @@ export default function SignUpPage() {
       if (authError) throw authError
 
       if (authData.user) {
-        // Create organization
-        const orgName = email.split('@')[0]
-        const { data: org, error: orgError } = await supabase
-          .from('orgs')
-          .insert({ name: orgName })
-          .select()
-          .single()
+        // Check if email confirmation is required
+        if (authData.session) {
+          // User is auto-logged in (email confirmation disabled)
+          // Create organization
+          const orgName = email.split('@')[0]
+          const { data: org, error: orgError } = await supabase
+            .from('orgs')
+            .insert({ name: orgName })
+            .select()
+            .single()
 
-        if (orgError) throw orgError
+          if (orgError) throw orgError
 
-        // Create user role
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: authData.user.id,
-            org_id: org.id,
-            role: 'owner',
-          })
+          // Create user role
+          const { error: roleError } = await supabase
+            .from('user_roles')
+            .insert({
+              user_id: authData.user.id,
+              org_id: org.id,
+              role: 'owner',
+            })
 
-        if (roleError) throw roleError
+          if (roleError) throw roleError
 
-        // Redirect to onboarding
-        router.push('/onboarding')
+          // Redirect to onboarding
+          router.push('/onboarding')
+        } else {
+          // Email confirmation required - show message
+          setError('Please check your email to confirm your account, then log in.')
+        }
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.')
