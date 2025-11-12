@@ -2,106 +2,46 @@
 
 import { MetricCard } from '@/components/ui/MetricCard'
 import { ActionCard } from '@/components/ui/ActionCard'
+import { VisibilityChart } from '@/components/dashboard/VisibilityChart'
+import { RankingTable } from '@/components/dashboard/RankingTable'
 import { TimeRangeFilter } from '@/components/ui/TimeRangeFilter'
-import { ShoppingBag, TrendingUp, Award, Package, FileCode, Sparkles } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip, Cell } from 'recharts'
+import { ShoppingBag, Star, MessageSquare, Globe, Sparkles, TrendingUp, FileCheck } from 'lucide-react'
 
 // Mock data
-const productMentionsByModel = [
-  { model: 'ChatGPT', mentions: 87, color: '#00C6B7' },
-  { model: 'Claude', mentions: 92, color: '#3C83FF' },
-  { model: 'Gemini', mentions: 68, color: '#4EE4FF' },
-  { model: 'Perplexity', mentions: 45, color: 'rgba(255,255,255,0.15)' },
+const visibilityData = [
+  { date: 'Jan 29', score: 88, competitor: 92 },
+  { date: 'Jan 30', score: 87.5, competitor: 91 },
+  { date: 'Jan 31', score: 89, competitor: 90 },
+  { date: 'Feb 01', score: 88.5, competitor: 89 },
+  { date: 'Feb 02', score: 89.2, competitor: 88.5 },
+  { date: 'Feb 03', score: 89.5, competitor: 88 },
+  { date: 'Feb 04', score: 89.8, competitor: 87 },
 ]
 
-const categoryData = [
-  { category: 'Business Credit Cards', rank: 2, models: ['ChatGPT', 'Claude', 'Gemini'], lastDetected: '2 hours ago' },
-  { category: 'Small Business Banking', rank: 4, models: ['ChatGPT', 'Gemini'], lastDetected: '5 hours ago' },
-  { category: 'Corporate Cards', rank: 7, models: ['Claude'], lastDetected: '1 day ago' },
-  { category: 'Expense Management', rank: null, models: [], lastDetected: 'Not detected' },
+const brandRankings = [
+  { rank: 1, name: 'Chase', logo: '💳', score: 92, delta: 5, isCurrentUser: false },
+  { rank: 2, name: 'Demo Brand', logo: '🏢', score: 89.8, delta: 1, isCurrentUser: true },
+  { rank: 3, name: 'American Express', logo: '💎', score: 85.2, delta: -1, isCurrentUser: false },
+  { rank: 4, name: 'Capital on Tap', logo: '🏦', score: 78, delta: 5, isCurrentUser: false },
+  { rank: 5, name: 'US Bank', logo: '🏛️', score: 76.9, delta: -2, isCurrentUser: false },
 ]
 
-const competitorData = [
-  { name: 'Your Brand', score: 89.8, color: '#00C6B7', gradient: true },
-  { name: 'Chase', score: 95.2, color: 'rgba(255,255,255,0.15)', gradient: false },
-  { name: 'American Express', score: 87.1, color: 'rgba(255,255,255,0.15)', gradient: false },
-  { name: 'Capital One', score: 72.4, color: 'rgba(255,255,255,0.15)', gradient: false },
-]
-
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div 
-        className="bg-navy rounded-lg p-3 animate-in"
-        style={{ 
-          boxShadow: '0 0 10px rgba(0,198,183,0.25)',
-          animation: 'fadeInUp 150ms ease-out'
-        }}
-      >
-        <p className="text-white font-body text-sm font-medium mb-1">{payload[0].payload.model}</p>
-        <p className="text-cyan text-xs font-medium">
-          {payload[0].value} <span className="text-softgray opacity-60">mentions</span>
-        </p>
-      </div>
-    )
-  }
-  return null
-}
-
-const CustomBar = (props: any) => {
-  const { fill, x, y, width, height, payload } = props
-  
+export default function OverviewPage() {
   return (
-    <g>
-      <defs>
-        {payload.model === 'Your Brand' && (
-          <linearGradient id={`gradient-${payload.model}`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#00C6B7" />
-            <stop offset="100%" stopColor="#4EE4FF" />
-          </linearGradient>
-        )}
-      </defs>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill={payload.model === 'Your Brand' ? `url(#gradient-${payload.model})` : fill}
-        rx={8}
-        className="transition-all duration-200 hover:translate-y-[-3px]"
-        style={{ 
-          filter: 'drop-shadow(0 4px 12px rgba(0,198,183,0.15))',
-          cursor: 'pointer'
-        }}
-      />
-    </g>
-  )
-}
-
-export default function ShoppingVisibilityPage() {
-  return (
-    <div 
-      className="min-h-screen bg-navy p-8 animate-in"
-      style={{
-        background: 'radial-gradient(ellipse at center, #0B1521 0%, rgba(0,0,0,0.4) 100%)'
-      }}
-    >
+    <div className="min-h-screen bg-navy p-8 animate-in fade-in duration-300">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 text-softgray text-sm mb-2">
           <span className="opacity-60">Demo Brand</span>
           <span className="opacity-40">›</span>
-          <span>Shopping Visibility</span>
+          <span>Overview</span>
         </div>
-        <h1 className="text-4xl font-heading font-bold text-white mb-2">
-          Shopping Visibility
+        <h1 className="text-4xl font-heading font-bold text-white mb-4">
+          Overview
         </h1>
-        <p className="text-softgray opacity-75 mb-4">
-          How often your products appear in ChatGPT Shopping tiles and other AI shopping recommendations
-        </p>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <p className="text-softgray opacity-75 text-sm">
+            <p className="text-softgray opacity-75">
               Last scan: 2 hours ago
             </p>
             <div className="relative flex items-center gap-2 px-3 py-1 bg-teal bg-opacity-10 rounded-full">
@@ -116,218 +56,118 @@ export default function ShoppingVisibilityPage() {
         </div>
       </div>
 
-      {/* Top Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <MetricCard
-          title="Shopping Visibility Score"
-          value="65.2%"
-          delta={1.9}
+          title="Shopping Visibility"
+          value="89.8%"
+          delta={1}
           icon={<ShoppingBag size={18} />}
-          tooltip="Percentage of relevant AI shopping queries where your products are mentioned"
+          onClick={() => console.log('Navigate to Shopping')}
+          tooltip="How often your products appear in AI shopping recommendations across ChatGPT, Claude, and Gemini"
         />
         <MetricCard
-          title="Shopping Visibility Rank"
-          value="#1"
-          description="In your category"
-          icon={<Award size={18} />}
-          tooltip="Your ranking among competitors in business credit card category"
+          title="Brand Mentions"
+          value="2.7M"
+          delta={12}
+          description="Estimated monthly volume"
+          icon={<Star size={18} />}
+          onClick={() => console.log('Navigate to Brand')}
+          tooltip="Total estimated mentions of your brand across all AI model responses this month"
         />
         <MetricCard
-          title="Total Mentions"
-          value="292"
+          title="Conversation Topics"
+          value="156"
           delta={8}
-          description="Across all models"
-          icon={<TrendingUp size={18} />}
-          tooltip="Total product mentions across ChatGPT, Claude, Gemini, and Perplexity"
+          description="Tracked keywords"
+          icon={<MessageSquare size={18} />}
+          onClick={() => console.log('Navigate to Conversations')}
+          tooltip="Number of distinct topics and questions users ask AI about your brand or category"
+        />
+        <MetricCard
+          title="Site Readability"
+          value="94%"
+          delta={3}
+          description="AI-optimized score"
+          icon={<Globe size={18} />}
+          onClick={() => console.log('Navigate to Website')}
+          tooltip="How well AI models can understand and extract information from your website content"
         />
       </div>
 
-      {/* Product Mentions by Model */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="harbor-card hover:shadow-[0_8px_20px_rgba(0,198,183,0.1)] transition-all duration-200">
-          <h3 className="text-lg font-heading font-semibold text-white mb-2">
-            How AI Models Mention Your Brand
-          </h3>
-          <p className="text-softgray text-sm opacity-75 mb-6">
-            Frequency of product recommendations across major AI platforms
+      {/* Brand Visibility Section */}
+      <div className="mb-8">
+        <div className="mb-4">
+          <h2 className="text-2xl font-heading font-semibold text-white mb-2">
+            Brand Visibility
+          </h2>
+          <p className="text-softgray opacity-75 text-sm">
+            Percentage of AI answers about business credit cards that mention your brand
           </p>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={productMentionsByModel}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-              <XAxis 
-                dataKey="model" 
-                stroke="#A9B4C5"
-                style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
-                tickLine={false}
-              />
-              <YAxis 
-                stroke="#A9B4C5"
-                style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
-                tickLine={false}
-              />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,198,183,0.05)' }} />
-              <Bar 
-                dataKey="mentions" 
-                radius={[8, 8, 0, 0]}
-                animationDuration={400}
-                animationBegin={0}
-                animationEasing="ease-in-out"
-              >
-                {productMentionsByModel.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.color}
-                    className="hover:translate-y-[-3px] transition-transform duration-200"
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
         </div>
 
-        {/* Competitor Comparison */}
-        <div className="harbor-card hover:shadow-[0_8px_20px_rgba(0,198,183,0.1)] transition-all duration-200">
-          <h3 className="text-lg font-heading font-semibold text-white mb-2">
-            Competitor Comparison
-          </h3>
-          <p className="text-softgray text-sm opacity-75 mb-6">
-            Your visibility vs. top competitors
-          </p>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={competitorData} layout="vertical">
-              <defs>
-                <linearGradient id="yourBrandGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#00C6B7" />
-                  <stop offset="100%" stopColor="#4EE4FF" />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-              <XAxis 
-                type="number"
-                stroke="#A9B4C5"
-                style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
-                tickLine={false}
-              />
-              <YAxis 
-                type="category"
-                dataKey="name"
-                stroke="#A9B4C5"
-                style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
-                tickLine={false}
-                width={120}
-              />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,198,183,0.05)' }} />
-              <Bar 
-                dataKey="score" 
-                radius={[0, 8, 8, 0]}
-                animationDuration={400}
-                animationBegin={100}
-                animationEasing="ease-in-out"
-              >
-                {competitorData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.gradient ? 'url(#yourBrandGradient)' : entry.color}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Visibility Chart */}
+          <div className="lg:col-span-2 harbor-card group hover:shadow-lg transition-all duration-200">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-sm font-body text-softgray opacity-75 uppercase tracking-wide mb-2">
+                  Visibility Score
+                </h3>
+                <div className="flex items-baseline gap-3">
+                  <span className="text-4xl font-heading font-bold text-white group-hover:text-cerulean transition-colors" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    89.8%
+                  </span>
+                  <span className="text-sm font-body flex items-center gap-1 text-cyan opacity-90">
+                    <span>↑</span>
+                    <span>1%</span>
+                    <span className="text-softgray opacity-60">vs last week</span>
+                  </span>
+                </div>
+              </div>
+              <button className="px-3 py-1 text-xs font-body text-teal border border-teal rounded-lg hover:bg-teal hover:text-white transition-colors">
+                Compare to Industry
+              </button>
+            </div>
+            <VisibilityChart data={visibilityData} height={250} />
+          </div>
+
+          {/* Rankings */}
+          <div>
+            <RankingTable data={brandRankings} />
+          </div>
         </div>
       </div>
 
-      {/* Category Coverage Table */}
-      <div className="harbor-card mb-8 hover:shadow-[0_8px_20px_rgba(0,198,183,0.1)] transition-all duration-200">
-        <h3 className="text-lg font-heading font-semibold text-white mb-2">
-          Where You Appear in AI Results
-        </h3>
-        <p className="text-softgray text-sm opacity-75 mb-6">
-          Product categories where AI models recommend your brand
-        </p>
-        <div className="overflow-x-auto">
-          <table className="harbor-table">
-            <thead>
-              <tr className="border-b border-harbor">
-                <th className="text-left py-3">Category</th>
-                <th className="text-left py-3">Rank</th>
-                <th className="text-left py-3">Models</th>
-                <th className="text-left py-3">Last Detected</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categoryData.map((item, index) => (
-                <tr 
-                  key={index}
-                  className="border-b border-harbor last:border-0 hover:bg-[rgba(0,198,183,0.05)] transition-colors"
-                >
-                  <td className="py-4">
-                    <span className="text-white font-body">{item.category}</span>
-                  </td>
-                  <td className="py-4">
-                    {item.rank ? (
-                      <span className="text-teal font-semibold text-sm">
-                        #{item.rank}
-                      </span>
-                    ) : (
-                      <span className="text-softgray opacity-60 text-sm">Not ranked</span>
-                    )}
-                  </td>
-                  <td className="py-4">
-                    <div className="flex gap-2">
-                      {item.models.length > 0 ? (
-                        item.models.map((model, i) => (
-                          <span 
-                            key={i}
-                            className="px-2 py-1 bg-navy-lighter text-cyan text-xs rounded"
-                            style={{ borderRadius: '4px' }}
-                          >
-                            {model}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-softgray opacity-60 text-sm">—</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="text-softgray text-sm opacity-75">{item.lastDetected}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Optimize Actions */}
-      <div>
-        <h2 className="text-2xl font-heading font-semibold text-white mb-2">
-          Improve Your Presence in AI Recommendations
+      {/* Action Cards - New Bottom Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-heading font-semibold text-white mb-6">
+          Recommended Actions
         </h2>
-        <p className="text-softgray opacity-75 mb-6">
-          Actionable steps to increase product mentions across AI platforms
-        </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ActionCard
-            title="Add Product Schema"
-            description="Implement Product JSON-LD with name, brand, SKU, and pricing to help AI models understand your products"
-            icon={<FileCode size={20} style={{ marginTop: '8px' }} />}
-            trend="+15% potential"
-            ctaText="Generate Schema"
+            title="Boost AI Shopping Presence"
+            description="Optimize product schema and descriptions to increase mentions in AI shopping results"
+            icon={<Sparkles size={20} />}
+            trend="+1.9% potential"
+            ctaText="View Optimization"
+            onClick={() => console.log('Navigate to Shopping optimization')}
           />
           <ActionCard
-            title="Enrich Descriptions"
-            description="Expand product descriptions to 120-150 words with AI-readable feature lists and use cases"
-            icon={<Package size={20} style={{ marginTop: '8px' }} />}
-            trend="+8% potential"
-            ctaText="View Guide"
+            title="Understand How AI Describes You"
+            description="Deep dive into how AI describes your brand and identify sentiment patterns"
+            icon={<TrendingUp size={20} />}
+            trend="+12% growth"
+            ctaText="View Intelligence"
+            onClick={() => console.log('Navigate to Brand analysis')}
           />
           <ActionCard
-            title="Add Review Schema"
-            description="Include aggregateRating and Review schema to build trust signals for AI recommendations"
-            icon={<Sparkles size={20} style={{ marginTop: '8px' }} />}
-            trend="+12% potential"
-            ctaText="Generate Schema"
+            title="Enhance Site Clarity for AI"
+            description="See which pages need optimization for better AI comprehension"
+            icon={<FileCheck size={20} />}
+            trend="3 issues found"
+            ctaText="View Report"
+            onClick={() => console.log('Navigate to Website report')}
           />
         </div>
       </div>
