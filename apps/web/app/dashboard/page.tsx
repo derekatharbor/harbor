@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
-export default function DashboardPage() {
+export default function DashboardPage(): JSX.Element {
   const [loading, setLoading] = useState(true)
   const [brandName, setBrandName] = useState('')
   const [hasScans, setHasScans] = useState(false)
