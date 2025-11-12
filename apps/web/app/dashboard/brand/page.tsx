@@ -189,13 +189,14 @@ export default function BrandVisibilityPage() {
                 cy="50%"
                 innerRadius={50}
                 outerRadius={80}
-                paddingAngle={2}
+                paddingAngle={0}
                 dataKey="value"
                 animationDuration={600}
                 animationBegin={0}
+                stroke="none"
               >
                 {sentimentData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                  <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
