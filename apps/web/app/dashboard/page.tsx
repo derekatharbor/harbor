@@ -1,3 +1,5 @@
+'use client'
+
 import { MetricCard } from '@/components/ui/MetricCard'
 import { ActionCard } from '@/components/ui/ActionCard'
 import { VisibilityChart } from '@/components/dashboard/VisibilityChart'
