@@ -3,10 +3,11 @@ import { AnthropicAdapter } from './anthropic'
 import { GeminiAdapter } from './gemini'
 import type { PromptJob, PromptResponse, ModelType } from './types'
 
-const adapters = {
+const adapters: Record<ModelType, any> = {
   gpt: new OpenAIAdapter(),
   claude: new AnthropicAdapter(),
   gemini: new GeminiAdapter(),
+  perplexity: null, // Not implemented yet
 }
 
 export async function runPrompt(job: PromptJob): Promise<PromptResponse> {

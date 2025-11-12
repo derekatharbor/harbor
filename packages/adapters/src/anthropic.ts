@@ -23,7 +23,7 @@ export class AnthropicAdapter implements ModelAdapter {
       ],
     })
 
-    const textContent = message.content.find(block => block.type === 'text')
+    const textContent = message.content.find((block: any) => block.type === 'text')
     
     return {
       text: textContent?.type === 'text' ? textContent.text : '',
