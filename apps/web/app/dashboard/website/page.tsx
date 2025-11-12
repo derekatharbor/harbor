@@ -60,9 +60,9 @@ const readabilityMetrics = [
 
 const getSeverityColor = (severity: 'high' | 'med' | 'low') => {
   switch (severity) {
-    case 'high': return { bg: 'rgba(255,107,74,0.1)', text: '#FF6B4A', border: '#FF6B4A' }
-    case 'med': return { bg: 'rgba(255,193,7,0.1)', text: '#FFC107', border: '#FFC107' }
-    case 'low': return { bg: 'rgba(169,180,197,0.1)', text: '#A9B4C5', border: '#A9B4C5' }
+    case 'high': return { bg: 'rgba(255,78,112,0.1)', text: '#FF4E70', border: '#FF4E70' }
+    case 'med': return { bg: 'rgba(255,200,87,0.1)', text: '#FFC857', border: '#FFC857' }
+    case 'low': return { bg: 'rgba(125,140,158,0.1)', text: '#7D8C9E', border: '#7D8C9E' }
   }
 }
 
@@ -76,9 +76,9 @@ const getSeverityIcon = (severity: 'high' | 'med' | 'low') => {
 
 const getStatusIcon = (status: string) => {
   switch (status) {
-    case 'pass': return <CheckCircle size={16} className="text-teal" />
-    case 'warning': return <AlertTriangle size={16} className="text-cyan" />
-    case 'fail': return <XCircle size={16} style={{ color: '#FF6B4A' }} />
+    case 'pass': return <CheckCircle size={16} className="text-teal opacity-90" />
+    case 'warning': return <AlertTriangle size={16} className="text-cyan opacity-90" />
+    case 'fail': return <XCircle size={16} className="opacity-90" style={{ color: '#FF4E70' }} />
     default: return null
   }
 }
@@ -89,19 +89,24 @@ function IssueAccordion({ issue }: { issue: typeof technicalIssues[0] }) {
 
   return (
     <div 
-      className="border border-harbor rounded-lg overflow-hidden hover:bg-[rgba(0,198,183,0.02)] transition-colors"
+      className="border border-harbor rounded-lg overflow-hidden hover:bg-[rgba(0,198,183,0.02)] transition-all duration-200 hover:translate-y-[-2px] hover:shadow-[0_4px_16px_rgba(0,198,183,0.1)] relative"
     >
+      {/* Left accent bar */}
+      <div 
+        className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-200"
+        style={{ backgroundColor: colors.text }}
+      />
+      
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-4 flex items-center justify-between cursor-pointer hover:bg-[rgba(0,198,183,0.05)] transition-colors"
+        className="w-full px-4 pl-6 py-4 flex items-center justify-between cursor-pointer hover:bg-[rgba(0,198,183,0.05)] transition-colors"
       >
         <div className="flex items-center gap-3 flex-1">
-          <div style={{ color: colors.text }}>
-            {getSeverityIcon(issue.severity)}
-          </div>
           <div className="text-left flex-1">
             <h4 className="text-white font-body text-sm font-medium">{issue.title}</h4>
-            <p className="text-softgray text-xs opacity-60 mt-1">{issue.count} affected {issue.count === 1 ? 'page' : 'pages'}</p>
+            <p className="text-softgray text-xs opacity-60 mt-1">
+              {issue.count} affected {issue.count === 1 ? 'page' : 'pages'}
+            </p>
           </div>
           <span 
             className="px-2 py-1 text-xs rounded font-medium uppercase"
@@ -118,7 +123,7 @@ function IssueAccordion({ issue }: { issue: typeof technicalIssues[0] }) {
       </button>
       
       {isOpen && (
-        <div className="px-4 pb-4 border-t border-harbor animate-in">
+        <div className="px-4 pl-6 pb-4 border-t border-harbor animate-in">
           <p className="text-softgray text-sm mt-3 mb-3 opacity-75">{issue.description}</p>
           <div className="space-y-1">
             <p className="text-xs text-softgray opacity-60 uppercase tracking-wide mb-2">Affected Pages:</p>
@@ -192,7 +197,7 @@ export default function WebsiteAnalyticsPage() {
         <MetricCard
           title="Technical Issues"
           value="9"
-          description="Requiring attention"
+          description="Needing review"
           icon={<AlertTriangle size={18} />}
           tooltip="Total number of technical issues affecting AI crawlability"
         />
@@ -215,14 +220,20 @@ export default function WebsiteAnalyticsPage() {
                   {metric.score}%
                 </span>
               </div>
-              <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
+              <div className="h-2 bg-navy-lighter rounded-full overflow-hidden relative">
                 <div 
-                  className="h-full rounded-full transition-all duration-500"
+                  className="h-full rounded-full transition-all duration-500 relative"
                   style={{ 
                     width: `${metric.score}%`,
-                    backgroundColor: metric.color
+                    backgroundColor: metric.color,
+                    boxShadow: `0 0 8px ${metric.color}80`
                   }}
-                />
+                >
+                  <div 
+                    className="absolute right-0 top-0 w-2 h-2 rounded-full"
+                    style={{ backgroundColor: metric.color, opacity: 0.6 }}
+                  />
+                </div>
               </div>
             </div>
           ))}
@@ -258,14 +269,18 @@ export default function WebsiteAnalyticsPage() {
                   </td>
                   <td className="py-4">
                     {page.schemas.length > 0 ? (
-                      <div className="flex gap-2 flex-wrap">
+                      <div className="flex gap-1.5 flex-wrap items-center">
                         {page.schemas.map((schema, i) => (
-                          <span 
-                            key={i}
-                            className="px-2 py-1 bg-navy-lighter text-teal text-xs rounded"
-                            style={{ borderRadius: '4px' }}
-                          >
-                            {schema}
+                          <span key={i}>
+                            <span 
+                              className="px-2 py-0.5 bg-navy-lighter text-teal text-xs rounded font-medium"
+                              style={{ borderRadius: '4px', letterSpacing: '-0.02em' }}
+                            >
+                              {schema}
+                            </span>
+                            {i < page.schemas.length - 1 && (
+                              <span className="text-softgray opacity-30 mx-1">•</span>
+                            )}
                           </span>
                         ))}
                       </div>
@@ -301,7 +316,7 @@ export default function WebsiteAnalyticsPage() {
           Technical Issues
         </h2>
         <p className="text-softgray opacity-75 mb-6">
-          Issues affecting AI crawlability and content understanding
+          Factors reducing AI clarity and content interpretation
         </p>
         <div className="space-y-3">
           {technicalIssues.map((issue, index) => (
@@ -313,10 +328,10 @@ export default function WebsiteAnalyticsPage() {
       {/* Optimize Actions */}
       <div>
         <h2 className="text-2xl font-heading font-semibold text-white mb-2">
-          Improve Site Clarity for AI
+          Enhance AI Understanding of Your Site
         </h2>
         <p className="text-softgray opacity-75 mb-6">
-          Priority actions to enhance how AI crawlers understand your content
+          Priority actions to improve how AI crawlers interpret your content
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ActionCard
