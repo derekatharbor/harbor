@@ -25,7 +25,7 @@ export function ActionCard({
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="text-teal group-hover:scale-110 transition-transform">
+          <div className="text-teal group-hover:scale-110 group-hover:rotate-2 transition-all duration-200">
             {icon}
           </div>
           <h3 className="text-lg font-heading font-semibold text-white group-hover:text-cerulean transition-colors">
@@ -33,7 +33,12 @@ export function ActionCard({
           </h3>
         </div>
         {trend && (
-          <div className="flex items-center gap-1 text-xs text-cyan opacity-90">
+          <div 
+            className="flex items-center gap-1 text-xs text-cyan opacity-90 group-hover:opacity-100 transition-all duration-200"
+            style={{
+              textShadow: '0 0 8px rgba(78,228,255,0.5)'
+            }}
+          >
             <TrendingUp size={12} />
             <span className="font-body font-medium">{trend}</span>
           </div>
