@@ -1,8 +1,9 @@
 import { MetricCard } from '@/components/ui/MetricCard'
+import { ActionCard } from '@/components/ui/ActionCard'
 import { VisibilityChart } from '@/components/dashboard/VisibilityChart'
 import { RankingTable } from '@/components/dashboard/RankingTable'
 import { TimeRangeFilter } from '@/components/ui/TimeRangeFilter'
-import { ShoppingBag, Star, MessageSquare, Globe } from 'lucide-react'
+import { ShoppingBag, Star, MessageSquare, Globe, Sparkles, TrendingUp, FileCheck } from 'lucide-react'
 
 // Mock data
 const visibilityData = [
@@ -16,16 +17,16 @@ const visibilityData = [
 ]
 
 const brandRankings = [
-  { rank: 1, name: 'Chase', logo: '💳', score: 92, delta: 5 },
-  { rank: 2, name: 'Demo Brand', logo: '🏢', score: 89.8, delta: 1 },
-  { rank: 3, name: 'American Express', logo: '💎', score: 85.2, delta: -1 },
-  { rank: 4, name: 'Capital on Tap', logo: '🏦', score: 78, delta: 5 },
-  { rank: 5, name: 'US Bank', logo: '🏛️', score: 76.9, delta: -2 },
+  { rank: 1, name: 'Chase', logo: '💳', score: 92, delta: 5, isCurrentUser: false },
+  { rank: 2, name: 'Demo Brand', logo: '🏢', score: 89.8, delta: 1, isCurrentUser: true },
+  { rank: 3, name: 'American Express', logo: '💎', score: 85.2, delta: -1, isCurrentUser: false },
+  { rank: 4, name: 'Capital on Tap', logo: '🏦', score: 78, delta: 5, isCurrentUser: false },
+  { rank: 5, name: 'US Bank', logo: '🏛️', score: 76.9, delta: -2, isCurrentUser: false },
 ]
 
 export default function OverviewPage() {
   return (
-    <div className="min-h-screen bg-navy p-8">
+    <div className="min-h-screen bg-navy p-8 animate-in fade-in duration-300">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 text-softgray text-sm mb-2">
@@ -37,9 +38,15 @@ export default function OverviewPage() {
           Overview
         </h1>
         <div className="flex items-center justify-between">
-          <p className="text-softgray opacity-75">
-            Last scan: 2 hours ago
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-softgray opacity-75">
+              Last scan: 2 hours ago
+            </p>
+            <div className="flex items-center gap-2 px-3 py-1 bg-cerulean bg-opacity-10 rounded-full">
+              <div className="w-2 h-2 bg-cerulean rounded-full animate-pulse" />
+              <span className="text-cerulean text-xs font-body">Live</span>
+            </div>
+          </div>
           <TimeRangeFilter />
         </div>
       </div>
@@ -51,6 +58,8 @@ export default function OverviewPage() {
           value="89.8%"
           delta={1}
           icon={<ShoppingBag size={18} />}
+          onClick={() => console.log('Navigate to Shopping')}
+          tooltip="How often your products appear in AI shopping recommendations across ChatGPT, Claude, and Gemini"
         />
         <MetricCard
           title="Brand Mentions"
@@ -58,6 +67,8 @@ export default function OverviewPage() {
           delta={12}
           description="Estimated monthly volume"
           icon={<Star size={18} />}
+          onClick={() => console.log('Navigate to Brand')}
+          tooltip="Total estimated mentions of your brand across all AI model responses this month"
         />
         <MetricCard
           title="Conversation Topics"
@@ -65,6 +76,8 @@ export default function OverviewPage() {
           delta={8}
           description="Tracked keywords"
           icon={<MessageSquare size={18} />}
+          onClick={() => console.log('Navigate to Conversations')}
+          tooltip="Number of distinct topics and questions users ask AI about your brand or category"
         />
         <MetricCard
           title="Site Readability"
@@ -72,6 +85,8 @@ export default function OverviewPage() {
           delta={3}
           description="AI-optimized score"
           icon={<Globe size={18} />}
+          onClick={() => console.log('Navigate to Website')}
+          tooltip="How well AI models can understand and extract information from your website content"
         />
       </div>
 
@@ -88,23 +103,26 @@ export default function OverviewPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Visibility Chart */}
-          <div className="lg:col-span-2 harbor-card">
+          <div className="lg:col-span-2 harbor-card group hover:shadow-lg transition-all duration-200">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-sm font-body text-softgray opacity-75 uppercase tracking-wide mb-2">
                   Visibility Score
                 </h3>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-heading font-bold text-white">
+                  <span className="text-4xl font-heading font-bold text-white group-hover:text-cerulean transition-colors">
                     89.8%
                   </span>
-                  <span className="text-cerulean text-sm font-body flex items-center gap-1">
+                  <span className="text-sm font-body flex items-center gap-1" style={{ color: '#4DA3FF' }}>
                     <span>↑</span>
                     <span>1%</span>
                     <span className="text-softgray opacity-60">vs last week</span>
                   </span>
                 </div>
               </div>
+              <button className="px-3 py-1 text-xs font-body text-cerulean border border-cerulean rounded-lg hover:bg-cerulean hover:text-white transition-colors">
+                Compare to Industry
+              </button>
             </div>
             <VisibilityChart data={visibilityData} height={250} />
           </div>
@@ -116,57 +134,36 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Module Previews */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Shopping Preview */}
-        <div className="harbor-card cursor-pointer hover:shadow-lg transition-harbor">
-          <div className="flex items-center gap-2 mb-4">
-            <ShoppingBag size={18} className="text-coral" />
-            <h3 className="text-lg font-heading font-semibold text-white">
-              Shopping Visibility
-            </h3>
-          </div>
-          <p className="text-softgray text-sm mb-4 opacity-75">
-            Track how your products appear in AI shopping recommendations
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-heading font-bold text-white">65.2%</span>
-            <span className="text-cerulean text-sm">+1.9%</span>
-          </div>
-        </div>
-
-        {/* Conversations Preview */}
-        <div className="harbor-card cursor-pointer hover:shadow-lg transition-harbor">
-          <div className="flex items-center gap-2 mb-4">
-            <MessageSquare size={18} className="text-coral" />
-            <h3 className="text-lg font-heading font-semibold text-white">
-              Conversation Volumes
-            </h3>
-          </div>
-          <p className="text-softgray text-sm mb-4 opacity-75">
-            See what users ask AI about your brand and category
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-heading font-bold text-white">2.7M</span>
-            <span className="text-cerulean text-sm">+12%</span>
-          </div>
-        </div>
-
-        {/* Website Analytics Preview */}
-        <div className="harbor-card cursor-pointer hover:shadow-lg transition-harbor">
-          <div className="flex items-center gap-2 mb-4">
-            <Globe size={18} className="text-coral" />
-            <h3 className="text-lg font-heading font-semibold text-white">
-              Website Analytics
-            </h3>
-          </div>
-          <p className="text-softgray text-sm mb-4 opacity-75">
-            Optimize how AI crawlers read and understand your site
-          </p>
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-heading font-bold text-white">94%</span>
-            <span className="text-cerulean text-sm">+3%</span>
-          </div>
+      {/* Action Cards - New Bottom Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-heading font-semibold text-white mb-6">
+          Recommended Actions
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <ActionCard
+            title="Improve Shopping Visibility"
+            description="Optimize product schema and descriptions to increase mentions in AI shopping results"
+            icon={<Sparkles size={20} />}
+            trend="+1.9% potential"
+            ctaText="View Optimization"
+            onClick={() => console.log('Navigate to Shopping optimization')}
+          />
+          <ActionCard
+            title="Analyze Brand Mentions"
+            description="Deep dive into how AI describes your brand and identify sentiment patterns"
+            icon={<TrendingUp size={20} />}
+            trend="+12% growth"
+            ctaText="View Intelligence"
+            onClick={() => console.log('Navigate to Brand analysis')}
+          />
+          <ActionCard
+            title="Review Readability Report"
+            description="See which pages need optimization for better AI comprehension"
+            icon={<FileCheck size={20} />}
+            trend="3 issues found"
+            ctaText="View Report"
+            onClick={() => console.log('Navigate to Website report')}
+          />
         </div>
       </div>
     </div>

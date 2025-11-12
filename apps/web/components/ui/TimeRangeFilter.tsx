@@ -28,10 +28,10 @@ export function TimeRangeFilter({ onChange }: TimeRangeFilterProps) {
           key={range.value}
           onClick={() => handleChange(range.value)}
           className={`
-            px-4 py-2 rounded-lg text-sm font-body transition-harbor cursor-pointer
+            px-4 py-2 rounded-lg text-sm font-body transition-all duration-200 cursor-pointer
             ${selected === range.value
-              ? 'bg-navy-lighter text-white'
-              : 'bg-transparent text-softgray hover:bg-navy-light hover:text-white'
+              ? 'bg-cerulean text-white shadow-lg'
+              : 'bg-navy-light text-softgray hover:bg-navy-lighter hover:text-white'
             }
           `}
         >
