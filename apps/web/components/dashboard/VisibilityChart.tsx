@@ -10,7 +10,7 @@ interface VisibilityChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-navy-lighter border border-coral rounded-lg p-3 shadow-lg">
+      <div className="bg-navy-lighter border border-teal rounded-lg p-3 shadow-lg">
         <p className="text-white font-body text-sm mb-2">{label}</p>
         {payload.map((entry: any, index: number) => (
           <div key={index} className="flex items-center gap-2 text-xs">
@@ -39,12 +39,12 @@ export function VisibilityChart({ data, height = 300 }: VisibilityChartProps) {
       >
         <defs>
           <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#4DA3FF" stopOpacity={0.4} />
-            <stop offset="95%" stopColor="#4DA3FF" stopOpacity={0} />
+            <stop offset="5%" stopColor="#4EE4FF" stopOpacity={0.4} />
+            <stop offset="95%" stopColor="#0B1521" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="competitorGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#6B7280" stopOpacity={0.2} />
-            <stop offset="95%" stopColor="#6B7280" stopOpacity={0} />
+            <stop offset="95%" stopColor="#0B1521" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid 
@@ -55,12 +55,12 @@ export function VisibilityChart({ data, height = 300 }: VisibilityChartProps) {
         <XAxis 
           dataKey="date" 
           stroke="rgba(255,255,255,0.3)"
-          style={{ fontSize: '12px', fontFamily: 'Source Code Pro' }}
+          style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
           tickLine={false}
         />
         <YAxis 
           stroke="rgba(255,255,255,0.3)"
-          style={{ fontSize: '12px', fontFamily: 'Source Code Pro' }}
+          style={{ fontSize: '12px', fontFamily: 'DM Sans' }}
           tickLine={false}
           tickFormatter={(value) => `${value}%`}
         />
@@ -68,8 +68,8 @@ export function VisibilityChart({ data, height = 300 }: VisibilityChartProps) {
         <Area
           type="monotone"
           dataKey="score"
-          stroke="#4DA3FF"
-          strokeWidth={3}
+          stroke="#00C6B7"
+          strokeWidth={2}
           fill="url(#scoreGradient)"
           animationDuration={800}
           animationBegin={0}

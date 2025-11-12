@@ -36,7 +36,7 @@ export function Sidebar() {
       {/* Brand header */}
       <div className="p-6 border-b border-harbor">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-coral rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-teal rounded-lg flex items-center justify-center">
             <span className="text-white font-heading font-bold text-sm">H</span>
           </div>
           <div>
@@ -108,7 +108,7 @@ export function Sidebar() {
                   `}
                 >
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-coral rounded-r" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-teal rounded-r" />
                   )}
                   <Icon size={18} strokeWidth={1.5} />
                   <span className="text-sm font-body">{item.name}</span>

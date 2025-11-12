@@ -9,30 +9,34 @@ module.exports = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#101A31',
-          light: '#141E38',
-          lighter: '#16203B',
+          DEFAULT: '#0B1521',
+          light: '#101C2C',
+          lighter: '#183B64',
         },
-        coral: {
-          DEFAULT: '#FF6B4A',
+        teal: {
+          DEFAULT: '#00C6B7',
+        },
+        cyan: {
+          DEFAULT: '#4EE4FF',
         },
         cerulean: {
           DEFAULT: '#2979FF',
         },
         softgray: {
-          DEFAULT: '#F4F6F8',
+          DEFAULT: '#A9B4C5',
         },
       },
       fontFamily: {
         heading: ['Space Grotesk', 'sans-serif'],
-        body: ['Source Code Pro', 'monospace'],
+        body: ['DM Sans', 'sans-serif'],
       },
       borderRadius: {
         card: '8px',
-        'card-lg': '12px',
+        'card-lg': '10px',
       },
       boxShadow: {
         card: '0px 4px 16px rgba(0,0,0,0.25)',
+        'teal-glow': '0 4px 10px rgba(0,198,183,0.08)',
       },
     },
   },

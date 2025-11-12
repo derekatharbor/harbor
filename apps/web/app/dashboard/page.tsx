@@ -44,9 +44,12 @@ export default function OverviewPage() {
             <p className="text-softgray opacity-75">
               Last scan: 2 hours ago
             </p>
-            <div className="flex items-center gap-2 px-3 py-1 bg-cerulean bg-opacity-10 rounded-full">
-              <div className="w-2 h-2 bg-cerulean rounded-full animate-pulse" />
-              <span className="text-cerulean text-xs font-body">Live</span>
+            <div className="relative flex items-center gap-2 px-3 py-1 bg-teal bg-opacity-10 rounded-full">
+              <div className="relative">
+                <div className="w-2 h-2 bg-teal rounded-full" />
+                <div className="absolute inset-0 w-2 h-2 bg-teal rounded-full animate-sonar" />
+              </div>
+              <span className="text-teal text-xs font-body">Live</span>
             </div>
           </div>
           <TimeRangeFilter />
@@ -112,17 +115,17 @@ export default function OverviewPage() {
                   Visibility Score
                 </h3>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-heading font-bold text-white group-hover:text-cerulean transition-colors">
+                  <span className="text-4xl font-heading font-bold text-white group-hover:text-cerulean transition-colors" style={{ fontVariantNumeric: 'tabular-nums' }}>
                     89.8%
                   </span>
-                  <span className="text-sm font-body flex items-center gap-1" style={{ color: '#4DA3FF' }}>
+                  <span className="text-sm font-body flex items-center gap-1 text-cyan opacity-90">
                     <span>↑</span>
                     <span>1%</span>
                     <span className="text-softgray opacity-60">vs last week</span>
                   </span>
                 </div>
               </div>
-              <button className="px-3 py-1 text-xs font-body text-cerulean border border-cerulean rounded-lg hover:bg-cerulean hover:text-white transition-colors">
+              <button className="px-3 py-1 text-xs font-body text-teal border border-teal rounded-lg hover:bg-teal hover:text-white transition-colors">
                 Compare to Industry
               </button>
             </div>
@@ -143,7 +146,7 @@ export default function OverviewPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ActionCard
-            title="Improve Shopping Visibility"
+            title="Boost AI Shopping Presence"
             description="Optimize product schema and descriptions to increase mentions in AI shopping results"
             icon={<Sparkles size={20} />}
             trend="+1.9% potential"
@@ -151,7 +154,7 @@ export default function OverviewPage() {
             onClick={() => console.log('Navigate to Shopping optimization')}
           />
           <ActionCard
-            title="Analyze Brand Mentions"
+            title="Understand How AI Describes You"
             description="Deep dive into how AI describes your brand and identify sentiment patterns"
             icon={<TrendingUp size={20} />}
             trend="+12% growth"
@@ -159,7 +162,7 @@ export default function OverviewPage() {
             onClick={() => console.log('Navigate to Brand analysis')}
           />
           <ActionCard
-            title="Review Readability Report"
+            title="Enhance Site Clarity for AI"
             description="See which pages need optimization for better AI comprehension"
             icon={<FileCheck size={20} />}
             trend="3 issues found"

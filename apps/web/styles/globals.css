@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
 @layer base {
   body {
@@ -21,23 +21,28 @@
   /* Card styles */
   .harbor-card {
     @apply bg-navy-light rounded-card-lg p-6 shadow-card;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 200ms ease;
+  }
+
+  .harbor-card:hover {
+    box-shadow: inset 0 0 20px rgba(0, 198, 183, 0.15);
   }
 
   /* Button styles */
   .btn-primary {
-    @apply bg-coral text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply transition-all duration-150 hover:brightness-105 cursor-pointer;
+    @apply bg-teal text-white px-4 py-2 rounded-lg font-body font-medium;
+    @apply transition-all duration-200 hover:brightness-110 cursor-pointer;
   }
 
   .btn-primary:focus {
-    @apply outline-none ring-1 ring-coral;
-    box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.2);
+    @apply outline-none ring-1 ring-teal;
+    box-shadow: 0 0 0 3px rgba(0, 198, 183, 0.2);
   }
 
   .btn-secondary {
     @apply bg-transparent text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply border border-white transition-all duration-150 hover:bg-white hover:bg-opacity-5 cursor-pointer;
+    @apply border border-white transition-all duration-200 hover:bg-white hover:bg-opacity-5 cursor-pointer;
   }
 
   .btn-primary:disabled,
@@ -49,7 +54,7 @@
   .harbor-input {
     @apply bg-navy-light text-white placeholder-softgray placeholder-opacity-60;
     @apply rounded-lg px-4 py-2 border border-white border-opacity-10;
-    @apply focus:outline-none focus:ring-1 focus:ring-coral;
+    @apply focus:outline-none focus:ring-1 focus:ring-teal;
   }
 
   /* Table styles */
@@ -62,7 +67,11 @@
   }
 
   .harbor-table tbody tr {
-    @apply h-[52px] transition-colors hover:bg-white hover:bg-opacity-[0.02];
+    @apply h-[52px] transition-colors;
+  }
+
+  .harbor-table tbody tr:hover {
+    background-color: rgba(0, 198, 183, 0.08);
   }
 
   .harbor-table tbody tr:nth-child(even) {
@@ -77,17 +86,17 @@
   }
 
   .animate-in {
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 350ms ease-out;
   }
 
   .fade-in {
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 350ms ease-out;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -95,13 +104,28 @@
     }
   }
 
+  @keyframes sonarPulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .animate-sonar {
+    animation: sonarPulse 5s ease-out infinite;
+  }
+
   .transition-harbor {
-    transition: all 120ms ease-in-out;
+    transition: all 150ms ease;
   }
 
   /* Border utilities */
   .border-harbor {
-    border-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.06);
   }
 
   /* Text truncation */

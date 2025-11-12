@@ -20,12 +20,12 @@ export function ActionCard({
 }: ActionCardProps) {
   return (
     <div 
-      className="harbor-card cursor-pointer group hover:shadow-xl hover:translate-y-[-2px] transition-all duration-200"
+      className="harbor-card cursor-pointer group hover:shadow-teal-glow hover:translate-y-[-2px] transition-all duration-200"
       onClick={onClick}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="text-coral group-hover:scale-110 transition-transform">
+          <div className="text-teal group-hover:scale-110 transition-transform">
             {icon}
           </div>
           <h3 className="text-lg font-heading font-semibold text-white group-hover:text-cerulean transition-colors">
@@ -33,14 +33,14 @@ export function ActionCard({
           </h3>
         </div>
         {trend && (
-          <div className="flex items-center gap-1 text-xs" style={{ color: '#4DA3FF' }}>
+          <div className="flex items-center gap-1 text-xs text-cyan opacity-90">
             <TrendingUp size={12} />
             <span className="font-body font-medium">{trend}</span>
           </div>
         )}
       </div>
 
-      <p className="text-softgray text-sm mb-4 opacity-75 line-clamp-2">
+      <p className="text-softgray text-sm mb-4 opacity-75 line-clamp-2 leading-relaxed">
         {description}
       </p>
 
