@@ -53,18 +53,40 @@ export default function OnboardingPage() {
     setError(null)
 
     try {
-      // Get current user
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('No user found')
+      // Get current user session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      
+      if (sessionError) {
+        console.error('Session error:', sessionError)
+        throw new Error('Session error: ' + sessionError.message)
+      }
+      
+      if (!session?.user) {
+        console.error('No session found')
+        throw new Error('No active session. Please log in again.')
+      }
+
+      const user = session.user
+      console.log('User found:', user.id)
 
       // Get user's org
-      const { data: userRole } = await supabase
+      const { data: userRole, error: roleError } = await supabase
         .from('user_roles')
         .select('org_id')
         .eq('user_id', user.id)
         .single()
 
-      if (!userRole?.org_id) throw new Error('No organization found')
+      if (roleError) {
+        console.error('Role error:', roleError)
+        throw new Error('Could not find organization: ' + roleError.message)
+      }
+
+      if (!userRole?.org_id) {
+        console.error('No org found for user')
+        throw new Error('No organization found. Please contact support.')
+      }
+
+      console.log('Org found:', userRole.org_id)
 
       // Filter out empty products
       const filteredProducts = products.filter(p => p.trim() !== '')
@@ -83,11 +105,17 @@ export default function OnboardingPage() {
           }
         })
 
-      if (dashboardError) throw dashboardError
+      if (dashboardError) {
+        console.error('Dashboard error:', dashboardError)
+        throw dashboardError
+      }
+
+      console.log('Dashboard created successfully')
 
       // Redirect to dashboard
       router.push('/dashboard')
     } catch (err: any) {
+      console.error('Full error:', err)
       setError(err.message || 'Failed to create dashboard')
     } finally {
       setLoading(false)
