@@ -1,3 +1,5 @@
+// app/api/scan/start/route.ts
+
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -77,12 +79,20 @@ export async function POST(request: Request) {
       .update({ last_fresh_scan_at: new Date().toISOString() })
       .eq('id', dashboard.id)
 
-    // TODO: Trigger actual scan processing (worker/queue)
-    // For now, we'll just mark it as "running" and return success
+    // Mark scan as running
     await supabase
       .from('scans')
       .update({ status: 'running' })
       .eq('id', scan.id)
+
+    // Trigger scan processing asynchronously
+    // Using fetch with no await so it runs in background
+    const baseUrl = request.url.split('/api')[0]
+    fetch(`${baseUrl}/api/scan/process`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scanId: scan.id })
+    }).catch(err => console.error('Background scan trigger error:', err))
 
     return NextResponse.json({ 
       success: true, 
