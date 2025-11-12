@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function HomePage() {
   return (
     <main className="min-h-screen flex items-center justify-center">
@@ -7,9 +9,9 @@ export default function HomePage() {
           See how AI sees your brand
         </p>
         <div className="flex gap-4 justify-center">
-          <button className="btn-primary">
-            Get Started
-          </button>
+          <Link href="/dashboard" className="btn-primary">
+            View Dashboard
+          </Link>
           <button className="btn-secondary">
             Request Demo
           </button>
