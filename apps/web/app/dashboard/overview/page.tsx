@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { LayoutDashboard, TrendingUp, Activity, Zap } from 'lucide-react'
 import Link from 'next/link'
 
@@ -24,7 +23,6 @@ export default function OverviewPage() {
   useEffect(() => {
     async function fetchLatestScan() {
       try {
-        const supabase = createClient()
         const response = await fetch('/api/scan/latest')
         
         if (!response.ok) {
