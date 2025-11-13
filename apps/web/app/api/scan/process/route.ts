@@ -1,6 +1,7 @@
 // app/api/scan/process/route.ts
 // Enhanced scan processor with multiple prompts and competitor data
 
+export const runtime = 'nodejs'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
