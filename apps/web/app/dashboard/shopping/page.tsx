@@ -3,7 +3,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles } from 'lucide-react'
+import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles, ArrowRight } from 'lucide-react'
 
 interface ShoppingData {
   visibility_score: number
@@ -264,217 +264,226 @@ export default function ShoppingVisibilityPage() {
         </div>
       </div>
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-2 gap-8">
-        {/* Left Column */}
-        <div className="space-y-8">
-          {/* Category Rankings */}
-          <div 
-            className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-            style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Category Rankings
-              </h2>
-              <Trophy className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-            </div>
-            
-            {data.categories.length > 0 ? (
-              <div className="space-y-3">
-                {data.categories.map((category, index) => (
-                  <div 
-                    key={index} 
-                    className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className="text-2xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[3rem]">
-                        #{category.rank}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-body font-medium mb-1">
-                          {category.name}
-                        </div>
-                        <div className="text-softgray/60 text-xs font-body">
-                          {category.mentions} mentions • {category.models.length} models
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-softgray/50 text-xs font-body">
-                        {category.models.join(', ')}
-                      </div>
-                      <span className={`text-sm ${
-                        category.trend === 'up' ? 'text-[#00C6B7]' : 
-                        category.trend === 'down' ? 'text-softgray/40' : 
-                        'text-softgray/60'
-                      }`}>
-                        {getTrendIcon(category.trend)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="text-softgray/40 text-sm font-body mb-2">
-                  No category data yet
-                </div>
-                <div className="text-softgray/60 text-xs font-body">
-                  Rankings will appear after your first scan completes
-                </div>
-              </div>
-            )}
+      {/* Two Column Grid - Context & Comparison */}
+      <div className="grid grid-cols-2 gap-8 mb-8">
+        {/* Category Rankings */}
+        <div 
+          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-heading font-bold text-white">
+              Category Rankings
+            </h2>
+            <Trophy className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
           </div>
-
-          {/* Model Coverage */}
-          <div 
-            className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-            style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Model Coverage
-              </h2>
-              <Sparkles className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-            </div>
-            
-            <div className="space-y-5">
-              {data.models.map((model, index) => (
-                <div key={index}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-white font-body font-medium">
-                      {model.name}
-                    </div>
-                    <div className="text-softgray/60 text-sm font-body tabular-nums">
-                      {model.mentions} mentions • {model.coverage}%
-                    </div>
-                  </div>
-                  <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#00C6B7] rounded-full transition-all duration-500"
-                      style={{ width: `${model.coverage}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-8">
-          {/* Competitive Position */}
-          <div 
-            className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-            style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Competitive Position
-              </h2>
-              <TrendingUp className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-            </div>
-            
+          
+          {data.categories.length > 0 ? (
             <div className="space-y-3">
-              {data.competitors.map((competitor, index) => (
+              {data.categories.map((category, index) => (
                 <div 
                   key={index} 
-                  className={`p-4 rounded-lg ${
-                    competitor.isUser 
-                      ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
-                      : 'bg-white/[0.02] hover:bg-white/[0.04]'
-                  } transition-colors ${!competitor.isUser && 'cursor-pointer'}`}
+                  className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`font-body ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
-                      {competitor.brand}
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="text-2xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[3rem]">
+                      #{category.rank}
                     </div>
-                    <div className={`font-heading font-bold text-2xl tabular-nums ${
-                      competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
-                    }`}>
-                      #{competitor.avg_rank}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-body font-medium mb-1">
+                        {category.name}
+                      </div>
+                      <div className="text-softgray/60 text-xs font-body">
+                        {category.mentions} mentions • {category.models.length} models
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-softgray/60 font-body">
-                      {competitor.mentions} mentions
+                  <div className="flex items-center gap-3">
+                    <div className="text-softgray/50 text-xs font-body">
+                      {category.models.join(', ')}
+                    </div>
+                    <span className={`text-sm ${
+                      category.trend === 'up' ? 'text-[#00C6B7]' : 
+                      category.trend === 'down' ? 'text-softgray/40' : 
+                      'text-softgray/60'
+                    }`}>
+                      {getTrendIcon(category.trend)}
                     </span>
-                    {competitor.isUser && (
-                      <span className="text-[#00C6B7] text-xs font-body font-medium">
-                        Market leader
-                      </span>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-softgray/40 text-sm font-body mb-2">
+                No category data yet
+              </div>
+              <div className="text-softgray/60 text-xs font-body">
+                Rankings will appear after your first scan completes
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Competitive Position */}
+        <div 
+          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-heading font-bold text-white">
+              Competitive Position
+            </h2>
+            <TrendingUp className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
+          </div>
+          
+          <div className="space-y-3">
+            {data.competitors.map((competitor, index) => (
+              <div 
+                key={index} 
+                className={`p-4 rounded-lg ${
+                  competitor.isUser 
+                    ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
+                    : 'bg-white/[0.02] hover:bg-white/[0.04]'
+                } transition-colors ${!competitor.isUser && 'cursor-pointer'}`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className={`font-body ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
+                    {competitor.brand}
+                  </div>
+                  <div className={`font-heading font-bold text-2xl tabular-nums ${
+                    competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
+                  }`}>
+                    #{competitor.avg_rank}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-softgray/60 font-body">
+                    {competitor.mentions} mentions
+                  </span>
+                  {competitor.isUser && (
+                    <span className="text-[#00C6B7] text-xs font-body font-medium">
+                      Market leader
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Model Coverage - Full Width */}
+      <div 
+        className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
+        style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-heading font-bold text-white">
+            Model Coverage
+          </h2>
+          <Sparkles className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
+        </div>
+        
+        <div className="grid grid-cols-3 gap-8">
+          {data.models.map((model, index) => (
+            <div key={index}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-white font-body font-medium text-lg">
+                  {model.name}
+                </div>
+                <div className="text-[#00C6B7] font-heading font-bold text-2xl tabular-nums">
+                  {model.coverage}%
+                </div>
+              </div>
+              <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
+                <div 
+                  className="h-full bg-[#00C6B7] rounded-full transition-all duration-500"
+                  style={{ width: `${model.coverage}%` }}
+                />
+              </div>
+              <div className="text-softgray/60 text-sm font-body">
+                {model.mentions} mentions
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Next Best Actions - Distinct Bottom Section */}
+      <div 
+        className="rounded-lg p-6 border border-white/5"
+        style={{ 
+          background: 'rgba(255,255,255,0.02)',
+          borderTop: '1px solid rgba(0, 198, 183, 0.25)',
+          boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)'
+        }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-heading font-bold text-white mb-2">
+              Next Best Actions
+            </h2>
+            <p className="text-sm text-softgray/60 font-body">
+              Recommended improvements based on your current visibility data
+            </p>
+          </div>
+          <Target className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="text-white font-body font-medium">
+                Add Product Schema
+              </div>
+              <span className="text-[#00C6B7] text-xs px-2 py-0.5 bg-[#00C6B7]/10 rounded font-medium">
+                High Impact
+              </span>
+            </div>
+            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
+              Structure your catalog with JSON-LD to improve AI model comprehension
+            </div>
+            <button className="flex items-center gap-2 text-[#00C6B7] text-sm font-body font-medium group-hover:gap-3 transition-all">
+              Generate Schema
+              <ArrowRight className="w-4 h-4" strokeWidth={2} />
+            </button>
           </div>
 
-          {/* Optimization Actions */}
-          <div 
-            className="bg-[#101C2C] rounded-lg p-6 border border-white/5 border-l-2 border-l-[#00C6B7]"
-            style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Optimize
-              </h2>
-              <Target className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="text-white font-body font-medium">
+                Enrich Descriptions
+              </div>
+              <span className="text-[#00C6B7] text-xs px-2 py-0.5 bg-[#00C6B7]/10 rounded font-medium">
+                High Impact
+              </span>
             </div>
-            
-            <div className="space-y-3">
-              <div className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors group">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-white font-body font-medium text-sm">
-                    Add Product Schema
-                  </div>
-                  <span className="text-[#00C6B7] text-xs px-2 py-0.5 bg-[#00C6B7]/10 rounded">
-                    High Impact
-                  </span>
-                </div>
-                <div className="text-softgray/60 text-xs font-body mb-3">
-                  Structure your catalog for AI comprehension
-                </div>
-                <button className="text-[#00C6B7] text-xs font-body font-medium group-hover:underline">
-                  Generate Schema →
-                </button>
-              </div>
-
-              <div className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors group">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-white font-body font-medium text-sm">
-                    Enrich Descriptions
-                  </div>
-                  <span className="text-[#00C6B7] text-xs px-2 py-0.5 bg-[#00C6B7]/10 rounded">
-                    High Impact
-                  </span>
-                </div>
-                <div className="text-softgray/60 text-xs font-body mb-3">
-                  Optimize product copy for model readability
-                </div>
-                <button className="text-[#00C6B7] text-xs font-body font-medium group-hover:underline">
-                  Generate Copy →
-                </button>
-              </div>
-
-              <div className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors group">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-white font-body font-medium text-sm">
-                    Category Coverage
-                  </div>
-                  <span className="text-softgray/50 text-xs px-2 py-0.5 bg-white/5 rounded">
-                    Medium Impact
-                  </span>
-                </div>
-                <div className="text-softgray/60 text-xs font-body mb-3">
-                  Target uncovered but relevant categories
-                </div>
-                <button className="text-[#00C6B7] text-xs font-body font-medium group-hover:underline">
-                  View Suggestions →
-                </button>
-              </div>
+            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
+              Optimize product copy for better model readability and ranking
             </div>
+            <button className="flex items-center gap-2 text-[#00C6B7] text-sm font-body font-medium group-hover:gap-3 transition-all">
+              Generate Copy
+              <ArrowRight className="w-4 h-4" strokeWidth={2} />
+            </button>
+          </div>
+
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+            <div className="flex items-start justify-between mb-3">
+              <div className="text-white font-body font-medium">
+                Expand Category Coverage
+              </div>
+              <span className="text-softgray/50 text-xs px-2 py-0.5 bg-white/5 rounded font-medium">
+                Medium Impact
+              </span>
+            </div>
+            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
+              Target uncovered but relevant product categories
+            </div>
+            <button className="flex items-center gap-2 text-[#00C6B7] text-sm font-body font-medium group-hover:gap-3 transition-all">
+              View Suggestions
+              <ArrowRight className="w-4 h-4" strokeWidth={2} />
+            </button>
           </div>
         </div>
       </div>
