@@ -51,8 +51,8 @@ export default function BrandVisibilityPage() {
           mentions_delta: '+83',
           sentiment_score: 8.2,
           sentiment_delta: '+0.3',
-          descriptor_count: 24,
-          descriptor_delta: '+3',
+          descriptor_count: 28,
+          descriptor_delta: '+4',
           last_scan: scanData.last_scan,
           descriptors: [
             { word: 'Innovative', sentiment: 'positive', weight: 95 },
@@ -62,9 +62,17 @@ export default function BrandVisibilityPage() {
             { word: 'Modern', sentiment: 'positive', weight: 72 },
             { word: 'Efficient', sentiment: 'positive', weight: 68 },
             { word: 'Secure', sentiment: 'positive', weight: 65 },
+            { word: 'Customer-focused', sentiment: 'positive', weight: 62 },
+            { word: 'Responsive', sentiment: 'positive', weight: 59 },
+            { word: 'Sophisticated', sentiment: 'positive', weight: 56 },
             { word: 'Established', sentiment: 'neutral', weight: 58 },
             { word: 'Corporate', sentiment: 'neutral', weight: 52 },
             { word: 'Traditional', sentiment: 'neutral', weight: 45 },
+            { word: 'Enterprise', sentiment: 'neutral', weight: 42 },
+            { word: 'Scalable', sentiment: 'positive', weight: 51 },
+            { word: 'Transparent', sentiment: 'positive', weight: 48 },
+            { word: 'Fast-growing', sentiment: 'positive', weight: 44 },
+            { word: 'Well-funded', sentiment: 'positive', weight: 40 },
           ],
           sentiment_distribution: {
             positive: 72,
@@ -303,7 +311,7 @@ export default function BrandVisibilityPage() {
           )}
         </div>
 
-        {/* Competitive Mentions */}
+        {/* Competitive Landscape */}
         <div 
           className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
           style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
@@ -315,7 +323,7 @@ export default function BrandVisibilityPage() {
             <TrendingUp className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* User Brand */}
             <div className="p-4 rounded-lg bg-[#4EE4FF]/10 border border-[#4EE4FF]/30">
               <div className="flex items-center justify-between mb-2">
@@ -442,7 +450,7 @@ export default function BrandVisibilityPage() {
         </div>
       </div>
 
-      {/* Next Best Actions - Distinct Bottom Section */}
+      {/* Recommended Improvements - Distinct Bottom Section */}
       <div 
         className="rounded-lg p-6 border border-white/5"
         style={{ 
@@ -454,10 +462,10 @@ export default function BrandVisibilityPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Next Best Actions
+              Recommended Improvements
             </h2>
             <p className="text-sm text-softgray/60 font-body">
-              Recommended improvements based on your brand perception data
+              High-impact actions to strengthen your brand perception
             </p>
           </div>
           <Target className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />

@@ -72,6 +72,9 @@ export default function ShoppingVisibilityPage() {
             { brand: 'Competitor A', mentions: 189, avg_rank: 2.1 },
             { brand: 'Competitor B', mentions: 156, avg_rank: 2.8 },
             { brand: 'Competitor C', mentions: 143, avg_rank: 3.2 },
+            { brand: 'Competitor D', mentions: 128, avg_rank: 3.8 },
+            { brand: 'Competitor E', mentions: 112, avg_rank: 4.1 },
+            { brand: 'Competitor F', mentions: 98, avg_rank: 4.5 },
           ],
           models: [
             { name: 'ChatGPT', mentions: 89, coverage: 78 },
@@ -279,18 +282,18 @@ export default function ShoppingVisibilityPage() {
           </div>
           
           {data.categories.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {data.categories.map((category, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer"
+                  className="flex items-center justify-between p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="text-2xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[3rem]">
+                  <div className="flex items-center gap-3.5 flex-1">
+                    <div className="text-xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[2.5rem]">
                       #{category.rank}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-white font-body font-medium mb-1">
+                      <div className="text-white font-body font-medium text-sm mb-0.5">
                         {category.name}
                       </div>
                       <div className="text-softgray/60 text-xs font-body">
@@ -298,9 +301,9 @@ export default function ShoppingVisibilityPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     <div className="text-softgray/50 text-xs font-body">
-                      {category.models.join(', ')}
+                      {category.models.slice(0, 2).join(', ')}
                     </div>
                     <span className={`text-sm ${
                       category.trend === 'up' ? 'text-[#00C6B7]' : 
@@ -337,28 +340,28 @@ export default function ShoppingVisibilityPage() {
             <TrendingUp className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {data.competitors.map((competitor, index) => (
               <div 
                 key={index} 
-                className={`p-4 rounded-lg ${
+                className={`p-3.5 rounded-lg ${
                   competitor.isUser 
                     ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
-                    : 'bg-white/[0.02] hover:bg-white/[0.04]'
-                } transition-colors ${!competitor.isUser && 'cursor-pointer'}`}
+                    : 'bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer'
+                } transition-colors`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`font-body ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className={`font-body text-sm ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
                     {competitor.brand}
                   </div>
-                  <div className={`font-heading font-bold text-2xl tabular-nums ${
+                  <div className={`font-heading font-bold text-xl tabular-nums ${
                     competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
                   }`}>
                     #{competitor.avg_rank}
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-softgray/60 font-body">
+                  <span className="text-softgray/60 font-body text-xs">
                     {competitor.mentions} mentions
                   </span>
                   {competitor.isUser && (
@@ -410,7 +413,7 @@ export default function ShoppingVisibilityPage() {
         </div>
       </div>
 
-      {/* Next Best Actions - Distinct Bottom Section */}
+      {/* Recommended Improvements - Distinct Bottom Section */}
       <div 
         className="rounded-lg p-6 border border-white/5"
         style={{ 
@@ -422,10 +425,10 @@ export default function ShoppingVisibilityPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Next Best Actions
+              Recommended Improvements
             </h2>
             <p className="text-sm text-softgray/60 font-body">
-              Recommended improvements based on your current visibility data
+              High-impact actions to strengthen your shopping visibility
             </p>
           </div>
           <Target className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
