@@ -4,6 +4,8 @@
 
 import { useEffect, useState } from 'react'
 import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles, ArrowRight } from 'lucide-react'
+import ScanButton from '@/components/scan/ScanButton'
+import ScanProgressModal from '@/components/scan/ScanProgressModal'
 
 interface ShoppingData {
   visibility_score: number
@@ -38,6 +40,8 @@ interface ShoppingData {
 export default function ShoppingVisibilityPage() {
   const [data, setData] = useState<ShoppingData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showScanModal, setShowScanModal] = useState(false)
+  const [currentScanId, setCurrentScanId] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -94,6 +98,23 @@ export default function ShoppingVisibilityPage() {
     fetchData()
   }, [])
 
+  const handleStartScan = async () => {
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setCurrentScanId(data.scanId)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
+    }
+  }
+
   // NUCLEAR CURSOR FIX
   useEffect(() => {
     const style = document.createElement('style')
@@ -142,11 +163,16 @@ export default function ShoppingVisibilityPage() {
     <div>
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
-          <h1 className="text-4xl font-heading font-bold text-white">
-            Shopping Visibility
-          </h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
+            <h1 className="text-4xl font-heading font-bold text-white">
+              Shopping Visibility
+            </h1>
+          </div>
+
+          {/* Scan Button */}
+          <ScanButton onScanStart={handleStartScan} />
         </div>
         
         <div className="flex items-center justify-between">
@@ -516,6 +542,13 @@ export default function ShoppingVisibilityPage() {
           </div>
         </div>
       </div>
+
+      {/* Scan Progress Modal */}
+      <ScanProgressModal
+        isOpen={showScanModal}
+        onClose={() => setShowScanModal(false)}
+        scanId={currentScanId}
+      />
     </div>
   )
 }
