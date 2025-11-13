@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react'
 import { 
+  Home,
   ShoppingBag, 
   Star, 
   MessageSquare, 
@@ -149,7 +150,8 @@ export default function OverviewPage() {
     <div>
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3 mb-4">
+          <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
           <h1 className="text-4xl font-heading font-bold text-white">
             Overview
           </h1>

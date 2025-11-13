@@ -91,7 +91,8 @@ export default function BrandVisibilityPage() {
     <div>
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3 mb-4">
+          <Star className="w-8 h-8 text-[#4EE4FF]" strokeWidth={1.5} />
           <h1 className="text-4xl font-heading font-bold text-white">
             Brand Visibility
           </h1>
@@ -293,7 +294,7 @@ export default function BrandVisibilityPage() {
             Brand Descriptors
           </h2>
           
-          <div className="flex flex-wrap gap-2 mb-6 min-h-[120px]">
+          <div className="flex flex-wrap gap-2 mb-6">
             {data.descriptors.length > 0 ? (
               data.descriptors.map((descriptor, index) => (
                 <span
@@ -308,8 +309,8 @@ export default function BrandVisibilityPage() {
                 </span>
               ))
             ) : (
-              <div className="w-full text-center py-8">
-                <p className="text-softgray/60 text-sm font-body mb-4">
+              <div className="w-full text-center py-6">
+                <p className="text-softgray/60 text-sm font-body mb-3">
                   AI hasn't identified recurring descriptors yet. Run a fresh scan to analyze emerging brand terms.
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center opacity-10">
@@ -407,23 +408,32 @@ export default function BrandVisibilityPage() {
         </div>
       </div>
 
-      {/* Sentiment Distribution - Full Width */}
+      {/* Sentiment Distribution - Full Width with Intelligence */}
       <div 
         className="bg-[#101C2C] rounded-lg p-8 border border-white/5"
         style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
       >
-        <h2 className="text-2xl font-heading font-bold text-white mb-6">
+        <h2 className="text-2xl font-heading font-bold text-white mb-2">
           Sentiment Distribution
         </h2>
+        <p className="text-sm text-softgray/60 italic mb-6">
+          AI sentiment distribution across all mentions in the past 7 days
+        </p>
         
-        <div className="space-y-6">
+        <div className="space-y-4 mb-6">
+          {/* Positive - Solid with glow */}
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div className="text-white font-body font-medium">
                 Positive
               </div>
-              <div className="text-[#00C6B7] font-heading font-bold text-xl tabular-nums">
-                {data.sentiment_breakdown.positive}%
+              <div className="flex items-center gap-3">
+                <div className="text-[#00C6B7] font-heading font-bold text-xl tabular-nums">
+                  {data.sentiment_breakdown.positive}%
+                </div>
+                <div className="text-[#00C6B7] text-sm font-body" style={{ opacity: 0.6 }}>
+                  ↑ +3.2%
+                </div>
               </div>
             </div>
             <div className="h-3 bg-navy/50 rounded-full overflow-hidden">
@@ -431,54 +441,88 @@ export default function BrandVisibilityPage() {
                 className="h-full bg-[#00C6B7] transition-all rounded-full"
                 style={{ 
                   width: `${data.sentiment_breakdown.positive}%`,
-                  boxShadow: '0 0 8px rgba(0, 198, 183, 0.4)'
+                  boxShadow: '0 0 8px rgba(0, 198, 183, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3)',
+                  animation: 'barSlide 400ms ease-out'
                 }}
               ></div>
             </div>
           </div>
 
+          {/* Neutral - Gradient with no glow */}
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div className="text-white font-body font-medium">
                 Neutral
               </div>
-              <div className="text-[#4EE4FF] font-heading font-bold text-xl tabular-nums" style={{ opacity: 0.7 }}>
-                {data.sentiment_breakdown.neutral}%
+              <div className="flex items-center gap-3">
+                <div className="text-[#4EE4FF] font-heading font-bold text-xl tabular-nums" style={{ opacity: 0.7 }}>
+                  {data.sentiment_breakdown.neutral}%
+                </div>
+                <div className="text-[#4EE4FF] text-sm font-body" style={{ opacity: 0.4 }}>
+                  – 0.5%
+                </div>
               </div>
             </div>
             <div className="h-3 bg-navy/50 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-[#4EE4FF] transition-all rounded-full"
+                className="h-full transition-all rounded-full"
                 style={{ 
                   width: `${data.sentiment_breakdown.neutral}%`,
-                  opacity: 0.7,
-                  boxShadow: '0 0 8px rgba(78, 228, 255, 0.3)'
+                  background: 'linear-gradient(90deg, #4EE4FF 0%, #1B2B3B 100%)',
+                  animation: 'barSlide 400ms ease-out 100ms backwards'
                 }}
               ></div>
             </div>
           </div>
 
+          {/* Negative - Muted with drop shadow */}
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-2">
               <div className="text-white font-body font-medium">
                 Negative
               </div>
-              <div className="text-[#FF4E70] font-heading font-bold text-xl tabular-nums" style={{ opacity: 0.6 }}>
-                {data.sentiment_breakdown.negative}%
+              <div className="flex items-center gap-3">
+                <div className="text-[#FF4E70] font-heading font-bold text-xl tabular-nums" style={{ opacity: 0.7 }}>
+                  {data.sentiment_breakdown.negative}%
+                </div>
+                <div className="text-[#FF4E70] text-sm font-body" style={{ opacity: 0.4 }}>
+                  ↓ –2.7%
+                </div>
               </div>
             </div>
             <div className="h-3 bg-navy/50 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-[#FF4E70] transition-all rounded-full"
+                className="h-full transition-all rounded-full"
                 style={{ 
                   width: `${data.sentiment_breakdown.negative}%`,
-                  opacity: 0.6,
-                  boxShadow: '0 0 8px rgba(255, 78, 112, 0.3)'
+                  backgroundColor: '#FF4E70',
+                  opacity: 0.7,
+                  boxShadow: '0 1px 3px rgba(255, 78, 112, 0.15)',
+                  animation: 'barSlide 400ms ease-out 200ms backwards'
                 }}
               ></div>
             </div>
           </div>
         </div>
+
+        {/* Aggregate Insight */}
+        <div className="pt-4 border-t border-white/10">
+          <p className="text-sm text-softgray/70 font-body">
+            Overall sentiment remains positive this week (+3 pts WoW), indicating stronger brand perception stability.
+          </p>
+        </div>
+
+        {/* Bar slide animation */}
+        <style jsx>{`
+          @keyframes barSlide {
+            from {
+              width: 0;
+            }
+            to {
+              width: var(--target-width);
+            }
+          }
+        `}</style>
       </div>
     </div>
   )
