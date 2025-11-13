@@ -162,7 +162,7 @@ export default function BrandVisibilityPage() {
                     key={index}
                     className={`px-3 py-1.5 rounded-full text-sm font-body font-medium sentiment-${descriptor.sentiment}`}
                   >
-                    {descriptor.descriptor || descriptor.word}
+                    {descriptor.word}
                   </span>
                 ))
               ) : (
