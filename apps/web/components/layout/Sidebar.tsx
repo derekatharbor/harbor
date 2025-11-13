@@ -1,3 +1,5 @@
+// apps/web/components/layout/Sidebar.tsx
+
 'use client'
 
 import Link from 'next/link'
@@ -9,18 +11,22 @@ import {
   Globe, 
   TrendingUp,
   Settings,
-  LogOut
+  LogOut,
+  Star
 } from 'lucide-react'
 
-const navigation = [
+const favorites = [
   { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
+]
+
+const intelligence = [
   { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
   { name: 'Brand Visibility', href: '/dashboard/brand', icon: TrendingUp },
   { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
   { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
 ]
 
-const bottomNav = [
+const control = [
   { name: 'Control Center', href: '/dashboard/settings', icon: Settings },
 ]
 
@@ -29,23 +35,24 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar-container w-60 bg-navy flex flex-col">
-      {/* Header */}
+      {/* Header - Static, Grounded */}
       <div className="p-6 border-b border-white/10">
-        <h1 className="text-xl font-heading font-bold text-white">
+        <h1 className="text-xl font-heading font-bold text-white tracking-wide">
           Harbor
         </h1>
-        <p className="text-sm text-softgray/60 mt-1 font-body">
+        <p className="text-xs text-softgray/50 mt-1 font-body uppercase tracking-wider">
           Intelligence Platform
         </p>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
-        <div className="text-xs uppercase text-softgray/40 font-body font-medium mb-3 px-3">
-          Intelligence
+      {/* Navigation - Fixed, Non-scrolling */}
+      <nav className="flex-1 overflow-hidden">
+        {/* Favorites Section */}
+        <div className="sidebar-section-header">
+          Favorites
         </div>
         
-        {navigation.map((item) => {
+        {favorites.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href
           
@@ -55,16 +62,41 @@ export default function Sidebar() {
               href={item.href}
               className={`nav-item ${isActive ? 'active' : ''}`}
             >
-              <Icon className="nav-icon" />
+              <Icon className="nav-icon" strokeWidth={1.5} />
+              <span className="text-sm font-body">{item.name}</span>
+            </Link>
+          )
+        })}
+
+        {/* Intelligence Section */}
+        <div className="sidebar-section-header">
+          Intelligence
+        </div>
+        
+        {intelligence.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+          
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`nav-item ${isActive ? 'active' : ''}`}
+            >
+              <Icon className="nav-icon" strokeWidth={1.5} />
               <span className="text-sm font-body">{item.name}</span>
             </Link>
           )
         })}
       </nav>
 
-      {/* Bottom Navigation */}
-      <div className="p-4 border-t border-white/10 space-y-1">
-        {bottomNav.map((item) => {
+      {/* Control Section - Bottom */}
+      <div className="p-4 border-t border-white/10">
+        <div className="sidebar-section-header" style={{ marginTop: 0, paddingTop: 0 }}>
+          Control
+        </div>
+        
+        {control.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href
           
@@ -74,7 +106,7 @@ export default function Sidebar() {
               href={item.href}
               className={`nav-item ${isActive ? 'active' : ''}`}
             >
-              <Icon className="nav-icon" />
+              <Icon className="nav-icon" strokeWidth={1.5} />
               <span className="text-sm font-body">{item.name}</span>
             </Link>
           )
@@ -87,7 +119,7 @@ export default function Sidebar() {
             console.log('Logout clicked')
           }}
         >
-          <LogOut className="nav-icon" />
+          <LogOut className="nav-icon" strokeWidth={1.5} />
           <span className="text-sm font-body">Logout</span>
         </button>
       </div>

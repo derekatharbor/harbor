@@ -135,24 +135,22 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Hero Card - Overall Visibility Score */}
-      <div className="card-L2 p-8 mb-8 relative overflow-hidden" style={{ minHeight: '200px' }}>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
-        
+      {/* Hero Card - Overall Visibility Score - NO HOVER */}
+      <div className="card-L2 p-8 mb-10 relative overflow-hidden" style={{ minHeight: '200px' }}>
         <div className="relative">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-2 mb-4">
             <Activity className="w-5 h-5 text-accent" strokeWidth={1.5} />
-            <h2 className="text-base font-heading font-semibold text-white uppercase tracking-wide text-softgray/60">
+            <h2 className="text-sm font-heading font-semibold text-softgray/60 uppercase tracking-wider">
               Overall Visibility
             </h2>
           </div>
           
-          <div className="flex items-baseline gap-4 mb-2">
+          <div className="flex items-baseline gap-4 mb-3">
             <div className="text-7xl font-heading font-bold text-white tabular-nums">
               {scanData.overall_score}
               <span className="text-3xl text-softgray/40 ml-1">%</span>
             </div>
-            <div className="delta-positive text-2xl font-heading" style={{ textShadow: '0 0 8px rgba(var(--pageAccent-rgb), 0.5)' }}>
+            <div className="delta-positive text-2xl font-heading tabular-nums">
               +2.3%
             </div>
           </div>
@@ -163,8 +161,8 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      {/* Quick Stats Row - NO HOVER */}
+      <div className="grid grid-cols-3 gap-6 mb-10">
         <div className="card-L2 p-6">
           <div className="flex items-center gap-2 mb-2 text-softgray/60">
             <TrendingUp className="w-4 h-4" strokeWidth={1.5} />
@@ -212,18 +210,19 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Module Cards Grid */}
+      {/* Module Cards Grid - INTERACTIVE */}
       <div className="grid grid-cols-2 gap-6">
         {modules.map((module, index) => (
           <Link 
             key={module.name} 
             href={module.href}
-            className="card-L2 p-6 hover:card-L3 cursor-pointer group transition-all"
+            className="card-L2 p-6 cursor-pointer group transition-all duration-100"
             style={{ animationDelay: `${(index + 4) * 100}ms` }}
+            data-interactive="true"
           >
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start justify-between mb-5">
               <div>
-                <h3 className="text-lg font-heading font-semibold text-white group-hover:text-accent transition-colors mb-1">
+                <h3 className="text-lg font-heading font-semibold text-white group-hover:text-accent transition-colors mb-2">
                   {module.name}
                 </h3>
                 <p className="text-sm text-softgray/60 font-body">
@@ -239,7 +238,7 @@ export default function OverviewPage() {
             </div>
 
             {/* Progress Bar */}
-            <div className="progress-bar mb-3">
+            <div className="progress-bar mb-4">
               <div 
                 className="progress-bar-fill"
                 style={{ width: `${module.score}%` }}

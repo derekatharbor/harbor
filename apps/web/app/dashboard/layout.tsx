@@ -17,15 +17,15 @@ export default function DashboardLayout({
     if (path === '/dashboard/brand') return 'brand'
     if (path === '/dashboard/conversations') return 'conversations'
     if (path === '/dashboard/website') return 'website'
-    return 'overview' // fallback
+    return 'overview'
   }
 
   const pageName = getPageName(pathname)
 
   return (
-    <div className="flex min-h-screen bg-navy" data-page={pageName}>
+    <div className="min-h-screen bg-navy" data-page={pageName}>
       <Sidebar />
-      <main className="flex-1 page-container">
+      <main className="page-container">
         <div className="max-w-7xl mx-auto px-8 py-8">
           {children}
         </div>

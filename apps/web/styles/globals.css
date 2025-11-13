@@ -5,37 +5,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
 /* ========================================
-   HARBOR MULTI-ACCENT SYSTEM
+   HARBOR MULTI-ACCENT SYSTEM (CORRECTED)
+   Grounded Intelligence - No Cyber Glow
    ======================================== */
 
 :root {
-  --pageAccent: #2979FF;
-  --pageAccent-rgb: 41, 121, 255;
+  --pageAccent: #2165CC;  /* Damped 25% from #2979FF */
+  --pageAccent-rgb: 33, 101, 204;
 }
 
 [data-page="overview"] {
-  --pageAccent: #2979FF;
-  --pageAccent-rgb: 41, 121, 255;
+  --pageAccent: #2165CC;  /* Cerulean damped */
+  --pageAccent-rgb: 33, 101, 204;
 }
 
 [data-page="shopping"] {
-  --pageAccent: #00C6B7;
-  --pageAccent-rgb: 0, 198, 183;
+  --pageAccent: #009E92;  /* Aqua damped */
+  --pageAccent-rgb: 0, 158, 146;
 }
 
 [data-page="brand"] {
-  --pageAccent: #4EE4FF;
-  --pageAccent-rgb: 78, 228, 255;
+  --pageAccent: #3BB8CC;  /* Periwinkle damped */
+  --pageAccent-rgb: 59, 184, 204;
 }
 
 [data-page="conversations"] {
-  --pageAccent: #5A5AFF;
-  --pageAccent-rgb: 90, 90, 255;
+  --pageAccent: #4848CC;  /* Indigo damped */
+  --pageAccent-rgb: 72, 72, 204;
 }
 
 [data-page="website"] {
-  --pageAccent: #2EE6D6;
-  --pageAccent-rgb: 46, 230, 214;
+  --pageAccent: #24B8AB;  /* Cyan-Teal damped */
+  --pageAccent-rgb: 36, 184, 171;
 }
 
 @layer base {
@@ -47,26 +48,116 @@
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading text-white;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.3px;  /* Breathing room */
   }
 }
 
 @layer components {
-  /* Card styles */
+  /* ========================================
+     SIDEBAR (FIXED, GROUNDED)
+     ======================================== */
+
+  .sidebar-container {
+    position: fixed;
+    height: 100vh;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0B1521;  /* Matte navy, no gradient */
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0;
+    transition: all 100ms ease;
+    cursor: pointer;
+    color: rgba(244, 246, 248, 0.7);
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.03);  /* Subtle, no accent */
+    color: rgba(244, 246, 248, 0.95);
+  }
+
+  .nav-item.active {
+    color: var(--pageAccent);
+    border-left: 2px solid var(--pageAccent);
+    background: transparent;  /* No fill, just border */
+    padding-left: calc(1rem - 2px);
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .sidebar-section-header {
+    color: rgba(255, 255, 255, 0.4);  /* Lighter hierarchy */
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ========================================
+     CARD STYLES (NO HOVER ON DATA CARDS)
+     ======================================== */
+
   .harbor-card {
     @apply bg-navy-light rounded-card-lg p-6 shadow-card;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    transition: all 200ms ease;
+    transition: none;  /* Static cards don't react */
   }
 
-  .harbor-card:hover {
-    box-shadow: inset 0 0 20px rgba(0, 198, 183, 0.15);
+  /* Only interactive cards respond */
+  .harbor-card[data-interactive="true"]:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    cursor: pointer;
   }
 
-  /* Button styles */
+  /* Standard card depth */
+  .card-L2 {
+    background: #101C2C;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Hover depth (interactive only) */
+  .card-L3 {
+    background: #141E38;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ========================================
+     PAGE LAYOUT
+     ======================================== */
+
+  .page-container {
+    background: #0B1521;  /* Flat navy, no gradient */
+    min-height: 100vh;
+    margin-left: 240px;  /* Sidebar width */
+  }
+
+  /* Header with simple accent line (no glow) */
+  .page-header {
+    border-top: 1px solid var(--pageAccent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: border-color 200ms ease;
+  }
+
+  /* ========================================
+     BUTTONS
+     ======================================== */
+
   .btn-primary {
     @apply bg-teal text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply transition-all duration-200 hover:brightness-110 cursor-pointer;
+    @apply transition-all duration-150 hover:brightness-110 cursor-pointer;
   }
 
   .btn-primary:focus {
@@ -76,7 +167,7 @@
 
   .btn-secondary {
     @apply bg-transparent text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply border border-white transition-all duration-200 hover:bg-white hover:bg-opacity-5 cursor-pointer;
+    @apply border border-white transition-all duration-150 hover:bg-white hover:bg-opacity-5 cursor-pointer;
   }
 
   .btn-primary:disabled,
@@ -84,14 +175,20 @@
     @apply opacity-30 cursor-not-allowed;
   }
 
-  /* Input styles */
+  /* ========================================
+     INPUT STYLES
+     ======================================== */
+
   .harbor-input {
     @apply bg-navy-light text-white placeholder-softgray placeholder-opacity-60;
     @apply rounded-lg px-4 py-2 border border-white border-opacity-10;
     @apply focus:outline-none focus:ring-1 focus:ring-teal;
   }
 
-  /* Table styles */
+  /* ========================================
+     TABLE STYLES
+     ======================================== */
+
   .harbor-table {
     @apply w-full;
   }
@@ -105,85 +202,25 @@
   }
 
   .harbor-table tbody tr:hover {
-    background-color: rgba(0, 198, 183, 0.08);
+    background-color: rgba(255, 255, 255, 0.02);  /* Subtle */
   }
 
   .harbor-table tbody tr:nth-child(even) {
-    @apply bg-white bg-opacity-[0.02];
+    @apply bg-white bg-opacity-[0.01];
   }
 
   /* ========================================
-     MULTI-ACCENT SYSTEM COMPONENTS
+     DELTAS (SUBTLE TEXT GLOW)
      ======================================== */
 
-  /* Ambient gradient background */
-  .page-container {
-    background: radial-gradient(
-      circle at 50% 10%,
-      rgba(var(--pageAccent-rgb), 0.05) 0%,
-      rgba(11, 21, 33, 1) 100%
-    );
-    transition: background 200ms ease-in-out;
-    min-height: 100vh;
-  }
-
-  /* Page header with accent line */
-  .page-header {
-    border-top: 2px solid var(--pageAccent);
-    box-shadow: 0 0 12px rgba(var(--pageAccent-rgb), 0.15);
-    transition: all 200ms ease-in-out;
-  }
-
-  /* Sidebar navigation */
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.625rem 0.75rem;
-    border-radius: 0.5rem;
-    transition: all 150ms ease-in-out;
-    cursor: pointer;
-    position: relative;
-    color: rgba(244, 246, 248, 0.7);
-  }
-
-  .nav-item:hover {
-    background: rgba(var(--pageAccent-rgb), 0.08);
-    color: rgba(244, 246, 248, 0.95);
-  }
-
-  .nav-item.active {
-    color: var(--pageAccent);
-    border-left: 2px solid var(--pageAccent);
-    background: rgba(var(--pageAccent-rgb), 0.05);
-    padding-left: 0.625rem;
-  }
-
-  .nav-item.active .nav-icon {
-    filter: drop-shadow(0 0 6px rgba(var(--pageAccent-rgb), 0.4));
-    transition: all 300ms ease;
-  }
-
-  .nav-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: filter 300ms ease;
-  }
-
-  .sidebar-container {
-    border-right: 1px solid rgba(var(--pageAccent-rgb), 0.15);
-    transition: border-color 200ms ease-in-out;
-  }
-
-  /* Delta metrics */
   .delta-positive {
     color: var(--pageAccent);
     font-weight: 500;
-    transition: color 200ms ease-in-out;
+    text-shadow: 0 0 6px rgba(var(--pageAccent-rgb), 0.3);  /* Subtle */
   }
 
   .delta-negative {
-    color: #FF4E70;
+    color: #CC3E5C;  /* Damped coral */
     font-weight: 500;
   }
 
@@ -192,48 +229,34 @@
     font-weight: 500;
   }
 
-  /* Sentiment colors (Brand module) */
+  /* ========================================
+     SENTIMENT COLORS
+     ======================================== */
+
   .sentiment-pos {
-    background: rgba(0, 198, 183, 0.15);
-    color: #00C6B7;
-    border: 1px solid rgba(0, 198, 183, 0.3);
+    background: rgba(0, 158, 146, 0.12);  /* Damped */
+    color: #009E92;
+    border: 1px solid rgba(0, 158, 146, 0.25);
   }
 
   .sentiment-neu {
-    background: rgba(78, 228, 255, 0.15);
-    color: #4EE4FF;
-    border: 1px solid rgba(78, 228, 255, 0.3);
+    background: rgba(59, 184, 204, 0.12);
+    color: #3BB8CC;
+    border: 1px solid rgba(59, 184, 204, 0.25);
   }
 
   .sentiment-neg {
-    background: rgba(255, 78, 112, 0.15);
-    color: #FF4E70;
-    border: 1px solid rgba(255, 78, 112, 0.3);
+    background: rgba(204, 62, 92, 0.12);
+    color: #CC3E5C;
+    border: 1px solid rgba(204, 62, 92, 0.25);
   }
 
-  /* Depth levels */
-  .card-L2 {
-    background: #101C2C;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-    border-radius: 0.75rem;
-    transition: all 200ms ease-in-out;
-  }
+  /* ========================================
+     PROGRESS BARS (NO GLOW)
+     ======================================== */
 
-  .card-L3,
-  .card-L2:hover {
-    background: #141E38;
-    box-shadow: inset 0 0 20px rgba(var(--pageAccent-rgb), 0.1);
-  }
-
-  .card-L4,
-  .card-active {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(var(--pageAccent-rgb), 0.15);
-  }
-
-  /* Progress bars */
   .progress-bar {
-    background: rgba(var(--pageAccent-rgb), 0.2);
+    background: rgba(var(--pageAccent-rgb), 0.15);
     border-radius: 9999px;
     overflow: hidden;
     height: 8px;
@@ -243,10 +266,13 @@
     background: var(--pageAccent);
     height: 100%;
     transition: width 400ms ease-out;
-    box-shadow: 0 0 8px rgba(var(--pageAccent-rgb), 0.4);
+    box-shadow: none;  /* Remove glow */
   }
 
-  /* Accent utilities */
+  /* ========================================
+     ACCENT UTILITIES
+     ======================================== */
+
   .text-accent {
     color: var(--pageAccent);
   }
@@ -261,23 +287,26 @@
 }
 
 @layer utilities {
-  /* Animation utilities */
+  /* ========================================
+     ANIMATIONS (CALM, NO JITTER)
+     ======================================== */
+
   .animate-pulse-slow {
-    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   .animate-in {
-    animation: fadeIn 350ms ease-out;
+    animation: fadeIn 250ms ease-out;
   }
 
   .fade-in {
-    animation: fadeIn 350ms ease-out;
+    animation: fadeIn 250ms ease-out;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(8px);  /* Reduced from 20px */
     }
     to {
       opacity: 1;
@@ -312,33 +341,20 @@
   }
 
   .transition-harbor {
-    transition: all 150ms ease;
-  }
-
-  /* Border utilities */
-  .border-harbor {
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-
-  /* Text truncation */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    transition: all 100ms ease;  /* Reduced from 150ms */
   }
 
   /* ========================================
-     MULTI-ACCENT ANIMATIONS
+     STAGGER ANIMATIONS
      ======================================== */
 
   .card-fade-in {
-    animation: fadeInUp 350ms ease-out forwards;
+    animation: fadeInUp 250ms ease-out forwards;
     opacity: 0;
   }
 
   .stagger-children > * {
-    animation: fadeInUp 350ms ease-out forwards;
+    animation: fadeInUp 250ms ease-out forwards;
     opacity: 0;
   }
 
@@ -351,14 +367,18 @@
   .stagger-children > *:nth-child(7) { animation-delay: 600ms; }
   .stagger-children > *:nth-child(8) { animation-delay: 700ms; }
 
-  @keyframes pulse-accent {
-    0%, 100% {
-      opacity: 1;
-      box-shadow: 0 0 0 0 rgba(var(--pageAccent-rgb), 0.7);
-    }
-    50% {
-      opacity: 0.6;
-      box-shadow: 0 0 0 4px rgba(var(--pageAccent-rgb), 0);
-    }
+  /* ========================================
+     UTILITIES
+     ======================================== */
+
+  .border-harbor {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
