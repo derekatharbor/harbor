@@ -1,10 +1,13 @@
 // app/api/scan/latest/route.ts
+// Returns the latest scan data for the current user's dashboard
+
+export const runtime = 'nodejs'
 
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const supabase = createRouteHandlerClient({ cookies })
     
@@ -22,7 +25,7 @@ export async function GET(request: Request) {
       .single()
 
     if (!userRole?.org_id) {
-      return NextResponse.json({ error: 'No organization found' }, { status: 404 })
+      return NextResponse.json({ hasScans: false })
     }
 
     const { data: dashboard } = await supabase
@@ -32,28 +35,25 @@ export async function GET(request: Request) {
       .single()
 
     if (!dashboard) {
-      return NextResponse.json({ error: 'No dashboard found' }, { status: 404 })
+      return NextResponse.json({ hasScans: false })
     }
 
     // Get latest completed scan
     const { data: scan } = await supabase
       .from('scans')
-      .select('id, status, started_at, finished_at')
+      .select('id, status, started_at, finished_at, type')
       .eq('dashboard_id', dashboard.id)
       .in('status', ['done', 'partial'])
-      .order('started_at', { ascending: false })
+      .order('finished_at', { ascending: false })
       .limit(1)
       .single()
 
     if (!scan) {
-      return NextResponse.json({ 
-        hasScans: false,
-        message: 'No completed scans found' 
-      })
+      return NextResponse.json({ hasScans: false })
     }
 
-    // Fetch all results for this scan
-    const [shoppingResults, brandResults, conversationsResults, siteResults] = await Promise.all([
+    // Get all results for this scan
+    const [shoppingResults, brandResults, conversationResults, siteResults] = await Promise.all([
       supabase
         .from('results_shopping')
         .select('*')
@@ -72,8 +72,15 @@ export async function GET(request: Request) {
       supabase
         .from('results_site')
         .select('*')
-        .eq('scan_id', scan.id)
+        .eq('scan_id', scan.id),
     ])
+
+    // Get visibility scores if they exist
+    const { data: scores } = await supabase
+      .from('visibility_scores')
+      .select('*')
+      .eq('scan_id', scan.id)
+      .single()
 
     return NextResponse.json({
       hasScans: true,
@@ -81,18 +88,27 @@ export async function GET(request: Request) {
         id: scan.id,
         status: scan.status,
         startedAt: scan.started_at,
-        finishedAt: scan.finished_at
+        finishedAt: scan.finished_at,
+        type: scan.type,
+      },
+      dashboard: {
+        id: dashboard.id,
+        brandName: dashboard.brand_name,
       },
       results: {
         shopping: shoppingResults.data || [],
         brand: brandResults.data || [],
-        conversations: conversationsResults.data || [],
-        site: siteResults.data || []
-      }
+        conversations: conversationResults.data || [],
+        site: siteResults.data || [],
+      },
+      scores: scores || null,
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Latest scan fetch error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch scan data' },
+      { status: 500 }
+    )
   }
 }
