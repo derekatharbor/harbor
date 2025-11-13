@@ -31,8 +31,8 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-navy" data-page={pageName}>
       <Sidebar />
-      <main className="ml-60 min-h-screen">
-        <div className="max-w-7xl mx-auto px-8 py-8">
+      <main className="ml-60 min-h-screen pt-8">
+        <div className="max-w-7xl mx-auto px-8">
           {children}
         </div>
       </main>
