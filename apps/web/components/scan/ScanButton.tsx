@@ -192,17 +192,17 @@ export default function ScanButton({ onScanStart, className = '' }: ScanButtonPr
 
   // READY TO SCAN
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={`flex flex-col gap-2 items-end ${className}`}>
       <button
         onClick={handleScan}
-        className="flex items-center gap-2 px-4 py-2.5 bg-[var(--pageAccent)]/5 hover:bg-[var(--pageAccent)] rounded-lg transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-[var(--pageAccent)]/30"
+        className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--pageAccent)]/5 hover:bg-[var(--pageAccent)] rounded-lg transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-[var(--pageAccent)]/30"
       >
         <Zap className="w-4 h-4 text-[var(--pageAccent)] group-hover:text-white group-hover:scale-110 transition-all" strokeWidth={2} />
         <span className="text-sm font-body font-medium text-[var(--pageAccent)] group-hover:text-white transition-colors">
           Run Fresh Scan
         </span>
       </button>
-      <div className="text-xs text-softgray/60 font-body">
+      <div className="text-xs text-softgray/60 font-body text-right">
         {status.scansRemaining} of {status.totalScans} scans remaining this month
       </div>
     </div>

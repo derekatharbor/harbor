@@ -58,8 +58,8 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
   useEffect(() => {
     if (!isOpen || !scanId) return
 
-    // Poll for actual scan status
-    const pollInterval = setInterval(async () => {
+    // Fetch immediately on mount
+    const fetchStatus = async () => {
       try {
         const response = await fetch(`/api/scan/status/${scanId}`)
         const data: ScanStatusResponse = await response.json()
@@ -70,15 +70,28 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
 
         if (data.status === 'done') {
           setIsComplete(true)
-          clearInterval(pollInterval)
+          return true // Stop polling
         } else if (data.status === 'failed') {
           setHasFailed(true)
-          clearInterval(pollInterval)
+          return true // Stop polling
         }
+        return false
       } catch (error) {
         console.error('Failed to fetch scan status:', error)
+        return false
       }
-    }, 2000) // Poll every 2 seconds
+    }
+
+    // Initial fetch
+    fetchStatus()
+
+    // Then poll every 2 seconds
+    const pollInterval = setInterval(async () => {
+      const shouldStop = await fetchStatus()
+      if (shouldStop) {
+        clearInterval(pollInterval)
+      }
+    }, 2000)
 
     return () => clearInterval(pollInterval)
   }, [isOpen, scanId])
@@ -137,7 +150,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-body text-white">{currentMessage}</span>
             <span className="text-sm font-body font-bold text-[var(--pageAccent)] tabular-nums">
-              {progress}%
+              {Math.round(progress)}%
             </span>
           </div>
           <div className="h-2 bg-white/5 rounded-full overflow-hidden">
