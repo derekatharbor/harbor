@@ -167,16 +167,16 @@ export default function OverviewPage() {
           
           {/* Time Filter Pills */}
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
               Last 24 hours
             </button>
-            <button className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg">
+            <button className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg cursor-pointer">
               Last 7 days
             </button>
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
               Last 30 days
             </button>
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
               Custom range
             </button>
           </div>
@@ -274,7 +274,7 @@ export default function OverviewPage() {
               <div className="text-softgray/40 text-sm">Chart visualization</div>
             </div>
             
-            <button className="mt-4 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm border border-blue-600/30 hover:bg-blue-600/30 transition-colors">
+            <button className="mt-4 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm border border-blue-600/30 hover:bg-blue-600/30 transition-colors cursor-pointer">
               Compare to Industry
             </button>
           </div>
@@ -365,7 +365,7 @@ export default function OverviewPage() {
                   {action.description}
                 </p>
                 
-                <button className="text-blue-400 text-sm hover:underline">
+                <button className="text-blue-400 text-sm hover:underline cursor-pointer">
                   {action.link} →
                 </button>
               </div>

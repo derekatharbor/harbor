@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 
 export default function DashboardLayout({
@@ -9,6 +10,11 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   
   // Map routes to page names for accent system
   const getPageName = (path: string): string => {
@@ -25,7 +31,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-navy" data-page={pageName}>
       <Sidebar />
-      <main className="page-container">
+      <main className="ml-60 min-h-screen">
         <div className="max-w-7xl mx-auto px-8 py-8">
           {children}
         </div>
