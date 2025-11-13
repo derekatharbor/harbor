@@ -102,7 +102,9 @@ export default function ShoppingVisibilityPage() {
       .shopping-clickable:hover { cursor: pointer !important; }
     `
     document.head.appendChild(style)
-    return () => document.head.removeChild(style)
+    return () => {
+      document.head.removeChild(style)
+    }
   }, [])
 
   const formatDate = (dateString: string | null) => {
