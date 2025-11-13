@@ -5,123 +5,132 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
-  LayoutDashboard, 
+  Home,
   ShoppingBag, 
+  Star,
   MessageSquare, 
-  Globe, 
-  TrendingUp,
+  Globe,
   Settings,
-  LogOut,
-  Star
+  FileText,
+  Video,
+  BookOpen
 } from 'lucide-react'
-
-const favorites = [
-  { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
-]
-
-const intelligence = [
-  { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
-  { name: 'Brand Visibility', href: '/dashboard/brand', icon: TrendingUp },
-  { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
-  { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
-]
-
-const control = [
-  { name: 'Control Center', href: '/dashboard/settings', icon: Settings },
-]
 
 export default function Sidebar() {
   const pathname = usePathname()
 
+  const favorites = [
+    { name: 'Quick Start Guide', href: '/dashboard/guide', icon: FileText },
+    { name: 'Video Tutorials', href: '/dashboard/tutorials', icon: Video },
+    { name: 'Documentation', href: '/dashboard/docs', icon: BookOpen },
+  ]
+
+  const intelligence = [
+    { name: 'Overview', href: '/dashboard/overview', icon: Home },
+    { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
+    { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
+    { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
+    { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
+  ]
+
   return (
-    <aside className="sidebar-container w-60 bg-navy flex flex-col">
-      {/* Header - Static, Grounded */}
-      <div className="p-6 border-b border-white/10">
-        <h1 className="text-xl font-heading font-bold text-white tracking-wide">
-          Harbor
-        </h1>
-        <p className="text-xs text-softgray/50 mt-1 font-body uppercase tracking-wider">
-          Intelligence Platform
-        </p>
+    <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0B1521] border-r border-white/5 flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="p-6 border-b border-white/5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center">
+            <span className="text-white font-heading font-bold text-xl">H</span>
+          </div>
+          <div>
+            <h1 className="text-lg font-heading font-bold text-white">
+              Harbor
+            </h1>
+            <p className="text-xs text-softgray/50">
+              Demo Brand
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Navigation - Fixed, Non-scrolling */}
+      {/* Navigation */}
       <nav className="flex-1 overflow-hidden">
         {/* Favorites Section */}
-        <div className="sidebar-section-header">
-          Favorites
-        </div>
-        
-        {favorites.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
+        <div className="px-4 pt-6 pb-3">
+          <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+            Favorites
+          </div>
           
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`nav-item ${isActive ? 'active' : ''}`}
-            >
-              <Icon className="nav-icon" strokeWidth={1.5} />
-              <span className="text-sm font-body">{item.name}</span>
-            </Link>
-          )
-        })}
+          {favorites.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
+                  transition-colors cursor-pointer
+                  ${isActive 
+                    ? 'text-white border-l-2 border-coral pl-[10px]' 
+                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                  }
+                `}
+              >
+                <Icon className="w-5 h-5" strokeWidth={1.5} />
+                <span className="text-sm font-body">{item.name}</span>
+              </Link>
+            )
+          })}
+        </div>
 
         {/* Intelligence Section */}
-        <div className="sidebar-section-header">
-          Intelligence
-        </div>
-        
-        {intelligence.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
+        <div className="px-4 py-3">
+          <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+            Intelligence
+          </div>
           
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`nav-item ${isActive ? 'active' : ''}`}
-            >
-              <Icon className="nav-icon" strokeWidth={1.5} />
-              <span className="text-sm font-body">{item.name}</span>
-            </Link>
-          )
-        })}
+          {intelligence.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
+                  transition-colors cursor-pointer
+                  ${isActive 
+                    ? 'text-white border-l-2 border-coral pl-[10px]' 
+                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                  }
+                `}
+              >
+                <Icon className="w-5 h-5" strokeWidth={1.5} />
+                <span className="text-sm font-body">{item.name}</span>
+              </Link>
+            )
+          })}
+        </div>
       </nav>
 
-      {/* Control Section - Bottom */}
-      <div className="p-4 border-t border-white/10">
-        <div className="sidebar-section-header" style={{ marginTop: 0, paddingTop: 0 }}>
-          Control
-        </div>
-        
-        {control.map((item) => {
-          const Icon = item.icon
-          const isActive = pathname === item.href
-          
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`nav-item ${isActive ? 'active' : ''}`}
-            >
-              <Icon className="nav-icon" strokeWidth={1.5} />
-              <span className="text-sm font-body">{item.name}</span>
-            </Link>
-          )
-        })}
-        
-        <button
-          className="nav-item w-full"
-          onClick={() => {
-            // Add logout logic here
-            console.log('Logout clicked')
-          }}
+      {/* Control Center - Bottom */}
+      <div className="p-4 border-t border-white/5">
+        <Link
+          href="/dashboard/settings"
+          className={`
+            flex items-center gap-3 px-3 py-2.5 rounded-lg
+            transition-colors cursor-pointer
+            ${pathname === '/dashboard/settings'
+              ? 'text-white border-l-2 border-coral pl-[10px]'
+              : 'text-softgray/60 hover:text-white hover:bg-white/5'
+            }
+          `}
         >
-          <LogOut className="nav-icon" strokeWidth={1.5} />
-          <span className="text-sm font-body">Logout</span>
-        </button>
+          <Settings className="w-5 h-5" strokeWidth={1.5} />
+          <span className="text-sm font-body">Control Center</span>
+        </Link>
       </div>
     </aside>
   )

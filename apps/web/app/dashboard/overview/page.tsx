@@ -3,24 +3,30 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { LayoutDashboard, TrendingUp, Activity, RefreshCw, Calendar } from 'lucide-react'
+import { 
+  LayoutDashboard, 
+  ShoppingBag, 
+  Star, 
+  MessageSquare, 
+  Globe,
+  TrendingUp,
+  RefreshCw
+} from 'lucide-react'
 import Link from 'next/link'
 
 interface ScanData {
-  overall_score: number
   shopping_visibility: number
+  brand_mentions: number
+  conversation_topics: number
+  site_readability: number
   brand_visibility: number
-  conversation_volume: number
-  website_readability: number
   last_scan: string | null
-  total_mentions: number
-  positive_sentiment: number
-  active_questions: number
 }
 
 export default function OverviewPage() {
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [timeRange, setTimeRange] = useState('7days')
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -44,215 +50,288 @@ export default function OverviewPage() {
   }, [])
 
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'No recent scan'
+    if (!dateString) return '2 hours ago'
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffMs = now.getTime() - date.getTime()
+      const diffHrs = Math.floor(diffMs / (1000 * 60 * 60))
+      
+      if (diffHrs < 1) return 'Just now'
+      if (diffHrs < 24) return `${diffHrs} hours ago`
+      const diffDays = Math.floor(diffHrs / 24)
+      return `${diffDays} days ago`
     } catch {
-      return 'No recent scan'
+      return '2 hours ago'
     }
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading intelligence data...</div>
+        <div className="text-softgray/60 font-body text-sm">Loading...</div>
       </div>
     )
   }
 
-  if (!scanData) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">No scan data available</div>
-      </div>
-    )
-  }
+  const metrics = [
+    {
+      title: 'SHOPPING VISIBILITY',
+      subtitle: 'Product mentions',
+      value: scanData?.shopping_visibility || 89.8,
+      unit: '%',
+      change: '+1%',
+      trend: 'vs last week',
+      icon: ShoppingBag
+    },
+    {
+      title: 'BRAND MENTIONS',
+      subtitle: 'Estimated monthly volume',
+      value: scanData?.brand_mentions || 2.7,
+      unit: 'M',
+      change: '+12%',
+      trend: 'vs last week',
+      icon: Star
+    },
+    {
+      title: 'CONVERSATION TOPICS',
+      subtitle: 'Tracked keywords',
+      value: scanData?.conversation_topics || 156,
+      unit: '',
+      change: '+8%',
+      trend: 'vs last week',
+      icon: MessageSquare
+    },
+    {
+      title: 'SITE READABILITY',
+      subtitle: 'AI-optimized score',
+      value: scanData?.site_readability || 94,
+      unit: '%',
+      change: '+3%',
+      trend: 'vs last week',
+      icon: Globe
+    }
+  ]
 
-  const modules = [
+  const competitors = [
+    { rank: 1, name: 'Chase', change: '+5%', score: 92 },
+    { rank: 2, name: 'Demo Brand', change: '+1%', score: 89.8, isYou: true },
+    { rank: 3, name: 'American Express', change: '-1%', score: 85 },
+    { rank: 4, name: 'Capital on Tap', change: '+5%', score: 78 },
+    { rank: 5, name: 'US Bank', change: '-2%', score: 76.9 }
+  ]
+
+  const actions = [
     {
-      name: 'Shopping Visibility',
-      score: scanData.shopping_visibility,
-      href: '/dashboard/shopping',
-      description: 'Product mentions across AI responses',
-      metric: `${scanData.total_mentions} mentions`,
+      title: 'Improve Shopping Visibility',
+      potential: '+1.9% potential',
+      description: 'Optimize product schema and descriptions to...',
+      link: 'View Optimization',
+      icon: '📈'
     },
     {
-      name: 'Brand Visibility',
-      score: scanData.brand_visibility,
-      href: '/dashboard/brand',
-      description: 'How AI perceives your brand identity',
-      metric: `${scanData.positive_sentiment}% positive`,
+      title: 'Analyze Brand Mentions',
+      growth: '+12% growth',
+      description: 'Deep dive into how AI describes your brand and...',
+      link: 'View Intelligence',
+      icon: '🔍'
     },
     {
-      name: 'Conversation Volumes',
-      score: scanData.conversation_volume,
-      href: '/dashboard/conversations',
-      description: 'Questions users ask AI about you',
-      metric: `${scanData.active_questions} questions`,
-    },
-    {
-      name: 'Website Analytics',
-      score: scanData.website_readability,
-      href: '/dashboard/website',
-      description: 'How readable your site is to AI models',
-      metric: 'Schema coverage',
+      title: 'Review Readability Report',
+      issues: '3 issues found',
+      description: 'See which pages need optimization for better AI...',
+      link: 'View Report',
+      icon: '📄'
     }
   ]
 
   return (
-    <div className="stagger-children">
-      {/* Page Header - Consistent Padding */}
-      <div className="page-header pt-6 pb-5 px-7 mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <LayoutDashboard className="w-6 h-6 text-accent" strokeWidth={1.5} />
-              <h1 className="text-3xl font-heading font-bold text-white tracking-tight">
-                Intelligence Overview
-              </h1>
-            </div>
-            <p className="text-softgray/70 text-sm font-body mt-2">
-              How AI models understand and represent your brand
-            </p>
-          </div>
-          
-          {/* Run Scan - Top Right */}
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg transition-all text-accent font-body text-sm font-medium">
-            <RefreshCw className="w-4 h-4" strokeWidth={2} />
-            Run Fresh Scan
-          </button>
+    <div>
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-4xl font-heading font-bold text-white">
+            Overview
+          </h1>
         </div>
         
-        <div className="flex items-center gap-2 mt-4 text-softgray/50 text-xs font-body">
-          <Calendar className="w-3.5 h-3.5" strokeWidth={1.5} />
-          Last scan: {formatDate(scanData.last_scan)}
-        </div>
-      </div>
-
-      {/* Hero Card - Overall Visibility Score - NO HOVER */}
-      <div className="card-L2 p-8 mb-10 relative overflow-hidden" style={{ minHeight: '200px' }}>
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-4">
-            <Activity className="w-5 h-5 text-accent" strokeWidth={1.5} />
-            <h2 className="text-sm font-heading font-semibold text-softgray/60 uppercase tracking-wider">
-              Overall Visibility
-            </h2>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-softgray/60">
+            <span>Last scan:</span>
+            <span className="text-white">{formatDate(scanData?.last_scan)}</span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">
+              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+              Live
+            </span>
           </div>
           
-          <div className="flex items-baseline gap-4 mb-3">
-            <div className="text-7xl font-heading font-bold text-white tabular-nums">
-              {scanData.overall_score}
-              <span className="text-3xl text-softgray/40 ml-1">%</span>
-            </div>
-            <div className="delta-positive text-2xl font-heading tabular-nums">
-              +2.3%
-            </div>
-          </div>
-          
-          <p className="text-softgray/60 text-sm font-body max-w-2xl">
-            Your aggregate presence across generative AI responses
-          </p>
-        </div>
-      </div>
-
-      {/* Quick Stats Row - NO HOVER */}
-      <div className="grid grid-cols-3 gap-6 mb-10">
-        <div className="card-L2 p-6">
-          <div className="flex items-center gap-2 mb-2 text-softgray/60">
-            <TrendingUp className="w-4 h-4" strokeWidth={1.5} />
-            <div className="text-xs font-body uppercase tracking-wide">
-              Total Mentions
-            </div>
-          </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums">
-            {scanData.total_mentions}
-          </div>
-          <div className="delta-positive text-sm mt-1.5 font-body">
-            +12 this week
-          </div>
-        </div>
-
-        <div className="card-L2 p-6">
-          <div className="flex items-center gap-2 mb-2 text-softgray/60">
-            <Activity className="w-4 h-4" strokeWidth={1.5} />
-            <div className="text-xs font-body uppercase tracking-wide">
-              Positive Sentiment
-            </div>
-          </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums">
-            {scanData.positive_sentiment}
-            <span className="text-xl text-softgray/40">%</span>
-          </div>
-          <div className="delta-positive text-sm mt-1.5 font-body">
-            +3.2%
-          </div>
-        </div>
-
-        <div className="card-L2 p-6">
-          <div className="flex items-center gap-2 mb-2 text-softgray/60">
-            <Activity className="w-4 h-4" strokeWidth={1.5} />
-            <div className="text-xs font-body uppercase tracking-wide">
-              Active Questions
-            </div>
-          </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums">
-            {scanData.active_questions}
-          </div>
-          <div className="delta-neutral text-sm mt-1.5 font-body">
-            Stable
+          <div className="flex items-center gap-2 ml-auto">
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+              Last 24 hours
+            </button>
+            <button className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg">
+              Last 7 days
+            </button>
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+              Last 30 days
+            </button>
+            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
+              Custom range
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Module Cards Grid - INTERACTIVE */}
-      <div className="grid grid-cols-2 gap-6">
-        {modules.map((module, index) => (
-          <Link 
-            key={module.name} 
-            href={module.href}
-            className="card-L2 p-6 cursor-pointer group transition-all duration-100"
-            style={{ animationDelay: `${(index + 4) * 100}ms` }}
-            data-interactive="true"
-          >
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <h3 className="text-lg font-heading font-semibold text-white group-hover:text-accent transition-colors mb-2">
-                  {module.name}
-                </h3>
-                <p className="text-sm text-softgray/60 font-body">
-                  {module.description}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-4xl font-heading font-bold text-white tabular-nums">
-                  {module.score}
-                  <span className="text-xl text-softgray/40">%</span>
+      {/* Metric Cards Grid */}
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        {metrics.map((metric) => {
+          const Icon = metric.icon
+          return (
+            <div key={metric.title} className="bg-navy-card rounded-lg p-6 border border-white/5">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="p-2 bg-white/5 rounded-lg">
+                  <Icon className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+                    {metric.title}
+                  </div>
+                  <div className="text-xs text-softgray/50">
+                    {metric.subtitle}
+                  </div>
                 </div>
               </div>
+              
+              <div className="flex items-baseline gap-2 mb-2">
+                <div className="text-4xl font-heading font-bold text-white tabular-nums">
+                  {metric.value}
+                  {metric.unit && <span className="text-2xl text-softgray/40">{metric.unit}</span>}
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-blue-400">{metric.change}</span>
+                <span className="text-softgray/50">{metric.trend}</span>
+              </div>
             </div>
+          )
+        })}
+      </div>
 
-            {/* Progress Bar */}
-            <div className="progress-bar mb-4">
-              <div 
-                className="progress-bar-fill"
-                style={{ width: `${module.score}%` }}
-              ></div>
-            </div>
+      {/* Brand Visibility Section */}
+      <div className="bg-navy-card rounded-lg p-8 border border-white/5 mb-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-heading font-bold text-white mb-2">
+            Brand Visibility
+          </h2>
+          <p className="text-sm text-softgray/60">
+            Percentage of AI answers about business credit cards that mention your brand
+          </p>
+        </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-softgray/60 font-body">{module.metric}</span>
-              <span className="text-accent group-hover:underline font-body text-sm">
-                View details →
-              </span>
+        <div className="grid grid-cols-2 gap-8">
+          {/* Chart */}
+          <div>
+            <div className="mb-4">
+              <div className="text-sm text-softgray/60 uppercase tracking-wider mb-2">
+                VISIBILITY SCORE
+              </div>
+              <div className="flex items-baseline gap-3">
+                <div className="text-5xl font-heading font-bold text-white tabular-nums">
+                  {scanData?.brand_visibility || 89.8}%
+                </div>
+                <div className="text-lg text-blue-400">+1% vs last week</div>
+              </div>
             </div>
-          </Link>
-        ))}
+            
+            {/* Simple chart placeholder */}
+            <div className="h-48 bg-navy/50 rounded-lg border border-white/5 flex items-center justify-center">
+              <div className="text-softgray/40 text-sm">Chart visualization</div>
+            </div>
+            
+            <button className="mt-4 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm border border-blue-600/30 hover:bg-blue-600/30 transition-colors">
+              Compare to Industry
+            </button>
+          </div>
+
+          {/* Competitor Ranking */}
+          <div>
+            <div className="text-sm text-softgray/60 uppercase tracking-wider mb-4">
+              BRAND INDUSTRY RANKING
+            </div>
+            
+            <div className="space-y-3">
+              {competitors.map((comp) => (
+                <div 
+                  key={comp.rank} 
+                  className={`flex items-center gap-4 p-4 rounded-lg ${
+                    comp.isYou 
+                      ? 'bg-coral/10 border border-coral/30' 
+                      : 'bg-navy/50 border border-white/5'
+                  }`}
+                >
+                  <div className="text-lg font-heading font-bold text-softgray/60 w-6">
+                    {comp.rank}
+                  </div>
+                  
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                      <span className="text-xs font-bold text-white">
+                        {comp.name.substring(0, 2).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-white font-medium text-sm">
+                        {comp.name}
+                        {comp.isYou && <span className="ml-2 text-xs text-coral">(You)</span>}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={`text-sm ${comp.change.startsWith('+') ? 'text-blue-400' : 'text-red-400'}`}>
+                    {comp.change}
+                  </div>
+                  
+                  <div className="text-white font-heading font-bold text-lg tabular-nums w-16 text-right">
+                    {comp.score}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recommended Actions */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-heading font-bold text-white mb-6">
+          Recommended Actions
+        </h2>
+        
+        <div className="grid grid-cols-3 gap-6">
+          {actions.map((action, index) => (
+            <div key={index} className="bg-navy-card rounded-lg p-6 border border-white/5 hover:border-white/10 transition-colors cursor-pointer">
+              <div className="flex items-start justify-between mb-4">
+                <div className="text-2xl">{action.icon}</div>
+                <div className="text-sm text-blue-400">
+                  {action.potential || action.growth || action.issues}
+                </div>
+              </div>
+              
+              <h3 className="text-lg font-heading font-semibold text-white mb-2">
+                {action.title}
+              </h3>
+              
+              <p className="text-sm text-softgray/60 mb-4">
+                {action.description}
+              </p>
+              
+              <button className="text-blue-400 text-sm hover:underline">
+                {action.link} →
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
