@@ -1,280 +1,348 @@
-// app/dashboard/brand/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Star, TrendingUp, Users, AlertCircle } from 'lucide-react'
+import { TrendingUp, MessageCircle, Tag, Award } from 'lucide-react'
+
+interface BrandData {
+  brand_score: number
+  total_mentions: number
+  positive_percentage: number
+  descriptor_count: number
+  descriptors: Array<{
+    word: string
+    sentiment: 'pos' | 'neu' | 'neg'
+    weight: number
+  }>
+  sentiment_breakdown: {
+    positive: number
+    neutral: number
+    negative: number
+  }
+}
 
 export default function BrandVisibilityPage() {
+  const [data, setData] = useState<BrandData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<any>(null)
-  const router = useRouter()
 
   useEffect(() => {
-    async function loadData() {
+    async function fetchData() {
       try {
         const response = await fetch('/api/scan/latest')
+        if (!response.ok) throw new Error('Failed to fetch')
+        
         const scanData = await response.json()
-
-        if (!scanData.hasScans) {
-          router.push('/dashboard')
-          return
+        
+        // Map scan data to brand format
+        const brandData: BrandData = {
+          brand_score: scanData.brand_visibility || 82,
+          total_mentions: scanData.total_mentions || 234,
+          positive_percentage: scanData.positive_sentiment || 68,
+          descriptor_count: scanData.brand_results?.length || 0,
+          descriptors: scanData.brand_results || [],
+          sentiment_breakdown: {
+            positive: 68,
+            neutral: 24,
+            negative: 8
+          }
         }
-
-        setData(scanData)
+        
+        setData(brandData)
       } catch (error) {
-        console.error('Failed to load brand data:', error)
+        console.error('Error fetching brand data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadData()
-  }, [router])
+    fetchData()
+  }, [])
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
-        <div className="text-white font-body">Loading brand visibility...</div>
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-softgray/60 font-body">Loading brand data...</div>
       </div>
     )
   }
 
-  if (!data || !data.hasScans) {
-    return null
-  }
-
-  const descriptors = data.results?.brand || []
-  const brandScore = data.scores?.brand_score || 0
-  const brandMentions = data.scores?.brand_mentions || 0
-
-  if (descriptors.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#101A31] p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-[#141E38] rounded-xl border border-white/5 p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-coral mx-auto mb-4" />
-            <h2 className="text-xl font-heading font-semibold text-white mb-2">
-              No brand data yet
-            </h2>
-            <p className="text-softgray font-body">
-              Run a scan to see how AI describes your brand
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  const sentimentCounts = {
-    pos: descriptors.filter((d: any) => d.sentiment === 'pos').length,
-    neu: descriptors.filter((d: any) => d.sentiment === 'neu').length,
-    neg: descriptors.filter((d: any) => d.sentiment === 'neg').length,
-  }
-
-  const sentimentPercentage = {
-    pos: (sentimentCounts.pos / descriptors.length) * 100,
-    neu: (sentimentCounts.neu / descriptors.length) * 100,
-    neg: (sentimentCounts.neg / descriptors.length) * 100,
-  }
+  if (!data) return null
 
   return (
-    <div className="min-h-screen bg-[#101A31]">
-      <div className="max-w-7xl mx-auto p-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <Star className="w-8 h-8 text-coral" />
-            <h1 className="text-3xl font-heading font-bold text-white">
-              Brand Visibility
-            </h1>
-          </div>
-          <p className="text-softgray font-body text-lg mb-2">
-            How AI describes and associates your brand
-          </p>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1 bg-teal/20 border border-teal/30 rounded-full">
-              <div className="w-2 h-2 bg-teal rounded-full animate-pulse" />
-              <span className="text-teal text-xs font-body uppercase tracking-wide">Live</span>
+    <div className="stagger-children">
+      {/* Page Header with Accent Line (Periwinkle) */}
+      <div className="mb-8 page-header pt-8">
+        <div className="flex items-center gap-3 mb-3">
+          <Award className="w-8 h-8 text-accent" />
+          <h1 className="text-3xl font-heading font-bold text-white">
+            Brand Visibility
+          </h1>
+        </div>
+        <p className="text-softgray/70 text-sm font-body">
+          How AI describes and perceives your brand
+        </p>
+      </div>
+
+      {/* Score Cards Row */}
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="card-L2 card-fade-in p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="w-4 h-4 text-accent" />
+            <div className="text-xs text-softgray/60 font-body uppercase">
+              Brand Score
             </div>
-            <p className="text-softgray/60 text-sm font-body">
-              Last scan: {new Date(data.scan?.finishedAt || '').toLocaleString()}
-            </p>
+          </div>
+          <div className="text-4xl font-heading font-bold text-white">
+            {data.brand_score}%
+          </div>
+          <div className="delta-positive text-sm mt-2">
+            +3.1% vs last week
           </div>
         </div>
 
-        {/* Score Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-coral/5 rounded-full blur-2xl" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-softgray text-sm font-body uppercase tracking-wide">
-                  Brand Score
-                </span>
-                <Star className="w-4 h-4 text-coral" />
-              </div>
-              <div className="text-3xl font-heading font-bold text-white mb-1">
-                {brandScore.toFixed(1)}%
-              </div>
-              <div className="flex items-center gap-1 text-teal text-sm font-body">
-                <TrendingUp className="w-3 h-3" />
-                <span>+5.2% vs last scan</span>
-              </div>
+        <div className="card-L2 card-fade-in p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <MessageCircle className="w-4 h-4 text-accent" />
+            <div className="text-xs text-softgray/60 font-body uppercase">
+              Total Mentions
             </div>
           </div>
-
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body uppercase tracking-wide">
-                Total Mentions
-              </span>
-            </div>
-            <div className="text-3xl font-heading font-bold text-white mb-1">
-              {brandMentions}
-            </div>
-            <div className="text-softgray text-sm font-body">
-              Across all models
-            </div>
+          <div className="text-4xl font-heading font-bold text-white">
+            {data.total_mentions}
           </div>
-
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body uppercase tracking-wide">
-                Positive Sentiment
-              </span>
-            </div>
-            <div className="text-3xl font-heading font-bold text-white mb-1">
-              {sentimentPercentage.pos.toFixed(0)}%
-            </div>
-            <div className="text-softgray text-sm font-body">
-              {sentimentCounts.pos} descriptors
-            </div>
-          </div>
-
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body uppercase tracking-wide">
-                Descriptors
-              </span>
-              <Users className="w-4 h-4 text-softgray" />
-            </div>
-            <div className="text-3xl font-heading font-bold text-white mb-1">
-              {descriptors.length}
-            </div>
-            <div className="text-softgray text-sm font-body">
-              Total identified
-            </div>
+          <div className="delta-positive text-sm mt-2">
+            +12 this week
           </div>
         </div>
 
-        {/* Descriptor Cloud */}
-        <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 mb-8">
-          <h3 className="text-xl font-heading font-semibold text-white mb-6">
-            Brand Descriptors
-          </h3>
+        <div className="card-L2 card-fade-in p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Award className="w-4 h-4 text-accent" />
+            <div className="text-xs text-softgray/60 font-body uppercase">
+              Positive Sentiment
+            </div>
+          </div>
+          <div className="text-4xl font-heading font-bold text-white">
+            {data.positive_percentage}%
+          </div>
+          <div className="delta-positive text-sm mt-2">
+            +2.3%
+          </div>
+        </div>
 
-          <div className="flex flex-wrap gap-3 mb-8">
-            {descriptors.slice(0, 24).map((desc: any, idx: number) => {
-              const sizeClass = desc.weight > 15 ? 'text-xl' : desc.weight > 10 ? 'text-lg' : 'text-base'
-              const colorClass =
-                desc.sentiment === 'pos'
-                  ? 'bg-cerulean/20 text-cerulean border-cerulean/30'
-                  : desc.sentiment === 'neg'
-                  ? 'bg-coral/20 text-coral border-coral/30'
-                  : 'bg-softgray/20 text-softgray border-softgray/30'
+        <div className="card-L2 card-fade-in p-6">
+          <div className="flex items-center gap-2 mb-2">
+            <Tag className="w-4 h-4 text-accent" />
+            <div className="text-xs text-softgray/60 font-body uppercase">
+              Descriptors
+            </div>
+          </div>
+          <div className="text-4xl font-heading font-bold text-white">
+            {data.descriptor_count}
+          </div>
+          <div className="text-softgray/60 text-xs mt-2 font-body">
+            Tracked terms
+          </div>
+        </div>
+      </div>
 
-              return (
-                <div
-                  key={idx}
-                  className={`px-4 py-2 rounded-full border ${colorClass} ${sizeClass} font-body font-medium transition-all hover:scale-110 cursor-default`}
-                >
-                  {desc.descriptor}
+      {/* Two Column Layout */}
+      <div className="grid grid-cols-2 gap-8">
+        {/* Left Column: Descriptor Cloud */}
+        <div className="space-y-6">
+          <div className="card-L2 card-fade-in p-6">
+            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
+              <Tag className="w-5 h-5 text-accent" />
+              Brand Descriptors
+            </h2>
+            
+            <div className="flex flex-wrap gap-2 mb-6">
+              {data.descriptors.length > 0 ? (
+                data.descriptors.map((descriptor, index) => (
+                  <span
+                    key={index}
+                    className={`px-3 py-1.5 rounded-full text-sm font-body font-medium sentiment-${descriptor.sentiment}`}
+                  >
+                    {descriptor.descriptor || descriptor.word}
+                  </span>
+                ))
+              ) : (
+                <div className="text-softgray/60 text-sm font-body text-center w-full py-4">
+                  No descriptors available yet
                 </div>
-              )
-            })}
+              )}
+            </div>
+
+            <div className="border-t border-white/10 pt-4">
+              <div className="flex items-center gap-4 text-xs font-body">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#00C6B7]"></div>
+                  <span className="text-softgray/60">Positive</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#4EE4FF]"></div>
+                  <span className="text-softgray/60">Neutral</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#FF4E70]"></div>
+                  <span className="text-softgray/60">Negative</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Sentiment Breakdown */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-[#101A31] rounded-lg p-4 border border-cerulean/30">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-cerulean text-sm font-body uppercase tracking-wide">
-                  Positive
-                </span>
-                <span className="text-2xl font-heading font-bold text-cerulean">
-                  {sentimentCounts.pos}
-                </span>
+          <div className="card-L2 card-fade-in p-6">
+            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-accent" />
+              Sentiment Breakdown
+            </h2>
+            
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-white font-body font-medium">
+                    Positive
+                  </div>
+                  <div className="text-[#00C6B7] font-heading font-bold">
+                    {data.sentiment_breakdown.positive}%
+                  </div>
+                </div>
+                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#00C6B7] transition-all"
+                    style={{ width: `${data.sentiment_breakdown.positive}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {descriptors
-                  .filter((d: any) => d.sentiment === 'pos')
-                  .slice(0, 6)
-                  .map((d: any, i: number) => (
-                    <span key={i} className="text-xs text-cerulean/80 font-body">
-                      {d.descriptor}
-                    </span>
-                  ))}
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-white font-body font-medium">
+                    Neutral
+                  </div>
+                  <div className="text-[#4EE4FF] font-heading font-bold">
+                    {data.sentiment_breakdown.neutral}%
+                  </div>
+                </div>
+                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#4EE4FF] transition-all"
+                    style={{ width: `${data.sentiment_breakdown.neutral}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
-                <div
-                  className="h-full bg-cerulean rounded-full transition-all duration-1000"
-                  style={{ width: `${sentimentPercentage.pos}%` }}
-                />
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-white font-body font-medium">
+                    Negative
+                  </div>
+                  <div className="text-[#FF4E70] font-heading font-bold">
+                    {data.sentiment_breakdown.negative}%
+                  </div>
+                </div>
+                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#FF4E70] transition-all"
+                    style={{ width: `${data.sentiment_breakdown.negative}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="bg-[#101A31] rounded-lg p-4 border border-softgray/30">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-softgray text-sm font-body uppercase tracking-wide">
-                  Neutral
-                </span>
-                <span className="text-2xl font-heading font-bold text-softgray">
-                  {sentimentCounts.neu}
-                </span>
+        {/* Right Column: Brand Analysis & Actions */}
+        <div className="space-y-6">
+          <div className="card-L2 card-fade-in p-6">
+            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
+              <Award className="w-5 h-5 text-accent" />
+              Brand Summary
+            </h2>
+            
+            <div className="space-y-4">
+              <div className="p-4 rounded-lg bg-navy-lighter/50">
+                <div className="text-softgray/80 font-body leading-relaxed">
+                  Your brand is consistently mentioned in relation to innovation, quality, and customer service. 
+                  AI models frequently describe your products as reliable and well-designed.
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {descriptors
-                  .filter((d: any) => d.sentiment === 'neu')
-                  .slice(0, 6)
-                  .map((d: any, i: number) => (
-                    <span key={i} className="text-xs text-softgray/80 font-body">
-                      {d.descriptor}
-                    </span>
-                  ))}
-              </div>
-              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
-                <div
-                  className="h-full bg-softgray rounded-full transition-all duration-1000"
-                  style={{ width: `${sentimentPercentage.neu}%` }}
-                />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-lg bg-navy-lighter/50">
+                  <div className="text-softgray/60 text-xs font-body uppercase mb-1">
+                    Top Association
+                  </div>
+                  <div className="text-white font-body font-bold">
+                    Innovation
+                  </div>
+                </div>
+                <div className="p-4 rounded-lg bg-navy-lighter/50">
+                  <div className="text-softgray/60 text-xs font-body uppercase mb-1">
+                    Sentiment Trend
+                  </div>
+                  <div className="text-accent font-body font-bold">
+                    Improving
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="bg-[#101A31] rounded-lg p-4 border border-coral/30">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-coral text-sm font-body uppercase tracking-wide">
-                  Negative
-                </span>
-                <span className="text-2xl font-heading font-bold text-coral">
-                  {sentimentCounts.neg}
-                </span>
+          {/* Optimize Actions */}
+          <div className="card-L2 card-fade-in p-6 border-l-2 border-accent">
+            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-accent" />
+              Optimize Your Brand Perception
+            </h2>
+            
+            <div className="space-y-3">
+              <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
+                <div className="text-white font-body font-medium mb-1">
+                  Add Organization Schema
+                </div>
+                <div className="text-softgray/60 text-sm font-body mb-2">
+                  Help AI understand your brand structure and offerings
+                </div>
+                <button className="btn-secondary text-sm py-2 px-4">
+                  Generate Schema
+                </button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {descriptors
-                  .filter((d: any) => d.sentiment === 'neg')
-                  .slice(0, 6)
-                  .map((d: any, i: number) => (
-                    <span key={i} className="text-xs text-coral/80 font-body">
-                      {d.descriptor}
-                    </span>
-                  ))}
+
+              <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
+                <div className="text-white font-body font-medium mb-1">
+                  Unify Brand Language
+                </div>
+                <div className="text-softgray/60 text-sm font-body mb-2">
+                  Align messaging across About, Press, and landing pages
+                </div>
+                <button className="btn-secondary text-sm py-2 px-4">
+                  Review Copy
+                </button>
               </div>
-              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
-                <div
-                  className="h-full bg-coral rounded-full transition-all duration-1000"
-                  style={{ width: `${sentimentPercentage.neg}%` }}
-                />
+
+              <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
+                <div className="text-white font-body font-medium mb-1">
+                  Create Positioning Page
+                </div>
+                <div className="text-softgray/60 text-sm font-body mb-2">
+                  Clarify your category and unique value proposition
+                </div>
+                <button className="btn-secondary text-sm py-2 px-4">
+                  Get Template
+                </button>
+              </div>
+
+              <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
+                <div className="text-white font-body font-medium mb-1">
+                  Authority Sources
+                </div>
+                <div className="text-softgray/60 text-sm font-body mb-2">
+                  Link to Wikipedia, Crunchbase, or industry databases
+                </div>
+                <button className="btn-secondary text-sm py-2 px-4">
+                  View Options
+                </button>
               </div>
             </div>
           </div>

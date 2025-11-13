@@ -3,131 +3,93 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
-  Home, 
+  LayoutDashboard, 
   ShoppingBag, 
   MessageSquare, 
   Globe, 
+  TrendingUp,
   Settings,
-  Star,
-  FileText,
-  Video,
-  BookOpen
+  LogOut
 } from 'lucide-react'
 
-const favorites = [
-  { name: 'Quick Start Guide', icon: FileText, href: '/guide' },
-  { name: 'Video Tutorials', icon: Video, href: '/tutorials' },
-  { name: 'Documentation', icon: BookOpen, href: '/docs' },
+const navigation = [
+  { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
+  { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
+  { name: 'Brand Visibility', href: '/dashboard/brand', icon: TrendingUp },
+  { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
+  { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
 ]
 
-const mainMenu = [
-  { name: 'Overview', icon: Home, href: '/dashboard' },
-  { name: 'Shopping Visibility', icon: ShoppingBag, href: '/dashboard/shopping' },
-  { name: 'Brand Visibility', icon: Star, href: '/dashboard/brand' },
-  { name: 'Conversation Volumes', icon: MessageSquare, href: '/dashboard/conversations' },
-  { name: 'Website Analytics', icon: Globe, href: '/dashboard/website' },
+const bottomNav = [
+  { name: 'Control Center', href: '/dashboard/settings', icon: Settings },
 ]
 
-export function Sidebar() {
+export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-60 bg-navy h-screen fixed left-0 top-0 flex flex-col border-r border-harbor">
-      {/* Brand header */}
-      <div className="p-6 border-b border-harbor">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-teal rounded-lg flex items-center justify-center">
-            <span className="text-white font-heading font-bold text-sm">H</span>
-          </div>
-          <div>
-            <h2 className="font-heading font-semibold text-white text-sm">Harbor</h2>
-            <p className="text-softgray text-xs opacity-75">Demo Brand</p>
-          </div>
-        </div>
+    <aside className="sidebar-container w-60 bg-navy flex flex-col">
+      {/* Header */}
+      <div className="p-6 border-b border-white/10">
+        <h1 className="text-xl font-heading font-bold text-white">
+          Harbor
+        </h1>
+        <p className="text-sm text-softgray/60 mt-1 font-body">
+          Intelligence Platform
+        </p>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 px-3">
-        {/* Favorites section */}
-        <div className="mb-8">
-          <div className="px-3 mb-3">
-            <span className="text-softgray text-xs uppercase tracking-wider opacity-60 font-body">
-              Favorites
-            </span>
-          </div>
-          <div className="space-y-1">
-            {favorites.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-lg transition-harbor cursor-pointer
-                    ${isActive 
-                      ? 'bg-navy-lighter text-white' 
-                      : 'text-softgray hover:bg-navy-light hover:text-white'
-                    }
-                  `}
-                >
-                  <Icon size={18} strokeWidth={1.5} />
-                  <span className="text-sm font-body">{item.name}</span>
-                </Link>
-              )
-            })}
-          </div>
+      {/* Main Navigation */}
+      <nav className="flex-1 p-4 space-y-1">
+        <div className="text-xs uppercase text-softgray/40 font-body font-medium mb-3 px-3">
+          Intelligence
         </div>
-
-        {/* Divider */}
-        <div className="h-px bg-harbor mb-8 mx-3" />
-
-        {/* Main Menu section */}
-        <div>
-          <div className="px-3 mb-3">
-            <span className="text-softgray text-xs uppercase tracking-wider opacity-60 font-body">
-              Intelligence
-            </span>
-          </div>
-          <div className="space-y-1">
-            {mainMenu.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-lg transition-harbor cursor-pointer relative
-                    ${isActive 
-                      ? 'bg-navy-lighter text-white' 
-                      : 'text-softgray hover:bg-navy-light hover:text-white'
-                    }
-                  `}
-                >
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-teal rounded-r" />
-                  )}
-                  <Icon size={18} strokeWidth={1.5} />
-                  <span className="text-sm font-body">{item.name}</span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
+        
+        {navigation.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+          
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`nav-item ${isActive ? 'active' : ''}`}
+            >
+              <Icon className="nav-icon" />
+              <span className="text-sm font-body">{item.name}</span>
+            </Link>
+          )
+        })}
       </nav>
 
-      {/* Settings footer */}
-      <div className="p-3 border-t border-harbor">
-        <Link
-          href="/settings"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-softgray hover:bg-navy-light hover:text-white transition-harbor cursor-pointer"
+      {/* Bottom Navigation */}
+      <div className="p-4 border-t border-white/10 space-y-1">
+        {bottomNav.map((item) => {
+          const Icon = item.icon
+          const isActive = pathname === item.href
+          
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`nav-item ${isActive ? 'active' : ''}`}
+            >
+              <Icon className="nav-icon" />
+              <span className="text-sm font-body">{item.name}</span>
+            </Link>
+          )
+        })}
+        
+        <button
+          className="nav-item w-full"
+          onClick={() => {
+            // Add logout logic here
+            console.log('Logout clicked')
+          }}
         >
-          <Settings size={18} strokeWidth={1.5} />
-          <span className="text-sm font-body">Control Center</span>
-        </Link>
+          <LogOut className="nav-icon" />
+          <span className="text-sm font-body">Logout</span>
+        </button>
       </div>
     </aside>
   )
