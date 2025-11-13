@@ -137,14 +137,8 @@ export default function ConversationVolumesPage() {
   }
 
   const getIntentColor = (intent: string) => {
-    const colors = {
-      how_to: 'bg-[#FFB84D]/10 text-[#FFB84D] border-[#FFB84D]/30',
-      vs: 'bg-[#00C6B7]/10 text-[#00C6B7] border-[#00C6B7]/30',
-      price: 'bg-[#2979FF]/10 text-[#2979FF] border-[#2979FF]/30',
-      trust: 'bg-[#4EE4FF]/10 text-[#4EE4FF] border-[#4EE4FF]/30',
-      features: 'bg-softgray/10 text-softgray border-softgray/30'
-    }
-    return colors[intent as keyof typeof colors] || colors.features
+    // All intent tags use amber/gold on this page for visual consistency
+    return 'bg-[#FFB84D]/10 text-[#FFB84D] border-[#FFB84D]/30'
   }
 
   const getIntentLabel = (intent: string) => {
