@@ -326,7 +326,7 @@ export default function ConversationVolumesPage() {
           </div>
           
           <div className="space-y-2.5">
-            {data.questions.map((question, index) => (
+            {data.questions.slice(0, 8).map((question, index) => (
               <div 
                 key={index} 
                 className="conversations-clickable p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
@@ -356,66 +356,95 @@ export default function ConversationVolumesPage() {
           </div>
         </div>
 
-        {/* Competitor Co-mentions */}
+        {/* Intent Breakdown - Now its own card */}
         <div 
           className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
           style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-heading font-bold text-white">
-              Competitor Co-mentions
+              Intent Distribution
             </h2>
-            <Users className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+            <TrendingUp className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-3">
-            {data.competitors.map((competitor, index) => (
-              <div 
-                key={index} 
-                className="conversations-clickable p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                style={{ cursor: 'pointer' }}
-              >
+          <div className="space-y-5">
+            {Object.entries(data.intent_breakdown).map(([intent, percentage]) => (
+              <div key={intent}>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="font-body font-medium text-white">
-                    {competitor.brand}
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs px-2 py-0.5 rounded border font-medium ${getIntentColor(intent)}`}>
+                      {getIntentLabel(intent)}
+                    </span>
                   </div>
-                  <div className="text-[#5A5AFF] font-heading font-bold text-xl tabular-nums">
-                    {competitor.co_mentions}
-                  </div>
+                  <span className="text-[#5A5AFF] font-heading font-bold text-xl tabular-nums">
+                    {percentage}%
+                  </span>
                 </div>
-                <div className="text-softgray/60 text-xs font-body">
-                  {competitor.context}
+                <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#5A5AFF] rounded-full transition-all duration-500"
+                    style={{ width: `${percentage}%` }}
+                  />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Intent Breakdown */}
+          {/* Add insight text at bottom */}
           <div className="mt-6 pt-6 border-t border-white/5">
-            <h3 className="text-sm font-heading font-semibold text-white mb-4 uppercase tracking-wide text-softgray/80">
-              Intent Breakdown
-            </h3>
-            <div className="space-y-3">
-              {Object.entries(data.intent_breakdown).map(([intent, percentage]) => (
-                <div key={intent}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-white font-body text-sm">
-                      {getIntentLabel(intent)}
-                    </span>
-                    <span className="text-[#5A5AFF] font-heading font-bold text-sm tabular-nums">
-                      {percentage}%
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-white/[0.03] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#5A5AFF] rounded-full transition-all duration-500"
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </div>
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-[#5A5AFF] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div>
+                <div className="text-white font-body text-sm font-medium mb-1">
+                  Primary Intent: How-To Guides
                 </div>
-              ))}
+                <div className="text-softgray/60 text-xs font-body leading-relaxed">
+                  Users primarily seek implementation guidance. Consider expanding your documentation and step-by-step tutorials.
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Competitor Co-mentions - Now Full Width Below */}
+      <div 
+        className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
+        style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-2xl font-heading font-bold text-white mb-2">
+              Competitor Co-mentions
+            </h2>
+            <p className="text-sm text-softgray/60 font-body">
+              How often your brand appears alongside competitors in user queries
+            </p>
+          </div>
+          <Users className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4">
+          {data.competitors.map((competitor, index) => (
+            <div 
+              key={index} 
+              className="conversations-clickable p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors border border-white/5"
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="font-body font-medium text-white">
+                  {competitor.brand}
+                </div>
+                <div className="text-[#5A5AFF] font-heading font-bold text-2xl tabular-nums">
+                  {competitor.co_mentions}
+                </div>
+              </div>
+              <div className="text-softgray/60 text-xs font-body">
+                {competitor.context}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
