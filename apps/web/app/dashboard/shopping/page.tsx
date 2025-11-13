@@ -176,7 +176,7 @@ export default function ShoppingVisibilityPage() {
                       </div>
                       <div>
                         <div className="text-white font-body font-medium">
-                          {category.category}
+                          {category.name}
                         </div>
                         <div className="text-softgray/60 text-xs font-body">
                           {category.mentions} mentions across {category.models?.length || 3} models
