@@ -10,7 +10,7 @@ interface ConversationsData {
   volume_delta: string
   top_questions_count: number
   questions_delta: string
-  emerging_topics: number
+  emerging_topics_count: number
   topics_delta: string
   co_mentions: number
   mentions_delta: string
@@ -57,7 +57,7 @@ export default function ConversationVolumesPage() {
           volume_delta: '+12%',
           top_questions_count: 156,
           questions_delta: '+23',
-          emerging_topics: 8,
+          emerging_topics_count: 8,
           topics_delta: '+3',
           co_mentions: 89,
           mentions_delta: '+14',
@@ -275,7 +275,7 @@ export default function ConversationVolumesPage() {
             </div>
           </div>
           <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.emerging_topics}
+            {data.emerging_topics_count}
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span className="text-[#5A5AFF]">{data.topics_delta}</span>
