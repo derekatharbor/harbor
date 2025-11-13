@@ -3,7 +3,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X, CheckCircle, Loader2 } from 'lucide-react'
+import { X, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 
 interface ScanProgressModalProps {
   isOpen: boolean
@@ -11,89 +11,81 @@ interface ScanProgressModalProps {
   scanId: string | null
 }
 
-interface ScanProgress {
-  currentModule: string
-  status: 'queued' | 'running' | 'done'
-  progress: number
-  message: string
-  modules: {
-    shopping: 'pending' | 'running' | 'done' | 'failed'
-    brand: 'pending' | 'running' | 'done' | 'failed'
-    conversations: 'pending' | 'running' | 'done' | 'failed'
-    website: 'pending' | 'running' | 'done' | 'failed'
-  }
+interface ModuleStatus {
+  shopping: 'pending' | 'running' | 'done' | 'failed'
+  brand: 'pending' | 'running' | 'done' | 'failed'
+  conversations: 'pending' | 'running' | 'done' | 'failed'
+  website: 'pending' | 'running' | 'done' | 'failed'
 }
 
-const progressMessages = [
-  { progress: 0, message: 'Initializing scan...', module: 'setup' },
-  { progress: 10, message: 'Querying ChatGPT about your products...', module: 'shopping' },
-  { progress: 20, message: 'Checking Claude for product mentions...', module: 'shopping' },
-  { progress: 30, message: 'Analyzing Gemini recommendations...', module: 'shopping' },
-  { progress: 40, message: 'Gathering brand perception data...', module: 'brand' },
-  { progress: 50, message: 'Analyzing brand descriptors across models...', module: 'brand' },
-  { progress: 60, message: 'Identifying conversation patterns...', module: 'conversations' },
-  { progress: 70, message: 'Categorizing user questions by intent...', module: 'conversations' },
-  { progress: 80, message: 'Crawling website structure...', module: 'website' },
-  { progress: 90, message: 'Validating schema markup...', module: 'website' },
-  { progress: 95, message: 'Computing visibility scores...', module: 'finalize' },
-  { progress: 100, message: 'Scan complete!', module: 'done' },
-]
+interface ScanStatusResponse {
+  status: 'queued' | 'running' | 'partial' | 'failed' | 'done'
+  progress: number
+  currentModule: string | null
+  modules: ModuleStatus
+  message: string
+}
 
 export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgressModalProps) {
   const [progress, setProgress] = useState(0)
-  const [currentMessage, setCurrentMessage] = useState(progressMessages[0].message)
-  const [moduleStatus, setModuleStatus] = useState<ScanProgress['modules']>({
+  const [currentMessage, setCurrentMessage] = useState('Initializing scan...')
+  const [moduleStatus, setModuleStatus] = useState<ModuleStatus>({
     shopping: 'pending',
     brand: 'pending',
     conversations: 'pending',
     website: 'pending',
   })
   const [isComplete, setIsComplete] = useState(false)
+  const [hasFailed, setHasFailed] = useState(false)
 
   useEffect(() => {
     if (!isOpen || !scanId) return
 
-    // Simulate progress (in reality, we'd poll /api/scan/status/:scanId)
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
+    // Poll for actual scan status
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/scan/status/${scanId}`)
+        const data: ScanStatusResponse = await response.json()
+
+        setProgress(data.progress)
+        setCurrentMessage(data.message)
+        setModuleStatus(data.modules)
+
+        if (data.status === 'done') {
           setIsComplete(true)
-          return 100
+          clearInterval(pollInterval)
+        } else if (data.status === 'failed') {
+          setHasFailed(true)
+          clearInterval(pollInterval)
         }
+      } catch (error) {
+        console.error('Failed to fetch scan status:', error)
+      }
+    }, 2000) // Poll every 2 seconds
 
-        const nextProgress = Math.min(prev + 5, 100)
-        
-        // Update message based on progress
-        const currentMsg = progressMessages.find(m => m.progress <= nextProgress && m.progress > prev)
-        if (currentMsg) {
-          setCurrentMessage(currentMsg.message)
-          
-          // Update module status
-          if (currentMsg.module === 'shopping') {
-            setModuleStatus(s => ({ ...s, shopping: 'running' }))
-          } else if (currentMsg.module === 'brand') {
-            setModuleStatus(s => ({ ...s, shopping: 'done', brand: 'running' }))
-          } else if (currentMsg.module === 'conversations') {
-            setModuleStatus(s => ({ ...s, brand: 'done', conversations: 'running' }))
-          } else if (currentMsg.module === 'website') {
-            setModuleStatus(s => ({ ...s, conversations: 'done', website: 'running' }))
-          } else if (currentMsg.module === 'done') {
-            setModuleStatus(s => ({ ...s, website: 'done' }))
-          }
-        }
-
-        return nextProgress
-      })
-    }, 800) // Update every 800ms
-
-    return () => clearInterval(interval)
+    return () => clearInterval(pollInterval)
   }, [isOpen, scanId])
 
   const getModuleIcon = (status: 'pending' | 'running' | 'done' | 'failed') => {
     if (status === 'done') return <CheckCircle className="w-5 h-5 text-[var(--pageAccent)]" strokeWidth={2} />
+    if (status === 'failed') return <AlertCircle className="w-5 h-5 text-coral" strokeWidth={2} />
     if (status === 'running') return <Loader2 className="w-5 h-5 text-[var(--pageAccent)] animate-spin" strokeWidth={2} />
     return <div className="w-5 h-5 rounded-full border-2 border-white/10"></div>
+  }
+
+  const getModuleMessage = (module: string, status: 'pending' | 'running' | 'done' | 'failed') => {
+    if (status === 'done') return 'Complete'
+    if (status === 'failed') return 'Failed'
+    if (status === 'pending') return 'Queued'
+    
+    // Running messages
+    const messages: Record<string, string> = {
+      shopping: 'Analyzing products...',
+      brand: 'Gathering perception data...',
+      conversations: 'Analyzing questions...',
+      website: 'Validating schema...'
+    }
+    return messages[module] || 'Processing...'
   }
 
   const handleClose = () => {
@@ -113,7 +105,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-heading font-bold text-white">
-            {isComplete ? 'Scan Complete!' : 'Running Scan'}
+            {isComplete ? 'Scan Complete!' : hasFailed ? 'Scan Failed' : 'Running Scan'}
           </h2>
           <button
             onClick={handleClose}
@@ -133,7 +125,9 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
           </div>
           <div className="h-2 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[var(--pageAccent)] rounded-full transition-all duration-500 ease-out"
+              className={`h-full rounded-full transition-all duration-500 ease-out ${
+                hasFailed ? 'bg-coral' : 'bg-[var(--pageAccent)]'
+              }`}
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -146,7 +140,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             <div className="flex-1">
               <div className="text-sm font-body font-medium text-white">Shopping Visibility</div>
               <div className="text-xs text-softgray/60 font-body">
-                {moduleStatus.shopping === 'done' ? 'Complete' : moduleStatus.shopping === 'running' ? 'Analyzing products...' : 'Queued'}
+                {getModuleMessage('shopping', moduleStatus.shopping)}
               </div>
             </div>
           </div>
@@ -156,7 +150,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             <div className="flex-1">
               <div className="text-sm font-body font-medium text-white">Brand Visibility</div>
               <div className="text-xs text-softgray/60 font-body">
-                {moduleStatus.brand === 'done' ? 'Complete' : moduleStatus.brand === 'running' ? 'Gathering perception data...' : 'Queued'}
+                {getModuleMessage('brand', moduleStatus.brand)}
               </div>
             </div>
           </div>
@@ -166,7 +160,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             <div className="flex-1">
               <div className="text-sm font-body font-medium text-white">Conversation Volumes</div>
               <div className="text-xs text-softgray/60 font-body">
-                {moduleStatus.conversations === 'done' ? 'Complete' : moduleStatus.conversations === 'running' ? 'Analyzing questions...' : 'Queued'}
+                {getModuleMessage('conversations', moduleStatus.conversations)}
               </div>
             </div>
           </div>
@@ -176,7 +170,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             <div className="flex-1">
               <div className="text-sm font-body font-medium text-white">Website Analytics</div>
               <div className="text-xs text-softgray/60 font-body">
-                {moduleStatus.website === 'done' ? 'Complete' : moduleStatus.website === 'running' ? 'Validating schema...' : 'Queued'}
+                {getModuleMessage('website', moduleStatus.website)}
               </div>
             </div>
           </div>
@@ -196,6 +190,21 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
               className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
             >
               View Results
+            </button>
+          </div>
+        ) : hasFailed ? (
+          <div className="flex items-center justify-between p-4 rounded-lg bg-coral/10 border border-coral/30">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-coral" strokeWidth={2} />
+              <div className="text-sm font-body text-white">
+                Scan encountered errors
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
+            >
+              Close
             </button>
           </div>
         ) : (

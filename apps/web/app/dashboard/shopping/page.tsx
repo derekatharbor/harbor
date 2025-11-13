@@ -42,6 +42,7 @@ export default function ShoppingVisibilityPage() {
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  const [hasScans, setHasScans] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -51,40 +52,31 @@ export default function ShoppingVisibilityPage() {
         
         const scanData = await response.json()
         
+        // Check if user has any scans
+        if (!scanData.hasScans) {
+          setHasScans(false)
+          setLoading(false)
+          return
+        }
+
+        setHasScans(true)
+        
+        // Use real data from API
+        const shopping = scanData.shopping || {}
+        
         const shoppingData: ShoppingData = {
-          visibility_score: scanData.shopping_visibility || 87.2,
-          visibility_delta: '+2.3%',
-          total_mentions: scanData.total_mentions || 234,
-          mentions_delta: '+18',
-          avg_rank: 2.3,
-          rank_delta: 'Improved',
-          market_position: 3,
-          position_delta: 'Holding',
+          visibility_score: shopping.shopping_visibility || 0,
+          visibility_delta: '+2.3%', // TODO: Calculate from previous scan
+          total_mentions: shopping.total_mentions || 0,
+          mentions_delta: '+18', // TODO: Calculate from previous scan
+          avg_rank: shopping.competitors?.find((c: any) => c.isUser)?.avg_rank || 0,
+          rank_delta: 'Improved', // TODO: Calculate from previous scan
+          market_position: shopping.competitors?.findIndex((c: any) => c.isUser) + 1 || 0,
+          position_delta: 'Holding', // TODO: Calculate from previous scan
           last_scan: scanData.last_scan,
-          categories: [
-            { name: 'Business Credit Cards', rank: 1, mentions: 89, models: ['ChatGPT', 'Claude', 'Gemini'], trend: 'up' },
-            { name: 'Corporate Banking', rank: 2, mentions: 76, models: ['ChatGPT', 'Claude'], trend: 'up' },
-            { name: 'Financial Services', rank: 3, mentions: 69, models: ['ChatGPT', 'Gemini'], trend: 'stable' },
-            { name: 'Payment Solutions', rank: 4, mentions: 54, models: ['Claude', 'Gemini'], trend: 'up' },
-            { name: 'Business Loans', rank: 5, mentions: 47, models: ['ChatGPT'], trend: 'stable' },
-            { name: 'Merchant Services', rank: 6, mentions: 38, models: ['Gemini'], trend: 'down' },
-            { name: 'Cash Management', rank: 7, mentions: 29, models: ['Claude'], trend: 'stable' },
-            { name: 'Treasury Services', rank: 9, mentions: 18, models: ['ChatGPT'], trend: 'down' }
-          ],
-          competitors: [
-            { brand: 'Your Brand', mentions: 234, avg_rank: 2.3, isUser: true },
-            { brand: 'Competitor A', mentions: 189, avg_rank: 2.1 },
-            { brand: 'Competitor B', mentions: 156, avg_rank: 2.8 },
-            { brand: 'Competitor C', mentions: 143, avg_rank: 3.2 },
-            { brand: 'Competitor D', mentions: 128, avg_rank: 3.8 },
-            { brand: 'Competitor E', mentions: 112, avg_rank: 4.1 },
-            { brand: 'Competitor F', mentions: 98, avg_rank: 4.5 },
-          ],
-          models: [
-            { name: 'ChatGPT', mentions: 89, coverage: 78 },
-            { name: 'Claude', mentions: 76, coverage: 72 },
-            { name: 'Gemini', mentions: 69, coverage: 65 },
-          ]
+          categories: shopping.categories || [],
+          competitors: shopping.competitors || [],
+          models: shopping.models || []
         }
         
         setData(shoppingData)
@@ -157,7 +149,62 @@ export default function ShoppingVisibilityPage() {
     )
   }
 
-  if (!data) return null
+  // Empty state - no scans yet
+  if (!hasScans || !data) {
+    return (
+      <div>
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
+              <h1 className="text-4xl font-heading font-bold text-white">
+                Shopping Visibility
+              </h1>
+            </div>
+
+            {/* Scan Button */}
+            <ScanButton onScanStart={handleStartScan} />
+          </div>
+          
+          <p className="text-sm text-softgray/60 mb-2">
+            How your products surface in AI shopping recommendations across models
+          </p>
+        </div>
+
+        {/* Empty State */}
+        <div 
+          className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="max-w-md mx-auto">
+            <ShoppingBag className="w-16 h-16 text-[#00C6B7] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+            <h2 className="text-2xl font-heading font-bold text-white mb-3">
+              No Scan Data Yet
+            </h2>
+            <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed">
+              Run your first scan to see how AI models recommend your products across shopping queries. 
+              We'll analyze ChatGPT, Claude, and Gemini to show where your brand appears.
+            </p>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
+          </div>
+        </div>
+
+        {/* Scan Progress Modal */}
+        <ScanProgressModal
+          isOpen={showScanModal}
+          onClose={() => setShowScanModal(false)}
+          scanId={currentScanId}
+        />
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -181,7 +228,9 @@ export default function ShoppingVisibilityPage() {
               How your products surface in AI shopping recommendations across models
             </p>
             <p className="text-sm text-softgray/70 italic">
-              AI models recommend your brand in {data.categories.length} product categories
+              {data.categories.length > 0 
+                ? `AI models recommend your brand in ${data.categories.length} product categories`
+                : 'Analyzing product category coverage...'}
             </p>
           </div>
           
@@ -208,20 +257,19 @@ export default function ShoppingVisibilityPage() {
               <TrendingUp className="w-5 h-5 text-white/60" strokeWidth={1.5} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+              <div className="text-softgray/60 text-xs font-body mb-1">
                 Visibility Score
               </div>
-              <div className="text-xs text-softgray/50">
-                Overall product presence
+              <div className="text-3xl font-heading font-bold text-white tabular-nums">
+                {data.visibility_score.toFixed(1)}%
               </div>
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.visibility_score}<span className="text-2xl text-softgray/40">%</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#00C6B7]">{data.visibility_delta}</span>
-            <span className="text-softgray/50">vs last week</span>
+          <div className="flex items-center gap-1.5 text-sm">
+            <span className="text-[#00C6B7] font-body font-medium">
+              {data.visibility_delta}
+            </span>
+            <span className="text-softgray/50 text-xs">vs last scan</span>
           </div>
         </div>
 
@@ -232,23 +280,22 @@ export default function ShoppingVisibilityPage() {
         >
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 bg-white/5 rounded-lg">
-              <ShoppingBag className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+              <Trophy className="w-5 h-5 text-white/60" strokeWidth={1.5} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+              <div className="text-softgray/60 text-xs font-body mb-1">
                 Total Mentions
               </div>
-              <div className="text-xs text-softgray/50">
-                Across all models
+              <div className="text-3xl font-heading font-bold text-white tabular-nums">
+                {data.total_mentions}
               </div>
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.total_mentions}
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#00C6B7]">{data.mentions_delta}</span>
-            <span className="text-softgray/50">this week</span>
+          <div className="flex items-center gap-1.5 text-sm">
+            <span className="text-[#00C6B7] font-body font-medium">
+              {data.mentions_delta}
+            </span>
+            <span className="text-softgray/50 text-xs">vs last scan</span>
           </div>
         </div>
 
@@ -259,23 +306,22 @@ export default function ShoppingVisibilityPage() {
         >
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 bg-white/5 rounded-lg">
-              <Trophy className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+              <Target className="w-5 h-5 text-white/60" strokeWidth={1.5} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+              <div className="text-softgray/60 text-xs font-body mb-1">
                 Average Rank
               </div>
-              <div className="text-xs text-softgray/50">
-                In recommendations
+              <div className="text-3xl font-heading font-bold text-white tabular-nums">
+                #{data.avg_rank.toFixed(1)}
               </div>
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            #{data.avg_rank}
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#00C6B7]">{data.rank_delta}</span>
-            <span className="text-softgray/50">position</span>
+          <div className="flex items-center gap-1.5 text-sm">
+            <span className="text-[#00C6B7] font-body font-medium">
+              {data.rank_delta}
+            </span>
+            <span className="text-softgray/50 text-xs">trending</span>
           </div>
         </div>
 
@@ -286,28 +332,28 @@ export default function ShoppingVisibilityPage() {
         >
           <div className="flex items-start gap-3 mb-4">
             <div className="p-2 bg-white/5 rounded-lg">
-              <Target className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+              <Sparkles className="w-5 h-5 text-white/60" strokeWidth={1.5} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+              <div className="text-softgray/60 text-xs font-body mb-1">
                 Market Position
               </div>
-              <div className="text-xs text-softgray/50">
-                Category ranking
+              <div className="text-3xl font-heading font-bold text-white tabular-nums">
+                #{data.market_position}
               </div>
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            #{data.market_position}
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-softgray/60">{data.position_delta}</span>
+          <div className="flex items-center gap-1.5 text-sm">
+            <span className="text-[#00C6B7] font-body font-medium">
+              {data.position_delta}
+            </span>
+            <span className="text-softgray/50 text-xs">position</span>
           </div>
         </div>
       </div>
 
-      {/* Two Column Grid - Context & Comparison */}
-      <div className="grid grid-cols-2 gap-8 mb-8">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Category Rankings */}
         <div 
           className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
@@ -321,27 +367,29 @@ export default function ShoppingVisibilityPage() {
           </div>
           
           {data.categories.length > 0 ? (
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-2">
               {data.categories.map((category, index) => (
                 <div 
-                  key={index} 
-                  className="shopping-clickable flex items-center justify-between p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                  style={{ cursor: 'pointer' }}
+                  key={index}
+                  className="p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
                 >
-                  <div className="flex items-center gap-3.5 flex-1">
-                    <div className="text-xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[2.5rem]">
-                      #{category.rank}
-                    </div>
+                  <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 min-w-0">
-                      <div className="text-white font-body font-medium text-sm mb-0.5">
+                      <div className="text-white font-body font-medium text-sm mb-1 truncate">
                         {category.name}
                       </div>
-                      <div className="text-softgray/60 text-xs font-body">
-                        {category.mentions} mentions • {category.models.length} models
+                      <div className="flex items-center gap-3 text-xs">
+                        <span className="text-softgray/60 font-body">
+                          Rank #{category.rank}
+                        </span>
+                        <span className="text-softgray/40">•</span>
+                        <span className="text-softgray/60 font-body">
+                          {category.mentions} mentions
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center justify-between">
                     <div className="text-softgray/50 text-xs font-body">
                       {category.models.slice(0, 2).join(', ')}
                     </div>
@@ -380,81 +428,94 @@ export default function ShoppingVisibilityPage() {
             <TrendingUp className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-2.5">
-            {data.competitors.map((competitor, index) => (
-              <div 
-                key={index} 
-                className={competitor.isUser ? '' : 'shopping-clickable'}
-                style={{ cursor: competitor.isUser ? 'default' : 'pointer' }}
-              >
-                <div className={`p-3.5 rounded-lg ${
-                  competitor.isUser 
-                    ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
-                    : 'bg-white/[0.02] hover:bg-white/[0.04]'
-                } transition-colors`}>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className={`font-body text-sm ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
-                      {competitor.brand}
+          {data.competitors.length > 0 ? (
+            <div className="space-y-2.5">
+              {data.competitors.map((competitor, index) => (
+                <div 
+                  key={index} 
+                  className={competitor.isUser ? '' : 'shopping-clickable'}
+                  style={{ cursor: competitor.isUser ? 'default' : 'pointer' }}
+                >
+                  <div className={`p-3.5 rounded-lg ${
+                    competitor.isUser 
+                      ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
+                      : 'bg-white/[0.02] hover:bg-white/[0.04]'
+                  } transition-colors`}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className={`font-body text-sm ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
+                        {competitor.brand}
+                      </div>
+                      <div className={`font-heading font-bold text-xl tabular-nums ${
+                        competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
+                      }`}>
+                        #{competitor.avg_rank}
+                      </div>
                     </div>
-                    <div className={`font-heading font-bold text-xl tabular-nums ${
-                      competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
-                    }`}>
-                      #{competitor.avg_rank}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-softgray/60 font-body text-xs">
-                      {competitor.mentions} mentions
-                    </span>
-                    {competitor.isUser && (
-                      <span className="text-[#00C6B7] text-xs font-body font-medium">
-                        Market leader
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-softgray/60 font-body text-xs">
+                        {competitor.mentions} mentions
                       </span>
-                    )}
+                      {competitor.isUser && (
+                        <span className="text-[#00C6B7] text-xs font-body font-medium">
+                          Your brand
+                        </span>
+                      )}
+                    </div>
                   </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-softgray/40 text-sm font-body mb-2">
+                No competitor data yet
+              </div>
+              <div className="text-softgray/60 text-xs font-body">
+                Competitive analysis will appear after your first scan
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Model Coverage - Full Width */}
+      {data.models.length > 0 && (
+        <div 
+          className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-heading font-bold text-white">
+              Model Coverage
+            </h2>
+            <Sparkles className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
+          </div>
+          
+          <div className="grid grid-cols-3 gap-8">
+            {data.models.map((model, index) => (
+              <div key={index}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-white font-body font-medium text-lg">
+                    {model.name}
+                  </div>
+                  <div className="text-[#00C6B7] font-heading font-bold text-2xl tabular-nums">
+                    {model.coverage}%
+                  </div>
+                </div>
+                <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
+                  <div 
+                    className="h-full bg-[#00C6B7] rounded-full transition-all duration-500"
+                    style={{ width: `${model.coverage}%` }}
+                  />
+                </div>
+                <div className="text-softgray/60 text-sm font-body">
+                  {model.mentions} mentions
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Model Coverage - Full Width */}
-      <div 
-        className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
-        style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-heading font-bold text-white">
-            Model Coverage
-          </h2>
-          <Sparkles className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-        </div>
-        
-        <div className="grid grid-cols-3 gap-8">
-          {data.models.map((model, index) => (
-            <div key={index}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-white font-body font-medium text-lg">
-                  {model.name}
-                </div>
-                <div className="text-[#00C6B7] font-heading font-bold text-2xl tabular-nums">
-                  {model.coverage}%
-                </div>
-              </div>
-              <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
-                <div 
-                  className="h-full bg-[#00C6B7] rounded-full transition-all duration-500"
-                  style={{ width: `${model.coverage}%` }}
-                />
-              </div>
-              <div className="text-softgray/60 text-sm font-body">
-                {model.mentions} mentions
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Recommended Improvements - Distinct Bottom Section */}
       <div 

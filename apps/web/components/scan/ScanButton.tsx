@@ -29,6 +29,17 @@ export default function ScanButton({ onScanStart, className = '' }: ScanButtonPr
     fetchScanStatus()
   }, [])
 
+  // Poll for status updates while scanning
+  useEffect(() => {
+    if (status?.reason !== 'scanning') return
+
+    const pollInterval = setInterval(() => {
+      fetchScanStatus()
+    }, 3000) // Poll every 3 seconds while scanning
+
+    return () => clearInterval(pollInterval)
+  }, [status?.reason])
+
   // Countdown timer for cooldown
   useEffect(() => {
     if (!status?.nextAvailableAt) return
@@ -68,7 +79,10 @@ export default function ScanButton({ onScanStart, className = '' }: ScanButtonPr
 
     try {
       onScanStart()
-      await fetchScanStatus() // Refresh after starting
+      // Wait a moment before refreshing to let backend update
+      setTimeout(() => {
+        fetchScanStatus()
+      }, 500)
     } catch (error) {
       console.error('Failed to start scan:', error)
     }
@@ -181,10 +195,10 @@ export default function ScanButton({ onScanStart, className = '' }: ScanButtonPr
     <div className={`flex flex-col gap-2 ${className}`}>
       <button
         onClick={handleScan}
-        className="flex items-center gap-2 px-4 py-2.5 bg-[var(--pageAccent)]/10 hover:bg-[var(--pageAccent)]/20 border border-[var(--pageAccent)]/30 hover:border-[var(--pageAccent)]/50 rounded-lg transition-all cursor-pointer group"
+        className="flex items-center gap-2 px-4 py-2.5 bg-transparent hover:bg-[var(--pageAccent)] border border-[var(--pageAccent)]/40 hover:border-[var(--pageAccent)] rounded-lg transition-all cursor-pointer group"
       >
-        <Zap className="w-4 h-4 text-[var(--pageAccent)] group-hover:scale-110 transition-transform" strokeWidth={2} />
-        <span className="text-sm font-body font-medium text-[var(--pageAccent)]">
+        <Zap className="w-4 h-4 text-[var(--pageAccent)] group-hover:text-white group-hover:scale-110 transition-all" strokeWidth={2} />
+        <span className="text-sm font-body font-medium text-[var(--pageAccent)] group-hover:text-white transition-colors">
           Run Fresh Scan
         </span>
       </button>
