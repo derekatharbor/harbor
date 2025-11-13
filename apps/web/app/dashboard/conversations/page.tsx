@@ -138,7 +138,7 @@ export default function ConversationVolumesPage() {
 
   const getIntentColor = (intent: string) => {
     const colors = {
-      how_to: 'bg-[#5A5AFF]/10 text-[#5A5AFF] border-[#5A5AFF]/30',
+      how_to: 'bg-[#FFB84D]/10 text-[#FFB84D] border-[#FFB84D]/30',
       vs: 'bg-[#00C6B7]/10 text-[#00C6B7] border-[#00C6B7]/30',
       price: 'bg-[#2979FF]/10 text-[#2979FF] border-[#2979FF]/30',
       trust: 'bg-[#4EE4FF]/10 text-[#4EE4FF] border-[#4EE4FF]/30',
@@ -173,7 +173,7 @@ export default function ConversationVolumesPage() {
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <MessageSquare className="w-8 h-8 text-[#5A5AFF]" strokeWidth={1.5} />
+          <MessageSquare className="w-8 h-8 text-[#FFB84D]" strokeWidth={1.5} />
           <h1 className="text-4xl font-heading font-bold text-white">
             Conversation Volumes
           </h1>
@@ -224,7 +224,7 @@ export default function ConversationVolumesPage() {
             {data.volume_index}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#5A5AFF]">{data.volume_delta}</span>
+            <span className="text-[#FFB84D]">{data.volume_delta}</span>
             <span className="text-softgray/50">vs last week</span>
           </div>
         </div>
@@ -251,7 +251,7 @@ export default function ConversationVolumesPage() {
             {data.top_questions_count}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#5A5AFF]">{data.questions_delta}</span>
+            <span className="text-[#FFB84D]">{data.questions_delta}</span>
             <span className="text-softgray/50">new this week</span>
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function ConversationVolumesPage() {
             {data.emerging_topics_count}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#5A5AFF]">{data.topics_delta}</span>
+            <span className="text-[#FFB84D]">{data.topics_delta}</span>
             <span className="text-softgray/50">detected</span>
           </div>
         </div>
@@ -305,7 +305,7 @@ export default function ConversationVolumesPage() {
             {data.co_mentions}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#5A5AFF]">{data.mentions_delta}</span>
+            <span className="text-[#FFB84D]">{data.mentions_delta}</span>
             <span className="text-softgray/50">this week</span>
           </div>
         </div>
@@ -322,11 +322,11 @@ export default function ConversationVolumesPage() {
             <h2 className="text-2xl font-heading font-bold text-white">
               Top Questions
             </h2>
-            <MessageSquare className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+            <MessageSquare className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
           </div>
           
           <div className="space-y-2.5">
-            {data.questions.slice(0, 8).map((question, index) => (
+            {data.questions.slice(0, 5).map((question, index) => (
               <div 
                 key={index} 
                 className="conversations-clickable p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
@@ -337,7 +337,7 @@ export default function ConversationVolumesPage() {
                     {question.text}
                   </div>
                   {question.emerging && (
-                    <span className="flex items-center gap-1 text-[#5A5AFF] text-xs px-2 py-0.5 bg-[#5A5AFF]/10 rounded font-medium whitespace-nowrap">
+                    <span className="flex items-center gap-1 text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium whitespace-nowrap">
                       <Sparkles className="w-3 h-3" strokeWidth={2} />
                       New
                     </span>
@@ -365,7 +365,7 @@ export default function ConversationVolumesPage() {
             <h2 className="text-2xl font-heading font-bold text-white">
               Intent Distribution
             </h2>
-            <TrendingUp className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+            <TrendingUp className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
           </div>
           
           <div className="space-y-5">
@@ -377,13 +377,13 @@ export default function ConversationVolumesPage() {
                       {getIntentLabel(intent)}
                     </span>
                   </div>
-                  <span className="text-[#5A5AFF] font-heading font-bold text-xl tabular-nums">
+                  <span className="text-[#FFB84D] font-heading font-bold text-xl tabular-nums">
                     {percentage}%
                   </span>
                 </div>
                 <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#5A5AFF] rounded-full transition-all duration-500"
+                    className="h-full bg-[#FFB84D] rounded-full transition-all duration-500"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -394,7 +394,7 @@ export default function ConversationVolumesPage() {
           {/* Add insight text at bottom */}
           <div className="mt-6 pt-6 border-t border-white/5">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#5A5AFF] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+              <AlertCircle className="w-5 h-5 text-[#FFB84D] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
               <div>
                 <div className="text-white font-body text-sm font-medium mb-1">
                   Primary Intent: How-To Guides
@@ -422,7 +422,7 @@ export default function ConversationVolumesPage() {
               How often your brand appears alongside competitors in user queries
             </p>
           </div>
-          <Users className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+          <Users className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
         </div>
         
         <div className="grid grid-cols-3 gap-4">
@@ -436,7 +436,7 @@ export default function ConversationVolumesPage() {
                 <div className="font-body font-medium text-white">
                   {competitor.brand}
                 </div>
-                <div className="text-[#5A5AFF] font-heading font-bold text-2xl tabular-nums">
+                <div className="text-[#FFB84D] font-heading font-bold text-2xl tabular-nums">
                   {competitor.co_mentions}
                 </div>
               </div>
@@ -462,7 +462,7 @@ export default function ConversationVolumesPage() {
               Rising interest areas with significant growth momentum
             </p>
           </div>
-          <Sparkles className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+          <Sparkles className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
         </div>
         
         <div className="grid grid-cols-5 gap-4">
@@ -473,8 +473,8 @@ export default function ConversationVolumesPage() {
               style={{ cursor: 'pointer' }}
             >
               <div className="flex items-start justify-between mb-3">
-                <AlertCircle className="w-4 h-4 text-[#5A5AFF]" strokeWidth={2} />
-                <span className="text-[#5A5AFF] text-xs font-body font-medium">
+                <AlertCircle className="w-4 h-4 text-[#FFB84D]" strokeWidth={2} />
+                <span className="text-[#FFB84D] text-xs font-body font-medium">
                   +{topic.growth}%
                 </span>
               </div>
@@ -507,7 +507,7 @@ export default function ConversationVolumesPage() {
               High-impact actions to address common user questions
             </p>
           </div>
-          <Target className="w-6 h-6 text-[#5A5AFF]" strokeWidth={1.5} />
+          <Target className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
         </div>
         
         <div className="grid grid-cols-3 gap-4">
@@ -519,14 +519,14 @@ export default function ConversationVolumesPage() {
               <div className="text-white font-body font-medium">
                 Add FAQ Schema
               </div>
-              <span className="text-[#5A5AFF] text-xs px-2 py-0.5 bg-[#5A5AFF]/10 rounded font-medium">
+              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Structure answers to your top questions for AI comprehension
             </div>
-            <button className="flex items-center gap-2 text-[#5A5AFF] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
               Generate Schema
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
@@ -540,14 +540,14 @@ export default function ConversationVolumesPage() {
               <div className="text-white font-body font-medium">
                 Build Comparison Pages
               </div>
-              <span className="text-[#5A5AFF] text-xs px-2 py-0.5 bg-[#5A5AFF]/10 rounded font-medium">
+              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Create "vs" pages for competitor comparisons
             </div>
-            <button className="flex items-center gap-2 text-[#5A5AFF] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
               View Template
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
@@ -568,7 +568,7 @@ export default function ConversationVolumesPage() {
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Address setup and integration questions
             </div>
-            <button className="flex items-center gap-2 text-[#5A5AFF] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
               Get Started
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>

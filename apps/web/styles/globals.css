@@ -30,8 +30,8 @@
 }
 
 [data-page="conversations"] {
-  --pageAccent: #4848CC;  /* Indigo damped */
-  --pageAccent-rgb: 72, 72, 204;
+  --pageAccent: #CC9239;  /* Amber/Gold damped 25% */
+  --pageAccent-rgb: 204, 146, 57;
 }
 
 [data-page="website"] {
