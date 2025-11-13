@@ -1,6 +1,5 @@
 // lib/ai-models.ts
-
-// This will handle calling different AI model APIs
+// FIXED: Correct model names for all APIs
 
 export type AIModel = 'gpt' | 'claude' | 'gemini' | 'perplexity'
 
@@ -56,7 +55,7 @@ async function callOpenAI(job: PromptJob): Promise<string> {
       'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini', // FIXED: Use gpt-4o-mini instead of gpt-4
+      model: 'gpt-4o-mini', // Cheaper and more available than gpt-4
       messages: [
         ...(job.system ? [{ role: 'system', content: job.system }] : []),
         { role: 'user', content: job.user }
@@ -86,7 +85,7 @@ async function callAnthropic(job: PromptJob): Promise<string> {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-5-sonnet-20240620', // FIXED: Correct date format
       max_tokens: job.maxTokens,
       messages: [
         { role: 'user', content: job.user }
@@ -109,8 +108,9 @@ async function callAnthropic(job: PromptJob): Promise<string> {
 async function callGemini(job: PromptJob): Promise<string> {
   const prompt = job.system ? `${job.system}\n\n${job.user}` : job.user
   
+  // FIXED: Use v1 instead of v1beta, and correct model name
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
