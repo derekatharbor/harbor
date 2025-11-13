@@ -120,7 +120,7 @@ export default function WebsiteAnalyticsPage() {
   }
 
   const getStatusIcon = (status: 'pass' | 'warning' | 'fail') => {
-    if (status === 'pass') return <CheckCircle className="w-4 h-4 text-[#2EE6D6]" strokeWidth={2} />
+    if (status === 'pass') return <CheckCircle className="w-4 h-4 text-[#E879F9]" strokeWidth={2} />
     if (status === 'warning') return <AlertTriangle className="w-4 h-4 text-[#FFB84D]" strokeWidth={2} />
     return <XCircle className="w-4 h-4 text-[#FF6B6B]" strokeWidth={2} />
   }
@@ -146,7 +146,7 @@ export default function WebsiteAnalyticsPage() {
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <Globe className="w-8 h-8 text-[#2EE6D6]" strokeWidth={1.5} />
+          <Globe className="w-8 h-8 text-[#E879F9]" strokeWidth={1.5} />
           <h1 className="text-4xl font-heading font-bold text-white">
             Website Analytics
           </h1>
@@ -197,7 +197,7 @@ export default function WebsiteAnalyticsPage() {
             {data.readability_score}<span className="text-2xl text-softgray/40">%</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#2EE6D6]">{data.readability_delta}</span>
+            <span className="text-[#E879F9]">{data.readability_delta}</span>
             <span className="text-softgray/50">improved</span>
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function WebsiteAnalyticsPage() {
             {data.schema_coverage}<span className="text-2xl text-softgray/40">%</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#2EE6D6]">{data.coverage_delta}</span>
+            <span className="text-[#E879F9]">{data.coverage_delta}</span>
             <span className="text-softgray/50">vs last scan</span>
           </div>
         </div>
@@ -251,7 +251,7 @@ export default function WebsiteAnalyticsPage() {
             {data.page_visibility}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#2EE6D6]">{data.visibility_delta}</span>
+            <span className="text-[#E879F9]">{data.visibility_delta}</span>
             <span className="text-softgray/50">pages indexed</span>
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function WebsiteAnalyticsPage() {
             {data.technical_issues}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#2EE6D6]">{data.issues_delta}</span>
+            <span className="text-[#E879F9]">{data.issues_delta}</span>
             <span className="text-softgray/50">resolved</span>
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function WebsiteAnalyticsPage() {
             <h2 className="text-2xl font-heading font-bold text-white">
               Schema Coverage
             </h2>
-            <FileCode className="w-6 h-6 text-[#2EE6D6]" strokeWidth={1.5} />
+            <FileCode className="w-6 h-6 text-[#E879F9]" strokeWidth={1.5} />
           </div>
           
           <div className="space-y-2.5">
@@ -321,7 +321,7 @@ export default function WebsiteAnalyticsPage() {
                 <div className="flex items-center gap-2 ml-6">
                   {page.schema_types.length > 0 ? (
                     page.schema_types.map((type, i) => (
-                      <span key={i} className="text-xs px-2 py-0.5 bg-[#2EE6D6]/10 text-[#2EE6D6] rounded border border-[#2EE6D6]/30 font-medium">
+                      <span key={i} className="text-xs px-2 py-0.5 bg-[#E879F9]/10 text-[#E879F9] rounded border border-[#E879F9]/30 font-medium">
                         {type}
                       </span>
                     ))
@@ -343,7 +343,7 @@ export default function WebsiteAnalyticsPage() {
             <h2 className="text-2xl font-heading font-bold text-white">
               Issue Breakdown
             </h2>
-            <AlertTriangle className="w-6 h-6 text-[#2EE6D6]" strokeWidth={1.5} />
+            <AlertTriangle className="w-6 h-6 text-[#E879F9]" strokeWidth={1.5} />
           </div>
           
           {/* Severity Summary */}
@@ -416,7 +416,7 @@ export default function WebsiteAnalyticsPage() {
               High-impact fixes to improve AI crawlability and comprehension
             </p>
           </div>
-          <Target className="w-6 h-6 text-[#2EE6D6]" strokeWidth={1.5} />
+          <Target className="w-6 h-6 text-[#E879F9]" strokeWidth={1.5} />
         </div>
         
         <div className="grid grid-cols-3 gap-4">
@@ -428,14 +428,14 @@ export default function WebsiteAnalyticsPage() {
               <div className="text-white font-body font-medium">
                 Add Missing Schema
               </div>
-              <span className="text-[#2EE6D6] text-xs px-2 py-0.5 bg-[#2EE6D6]/10 rounded font-medium">
+              <span className="text-[#E879F9] text-xs px-2 py-0.5 bg-[#E879F9]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Implement structured data on 8 pages missing JSON-LD
             </div>
-            <button className="flex items-center gap-2 text-[#2EE6D6] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#E879F9] text-sm font-body font-medium group-hover:gap-3 transition-all">
               Generate Schema
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
@@ -449,14 +449,14 @@ export default function WebsiteAnalyticsPage() {
               <div className="text-white font-body font-medium">
                 Fix Canonical Tags
               </div>
-              <span className="text-[#2EE6D6] text-xs px-2 py-0.5 bg-[#2EE6D6]/10 rounded font-medium">
+              <span className="text-[#E879F9] text-xs px-2 py-0.5 bg-[#E879F9]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Resolve duplicate content issues with proper canonicals
             </div>
-            <button className="flex items-center gap-2 text-[#2EE6D6] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#E879F9] text-sm font-body font-medium group-hover:gap-3 transition-all">
               View Issues
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
@@ -477,7 +477,7 @@ export default function WebsiteAnalyticsPage() {
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
               Write clear, concise descriptions for 5 pages
             </div>
-            <button className="flex items-center gap-2 text-[#2EE6D6] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#E879F9] text-sm font-body font-medium group-hover:gap-3 transition-all">
               Generate Descriptions
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>

@@ -35,8 +35,8 @@
 }
 
 [data-page="website"] {
-  --pageAccent: #24B8AB;  /* Cyan-Teal damped */
-  --pageAccent-rgb: 36, 184, 171;
+  --pageAccent: #B95BC4;  /* Magenta/Pink damped 25% */
+  --pageAccent-rgb: 185, 91, 196;
 }
 
 @layer base {

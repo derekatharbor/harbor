@@ -39,7 +39,7 @@ export default function Sidebar() {
     if (pathname === '/dashboard/shopping') return '#00C6B7' // Aqua
     if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
     if (pathname === '/dashboard/conversations') return '#FFB84D' // Amber/Gold
-    if (pathname === '/dashboard/website') return '#2EE6D6' // Cyan-Teal
+    if (pathname === '/dashboard/website') return '#E879F9' // Magenta/Pink
     return '#FF6B4A' // Coral fallback
   }
 
