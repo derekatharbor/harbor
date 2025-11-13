@@ -49,7 +49,7 @@ export default function OverviewPage() {
     fetchLatestScan()
   }, [])
 
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return '2 hours ago'
     try {
       const date = new Date(dateString)
