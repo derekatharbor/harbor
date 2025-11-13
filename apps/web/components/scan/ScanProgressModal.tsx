@@ -28,6 +28,7 @@ interface ScanStatusResponse {
 
 export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgressModalProps) {
   const [progress, setProgress] = useState(0)
+  const [targetProgress, setTargetProgress] = useState(0)
   const [currentMessage, setCurrentMessage] = useState('Initializing scan...')
   const [moduleStatus, setModuleStatus] = useState<ModuleStatus>({
     shopping: 'pending',
@@ -38,6 +39,22 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
   const [isComplete, setIsComplete] = useState(false)
   const [hasFailed, setHasFailed] = useState(false)
 
+  // Smooth progress interpolation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev < targetProgress) {
+          // Gradually move toward target
+          const diff = targetProgress - prev
+          return prev + Math.min(diff * 0.1, 1)
+        }
+        return prev
+      })
+    }, 100) // Update every 100ms for smooth animation
+
+    return () => clearInterval(interval)
+  }, [targetProgress])
+
   useEffect(() => {
     if (!isOpen || !scanId) return
 
@@ -47,7 +64,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
         const response = await fetch(`/api/scan/status/${scanId}`)
         const data: ScanStatusResponse = await response.json()
 
-        setProgress(data.progress)
+        setTargetProgress(data.progress)
         setCurrentMessage(data.message)
         setModuleStatus(data.modules)
 
@@ -187,7 +204,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             </div>
             <button
               onClick={handleClose}
-              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
+              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none focus:ring-2 focus:ring-[var(--pageAccent)]/50"
             >
               View Results
             </button>

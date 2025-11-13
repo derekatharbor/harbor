@@ -195,7 +195,7 @@ export default function ScanButton({ onScanStart, className = '' }: ScanButtonPr
     <div className={`flex flex-col gap-2 ${className}`}>
       <button
         onClick={handleScan}
-        className="flex items-center gap-2 px-4 py-2.5 bg-transparent hover:bg-[var(--pageAccent)] border border-[var(--pageAccent)]/40 hover:border-[var(--pageAccent)] rounded-lg transition-all cursor-pointer group"
+        className="flex items-center gap-2 px-4 py-2.5 bg-transparent hover:bg-[var(--pageAccent)] border border-[var(--pageAccent)]/40 hover:border-[var(--pageAccent)] rounded-lg transition-all cursor-pointer group outline-none focus:ring-2 focus:ring-[var(--pageAccent)]/50"
       >
         <Zap className="w-4 h-4 text-[var(--pageAccent)] group-hover:text-white group-hover:scale-110 transition-all" strokeWidth={2} />
         <span className="text-sm font-body font-medium text-[var(--pageAccent)] group-hover:text-white transition-colors">
