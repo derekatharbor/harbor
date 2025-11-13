@@ -33,6 +33,18 @@ export default function Sidebar() {
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
   ]
 
+  // Get current page accent color
+  const getAccentColor = () => {
+    if (pathname === '/dashboard/overview') return '#2979FF' // Cerulean
+    if (pathname === '/dashboard/shopping') return '#00C6B7' // Aqua
+    if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
+    if (pathname === '/dashboard/conversations') return '#5A5AFF' // Indigo
+    if (pathname === '/dashboard/website') return '#2EE6D6' // Cyan-Teal
+    return '#FF6B4A' // Coral fallback
+  }
+
+  const accentColor = getAccentColor()
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0B1521] border-r border-white/5 flex flex-col overflow-hidden">
       {/* Header */}
@@ -72,10 +84,13 @@ export default function Sidebar() {
                   flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
                   transition-colors cursor-pointer
                   ${isActive 
-                    ? 'text-white border-l-2 border-coral pl-[10px]' 
+                    ? 'text-white pl-[10px]' 
                     : 'text-softgray/60 hover:text-white hover:bg-white/5'
                   }
                 `}
+                style={isActive ? {
+                  borderLeft: `2px solid ${accentColor}`
+                } : {}}
               >
                 <Icon className="w-5 h-5" strokeWidth={1.5} />
                 <span className="text-sm font-body">{item.name}</span>
@@ -102,10 +117,13 @@ export default function Sidebar() {
                   flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
                   transition-colors cursor-pointer
                   ${isActive 
-                    ? 'text-white border-l-2 border-coral pl-[10px]' 
+                    ? 'text-white pl-[10px]' 
                     : 'text-softgray/60 hover:text-white hover:bg-white/5'
                   }
                 `}
+                style={isActive ? {
+                  borderLeft: `2px solid ${accentColor}`
+                } : {}}
               >
                 <Icon className="w-5 h-5" strokeWidth={1.5} />
                 <span className="text-sm font-body">{item.name}</span>
@@ -123,10 +141,13 @@ export default function Sidebar() {
             flex items-center gap-3 px-3 py-2.5 rounded-lg
             transition-colors cursor-pointer
             ${pathname === '/dashboard/settings'
-              ? 'text-white border-l-2 border-coral pl-[10px]'
+              ? 'text-white pl-[10px]'
               : 'text-softgray/60 hover:text-white hover:bg-white/5'
             }
           `}
+          style={pathname === '/dashboard/settings' ? {
+            borderLeft: `2px solid ${accentColor}`
+          } : {}}
         >
           <Settings className="w-5 h-5" strokeWidth={1.5} />
           <span className="text-sm font-body">Control Center</span>
