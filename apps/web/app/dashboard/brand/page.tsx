@@ -2,148 +2,51 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/navigation'
 import { Star, TrendingUp, Users, AlertCircle } from 'lucide-react'
-
-interface BrandDescriptor {
-  word: string
-  sentiment: 'pos' | 'neu' | 'neg'
-  weight: number
-  model: string
-}
-
-interface CompetitorData {
-  name: string
-  mentionCount: number
-  context: string[]
-}
 
 export default function BrandVisibilityPage() {
   const [loading, setLoading] = useState(true)
-  const [descriptors, setDescriptors] = useState<BrandDescriptor[]>([])
-  const [competitors, setCompetitors] = useState<CompetitorData[]>([])
-  const [brandScore, setBrandScore] = useState<number>(0)
-  const [totalMentions, setTotalMentions] = useState<number>(0)
-  const [brandName, setBrandName] = useState('')
-
-  const supabase = createClientComponentClient()
+  const [data, setData] = useState<any>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    async function loadBrandData() {
+    async function loadData() {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session) return
+        const response = await fetch('/api/scan/latest')
+        const scanData = await response.json()
 
-        const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('org_id')
-          .eq('user_id', session.user.id)
-          .single()
-
-        if (!userRole) return
-
-        const { data: dashboard } = await supabase
-          .from('dashboards')
-          .select('id, brand_name')
-          .eq('org_id', userRole.org_id)
-          .single()
-
-        if (!dashboard) return
-
-        setBrandName(dashboard.brand_name)
-
-        const { data: latestScan } = await supabase
-          .from('scans')
-          .select('id')
-          .eq('dashboard_id', dashboard.id)
-          .eq('status', 'done')
-          .order('finished_at', { ascending: false })
-          .limit(1)
-          .single()
-
-        if (!latestScan) {
-          setLoading(false)
+        if (!scanData.hasScans) {
+          router.push('/dashboard')
           return
         }
 
-        // Get visibility score
-        const { data: scoreData } = await supabase
-          .from('visibility_scores')
-          .select('brand_score, brand_mentions')
-          .eq('scan_id', latestScan.id)
-          .single()
-
-        if (scoreData) {
-          setBrandScore(scoreData.brand_score || 0)
-          setTotalMentions(scoreData.brand_mentions || 0)
-        }
-
-        // Get brand descriptors
-        const { data: descriptorData } = await supabase
-          .from('results_brand')
-          .select('*')
-          .eq('scan_id', latestScan.id)
-          .order('weight', { ascending: false })
-
-        if (descriptorData) {
-          setDescriptors(
-            descriptorData.map(d => ({
-              word: d.descriptor,
-              sentiment: d.sentiment,
-              weight: d.weight || 10,
-              model: d.source_model,
-            }))
-          )
-        }
-
-        // Get competitor data
-        const { data: competitorData } = await supabase
-          .from('brand_competitors')
-          .select('*')
-          .eq('scan_id', latestScan.id)
-
-        if (competitorData) {
-          const competitorMap = new Map<string, CompetitorData>()
-
-          competitorData.forEach(c => {
-            if (!competitorMap.has(c.competitor_name)) {
-              competitorMap.set(c.competitor_name, {
-                name: c.competitor_name,
-                mentionCount: 0,
-                context: [],
-              })
-            }
-            const comp = competitorMap.get(c.competitor_name)!
-            comp.mentionCount++
-            if (c.comparison_context) {
-              comp.context.push(c.comparison_context)
-            }
-          })
-
-          setCompetitors(
-            Array.from(competitorMap.values())
-              .sort((a, b) => b.mentionCount - a.mentionCount)
-              .slice(0, 5)
-          )
-        }
-
+        setData(scanData)
       } catch (error) {
-        console.error('Error loading brand data:', error)
+        console.error('Failed to load brand data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadBrandData()
-  }, [supabase])
+    loadData()
+  }, [router])
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
-        <div className="text-white font-mono">Loading brand visibility...</div>
+        <div className="text-white font-body">Loading brand visibility...</div>
       </div>
     )
   }
+
+  if (!data || !data.hasScans) {
+    return null
+  }
+
+  const descriptors = data.results?.brand || []
+  const brandScore = data.scores?.brand_score || 0
+  const brandMentions = data.scores?.brand_mentions || 0
 
   if (descriptors.length === 0) {
     return (
@@ -164,9 +67,9 @@ export default function BrandVisibilityPage() {
   }
 
   const sentimentCounts = {
-    pos: descriptors.filter(d => d.sentiment === 'pos').length,
-    neu: descriptors.filter(d => d.sentiment === 'neu').length,
-    neg: descriptors.filter(d => d.sentiment === 'neg').length,
+    pos: descriptors.filter((d: any) => d.sentiment === 'pos').length,
+    neu: descriptors.filter((d: any) => d.sentiment === 'neu').length,
+    neg: descriptors.filter((d: any) => d.sentiment === 'neg').length,
   }
 
   const sentimentPercentage = {
@@ -186,33 +89,49 @@ export default function BrandVisibilityPage() {
               Brand Visibility
             </h1>
           </div>
-          <p className="text-softgray font-body text-lg">
+          <p className="text-softgray font-body text-lg mb-2">
             How AI describes and associates your brand
           </p>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1 bg-teal/20 border border-teal/30 rounded-full">
+              <div className="w-2 h-2 bg-teal rounded-full animate-pulse" />
+              <span className="text-teal text-xs font-body uppercase tracking-wide">Live</span>
+            </div>
+            <p className="text-softgray/60 text-sm font-body">
+              Last scan: {new Date(data.scan?.finishedAt || '').toLocaleString()}
+            </p>
+          </div>
         </div>
 
         {/* Score Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Brand Score</span>
-              <Star className="w-4 h-4 text-coral" />
-            </div>
-            <div className="text-3xl font-heading font-bold text-white mb-1">
-              {brandScore.toFixed(1)}%
-            </div>
-            <div className="flex items-center gap-1 text-cerulean text-sm font-body">
-              <TrendingUp className="w-3 h-3" />
-              <span>+5.2% vs last scan</span>
+          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-coral/5 rounded-full blur-2xl" />
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                  Brand Score
+                </span>
+                <Star className="w-4 h-4 text-coral" />
+              </div>
+              <div className="text-3xl font-heading font-bold text-white mb-1">
+                {brandScore.toFixed(1)}%
+              </div>
+              <div className="flex items-center gap-1 text-teal text-sm font-body">
+                <TrendingUp className="w-3 h-3" />
+                <span>+5.2% vs last scan</span>
+              </div>
             </div>
           </div>
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Total Mentions</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Total Mentions
+              </span>
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
-              {totalMentions}
+              {brandMentions}
             </div>
             <div className="text-softgray text-sm font-body">
               Across all models
@@ -221,7 +140,9 @@ export default function BrandVisibilityPage() {
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Positive Sentiment</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Positive Sentiment
+              </span>
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
               {sentimentPercentage.pos.toFixed(0)}%
@@ -233,14 +154,16 @@ export default function BrandVisibilityPage() {
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Competitors</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Descriptors
+              </span>
               <Users className="w-4 h-4 text-softgray" />
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
-              {competitors.length}
+              {descriptors.length}
             </div>
             <div className="text-softgray text-sm font-body">
-              Identified
+              Total identified
             </div>
           </div>
         </div>
@@ -252,7 +175,7 @@ export default function BrandVisibilityPage() {
           </h3>
 
           <div className="flex flex-wrap gap-3 mb-8">
-            {descriptors.slice(0, 20).map((desc, idx) => {
+            {descriptors.slice(0, 24).map((desc: any, idx: number) => {
               const sizeClass = desc.weight > 15 ? 'text-xl' : desc.weight > 10 ? 'text-lg' : 'text-base'
               const colorClass =
                 desc.sentiment === 'pos'
@@ -264,9 +187,9 @@ export default function BrandVisibilityPage() {
               return (
                 <div
                   key={idx}
-                  className={`px-4 py-2 rounded-full border ${colorClass} ${sizeClass} font-body font-medium`}
+                  className={`px-4 py-2 rounded-full border ${colorClass} ${sizeClass} font-body font-medium transition-all hover:scale-110 cursor-default`}
                 >
-                  {desc.word}
+                  {desc.descriptor}
                 </div>
               )
             })}
@@ -283,15 +206,21 @@ export default function BrandVisibilityPage() {
                   {sentimentCounts.pos}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {descriptors
-                  .filter(d => d.sentiment === 'pos')
-                  .slice(0, 5)
-                  .map((d, i) => (
+                  .filter((d: any) => d.sentiment === 'pos')
+                  .slice(0, 6)
+                  .map((d: any, i: number) => (
                     <span key={i} className="text-xs text-cerulean/80 font-body">
-                      {d.word}
+                      {d.descriptor}
                     </span>
                   ))}
+              </div>
+              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
+                <div
+                  className="h-full bg-cerulean rounded-full transition-all duration-1000"
+                  style={{ width: `${sentimentPercentage.pos}%` }}
+                />
               </div>
             </div>
 
@@ -304,15 +233,21 @@ export default function BrandVisibilityPage() {
                   {sentimentCounts.neu}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {descriptors
-                  .filter(d => d.sentiment === 'neu')
-                  .slice(0, 5)
-                  .map((d, i) => (
+                  .filter((d: any) => d.sentiment === 'neu')
+                  .slice(0, 6)
+                  .map((d: any, i: number) => (
                     <span key={i} className="text-xs text-softgray/80 font-body">
-                      {d.word}
+                      {d.descriptor}
                     </span>
                   ))}
+              </div>
+              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
+                <div
+                  className="h-full bg-softgray rounded-full transition-all duration-1000"
+                  style={{ width: `${sentimentPercentage.neu}%` }}
+                />
               </div>
             </div>
 
@@ -325,68 +260,25 @@ export default function BrandVisibilityPage() {
                   {sentimentCounts.neg}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {descriptors
-                  .filter(d => d.sentiment === 'neg')
-                  .slice(0, 5)
-                  .map((d, i) => (
+                  .filter((d: any) => d.sentiment === 'neg')
+                  .slice(0, 6)
+                  .map((d: any, i: number) => (
                     <span key={i} className="text-xs text-coral/80 font-body">
-                      {d.word}
+                      {d.descriptor}
                     </span>
                   ))}
+              </div>
+              <div className="h-2 bg-navy rounded-full overflow-hidden mt-4">
+                <div
+                  className="h-full bg-coral rounded-full transition-all duration-1000"
+                  style={{ width: `${sentimentPercentage.neg}%` }}
+                />
               </div>
             </div>
           </div>
         </div>
-
-        {/* Competitor Analysis */}
-        {competitors.length > 0 && (
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <h3 className="text-xl font-heading font-semibold text-white mb-6">
-              Competitor Landscape
-            </h3>
-
-            <div className="space-y-4">
-              {competitors.map((comp, idx) => (
-                <div
-                  key={idx}
-                  className="bg-[#101A31] rounded-lg p-4 border border-white/5 hover:border-white/10 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-navy flex items-center justify-center">
-                        <span className="text-sm font-heading text-white">
-                          {comp.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="text-base font-body font-semibold text-white">
-                          {comp.name}
-                        </h4>
-                        <p className="text-xs text-softgray font-body">
-                          {comp.mentionCount} co-mentions
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-heading text-softgray">
-                        Rank #{idx + 1}
-                      </div>
-                    </div>
-                  </div>
-
-                  {comp.context.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-white/5">
-                      <p className="text-xs text-softgray font-body italic">
-                        "{comp.context[0]}"
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )

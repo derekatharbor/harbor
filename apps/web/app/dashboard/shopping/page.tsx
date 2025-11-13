@@ -2,189 +2,109 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { ShoppingBag, TrendingUp, TrendingDown, Award, AlertCircle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { ShoppingBag, TrendingUp, Award, AlertCircle, ArrowRight } from 'lucide-react'
 
-interface ShoppingData {
-  category: string
+interface ShoppingResult {
   model: string
-  userMentions: number
-  competitorMentions: number
-  avgUserRank: number
-  bestUserRank: number
-  topCompetitors: Array<{
-    brand: string
-    mentions: number
-    avgRank: number
-  }>
+  category: string
+  product: string
+  brand: string
+  rank: number
+  confidence: number
 }
 
-interface ProductMention {
+interface CompetitorRanking {
   brand: string
-  product: string
-  rank: number
-  model: string
-  category: string
-  isUserBrand: boolean
+  mentions: number
+  avgRank: number
+  isUser: boolean
 }
 
 export default function ShoppingVisibilityPage() {
   const [loading, setLoading] = useState(true)
-  const [shoppingData, setShoppingData] = useState<ShoppingData[]>([])
-  const [allMentions, setAllMentions] = useState<ProductMention[]>([])
-  const [visibilityScore, setVisibilityScore] = useState<number>(0)
-  const [shoppingRank, setShoppingRank] = useState<number | null>(null)
-  const [brandName, setBrandName] = useState('')
-
-  const supabase = createClientComponentClient()
+  const [data, setData] = useState<any>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    async function loadShoppingData() {
+    async function loadData() {
       try {
-        // Get current user's dashboard
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session) return
+        const response = await fetch('/api/scan/latest')
+        const scanData = await response.json()
 
-        const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('org_id')
-          .eq('user_id', session.user.id)
-          .single()
-
-        if (!userRole) return
-
-        const { data: dashboard } = await supabase
-          .from('dashboards')
-          .select('id, brand_name')
-          .eq('org_id', userRole.org_id)
-          .single()
-
-        if (!dashboard) return
-
-        setBrandName(dashboard.brand_name)
-
-        // Get latest scan
-        const { data: latestScan } = await supabase
-          .from('scans')
-          .select('id')
-          .eq('dashboard_id', dashboard.id)
-          .eq('status', 'done')
-          .order('finished_at', { ascending: false })
-          .limit(1)
-          .single()
-
-        if (!latestScan) {
-          setLoading(false)
+        if (!scanData.hasScans) {
+          router.push('/dashboard')
           return
         }
 
-        // Get visibility score
-        const { data: scoreData } = await supabase
-          .from('visibility_scores')
-          .select('shopping_score, shopping_rank')
-          .eq('scan_id', latestScan.id)
-          .single()
-
-        if (scoreData) {
-          setVisibilityScore(scoreData.shopping_score || 0)
-          setShoppingRank(scoreData.shopping_rank)
-        }
-
-        // Get all shopping results
-        const { data: results } = await supabase
-          .from('results_shopping')
-          .select('*')
-          .eq('scan_id', latestScan.id)
-          .order('rank', { ascending: true })
-
-        if (!results) {
-          setLoading(false)
-          return
-        }
-
-        // Process all mentions
-        const mentions: ProductMention[] = results.map(r => ({
-          brand: r.brand,
-          product: r.product,
-          rank: r.rank,
-          model: r.model,
-          category: r.category,
-          isUserBrand: r.is_user_brand || false,
-        }))
-
-        setAllMentions(mentions)
-
-        // Aggregate by category and model
-        const aggregated = new Map<string, ShoppingData>()
-
-        for (const result of results) {
-          const key = `${result.category}-${result.model}`
-          
-          if (!aggregated.has(key)) {
-            aggregated.set(key, {
-              category: result.category,
-              model: result.model,
-              userMentions: 0,
-              competitorMentions: 0,
-              avgUserRank: 0,
-              bestUserRank: 99,
-              topCompetitors: [],
-            })
-          }
-
-          const data = aggregated.get(key)!
-          
-          if (result.is_user_brand) {
-            data.userMentions++
-            data.avgUserRank = (data.avgUserRank + result.rank) / data.userMentions
-            data.bestUserRank = Math.min(data.bestUserRank, result.rank)
-          } else {
-            data.competitorMentions++
-          }
-        }
-
-        // Get top competitors
-        const competitorMap = new Map<string, { mentions: number; totalRank: number }>()
-        
-        for (const result of results) {
-          if (!result.is_user_brand) {
-            const current = competitorMap.get(result.brand) || { mentions: 0, totalRank: 0 }
-            current.mentions++
-            current.totalRank += result.rank
-            competitorMap.set(result.brand, current)
-          }
-        }
-
-        const topCompetitors = Array.from(competitorMap.entries())
-          .map(([brand, data]) => ({
-            brand,
-            mentions: data.mentions,
-            avgRank: data.totalRank / data.mentions,
-          }))
-          .sort((a, b) => b.mentions - a.mentions)
-          .slice(0, 5)
-
-        setShoppingData(Array.from(aggregated.values()))
-
+        setData(scanData)
       } catch (error) {
-        console.error('Error loading shopping data:', error)
+        console.error('Failed to load shopping data:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadShoppingData()
-  }, [supabase])
+    loadData()
+  }, [router])
 
   if (loading) {
     return (
       <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
-        <div className="text-white font-mono">Loading shopping visibility...</div>
+        <div className="text-white font-body">Loading shopping visibility...</div>
       </div>
     )
   }
 
-  if (allMentions.length === 0) {
+  if (!data || !data.hasScans) {
+    return null
+  }
+
+  const results: ShoppingResult[] = data.results?.shopping || []
+  const brandName = data.dashboard?.brandName || 'Your Brand'
+  const shoppingScore = data.scores?.shopping_score || 0
+  const marketRank = data.scores?.shopping_rank || 0
+
+  // Calculate user mentions
+  const userMentions = results.filter(r => 
+    r.brand.toLowerCase() === brandName.toLowerCase()
+  )
+
+  const avgRank = userMentions.length > 0
+    ? userMentions.reduce((sum, r) => sum + r.rank, 0) / userMentions.length
+    : 0
+
+  // Group by category for competitive analysis
+  const categories = Array.from(new Set(results.map(r => r.category)))
+  
+  // Calculate competitor rankings
+  const competitorMap = new Map<string, { mentions: number; totalRank: number }>()
+  results.forEach(r => {
+    const current = competitorMap.get(r.brand) || { mentions: 0, totalRank: 0 }
+    current.mentions++
+    current.totalRank += r.rank
+    competitorMap.set(r.brand, current)
+  })
+
+  const competitorRankings: CompetitorRanking[] = Array.from(competitorMap.entries())
+    .map(([brand, data]) => ({
+      brand,
+      mentions: data.mentions,
+      avgRank: data.totalRank / data.mentions,
+      isUser: brand.toLowerCase() === brandName.toLowerCase(),
+    }))
+    .sort((a, b) => a.avgRank - b.avgRank)
+
+  // Group by model
+  const byModel: Record<string, ShoppingResult[]> = {}
+  results.forEach(r => {
+    if (!byModel[r.model]) byModel[r.model] = []
+    byModel[r.model].push(r)
+  })
+
+  const models = Object.keys(byModel)
+
+  if (results.length === 0) {
     return (
       <div className="min-h-screen bg-[#101A31] p-8">
         <div className="max-w-7xl mx-auto">
@@ -202,12 +122,6 @@ export default function ShoppingVisibilityPage() {
     )
   }
 
-  const userMentions = allMentions.filter(m => m.isUserBrand)
-  const competitorMentions = allMentions.filter(m => !m.isUserBrand)
-  const avgUserRank = userMentions.length > 0
-    ? userMentions.reduce((sum, m) => sum + m.rank, 0) / userMentions.length
-    : 0
-
   return (
     <div className="min-h-screen bg-[#101A31]">
       <div className="max-w-7xl mx-auto p-8">
@@ -219,30 +133,46 @@ export default function ShoppingVisibilityPage() {
               Shopping Visibility
             </h1>
           </div>
-          <p className="text-softgray font-body text-lg">
+          <p className="text-softgray font-body text-lg mb-2">
             How your products appear in AI shopping recommendations
           </p>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1 bg-teal/20 border border-teal/30 rounded-full">
+              <div className="w-2 h-2 bg-teal rounded-full animate-pulse" />
+              <span className="text-teal text-xs font-body uppercase tracking-wide">Live</span>
+            </div>
+            <p className="text-softgray/60 text-sm font-body">
+              Last scan: {new Date(data.scan?.finishedAt || '').toLocaleString()}
+            </p>
+          </div>
         </div>
 
         {/* Score Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Visibility Score</span>
-              <Award className="w-4 h-4 text-coral" />
-            </div>
-            <div className="text-3xl font-heading font-bold text-white mb-1">
-              {visibilityScore.toFixed(1)}%
-            </div>
-            <div className="flex items-center gap-1 text-cerulean text-sm font-body">
-              <TrendingUp className="w-3 h-3" />
-              <span>+2.3% vs last scan</span>
+          <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-teal/5 rounded-full blur-2xl" />
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                  Visibility Score
+                </span>
+                <Award className="w-4 h-4 text-coral" />
+              </div>
+              <div className="text-3xl font-heading font-bold text-white mb-1">
+                {shoppingScore.toFixed(1)}%
+              </div>
+              <div className="flex items-center gap-1 text-teal text-sm font-body">
+                <TrendingUp className="w-3 h-3" />
+                <span>+2.3% vs last scan</span>
+              </div>
             </div>
           </div>
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Your Mentions</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Your Mentions
+              </span>
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
               {userMentions.length}
@@ -254,10 +184,12 @@ export default function ShoppingVisibilityPage() {
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Average Rank</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Average Rank
+              </span>
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
-              #{avgUserRank.toFixed(1)}
+              #{avgRank > 0 ? avgRank.toFixed(1) : 'N/A'}
             </div>
             <div className="text-softgray text-sm font-body">
               In recommendations
@@ -266,122 +198,146 @@ export default function ShoppingVisibilityPage() {
 
           <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-softgray text-sm font-body">Market Rank</span>
+              <span className="text-softgray text-sm font-body uppercase tracking-wide">
+                Market Rank
+              </span>
             </div>
             <div className="text-3xl font-heading font-bold text-white mb-1">
-              #{shoppingRank || 'N/A'}
+              #{marketRank || competitorRankings.findIndex(c => c.isUser) + 1}
             </div>
             <div className="text-softgray text-sm font-body">
-              vs competitors
+              of {competitorRankings.length} brands
             </div>
           </div>
         </div>
 
-        {/* Competitive Rankings Table */}
+        {/* Competitive Rankings */}
         <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 mb-8">
-          <h3 className="text-xl font-heading font-semibold text-white mb-6">
-            Competitive Rankings
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-heading font-semibold text-white">
+              Competitive Rankings
+            </h3>
+            <span className="text-sm text-softgray font-body">
+              {categories.length} categories analyzed
+            </span>
+          </div>
 
-          <div className="space-y-4">
-            {Array.from(new Set(allMentions.map(m => m.category))).map(category => {
-              const categoryMentions = allMentions.filter(m => m.category === category)
-              const brandRankings = new Map<string, { mentions: number; avgRank: number; isUser: boolean }>()
+          {categories.map(category => {
+            const categoryResults = results.filter(r => r.category === category)
+            const categoryCompetitors = new Map<string, { mentions: number; avgRank: number; isUser: boolean }>()
+            
+            categoryResults.forEach(r => {
+              const current = categoryCompetitors.get(r.brand) || { mentions: 0, avgRank: 0, isUser: false }
+              current.mentions++
+              current.avgRank = (current.avgRank * (current.mentions - 1) + r.rank) / current.mentions
+              current.isUser = r.brand.toLowerCase() === brandName.toLowerCase()
+              categoryCompetitors.set(r.brand, current)
+            })
 
-              categoryMentions.forEach(m => {
-                const current = brandRankings.get(m.brand) || { mentions: 0, avgRank: 0, isUser: m.isUserBrand }
-                current.mentions++
-                current.avgRank = (current.avgRank * (current.mentions - 1) + m.rank) / current.mentions
-                brandRankings.set(m.brand, current)
-              })
+            const sortedBrands = Array.from(categoryCompetitors.entries())
+              .sort((a, b) => a[1].avgRank - b[1].avgRank)
+              .slice(0, 8)
 
-              const sortedBrands = Array.from(brandRankings.entries())
-                .sort((a, b) => a[1].avgRank - b[1].avgRank)
-                .slice(0, 8)
-
-              return (
-                <div key={category} className="border-b border-white/5 last:border-0 pb-6 last:pb-0">
-                  <h4 className="text-sm font-body text-softgray uppercase tracking-wide mb-4">
-                    {category}
-                  </h4>
-                  <div className="space-y-2">
-                    {sortedBrands.map(([brand, data], idx) => (
-                      <div
-                        key={brand}
-                        className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                          data.isUser ? 'bg-coral/10 ring-1 ring-coral/30' : 'bg-[#101A31]/50 hover:bg-[#101A31]'
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <span className="text-softgray font-body text-sm w-8">
-                            #{idx + 1}
-                          </span>
-                          <div className="w-8 h-8 rounded bg-navy flex items-center justify-center">
-                            <span className="text-xs font-heading text-white">
-                              {brand.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <span className={`font-body text-sm ${data.isUser ? 'text-white font-semibold' : 'text-softgray'}`}>
-                            {brand}
-                            {data.isUser && (
-                              <span className="ml-2 text-xs text-coral">(You)</span>
-                            )}
+            return (
+              <div key={category} className="border-b border-white/5 last:border-0 pb-6 mb-6 last:mb-0">
+                <h4 className="text-sm font-body text-softgray uppercase tracking-wide mb-4">
+                  {category}
+                </h4>
+                <div className="space-y-2">
+                  {sortedBrands.map(([brand, data], idx) => (
+                    <div
+                      key={brand}
+                      className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                        data.isUser 
+                          ? 'bg-coral/10 ring-1 ring-coral/30' 
+                          : 'bg-[#101A31]/50 hover:bg-[#101A31]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4 flex-1">
+                        <span className="text-softgray font-body text-sm w-8">
+                          #{idx + 1}
+                        </span>
+                        <div className="w-8 h-8 rounded bg-navy flex items-center justify-center">
+                          <span className="text-xs font-heading text-white">
+                            {brand.charAt(0).toUpperCase()}
                           </span>
                         </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-right">
-                            <div className="text-xs text-softgray font-body mb-1">Avg Rank</div>
-                            <div className="text-sm font-heading text-white">
-                              #{data.avgRank.toFixed(1)}
-                            </div>
+                        <span className={`font-body text-sm flex-1 ${
+                          data.isUser ? 'text-white font-semibold' : 'text-softgray'
+                        }`}>
+                          {brand}
+                          {data.isUser && (
+                            <span className="ml-2 text-xs text-coral">(You)</span>
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-6">
+                        <div className="text-right">
+                          <div className="text-xs text-softgray font-body mb-1">Avg Rank</div>
+                          <div className="text-sm font-heading text-white">
+                            #{data.avgRank.toFixed(1)}
                           </div>
-                          <div className="text-right">
-                            <div className="text-xs text-softgray font-body mb-1">Mentions</div>
-                            <div className="text-sm font-heading text-white">{data.mentions}</div>
-                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-softgray font-body mb-1">Mentions</div>
+                          <div className="text-sm font-heading text-white">{data.mentions}</div>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Model Breakdown */}
-        <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
+        <div className="bg-[#141E38] rounded-lg border border-white/5 p-6 mb-8">
           <h3 className="text-xl font-heading font-semibold text-white mb-6">
-            Mentions by AI Model
+            Product Mentions by Model
           </h3>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {['gpt', 'claude', 'gemini'].map(model => {
-              const modelMentions = allMentions.filter(m => m.model === model)
-              const userModelMentions = modelMentions.filter(m => m.isUserBrand)
-              const competitorModelMentions = modelMentions.filter(m => !m.isUserBrand)
+            {models.map(model => {
+              const modelResults = byModel[model]
+              const userModelMentions = modelResults.filter(r => 
+                r.brand.toLowerCase() === brandName.toLowerCase()
+              )
+              const competitorModelMentions = modelResults.filter(r => 
+                r.brand.toLowerCase() !== brandName.toLowerCase()
+              )
+
+              const modelName = model === 'ChatGPT' ? 'ChatGPT' : 
+                               model === 'Claude' ? 'Claude' : 
+                               model === 'Gemini' ? 'Gemini' : model
 
               return (
                 <div key={model} className="bg-[#101A31] rounded-lg p-4 border border-white/5">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-sm font-body text-white uppercase tracking-wide">
-                      {model === 'gpt' ? 'ChatGPT' : model === 'claude' ? 'Claude' : 'Gemini'}
+                      {modelName}
                     </h4>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-softgray font-body">Your mentions</span>
-                      <span className="text-lg font-heading text-coral">{userModelMentions.length}</span>
+                      <span className="text-lg font-heading text-coral">
+                        {userModelMentions.length}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-softgray font-body">Competitor mentions</span>
-                      <span className="text-lg font-heading text-softgray">{competitorModelMentions.length}</span>
+                      <span className="text-lg font-heading text-softgray">
+                        {competitorModelMentions.length}
+                      </span>
                     </div>
                     <div className="h-2 bg-navy rounded-full overflow-hidden mt-3">
                       <div
-                        className="h-full bg-coral rounded-full"
+                        className="h-full bg-coral rounded-full transition-all duration-1000"
                         style={{
-                          width: `${modelMentions.length > 0 ? (userModelMentions.length / modelMentions.length) * 100 : 0}%`,
+                          width: `${modelResults.length > 0 
+                            ? (userModelMentions.length / modelResults.length) * 100 
+                            : 0}%`,
                         }}
                       />
                     </div>
@@ -389,6 +345,87 @@ export default function ShoppingVisibilityPage() {
                 </div>
               )
             })}
+          </div>
+        </div>
+
+        {/* Optimize Section */}
+        <div className="bg-[#141E38] rounded-lg border border-white/5 p-6">
+          <h3 className="text-xl font-heading font-semibold text-white mb-2">
+            Optimize Your Shopping Visibility
+          </h3>
+          <p className="text-softgray font-body text-sm mb-6">
+            Recommended actions to improve your product mentions in AI shopping results
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="bg-[#101A31] rounded-lg p-4 border border-white/5 hover:border-teal/30 transition-all cursor-pointer group">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-teal/20 flex items-center justify-center text-teal">
+                  <ShoppingBag className="w-5 h-5" />
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-teal/20 text-teal font-body">
+                  +15% potential
+                </span>
+              </div>
+              <h4 className="text-white font-body font-semibold mb-2 text-sm">
+                Add Product Schema
+              </h4>
+              <p className="text-softgray text-xs font-body mb-3">
+                Implement Product JSON-LD with name, brand, SKU, and pricing to...
+              </p>
+              <div className="flex items-center gap-2 text-teal text-xs font-body group-hover:gap-3 transition-all">
+                <span>Generate Schema</span>
+                <ArrowRight className="w-3 h-3" />
+              </div>
+            </div>
+
+            <div className="bg-[#101A31] rounded-lg p-4 border border-white/5 hover:border-cerulean/30 transition-all cursor-pointer group">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-cerulean/20 flex items-center justify-center text-cerulean">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-cerulean/20 text-cerulean font-body">
+                  +8% potential
+                </span>
+              </div>
+              <h4 className="text-white font-body font-semibold mb-2 text-sm">
+                Enrich Descriptions
+              </h4>
+              <p className="text-softgray text-xs font-body mb-3">
+                Expand product descriptions to 120-150 words with AI-readable...
+              </p>
+              <div className="flex items-center gap-2 text-cerulean text-xs font-body group-hover:gap-3 transition-all">
+                <span>View Guide</span>
+                <ArrowRight className="w-3 h-3" />
+              </div>
+            </div>
+
+            <div className="bg-[#101A31] rounded-lg p-4 border border-white/5 hover:border-coral/30 transition-all cursor-pointer group">
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-coral/20 flex items-center justify-center text-coral">
+                  <Award className="w-5 h-5" />
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-coral/20 text-coral font-body">
+                  +12% potential
+                </span>
+              </div>
+              <h4 className="text-white font-body font-semibold mb-2 text-sm">
+                Add Review Schema
+              </h4>
+              <p className="text-softgray text-xs font-body mb-3">
+                Include aggregateRating and Review schema to build trust...
+              </p>
+              <div className="flex items-center gap-2 text-coral text-xs font-body group-hover:gap-3 transition-all">
+                <span>Generate Schema</span>
+                <ArrowRight className="w-3 h-3" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
