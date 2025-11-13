@@ -4,13 +4,13 @@
 
 import { useEffect, useState } from 'react'
 import { 
-  LayoutDashboard, 
   ShoppingBag, 
   Star, 
   MessageSquare, 
   Globe,
   TrendingUp,
-  RefreshCw
+  FileText,
+  Search
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -26,7 +26,6 @@ interface ScanData {
 export default function OverviewPage() {
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState('7days')
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -82,7 +81,8 @@ export default function OverviewPage() {
       unit: '%',
       change: '+1%',
       trend: 'vs last week',
-      icon: ShoppingBag
+      icon: ShoppingBag,
+      isLead: true
     },
     {
       title: 'BRAND MENTIONS',
@@ -125,23 +125,23 @@ export default function OverviewPage() {
     {
       title: 'Improve Shopping Visibility',
       potential: '+1.9% potential',
-      description: 'Optimize product schema and descriptions to...',
+      description: 'Optimize product schema and descriptions to improve AI comprehension',
       link: 'View Optimization',
-      icon: '📈'
+      icon: TrendingUp
     },
     {
       title: 'Analyze Brand Mentions',
       growth: '+12% growth',
-      description: 'Deep dive into how AI describes your brand and...',
+      description: 'Deep dive into how AI describes your brand and identify optimization opportunities',
       link: 'View Intelligence',
-      icon: '🔍'
+      icon: Search
     },
     {
       title: 'Review Readability Report',
       issues: '3 issues found',
-      description: 'See which pages need optimization for better AI...',
+      description: 'See which pages need optimization for better AI comprehension',
       link: 'View Report',
-      icon: '📄'
+      icon: FileText
     }
   ]
 
@@ -155,17 +155,18 @@ export default function OverviewPage() {
           </h1>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-softgray/60">
             <span>Last scan:</span>
             <span className="text-white">{formatDate(scanData?.last_scan)}</span>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
               Live
             </span>
           </div>
           
-          <div className="flex items-center gap-2 ml-auto">
+          {/* Time Filter Pills */}
+          <div className="flex items-center gap-2">
             <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors">
               Last 24 hours
             </button>
@@ -182,12 +183,19 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
+      {/* Metric Cards Grid - 32px margin below */}
       <div className="grid grid-cols-4 gap-6 mb-8">
         {metrics.map((metric) => {
           const Icon = metric.icon
           return (
-            <div key={metric.title} className="bg-navy-card rounded-lg p-6 border border-white/5">
+            <div 
+              key={metric.title} 
+              className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
+              style={{ 
+                boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)',
+                opacity: metric.isLead ? 1 : 0.95
+              }}
+            >
               <div className="flex items-start gap-3 mb-4">
                 <div className="p-2 bg-white/5 rounded-lg">
                   <Icon className="w-5 h-5 text-white/60" strokeWidth={1.5} />
@@ -203,7 +211,10 @@ export default function OverviewPage() {
               </div>
               
               <div className="flex items-baseline gap-2 mb-2">
-                <div className="text-4xl font-heading font-bold text-white tabular-nums">
+                <div 
+                  className="font-heading font-bold text-white tabular-nums"
+                  style={{ fontSize: metric.isLead ? '2.5rem' : '2.25rem' }}
+                >
                   {metric.value}
                   {metric.unit && <span className="text-2xl text-softgray/40">{metric.unit}</span>}
                 </div>
@@ -218,8 +229,8 @@ export default function OverviewPage() {
         })}
       </div>
 
-      {/* Brand Visibility Section */}
-      <div className="bg-navy-card rounded-lg p-8 border border-white/5 mb-8">
+      {/* Brand Visibility Section - 32px spacing */}
+      <div className="bg-[#101C2C] rounded-lg p-8 border border-white/5 mb-8" style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}>
         <div className="mb-6">
           <h2 className="text-2xl font-heading font-bold text-white mb-2">
             Brand Visibility
@@ -230,7 +241,7 @@ export default function OverviewPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          {/* Chart */}
+          {/* Chart - Left Column */}
           <div>
             <div className="mb-4">
               <div className="text-sm text-softgray/60 uppercase tracking-wider mb-2">
@@ -244,8 +255,22 @@ export default function OverviewPage() {
               </div>
             </div>
             
-            {/* Simple chart placeholder */}
-            <div className="h-48 bg-navy/50 rounded-lg border border-white/5 flex items-center justify-center">
+            {/* Scanning Grid Pattern Chart Placeholder */}
+            <div 
+              className="h-48 rounded-lg border border-white/5 flex items-center justify-center relative overflow-hidden"
+              style={{
+                background: `
+                  repeating-linear-gradient(
+                    45deg,
+                    rgba(255,255,255,0.03) 0,
+                    rgba(255,255,255,0.03) 2px,
+                    transparent 2px,
+                    transparent 4px
+                  ),
+                  #0B1521
+                `
+              }}
+            >
               <div className="text-softgray/40 text-sm">Chart visualization</div>
             </div>
             
@@ -254,83 +279,98 @@ export default function OverviewPage() {
             </button>
           </div>
 
-          {/* Competitor Ranking */}
-          <div>
-            <div className="text-sm text-softgray/60 uppercase tracking-wider mb-4">
-              BRAND INDUSTRY RANKING
-            </div>
+          {/* Vertical Divider */}
+          <div className="relative">
+            <div className="absolute left-0 top-0 bottom-0 w-px bg-white/5"></div>
             
-            <div className="space-y-3">
-              {competitors.map((comp) => (
-                <div 
-                  key={comp.rank} 
-                  className={`flex items-center gap-4 p-4 rounded-lg ${
-                    comp.isYou 
-                      ? 'bg-coral/10 border border-coral/30' 
-                      : 'bg-navy/50 border border-white/5'
-                  }`}
-                >
-                  <div className="text-lg font-heading font-bold text-softgray/60 w-6">
-                    {comp.rank}
-                  </div>
-                  
-                  <div className="flex items-center gap-3 flex-1">
-                    <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
-                      <span className="text-xs font-bold text-white">
-                        {comp.name.substring(0, 2).toUpperCase()}
-                      </span>
+            {/* Competitor Ranking - Right Column */}
+            <div className="pl-8">
+              <div className="text-sm text-softgray/60 uppercase tracking-wider mb-4">
+                BRAND INDUSTRY RANKING
+              </div>
+              
+              <div className="space-y-0">
+                {competitors.map((comp, index) => (
+                  <div 
+                    key={comp.rank} 
+                    className={`
+                      flex items-center gap-4 p-4 rounded-lg
+                      ${comp.isYou 
+                        ? 'bg-[rgba(41,121,255,0.05)] border border-blue-500/30' 
+                        : index % 2 === 0 ? 'bg-white/[0.02]' : 'bg-transparent'
+                      }
+                    `}
+                  >
+                    <div className="text-lg font-heading font-bold text-softgray/60 w-6 tabular-nums">
+                      {comp.rank}
                     </div>
-                    <div className="flex-1">
-                      <div className="text-white font-medium text-sm">
-                        {comp.name}
-                        {comp.isYou && <span className="ml-2 text-xs text-coral">(You)</span>}
+                    
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">
+                          {comp.name.substring(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-white font-medium text-sm">
+                          {comp.name}
+                        </div>
                       </div>
                     </div>
+                    
+                    <div className={`text-sm ${comp.change.startsWith('+') ? 'text-blue-400' : 'text-red-400'}`}>
+                      {comp.change}
+                    </div>
+                    
+                    <div className="text-white font-heading font-bold text-lg tabular-nums w-16 text-right">
+                      {comp.score}%
+                    </div>
                   </div>
-                  
-                  <div className={`text-sm ${comp.change.startsWith('+') ? 'text-blue-400' : 'text-red-400'}`}>
-                    {comp.change}
-                  </div>
-                  
-                  <div className="text-white font-heading font-bold text-lg tabular-nums w-16 text-right">
-                    {comp.score}%
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Recommended Actions */}
-      <div className="mb-8">
+      {/* Next Best Actions - 32px spacing */}
+      <div>
         <h2 className="text-2xl font-heading font-bold text-white mb-6">
-          Recommended Actions
+          Next Best Actions
         </h2>
         
         <div className="grid grid-cols-3 gap-6">
-          {actions.map((action, index) => (
-            <div key={index} className="bg-navy-card rounded-lg p-6 border border-white/5 hover:border-white/10 transition-colors cursor-pointer">
-              <div className="flex items-start justify-between mb-4">
-                <div className="text-2xl">{action.icon}</div>
-                <div className="text-sm text-blue-400">
-                  {action.potential || action.growth || action.issues}
+          {actions.map((action, index) => {
+            const Icon = action.icon
+            return (
+              <div 
+                key={index} 
+                className="bg-[#101C2C] rounded-lg p-6 border border-white/5 hover:border-white/10 transition-colors cursor-pointer"
+                style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-2 bg-white/5 rounded-lg">
+                    <Icon className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
+                  </div>
+                  <div className="text-sm text-blue-400">
+                    {action.potential || action.growth || action.issues}
+                  </div>
                 </div>
+                
+                <h3 className="text-lg font-heading font-semibold text-white mb-2">
+                  {action.title}
+                </h3>
+                
+                <p className="text-sm text-softgray/60 mb-4 leading-relaxed">
+                  {action.description}
+                </p>
+                
+                <button className="text-blue-400 text-sm hover:underline">
+                  {action.link} →
+                </button>
               </div>
-              
-              <h3 className="text-lg font-heading font-semibold text-white mb-2">
-                {action.title}
-              </h3>
-              
-              <p className="text-sm text-softgray/60 mb-4">
-                {action.description}
-              </p>
-              
-              <button className="text-blue-400 text-sm hover:underline">
-                {action.link} →
-              </button>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>
