@@ -94,6 +94,17 @@ export default function ShoppingVisibilityPage() {
     fetchData()
   }, [])
 
+  // NUCLEAR CURSOR FIX
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.innerHTML = `
+      .shopping-clickable { cursor: pointer !important; }
+      .shopping-clickable:hover { cursor: pointer !important; }
+    `
+    document.head.appendChild(style)
+    return () => document.head.removeChild(style)
+  }, [])
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
     try {
@@ -286,7 +297,8 @@ export default function ShoppingVisibilityPage() {
               {data.categories.map((category, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center justify-between p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors cursor-pointer"
+                  className="shopping-clickable flex items-center justify-between p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="flex items-center gap-3.5 flex-1">
                     <div className="text-xl font-heading font-bold text-[#00C6B7] tabular-nums min-w-[2.5rem]">
@@ -344,31 +356,34 @@ export default function ShoppingVisibilityPage() {
             {data.competitors.map((competitor, index) => (
               <div 
                 key={index} 
-                className={`p-3.5 rounded-lg ${
+                className={competitor.isUser ? '' : 'shopping-clickable'}
+                style={{ cursor: competitor.isUser ? 'default' : 'pointer' }}
+              >
+                <div className={`p-3.5 rounded-lg ${
                   competitor.isUser 
                     ? 'bg-[#00C6B7]/10 border border-[#00C6B7]/30' 
-                    : 'bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer'
-                } transition-colors`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className={`font-body text-sm ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
-                    {competitor.brand}
+                    : 'bg-white/[0.02] hover:bg-white/[0.04]'
+                } transition-colors`}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className={`font-body text-sm ${competitor.isUser ? 'font-bold text-white' : 'font-medium text-white'}`}>
+                      {competitor.brand}
+                    </div>
+                    <div className={`font-heading font-bold text-xl tabular-nums ${
+                      competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
+                    }`}>
+                      #{competitor.avg_rank}
+                    </div>
                   </div>
-                  <div className={`font-heading font-bold text-xl tabular-nums ${
-                    competitor.isUser ? 'text-[#00C6B7]' : 'text-softgray/70'
-                  }`}>
-                    #{competitor.avg_rank}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-softgray/60 font-body text-xs">
-                    {competitor.mentions} mentions
-                  </span>
-                  {competitor.isUser && (
-                    <span className="text-[#00C6B7] text-xs font-body font-medium">
-                      Market leader
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-softgray/60 font-body text-xs">
+                      {competitor.mentions} mentions
                     </span>
-                  )}
+                    {competitor.isUser && (
+                      <span className="text-[#00C6B7] text-xs font-body font-medium">
+                        Market leader
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -435,7 +450,10 @@ export default function ShoppingVisibilityPage() {
         </div>
         
         <div className="grid grid-cols-3 gap-4">
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+          <div 
+            className="shopping-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
+            style={{ cursor: 'pointer' }}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
                 Add Product Schema
@@ -453,7 +471,10 @@ export default function ShoppingVisibilityPage() {
             </button>
           </div>
 
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+          <div 
+            className="shopping-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
+            style={{ cursor: 'pointer' }}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
                 Enrich Descriptions
@@ -471,7 +492,10 @@ export default function ShoppingVisibilityPage() {
             </button>
           </div>
 
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
+          <div 
+            className="shopping-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
+            style={{ cursor: 'pointer' }}
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
                 Expand Category Coverage
