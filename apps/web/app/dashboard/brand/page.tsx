@@ -1,13 +1,16 @@
+// apps/web/app/dashboard/brand/page.tsx
+
 'use client'
 
 import { useEffect, useState } from 'react'
-import { TrendingUp, MessageCircle, Tag, Award } from 'lucide-react'
+import { TrendingUp, MessageCircle, Tag, Award, RefreshCw, Calendar } from 'lucide-react'
 
 interface BrandData {
   brand_score: number
   total_mentions: number
   positive_percentage: number
   descriptor_count: number
+  last_scan: string | null
   descriptors: Array<{
     word: string
     sentiment: 'pos' | 'neu' | 'neg'
@@ -32,12 +35,12 @@ export default function BrandVisibilityPage() {
         
         const scanData = await response.json()
         
-        // Map scan data to brand format
         const brandData: BrandData = {
           brand_score: scanData.brand_visibility || 82,
           total_mentions: scanData.total_mentions || 234,
           positive_percentage: scanData.positive_sentiment || 68,
           descriptor_count: scanData.brand_results?.length || 0,
+          last_scan: scanData.last_scan,
           descriptors: scanData.brand_results || [],
           sentiment_breakdown: {
             positive: 68,
@@ -57,10 +60,23 @@ export default function BrandVisibilityPage() {
     fetchData()
   }, [])
 
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No recent scan'
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      })
+    } catch {
+      return 'No recent scan'
+    }
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-softgray/60 font-body">Loading brand data...</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-softgray/60 font-body text-sm">Loading brand data...</div>
       </div>
     )
   }
@@ -69,74 +85,90 @@ export default function BrandVisibilityPage() {
 
   return (
     <div className="stagger-children">
-      {/* Page Header with Accent Line (Periwinkle) */}
-      <div className="mb-8 page-header pt-8">
-        <div className="flex items-center gap-3 mb-3">
-          <Award className="w-8 h-8 text-accent" />
-          <h1 className="text-3xl font-heading font-bold text-white">
-            Brand Visibility
-          </h1>
+      {/* Page Header - Consistent Padding */}
+      <div className="page-header pt-6 pb-5 px-7 mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <Award className="w-6 h-6 text-accent" strokeWidth={1.5} />
+              <h1 className="text-3xl font-heading font-bold text-white tracking-tight">
+                Brand Visibility
+              </h1>
+            </div>
+            <p className="text-softgray/70 text-sm font-body mt-2">
+              How AI models perceive and describe your brand identity
+            </p>
+          </div>
+          
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg transition-all text-accent font-body text-sm font-medium">
+            <RefreshCw className="w-4 h-4" strokeWidth={2} />
+            Run Fresh Scan
+          </button>
         </div>
-        <p className="text-softgray/70 text-sm font-body">
-          How AI describes and perceives your brand
-        </p>
+        
+        <div className="flex items-center gap-2 mt-4 text-softgray/50 text-xs font-body">
+          <Calendar className="w-3.5 h-3.5" strokeWidth={1.5} />
+          Last scan: {formatDate(data.last_scan)}
+        </div>
       </div>
 
       {/* Score Cards Row */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <TrendingUp className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Brand Score
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
-            {data.brand_score}%
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
+            {data.brand_score}
+            <span className="text-xl text-softgray/40">%</span>
           </div>
-          <div className="delta-positive text-sm mt-2">
-            +3.1% vs last week
+          <div className="delta-positive text-sm mt-2 font-body" style={{ textShadow: '0 0 8px rgba(var(--pageAccent-rgb), 0.5)' }}>
+            +3.1%
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <MessageCircle className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <MessageCircle className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Total Mentions
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
             {data.total_mentions}
           </div>
-          <div className="delta-positive text-sm mt-2">
+          <div className="delta-positive text-sm mt-2 font-body">
             +12 this week
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Award className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <Award className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Positive Sentiment
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
-            {data.positive_percentage}%
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
+            {data.positive_percentage}
+            <span className="text-xl text-softgray/40">%</span>
           </div>
-          <div className="delta-positive text-sm mt-2">
+          <div className="delta-positive text-sm mt-2 font-body">
             +2.3%
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Tag className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <Tag className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Descriptors
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
             {data.descriptor_count}
           </div>
           <div className="text-softgray/60 text-xs mt-2 font-body">
@@ -147,11 +179,12 @@ export default function BrandVisibilityPage() {
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-2 gap-8">
-        {/* Left Column: Descriptor Cloud */}
+        {/* Left Column */}
         <div className="space-y-6">
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <Tag className="w-5 h-5 text-accent" />
+          {/* Descriptor Cloud */}
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <Tag className="w-5 h-5 text-accent" strokeWidth={1.5} />
               Brand Descriptors
             </h2>
             
@@ -166,8 +199,8 @@ export default function BrandVisibilityPage() {
                   </span>
                 ))
               ) : (
-                <div className="text-softgray/60 text-sm font-body text-center w-full py-4">
-                  No descriptors available yet
+                <div className="text-softgray/60 text-sm font-body text-center w-full py-8">
+                  No descriptors yet — data updates after next scan
                 </div>
               )}
             </div>
@@ -191,60 +224,69 @@ export default function BrandVisibilityPage() {
           </div>
 
           {/* Sentiment Breakdown */}
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-accent" />
-              Sentiment Breakdown
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <TrendingUp className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Sentiment Distribution
             </h2>
             
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-white font-body font-medium">
+                  <div className="text-white font-body font-medium text-sm">
                     Positive
                   </div>
-                  <div className="text-[#00C6B7] font-heading font-bold">
+                  <div className="text-[#00C6B7] font-heading font-bold tabular-nums">
                     {data.sentiment_breakdown.positive}%
                   </div>
                 </div>
-                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#00C6B7] transition-all"
-                    style={{ width: `${data.sentiment_breakdown.positive}%` }}
+                    className="h-full bg-[#00C6B7] transition-all rounded-full"
+                    style={{ 
+                      width: `${data.sentiment_breakdown.positive}%`,
+                      boxShadow: '0 0 8px rgba(0, 198, 183, 0.4)'
+                    }}
                   ></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-white font-body font-medium">
+                  <div className="text-white font-body font-medium text-sm">
                     Neutral
                   </div>
-                  <div className="text-[#4EE4FF] font-heading font-bold">
+                  <div className="text-[#4EE4FF] font-heading font-bold tabular-nums">
                     {data.sentiment_breakdown.neutral}%
                   </div>
                 </div>
-                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#4EE4FF] transition-all"
-                    style={{ width: `${data.sentiment_breakdown.neutral}%` }}
+                    className="h-full bg-[#4EE4FF] transition-all rounded-full"
+                    style={{ 
+                      width: `${data.sentiment_breakdown.neutral}%`,
+                      boxShadow: '0 0 8px rgba(78, 228, 255, 0.4)'
+                    }}
                   ></div>
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-white font-body font-medium">
+                  <div className="text-white font-body font-medium text-sm">
                     Negative
                   </div>
-                  <div className="text-[#FF4E70] font-heading font-bold">
+                  <div className="text-[#FF4E70] font-heading font-bold tabular-nums">
                     {data.sentiment_breakdown.negative}%
                   </div>
                 </div>
-                <div className="h-3 bg-navy-lighter rounded-full overflow-hidden">
+                <div className="h-2 bg-navy-lighter rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#FF4E70] transition-all"
-                    style={{ width: `${data.sentiment_breakdown.negative}%` }}
+                    className="h-full bg-[#FF4E70] transition-all rounded-full"
+                    style={{ 
+                      width: `${data.sentiment_breakdown.negative}%`,
+                      boxShadow: '0 0 8px rgba(255, 78, 112, 0.4)'
+                    }}
                   ></div>
                 </div>
               </div>
@@ -252,25 +294,26 @@ export default function BrandVisibilityPage() {
           </div>
         </div>
 
-        {/* Right Column: Brand Analysis & Actions */}
+        {/* Right Column */}
         <div className="space-y-6">
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-accent" />
-              Brand Summary
+          {/* Brand Analysis */}
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <Award className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Perception Analysis
             </h2>
             
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-navy-lighter/50">
-                <div className="text-softgray/80 font-body leading-relaxed">
-                  Your brand is consistently mentioned in relation to innovation, quality, and customer service. 
+                <div className="text-softgray/80 font-body leading-relaxed text-sm">
+                  Your brand is consistently associated with innovation, quality, and customer service. 
                   AI models frequently describe your products as reliable and well-designed.
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-navy-lighter/50">
-                  <div className="text-softgray/60 text-xs font-body uppercase mb-1">
+                  <div className="text-softgray/60 text-xs font-body uppercase mb-1 tracking-wide">
                     Top Association
                   </div>
                   <div className="text-white font-body font-bold">
@@ -278,7 +321,7 @@ export default function BrandVisibilityPage() {
                   </div>
                 </div>
                 <div className="p-4 rounded-lg bg-navy-lighter/50">
-                  <div className="text-softgray/60 text-xs font-body uppercase mb-1">
+                  <div className="text-softgray/60 text-xs font-body uppercase mb-1 tracking-wide">
                     Sentiment Trend
                   </div>
                   <div className="text-accent font-body font-bold">
@@ -290,58 +333,58 @@ export default function BrandVisibilityPage() {
           </div>
 
           {/* Optimize Actions */}
-          <div className="card-L2 card-fade-in p-6 border-l-2 border-accent">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-accent" />
-              Optimize Your Brand Perception
+          <div className="card-L2 p-6 border-l-2 border-accent">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <TrendingUp className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Optimization
             </h2>
             
             <div className="space-y-3">
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
+                <div className="text-white font-body font-medium mb-1 text-sm">
                   Add Organization Schema
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
-                  Help AI understand your brand structure and offerings
+                <div className="text-softgray/60 text-xs font-body mb-3">
+                  Structure brand information for model comprehension
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  Generate Schema
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  Generate Schema →
                 </button>
               </div>
 
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
+                <div className="text-white font-body font-medium mb-1 text-sm">
                   Unify Brand Language
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
+                <div className="text-softgray/60 text-xs font-body mb-3">
                   Align messaging across About, Press, and landing pages
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  Review Copy
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  Review Copy →
                 </button>
               </div>
 
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
-                  Create Positioning Page
+                <div className="text-white font-body font-medium mb-1 text-sm">
+                  Positioning Page
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
-                  Clarify your category and unique value proposition
+                <div className="text-softgray/60 text-xs font-body mb-3">
+                  Clarify category and unique value proposition
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  Get Template
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  Get Template →
                 </button>
               </div>
 
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
+                <div className="text-white font-body font-medium mb-1 text-sm">
                   Authority Sources
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
-                  Link to Wikipedia, Crunchbase, or industry databases
+                <div className="text-softgray/60 text-xs font-body mb-3">
+                  Link to Wikipedia, Crunchbase, industry databases
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  View Options
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  View Options →
                 </button>
               </div>
             </div>

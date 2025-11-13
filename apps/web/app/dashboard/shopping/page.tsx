@@ -1,13 +1,16 @@
+// apps/web/app/dashboard/shopping/page.tsx
+
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ShoppingBag, TrendingUp, Trophy, Target } from 'lucide-react'
+import { ShoppingBag, TrendingUp, Trophy, Target, RefreshCw, Calendar } from 'lucide-react'
 
 interface ShoppingData {
   visibility_score: number
   total_mentions: number
   avg_rank: number
   market_position: number
+  last_scan: string | null
   categories: Array<{
     name: string
     rank: number
@@ -38,12 +41,12 @@ export default function ShoppingVisibilityPage() {
         
         const scanData = await response.json()
         
-        // Map scan data to shopping format
         const shoppingData: ShoppingData = {
           visibility_score: scanData.shopping_visibility || 87,
           total_mentions: scanData.total_mentions || 234,
           avg_rank: 2.3,
           market_position: 3,
+          last_scan: scanData.last_scan,
           categories: scanData.shopping_results?.slice(0, 8) || [],
           competitors: [
             { brand: 'Competitor A', mentions: 189, avg_rank: 2.1 },
@@ -68,10 +71,23 @@ export default function ShoppingVisibilityPage() {
     fetchData()
   }, [])
 
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No recent scan'
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      })
+    } catch {
+      return 'No recent scan'
+    }
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-softgray/60 font-body">Loading shopping data...</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-softgray/60 font-body text-sm">Loading shopping data...</div>
       </div>
     )
   }
@@ -80,74 +96,89 @@ export default function ShoppingVisibilityPage() {
 
   return (
     <div className="stagger-children">
-      {/* Page Header with Accent Line (Aqua) */}
-      <div className="mb-8 page-header pt-8">
-        <div className="flex items-center gap-3 mb-3">
-          <ShoppingBag className="w-8 h-8 text-accent" />
-          <h1 className="text-3xl font-heading font-bold text-white">
-            Shopping Visibility
-          </h1>
+      {/* Page Header - Consistent Padding */}
+      <div className="page-header pt-6 pb-5 px-7 mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <ShoppingBag className="w-6 h-6 text-accent" strokeWidth={1.5} />
+              <h1 className="text-3xl font-heading font-bold text-white tracking-tight">
+                Shopping Visibility
+              </h1>
+            </div>
+            <p className="text-softgray/70 text-sm font-body mt-2">
+              How your products surface in AI shopping recommendations
+            </p>
+          </div>
+          
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg transition-all text-accent font-body text-sm font-medium">
+            <RefreshCw className="w-4 h-4" strokeWidth={2} />
+            Run Fresh Scan
+          </button>
         </div>
-        <p className="text-softgray/70 text-sm font-body">
-          How your products surface in AI shopping recommendations
-        </p>
+        
+        <div className="flex items-center gap-2 mt-4 text-softgray/50 text-xs font-body">
+          <Calendar className="w-3.5 h-3.5" strokeWidth={1.5} />
+          Last scan: {formatDate(data.last_scan)}
+        </div>
       </div>
 
       {/* Score Cards Row */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <TrendingUp className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Visibility Score
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
-            {data.visibility_score}%
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
+            {data.visibility_score}
+            <span className="text-xl text-softgray/40">%</span>
           </div>
-          <div className="delta-positive text-sm mt-2">
-            +2.3% vs last week
+          <div className="delta-positive text-sm mt-2 font-body" style={{ textShadow: '0 0 8px rgba(var(--pageAccent-rgb), 0.5)' }}>
+            +2.3%
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <ShoppingBag className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Total Mentions
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
             {data.total_mentions}
           </div>
-          <div className="delta-positive text-sm mt-2">
+          <div className="delta-positive text-sm mt-2 font-body">
             +18 this week
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Trophy className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <Trophy className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Avg Rank
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
             #{data.avg_rank}
           </div>
-          <div className="delta-positive text-sm mt-2">
+          <div className="delta-positive text-sm mt-2 font-body">
             Improved
           </div>
         </div>
 
-        <div className="card-L2 card-fade-in p-6">
-          <div className="flex items-center gap-2 mb-2">
-            <Target className="w-4 h-4 text-accent" />
-            <div className="text-xs text-softgray/60 font-body uppercase">
+        <div className="card-L2 p-5">
+          <div className="flex items-center gap-2 mb-2 text-softgray/60">
+            <Target className="w-4 h-4" strokeWidth={1.5} />
+            <div className="text-xs font-body uppercase tracking-wide">
               Market Position
             </div>
           </div>
-          <div className="text-4xl font-heading font-bold text-white">
+          <div className="text-4xl font-heading font-bold text-white tabular-nums">
             #{data.market_position}
           </div>
           <div className="text-softgray/60 text-xs mt-2 font-body">
@@ -158,60 +189,61 @@ export default function ShoppingVisibilityPage() {
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-2 gap-8">
-        {/* Left Column: Category Rankings */}
+        {/* Left Column */}
         <div className="space-y-6">
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-accent" />
+          {/* Category Rankings */}
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <Trophy className="w-5 h-5 text-accent" strokeWidth={1.5} />
               Category Rankings
             </h2>
             
             <div className="space-y-3">
               {data.categories.length > 0 ? (
                 data.categories.map((category, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-navy-lighter/50">
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl font-heading font-bold text-accent">
+                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="text-2xl font-heading font-bold text-accent tabular-nums">
                         #{category.rank}
                       </div>
                       <div>
-                        <div className="text-white font-body font-medium">
+                        <div className="text-white font-body font-medium mb-0.5">
                           {category.name}
                         </div>
                         <div className="text-softgray/60 text-xs font-body">
-                          {category.mentions} mentions across {category.models?.length || 3} models
+                          {category.mentions} mentions • {category.models?.length || 3} models
                         </div>
                       </div>
                     </div>
-                    <div className="text-accent text-sm font-body">
+                    <div className="text-accent text-xs font-body">
                       {category.models?.join(', ') || 'ChatGPT, Claude'}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-softgray/60 text-sm font-body text-center py-4">
-                  No category data available yet
+                <div className="text-softgray/60 text-sm font-body text-center py-8">
+                  No category data yet — updates after next scan
                 </div>
               )}
             </div>
           </div>
 
           {/* Model Breakdown */}
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-accent" />
-              Model Breakdown
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <Target className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Model Coverage
             </h2>
             
             <div className="space-y-4">
               {data.models.map((model, index) => (
                 <div key={index}>
                   <div className="flex items-center justify-between mb-2">
-                    <div className="text-white font-body font-medium">
+                    <div className="text-white font-body font-medium text-sm">
                       {model.name}
                     </div>
-                    <div className="text-softgray/60 text-sm font-body">
-                      {model.mentions} mentions • {model.coverage}% coverage
+                    <div className="text-softgray/60 text-xs font-body tabular-nums">
+                      {model.mentions} mentions • {model.coverage}%
                     </div>
                   </div>
                   <div className="progress-bar">
@@ -226,12 +258,13 @@ export default function ShoppingVisibilityPage() {
           </div>
         </div>
 
-        {/* Right Column: Competitive Analysis */}
+        {/* Right Column */}
         <div className="space-y-6">
-          <div className="card-L2 card-fade-in p-6">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-accent" />
-              Competitive Rankings
+          {/* Competitive Rankings */}
+          <div className="card-L2 p-6">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <TrendingUp className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Competitive Position
             </h2>
             
             <div className="space-y-3">
@@ -240,7 +273,7 @@ export default function ShoppingVisibilityPage() {
                   <div className="text-white font-body font-bold">
                     Your Brand
                   </div>
-                  <div className="text-accent font-heading font-bold text-xl">
+                  <div className="text-accent font-heading font-bold text-2xl tabular-nums">
                     #{data.avg_rank}
                   </div>
                 </div>
@@ -248,7 +281,7 @@ export default function ShoppingVisibilityPage() {
                   <span className="text-softgray/60 font-body">
                     {data.total_mentions} mentions
                   </span>
-                  <span className="delta-positive">
+                  <span className="delta-positive font-body text-xs">
                     Market leader
                   </span>
                 </div>
@@ -260,14 +293,12 @@ export default function ShoppingVisibilityPage() {
                     <div className="text-white font-body font-medium">
                       {competitor.brand}
                     </div>
-                    <div className="text-softgray/70 font-heading font-bold text-xl">
+                    <div className="text-softgray/70 font-heading font-bold text-xl tabular-nums">
                       #{competitor.avg_rank}
                     </div>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-softgray/60 font-body">
-                      {competitor.mentions} mentions
-                    </span>
+                  <div className="text-softgray/60 text-sm font-body">
+                    {competitor.mentions} mentions
                   </div>
                 </div>
               ))}
@@ -275,46 +306,46 @@ export default function ShoppingVisibilityPage() {
           </div>
 
           {/* Optimize Actions */}
-          <div className="card-L2 card-fade-in p-6 border-l-2 border-accent">
-            <h2 className="text-lg font-heading font-semibold text-white mb-4 flex items-center gap-2">
-              <Target className="w-5 h-5 text-accent" />
-              Optimize Your Visibility
+          <div className="card-L2 p-6 border-l-2 border-accent">
+            <h2 className="text-base font-heading font-semibold text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-softgray/80">
+              <Target className="w-5 h-5 text-accent" strokeWidth={1.5} />
+              Optimization
             </h2>
             
             <div className="space-y-3">
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
+                <div className="text-white font-body font-medium mb-1 text-sm">
                   Add Product Schema
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
-                  Improve how AI understands your product catalog
+                <div className="text-softgray/60 text-xs font-body mb-3">
+                  Structure your catalog for AI comprehension
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  Generate Schema
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  Generate Schema →
                 </button>
               </div>
 
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
-                  Enrich Product Descriptions
+                <div className="text-white font-body font-medium mb-1 text-sm">
+                  Enrich Descriptions
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
-                  Make your products more AI-readable
+                <div className="text-softgray/60 text-xs font-body mb-3">
+                  Optimize product copy for model readability
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  Generate Copy
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  Generate Copy →
                 </button>
               </div>
 
               <div className="p-4 rounded-lg bg-navy-lighter/50 hover:bg-navy-lighter cursor-pointer transition-colors">
-                <div className="text-white font-body font-medium mb-1">
-                  Create Category Landing Pages
+                <div className="text-white font-body font-medium mb-1 text-sm">
+                  Category Coverage
                 </div>
-                <div className="text-softgray/60 text-sm font-body mb-2">
+                <div className="text-softgray/60 text-xs font-body mb-3">
                   Target uncovered but relevant categories
                 </div>
-                <button className="btn-secondary text-sm py-2 px-4">
-                  View Suggestions
+                <button className="text-accent text-xs font-body font-medium hover:underline">
+                  View Suggestions →
                 </button>
               </div>
             </div>
