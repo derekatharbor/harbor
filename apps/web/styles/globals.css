@@ -381,4 +381,39 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* ========================================
+     CURSOR FIXES (FORCE POINTER ON INTERACTIVE ELEMENTS)
+     ======================================== */
+
+  /* Force pointer cursor on all hover-enabled elements */
+  [class*="hover:"]:not([class*="cursor-not-allowed"]) {
+    cursor: pointer !important;
+  }
+
+  /* Specifically target Harbor interactive elements */
+  .transition-colors:hover {
+    cursor: pointer !important;
+  }
+
+  /* Ensure group hover works */
+  .group:hover {
+    cursor: pointer !important;
+  }
+
+  /* Brand descriptors and pills */
+  [class*="hover:scale"] {
+    cursor: pointer !important;
+  }
+
+  /* Exclude user brand highlight cards from pointer */
+  [class*="border-[#00C6B7]/30"],
+  [class*="border-[#4EE4FF]/30"] {
+    cursor: default !important;
+  }
+
+  /* Explicit cursor pointer utility */
+  .cursor-pointer {
+    cursor: pointer !important;
+  }
 }
