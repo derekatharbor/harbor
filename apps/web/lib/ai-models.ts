@@ -1,7 +1,6 @@
 // lib/ai-models.ts
 
 // This will handle calling different AI model APIs
-// For now, returns mock responses until you add API keys
 
 export type AIModel = 'gpt' | 'claude' | 'gemini' | 'perplexity'
 
@@ -57,7 +56,7 @@ async function callOpenAI(job: PromptJob): Promise<string> {
       'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'gpt-4',
+      model: 'gpt-4o-mini', // FIXED: Use gpt-4o-mini instead of gpt-4
       messages: [
         ...(job.system ? [{ role: 'system', content: job.system }] : []),
         { role: 'user', content: job.user }
@@ -68,6 +67,8 @@ async function callOpenAI(job: PromptJob): Promise<string> {
   })
 
   if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('OpenAI error body:', errorBody)
     throw new Error(`OpenAI API error: ${response.statusText}`)
   }
 
@@ -95,6 +96,8 @@ async function callAnthropic(job: PromptJob): Promise<string> {
   })
 
   if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('Anthropic error body:', errorBody)
     throw new Error(`Anthropic API error: ${response.statusText}`)
   }
 
@@ -107,7 +110,7 @@ async function callGemini(job: PromptJob): Promise<string> {
   const prompt = job.system ? `${job.system}\n\n${job.user}` : job.user
   
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -122,6 +125,8 @@ async function callGemini(job: PromptJob): Promise<string> {
   )
 
   if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('Gemini error body:', errorBody)
     throw new Error(`Gemini API error: ${response.statusText}`)
   }
 
@@ -149,6 +154,8 @@ async function callPerplexity(job: PromptJob): Promise<string> {
   })
 
   if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('Perplexity error body:', errorBody)
     throw new Error(`Perplexity API error: ${response.statusText}`)
   }
 
@@ -158,7 +165,7 @@ async function callPerplexity(job: PromptJob): Promise<string> {
 
 // Mock response for testing without API keys
 function getMockResponse(job: PromptJob): string {
-  console.log(`📝 Mock response for ${job.model}`)
+  console.log(`🎭 Mock response for ${job.model}`)
   
   // Return structured mock data based on prompt content
   if (job.user.includes('shopping') || job.user.includes('product')) {
