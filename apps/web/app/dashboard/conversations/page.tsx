@@ -393,9 +393,14 @@ export default function ConversationVolumesPage() {
           style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-heading font-bold text-white">
-              Top Questions
-            </h2>
+            <div>
+              <h2 className="text-2xl font-heading font-bold text-white">
+                Top Questions
+              </h2>
+              <p className="text-sm text-softgray/60 font-body mt-1">
+                Most frequent questions users ask AI models about your brand
+              </p>
+            </div>
             <MessageSquare className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
           </div>
           
@@ -453,9 +458,14 @@ export default function ConversationVolumesPage() {
           style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-heading font-bold text-white">
-              Intent Breakdown
-            </h2>
+            <div>
+              <h2 className="text-2xl font-heading font-bold text-white">
+                Intent Breakdown
+              </h2>
+              <p className="text-sm text-softgray/60 font-body mt-1">
+                What users are trying to learn when they ask about you
+              </p>
+            </div>
             <TrendingUp className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
           </div>
           
@@ -539,7 +549,7 @@ export default function ConversationVolumesPage() {
         className="rounded-lg p-6 border border-white/5"
         style={{ 
           background: 'rgba(255,255,255,0.02)',
-          borderTop: '1px solid rgba(157, 78, 221, 0.25)',
+          borderTop: '1px solid rgba(255, 184, 77, 0.25)',
           boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)'
         }}
       >
