@@ -4,7 +4,6 @@
 
 import { useEffect, useState } from 'react'
 import { MessageSquare, TrendingUp, Sparkles, Users, Target, ArrowRight, AlertCircle } from 'lucide-react'
-import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import { useBrand } from '@/contexts/BrandContext'
 
@@ -68,8 +67,8 @@ export default function ConversationVolumesPage() {
         
         const scanData = await response.json()
         
-        // Check if user has any scans
-        if (!scanData.hasScans) {
+        // Check if user has any scans - API returns scan: null when no scans exist
+        if (!scanData.scan) {
           setHasScans(false)
           setLoading(false)
           return
@@ -90,7 +89,7 @@ export default function ConversationVolumesPage() {
         }
         
         const conversationsData: ConversationsData = {
-          volume_index: conversations.conversation_volume || 0,
+          volume_index: conversations.volume_index || 0,
           volume_delta: '+12%', // TODO: Calculate from previous scan
           top_questions_count: conversations.questions?.length || 0,
           questions_delta: '+23', // TODO: Calculate from previous scan
@@ -98,7 +97,7 @@ export default function ConversationVolumesPage() {
           topics_delta: '+3', // TODO: Calculate from previous scan
           co_mentions: 0, // TODO: Extract from competitor data
           mentions_delta: '+14', // TODO: Calculate from previous scan
-          last_scan: scanData.last_scan,
+          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,
           questions: (conversations.questions || []).map((q: any) => ({
             text: q.question,
             intent: mapIntent(q.intent),
@@ -127,7 +126,29 @@ export default function ConversationVolumesPage() {
     fetchData()
   }, [currentDashboard]) // Re-fetch when brand changes!
 
-  // Helper functions below (no handleStartScan needed)
+  const handleStartScan = async () => {
+    if (!currentDashboard) {
+      console.error('No dashboard selected')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id }),
+      })
+
+      const data = await response.json()
+
+      if (data.scan) {
+        setCurrentScanId(data.scan.id)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
+    }
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -189,7 +210,16 @@ export default function ConversationVolumesPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton />
+            <div className="flex flex-col items-end gap-2">
+              <button
+                onClick={handleStartScan}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+              >
+                <Sparkles className="w-4 h-4" strokeWidth={2} />
+                Run Fresh Scan
+              </button>
+              <p className="text-xs text-softgray/50">1 scan remaining this week</p>
+            </div>
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -211,9 +241,13 @@ export default function ConversationVolumesPage() {
               Run your first scan to discover what questions users are asking AI models about your brand. 
               We'll analyze conversation patterns, intent, and emerging topics.
             </p>
-            <div className="flex justify-center">
-              <ScanButton variant="large" />
-            </div>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-base"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
           </div>
         </div>
 
@@ -240,7 +274,16 @@ export default function ConversationVolumesPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton />
+          <div className="flex flex-col items-end gap-2">
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+            >
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
+              Run Fresh Scan
+            </button>
+            <p className="text-xs text-softgray/50">1 scan remaining this week</p>
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
