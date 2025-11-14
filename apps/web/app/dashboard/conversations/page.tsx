@@ -3,24 +3,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MessageSquare, TrendingUp, Sparkles, Users, Target, ArrowRight, AlertCircle } from 'lucide-react'
+import { MessageSquare, TrendingUp, Users, Target, ArrowRight } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
 
 interface ConversationsData {
   volume_index: number
-  volume_delta: string
-  top_questions_count: number
-  questions_delta: string
-  emerging_topics_count: number
-  topics_delta: string
-  co_mentions: number
-  mentions_delta: string
-  last_scan: string | null
   questions: Array<{
-    text: string
-    intent: 'how_to' | 'vs' | 'price' | 'trust' | 'features'
-    frequency: number
+    question: string
+    intent: string
+    score: number
     emerging: boolean
   }>
   intent_breakdown: {
@@ -30,92 +23,40 @@ interface ConversationsData {
     trust: number
     features: number
   }
-  competitors: Array<{
-    brand: string
-    co_mentions: number
-    context: string
-  }>
-  emerging_topics: Array<{
-    topic: string
-    growth: number
-    volume: number
-  }>
 }
 
 export default function ConversationVolumesPage() {
-  // Brand context - automatically gets current dashboard
   const { currentDashboard } = useBrand()
   
   const [data, setData] = useState<ConversationsData | null>(null)
+  const [scanData, setScanData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
-  const [hasScans, setHasScans] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
-      // Don't fetch if no dashboard selected yet
       if (!currentDashboard) {
         setLoading(false)
         return
       }
 
       try {
-        // Add dashboardId to API call - this makes it brand-aware!
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
-        const scanData = await response.json()
+        const result = await response.json()
+        setScanData(result)
         
-        // Check if user has any scans - API returns scan: null when no scans exist
-        if (!scanData.scan) {
-          setHasScans(false)
+        // If no scan exists, don't set data
+        if (!result.scan) {
+          setData(null)
           setLoading(false)
           return
         }
-
-        setHasScans(true)
         
-        // Use real data from API
-        const conversations = scanData.conversations || {}
-        
-        // Map intent to readable format
-        const mapIntent = (intent: string): 'how_to' | 'vs' | 'price' | 'trust' | 'features' => {
-          if (intent === 'how_to') return 'how_to'
-          if (intent === 'vs') return 'vs'
-          if (intent === 'price') return 'price'
-          if (intent === 'trust') return 'trust'
-          return 'features'
-        }
-        
-        const conversationsData: ConversationsData = {
-          volume_index: conversations.volume_index || 0,
-          volume_delta: '+12%', // TODO: Calculate from previous scan
-          top_questions_count: conversations.questions?.length || 0,
-          questions_delta: '+23', // TODO: Calculate from previous scan
-          emerging_topics_count: conversations.questions?.filter((q: any) => q.emerging).length || 0,
-          topics_delta: '+3', // TODO: Calculate from previous scan
-          co_mentions: 0, // TODO: Extract from competitor data
-          mentions_delta: '+14', // TODO: Calculate from previous scan
-          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,
-          questions: (conversations.questions || []).map((q: any) => ({
-            text: q.question,
-            intent: mapIntent(q.intent),
-            frequency: q.score || 0,
-            emerging: q.emerging || false
-          })),
-          intent_breakdown: conversations.intent_breakdown || {
-            how_to: 0,
-            vs: 0,
-            price: 0,
-            trust: 0,
-            features: 0
-          },
-          competitors: [], // TODO: Extract co-mention data
-          emerging_topics: [] // TODO: Group by topic keywords
-        }
-        
-        setData(conversationsData)
+        // Map conversations data from API
+        setData(result.conversations)
       } catch (error) {
         console.error('Error fetching conversations data:', error)
       } finally {
@@ -124,31 +65,7 @@ export default function ConversationVolumesPage() {
     }
 
     fetchData()
-  }, [currentDashboard]) // Re-fetch when brand changes!
-
-  const handleStartScan = async () => {
-    if (!currentDashboard) {
-      console.error('No dashboard selected')
-      return
-    }
-
-    try {
-      const response = await fetch('/api/scan/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dashboardId: currentDashboard.id }),
-      })
-
-      const data = await response.json()
-
-      if (data.scan) {
-        setCurrentScanId(data.scan.id)
-        setShowScanModal(true)
-      }
-    } catch (error) {
-      console.error('Failed to start scan:', error)
-    }
-  }
+  }, [currentDashboard])
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -171,87 +88,76 @@ export default function ConversationVolumesPage() {
       vs: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
       price: 'bg-green-500/10 text-green-400 border-green-500/30',
       trust: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-      features: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+      features: 'bg-teal-500/10 text-teal-400 border-teal-500/30'
     }
-    return colors[intent] || 'bg-softgray/10 text-softgray/70 border-softgray/30'
+    return colors[intent] || 'bg-gray-500/10 text-gray-400 border-gray-500/30'
   }
 
   const getIntentLabel = (intent: string) => {
     const labels: Record<string, string> = {
       how_to: 'How To',
       vs: 'Comparison',
-      price: 'Pricing',
+      price: 'Price',
       trust: 'Trust',
       features: 'Features'
     }
     return labels[intent] || intent
   }
 
+  // Loading skeleton
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading conversations data...</div>
+      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-border rounded-lg"></div>
+            <div className="h-10 w-64 bg-border rounded"></div>
+          </div>
+          <div className="h-10 w-40 bg-border rounded-lg"></div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
+          ))}
+        </div>
+
+        <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
       </div>
     )
   }
 
   // Empty state - no scans yet
-  if (!hasScans || !data) {
+  if (!data || !scanData?.scan) {
     return (
-      <div>
-        {/* Page Header */}
+      <div className="max-w-screen-2xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <MessageSquare className="w-8 h-8 text-[#FFB84D]" strokeWidth={1.5} />
-              <h1 className="text-4xl font-heading font-bold text-white">
+              <h1 className="text-4xl font-heading font-bold text-primary">
                 Conversation Volumes
               </h1>
             </div>
-
-            {/* Scan Button */}
-            <div className="flex flex-col items-end gap-2">
-              <button
-                onClick={handleStartScan}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
-              >
-                <Sparkles className="w-4 h-4" strokeWidth={2} />
-                Run Fresh Scan
-              </button>
-              <p className="text-xs text-softgray/50">1 scan remaining this week</p>
-            </div>
+            <UniversalScanButton />
           </div>
           
-          <p className="text-sm text-softgray/60 mb-2">
-            Common questions users ask AI models about your brand and category
+          <p className="text-sm text-secondary/60 mb-2">
+            What users ask AI about your brand and category
           </p>
         </div>
 
-        {/* Empty State */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="max-w-md mx-auto">
-            <MessageSquare className="w-16 h-16 text-[#FFB84D] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-2xl font-heading font-bold text-white mb-3">
-              No Scan Data Yet
-            </h2>
-            <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed">
-              Run your first scan to discover what questions users are asking AI models about your brand. 
-              We'll analyze conversation patterns, intent, and emerging topics.
-            </p>
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-base"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
-            </button>
-          </div>
+        <div className="bg-card rounded-lg p-12 border border-border text-center">
+          <MessageSquare className="w-16 h-16 text-[#FFB84D] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
+            No Scan Data Yet
+          </h2>
+          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+            Run your first scan to discover what questions users are asking AI about your brand, products, and industry.
+          </p>
+          <UniversalScanButton variant="large" />
         </div>
 
-        {/* Scan Progress Modal */}
         <ScanProgressModal
           isOpen={showScanModal}
           onClose={() => setShowScanModal(false)}
@@ -261,403 +167,192 @@ export default function ConversationVolumesPage() {
     )
   }
 
+  // Main content with data
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto">
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <MessageSquare className="w-8 h-8 text-[#FFB84D]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-white">
+            <h1 className="text-4xl font-heading font-bold text-primary">
               Conversation Volumes
             </h1>
           </div>
-
-          {/* Scan Button */}
-          <div className="flex flex-col items-end gap-2">
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
-            >
-              <Sparkles className="w-4 h-4" strokeWidth={2} />
-              Run Fresh Scan
-            </button>
-            <p className="text-xs text-softgray/50">1 scan remaining this week</p>
-          </div>
+          <UniversalScanButton />
         </div>
         
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-softgray/60 mb-2">
-              Common questions users ask AI models about your brand and category
+            <p className="text-sm text-secondary/60 mb-2">
+              What users ask AI about your brand and category
             </p>
-            <p className="text-sm text-softgray/70 italic">
-              {data.top_questions_count > 0 
-                ? `Tracking ${data.top_questions_count} unique questions across models`
-                : 'Analyzing conversation patterns...'}
+            <p className="text-sm text-secondary/70 italic">
+              Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
             </p>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-softgray/60">
-            <span>Last scan:</span>
-            <span className="text-white">{formatDate(data.last_scan)}</span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-              Live
-            </span>
           </div>
         </div>
       </div>
 
       {/* Metric Cards */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        {/* Volume Index */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Volume Index
-              </div>
-              <div className="text-xs text-softgray/50">
-                Relative activity
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <Target className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Volume Index</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.volume_index}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.volume_delta}</span>
-            <span className="text-softgray/50">this month</span>
-          </div>
+          <p className="text-sm text-secondary/60">Question volume</p>
         </div>
 
-        {/* Top Questions */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <MessageSquare className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Top Questions
-              </div>
-              <div className="text-xs text-softgray/50">
-                Unique queries
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <MessageSquare className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Questions</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.top_questions_count}
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.questions.length}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.questions_delta}</span>
-            <span className="text-softgray/50">new this week</span>
-          </div>
+          <p className="text-sm text-secondary/60">Unique queries</p>
         </div>
 
-        {/* Emerging Topics */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <Sparkles className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Emerging Topics
-              </div>
-              <div className="text-xs text-softgray/50">
-                Growing interest
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Emerging</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.emerging_topics_count}
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.questions.filter(q => q.emerging).length}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.topics_delta}</span>
-            <span className="text-softgray/50">trending up</span>
-          </div>
+          <p className="text-sm text-secondary/60">New topics</p>
         </div>
 
-        {/* Co-mentions */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <Users className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Co-mentions
-              </div>
-              <div className="text-xs text-softgray/50">
-                With competitors
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <Users className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Top Intent</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.co_mentions}
+          <div className="text-2xl font-heading font-bold text-primary mb-2">
+            {getIntentLabel(Object.entries(data.intent_breakdown).sort((a, b) => b[1] - a[1])[0][0])}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.mentions_delta}</span>
-            <span className="text-softgray/50">comparisons</span>
-          </div>
+          <p className="text-sm text-secondary/60">Most common</p>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-2 gap-6 mb-8">
-        {/* Top Questions */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Top Questions
-              </h2>
-              <p className="text-sm text-softgray/60 font-body mt-1">
-                Most frequent questions users ask AI models about your brand
-              </p>
-            </div>
-            <MessageSquare className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
-          </div>
-          
+      {/* Questions Table */}
+      <div className="bg-card rounded-lg border border-border mb-8">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Top Questions
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            What users are asking AI about your category
+          </p>
+        </div>
+        
+        <div className="overflow-hidden">
           {data.questions.length > 0 ? (
-            <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-2">
-              {data.questions.map((question, index) => (
-                <div 
-                  key={index}
-                  className="p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1 min-w-0 pr-3">
-                      <div className="text-white font-body text-sm mb-2 leading-relaxed">
-                        {question.text}
-                      </div>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Question</th>
+                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Intent</th>
+                  <th className="text-right p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.questions.slice(0, 20).map((question, index) => (
+                  <tr 
+                    key={index}
+                    className="border-b border-border last:border-0 hover:bg-hover transition-colors"
+                  >
+                    <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded text-xs font-body font-medium border ${getIntentColor(question.intent)}`}>
-                          {getIntentLabel(question.intent)}
-                        </span>
+                        <span className="text-primary">{question.question}</span>
                         {question.emerging && (
-                          <span className="px-2 py-0.5 rounded text-xs font-body font-medium bg-[#FFB84D]/10 text-[#FFB84D] border border-[#FFB84D]/30">
-                            <Sparkles className="w-3 h-3 inline mr-1" strokeWidth={2} />
-                            Emerging
+                          <span className="px-2 py-0.5 bg-[#FFB84D]/10 text-[#FFB84D] border border-[#FFB84D]/30 rounded text-xs font-medium">
+                            New
                           </span>
                         )}
                       </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <div className="text-[#FFB84D] font-heading font-bold text-lg tabular-nums">
-                        {question.frequency}
-                      </div>
-                      <div className="text-softgray/50 text-xs font-body">
-                        mentions
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-3 py-1 rounded-full border text-xs font-medium ${getIntentColor(question.intent)}`}>
+                        {getIntentLabel(question.intent)}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right text-secondary/70 font-mono">{question.score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
-            <div className="text-center py-12">
-              <div className="text-softgray/40 text-sm font-body mb-2">
-                No questions detected yet
-              </div>
-              <div className="text-softgray/60 text-xs font-body">
-                Question data will appear after your first scan
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Intent Breakdown */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-heading font-bold text-white">
-                Intent Breakdown
-              </h2>
-              <p className="text-sm text-softgray/60 font-body mt-1">
-                What users are trying to learn when they ask about you
-              </p>
-            </div>
-            <TrendingUp className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
-          </div>
-          
-          <div className="space-y-4">
-            {Object.entries(data.intent_breakdown).map(([intent, percentage]) => (
-              <div key={intent}>
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-white font-body font-medium">
-                    {getIntentLabel(intent)}
-                  </div>
-                  <div className="text-[#FFB84D] font-heading font-bold text-xl tabular-nums">
-                    {percentage}%
-                  </div>
-                </div>
-                <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#FFB84D] rounded-full transition-all duration-500"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {data.questions.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-softgray/40 text-sm font-body mb-2">
-                No intent data yet
-              </div>
-              <div className="text-softgray/60 text-xs font-body">
-                Intent breakdown will appear after your first scan
-              </div>
+            <div className="p-12 text-center text-secondary/60">
+              No question data available
             </div>
           )}
         </div>
       </div>
 
-      {/* Competitive Co-mentions - Full Width */}
-      {data.competitors.length > 0 && (
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-heading font-bold text-white mb-2">
-                Competitive Co-mentions
-              </h2>
-              <p className="text-sm text-softgray/60 font-body">
-                Brands mentioned alongside yours in user queries
-              </p>
-            </div>
-            <Users className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
-          </div>
-          
-          <div className="grid grid-cols-3 gap-4">
-            {data.competitors.map((competitor, index) => (
-              <div 
-                key={index}
-                className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="font-body font-medium text-white">
-                    {competitor.brand}
-                  </div>
-                  <div className="text-[#FFB84D] font-heading font-bold text-xl tabular-nums">
-                    {competitor.co_mentions}
-                  </div>
-                </div>
-                <div className="text-softgray/60 text-sm font-body">
-                  {competitor.context}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Recommended Improvements */}
-      <div 
-        className="rounded-lg p-6 border border-white/5"
-        style={{ 
-          background: 'rgba(255,255,255,0.02)',
-          borderTop: '1px solid rgba(255, 184, 77, 0.25)',
-          boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)'
-        }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Recommended Improvements
-            </h2>
-            <p className="text-sm text-softgray/60 font-body">
-              High-impact actions to address common user questions
-            </p>
-          </div>
-          <Target className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
+      {/* Intent Breakdown */}
+      <div className="bg-card rounded-lg border border-border mb-8">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Intent Breakdown
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            Distribution of question types
+          </p>
         </div>
         
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Add FAQPage Schema
+        <div className="p-6">
+          <div className="grid grid-cols-5 gap-6">
+            {Object.entries(data.intent_breakdown).map(([intent, count]) => (
+              <div key={intent} className="text-center">
+                <div className="text-3xl font-heading font-bold text-primary mb-2">
+                  {count}
+                </div>
+                <p className="text-sm text-secondary/70">{getIntentLabel(intent)}</p>
               </div>
-              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
-                High Impact
-              </span>
-            </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Structure your top questions for better AI comprehension
-            </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              Generate Schema
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
-          </div>
-
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Create Comparison Pages
-              </div>
-              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
-                High Impact
-              </span>
-            </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Address "vs" questions with dedicated comparison content
-            </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              View Suggestions
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
-          </div>
-
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Build How-to Guides
-              </div>
-              <span className="text-softgray/50 text-xs px-2 py-0.5 bg-white/5 rounded font-medium">
-                Medium Impact
-              </span>
-            </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Create documentation for common how-to questions
-            </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              View Topics
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Scan Progress Modal */}
+      {/* Optimize Section */}
+      <div className="bg-card rounded-lg border border-border">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Optimize Conversation Coverage
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            Actions to improve question coverage
+          </p>
+        </div>
+        <div className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#FFB84D]/30 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-[#FFB84D]/10 flex items-center justify-center flex-shrink-0">
+                <MessageSquare className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-heading font-semibold text-primary mb-1">
+                  Add FAQ Schema
+                </h3>
+                <p className="text-sm text-secondary/70 mb-3">
+                  Create an FAQ page with JSON-LD schema for your top questions to help AI provide better answers.
+                </p>
+                <button className="text-sm text-[#FFB84D] hover:underline font-medium inline-flex items-center gap-1">
+                  Learn how <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ScanProgressModal
         isOpen={showScanModal}
         onClose={() => setShowScanModal(false)}
