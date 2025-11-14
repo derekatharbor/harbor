@@ -50,7 +50,7 @@ export default function DashboardLayout({
     <BrandProvider>
       <div className="flex min-h-screen bg-primary">
         <Sidebar />
-        <main className={`flex-1 p-8 relative transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-60'}`}>
+        <main className={`flex-1 p-4 lg:p-8 relative transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-60'}`}>
           {/* Route transition overlay */}
           {isTransitioning && (
             <div className="absolute inset-0 bg-primary z-50 flex items-start justify-start pt-8">
@@ -61,11 +61,11 @@ export default function DashboardLayout({
                     <div className="w-8 h-8 bg-border rounded-lg"></div>
                     <div className="h-10 w-64 bg-border rounded"></div>
                   </div>
-                  <div className="h-10 w-40 bg-border rounded-lg"></div>
+                  <div className="h-10 w-40 bg-border rounded-lg hidden lg:block"></div>
                 </div>
 
                 {/* Cards skeleton */}
-                <div className="grid grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
                   ))}
