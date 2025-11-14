@@ -2,8 +2,8 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Sparkles } from 'lucide-react'
+import { useState } from 'react'
+import { RotateCw } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 
 interface UniversalScanButtonProps {
@@ -12,102 +12,118 @@ interface UniversalScanButtonProps {
 
 export default function UniversalScanButton({ variant = 'default' }: UniversalScanButtonProps) {
   const { currentDashboard } = useBrand()
-  const [canScan, setCanScan] = useState(true)
-  const [scansRemaining, setScansRemaining] = useState(0)
-  const [scanStatusReason, setScanStatusReason] = useState<string>('ready')
-  const [isCheckingStatus, setIsCheckingStatus] = useState(true)
+  const [isScanning, setIsScanning] = useState(false)
+  
+  // Mock scan limits - replace with actual API call
+  const scansUsed = 0
+  const scansLimit = currentDashboard?.plan === 'solo' ? 1 : 8
+  const scansRemaining = scansLimit - scansUsed
 
-  // Fetch scan status
-  useEffect(() => {
-    async function fetchScanStatus() {
-      if (!currentDashboard) {
-        setIsCheckingStatus(false)
-        return
-      }
-
-      try {
-        const response = await fetch('/api/scan/status')
-        if (!response.ok) throw new Error('Failed to fetch scan status')
-        
-        const status = await response.json()
-        setCanScan(status.canScan)
-        setScansRemaining(status.scansRemaining)
-        setScanStatusReason(status.reason)
-      } catch (error) {
-        console.error('Error fetching scan status:', error)
-        setCanScan(true) // Default to allowing scan if status check fails
-      } finally {
-        setIsCheckingStatus(false)
-      }
-    }
-
-    fetchScanStatus()
-  }, [currentDashboard])
-
-  const handleStartScan = async () => {
-    if (!currentDashboard) {
-      console.error('No dashboard selected')
-      return
-    }
-
+  const handleScan = async () => {
+    if (!currentDashboard || isScanning) return
+    
+    setIsScanning(true)
+    
     try {
       const response = await fetch('/api/scan/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dashboardId: currentDashboard.id }),
+        body: JSON.stringify({ 
+          dashboardId: currentDashboard.id 
+        })
       })
-
-      const data = await response.json()
-
-      if (data.scan) {
-        // Trigger a page reload to show scan progress
-        window.location.reload()
+      
+      if (!response.ok) {
+        throw new Error('Failed to start scan')
       }
+      
+      const data = await response.json()
+      
+      // Reload page to show new scan data
+      window.location.reload()
     } catch (error) {
-      console.error('Failed to start scan:', error)
+      console.error('Scan error:', error)
+      alert('Failed to start scan. Please try again.')
+    } finally {
+      setIsScanning(false)
     }
   }
 
-  const isLarge = variant === 'large'
-
-  if (isLarge) {
+  if (variant === 'large') {
     return (
-      <button
-        onClick={handleStartScan}
-        disabled={!canScan || isCheckingStatus}
-        className={`
-          inline-flex items-center gap-2 px-8 py-4 rounded-lg font-body font-medium transition-all text-base
-          ${canScan && !isCheckingStatus
-            ? 'bg-transparent border-2 border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white cursor-pointer'
-            : 'bg-transparent border-2 border-border text-secondary/30 cursor-not-allowed'
-          }
-        `}
-      >
-        <Sparkles className="w-5 h-5" strokeWidth={2} />
-        {isCheckingStatus ? 'Checking...' : scanStatusReason === 'scanning' ? 'Scanning...' : !canScan ? 'Scan Limit Reached' : 'Run Your First Scan'}
-      </button>
+      <div className="flex flex-col items-center">
+        <button
+          onClick={handleScan}
+          disabled={isScanning || scansRemaining <= 0}
+          className="
+            group relative
+            px-8 py-4
+            bg-coral hover:bg-coral/90
+            disabled:bg-border disabled:cursor-not-allowed
+            text-white font-heading font-semibold text-base
+            rounded-lg
+            transition-all duration-200
+            cursor-pointer
+            flex items-center gap-3
+          "
+        >
+          <RotateCw 
+            className={`w-5 h-5 ${isScanning ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} 
+            strokeWidth={2}
+          />
+          <span>
+            {isScanning ? 'Scanning...' : 'Refresh Brand Intelligence'}
+          </span>
+        </button>
+        
+        {scansRemaining > 0 ? (
+          <p className="text-xs text-secondary/60 mt-2">
+            {scansRemaining} {scansRemaining === 1 ? 'scan' : 'scans'} remaining this {currentDashboard?.plan === 'solo' ? 'week' : 'month'}
+          </p>
+        ) : (
+          <p className="text-xs text-red-400 mt-2">
+            Scan limit reached
+          </p>
+        )}
+      </div>
     )
   }
 
   return (
-    <div className="flex flex-col items-end gap-2">
+    <div className="flex flex-col items-end">
       <button
-        onClick={handleStartScan}
-        disabled={!canScan || isCheckingStatus}
-        className={`
-          inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-body font-medium transition-all text-sm
-          ${canScan && !isCheckingStatus
-            ? 'bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white cursor-pointer'
-            : 'bg-transparent border border-border text-secondary/30 cursor-not-allowed'
-          }
-        `}
+        onClick={handleScan}
+        disabled={isScanning || scansRemaining <= 0}
+        className="
+          group relative
+          px-4 py-2
+          bg-coral hover:bg-coral/90
+          disabled:bg-border disabled:cursor-not-allowed
+          text-white font-heading font-semibold text-sm
+          rounded-lg
+          transition-all duration-200
+          cursor-pointer
+          flex items-center gap-2
+        "
       >
-        <Sparkles className="w-4 h-4" strokeWidth={2} />
-        {isCheckingStatus ? 'Checking...' : scanStatusReason === 'scanning' ? 'Scanning...' : 'Run Fresh Scan'}
+        <RotateCw 
+          className={`w-4 h-4 ${isScanning ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} 
+          strokeWidth={2}
+        />
+        <span>
+          {isScanning ? 'Scanning...' : 'Refresh Brand Intelligence'}
+        </span>
       </button>
-      <p className="text-xs text-secondary/50">
-        {isCheckingStatus ? 'Loading...' : canScan ? `${scansRemaining} scan${scansRemaining !== 1 ? 's' : ''} remaining this week` : 'Scan limit reached'}
-      </p>
+      
+      {scansRemaining > 0 ? (
+        <p className="text-xs text-secondary/60 mt-1">
+          {scansRemaining} {scansRemaining === 1 ? 'scan' : 'scans'} remaining
+        </p>
+      ) : (
+        <p className="text-xs text-red-400 mt-1">
+          Scan limit reached
+        </p>
+      )}
     </div>
   )
 }
