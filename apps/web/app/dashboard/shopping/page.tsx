@@ -39,7 +39,6 @@ interface ShoppingData {
 }
 
 export default function ShoppingVisibilityPage() {
-  // Brand context - automatically gets current dashboard
   const { currentDashboard } = useBrand()
   
   const [data, setData] = useState<ShoppingData | null>(null)
@@ -50,14 +49,12 @@ export default function ShoppingVisibilityPage() {
 
   useEffect(() => {
     async function fetchData() {
-      // Don't fetch if no dashboard selected yet
       if (!currentDashboard) {
         setLoading(false)
         return
       }
 
       try {
-        // Add dashboardId to API call - this makes it brand-aware!
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
@@ -99,7 +96,7 @@ export default function ShoppingVisibilityPage() {
     }
 
     fetchData()
-  }, [currentDashboard]) // Re-fetch when brand changes!
+  }, [currentDashboard])
 
   const handleStartScan = async () => {
     try {
