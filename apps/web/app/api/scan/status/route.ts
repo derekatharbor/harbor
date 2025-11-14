@@ -77,20 +77,31 @@ export async function GET() {
       })
     }
 
-    // Count scans this month
-    const startOfMonth = new Date()
-    startOfMonth.setDate(1)
-    startOfMonth.setHours(0, 0, 0, 0)
+    // Determine time window based on plan type
+    let timeWindowStart: Date
+    let isWeeklyPlan = false
+    
+    if (planLimits.fresh_scans_week) {
+      // Weekly plan (Solo) - count from 7 days ago
+      timeWindowStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      isWeeklyPlan = true
+    } else {
+      // Monthly plan (Agency/Enterprise) - count from start of month
+      timeWindowStart = new Date()
+      timeWindowStart.setDate(1)
+      timeWindowStart.setHours(0, 0, 0, 0)
+    }
 
-    const { count: scansThisMonth } = await supabase
+    // Count scans in the appropriate time window
+    const { count: scansInPeriod } = await supabase
       .from('scans')
       .select('*', { count: 'exact', head: true })
       .eq('dashboard_id', dashboard.id)
       .eq('type', 'fresh')
-      .gte('started_at', startOfMonth.toISOString())
+      .gte('started_at', timeWindowStart.toISOString())
 
-    const totalScans = planLimits.fresh_scans_month || planLimits.fresh_scans_week || 1
-    const scansUsed = scansThisMonth || 0
+    const totalScans = isWeeklyPlan ? planLimits.fresh_scans_week : planLimits.fresh_scans_month
+    const scansUsed = scansInPeriod || 0
     const scansRemaining = Math.max(0, totalScans - scansUsed)
 
     // FREE TIER - Check if they've used their one scan

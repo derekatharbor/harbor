@@ -59,48 +59,42 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Check recent scans (weekly/monthly limits)
-    const now = new Date()
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-
-    const { data: recentScans } = await supabase
-      .from('scans')
-      .select('started_at')
-      .eq('dashboard_id', dashboardId)
-      .eq('type', 'fresh')
-      .gte('started_at', weekAgo.toISOString())
-
-    // Weekly limit check (Solo plan)
-    if (planLimit.fresh_scans_week && recentScans) {
-      const weeklyScans = recentScans.filter(
-        (s) => new Date(s.started_at) >= weekAgo
-      )
-      if (weeklyScans.length >= planLimit.fresh_scans_week) {
-        return NextResponse.json(
-          {
-            error: `Weekly scan limit reached (${planLimit.fresh_scans_week}/week). Next scan available in ${Math.ceil((weekAgo.getTime() + 7 * 24 * 60 * 60 * 1000 - now.getTime()) / (24 * 60 * 60 * 1000))} days.`,
-            limitReached: true,
-          },
-          { status: 429 }
-        )
-      }
+    // Determine time window based on plan type
+    let timeWindowStart: Date
+    let isWeeklyPlan = false
+    
+    if (planLimit.fresh_scans_week) {
+      // Weekly plan (Solo) - count from 7 days ago
+      timeWindowStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+      isWeeklyPlan = true
+    } else {
+      // Monthly plan (Agency/Enterprise) - count from start of month
+      timeWindowStart = new Date()
+      timeWindowStart.setDate(1)
+      timeWindowStart.setHours(0, 0, 0, 0)
     }
 
-    // Monthly limit check (Agency plan)
-    if (planLimit.fresh_scans_month && recentScans) {
-      const monthlyScans = recentScans.filter(
-        (s) => new Date(s.started_at) >= monthAgo
+    // Count scans in the appropriate time window
+    const { count: scansInPeriod } = await supabase
+      .from('scans')
+      .select('*', { count: 'exact', head: true })
+      .eq('dashboard_id', dashboardId)
+      .eq('type', 'fresh')
+      .gte('started_at', timeWindowStart.toISOString())
+
+    const scansUsed = scansInPeriod || 0
+    const scanLimit = isWeeklyPlan ? planLimit.fresh_scans_week : planLimit.fresh_scans_month
+    
+    // Check if limit reached
+    if (scansUsed >= scanLimit) {
+      const period = isWeeklyPlan ? 'week' : 'month'
+      return NextResponse.json(
+        {
+          error: `Scan limit reached (${scansUsed}/${scanLimit} per ${period}).`,
+          limitReached: true,
+        },
+        { status: 429 }
       )
-      if (monthlyScans.length >= planLimit.fresh_scans_month) {
-        return NextResponse.json(
-          {
-            error: `Monthly scan limit reached (${planLimit.fresh_scans_month}/month).`,
-            limitReached: true,
-          },
-          { status: 429 }
-        )
-      }
     }
 
     // Create scan record
