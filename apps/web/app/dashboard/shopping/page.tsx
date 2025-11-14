@@ -7,6 +7,7 @@ import { ShoppingBag, TrendingUp, Trophy, Target, ArrowRight } from 'lucide-reac
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
+import MobileHeader from '@/components/layout/MobileHeader'
 
 interface ShoppingData {
   score: number
@@ -86,95 +87,99 @@ export default function ShoppingVisibilityPage() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-border rounded-lg"></div>
-            <div className="h-10 w-64 bg-border rounded"></div>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-border rounded-lg"></div>
+              <div className="h-10 w-64 bg-border rounded"></div>
+            </div>
           </div>
-          <div className="h-10 w-40 bg-border rounded-lg"></div>
-        </div>
 
-        <div className="grid grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
-          ))}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
+            ))}
+          </div>
 
-        <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
-      </div>
+          <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
+        </div>
+      </>
     )
   }
 
   // Empty state - no scans yet
   if (!data || !scanData?.scan) {
     return (
-      <div className="max-w-screen-2xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
-              <h1 className="text-4xl font-heading font-bold text-primary">
-                Shopping Visibility
-              </h1>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <ShoppingBag className="w-6 h-6 lg:w-8 lg:h-8 text-[#00C6B7]" strokeWidth={1.5} />
+                <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                  Shopping Visibility
+                </h1>
+              </div>
             </div>
-            <UniversalScanButton />
+            
+            <p className="text-sm text-secondary/60 mb-2">
+              How your products surface in AI shopping recommendations across models
+            </p>
           </div>
-          
-          <p className="text-sm text-secondary/60 mb-2">
-            How your products surface in AI shopping recommendations across models
-          </p>
-        </div>
 
-        <div className="bg-card rounded-lg p-12 border border-border text-center">
-          <ShoppingBag className="w-16 h-16 text-[#00C6B7] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
-            No Scan Data Yet
-          </h2>
-          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-            Run your first scan to see how your products appear in AI shopping recommendations across ChatGPT, Claude, Gemini, and Perplexity.
-          </p>
-          <UniversalScanButton variant="large" />
-        </div>
+          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
+            <ShoppingBag className="w-12 h-12 lg:w-16 lg:h-16 text-[#00C6B7] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+              No Scan Data Yet
+            </h2>
+            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+              Run your first scan to see how your products appear in AI shopping recommendations across ChatGPT, Claude, Gemini, and Perplexity.
+            </p>
+          </div>
 
-        <ScanProgressModal
-          isOpen={showScanModal}
-          onClose={() => setShowScanModal(false)}
-          scanId={currentScanId}
-        />
-      </div>
+          <ScanProgressModal
+            isOpen={showScanModal}
+            onClose={() => setShowScanModal(false)}
+            scanId={currentScanId}
+          />
+        </div>
+      </>
     )
   }
 
   // Main content with data
   return (
-    <div className="max-w-screen-2xl mx-auto">
-      {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-primary">
-              Shopping Visibility
-            </h1>
+    <>
+      <MobileHeader />
+      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <ShoppingBag className="w-6 h-6 lg:w-8 lg:h-8 text-[#00C6B7]" strokeWidth={1.5} />
+              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                Shopping Visibility
+              </h1>
+            </div>
           </div>
-          <UniversalScanButton />
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-secondary/60 mb-2">
-              How your products surface in AI shopping recommendations across models
-            </p>
-            <p className="text-sm text-secondary/70 italic">
-              Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
-            </p>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-secondary/60 mb-2">
+                How your products surface in AI shopping recommendations across models
+              </p>
+              <p className="text-sm text-secondary/70 italic">
+                Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+        {/* Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center gap-2 mb-4">
             <Trophy className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
@@ -221,7 +226,7 @@ export default function ShoppingVisibilityPage() {
       </div>
 
       {/* Categories Table */}
-      <div className="bg-card rounded-lg border border-border mb-8">
+      <div className="bg-card rounded-lg border border-border mb-8 overflow-hidden">
         <div className="p-6 border-b border-border">
           <h2 className="text-xl font-heading font-bold text-primary">
             Category Performance
@@ -231,7 +236,7 @@ export default function ShoppingVisibilityPage() {
           </p>
         </div>
         
-        <div className="overflow-hidden">
+        <div className="overflow-x-auto">
           {data.categories.length > 0 ? (
             <table className="w-full">
               <thead>
@@ -267,7 +272,7 @@ export default function ShoppingVisibilityPage() {
       </div>
 
       {/* Competitors & Models Grid */}
-      <div className="grid grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Competitors */}
         <div className="bg-card rounded-lg border border-border">
           <div className="p-6 border-b border-border">
@@ -352,6 +357,7 @@ export default function ShoppingVisibilityPage() {
         onClose={() => setShowScanModal(false)}
         scanId={currentScanId}
       />
-    </div>
+      </div>
+    </>
   )
 }
