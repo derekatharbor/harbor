@@ -59,8 +59,8 @@ export default function ShoppingVisibilityPage() {
         
         const scanData = await response.json()
         
-        // Check if user has any scans
-        if (!scanData.hasScans) {
+        // Check if user has any scans - API returns scan: null when no scans exist
+        if (!scanData.scan) {
           setHasScans(false)
           setLoading(false)
           return
@@ -72,7 +72,7 @@ export default function ShoppingVisibilityPage() {
         const shopping = scanData.shopping || {}
         
         const shoppingData: ShoppingData = {
-          visibility_score: shopping.shopping_visibility || 0,
+          visibility_score: shopping.score || 0,  // API returns 'score' not 'shopping_visibility'
           visibility_delta: '+2.3%', // TODO: Calculate from previous scan
           total_mentions: shopping.total_mentions || 0,
           mentions_delta: '+18', // TODO: Calculate from previous scan
@@ -80,10 +80,20 @@ export default function ShoppingVisibilityPage() {
           rank_delta: 'Improved', // TODO: Calculate from previous scan
           market_position: shopping.competitors?.findIndex((c: any) => c.isUser) + 1 || 0,
           position_delta: 'Holding', // TODO: Calculate from previous scan
-          last_scan: scanData.last_scan,
-          categories: shopping.categories || [],
+          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,  // API returns scan object
+          categories: (shopping.categories || []).map((cat: any) => ({
+            name: cat.category,
+            rank: cat.rank,
+            mentions: cat.mentions,
+            models: [],
+            trend: 'stable' as const
+          })),
           competitors: shopping.competitors || [],
-          models: shopping.models || []
+          models: (shopping.models || []).map((m: any) => ({
+            name: m.model,
+            mentions: m.mentions,
+            coverage: 0
+          }))
         }
         
         setData(shoppingData)
@@ -98,15 +108,22 @@ export default function ShoppingVisibilityPage() {
   }, [currentDashboard])
 
   const handleStartScan = async () => {
+    if (!currentDashboard) {
+      console.error('No dashboard selected')
+      return
+    }
+
     try {
       const response = await fetch('/api/scan/start', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id }),
       })
 
       const data = await response.json()
 
-      if (data.success) {
-        setCurrentScanId(data.scanId)
+      if (data.scan) {
+        setCurrentScanId(data.scan.id)
         setShowScanModal(true)
       }
     } catch (error) {
