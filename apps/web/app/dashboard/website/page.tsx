@@ -3,8 +3,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ArrowRight, FileCode } from 'lucide-react'
-import ScanButton from '@/components/scan/ScanButton'
+import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ArrowRight, FileCode, Sparkles } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import { useBrand } from '@/contexts/BrandContext'
 
@@ -62,8 +61,8 @@ export default function WebsiteAnalyticsPage() {
         
         const scanData = await response.json()
         
-        // Check if user has any scans
-        if (!scanData.hasScans) {
+        // Check if user has any scans - API returns scan: null when no scans exist
+        if (!scanData.scan) {
           setHasScans(false)
           setLoading(false)
           return
@@ -153,7 +152,7 @@ export default function WebsiteAnalyticsPage() {
           visibility_delta: '+8', // TODO: Calculate from previous scan
           technical_issues: (website.issues || []).length,
           issues_delta: '-5', // TODO: Calculate from previous scan
-          last_scan: scanData.last_scan,
+          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,
           pages,
           issues_by_severity: { high, medium, low },
           issue_categories
@@ -170,7 +169,29 @@ export default function WebsiteAnalyticsPage() {
     fetchData()
   }, [currentDashboard]) // Re-fetch when brand changes!
 
-  // formatIssueCode helper moved below (no handleStartScan needed)
+  const handleStartScan = async () => {
+    if (!currentDashboard) {
+      console.error('No dashboard selected')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id }),
+      })
+
+      const data = await response.json()
+
+      if (data.scan) {
+        setCurrentScanId(data.scan.id)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
+    }
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -229,7 +250,16 @@ export default function WebsiteAnalyticsPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton />
+            <div className="flex flex-col items-end gap-2">
+              <button
+                onClick={handleStartScan}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#E879F9] text-[#E879F9] hover:bg-[#E879F9] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+              >
+                <Sparkles className="w-4 h-4" strokeWidth={2} />
+                Run Fresh Scan
+              </button>
+              <p className="text-xs text-softgray/50">1 scan remaining this week</p>
+            </div>
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -251,9 +281,13 @@ export default function WebsiteAnalyticsPage() {
               Run your first scan to analyze how AI models read your website. We'll check schema markup, 
               meta tags, content structure, and technical SEO factors.
             </p>
-            <div className="flex justify-center">
-              <ScanButton variant="large" />
-            </div>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-[#E879F9] text-[#E879F9] hover:bg-[#E879F9] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-base"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
           </div>
         </div>
 
@@ -280,7 +314,16 @@ export default function WebsiteAnalyticsPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton />
+          <div className="flex flex-col items-end gap-2">
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#E879F9] text-[#E879F9] hover:bg-[#E879F9] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+            >
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
+              Run Fresh Scan
+            </button>
+            <p className="text-xs text-softgray/50">1 scan remaining this week</p>
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
