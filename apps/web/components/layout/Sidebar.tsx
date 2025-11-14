@@ -104,8 +104,12 @@ export default function Sidebar() {
       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-xl">H</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img 
+                src="/Harbor_White_Logo.png" 
+                alt="Harbor Logo" 
+                className="w-10 h-10 object-contain"
+              />
             </div>
             <h1 className="text-lg font-heading font-bold text-white">
               Harbor
@@ -115,10 +119,14 @@ export default function Sidebar() {
         {isCollapsed && (
           <button
             onClick={toggleCollapse}
-            className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center mx-auto group relative cursor-pointer transition-all"
+            className="w-10 h-10 flex items-center justify-center mx-auto group relative cursor-pointer transition-all"
             title="Expand sidebar"
           >
-            <span className="text-white font-heading font-bold text-xl group-hover:opacity-0 transition-opacity">H</span>
+            <img 
+              src="/Harbor_White_Logo.png" 
+              alt="Harbor Logo" 
+              className="w-10 h-10 object-contain group-hover:opacity-0 transition-opacity"
+            />
             <ChevronRight className="w-5 h-5 text-white absolute opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2} />
           </button>
         )}
