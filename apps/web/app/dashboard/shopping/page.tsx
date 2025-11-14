@@ -7,7 +7,6 @@ import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles, ArrowRight } from 'l
 import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import { useBrand } from '@/contexts/BrandContext'
-import { useBrand } from '@/contexts/BrandContext'
 
 interface ShoppingData {
   visibility_score: number
