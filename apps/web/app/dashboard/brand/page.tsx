@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Sparkles, TrendingUp, MessageSquare, Users, Target, ArrowRight } from 'lucide-react'
 import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import { useBrand } from '@/contexts/BrandContext'
 
 interface BrandData {
   visibility_index: number
@@ -35,6 +36,9 @@ interface BrandData {
 }
 
 export default function BrandVisibilityPage() {
+  // Brand context - automatically gets current dashboard
+  const { currentDashboard } = useBrand()
+  
   const [data, setData] = useState<BrandData | null>(null)
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
@@ -43,8 +47,15 @@ export default function BrandVisibilityPage() {
 
   useEffect(() => {
     async function fetchData() {
+      // Don't fetch if no dashboard selected yet
+      if (!currentDashboard) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const response = await fetch('/api/scan/latest')
+        // Add dashboardId to API call - this makes it brand-aware!
+        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
         const scanData = await response.json()
@@ -110,24 +121,9 @@ export default function BrandVisibilityPage() {
     }
 
     fetchData()
-  }, [])
+  }, [currentDashboard]) // Re-fetch when brand changes!
 
-  const handleStartScan = async () => {
-    try {
-      const response = await fetch('/api/scan/start', {
-        method: 'POST',
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        setCurrentScanId(data.scanId)
-        setShowScanModal(true)
-      }
-    } catch (error) {
-      console.error('Failed to start scan:', error)
-    }
-  }
+  // Helper functions below (no handleStartScan needed)
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -173,7 +169,7 @@ export default function BrandVisibilityPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton onScanStart={handleStartScan} />
+            <ScanButton />
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -228,7 +224,7 @@ export default function BrandVisibilityPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton onScanStart={handleStartScan} />
+          <ScanButton />
         </div>
         
         <div className="flex items-center justify-between">

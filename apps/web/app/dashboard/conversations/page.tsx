@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { MessageSquare, TrendingUp, Sparkles, Users, Target, ArrowRight, AlertCircle } from 'lucide-react'
 import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import { useBrand } from '@/contexts/BrandContext'
 
 interface ConversationsData {
   volume_index: number
@@ -43,6 +44,9 @@ interface ConversationsData {
 }
 
 export default function ConversationVolumesPage() {
+  // Brand context - automatically gets current dashboard
+  const { currentDashboard } = useBrand()
+  
   const [data, setData] = useState<ConversationsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
@@ -51,8 +55,15 @@ export default function ConversationVolumesPage() {
 
   useEffect(() => {
     async function fetchData() {
+      // Don't fetch if no dashboard selected yet
+      if (!currentDashboard) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const response = await fetch('/api/scan/latest')
+        // Add dashboardId to API call - this makes it brand-aware!
+        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
         const scanData = await response.json()
@@ -114,24 +125,9 @@ export default function ConversationVolumesPage() {
     }
 
     fetchData()
-  }, [])
+  }, [currentDashboard]) // Re-fetch when brand changes!
 
-  const handleStartScan = async () => {
-    try {
-      const response = await fetch('/api/scan/start', {
-        method: 'POST',
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        setCurrentScanId(data.scanId)
-        setShowScanModal(true)
-      }
-    } catch (error) {
-      console.error('Failed to start scan:', error)
-    }
-  }
+  // Helper functions below (no handleStartScan needed)
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -193,7 +189,7 @@ export default function ConversationVolumesPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton onScanStart={handleStartScan} />
+            <ScanButton />
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -248,7 +244,7 @@ export default function ConversationVolumesPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton onScanStart={handleStartScan} />
+          <ScanButton />
         </div>
         
         <div className="flex items-center justify-between">
