@@ -3,115 +3,58 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Sparkles, TrendingUp, MessageSquare, Users, Target, ArrowRight } from 'lucide-react'
+import { Star, TrendingUp, MessageSquare, Users, Target, ArrowRight } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
 
 interface BrandData {
   visibility_index: number
-  visibility_delta: string
-  total_mentions: number
-  mentions_delta: string
-  sentiment_score: number
-  sentiment_delta: string
-  descriptor_count: number
-  descriptor_delta: string
-  last_scan: string | null
   descriptors: Array<{
     word: string
-    sentiment: 'positive' | 'neutral' | 'negative'
+    sentiment: string
     weight: number
   }>
-  sentiment_distribution: {
+  sentiment_breakdown: {
     positive: number
     neutral: number
     negative: number
   }
-  competitors: Array<{
-    brand: string
-    mentions: number
-    sentiment: number
-  }>
+  total_mentions: number
 }
 
 export default function BrandVisibilityPage() {
-  // Brand context - automatically gets current dashboard
   const { currentDashboard } = useBrand()
   
   const [data, setData] = useState<BrandData | null>(null)
+  const [scanData, setScanData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
-  const [hasScans, setHasScans] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
-      // Don't fetch if no dashboard selected yet
       if (!currentDashboard) {
         setLoading(false)
         return
       }
 
       try {
-        // Add dashboardId to API call - this makes it brand-aware!
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
-        const scanData = await response.json()
+        const result = await response.json()
+        setScanData(result)
         
-        // Check if user has any scans - API returns scan: null when no scans exist
-        if (!scanData.scan) {
-          setHasScans(false)
+        // If no scan exists, don't set data
+        if (!result.scan) {
+          setData(null)
           setLoading(false)
           return
         }
-
-        setHasScans(true)
         
-        // Use real data from API
-        const brand = scanData.brand || {}
-        
-        // Calculate total mentions from descriptors
-        const totalMentions = brand.descriptors?.reduce((sum: number, d: any) => sum + d.weight, 0) || 0
-        
-        // Map sentiment from API format ('pos'/'neu'/'neg') to page format ('positive'/'neutral'/'negative')
-        const mapSentiment = (s: string): 'positive' | 'neutral' | 'negative' => {
-          if (s === 'pos') return 'positive'
-          if (s === 'neg') return 'negative'
-          return 'neutral'
-        }
-        
-        // Calculate sentiment score (0-10 scale)
-        const sentimentBreakdown = brand.sentiment_breakdown || { positive: 0, neutral: 0, negative: 0 }
-        const total = sentimentBreakdown.positive + sentimentBreakdown.neutral + sentimentBreakdown.negative
-        const sentimentScore = total > 0
-          ? ((sentimentBreakdown.positive * 10 + sentimentBreakdown.neutral * 5 - sentimentBreakdown.negative * 3) / total) / 10
-          : 5.0
-        
-        const brandData: BrandData = {
-          visibility_index: brand.visibility_index || 0,
-          visibility_delta: '+1.2%', // TODO: Calculate from previous scan
-          total_mentions: totalMentions,
-          mentions_delta: '+83', // TODO: Calculate from previous scan
-          sentiment_score: Number(sentimentScore.toFixed(1)),
-          sentiment_delta: '+0.3', // TODO: Calculate from previous scan
-          descriptor_count: brand.descriptors?.length || 0,
-          descriptor_delta: '+4', // TODO: Calculate from previous scan
-          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,
-          descriptors: (brand.descriptors || []).map((d: any) => ({
-            word: d.word,
-            sentiment: mapSentiment(d.sentiment),
-            weight: d.weight
-          })),
-          sentiment_distribution: {
-            positive: sentimentBreakdown.positive || 0,
-            neutral: sentimentBreakdown.neutral || 0,
-            negative: sentimentBreakdown.negative || 0
-          },
-          competitors: [] // TODO: Add competitor brand data from shopping results
-        }
-        
-        setData(brandData)
+        // Map brand data from API
+        setData(result.brand)
       } catch (error) {
         console.error('Error fetching brand data:', error)
       } finally {
@@ -120,31 +63,7 @@ export default function BrandVisibilityPage() {
     }
 
     fetchData()
-  }, [currentDashboard]) // Re-fetch when brand changes!
-
-  const handleStartScan = async () => {
-    if (!currentDashboard) {
-      console.error('No dashboard selected')
-      return
-    }
-
-    try {
-      const response = await fetch('/api/scan/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dashboardId: currentDashboard.id }),
-      })
-
-      const data = await response.json()
-
-      if (data.scan) {
-        setCurrentScanId(data.scan.id)
-        setShowScanModal(true)
-      }
-    } catch (error) {
-      console.error('Failed to start scan:', error)
-    }
-  }
+  }, [currentDashboard])
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -161,74 +80,66 @@ export default function BrandVisibilityPage() {
     }
   }
 
-  const getSentimentColor = (sentiment: 'positive' | 'neutral' | 'negative') => {
-    if (sentiment === 'positive') return 'text-[#4EE4FF] bg-[#4EE4FF]/10'
-    if (sentiment === 'neutral') return 'text-softgray/70 bg-white/5'
-    return 'text-softgray/40 bg-white/[0.02]'
+  const getSentimentColor = (sentiment: string) => {
+    if (sentiment === 'pos' || sentiment === 'positive') return 'bg-[#00C6B7]/10 text-[#00C6B7] border-[#00C6B7]/30'
+    if (sentiment === 'neg' || sentiment === 'negative') return 'bg-red-500/10 text-red-400 border-red-500/30'
+    return 'bg-blue-500/10 text-blue-400 border-blue-500/30'
   }
 
+  // Loading skeleton
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading brand data...</div>
+      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-border rounded-lg"></div>
+            <div className="h-10 w-64 bg-border rounded"></div>
+          </div>
+          <div className="h-10 w-40 bg-border rounded-lg"></div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
+          ))}
+        </div>
+
+        <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
       </div>
     )
   }
 
   // Empty state - no scans yet
-  if (!hasScans || !data) {
+  if (!data || !scanData?.scan) {
     return (
-      <div>
-        {/* Page Header */}
+      <div className="max-w-screen-2xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Sparkles className="w-8 h-8 text-[#4EE4FF]" strokeWidth={1.5} />
-              <h1 className="text-4xl font-heading font-bold text-white">
+              <Star className="w-8 h-8 text-[#4EE4FF]" strokeWidth={1.5} />
+              <h1 className="text-4xl font-heading font-bold text-primary">
                 Brand Visibility
               </h1>
             </div>
-
-            {/* Scan Button */}
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Fresh Scan
-            </button>
+            <UniversalScanButton />
           </div>
           
-          <p className="text-sm text-softgray/60 mb-2">
-            How AI models describe and associate your brand across contexts
+          <p className="text-sm text-secondary/60 mb-2">
+            How AI models describe and associate your brand
           </p>
         </div>
 
-        {/* Empty State */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="max-w-md mx-auto">
-            <Sparkles className="w-16 h-16 text-[#4EE4FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-2xl font-heading font-bold text-white mb-3">
-              No Scan Data Yet
-            </h2>
-            <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed">
-              Run your first scan to see how AI models perceive your brand. We'll analyze 
-              sentiment, descriptors, and brand associations across ChatGPT, Claude, and Gemini.
-            </p>
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
-            </button>
-          </div>
+        <div className="bg-card rounded-lg p-12 border border-border text-center">
+          <Star className="w-16 h-16 text-[#4EE4FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
+            No Scan Data Yet
+          </h2>
+          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+            Run your first scan to see how AI models describe your brand, analyze sentiment, and identify key associations.
+          </p>
+          <UniversalScanButton variant="large" />
         </div>
 
-        {/* Scan Progress Modal */}
         <ScanProgressModal
           isOpen={showScanModal}
           onClose={() => setShowScanModal(false)}
@@ -238,431 +149,176 @@ export default function BrandVisibilityPage() {
     )
   }
 
+  // Main content with data
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto">
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-[#4EE4FF]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-white">
+            <Star className="w-8 h-8 text-[#4EE4FF]" strokeWidth={1.5} />
+            <h1 className="text-4xl font-heading font-bold text-primary">
               Brand Visibility
             </h1>
           </div>
-
-          {/* Scan Button */}
-          <button
-            onClick={handleStartScan}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-          >
-            <Sparkles className="w-5 h-5" strokeWidth={2} />
-            Run Fresh Scan
-          </button>
+          <UniversalScanButton />
         </div>
         
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-softgray/60 mb-2">
-              How AI models describe and associate your brand across contexts
+            <p className="text-sm text-secondary/60 mb-2">
+              How AI models describe and associate your brand
             </p>
-            <p className="text-sm text-softgray/70 italic">
-              Your brand appears with {data.sentiment_distribution.positive}% positive sentiment
+            <p className="text-sm text-secondary/70 italic">
+              Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
             </p>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-softgray/60">
-            <span>Last scan:</span>
-            <span className="text-white">{formatDate(data.last_scan)}</span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-              Live
-            </span>
           </div>
         </div>
       </div>
 
       {/* Metric Cards */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        {/* Visibility Index */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Visibility Index
-              </div>
-              <div className="text-xs text-softgray/50">
-                Brand prominence
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <Target className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Visibility Index</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.visibility_index}<span className="text-2xl text-softgray/40">%</span>
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.visibility_index}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#4EE4FF]">{data.visibility_delta}</span>
-            <span className="text-softgray/50">vs last week</span>
-          </div>
+          <p className="text-sm text-secondary/60">Brand presence</p>
         </div>
 
-        {/* Total Mentions */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <MessageSquare className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Total Mentions
-              </div>
-              <div className="text-xs text-softgray/50">
-                Weighted frequency
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <MessageSquare className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Mentions</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.total_mentions.toLocaleString()}
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.total_mentions}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#4EE4FF]">{data.mentions_delta}</span>
-            <span className="text-softgray/50">this month</span>
-          </div>
+          <p className="text-sm text-secondary/60">Across all models</p>
         </div>
 
-        {/* Sentiment Score */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <Users className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Sentiment Score
-              </div>
-              <div className="text-xs text-softgray/50">
-                Overall perception
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Positive Sentiment</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.sentiment_score}<span className="text-2xl text-softgray/40">/10</span>
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.sentiment_breakdown.positive}<span className="text-2xl text-secondary/40">%</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#4EE4FF]">{data.sentiment_delta}</span>
-            <span className="text-softgray/50">improving</span>
-          </div>
+          <p className="text-sm text-secondary/60">Of descriptors</p>
         </div>
 
-        {/* Descriptor Count */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            <div className="p-2 bg-white/5 rounded-lg">
-              <MessageSquare className="w-5 h-5 text-white/60" strokeWidth={1.5} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
-                Descriptors
-              </div>
-              <div className="text-xs text-softgray/50">
-                Unique attributes
-              </div>
-            </div>
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <Users className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+            <p className="text-xs text-secondary/60 uppercase tracking-wider">Descriptors</p>
           </div>
-          <div className="text-4xl font-heading font-bold text-white tabular-nums mb-2">
-            {data.descriptor_count}
+          <div className="text-4xl font-heading font-bold text-primary mb-2">
+            {data.descriptors.length}
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#4EE4FF]">{data.descriptor_delta}</span>
-            <span className="text-softgray/50">new terms</span>
-          </div>
+          <p className="text-sm text-secondary/60">Key associations</p>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-2 gap-6 mb-8">
-        {/* Brand Descriptors */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-heading font-bold text-white">
-              Brand Descriptors
-            </h2>
-            <Sparkles className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />
-          </div>
-          
-          {data.descriptors.length > 0 ? (
-            <div className="flex flex-wrap gap-2 max-h-[480px] overflow-y-auto pr-2">
-              {data.descriptors.map((descriptor, index) => (
-                <div
-                  key={index}
-                  className={`px-3 py-2 rounded-lg font-body text-sm font-medium ${getSentimentColor(descriptor.sentiment)}`}
-                >
-                  <span>{descriptor.word}</span>
-                  <span className="ml-2 text-xs opacity-60">
-                    {descriptor.weight}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-softgray/40 text-sm font-body mb-2">
-                No descriptors yet
-              </div>
-              <div className="text-softgray/60 text-xs font-body">
-                Brand descriptors will appear after your first scan
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Competitive Mentions */}
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-heading font-bold text-white">
-              Competitive Mentions
-            </h2>
-            <TrendingUp className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />
-          </div>
-          
-          {data.competitors.length > 0 ? (
-            <div className="space-y-3">
-              {/* Your Brand (Always First) */}
-              <div className="p-4 rounded-lg bg-[#4EE4FF]/10 border border-[#4EE4FF]/30">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="font-body font-bold text-white">
-                    Your Brand
-                  </div>
-                  <div className="text-[#4EE4FF] font-heading font-bold text-2xl tabular-nums">
-                    {data.total_mentions.toLocaleString()}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-softgray/60 font-body">
-                    Sentiment: {data.sentiment_score}/10
-                  </span>
-                  <span className="text-[#4EE4FF] text-xs font-body font-medium">
-                    Leading mentions
-                  </span>
-                </div>
-              </div>
-
-              {/* Competitors */}
-              {data.competitors.map((competitor, index) => (
-                <div 
-                  key={index} 
-                  className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="font-body font-medium text-white">
-                      {competitor.brand}
-                    </div>
-                    <div className="text-softgray/70 font-heading font-bold text-xl tabular-nums">
-                      {competitor.mentions.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="text-softgray/60 text-sm font-body">
-                    Sentiment: {competitor.sentiment}/10
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-softgray/40 text-sm font-body mb-2">
-                No competitor data yet
-              </div>
-              <div className="text-softgray/60 text-xs font-body">
-                Competitive analysis will appear after your first scan
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Sentiment Distribution - Full Width */}
-      {data.descriptors.length > 0 && (
-        <div 
-          className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
-          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-heading font-bold text-white mb-2">
-                Sentiment Distribution
-              </h2>
-              <p className="text-sm text-softgray/60 font-body">
-                Overall sentiment balance across all brand mentions
-              </p>
-            </div>
-            <MessageSquare className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />
-          </div>
-          
-          <div className="grid grid-cols-3 gap-8">
-            {/* Positive */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-white font-body font-medium text-lg">
-                  Positive
-                </div>
-                <div className="text-[#4EE4FF] font-heading font-bold text-2xl tabular-nums">
-                  {data.sentiment_distribution.positive}%
-                </div>
-              </div>
-              <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
-                <div 
-                  className="h-full bg-[#4EE4FF] rounded-full transition-all duration-500"
-                  style={{ width: `${data.sentiment_distribution.positive}%` }}
-                />
-              </div>
-              <div className="text-softgray/60 text-sm font-body">
-                <span className="text-[#4EE4FF]">↑ 3%</span> vs last month
-              </div>
-            </div>
-
-            {/* Neutral */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-white font-body font-medium text-lg">
-                  Neutral
-                </div>
-                <div className="text-softgray/70 font-heading font-bold text-2xl tabular-nums">
-                  {data.sentiment_distribution.neutral}%
-                </div>
-              </div>
-              <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
-                <div 
-                  className="h-full bg-softgray/50 rounded-full transition-all duration-500"
-                  style={{ width: `${data.sentiment_distribution.neutral}%` }}
-                />
-              </div>
-              <div className="text-softgray/60 text-sm font-body">
-                <span className="text-softgray/60">—</span> Stable
-              </div>
-            </div>
-
-            {/* Negative */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-white font-body font-medium text-lg">
-                  Negative
-                </div>
-                <div className="text-softgray/50 font-heading font-bold text-2xl tabular-nums">
-                  {data.sentiment_distribution.negative}%
-                </div>
-              </div>
-              <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden mb-2">
-                <div 
-                  className="h-full bg-softgray/30 rounded-full transition-all duration-500"
-                  style={{ width: `${data.sentiment_distribution.negative}%` }}
-                />
-              </div>
-              <div className="text-softgray/60 text-sm font-body">
-                <span className="text-[#4EE4FF]">↓ 1%</span> Improving
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Recommended Improvements */}
-      <div 
-        className="rounded-lg p-6 border border-white/5"
-        style={{ 
-          background: 'rgba(255,255,255,0.02)',
-          borderTop: '1px solid rgba(78, 228, 255, 0.25)',
-          boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)'
-        }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Recommended Improvements
-            </h2>
-            <p className="text-sm text-softgray/60 font-body">
-              High-impact actions to strengthen your brand perception
-            </p>
-          </div>
-          <Target className="w-6 h-6 text-[#4EE4FF]" strokeWidth={1.5} />
+      {/* Descriptors Cloud */}
+      <div className="bg-card rounded-lg border border-border mb-8">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Brand Descriptors
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            How AI models describe your brand
+          </p>
         </div>
         
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Add Organization Schema
-              </div>
-              <span className="text-[#4EE4FF] text-xs px-2 py-0.5 bg-[#4EE4FF]/10 rounded font-medium">
-                High Impact
-              </span>
+        <div className="p-6">
+          {data.descriptors.length > 0 ? (
+            <div className="flex flex-wrap gap-3">
+              {data.descriptors.map((desc, index) => (
+                <span
+                  key={index}
+                  className={`px-4 py-2 rounded-full border text-sm font-medium ${getSentimentColor(desc.sentiment)}`}
+                >
+                  {desc.word}
+                </span>
+              ))}
             </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Structure your brand identity with logo, links, and tagline
-            </div>
-            <button className="flex items-center gap-2 text-[#4EE4FF] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              Generate Schema
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
-          </div>
+          ) : (
+            <p className="text-secondary/60 text-sm text-center py-8">No descriptor data</p>
+          )}
+        </div>
+      </div>
 
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Unify Brand Language
+      {/* Sentiment Distribution */}
+      <div className="bg-card rounded-lg border border-border mb-8">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Sentiment Distribution
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            Overall brand perception breakdown
+          </p>
+        </div>
+        
+        <div className="p-6">
+          <div className="grid grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-heading font-bold text-[#00C6B7] mb-2">
+                {data.sentiment_breakdown.positive}%
               </div>
-              <span className="text-[#4EE4FF] text-xs px-2 py-0.5 bg-[#4EE4FF]/10 rounded font-medium">
-                High Impact
-              </span>
+              <p className="text-sm text-secondary/70">Positive</p>
             </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Align messaging across About, Press, and landing pages
-            </div>
-            <button className="flex items-center gap-2 text-[#4EE4FF] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              View Guidelines
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
-          </div>
-
-          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-white font-body font-medium">
-                Build Authority Sources
+            <div className="text-center">
+              <div className="text-3xl font-heading font-bold text-blue-400 mb-2">
+                {data.sentiment_breakdown.neutral}%
               </div>
-              <span className="text-softgray/50 text-xs px-2 py-0.5 bg-white/5 rounded font-medium">
-                Medium Impact
-              </span>
+              <p className="text-sm text-secondary/70">Neutral</p>
             </div>
-            <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Connect Wikipedia, Crunchbase, and GS1 references
+            <div className="text-center">
+              <div className="text-3xl font-heading font-bold text-red-400 mb-2">
+                {data.sentiment_breakdown.negative}%
+              </div>
+              <p className="text-sm text-secondary/70">Negative</p>
             </div>
-            <button className="flex items-center gap-2 text-[#4EE4FF] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              View Checklist
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Scan Progress Modal */}
+      {/* Optimize Section */}
+      <div className="bg-card rounded-lg border border-border">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-heading font-bold text-primary">
+            Optimize Brand Visibility
+          </h2>
+          <p className="text-sm text-secondary/60 mt-1">
+            Actions to improve brand perception
+          </p>
+        </div>
+        <div className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#4EE4FF]/30 transition-colors">
+              <div className="w-10 h-10 rounded-lg bg-[#4EE4FF]/10 flex items-center justify-center flex-shrink-0">
+                <Star className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-heading font-semibold text-primary mb-1">
+                  Add Organization Schema
+                </h3>
+                <p className="text-sm text-secondary/70 mb-3">
+                  Implement Organization JSON-LD with brand description, logo, and social links to help AI understand your brand.
+                </p>
+                <button className="text-sm text-[#4EE4FF] hover:underline font-medium inline-flex items-center gap-1">
+                  Learn how <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <ScanProgressModal
         isOpen={showScanModal}
         onClose={() => setShowScanModal(false)}
