@@ -118,7 +118,7 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
   }
 
   return (
-    <div className="flex flex-col items-start gap-2">
+    <div className="flex flex-col items-start lg:items-end gap-2">
       <button
         onClick={handleScan}
         disabled={isScanning || scansRemaining <= 0}

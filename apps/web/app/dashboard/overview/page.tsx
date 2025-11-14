@@ -125,7 +125,7 @@ export default function OverviewPage() {
         <MobileHeader />
         <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
           <div className="mb-8">
-            <div className="flex flex-col gap-4 mb-4">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
               <div className="flex items-center gap-3">
                 <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
                 <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
@@ -210,7 +210,7 @@ export default function OverviewPage() {
       <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
         {/* Page Header */}
         <div className="mb-8">
-          <div className="flex flex-col gap-4 mb-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
               <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
               <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
