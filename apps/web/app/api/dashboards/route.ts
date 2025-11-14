@@ -3,14 +3,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic'
+
+// Helper to create Supabase client
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+  
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 // GET /api/dashboards - List all dashboards user has access to
 export async function GET(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
     // TODO: Get actual user ID from auth session
     // For now, we'll return all dashboards (remove this in production)
     const { data: dashboards, error } = await supabase
@@ -41,6 +52,8 @@ export async function GET(req: NextRequest) {
 // POST /api/dashboards - Create new dashboard
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabaseClient()
+    
     const body = await req.json()
     const { brand_name, domain, category } = body
 

@@ -1,390 +1,206 @@
-// app/api/scan/latest/route.ts
-// Returns aggregated scan data formatted for dashboard pages
+// apps/web/app/api/scan/latest/route.ts
 
-export const runtime = 'nodejs'
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+// Force dynamic rendering - don't pre-render at build time
+export const dynamic = 'force-dynamic'
 
-export async function GET() {
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+  
+  return createClient(supabaseUrl, supabaseKey)
+}
+
+export async function GET(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = getSupabaseClient()
     
-    // Get current user
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { searchParams } = new URL(req.url)
+    const dashboardId = searchParams.get('dashboardId')
+
+    if (!dashboardId) {
+      return NextResponse.json(
+        { error: 'Dashboard ID is required' },
+        { status: 400 }
+      )
     }
 
-    // Get user's dashboard
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('org_id')
-      .eq('user_id', session.user.id)
-      .single()
-
-    if (!userRole?.org_id) {
-      return NextResponse.json({ hasScans: false })
-    }
-
-    const { data: dashboard } = await supabase
-      .from('dashboards')
-      .select('id, brand_name, metadata')
-      .eq('org_id', userRole.org_id)
-      .single()
-
-    if (!dashboard) {
-      return NextResponse.json({ hasScans: false })
-    }
-
-    // Get latest completed scan
-    const { data: scan } = await supabase
+    // Get latest scan for this dashboard
+    const { data: scan, error: scanError } = await supabase
       .from('scans')
-      .select('id, status, started_at, finished_at, type')
-      .eq('dashboard_id', dashboard.id)
-      .in('status', ['done', 'partial'])
-      .order('finished_at', { ascending: false })
+      .select('*')
+      .eq('dashboard_id', dashboardId)
+      .order('started_at', { ascending: false })
       .limit(1)
       .single()
 
-    if (!scan) {
-      return NextResponse.json({ hasScans: false })
+    if (scanError || !scan) {
+      // No scans yet - return empty state
+      return NextResponse.json({
+        scan: null,
+        shopping: { score: 0, total_mentions: 0, categories: [], competitors: [], models: [] },
+        brand: { visibility_index: 0, descriptors: [], sentiment_breakdown: { positive: 0, neutral: 0, negative: 0 }, total_mentions: 0 },
+        conversations: { volume_index: 0, questions: [], intent_breakdown: { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 } },
+        website: { readability_score: 0, schema_coverage: 0, issues: [] },
+      })
     }
 
-    // Get all results for this scan
-    const [shoppingResults, brandResults, conversationResults, siteResults] = await Promise.all([
-      supabase
-        .from('results_shopping')
-        .select('*')
-        .eq('scan_id', scan.id),
-      
-      supabase
-        .from('results_brand')
-        .select('*')
-        .eq('scan_id', scan.id),
-      
-      supabase
-        .from('results_conversations')
-        .select('*')
-        .eq('scan_id', scan.id),
-      
-      supabase
-        .from('results_site')
-        .select('*')
-        .eq('scan_id', scan.id),
+    // Fetch results for each module
+    const [shoppingResults, brandResults, conversationResults, websiteResults] = await Promise.all([
+      supabase.from('results_shopping').select('*').eq('scan_id', scan.id),
+      supabase.from('results_brand').select('*').eq('scan_id', scan.id),
+      supabase.from('results_conversations').select('*').eq('scan_id', scan.id),
+      supabase.from('results_site').select('*').eq('scan_id', scan.id),
     ])
 
-    // ========================================================================
-    // AGGREGATE SHOPPING DATA
-    // ========================================================================
-    const shopping = aggregateShoppingData(
-      shoppingResults.data || [],
-      dashboard.brand_name,
-      dashboard.metadata
-    )
+    // Aggregate Shopping data
+    const shoppingData = shoppingResults.data || []
+    const totalMentions = shoppingData.length
+    
+    // Group by category
+    const categoryMap = new Map<string, { category: string; mentions: number; bestRank: number }>()
+    shoppingData.forEach((item) => {
+      const existing = categoryMap.get(item.category) || { category: item.category, mentions: 0, bestRank: 999 }
+      categoryMap.set(item.category, {
+        category: item.category,
+        mentions: existing.mentions + 1,
+        bestRank: Math.min(existing.bestRank, item.rank || 999),
+      })
+    })
+    
+    const categories = Array.from(categoryMap.values())
+      .map(c => ({ category: c.category, rank: c.bestRank, mentions: c.mentions }))
+      .sort((a, b) => b.mentions - a.mentions)
 
-    // ========================================================================
-    // AGGREGATE BRAND DATA
-    // ========================================================================
-    const brand = aggregateBrandData(brandResults.data || [])
+    // Group by competitor
+    const competitorMap = new Map<string, number>()
+    shoppingData.forEach((item) => {
+      if (item.brand) {
+        competitorMap.set(item.brand, (competitorMap.get(item.brand) || 0) + 1)
+      }
+    })
+    
+    const competitors = Array.from(competitorMap.entries())
+      .map(([brand, mentions]) => ({ brand, mentions }))
+      .sort((a, b) => b.mentions - a.mentions)
 
-    // ========================================================================
-    // AGGREGATE CONVERSATION DATA
-    // ========================================================================
-    const conversations = aggregateConversationData(conversationResults.data || [])
+    // Group by model
+    const modelMap = new Map<string, number>()
+    shoppingData.forEach((item) => {
+      if (item.model) {
+        modelMap.set(item.model, (modelMap.get(item.model) || 0) + 1)
+      }
+    })
+    
+    const models = Array.from(modelMap.entries())
+      .map(([model, mentions]) => ({ model, mentions }))
+      .sort((a, b) => b.mentions - a.mentions)
 
-    // ========================================================================
-    // AGGREGATE WEBSITE DATA
-    // ========================================================================
-    const website = aggregateWebsiteData(siteResults.data || [])
+    const shoppingScore = totalMentions > 0 
+      ? Math.min(100, (totalMentions / categories.length) * 25)
+      : 0
+
+    // Aggregate Brand data
+    const brandData = brandResults.data || []
+    const descriptors = brandData.map((d) => ({
+      word: d.descriptor,
+      sentiment: d.sentiment,
+      weight: d.weight || 1,
+    }))
+    
+    const sentimentCounts = { positive: 0, neutral: 0, negative: 0 }
+    brandData.forEach((d) => {
+      if (d.sentiment === 'pos') sentimentCounts.positive++
+      else if (d.sentiment === 'neu') sentimentCounts.neutral++
+      else if (d.sentiment === 'neg') sentimentCounts.negative++
+    })
+    
+    const totalSentiments = sentimentCounts.positive + sentimentCounts.neutral + sentimentCounts.negative
+    const sentimentBreakdown = {
+      positive: totalSentiments > 0 ? Math.round((sentimentCounts.positive / totalSentiments) * 100) : 0,
+      neutral: totalSentiments > 0 ? Math.round((sentimentCounts.neutral / totalSentiments) * 100) : 0,
+      negative: totalSentiments > 0 ? Math.round((sentimentCounts.negative / totalSentiments) * 100) : 0,
+    }
+    
+    const totalWeightedMentions = brandData.reduce((sum, d) => sum + (d.weight || 1), 0)
+    const visibilityIndex = totalWeightedMentions > 0 
+      ? Math.min(100, totalWeightedMentions * 5)
+      : 0
+
+    // Aggregate Conversation data
+    const conversationData = conversationResults.data || []
+    const questions = conversationData.map((q) => ({
+      question: q.question,
+      intent: q.intent,
+      score: q.score || 1,
+      emerging: q.emerging || false,
+    }))
+    
+    const intentCounts = { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 }
+    conversationData.forEach((q) => {
+      const intent = q.intent as keyof typeof intentCounts
+      if (intent in intentCounts) {
+        intentCounts[intent]++
+      }
+    })
+    
+    const volumeIndex = conversationData.reduce((sum, q) => sum + (q.score || 1), 0)
+
+    // Aggregate Website data
+    const websiteData = websiteResults.data || []
+    const issues = websiteData.map((issue) => ({
+      url: issue.url,
+      code: issue.issue_code,
+      severity: issue.severity,
+      message: issue.details?.message || 'No details available',
+      schema_found: issue.schema_found || false,
+    }))
+    
+    const totalIssues = issues.length
+    const highSeverity = issues.filter(i => i.severity === 'high').length
+    const readabilityScore = Math.max(0, 100 - (highSeverity * 20) - (totalIssues * 5))
+    
+    const pagesWithSchema = issues.filter(i => i.schema_found).length
+    const totalPages = Math.max(issues.length, 1)
+    const schemaCoverage = Math.round((pagesWithSchema / totalPages) * 100)
 
     return NextResponse.json({
-      hasScans: true,
-      last_scan: scan.finished_at,
-      scan_id: scan.id,
-      dashboard: {
-        id: dashboard.id,
-        brand_name: dashboard.brand_name,
+      scan,
+      shopping: {
+        score: Math.round(shoppingScore),
+        total_mentions: totalMentions,
+        categories,
+        competitors,
+        models,
       },
-      shopping,
-      brand,
-      conversations,
-      website,
+      brand: {
+        visibility_index: Math.round(visibilityIndex),
+        descriptors,
+        sentiment_breakdown: sentimentBreakdown,
+        total_mentions: brandData.length,
+      },
+      conversations: {
+        volume_index: Math.round(volumeIndex),
+        questions,
+        intent_breakdown: intentCounts,
+      },
+      website: {
+        readability_score: Math.round(readabilityScore),
+        schema_coverage: schemaCoverage,
+        issues,
+      },
     })
-
-  } catch (error: any) {
-    console.error('Latest scan fetch error:', error)
+  } catch (error) {
+    console.error('Error in GET /api/scan/latest:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch scan data' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
-}
-
-// ============================================================================
-// AGGREGATION FUNCTIONS
-// ============================================================================
-
-function aggregateShoppingData(results: any[], userBrand: string, metadata: any) {
-  if (results.length === 0) {
-    return {
-      shopping_visibility: 0,
-      total_mentions: 0,
-      categories: [],
-      competitors: [],
-      models: [],
-    }
-  }
-
-  // Count total mentions of user's brand
-  const userMentions = results.filter(r => 
-    r.brand?.toLowerCase() === userBrand.toLowerCase()
-  )
-
-  // Group by category
-  const categoryMap = new Map<string, any>()
-  
-  userMentions.forEach(result => {
-    const category = result.category
-    
-    if (!categoryMap.has(category)) {
-      categoryMap.set(category, {
-        name: category,
-        mentions: 0,
-        models: new Set<string>(),
-        ranks: [],
-      })
-    }
-    
-    const cat = categoryMap.get(category)
-    cat.mentions++
-    cat.models.add(result.model)
-    cat.ranks.push(result.rank)
-  })
-
-  // Format categories
-  const categories = Array.from(categoryMap.values())
-    .map(cat => ({
-      name: cat.name,
-      rank: Math.round(cat.ranks.reduce((a: number, b: number) => a + b, 0) / cat.ranks.length),
-      mentions: cat.mentions,
-      models: Array.from(cat.models),
-      trend: 'stable' as const, // TODO: Compare with previous scan
-    }))
-    .sort((a, b) => b.mentions - a.mentions)
-
-  // Aggregate competitors
-  const competitorMap = new Map<string, any>()
-  
-  results.forEach(result => {
-    const brand = result.brand
-    
-    if (!competitorMap.has(brand)) {
-      competitorMap.set(brand, {
-        brand,
-        mentions: 0,
-        ranks: [],
-      })
-    }
-    
-    const comp = competitorMap.get(brand)
-    comp.mentions++
-    comp.ranks.push(result.rank)
-  })
-
-  const competitors = Array.from(competitorMap.values())
-    .map(comp => ({
-      brand: comp.brand,
-      mentions: comp.mentions,
-      avg_rank: Number((comp.ranks.reduce((a: number, b: number) => a + b, 0) / comp.ranks.length).toFixed(1)),
-      isUser: comp.brand.toLowerCase() === userBrand.toLowerCase(),
-    }))
-    .sort((a, b) => {
-      // User brand first, then by mentions
-      if (a.isUser) return -1
-      if (b.isUser) return 1
-      return b.mentions - a.mentions
-    })
-    .slice(0, 7) // Top 7
-
-  // Aggregate by model
-  const modelMap = new Map<string, any>()
-  
-  userMentions.forEach(result => {
-    const model = result.model
-    
-    if (!modelMap.has(model)) {
-      modelMap.set(model, {
-        name: formatModelName(model),
-        mentions: 0,
-      })
-    }
-    
-    modelMap.get(model).mentions++
-  })
-
-  const totalPossibleMentions = categoryMap.size * 3 // Assuming 3 models queried per category
-  
-  const models = Array.from(modelMap.values()).map(m => ({
-    name: m.name,
-    mentions: m.mentions,
-    coverage: Math.round((m.mentions / Math.max(totalPossibleMentions, 1)) * 100),
-  }))
-
-  // Calculate visibility score
-  const avgRank = userMentions.length > 0
-    ? userMentions.reduce((sum, r) => sum + r.rank, 0) / userMentions.length
-    : 0
-  
-  // Score formula: (mentions / total results) * (1 / avg_rank) * 100
-  const visibility_score = userMentions.length > 0
-    ? Math.min(100, Math.round(
-        (userMentions.length / results.length) * (1 / Math.max(avgRank, 1)) * 100
-      ))
-    : 0
-
-  return {
-    shopping_visibility: visibility_score,
-    total_mentions: userMentions.length,
-    categories,
-    competitors,
-    models,
-  }
-}
-
-function aggregateBrandData(results: any[]) {
-  if (results.length === 0) {
-    return {
-      visibility_index: 0,
-      descriptors: [],
-      sentiment_breakdown: { positive: 0, neutral: 0, negative: 0 },
-    }
-  }
-
-  // Group descriptors
-  const descriptorMap = new Map<string, any>()
-  
-  results.forEach(result => {
-    const desc = result.descriptor.toLowerCase()
-    
-    if (!descriptorMap.has(desc)) {
-      descriptorMap.set(desc, {
-        word: result.descriptor,
-        sentiment: result.sentiment,
-        count: 0,
-        weight: 0,
-      })
-    }
-    
-    const d = descriptorMap.get(desc)
-    d.count++
-    d.weight += result.weight || 1
-  })
-
-  const descriptors = Array.from(descriptorMap.values())
-    .sort((a, b) => b.weight - a.weight)
-    .slice(0, 20) // Top 20
-
-  // Sentiment breakdown
-  const sentiment_breakdown = {
-    positive: results.filter(r => r.sentiment === 'pos').length,
-    neutral: results.filter(r => r.sentiment === 'neu').length,
-    negative: results.filter(r => r.sentiment === 'neg').length,
-  }
-
-  // Visibility index (mentions × prominence × sentiment ratio)
-  const total = sentiment_breakdown.positive + sentiment_breakdown.neutral + sentiment_breakdown.negative
-  const sentimentScore = total > 0
-    ? (sentiment_breakdown.positive * 1 + sentiment_breakdown.neutral * 0.5 - sentiment_breakdown.negative * 0.5) / total
-    : 0
-  
-  const visibility_index = Math.max(0, Math.min(100, Math.round(
-    (results.length / 50) * sentimentScore * 100
-  )))
-
-  return {
-    visibility_index,
-    descriptors,
-    sentiment_breakdown,
-  }
-}
-
-function aggregateConversationData(results: any[]) {
-  if (results.length === 0) {
-    return {
-      conversation_volume: 0,
-      questions: [],
-      intent_breakdown: {},
-    }
-  }
-
-  // Sort by score
-  const questions = results
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 25) // Top 25
-    .map(q => ({
-      question: q.question,
-      intent: q.intent,
-      score: q.score,
-      emerging: q.emerging,
-    }))
-
-  // Intent breakdown
-  const intent_breakdown: Record<string, number> = {}
-  results.forEach(q => {
-    intent_breakdown[q.intent] = (intent_breakdown[q.intent] || 0) + 1
-  })
-
-  // Volume calculation (relative index)
-  const conversation_volume = Math.min(100, Math.round((results.length / 25) * 100))
-
-  return {
-    conversation_volume,
-    questions,
-    intent_breakdown,
-  }
-}
-
-function aggregateWebsiteData(results: any[]) {
-  if (results.length === 0) {
-    return {
-      readability_score: 100,
-      issues: [],
-      schema_coverage: 100,
-    }
-  }
-
-  // Group by severity
-  const issues = results.map(r => ({
-    url: r.url,
-    code: r.issue_code,
-    severity: r.severity,
-    message: r.details?.message || 'Issue detected',
-    schema_found: r.schema_found,
-  }))
-
-  const high = issues.filter(i => i.severity === 'high').length
-  const med = issues.filter(i => i.severity === 'med').length
-  const low = issues.filter(i => i.severity === 'low').length
-
-  // Calculate scores
-  const readability_score = Math.max(0, 100 - (high * 15 + med * 8 + low * 3))
-  const schema_coverage = Math.max(0, 100 - (high * 20))
-
-  return {
-    readability_score,
-    schema_coverage,
-    issues,
-  }
-}
-
-function formatModelName(model: string): string {
-  const mapping: Record<string, string> = {
-    gpt: 'ChatGPT',
-    claude: 'Claude',
-    gemini: 'Gemini',
-    perplexity: 'Perplexity',
-  }
-  return mapping[model] || model
 }
