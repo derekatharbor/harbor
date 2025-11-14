@@ -217,7 +217,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             </div>
             <button
               onClick={handleClose}
-              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none focus:ring-2 focus:ring-[var(--pageAccent)]/50"
+              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none"
             >
               View Results
             </button>
@@ -232,7 +232,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             </div>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none"
             >
               Close
             </button>

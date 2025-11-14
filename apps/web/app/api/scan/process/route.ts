@@ -1,5 +1,5 @@
 // app/api/scan/process/route.ts
-// Enhanced scan processor with multiple prompts and competitor data
+// CRITICAL FIX: Properly update scan_jobs status from 'queued' -> 'running' -> 'done'
 
 export const runtime = 'nodejs'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
@@ -11,9 +11,6 @@ import {
   getBrandPrompts,
   getConversationPrompts,
   buildPromptConfig,
-  calculateVisibilityScore,
-  calculateBrandVisibilityIndex,
-  calculateConversationVolume,
 } from '@/lib/prompts'
 
 export async function POST(request: Request) {
@@ -102,30 +99,47 @@ export async function POST(request: Request) {
 }
 
 // ============================================================================
-// MODULE PROCESSORS
+// MODULE PROCESSORS - WITH PROPER STATUS UPDATES
 // ============================================================================
 
 async function processShoppingModule(supabase: any, scanId: string, metadata: any) {
   console.log('[Shopping] Starting module...')
 
-  // Create job record
-  const { data: job } = await supabase
+  // Find existing job or create new one
+  let { data: job } = await supabase
     .from('scan_jobs')
-    .insert({
-      scan_id: scanId,
-      module: 'shopping',
+    .select('*')
+    .eq('scan_id', scanId)
+    .eq('module', 'shopping')
+    .single()
+
+  if (!job) {
+    const { data: newJob } = await supabase
+      .from('scan_jobs')
+      .insert({
+        scan_id: scanId,
+        module: 'shopping',
+        status: 'queued',
+      })
+      .select()
+      .single()
+    job = newJob
+  }
+
+  // CRITICAL: Update to 'running' status
+  await supabase
+    .from('scan_jobs')
+    .update({
       status: 'running',
       started_at: new Date().toISOString(),
     })
-    .select()
-    .single()
+    .eq('id', job.id)
 
   try {
     const prompts = getShoppingPrompts(metadata)
     const allResults: any[] = []
     let totalTokens = 0
 
-    // Run prompts across all models
     const models: Array<'gpt' | 'claude' | 'gemini'> = ['gpt', 'claude', 'gemini']
 
     for (const promptConfig of prompts) {
@@ -140,9 +154,8 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
             maxTokens: config.maxTokens,
           })
 
-          totalTokens += config.maxTokens // Rough estimate
+          totalTokens += config.maxTokens
 
-          // Parse JSON response
           const cleanedResponse = response
             .replace(/```json\n?/g, '')
             .replace(/```\n?/g, '')
@@ -150,7 +163,6 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
 
           const results = JSON.parse(cleanedResponse)
 
-          // Store each result
           for (const result of results) {
             allResults.push({
               scan_id: scanId,
@@ -159,7 +171,7 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
               product: result.product || 'Unknown',
               brand: result.brand || 'Unknown',
               rank: result.rank || 99,
-              confidence: 80, // Default confidence
+              confidence: 80,
             })
           }
         } catch (error) {
@@ -168,12 +180,11 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
       }
     }
 
-    // Bulk insert results
     if (allResults.length > 0) {
       await supabase.from('results_shopping').insert(allResults)
     }
 
-    // Update job status
+    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -188,6 +199,7 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
   } catch (error: any) {
     console.error('[Shopping] Module error:', error)
 
+    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -204,16 +216,34 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
 async function processBrandModule(supabase: any, scanId: string, metadata: any) {
   console.log('[Brand] Starting module...')
 
-  const { data: job } = await supabase
+  let { data: job } = await supabase
     .from('scan_jobs')
-    .insert({
-      scan_id: scanId,
-      module: 'brand',
+    .select('*')
+    .eq('scan_id', scanId)
+    .eq('module', 'brand')
+    .single()
+
+  if (!job) {
+    const { data: newJob } = await supabase
+      .from('scan_jobs')
+      .insert({
+        scan_id: scanId,
+        module: 'brand',
+        status: 'queued',
+      })
+      .select()
+      .single()
+    job = newJob
+  }
+
+  // CRITICAL: Update to 'running' status
+  await supabase
+    .from('scan_jobs')
+    .update({
       status: 'running',
       started_at: new Date().toISOString(),
     })
-    .select()
-    .single()
+    .eq('id', job.id)
 
   try {
     const prompts = getBrandPrompts(metadata)
@@ -243,23 +273,16 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
 
           const result = JSON.parse(cleanedResponse)
 
-          // Store descriptors
           if (result.descriptors) {
             for (const desc of result.descriptors) {
               allDescriptors.push({
                 scan_id: scanId,
                 descriptor: desc.word,
                 sentiment: desc.sentiment,
-                weight: 10, // Default weight
+                weight: 10,
                 source_model: modelName,
               })
             }
-          }
-
-          // Store competitors (we'll add this to a new table or metadata later)
-          // For now, just log them
-          if (result.competitors) {
-            console.log(`[Brand] Competitors from ${modelName}:`, result.competitors)
           }
         } catch (error) {
           console.error(`[Brand] Error with ${modelName}:`, error)
@@ -267,11 +290,11 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
       }
     }
 
-    // Bulk insert descriptors
     if (allDescriptors.length > 0) {
       await supabase.from('results_brand').insert(allDescriptors)
     }
 
+    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -286,6 +309,7 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
   } catch (error: any) {
     console.error('[Brand] Module error:', error)
 
+    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -302,16 +326,34 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
 async function processConversationsModule(supabase: any, scanId: string, metadata: any) {
   console.log('[Conversations] Starting module...')
 
-  const { data: job } = await supabase
+  let { data: job } = await supabase
     .from('scan_jobs')
-    .insert({
-      scan_id: scanId,
-      module: 'conversations',
+    .select('*')
+    .eq('scan_id', scanId)
+    .eq('module', 'conversations')
+    .single()
+
+  if (!job) {
+    const { data: newJob } = await supabase
+      .from('scan_jobs')
+      .insert({
+        scan_id: scanId,
+        module: 'conversations',
+        status: 'queued',
+      })
+      .select()
+      .single()
+    job = newJob
+  }
+
+  // CRITICAL: Update to 'running' status
+  await supabase
+    .from('scan_jobs')
+    .update({
       status: 'running',
       started_at: new Date().toISOString(),
     })
-    .select()
-    .single()
+    .eq('id', job.id)
 
   try {
     const prompts = getConversationPrompts(metadata)
@@ -341,14 +383,13 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
 
           const results = JSON.parse(cleanedResponse)
 
-          // Store questions
           for (const q of results) {
             allQuestions.push({
               scan_id: scanId,
               question: q.question,
               intent: q.intent,
               score: q.frequency === 'high' ? 80 : q.frequency === 'medium' ? 50 : 20,
-              emerging: false, // Will calculate deltas later
+              emerging: false,
             })
           }
         } catch (error) {
@@ -357,16 +398,15 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
       }
     }
 
-    // Deduplicate questions
     const uniqueQuestions = Array.from(
       new Map(allQuestions.map(q => [q.question.toLowerCase(), q])).values()
     )
 
-    // Bulk insert
     if (uniqueQuestions.length > 0) {
       await supabase.from('results_conversations').insert(uniqueQuestions)
     }
 
+    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -381,6 +421,7 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
   } catch (error: any) {
     console.error('[Conversations] Module error:', error)
 
+    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -397,20 +438,37 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
 async function processWebsiteModule(supabase: any, scanId: string, metadata: any) {
   console.log('[Website] Starting module...')
 
-  const { data: job } = await supabase
+  let { data: job } = await supabase
     .from('scan_jobs')
-    .insert({
-      scan_id: scanId,
-      module: 'website',
+    .select('*')
+    .eq('scan_id', scanId)
+    .eq('module', 'website')
+    .single()
+
+  if (!job) {
+    const { data: newJob } = await supabase
+      .from('scan_jobs')
+      .insert({
+        scan_id: scanId,
+        module: 'website',
+        status: 'queued',
+      })
+      .select()
+      .single()
+    job = newJob
+  }
+
+  // CRITICAL: Update to 'running' status
+  await supabase
+    .from('scan_jobs')
+    .update({
       status: 'running',
       started_at: new Date().toISOString(),
     })
-    .select()
-    .single()
+    .eq('id', job.id)
 
   try {
     // TODO: Implement actual website crawler
-    // For now, insert mock data
     const mockIssues = [
       {
         scan_id: scanId,
@@ -432,6 +490,7 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
 
     await supabase.from('results_site').insert(mockIssues)
 
+    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -446,6 +505,7 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
   } catch (error: any) {
     console.error('[Website] Module error:', error)
 
+    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
