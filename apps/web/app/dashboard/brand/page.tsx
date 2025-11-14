@@ -4,7 +4,6 @@
 
 import { useEffect, useState } from 'react'
 import { Sparkles, TrendingUp, MessageSquare, Users, Target, ArrowRight } from 'lucide-react'
-import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import { useBrand } from '@/contexts/BrandContext'
 
@@ -60,8 +59,8 @@ export default function BrandVisibilityPage() {
         
         const scanData = await response.json()
         
-        // Check if user has any scans
-        if (!scanData.hasScans) {
+        // Check if user has any scans - API returns scan: null when no scans exist
+        if (!scanData.scan) {
           setHasScans(false)
           setLoading(false)
           return
@@ -98,7 +97,7 @@ export default function BrandVisibilityPage() {
           sentiment_delta: '+0.3', // TODO: Calculate from previous scan
           descriptor_count: brand.descriptors?.length || 0,
           descriptor_delta: '+4', // TODO: Calculate from previous scan
-          last_scan: scanData.last_scan,
+          last_scan: scanData.scan?.finished_at || scanData.scan?.started_at,
           descriptors: (brand.descriptors || []).map((d: any) => ({
             word: d.word,
             sentiment: mapSentiment(d.sentiment),
@@ -123,7 +122,29 @@ export default function BrandVisibilityPage() {
     fetchData()
   }, [currentDashboard]) // Re-fetch when brand changes!
 
-  // Helper functions below (no handleStartScan needed)
+  const handleStartScan = async () => {
+    if (!currentDashboard) {
+      console.error('No dashboard selected')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id }),
+      })
+
+      const data = await response.json()
+
+      if (data.scan) {
+        setCurrentScanId(data.scan.id)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
+    }
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -169,7 +190,13 @@ export default function BrandVisibilityPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton />
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Fresh Scan
+            </button>
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -191,10 +218,13 @@ export default function BrandVisibilityPage() {
               Run your first scan to see how AI models perceive your brand. We'll analyze 
               sentiment, descriptors, and brand associations across ChatGPT, Claude, and Gemini.
             </p>
-            {/* Empty state uses ScanButton component instead of custom button */}
-            <div className="flex justify-center">
-              <ScanButton variant="large" />
-            </div>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
           </div>
         </div>
 
@@ -221,7 +251,13 @@ export default function BrandVisibilityPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton />
+          <button
+            onClick={handleStartScan}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+          >
+            <Sparkles className="w-5 h-5" strokeWidth={2} />
+            Run Fresh Scan
+          </button>
         </div>
         
         <div className="flex items-center justify-between">
