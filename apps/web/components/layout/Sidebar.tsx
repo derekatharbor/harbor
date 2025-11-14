@@ -16,6 +16,7 @@ import {
   BookOpen
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
+import ThemeToggle from './ThemeToggle'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -133,6 +134,10 @@ export default function Sidebar() {
           })}
         </div>
       </nav>
+
+<div className="p-4 border-t border-sidebar-border">
+  <ThemeToggle />
+</div>
 
       {/* Control Center - Bottom */}
       <div className="p-4 border-t border-white/5">

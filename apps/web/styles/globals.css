@@ -40,8 +40,50 @@
 }
 
 @layer base {
+  /* ========================================
+     LIGHT MODE (DEFAULT) - Professional SaaS look
+     ======================================== */
+  :root {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F8F9FA;
+    
+    --text-primary: #101A31;
+    --text-secondary: #64748B;
+    
+    --border: rgba(0, 0, 0, 0.08);
+    
+    /* Sidebar stays dark navy in both modes */
+    --sidebar-bg: #0B1521;
+    --sidebar-text: #F4F6F8;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+  }
+
+  /* ========================================
+     DARK MODE (OPT-IN) - Navy theme for night work
+     ======================================== */
+  :root[data-theme="dark"] {
+    --bg-primary: #0B1521;
+    --bg-secondary: #101A31;
+    --bg-card: #101C2C;
+    --bg-hover: rgba(255, 255, 255, 0.02);
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #F4F6F8;
+    
+    --border: rgba(255, 255, 255, 0.06);
+    
+    /* Sidebar stays dark navy in dark mode */
+    --sidebar-bg: #0B1521;
+    --sidebar-text: #F4F6F8;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+  }
+
   body {
-    @apply bg-navy text-softgray font-body;
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: normal;
     line-height: 1.6;
   }
@@ -108,8 +150,11 @@
      ======================================== */
 
   .harbor-card {
-    @apply bg-navy-light rounded-card-lg p-6 shadow-card;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
     transition: none;  /* Static cards don't react */
   }
 
@@ -122,10 +167,10 @@
 
   /* Standard card depth */
   .card-L2 {
-    background: #101C2C;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    background: var(--bg-card);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
   }
 
   /* Hover depth (interactive only) */
@@ -139,7 +184,7 @@
      ======================================== */
 
   .page-container {
-    background: #0B1521;  /* Flat navy, no gradient */
+    background: var(--bg-primary);
     min-height: 100vh;
     margin-left: 240px;  /* Sidebar width */
   }
@@ -415,5 +460,36 @@
   /* Explicit cursor pointer utility */
   .cursor-pointer {
     cursor: pointer !important;
+  }
+
+  /* ========================================
+     THEME UTILITIES
+     ======================================== */
+  .bg-primary {
+    background-color: var(--bg-primary);
+  }
+  
+  .bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+  
+  .bg-card {
+    background-color: var(--bg-card);
+  }
+  
+  .bg-hover:hover {
+    background-color: var(--bg-hover);
+  }
+  
+  .text-primary {
+    color: var(--text-primary);
+  }
+  
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  
+  .border-border {
+    border-color: var(--border);
   }
 }
