@@ -68,7 +68,7 @@ export default function Sidebar() {
 
   return (
     <aside 
-      className={`fixed left-0 top-0 h-screen bg-[#0B1521] border-r border-white/5 flex flex-col transition-all duration-300 ${
+      className={`fixed left-0 top-0 h-screen bg-[#0B1521] border-r border-white/5 flex flex-col transition-all duration-300 z-[100] ${
         isCollapsed ? 'w-20' : 'w-60'
       }`}
     >
@@ -85,21 +85,24 @@ export default function Sidebar() {
           </div>
         )}
         {isCollapsed && (
-          <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center mx-auto">
-            <span className="text-white font-heading font-bold text-xl">H</span>
-          </div>
+          <button
+            onClick={toggleCollapse}
+            className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center mx-auto group relative cursor-pointer transition-all"
+            title="Expand sidebar"
+          >
+            <span className="text-white font-heading font-bold text-xl group-hover:opacity-0 transition-opacity">H</span>
+            <ChevronRight className="w-5 h-5 text-white absolute opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2} />
+          </button>
         )}
-        <button
-          onClick={toggleCollapse}
-          className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {isCollapsed ? (
-            <ChevronRight className="w-5 h-5 text-softgray/60" strokeWidth={1.5} />
-          ) : (
+        {!isCollapsed && (
+          <button
+            onClick={toggleCollapse}
+            className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+            title="Collapse sidebar"
+          >
             <ChevronLeft className="w-5 h-5 text-softgray/60" strokeWidth={1.5} />
-          )}
-        </button>
+          </button>
+        )}
       </div>
 
       {/* Brand Switcher - hide when collapsed */}
@@ -163,9 +166,9 @@ export default function Sidebar() {
                 <Link
                   href={item.href}
                   className={`
-                    flex items-center gap-3 py-2.5 rounded-lg mb-1
-                    transition-colors cursor-pointer
-                    ${isCollapsed ? 'px-0 justify-center' : 'px-3'}
+                    flex items-center rounded-lg mb-1
+                    transition-colors cursor-pointer relative
+                    ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                     ${isActive 
                       ? 'text-white' 
                       : 'text-softgray/60 hover:text-white hover:bg-white/5'
@@ -176,9 +179,7 @@ export default function Sidebar() {
                     borderLeft: `2px solid ${accentColor}`
                   } : {}}
                 >
-                  <div className="flex items-center justify-center w-5 h-5 flex-shrink-0">
-                    <Icon className="w-5 h-5" strokeWidth={1.5} />
-                  </div>
+                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                   {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
                 </Link>
 
@@ -186,17 +187,17 @@ export default function Sidebar() {
                 {isCollapsed && (
                   <div
                     className="
-                      absolute left-full ml-2 top-1/2 -translate-y-1/2
-                      px-3 py-1.5 rounded-md whitespace-nowrap
+                      absolute left-full ml-3 top-1/2 -translate-y-1/2
+                      px-3 py-2 rounded-md whitespace-nowrap
+                      bg-[#0B1521] shadow-lg
                       opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                      transition-all duration-150 ease-in pointer-events-none z-50
+                      transition-all duration-150 ease-in pointer-events-none
                     "
                     style={{ 
-                      backgroundColor: '#121A24',
-                      border: `1px solid ${accentColor}`
+                      zIndex: 9999
                     }}
                   >
-                    <span className="text-white/90 font-body text-xs">
+                    <span className="text-white/90 font-body text-sm">
                       {item.name}
                     </span>
                   </div>
@@ -217,9 +218,9 @@ export default function Sidebar() {
             <Link
               href="/dashboard/settings"
               className={`
-                flex items-center gap-3 py-2.5 rounded-lg
-                transition-colors cursor-pointer
-                ${isCollapsed ? 'px-0 justify-center' : 'px-3'}
+                flex items-center rounded-lg
+                transition-colors cursor-pointer relative
+                ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                 ${pathname === '/dashboard/settings'
                   ? 'text-white'
                   : 'text-softgray/60 hover:text-white hover:bg-white/5'
@@ -230,9 +231,7 @@ export default function Sidebar() {
                 borderLeft: `2px solid ${accentColor}`
               } : {}}
             >
-              <div className="flex items-center justify-center w-5 h-5 flex-shrink-0">
-                <Settings className="w-5 h-5" strokeWidth={1.5} />
-              </div>
+              <Settings className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
               {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
             </Link>
 
@@ -240,17 +239,17 @@ export default function Sidebar() {
             {isCollapsed && (
               <div
                 className="
-                  absolute left-full ml-2 top-1/2 -translate-y-1/2
-                  px-3 py-1.5 rounded-md whitespace-nowrap
+                  absolute left-full ml-3 top-1/2 -translate-y-1/2
+                  px-3 py-2 rounded-md whitespace-nowrap
+                  bg-[#0B1521] shadow-lg
                   opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                  transition-all duration-150 ease-in pointer-events-none z-50
+                  transition-all duration-150 ease-in pointer-events-none
                 "
                 style={{ 
-                  backgroundColor: '#121A24',
-                  border: `1px solid ${accentColor}`
+                  zIndex: 9999
                 }}
               >
-                <span className="text-white/90 font-body text-xs">
+                <span className="text-white/90 font-body text-sm">
                   Control Center
                 </span>
               </div>
