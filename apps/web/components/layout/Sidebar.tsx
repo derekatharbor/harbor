@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
@@ -16,10 +16,11 @@ import {
   Video,
   BookOpen,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Moon,
+  Sun
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
-import ThemeToggle from './ThemeToggle'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -30,6 +31,33 @@ export default function Sidebar() {
     }
     return false
   })
+
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    // Check localStorage or system preference on mount
+    const savedTheme = localStorage.getItem('harbor-theme') as 'light' | 'dark' | null
+    const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    
+    const initialTheme = savedTheme || systemPreference
+    setTheme(initialTheme)
+    
+    if (initialTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    localStorage.setItem('harbor-theme', newTheme)
+    
+    if (newTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    } else {
+      document.documentElement.removeAttribute('data-theme')
+    }
+  }
 
   // Update localStorage when collapsed state changes
   const toggleCollapse = () => {
@@ -209,7 +237,48 @@ export default function Sidebar() {
 
         {/* Theme Toggle - scrolls with content */}
         <div className="px-4 py-3 border-t border-white/5">
-          <ThemeToggle isCollapsed={isCollapsed} />
+          <div className="relative group">
+            <button
+              onClick={toggleTheme}
+              className={`
+                flex items-center rounded-lg mb-1
+                transition-colors cursor-pointer relative
+                ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+                text-softgray/60 hover:text-white hover:bg-white/5
+              `}
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+              ) : (
+                <Sun className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+              )}
+              {!isCollapsed && (
+                <span className="text-sm font-body">
+                  {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              )}
+            </button>
+            
+            {/* Tooltip - only show when collapsed */}
+            {isCollapsed && (
+              <div
+                className="
+                  absolute left-full ml-3 top-1/2 -translate-y-1/2
+                  px-3 py-2 rounded-md whitespace-nowrap
+                  bg-[#0B1521] shadow-lg
+                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                  transition-all duration-150 ease-in pointer-events-none
+                "
+                style={{ 
+                  zIndex: 9999
+                }}
+              >
+                <span className="text-white/90 font-body text-sm">
+                  {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Control Center - scrolls with content */}
