@@ -4,6 +4,8 @@
 
 import { useEffect, useState } from 'react'
 import { MessageSquare, TrendingUp, Sparkles, Users, Target, ArrowRight, AlertCircle } from 'lucide-react'
+import ScanButton from '@/components/scan/ScanButton'
+import ScanProgressModal from '@/components/scan/ScanProgressModal'
 
 interface ConversationsData {
   volume_index: number
@@ -43,6 +45,9 @@ interface ConversationsData {
 export default function ConversationVolumesPage() {
   const [data, setData] = useState<ConversationsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showScanModal, setShowScanModal] = useState(false)
+  const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  const [hasScans, setHasScans] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -52,49 +57,52 @@ export default function ConversationVolumesPage() {
         
         const scanData = await response.json()
         
+        // Check if user has any scans
+        if (!scanData.hasScans) {
+          setHasScans(false)
+          setLoading(false)
+          return
+        }
+
+        setHasScans(true)
+        
+        // Use real data from API
+        const conversations = scanData.conversations || {}
+        
+        // Map intent to readable format
+        const mapIntent = (intent: string): 'how_to' | 'vs' | 'price' | 'trust' | 'features' => {
+          if (intent === 'how_to') return 'how_to'
+          if (intent === 'vs') return 'vs'
+          if (intent === 'price') return 'price'
+          if (intent === 'trust') return 'trust'
+          return 'features'
+        }
+        
         const conversationsData: ConversationsData = {
-          volume_index: scanData.conversation_volume || 847,
-          volume_delta: '+12%',
-          top_questions_count: 156,
-          questions_delta: '+23',
-          emerging_topics_count: 8,
-          topics_delta: '+3',
-          co_mentions: 89,
-          mentions_delta: '+14',
+          volume_index: conversations.conversation_volume || 0,
+          volume_delta: '+12%', // TODO: Calculate from previous scan
+          top_questions_count: conversations.questions?.length || 0,
+          questions_delta: '+23', // TODO: Calculate from previous scan
+          emerging_topics_count: conversations.questions?.filter((q: any) => q.emerging).length || 0,
+          topics_delta: '+3', // TODO: Calculate from previous scan
+          co_mentions: 0, // TODO: Extract from competitor data
+          mentions_delta: '+14', // TODO: Calculate from previous scan
           last_scan: scanData.last_scan,
-          questions: [
-            { text: 'How does this compare to traditional options?', intent: 'vs', frequency: 234, emerging: false },
-            { text: 'What are the key features?', intent: 'features', frequency: 189, emerging: false },
-            { text: 'How much does it cost?', intent: 'price', frequency: 167, emerging: false },
-            { text: 'Is this company trustworthy?', intent: 'trust', frequency: 145, emerging: false },
-            { text: 'How do I get started?', intent: 'how_to', frequency: 132, emerging: true },
-            { text: 'What makes this different from competitors?', intent: 'vs', frequency: 118, emerging: false },
-            { text: 'How does pricing work?', intent: 'price', frequency: 104, emerging: false },
-            { text: 'What are the main benefits?', intent: 'features', frequency: 98, emerging: false },
-            { text: 'How do I integrate this with my existing setup?', intent: 'how_to', frequency: 87, emerging: true },
-            { text: 'Is there a free trial?', intent: 'price', frequency: 76, emerging: false },
-            { text: 'What do customers say about reliability?', intent: 'trust', frequency: 68, emerging: false },
-            { text: 'How does support work?', intent: 'how_to', frequency: 54, emerging: false },
-          ],
-          intent_breakdown: {
-            how_to: 28,
-            vs: 24,
-            price: 22,
-            trust: 14,
-            features: 12
+          questions: (conversations.questions || []).map((q: any) => ({
+            text: q.question,
+            intent: mapIntent(q.intent),
+            frequency: q.score || 0,
+            emerging: q.emerging || false
+          })),
+          intent_breakdown: conversations.intent_breakdown || {
+            how_to: 0,
+            vs: 0,
+            price: 0,
+            trust: 0,
+            features: 0
           },
-          competitors: [
-            { brand: 'Competitor A', co_mentions: 67, context: 'Alternative comparisons' },
-            { brand: 'Competitor B', co_mentions: 54, context: 'Feature comparisons' },
-            { brand: 'Competitor C', co_mentions: 43, context: 'Pricing discussions' },
-          ],
-          emerging_topics: [
-            { topic: 'Integration capabilities', growth: 142, volume: 89 },
-            { topic: 'Mobile functionality', growth: 118, volume: 76 },
-            { topic: 'Security features', growth: 94, volume: 54 },
-            { topic: 'API access', growth: 87, volume: 48 },
-            { topic: 'Team collaboration', growth: 73, volume: 42 },
-          ]
+          competitors: [], // TODO: Extract co-mention data
+          emerging_topics: [] // TODO: Group by topic keywords
         }
         
         setData(conversationsData)
@@ -108,18 +116,22 @@ export default function ConversationVolumesPage() {
     fetchData()
   }, [])
 
-  // CURSOR FIX
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.innerHTML = `
-      .conversations-clickable { cursor: pointer !important; }
-      .conversations-clickable:hover { cursor: pointer !important; }
-    `
-    document.head.appendChild(style)
-    return () => {
-      document.head.removeChild(style)
+  const handleStartScan = async () => {
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setCurrentScanId(data.scanId)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
     }
-  }, [])
+  }
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No recent scan'
@@ -137,49 +149,117 @@ export default function ConversationVolumesPage() {
   }
 
   const getIntentColor = (intent: string) => {
-    // All intent tags use amber/gold on this page for visual consistency
-    return 'bg-[#FFB84D]/10 text-[#FFB84D] border-[#FFB84D]/30'
+    const colors: Record<string, string> = {
+      how_to: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+      vs: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+      price: 'bg-green-500/10 text-green-400 border-green-500/30',
+      trust: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+      features: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+    }
+    return colors[intent] || 'bg-softgray/10 text-softgray/70 border-softgray/30'
   }
 
   const getIntentLabel = (intent: string) => {
-    const labels = {
-      how_to: 'How-To',
+    const labels: Record<string, string> = {
+      how_to: 'How To',
       vs: 'Comparison',
       price: 'Pricing',
       trust: 'Trust',
       features: 'Features'
     }
-    return labels[intent as keyof typeof labels] || intent
+    return labels[intent] || intent
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading conversation data...</div>
+        <div className="text-softgray/60 font-body text-sm">Loading conversations data...</div>
       </div>
     )
   }
 
-  if (!data) return null
+  // Empty state - no scans yet
+  if (!hasScans || !data) {
+    return (
+      <div>
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <MessageSquare className="w-8 h-8 text-[#9D4EDD]" strokeWidth={1.5} />
+              <h1 className="text-4xl font-heading font-bold text-white">
+                Conversation Volumes
+              </h1>
+            </div>
+
+            {/* Scan Button */}
+            <ScanButton onScanStart={handleStartScan} />
+          </div>
+          
+          <p className="text-sm text-softgray/60 mb-2">
+            Common questions users ask AI models about your brand and category
+          </p>
+        </div>
+
+        {/* Empty State */}
+        <div 
+          className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="max-w-md mx-auto">
+            <MessageSquare className="w-16 h-16 text-[#9D4EDD] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+            <h2 className="text-2xl font-heading font-bold text-white mb-3">
+              No Scan Data Yet
+            </h2>
+            <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed">
+              Run your first scan to discover what questions users are asking AI models about your brand. 
+              We'll analyze conversation patterns, intent, and emerging topics.
+            </p>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#9D4EDD] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
+          </div>
+        </div>
+
+        {/* Scan Progress Modal */}
+        <ScanProgressModal
+          isOpen={showScanModal}
+          onClose={() => setShowScanModal(false)}
+          scanId={currentScanId}
+        />
+      </div>
+    )
+  }
 
   return (
     <div>
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <MessageSquare className="w-8 h-8 text-[#FFB84D]" strokeWidth={1.5} />
-          <h1 className="text-4xl font-heading font-bold text-white">
-            Conversation Volumes
-          </h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <MessageSquare className="w-8 h-8 text-[#9D4EDD]" strokeWidth={1.5} />
+            <h1 className="text-4xl font-heading font-bold text-white">
+              Conversation Volumes
+            </h1>
+          </div>
+
+          {/* Scan Button */}
+          <ScanButton onScanStart={handleStartScan} />
         </div>
         
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-softgray/60 mb-2">
-              What users ask AI about your brand and category
+              Common questions users ask AI models about your brand and category
             </p>
             <p className="text-sm text-softgray/70 italic">
-              {data.emerging_topics.length} emerging topics detected this week
+              {data.top_questions_count > 0 
+                ? `Tracking ${data.top_questions_count} unique questions across models`
+                : 'Analyzing conversation patterns...'}
             </p>
           </div>
           
@@ -210,7 +290,7 @@ export default function ConversationVolumesPage() {
                 Volume Index
               </div>
               <div className="text-xs text-softgray/50">
-                Relative query volume
+                Relative activity
               </div>
             </div>
           </div>
@@ -218,8 +298,8 @@ export default function ConversationVolumesPage() {
             {data.volume_index}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.volume_delta}</span>
-            <span className="text-softgray/50">vs last week</span>
+            <span className="text-[#9D4EDD]">{data.volume_delta}</span>
+            <span className="text-softgray/50">this month</span>
           </div>
         </div>
 
@@ -237,7 +317,7 @@ export default function ConversationVolumesPage() {
                 Top Questions
               </div>
               <div className="text-xs text-softgray/50">
-                Unique queries tracked
+                Unique queries
               </div>
             </div>
           </div>
@@ -245,7 +325,7 @@ export default function ConversationVolumesPage() {
             {data.top_questions_count}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.questions_delta}</span>
+            <span className="text-[#9D4EDD]">{data.questions_delta}</span>
             <span className="text-softgray/50">new this week</span>
           </div>
         </div>
@@ -264,7 +344,7 @@ export default function ConversationVolumesPage() {
                 Emerging Topics
               </div>
               <div className="text-xs text-softgray/50">
-                Rising interest areas
+                Growing interest
               </div>
             </div>
           </div>
@@ -272,8 +352,8 @@ export default function ConversationVolumesPage() {
             {data.emerging_topics_count}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.topics_delta}</span>
-            <span className="text-softgray/50">detected</span>
+            <span className="text-[#9D4EDD]">{data.topics_delta}</span>
+            <span className="text-softgray/50">trending up</span>
           </div>
         </div>
 
@@ -299,14 +379,14 @@ export default function ConversationVolumesPage() {
             {data.co_mentions}
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#FFB84D]">{data.mentions_delta}</span>
-            <span className="text-softgray/50">this week</span>
+            <span className="text-[#9D4EDD]">{data.mentions_delta}</span>
+            <span className="text-softgray/50">comparisons</span>
           </div>
         </div>
       </div>
 
-      {/* Two Column Grid - Context & Comparison */}
-      <div className="grid grid-cols-2 gap-8 mb-8">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Top Questions */}
         <div 
           className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
@@ -316,68 +396,83 @@ export default function ConversationVolumesPage() {
             <h2 className="text-2xl font-heading font-bold text-white">
               Top Questions
             </h2>
-            <MessageSquare className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
+            <MessageSquare className="w-6 h-6 text-[#9D4EDD]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-2.5">
-            {data.questions.slice(0, 5).map((question, index) => (
-              <div 
-                key={index} 
-                className="conversations-clickable p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="flex items-start justify-between gap-3 mb-2">
-                  <div className="text-white font-body text-sm flex-1">
-                    {question.text}
+          {data.questions.length > 0 ? (
+            <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-2">
+              {data.questions.map((question, index) => (
+                <div 
+                  key={index}
+                  className="p-3.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1 min-w-0 pr-3">
+                      <div className="text-white font-body text-sm mb-2 leading-relaxed">
+                        {question.text}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-0.5 rounded text-xs font-body font-medium border ${getIntentColor(question.intent)}`}>
+                          {getIntentLabel(question.intent)}
+                        </span>
+                        {question.emerging && (
+                          <span className="px-2 py-0.5 rounded text-xs font-body font-medium bg-[#9D4EDD]/10 text-[#9D4EDD] border border-[#9D4EDD]/30">
+                            <Sparkles className="w-3 h-3 inline mr-1" strokeWidth={2} />
+                            Emerging
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-[#9D4EDD] font-heading font-bold text-lg tabular-nums">
+                        {question.frequency}
+                      </div>
+                      <div className="text-softgray/50 text-xs font-body">
+                        mentions
+                      </div>
+                    </div>
                   </div>
-                  {question.emerging && (
-                    <span className="flex items-center gap-1 text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium whitespace-nowrap">
-                      <Sparkles className="w-3 h-3" strokeWidth={2} />
-                      New
-                    </span>
-                  )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs px-2 py-0.5 rounded border font-medium ${getIntentColor(question.intent)}`}>
-                    {getIntentLabel(question.intent)}
-                  </span>
-                  <span className="text-softgray/60 text-xs font-body tabular-nums">
-                    {question.frequency} asks
-                  </span>
-                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-softgray/40 text-sm font-body mb-2">
+                No questions detected yet
               </div>
-            ))}
-          </div>
+              <div className="text-softgray/60 text-xs font-body">
+                Question data will appear after your first scan
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Intent Breakdown - Now its own card */}
+        {/* Intent Breakdown */}
         <div 
           className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
           style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-heading font-bold text-white">
-              Intent Distribution
+              Intent Breakdown
             </h2>
-            <TrendingUp className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
+            <TrendingUp className="w-6 h-6 text-[#9D4EDD]" strokeWidth={1.5} />
           </div>
           
-          <div className="space-y-5">
+          <div className="space-y-4">
             {Object.entries(data.intent_breakdown).map(([intent, percentage]) => (
               <div key={intent}>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs px-2 py-0.5 rounded border font-medium ${getIntentColor(intent)}`}>
-                      {getIntentLabel(intent)}
-                    </span>
+                  <div className="text-white font-body font-medium">
+                    {getIntentLabel(intent)}
                   </div>
-                  <span className="text-[#FFB84D] font-heading font-bold text-xl tabular-nums">
+                  <div className="text-[#9D4EDD] font-heading font-bold text-xl tabular-nums">
                     {percentage}%
-                  </span>
+                  </div>
                 </div>
                 <div className="h-2 bg-white/[0.03] rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-[#FFB84D] rounded-full transition-all duration-500"
+                    className="h-full bg-[#9D4EDD] rounded-full transition-all duration-500"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -385,110 +480,66 @@ export default function ConversationVolumesPage() {
             ))}
           </div>
 
-          {/* Add insight text at bottom */}
-          <div className="mt-6 pt-6 border-t border-white/5">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#FFB84D] flex-shrink-0 mt-0.5" strokeWidth={1.5} />
-              <div>
-                <div className="text-white font-body text-sm font-medium mb-1">
-                  Primary Intent: How-To Guides
-                </div>
-                <div className="text-softgray/60 text-xs font-body leading-relaxed">
-                  Users primarily seek implementation guidance. Consider expanding your documentation and step-by-step tutorials.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Competitor Co-mentions - Now Full Width Below */}
-      <div 
-        className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
-        style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Competitor Co-mentions
-            </h2>
-            <p className="text-sm text-softgray/60 font-body">
-              How often your brand appears alongside competitors in user queries
-            </p>
-          </div>
-          <Users className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
-        </div>
-        
-        <div className="grid grid-cols-3 gap-4">
-          {data.competitors.map((competitor, index) => (
-            <div 
-              key={index} 
-              className="conversations-clickable p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors border border-white/5"
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="font-body font-medium text-white">
-                  {competitor.brand}
-                </div>
-                <div className="text-[#FFB84D] font-heading font-bold text-2xl tabular-nums">
-                  {competitor.co_mentions}
-                </div>
+          {data.questions.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-softgray/40 text-sm font-body mb-2">
+                No intent data yet
               </div>
               <div className="text-softgray/60 text-xs font-body">
-                {competitor.context}
+                Intent breakdown will appear after your first scan
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
-      {/* Emerging Topics - Full Width */}
-      <div 
-        className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
-        style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-heading font-bold text-white mb-2">
-              Emerging Topics
-            </h2>
-            <p className="text-sm text-softgray/60 font-body">
-              Rising interest areas with significant growth momentum
-            </p>
+      {/* Competitive Co-mentions - Full Width */}
+      {data.competitors.length > 0 && (
+        <div 
+          className="bg-[#101C2C] rounded-lg p-6 border border-white/5 mb-8"
+          style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-heading font-bold text-white mb-2">
+                Competitive Co-mentions
+              </h2>
+              <p className="text-sm text-softgray/60 font-body">
+                Brands mentioned alongside yours in user queries
+              </p>
+            </div>
+            <Users className="w-6 h-6 text-[#9D4EDD]" strokeWidth={1.5} />
           </div>
-          <Sparkles className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
+          
+          <div className="grid grid-cols-3 gap-4">
+            {data.competitors.map((competitor, index) => (
+              <div 
+                key={index}
+                className="p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] cursor-pointer transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="font-body font-medium text-white">
+                    {competitor.brand}
+                  </div>
+                  <div className="text-[#9D4EDD] font-heading font-bold text-xl tabular-nums">
+                    {competitor.co_mentions}
+                  </div>
+                </div>
+                <div className="text-softgray/60 text-sm font-body">
+                  {competitor.context}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-5 gap-4">
-          {data.emerging_topics.map((topic, index) => (
-            <div 
-              key={index}
-              className="conversations-clickable p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors border border-white/5"
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <AlertCircle className="w-4 h-4 text-[#FFB84D]" strokeWidth={2} />
-                <span className="text-[#FFB84D] text-xs font-body font-medium">
-                  +{topic.growth}%
-                </span>
-              </div>
-              <div className="text-white font-body text-sm font-medium mb-2">
-                {topic.topic}
-              </div>
-              <div className="text-softgray/60 text-xs font-body">
-                {topic.volume} mentions
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
-      {/* Recommended Improvements - Distinct Bottom Section */}
+      {/* Recommended Improvements */}
       <div 
         className="rounded-lg p-6 border border-white/5"
         style={{ 
           background: 'rgba(255,255,255,0.02)',
-          borderTop: '1px solid rgba(90, 90, 255, 0.25)',
+          borderTop: '1px solid rgba(157, 78, 221, 0.25)',
           boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)'
         }}
       >
@@ -501,74 +552,72 @@ export default function ConversationVolumesPage() {
               High-impact actions to address common user questions
             </p>
           </div>
-          <Target className="w-6 h-6 text-[#FFB84D]" strokeWidth={1.5} />
+          <Target className="w-6 h-6 text-[#9D4EDD]" strokeWidth={1.5} />
         </div>
         
         <div className="grid grid-cols-3 gap-4">
-          <div 
-            className="conversations-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
-            style={{ cursor: 'pointer' }}
-          >
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
-                Add FAQ Schema
+                Add FAQPage Schema
               </div>
-              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
+              <span className="text-[#9D4EDD] text-xs px-2 py-0.5 bg-[#9D4EDD]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Structure answers to your top questions for AI comprehension
+              Structure your top questions for better AI comprehension
             </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
+            <button className="flex items-center gap-2 text-[#9D4EDD] text-sm font-body font-medium group-hover:gap-3 transition-all">
               Generate Schema
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
 
-          <div 
-            className="conversations-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
-            style={{ cursor: 'pointer' }}
-          >
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
-                Build Comparison Pages
+                Create Comparison Pages
               </div>
-              <span className="text-[#FFB84D] text-xs px-2 py-0.5 bg-[#FFB84D]/10 rounded font-medium">
+              <span className="text-[#9D4EDD] text-xs px-2 py-0.5 bg-[#9D4EDD]/10 rounded font-medium">
                 High Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Create "vs" pages for competitor comparisons
+              Address "vs" questions with dedicated comparison content
             </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              View Template
+            <button className="flex items-center gap-2 text-[#9D4EDD] text-sm font-body font-medium group-hover:gap-3 transition-all">
+              View Suggestions
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
 
-          <div 
-            className="conversations-clickable p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] transition-colors group border border-white/5"
-            style={{ cursor: 'pointer' }}
-          >
+          <div className="p-5 rounded-lg bg-[#101C2C] hover:bg-[#141E38] cursor-pointer transition-colors group border border-white/5">
             <div className="flex items-start justify-between mb-3">
               <div className="text-white font-body font-medium">
-                Create How-To Docs
+                Build How-to Guides
               </div>
               <span className="text-softgray/50 text-xs px-2 py-0.5 bg-white/5 rounded font-medium">
                 Medium Impact
               </span>
             </div>
             <div className="text-softgray/60 text-sm font-body mb-4 leading-relaxed">
-              Address setup and integration questions
+              Create documentation for common how-to questions
             </div>
-            <button className="flex items-center gap-2 text-[#FFB84D] text-sm font-body font-medium group-hover:gap-3 transition-all">
-              Get Started
+            <button className="flex items-center gap-2 text-[#9D4EDD] text-sm font-body font-medium group-hover:gap-3 transition-all">
+              View Topics
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
         </div>
       </div>
+
+      {/* Scan Progress Modal */}
+      <ScanProgressModal
+        isOpen={showScanModal}
+        onClose={() => setShowScanModal(false)}
+        scanId={currentScanId}
+      />
     </div>
   )
 }
