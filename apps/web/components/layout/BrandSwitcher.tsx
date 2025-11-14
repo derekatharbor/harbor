@@ -41,7 +41,7 @@ export default function BrandSwitcher() {
   return (
     <>
       {/* Inline Accordion */}
-      <div className="bg-[#0B1521] border border-white/8 rounded-lg overflow-hidden">
+      <div className="bg-[#0B1521] rounded-lg overflow-hidden">
         {/* Current Brand Header - Always Visible */}
         <button
           onClick={() => setIsOpen(!isOpen)}
