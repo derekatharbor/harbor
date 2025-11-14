@@ -7,6 +7,7 @@ import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ArrowRi
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
+import MobileHeader from '@/components/layout/MobileHeader'
 
 interface WebsiteData {
   readability_score: number
@@ -92,63 +93,66 @@ export default function WebsiteAnalyticsPage() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-border rounded-lg"></div>
-            <div className="h-10 w-64 bg-border rounded"></div>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-border rounded-lg"></div>
+              <div className="h-10 w-64 bg-border rounded"></div>
+            </div>
           </div>
-          <div className="h-10 w-40 bg-border rounded-lg"></div>
-        </div>
 
-        <div className="grid grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
-          ))}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
+            ))}
+          </div>
 
-        <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
-      </div>
+          <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
+        </div>
+      </>
     )
   }
 
   // Empty state - no scans yet
   if (!data || !scanData?.scan) {
     return (
-      <div className="max-w-screen-2xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Globe className="w-8 h-8 text-[#E879F9]" strokeWidth={1.5} />
-              <h1 className="text-4xl font-heading font-bold text-primary">
-                Website Analytics
-              </h1>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <Globe className="w-6 h-6 lg:w-8 lg:h-8 text-[#E879F9]" strokeWidth={1.5} />
+                <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                  Website Analytics
+                </h1>
+              </div>
             </div>
-            <UniversalScanButton />
+            
+            <p className="text-sm text-secondary/60 mb-2">
+              How AI crawlers read and understand your website structure
+            </p>
           </div>
-          
-          <p className="text-sm text-secondary/60 mb-2">
-            How AI crawlers read and understand your website structure
-          </p>
-        </div>
 
-        <div className="bg-card rounded-lg p-12 border border-border text-center">
-          <Globe className="w-16 h-16 text-[#E879F9] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
-            No Scan Data Yet
-          </h2>
-          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-            Run your first scan to analyze schema markup, meta tags, content structure, and technical SEO for AI readability.
-          </p>
-          <UniversalScanButton variant="large" />
-        </div>
+          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
+            <Globe className="w-12 h-12 lg:w-16 lg:h-16 text-[#E879F9] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+              No Scan Data Yet
+            </h2>
+            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+              Run your first scan to analyze schema markup, meta tags, content structure, and technical SEO for AI readability.
+            </p>
+          </div>
 
-        <ScanProgressModal
-          isOpen={showScanModal}
-          onClose={() => setShowScanModal(false)}
-          scanId={currentScanId}
-        />
-      </div>
+          <ScanProgressModal
+            isOpen={showScanModal}
+            onClose={() => setShowScanModal(false)}
+            scanId={currentScanId}
+          />
+        </div>
+      </>
     )
   }
 
@@ -158,33 +162,34 @@ export default function WebsiteAnalyticsPage() {
 
   // Main content with data
   return (
-    <div className="max-w-screen-2xl mx-auto">
-      {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Globe className="w-8 h-8 text-[#E879F9]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-primary">
-              Website Analytics
-            </h1>
+    <>
+      <MobileHeader />
+      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Globe className="w-6 h-6 lg:w-8 lg:h-8 text-[#E879F9]" strokeWidth={1.5} />
+              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                Website Analytics
+              </h1>
+            </div>
           </div>
-          <UniversalScanButton />
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-secondary/60 mb-2">
-              How AI crawlers read and understand your website structure
-            </p>
-            <p className="text-sm text-secondary/70 italic">
-              Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
-            </p>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-secondary/60 mb-2">
+                How AI crawlers read and understand your website structure
+              </p>
+              <p className="text-sm text-secondary/70 italic">
+                Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+        {/* Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-card rounded-lg p-6 border border-border">
           <div className="flex items-center gap-2 mb-4">
             <Target className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
@@ -242,7 +247,7 @@ export default function WebsiteAnalyticsPage() {
         </div>
         
         <div className="p-6">
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-3xl font-heading font-bold text-red-400 mb-2">
                 {highSeverity}
@@ -276,7 +281,7 @@ export default function WebsiteAnalyticsPage() {
           </p>
         </div>
         
-        <div className="overflow-hidden">
+        <div className="overflow-x-auto">
           {data.issues.length > 0 ? (
             <table className="w-full">
               <thead>
@@ -363,6 +368,7 @@ export default function WebsiteAnalyticsPage() {
         onClose={() => setShowScanModal(false)}
         scanId={currentScanId}
       />
-    </div>
+      </div>
+    </>
   )
 }
