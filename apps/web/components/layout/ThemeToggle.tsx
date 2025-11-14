@@ -41,8 +41,8 @@ export default function ThemeToggle({ isCollapsed = false }: ThemeToggleProps) {
     <button
       onClick={toggleTheme}
       className={`
-        flex items-center gap-3 py-2.5 rounded-lg text-sidebar-text/60 hover:text-sidebar-text hover:bg-white/5 transition-colors cursor-pointer
-        ${isCollapsed ? 'px-2 justify-center' : 'px-3 w-full'}
+        flex items-center rounded-lg text-sidebar-text/60 hover:text-sidebar-text hover:bg-white/5 transition-colors cursor-pointer
+        ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3 w-full'}
       `}
       title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
     >
