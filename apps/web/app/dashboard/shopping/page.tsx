@@ -101,6 +101,23 @@ export default function ShoppingVisibilityPage() {
     fetchData()
   }, [currentDashboard]) // Re-fetch when brand changes!
 
+  const handleStartScan = async () => {
+    try {
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setCurrentScanId(data.scanId)
+        setShowScanModal(true)
+      }
+    } catch (error) {
+      console.error('Failed to start scan:', error)
+    }
+  }
+
   // NUCLEAR CURSOR FIX
   useEffect(() => {
     const style = document.createElement('style')
@@ -158,7 +175,7 @@ export default function ShoppingVisibilityPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton />
+            <ScanButton onScanStart={handleStartScan} />
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -180,9 +197,13 @@ export default function ShoppingVisibilityPage() {
               Run your first scan to see how AI models recommend your products across shopping queries. 
               We'll analyze ChatGPT, Claude, and Gemini to show where your brand appears.
             </p>
-            <div className="flex justify-center">
-              <ScanButton variant="large" />
-            </div>
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Your First Scan
+            </button>
           </div>
         </div>
 
@@ -209,7 +230,7 @@ export default function ShoppingVisibilityPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton />
+          <ScanButton onScanStart={handleStartScan} />
         </div>
         
         <div className="flex items-center justify-between">
