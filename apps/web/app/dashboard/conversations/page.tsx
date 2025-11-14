@@ -213,7 +213,7 @@ export default function ConversationVolumesPage() {
             <div className="flex flex-col items-end gap-2">
               <button
                 onClick={handleStartScan}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
               >
                 <Sparkles className="w-4 h-4" strokeWidth={2} />
                 Run Fresh Scan
@@ -243,7 +243,7 @@ export default function ConversationVolumesPage() {
             </p>
             <button
               onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-base"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-base"
             >
               <Sparkles className="w-5 h-5" strokeWidth={2} />
               Run Your First Scan
@@ -277,7 +277,7 @@ export default function ConversationVolumesPage() {
           <div className="flex flex-col items-end gap-2">
             <button
               onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent border border-[#FFB84D] text-[#FFB84D] hover:bg-[#FFB84D] hover:text-white rounded-lg font-body font-medium transition-all cursor-pointer text-sm"
             >
               <Sparkles className="w-4 h-4" strokeWidth={2} />
               Run Fresh Scan
