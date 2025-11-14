@@ -2,6 +2,7 @@
 
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
@@ -13,13 +14,16 @@ import {
   Settings,
   FileText,
   Video,
-  BookOpen
+  BookOpen,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 import ThemeToggle from './ThemeToggle'
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   const favorites = [
     { name: 'Quick Start Guide', href: '/dashboard/guide', icon: FileText },
@@ -48,64 +52,92 @@ export default function Sidebar() {
   const accentColor = getAccentColor()
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0B1521] border-r border-white/5 flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="p-6 border-b border-white/5">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center">
-            <span className="text-white font-heading font-bold text-xl">H</span>
-          </div>
-          <div>
+    <aside 
+      className={`fixed left-0 top-0 h-screen bg-[#0B1521] border-r border-white/5 flex flex-col transition-all duration-300 ${
+        isCollapsed ? 'w-16' : 'w-60'
+      }`}
+    >
+      {/* Header with collapse button */}
+      <div className="p-4 border-b border-white/5 flex items-center justify-between">
+        {!isCollapsed && (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center">
+              <span className="text-white font-heading font-bold text-xl">H</span>
+            </div>
             <h1 className="text-lg font-heading font-bold text-white">
               Harbor
             </h1>
           </div>
-        </div>
-        
-        {/* Brand Switcher */}
-        <BrandSwitcher />
+        )}
+        {isCollapsed && (
+          <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center mx-auto">
+            <span className="text-white font-heading font-bold text-xl">H</span>
+          </div>
+        )}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-5 h-5 text-softgray/60" strokeWidth={1.5} />
+          ) : (
+            <ChevronLeft className="w-5 h-5 text-softgray/60" strokeWidth={1.5} />
+          )}
+        </button>
       </div>
 
-      {/* Navigation */}
+      {/* Brand Switcher - hide when collapsed */}
+      {!isCollapsed && (
+        <div className="px-4 py-4 border-b border-white/5">
+          <BrandSwitcher />
+        </div>
+      )}
+
+      {/* Scrollable Navigation - Everything in one scroll area */}
       <nav className="flex-1 overflow-y-auto overflow-x-hidden">
         {/* Favorites Section */}
-        <div className="px-4 pt-6 pb-3">
-          <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
-            Favorites
-          </div>
-          
-          {favorites.map((item) => {
-            const Icon = item.icon
-            const isActive = pathname === item.href
+        {!isCollapsed && (
+          <div className="px-4 pt-6 pb-3">
+            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+              Favorites
+            </div>
             
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
-                  transition-colors cursor-pointer
-                  ${isActive 
-                    ? 'text-white pl-[10px]' 
-                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
-                  }
-                `}
-                style={isActive ? {
-                  borderLeft: `2px solid ${accentColor}`
-                } : {}}
-              >
-                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-                <span className="text-sm font-body truncate">{item.name}</span>
-              </Link>
-            )
-          })}
-        </div>
+            {favorites.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
+                    transition-colors cursor-pointer
+                    ${isActive 
+                      ? 'text-white pl-[10px]' 
+                      : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    }
+                  `}
+                  style={isActive ? {
+                    borderLeft: `2px solid ${accentColor}`
+                  } : {}}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                  <span className="text-sm font-body truncate">{item.name}</span>
+                </Link>
+              )
+            })}
+          </div>
+        )}
 
         {/* Intelligence Section */}
         <div className="px-4 py-3">
-          <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
-            Intelligence
-          </div>
+          {!isCollapsed && (
+            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+              Intelligence
+            </div>
+          )}
           
           {intelligence.map((item) => {
             const Icon = item.icon
@@ -116,50 +148,55 @@ export default function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
+                  flex items-center gap-3 py-2.5 rounded-lg mb-1
                   transition-colors cursor-pointer
+                  ${isCollapsed ? 'px-2 justify-center' : 'px-3'}
                   ${isActive 
                     ? 'text-white pl-[10px]' 
                     : 'text-softgray/60 hover:text-white hover:bg-white/5'
                   }
                 `}
-                style={isActive ? {
+                style={isActive && !isCollapsed ? {
                   borderLeft: `2px solid ${accentColor}`
                 } : {}}
+                title={isCollapsed ? item.name : undefined}
               >
                 <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-                <span className="text-sm font-body truncate">{item.name}</span>
+                {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
               </Link>
             )
           })}
         </div>
+
+        {/* Theme Toggle - scrolls with content */}
+        <div className="px-4 py-3 border-t border-white/5">
+          <ThemeToggle isCollapsed={isCollapsed} />
+        </div>
+
+        {/* Control Center - scrolls with content */}
+        <div className="px-4 py-3 border-t border-white/5">
+          <Link
+            href="/dashboard/settings"
+            className={`
+              flex items-center gap-3 py-2.5 rounded-lg
+              transition-colors cursor-pointer
+              ${isCollapsed ? 'px-2 justify-center' : 'px-3'}
+              ${pathname === '/dashboard/settings'
+                ? 'text-white pl-[10px]'
+                : 'text-softgray/60 hover:text-white hover:bg-white/5'
+              }
+            `}
+            style={pathname === '/dashboard/settings' && !isCollapsed ? {
+              borderLeft: `2px solid ${accentColor}`
+            } : {}}
+            title={isCollapsed ? 'Control Center' : undefined}
+          >
+            <Settings className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+            {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
+          </Link>
+        </div>
       </nav>
-
-      {/* Theme Toggle - No top border, compact padding */}
-      <div className="px-4 py-2">
-        <ThemeToggle />
-      </div>
-
-      {/* Control Center - Bottom */}
-      <div className="p-4 border-t border-white/5">
-        <Link
-          href="/dashboard/settings"
-          className={`
-            flex items-center gap-3 px-3 py-2.5 rounded-lg
-            transition-colors cursor-pointer
-            ${pathname === '/dashboard/settings'
-              ? 'text-white pl-[10px]'
-              : 'text-softgray/60 hover:text-white hover:bg-white/5'
-            }
-          `}
-          style={pathname === '/dashboard/settings' ? {
-            borderLeft: `2px solid ${accentColor}`
-          } : {}}
-        >
-          <Settings className="w-5 h-5" strokeWidth={1.5} />
-          <span className="text-sm font-body">Control Center</span>
-        </Link>
-      </div>
     </aside>
   )
+}
 }

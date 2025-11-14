@@ -27,11 +27,14 @@ export default function DashboardLayout({
     return () => clearTimeout(timer)
   }, [pathname])
 
+  // Note: Sidebar margin is now handled by CSS (ml-60 or ml-16 based on sidebar width)
+  // We use a fixed class here and let the sidebar handle its own width transition
+
   return (
     <BrandProvider>
       <div className="flex min-h-screen bg-primary">
         <Sidebar />
-        <main className="flex-1 ml-60 p-8 relative">
+        <main className="flex-1 ml-60 p-8 relative transition-all duration-300">
           {/* Route transition overlay */}
           {isTransitioning && (
             <div className="absolute inset-0 bg-primary z-50 flex items-start justify-start pt-8">
