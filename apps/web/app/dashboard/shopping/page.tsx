@@ -86,7 +86,7 @@ export default function ShoppingVisibilityPage() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="animate-pulse space-y-8">
+      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-border rounded-lg"></div>
@@ -109,7 +109,7 @@ export default function ShoppingVisibilityPage() {
   // Empty state - no scans yet
   if (!data || !scanData?.scan) {
     return (
-      <div>
+      <div className="max-w-screen-2xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -148,7 +148,7 @@ export default function ShoppingVisibilityPage() {
 
   // Main content with data
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto">
       {/* Page Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
