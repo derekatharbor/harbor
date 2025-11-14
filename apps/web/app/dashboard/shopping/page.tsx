@@ -4,7 +4,6 @@
 
 import { useEffect, useState } from 'react'
 import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles, ArrowRight } from 'lucide-react'
-import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import { useBrand } from '@/contexts/BrandContext'
 
@@ -172,7 +171,13 @@ export default function ShoppingVisibilityPage() {
             </div>
 
             {/* Scan Button */}
-            <ScanButton onScanStart={handleStartScan} />
+            <button
+              onClick={handleStartScan}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+            >
+              <Sparkles className="w-5 h-5" strokeWidth={2} />
+              Run Fresh Scan
+            </button>
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -227,7 +232,13 @@ export default function ShoppingVisibilityPage() {
           </div>
 
           {/* Scan Button */}
-          <ScanButton onScanStart={handleStartScan} />
+          <button
+            onClick={handleStartScan}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+          >
+            <Sparkles className="w-5 h-5" strokeWidth={2} />
+            Run Fresh Scan
+          </button>
         </div>
         
         <div className="flex items-center justify-between">
