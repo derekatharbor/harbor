@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
+import MobileHeader from '@/components/layout/MobileHeader'
 
 interface OverviewData {
   shopping_visibility: number
@@ -94,53 +95,59 @@ export default function OverviewPage() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-border rounded-lg"></div>
-            <div className="h-10 w-48 bg-border rounded"></div>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-border rounded-lg"></div>
+              <div className="h-10 w-48 bg-border rounded"></div>
+            </div>
+            <div className="h-10 w-40 bg-border rounded-lg hidden lg:block"></div>
           </div>
-          <div className="h-10 w-40 bg-border rounded-lg"></div>
-        </div>
 
-        <div className="grid grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-card rounded-lg p-6 border border-border h-40"></div>
-          ))}
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-card rounded-lg p-6 border border-border h-40"></div>
+            ))}
+          </div>
 
-        <div className="bg-card rounded-lg p-8 border border-border h-96"></div>
-      </div>
+          <div className="bg-card rounded-lg p-8 border border-border h-96"></div>
+        </div>
+      </>
     )
   }
 
   // Empty state - no scans yet
   if (!scanData) {
     return (
-      <div className="max-w-screen-2xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
-              <h1 className="text-4xl font-heading font-bold text-primary">
-                Overview
-              </h1>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+          <div className="mb-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+              <div className="flex items-center gap-3">
+                <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
+                <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                  Overview
+                </h1>
+              </div>
+              <UniversalScanButton />
             </div>
-            <UniversalScanButton />
+          </div>
+
+          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
+            <Home className="w-12 h-12 lg:w-16 lg:h-16 text-[#2979FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+              No Scan Data Yet
+            </h2>
+            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+              Run your first scan to see an overview of your brand's AI visibility across all modules.
+            </p>
+            <UniversalScanButton variant="large" />
           </div>
         </div>
-
-        <div className="bg-card rounded-lg p-12 border border-border text-center">
-          <Home className="w-16 h-16 text-[#2979FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
-            No Scan Data Yet
-          </h2>
-          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-            Run your first scan to see an overview of your brand's AI visibility across all modules.
-          </p>
-          <UniversalScanButton variant="large" />
-        </div>
-      </div>
+      </>
     )
   }
 
@@ -198,33 +205,35 @@ export default function OverviewPage() {
   ]
 
   return (
-    <div className="max-w-screen-2xl mx-auto">
-      {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-primary">
-              Overview
-            </h1>
+    <>
+      <MobileHeader />
+      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
+              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                Overview
+              </h1>
+            </div>
+            <UniversalScanButton />
           </div>
-          <UniversalScanButton />
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-secondary/60">
-            <span>Last scan:</span>
-            <span className="text-primary">{formatDate(scanData.last_scan)}</span>
-            <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-              <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-              Live
-            </span>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-secondary/60">
+              <span>Last scan:</span>
+              <span className="text-primary">{formatDate(scanData.last_scan)}</span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
+                Live
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Metric Cards Grid */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+        {/* Metric Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {metrics.map((metric) => {
           const Icon = metric.icon
           return (
@@ -271,7 +280,7 @@ export default function OverviewPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Score Display */}
           <div>
             <div className="mb-4">
@@ -331,7 +340,7 @@ export default function OverviewPage() {
           Next Best Actions
         </h2>
         
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {actions.map((action, index) => {
             const Icon = action.icon
             return (
@@ -358,6 +367,7 @@ export default function OverviewPage() {
           })}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
