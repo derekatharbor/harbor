@@ -13,23 +13,22 @@ import {
   FileText,
   Search
 } from 'lucide-react'
-import Link from 'next/link'
+import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
 
-interface ScanData {
+interface OverviewData {
   shopping_visibility: number
-  brand_mentions: number
+  brand_visibility: number
   conversation_topics: number
   site_readability: number
-  brand_visibility: number
+  brand_mentions: number
   last_scan: string | null
 }
 
 export default function OverviewPage() {
   const { currentDashboard } = useBrand()
-  const [scanData, setScanData] = useState<ScanData | null>(null)
+  const [scanData, setScanData] = useState<OverviewData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [competitors, setCompetitors] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -47,8 +46,15 @@ export default function OverviewPage() {
         
         const data = await response.json()
         
+        // Check if scan exists
+        if (!data.scan) {
+          setScanData(null)
+          setLoading(false)
+          return
+        }
+        
         // Map API response to overview format
-        const overviewData: ScanData = {
+        const overviewData: OverviewData = {
           shopping_visibility: data.shopping?.score || 0,
           brand_mentions: data.brand?.total_mentions || 0,
           conversation_topics: data.conversations?.questions?.length || 0,
@@ -58,21 +64,6 @@ export default function OverviewPage() {
         }
         
         setScanData(overviewData)
-        
-        // Build competitors list from shopping data
-        if (data.shopping?.competitors && data.shopping.competitors.length > 0) {
-          const competitorsList = data.shopping.competitors
-            .map((comp: any, index: number) => ({
-              rank: index + 1,
-              name: comp.brand,
-              change: '+0%', // TODO: Calculate from previous scan
-              score: Math.round((comp.mentions / data.shopping.total_mentions) * 100) || 0,
-              isYou: comp.brand === currentDashboard.brand_name
-            }))
-            .sort((a: any, b: any) => b.score - a.score)
-          
-          setCompetitors(competitorsList)
-        }
       } catch (error) {
         console.error('Error fetching scan:', error)
       } finally {
@@ -84,7 +75,7 @@ export default function OverviewPage() {
   }, [currentDashboard])
 
   const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return '2 hours ago'
+    if (!dateString) return 'No recent scan'
     try {
       const date = new Date(dateString)
       const now = new Date()
@@ -96,65 +87,58 @@ export default function OverviewPage() {
       const diffDays = Math.floor(diffHrs / 24)
       return `${diffDays} days ago`
     } catch {
-      return '2 hours ago'
+      return 'No recent scan'
     }
   }
 
+  // Loading skeleton
   if (loading) {
     return (
-      <div>
-        {/* Header Skeleton */}
-        <div className="mb-8 animate-pulse">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-white/5 rounded-lg"></div>
-            <div className="h-10 w-48 bg-white/5 rounded"></div>
+      <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-border rounded-lg"></div>
+            <div className="h-10 w-48 bg-border rounded"></div>
           </div>
-          <div className="h-4 w-64 bg-white/5 rounded"></div>
+          <div className="h-10 w-40 bg-border rounded-lg"></div>
         </div>
 
-        {/* Metric Cards Skeleton */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse h-40"></div>
+            <div key={i} className="bg-card rounded-lg p-6 border border-border h-40"></div>
           ))}
         </div>
 
-        {/* Brand Visibility Skeleton */}
-        <div className="bg-[#101C2C] rounded-lg p-8 border border-white/5 mb-8 animate-pulse h-96"></div>
-
-        {/* Actions Skeleton */}
-        <div className="grid grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse h-48"></div>
-          ))}
-        </div>
+        <div className="bg-card rounded-lg p-8 border border-border h-96"></div>
       </div>
     )
   }
 
-  // Show empty state if no scan data exists
-  if (!scanData || !scanData.last_scan) {
+  // Empty state - no scans yet
+  if (!scanData) {
     return (
-      <div>
-        {/* Page Header */}
+      <div className="max-w-screen-2xl mx-auto">
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
-            <h1 className="text-4xl font-heading font-bold text-white">
-              Overview
-            </h1>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
+              <h1 className="text-4xl font-heading font-bold text-primary">
+                Overview
+              </h1>
+            </div>
+            <UniversalScanButton />
           </div>
         </div>
 
-        {/* Empty State */}
-        <div className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center">
+        <div className="bg-card rounded-lg p-12 border border-border text-center">
           <Home className="w-16 h-16 text-[#2979FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-          <h2 className="text-2xl font-heading font-bold text-white mb-3">
+          <h2 className="text-2xl font-heading font-bold text-primary mb-3">
             No Scan Data Yet
           </h2>
-          <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+          <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
             Run your first scan to see an overview of your brand's AI visibility across all modules.
           </p>
+          <UniversalScanButton variant="large" />
         </div>
       </div>
     )
@@ -166,18 +150,14 @@ export default function OverviewPage() {
       subtitle: 'Product mentions',
       value: scanData.shopping_visibility,
       unit: '%',
-      change: '+1%',
-      trend: 'vs last week',
       icon: ShoppingBag,
       isLead: true
     },
     {
       title: 'BRAND MENTIONS',
-      subtitle: 'Estimated monthly volume',
+      subtitle: 'Total mentions',
       value: scanData.brand_mentions,
-      unit: 'M',
-      change: '+12%',
-      trend: 'vs last week',
+      unit: '',
       icon: Star
     },
     {
@@ -185,8 +165,6 @@ export default function OverviewPage() {
       subtitle: 'Tracked keywords',
       value: scanData.conversation_topics,
       unit: '',
-      change: '+8%',
-      trend: 'vs last week',
       icon: MessageSquare
     },
     {
@@ -194,99 +172,75 @@ export default function OverviewPage() {
       subtitle: 'AI-optimized score',
       value: scanData.site_readability,
       unit: '%',
-      change: '+3%',
-      trend: 'vs last week',
       icon: Globe
     }
   ]
 
-  // Competitors now come from state, populated by API response
-
   const actions = [
     {
       title: 'Improve Shopping Visibility',
-      potential: '+1.9% potential',
       description: 'Optimize product schema and descriptions to improve AI comprehension',
-      link: 'View Optimization',
+      link: '/dashboard/shopping',
       icon: TrendingUp
     },
     {
       title: 'Analyze Brand Mentions',
-      growth: '+12% growth',
       description: 'Deep dive into how AI describes your brand and identify optimization opportunities',
-      link: 'View Intelligence',
+      link: '/dashboard/brand',
       icon: Search
     },
     {
       title: 'Review Readability Report',
-      issues: '3 issues found',
       description: 'See which pages need optimization for better AI comprehension',
-      link: 'View Report',
+      link: '/dashboard/website',
       icon: FileText
     }
   ]
 
   return (
-    <div>
+    <div className="max-w-screen-2xl mx-auto">
       {/* Page Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
-          <h1 className="text-4xl font-heading font-bold text-white">
-            Overview
-          </h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
+            <h1 className="text-4xl font-heading font-bold text-primary">
+              Overview
+            </h1>
+          </div>
+          <UniversalScanButton />
         </div>
         
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-softgray/60">
+          <div className="flex items-center gap-2 text-sm text-secondary/60">
             <span>Last scan:</span>
-            <span className="text-white">{formatDate(scanData?.last_scan)}</span>
+            <span className="text-primary">{formatDate(scanData.last_scan)}</span>
             <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
               <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
               Live
             </span>
           </div>
-          
-          {/* Time Filter Pills */}
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
-              Last 24 hours
-            </button>
-            <button className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-lg cursor-pointer">
-              Last 7 days
-            </button>
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
-              Last 30 days
-            </button>
-            <button className="px-3 py-1.5 text-sm text-softgray/60 hover:text-white rounded-lg transition-colors cursor-pointer">
-              Custom range
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Metric Cards Grid - 32px margin below */}
+      {/* Metric Cards Grid */}
       <div className="grid grid-cols-4 gap-6 mb-8">
         {metrics.map((metric) => {
           const Icon = metric.icon
           return (
             <div 
               key={metric.title} 
-              className="bg-[#101C2C] rounded-lg p-6 border border-white/5"
-              style={{ 
-                boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)',
-                opacity: metric.isLead ? 1 : 0.95
-              }}
+              className="bg-card rounded-lg p-6 border border-border"
             >
               <div className="flex items-start gap-3 mb-4">
                 <div className="p-2 bg-white/5 rounded-lg">
-                  <Icon className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+                  <Icon className="w-5 h-5 text-secondary/60" strokeWidth={1.5} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-softgray/60 uppercase tracking-wider mb-1">
+                  <div className="text-xs text-secondary/60 uppercase tracking-wider mb-1">
                     {metric.title}
                   </div>
-                  <div className="text-xs text-softgray/50">
+                  <div className="text-xs text-secondary/50">
                     {metric.subtitle}
                   </div>
                 </div>
@@ -294,130 +248,86 @@ export default function OverviewPage() {
               
               <div className="flex items-baseline gap-2 mb-2">
                 <div 
-                  className="font-heading font-bold text-white tabular-nums"
+                  className="font-heading font-bold text-primary tabular-nums"
                   style={{ fontSize: metric.isLead ? '2.5rem' : '2.25rem' }}
                 >
                   {metric.value}
-                  {metric.unit && <span className="text-2xl text-softgray/40">{metric.unit}</span>}
+                  {metric.unit && <span className="text-2xl text-secondary/40">{metric.unit}</span>}
                 </div>
-              </div>
-              
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-blue-400">{metric.change}</span>
-                <span className="text-softgray/50">{metric.trend}</span>
               </div>
             </div>
           )
         })}
       </div>
 
-      {/* Brand Visibility Section - 32px spacing */}
-      <div className="bg-[#101C2C] rounded-lg p-8 border border-white/5 mb-8" style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}>
+      {/* Brand Visibility Section */}
+      <div className="bg-card rounded-lg p-8 border border-border mb-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-white mb-2">
+          <h2 className="text-2xl font-heading font-bold text-primary mb-2">
             Brand Visibility
           </h2>
-          <p className="text-sm text-softgray/60">
-            Percentage of AI answers about business credit cards that mention your brand
+          <p className="text-sm text-secondary/60">
+            Overall brand presence in AI responses
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          {/* Chart - Left Column */}
+          {/* Score Display */}
           <div>
             <div className="mb-4">
-              <div className="text-sm text-softgray/60 uppercase tracking-wider mb-2">
-                VISIBILITY SCORE
+              <div className="text-sm text-secondary/60 uppercase tracking-wider mb-2">
+                VISIBILITY INDEX
               </div>
               <div className="flex items-baseline gap-3">
-                <div className="text-5xl font-heading font-bold text-white tabular-nums">
-                  {scanData.brand_visibility}%
+                <div className="text-5xl font-heading font-bold text-primary tabular-nums">
+                  {scanData.brand_visibility}
                 </div>
-                <div className="text-lg text-blue-400">+1% vs last week</div>
               </div>
             </div>
             
-            {/* Scanning Grid Pattern Chart Placeholder */}
+            {/* Chart placeholder */}
             <div 
-              className="h-48 rounded-lg border border-white/5 flex items-center justify-center relative overflow-hidden"
+              className="h-48 rounded-lg border border-border flex items-center justify-center relative overflow-hidden"
               style={{
                 background: `
                   repeating-linear-gradient(
                     45deg,
-                    rgba(255,255,255,0.03) 0,
-                    rgba(255,255,255,0.03) 2px,
+                    rgba(var(--text-secondary), 0.03) 0,
+                    rgba(var(--text-secondary), 0.03) 2px,
                     transparent 2px,
                     transparent 4px
                   ),
-                  #0B1521
+                  var(--bg-card)
                 `
               }}
             >
-              <div className="text-softgray/40 text-sm">Chart visualization</div>
+              <div className="text-secondary/40 text-sm">Chart visualization</div>
             </div>
-            
-            <button className="mt-4 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg text-sm border border-blue-600/30 hover:bg-blue-600/30 transition-colors cursor-pointer">
-              Compare to Industry
-            </button>
           </div>
 
-          {/* Vertical Divider */}
-          <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-px bg-white/5"></div>
-            
-            {/* Competitor Ranking - Right Column */}
-            <div className="pl-8">
-              <div className="text-sm text-softgray/60 uppercase tracking-wider mb-4">
-                BRAND INDUSTRY RANKING
+          {/* Quick Stats */}
+          <div>
+            <div className="space-y-4">
+              <div className="p-4 rounded-lg border border-border">
+                <div className="text-sm text-secondary/60 mb-1">Total Mentions</div>
+                <div className="text-2xl font-heading font-bold text-primary">{scanData.brand_mentions}</div>
               </div>
-              
-              <div className="space-y-0">
-                {competitors.map((comp, index) => (
-                  <div 
-                    key={comp.rank} 
-                    className={`
-                      flex items-center gap-4 p-4 rounded-lg
-                      ${comp.isYou 
-                        ? 'bg-[rgba(41,121,255,0.05)] border border-blue-500/30' 
-                        : index % 2 === 0 ? 'bg-white/[0.02]' : 'bg-transparent'
-                      }
-                    `}
-                  >
-                    <div className="text-lg font-heading font-bold text-softgray/60 w-6 tabular-nums">
-                      {comp.rank}
-                    </div>
-                    
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">
-                          {comp.name.substring(0, 2).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-white font-medium text-sm">
-                          {comp.name}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className={`text-sm ${comp.change.startsWith('+') ? 'text-blue-400' : 'text-red-400'}`}>
-                      {comp.change}
-                    </div>
-                    
-                    <div className="text-white font-heading font-bold text-lg tabular-nums w-16 text-right">
-                      {comp.score}%
-                    </div>
-                  </div>
-                ))}
+              <div className="p-4 rounded-lg border border-border">
+                <div className="text-sm text-secondary/60 mb-1">Shopping Score</div>
+                <div className="text-2xl font-heading font-bold text-primary">{scanData.shopping_visibility}%</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border">
+                <div className="text-sm text-secondary/60 mb-1">Site Readability</div>
+                <div className="text-2xl font-heading font-bold text-primary">{scanData.site_readability}%</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Next Best Actions - 32px spacing */}
+      {/* Next Best Actions */}
       <div>
-        <h2 className="text-2xl font-heading font-bold text-white mb-6">
+        <h2 className="text-2xl font-heading font-bold text-primary mb-6">
           Next Best Actions
         </h2>
         
@@ -425,32 +335,25 @@ export default function OverviewPage() {
           {actions.map((action, index) => {
             const Icon = action.icon
             return (
-              <div 
-                key={index} 
-                className="bg-[#101C2C] rounded-lg p-6 border border-white/5 hover:border-white/10 transition-colors cursor-pointer"
-                style={{ boxShadow: '0 0 4px rgba(0, 0, 0, 0.06)' }}
+              <a
+                key={index}
+                href={action.link}
+                className="bg-card rounded-lg p-6 border border-border hover:border-[#2979FF]/30 transition-colors cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="p-2 bg-white/5 rounded-lg">
-                    <Icon className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
-                  </div>
-                  <div className="text-sm text-blue-400">
-                    {action.potential || action.growth || action.issues}
+                  <div className="p-2 bg-[#2979FF]/10 rounded-lg">
+                    <Icon className="w-5 h-5 text-[#2979FF]" strokeWidth={1.5} />
                   </div>
                 </div>
                 
-                <h3 className="text-lg font-heading font-semibold text-white mb-2">
+                <h3 className="text-lg font-heading font-semibold text-primary mb-2">
                   {action.title}
                 </h3>
                 
-                <p className="text-sm text-softgray/60 mb-4 leading-relaxed">
+                <p className="text-sm text-secondary/60 leading-relaxed">
                   {action.description}
                 </p>
-                
-                <button className="text-blue-400 text-sm hover:underline cursor-pointer">
-                  {action.link} →
-                </button>
-              </div>
+              </a>
             )
           })}
         </div>
