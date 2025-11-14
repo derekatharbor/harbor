@@ -116,11 +116,39 @@ export default function OverviewPage() {
     )
   }
 
+  // Show empty state if no scan data exists
+  if (!scanData || !scanData.last_scan) {
+    return (
+      <div>
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <Home className="w-8 h-8 text-[#2979FF]" strokeWidth={1.5} />
+            <h1 className="text-4xl font-heading font-bold text-white">
+              Overview
+            </h1>
+          </div>
+        </div>
+
+        {/* Empty State */}
+        <div className="bg-[#101C2C] rounded-lg p-12 border border-white/5 text-center">
+          <Home className="w-16 h-16 text-[#2979FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
+          <h2 className="text-2xl font-heading font-bold text-white mb-3">
+            No Scan Data Yet
+          </h2>
+          <p className="text-softgray/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
+            Run your first scan to see an overview of your brand's AI visibility across all modules.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   const metrics = [
     {
       title: 'SHOPPING VISIBILITY',
       subtitle: 'Product mentions',
-      value: scanData?.shopping_visibility || 89.8,
+      value: scanData.shopping_visibility,
       unit: '%',
       change: '+1%',
       trend: 'vs last week',
@@ -130,7 +158,7 @@ export default function OverviewPage() {
     {
       title: 'BRAND MENTIONS',
       subtitle: 'Estimated monthly volume',
-      value: scanData?.brand_mentions || 2.7,
+      value: scanData.brand_mentions,
       unit: 'M',
       change: '+12%',
       trend: 'vs last week',
@@ -139,7 +167,7 @@ export default function OverviewPage() {
     {
       title: 'CONVERSATION TOPICS',
       subtitle: 'Tracked keywords',
-      value: scanData?.conversation_topics || 156,
+      value: scanData.conversation_topics,
       unit: '',
       change: '+8%',
       trend: 'vs last week',
@@ -148,7 +176,7 @@ export default function OverviewPage() {
     {
       title: 'SITE READABILITY',
       subtitle: 'AI-optimized score',
-      value: scanData?.site_readability || 94,
+      value: scanData.site_readability,
       unit: '%',
       change: '+3%',
       trend: 'vs last week',
@@ -293,7 +321,7 @@ export default function OverviewPage() {
               </div>
               <div className="flex items-baseline gap-3">
                 <div className="text-5xl font-heading font-bold text-white tabular-nums">
-                  {scanData?.brand_visibility || 89.8}%
+                  {scanData.brand_visibility}%
                 </div>
                 <div className="text-lg text-blue-400">+1% vs last week</div>
               </div>
