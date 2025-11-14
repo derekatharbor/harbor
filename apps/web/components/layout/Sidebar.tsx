@@ -67,7 +67,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-hidden">
+      <nav className="flex-1 overflow-y-auto overflow-x-hidden">
         {/* Favorites Section */}
         <div className="px-4 pt-6 pb-3">
           <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
@@ -94,8 +94,8 @@ export default function Sidebar() {
                   borderLeft: `2px solid ${accentColor}`
                 } : {}}
               >
-                <Icon className="w-5 h-5" strokeWidth={1.5} />
-                <span className="text-sm font-body">{item.name}</span>
+                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                <span className="text-sm font-body truncate">{item.name}</span>
               </Link>
             )
           })}
@@ -127,17 +127,18 @@ export default function Sidebar() {
                   borderLeft: `2px solid ${accentColor}`
                 } : {}}
               >
-                <Icon className="w-5 h-5" strokeWidth={1.5} />
-                <span className="text-sm font-body">{item.name}</span>
+                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                <span className="text-sm font-body truncate">{item.name}</span>
               </Link>
             )
           })}
         </div>
       </nav>
 
-<div className="p-4 border-t border-sidebar-border">
-  <ThemeToggle />
-</div>
+      {/* Theme Toggle - No top border, compact padding */}
+      <div className="px-4 py-2">
+        <ThemeToggle />
+      </div>
 
       {/* Control Center - Bottom */}
       <div className="p-4 border-t border-white/5">
