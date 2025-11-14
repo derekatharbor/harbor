@@ -45,6 +45,40 @@ export default function ShoppingVisibilityPage() {
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
   const [hasScans, setHasScans] = useState(false)
+  
+  // Scan status state
+  const [canScan, setCanScan] = useState(true)
+  const [scansRemaining, setScansRemaining] = useState(0)
+  const [scanStatusReason, setScanStatusReason] = useState<string>('ready')
+  const [isCheckingStatus, setIsCheckingStatus] = useState(true)
+
+  // Fetch scan status
+  useEffect(() => {
+    async function fetchScanStatus() {
+      if (!currentDashboard) {
+        setIsCheckingStatus(false)
+        return
+      }
+
+      try {
+        const response = await fetch('/api/scan/status')
+        if (!response.ok) throw new Error('Failed to fetch scan status')
+        
+        const status = await response.json()
+        setCanScan(status.canScan)
+        setScansRemaining(status.scansRemaining)
+        setScanStatusReason(status.reason)
+      } catch (error) {
+        console.error('Error fetching scan status:', error)
+        // Default to allowing scan if status check fails
+        setCanScan(true)
+      } finally {
+        setIsCheckingStatus(false)
+      }
+    }
+
+    fetchScanStatus()
+  }, [currentDashboard])
 
   useEffect(() => {
     async function fetchData() {
@@ -188,13 +222,25 @@ export default function ShoppingVisibilityPage() {
             </div>
 
             {/* Scan Button */}
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Fresh Scan
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              <button
+                onClick={handleStartScan}
+                disabled={!canScan || isCheckingStatus}
+                className={`
+                  inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-body font-medium transition-all text-sm
+                  ${canScan && !isCheckingStatus
+                    ? 'bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white cursor-pointer'
+                    : 'bg-transparent border border-white/10 text-softgray/30 cursor-not-allowed'
+                  }
+                `}
+              >
+                <Sparkles className="w-4 h-4" strokeWidth={2} />
+                {isCheckingStatus ? 'Checking...' : scanStatusReason === 'scanning' ? 'Scanning...' : 'Run Fresh Scan'}
+              </button>
+              <p className="text-xs text-softgray/50">
+                {isCheckingStatus ? 'Loading...' : canScan ? `${scansRemaining} scan${scansRemaining !== 1 ? 's' : ''} remaining this week` : 'Scan limit reached'}
+              </p>
+            </div>
           </div>
           
           <p className="text-sm text-softgray/60 mb-2">
@@ -218,10 +264,17 @@ export default function ShoppingVisibilityPage() {
             </p>
             <button
               onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
+              disabled={!canScan || isCheckingStatus}
+              className={`
+                inline-flex items-center gap-2 px-8 py-4 rounded-lg font-body font-medium transition-all text-base
+                ${canScan && !isCheckingStatus
+                  ? 'bg-transparent border-2 border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white cursor-pointer'
+                  : 'bg-transparent border-2 border-white/10 text-softgray/30 cursor-not-allowed'
+                }
+              `}
             >
               <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
+              {isCheckingStatus ? 'Checking...' : scanStatusReason === 'scanning' ? 'Scanning...' : !canScan ? 'Scan Limit Reached' : 'Run Your First Scan'}
             </button>
           </div>
         </div>
@@ -249,13 +302,25 @@ export default function ShoppingVisibilityPage() {
           </div>
 
           {/* Scan Button */}
-          <button
-            onClick={handleStartScan}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-          >
-            <Sparkles className="w-5 h-5" strokeWidth={2} />
-            Run Fresh Scan
-          </button>
+          <div className="flex flex-col items-end gap-2">
+            <button
+              onClick={handleStartScan}
+              disabled={!canScan || isCheckingStatus}
+              className={`
+                inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-body font-medium transition-all text-sm
+                ${canScan && !isCheckingStatus
+                  ? 'bg-transparent border border-[#00C6B7] text-[#00C6B7] hover:bg-[#00C6B7] hover:text-white cursor-pointer'
+                  : 'bg-transparent border border-white/10 text-softgray/30 cursor-not-allowed'
+                }
+              `}
+            >
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
+              {isCheckingStatus ? 'Checking...' : scanStatusReason === 'scanning' ? 'Scanning...' : 'Run Fresh Scan'}
+            </button>
+            <p className="text-xs text-softgray/50">
+              {isCheckingStatus ? 'Loading...' : canScan ? `${scansRemaining} scan${scansRemaining !== 1 ? 's' : ''} remaining this week` : 'Scan limit reached'}
+            </p>
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
