@@ -29,6 +29,7 @@ export default function OverviewPage() {
   const { currentDashboard } = useBrand()
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [competitors, setCompetitors] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -57,6 +58,21 @@ export default function OverviewPage() {
         }
         
         setScanData(overviewData)
+        
+        // Build competitors list from shopping data
+        if (data.shopping?.competitors && data.shopping.competitors.length > 0) {
+          const competitorsList = data.shopping.competitors
+            .map((comp: any, index: number) => ({
+              rank: index + 1,
+              name: comp.brand,
+              change: '+0%', // TODO: Calculate from previous scan
+              score: Math.round((comp.mentions / data.shopping.total_mentions) * 100) || 0,
+              isYou: comp.brand === currentDashboard.brand_name
+            }))
+            .sort((a: any, b: any) => b.score - a.score)
+          
+          setCompetitors(competitorsList)
+        }
       } catch (error) {
         console.error('Error fetching scan:', error)
       } finally {
@@ -184,13 +200,7 @@ export default function OverviewPage() {
     }
   ]
 
-  const competitors = [
-    { rank: 1, name: 'Chase', change: '+5%', score: 92 },
-    { rank: 2, name: 'Demo Brand', change: '+1%', score: 89.8, isYou: true },
-    { rank: 3, name: 'American Express', change: '-1%', score: 85 },
-    { rank: 4, name: 'Capital on Tap', change: '+5%', score: 78 },
-    { rank: 5, name: 'US Bank', change: '-2%', score: 76.9 }
-  ]
+  // Competitors now come from state, populated by API response
 
   const actions = [
     {
