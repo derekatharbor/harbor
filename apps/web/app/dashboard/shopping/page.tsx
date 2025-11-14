@@ -199,10 +199,36 @@ export default function ShoppingVisibilityPage() {
     return '—'
   }
 
-  if (loading) {
+  if (loading || isCheckingStatus) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading shopping data...</div>
+      <div>
+        {/* Header Skeleton */}
+        <div className="mb-8 animate-pulse">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/5 rounded-lg"></div>
+              <div className="h-10 w-64 bg-white/5 rounded"></div>
+            </div>
+            <div className="h-10 w-40 bg-white/5 rounded-lg"></div>
+          </div>
+          <div className="h-4 w-96 bg-white/5 rounded"></div>
+        </div>
+
+        {/* Metric Cards Skeleton */}
+        <div className="grid grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse">
+              <div className="h-4 w-24 bg-white/5 rounded mb-4"></div>
+              <div className="h-8 w-16 bg-white/5 rounded mb-2"></div>
+              <div className="h-3 w-12 bg-white/5 rounded"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Chart Skeleton */}
+        <div className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse">
+          <div className="h-64 bg-white/5 rounded"></div>
+        </div>
       </div>
     )
   }
