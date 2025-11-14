@@ -237,11 +237,19 @@ export default function Sidebar() {
 
         {/* Theme Toggle - scrolls with content */}
         <div className="px-4 py-3 border-t border-white/5">
-          <button
+          <div
             onClick={toggleTheme}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                toggleTheme()
+              }
+            }}
             className={`
               flex items-center rounded-lg
-              transition-colors cursor-pointer relative
+              transition-colors cursor-pointer
               ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
               text-softgray/60 hover:text-white hover:bg-white/5
             `}
@@ -256,7 +264,7 @@ export default function Sidebar() {
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </span>
             )}
-          </button>
+          </div>
         </div>
 
         {/* Control Center - scrolls with content */}
