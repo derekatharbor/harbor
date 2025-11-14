@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { ShoppingBag, TrendingUp, Trophy, Target, Sparkles, ArrowRight } from 'lucide-react'
 import ScanButton from '@/components/scan/ScanButton'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import { useBrand } from '@/contexts/BrandContext'
 
 interface ShoppingData {
   visibility_score: number
@@ -38,6 +39,9 @@ interface ShoppingData {
 }
 
 export default function ShoppingVisibilityPage() {
+  // Brand context - automatically gets current dashboard
+  const { currentDashboard } = useBrand()
+  
   const [data, setData] = useState<ShoppingData | null>(null)
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
@@ -46,8 +50,15 @@ export default function ShoppingVisibilityPage() {
 
   useEffect(() => {
     async function fetchData() {
+      // Don't fetch if no dashboard selected yet
+      if (!currentDashboard) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const response = await fetch('/api/scan/latest')
+        // Add dashboardId to API call - this makes it brand-aware!
+        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
         const scanData = await response.json()
@@ -88,12 +99,19 @@ export default function ShoppingVisibilityPage() {
     }
 
     fetchData()
-  }, [])
+  }, [currentDashboard]) // Re-fetch when brand changes!
 
   const handleStartScan = async () => {
+    if (!currentDashboard) {
+      console.error('No dashboard selected')
+      return
+    }
+
     try {
       const response = await fetch('/api/scan/start', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id }) // Send current brand!
       })
 
       const data = await response.json()

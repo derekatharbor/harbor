@@ -1,48 +1,102 @@
-// app/api/scan/start/route.ts
+// apps/web/app/api/scan/start/route.ts
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
-export async function POST(request: Request) {
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export async function POST(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
-    
-    // Get current user
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const body = await req.json()
+    const { dashboardId } = body
+
+    if (!dashboardId) {
+      return NextResponse.json(
+        { error: 'Dashboard ID is required' },
+        { status: 400 }
+      )
     }
 
-    // Get user's dashboard
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('org_id')
-      .eq('user_id', session.user.id)
-      .single()
-
-    if (!userRole?.org_id) {
-      return NextResponse.json({ error: 'No organization found' }, { status: 404 })
-    }
-
-    const { data: dashboard } = await supabase
+    // Get dashboard details
+    const { data: dashboard, error: dashboardError } = await supabase
       .from('dashboards')
-      .select('id, brand_name, plan')
-      .eq('org_id', userRole.org_id)
+      .select('*')
+      .eq('id', dashboardId)
       .single()
 
-    if (!dashboard) {
-      return NextResponse.json({ error: 'No dashboard found' }, { status: 404 })
+    if (dashboardError || !dashboard) {
+      return NextResponse.json(
+        { error: 'Dashboard not found' },
+        { status: 404 }
+      )
     }
 
-    // Check plan limits (for now, just log - we'll enforce later)
-    console.log(`Starting scan for dashboard: ${dashboard.id}, plan: ${dashboard.plan}`)
+    // Check plan limits
+    const { data: planLimit } = await supabase
+      .from('plan_limits')
+      .select('*')
+      .eq('plan', dashboard.plan)
+      .single()
+
+    if (!planLimit) {
+      return NextResponse.json(
+        { error: 'Invalid plan configuration' },
+        { status: 500 }
+      )
+    }
+
+    // Check recent scans (weekly/monthly limits)
+    const now = new Date()
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+    const { data: recentScans } = await supabase
+      .from('scans')
+      .select('started_at')
+      .eq('dashboard_id', dashboardId)
+      .eq('type', 'fresh')
+      .gte('started_at', weekAgo.toISOString())
+
+    // Weekly limit check (Solo plan)
+    if (planLimit.fresh_scans_week && recentScans) {
+      const weeklyScans = recentScans.filter(
+        (s) => new Date(s.started_at) >= weekAgo
+      )
+      if (weeklyScans.length >= planLimit.fresh_scans_week) {
+        return NextResponse.json(
+          {
+            error: `Weekly scan limit reached (${planLimit.fresh_scans_week}/week). Next scan available in ${Math.ceil((weekAgo.getTime() + 7 * 24 * 60 * 60 * 1000 - now.getTime()) / (24 * 60 * 60 * 1000))} days.`,
+            limitReached: true,
+          },
+          { status: 429 }
+        )
+      }
+    }
+
+    // Monthly limit check (Agency plan)
+    if (planLimit.fresh_scans_month && recentScans) {
+      const monthlyScans = recentScans.filter(
+        (s) => new Date(s.started_at) >= monthAgo
+      )
+      if (monthlyScans.length >= planLimit.fresh_scans_month) {
+        return NextResponse.json(
+          {
+            error: `Monthly scan limit reached (${planLimit.fresh_scans_month}/month).`,
+            limitReached: true,
+          },
+          { status: 429 }
+        )
+      }
+    }
 
     // Create scan record
     const { data: scan, error: scanError } = await supabase
       .from('scans')
       .insert({
-        dashboard_id: dashboard.id,
+        dashboard_id: dashboardId,
         type: 'fresh',
         status: 'queued',
         started_at: new Date().toISOString(),
@@ -50,58 +104,50 @@ export async function POST(request: Request) {
       .select()
       .single()
 
-    if (scanError) {
-      console.error('Scan creation error:', scanError)
-      return NextResponse.json({ error: 'Failed to create scan' }, { status: 500 })
+    if (scanError || !scan) {
+      console.error('Error creating scan:', scanError)
+      return NextResponse.json(
+        { error: 'Failed to create scan' },
+        { status: 500 }
+      )
     }
 
     // Create scan jobs for each module
     const modules = ['shopping', 'brand', 'conversations', 'website']
-    const jobs = modules.map(module => ({
+    const jobInserts = modules.map((module) => ({
       scan_id: scan.id,
       module,
       status: 'queued',
-      started_at: new Date().toISOString(),
     }))
 
     const { error: jobsError } = await supabase
       .from('scan_jobs')
-      .insert(jobs)
+      .insert(jobInserts)
 
     if (jobsError) {
-      console.error('Jobs creation error:', jobsError)
-      return NextResponse.json({ error: 'Failed to create scan jobs' }, { status: 500 })
+      console.error('Error creating scan jobs:', jobsError)
+      return NextResponse.json(
+        { error: 'Failed to create scan jobs' },
+        { status: 500 }
+      )
     }
 
-    // Update dashboard last_fresh_scan_at
-    await supabase
-      .from('dashboards')
-      .update({ last_fresh_scan_at: new Date().toISOString() })
-      .eq('id', dashboard.id)
-
-    // Mark scan as running
-    await supabase
-      .from('scans')
-      .update({ status: 'running' })
-      .eq('id', scan.id)
-
-    // Trigger scan processing asynchronously
-    // Using fetch with no await so it runs in background
-    const baseUrl = request.url.split('/api')[0]
-    fetch(`${baseUrl}/api/scan/process`, {
+    // Trigger background processing
+    fetch(`${req.nextUrl.origin}/api/scan/process`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scanId: scan.id })
-    }).catch(err => console.error('Background scan trigger error:', err))
+      body: JSON.stringify({ scanId: scan.id }),
+    }).catch((err) => console.error('Error triggering scan process:', err))
 
-    return NextResponse.json({ 
-      success: true, 
-      scanId: scan.id,
-      message: 'Scan started successfully'
+    return NextResponse.json({
+      scan,
+      message: 'Scan started successfully',
     })
-
   } catch (error) {
-    console.error('Scan start error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Error in POST /api/scan/start:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

@@ -15,6 +15,7 @@ import {
   Video,
   BookOpen
 } from 'lucide-react'
+import BrandSwitcher from './BrandSwitcher'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -49,7 +50,7 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 h-screen w-60 bg-[#0B1521] border-r border-white/5 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="p-6 border-b border-white/5">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-coral rounded-lg flex items-center justify-center">
             <span className="text-white font-heading font-bold text-xl">H</span>
           </div>
@@ -57,11 +58,11 @@ export default function Sidebar() {
             <h1 className="text-lg font-heading font-bold text-white">
               Harbor
             </h1>
-            <p className="text-xs text-softgray/50">
-              Demo Brand
-            </p>
           </div>
         </div>
+        
+        {/* Brand Switcher */}
+        <BrandSwitcher />
       </div>
 
       {/* Navigation */}
