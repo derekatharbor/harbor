@@ -199,7 +199,10 @@ export default function ShoppingVisibilityPage() {
     return '—'
   }
 
-  if (loading || isCheckingStatus) {
+  // Show skeleton while loading data OR checking scan status
+  const isInitialLoad = loading || isCheckingStatus
+
+  if (isInitialLoad) {
     return (
       <div>
         {/* Header Skeleton */}
