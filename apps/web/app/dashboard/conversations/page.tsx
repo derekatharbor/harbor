@@ -211,13 +211,9 @@ export default function ConversationVolumesPage() {
               Run your first scan to discover what questions users are asking AI models about your brand. 
               We'll analyze conversation patterns, intent, and emerging topics.
             </p>
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#FFB84D] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
-            </button>
+            <div className="flex justify-center">
+              <ScanButton variant="large" />
+            </div>
           </div>
         </div>
 

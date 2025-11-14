@@ -251,13 +251,9 @@ export default function WebsiteAnalyticsPage() {
               Run your first scan to analyze how AI models read your website. We'll check schema markup, 
               meta tags, content structure, and technical SEO factors.
             </p>
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#E879F9] hover:brightness-110 text-white rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <FileCode className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
-            </button>
+            <div className="flex justify-center">
+              <ScanButton variant="large" />
+            </div>
           </div>
         </div>
 

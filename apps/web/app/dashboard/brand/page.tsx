@@ -191,13 +191,10 @@ export default function BrandVisibilityPage() {
               Run your first scan to see how AI models perceive your brand. We'll analyze 
               sentiment, descriptors, and brand associations across ChatGPT, Claude, and Gemini.
             </p>
-            <button
-              onClick={handleStartScan}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#4EE4FF] hover:brightness-110 text-navy rounded-lg font-body font-medium transition-all cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5" strokeWidth={2} />
-              Run Your First Scan
-            </button>
+            {/* Empty state uses ScanButton component instead of custom button */}
+            <div className="flex justify-center">
+              <ScanButton variant="large" />
+            </div>
           </div>
         </div>
 
