@@ -78,13 +78,6 @@ export default function ScanButton({ variant = 'default' }: ScanButtonProps) {
     }
   }
 
-  const handleScanComplete = () => {
-    setIsScanning(false)
-    setShowModal(false)
-    setCurrentScanId(null)
-    window.location.reload() // Refresh to show new data
-  }
-
   const handleCloseModal = () => {
     setShowModal(false)
     // Scan continues in background
@@ -134,7 +127,6 @@ export default function ScanButton({ variant = 'default' }: ScanButtonProps) {
             scanId={currentScanId}
             isOpen={showModal}
             onClose={handleCloseModal}
-            onComplete={handleScanComplete}
           />
         )}
       </>
