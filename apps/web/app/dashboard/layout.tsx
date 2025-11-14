@@ -14,6 +14,22 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+
+  // Listen for sidebar toggle events
+  useEffect(() => {
+    const checkSidebarState = () => {
+      const collapsed = localStorage.getItem('harbor-sidebar-collapsed') === 'true'
+      setSidebarCollapsed(collapsed)
+    }
+
+    // Check on mount
+    checkSidebarState()
+
+    // Listen for changes
+    window.addEventListener('sidebar-toggle', checkSidebarState)
+    return () => window.removeEventListener('sidebar-toggle', checkSidebarState)
+  }, [])
 
   useEffect(() => {
     // Show loader on route change
@@ -34,7 +50,7 @@ export default function DashboardLayout({
     <BrandProvider>
       <div className="flex min-h-screen bg-primary">
         <Sidebar />
-        <main className="flex-1 ml-60 p-8 relative transition-all duration-300">
+        <main className={`flex-1 p-8 relative transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-60'}`}>
           {/* Route transition overlay */}
           {isTransitioning && (
             <div className="absolute inset-0 bg-primary z-50 flex items-start justify-start pt-8">

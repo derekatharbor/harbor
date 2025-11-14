@@ -23,7 +23,22 @@ import ThemeToggle from './ThemeToggle'
 
 export default function Sidebar() {
   const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Check localStorage on mount
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('harbor-sidebar-collapsed') === 'true'
+    }
+    return false
+  })
+
+  // Update localStorage when collapsed state changes
+  const toggleCollapse = () => {
+    const newState = !isCollapsed
+    setIsCollapsed(newState)
+    localStorage.setItem('harbor-sidebar-collapsed', String(newState))
+    // Dispatch custom event so layout can listen
+    window.dispatchEvent(new Event('sidebar-toggle'))
+  }
 
   const favorites = [
     { name: 'Quick Start Guide', href: '/dashboard/guide', icon: FileText },
@@ -54,7 +69,7 @@ export default function Sidebar() {
   return (
     <aside 
       className={`fixed left-0 top-0 h-screen bg-[#0B1521] border-r border-white/5 flex flex-col transition-all duration-300 ${
-        isCollapsed ? 'w-16' : 'w-60'
+        isCollapsed ? 'w-20' : 'w-60'
       }`}
     >
       {/* Header with collapse button */}
@@ -75,7 +90,7 @@ export default function Sidebar() {
           </div>
         )}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={toggleCollapse}
           className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
           title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
