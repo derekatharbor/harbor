@@ -159,26 +159,49 @@ export default function Sidebar() {
             const isActive = pathname === item.href
             
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`
-                  flex items-center gap-3 py-2.5 rounded-lg mb-1
-                  transition-colors cursor-pointer
-                  ${isCollapsed ? 'px-2 justify-center' : 'px-3'}
-                  ${isActive 
-                    ? 'text-white pl-[10px]' 
-                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
-                  }
-                `}
-                style={isActive && !isCollapsed ? {
-                  borderLeft: `2px solid ${accentColor}`
-                } : {}}
-                title={isCollapsed ? item.name : undefined}
-              >
-                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-                {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
-              </Link>
+              <div key={item.name} className="relative group">
+                <Link
+                  href={item.href}
+                  className={`
+                    flex items-center gap-3 py-2.5 rounded-lg mb-1
+                    transition-colors cursor-pointer
+                    ${isCollapsed ? 'px-0 justify-center' : 'px-3'}
+                    ${isActive 
+                      ? 'text-white' 
+                      : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    }
+                    ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
+                  `}
+                  style={isActive && !isCollapsed ? {
+                    borderLeft: `2px solid ${accentColor}`
+                  } : {}}
+                >
+                  <div className="flex items-center justify-center w-5 h-5 flex-shrink-0">
+                    <Icon className="w-5 h-5" strokeWidth={1.5} />
+                  </div>
+                  {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
+                </Link>
+
+                {/* Tooltip - only show when collapsed */}
+                {isCollapsed && (
+                  <div
+                    className="
+                      absolute left-full ml-2 top-1/2 -translate-y-1/2
+                      px-3 py-1.5 rounded-md whitespace-nowrap
+                      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                      transition-all duration-150 ease-in pointer-events-none z-50
+                    "
+                    style={{ 
+                      backgroundColor: '#121A24',
+                      border: `1px solid ${accentColor}`
+                    }}
+                  >
+                    <span className="text-white/90 font-body text-xs">
+                      {item.name}
+                    </span>
+                  </div>
+                )}
+              </div>
             )
           })}
         </div>
@@ -190,25 +213,49 @@ export default function Sidebar() {
 
         {/* Control Center - scrolls with content */}
         <div className="px-4 py-3 border-t border-white/5">
-          <Link
-            href="/dashboard/settings"
-            className={`
-              flex items-center gap-3 py-2.5 rounded-lg
-              transition-colors cursor-pointer
-              ${isCollapsed ? 'px-2 justify-center' : 'px-3'}
-              ${pathname === '/dashboard/settings'
-                ? 'text-white pl-[10px]'
-                : 'text-softgray/60 hover:text-white hover:bg-white/5'
-              }
-            `}
-            style={pathname === '/dashboard/settings' && !isCollapsed ? {
-              borderLeft: `2px solid ${accentColor}`
-            } : {}}
-            title={isCollapsed ? 'Control Center' : undefined}
-          >
-            <Settings className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-            {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
-          </Link>
+          <div className="relative group">
+            <Link
+              href="/dashboard/settings"
+              className={`
+                flex items-center gap-3 py-2.5 rounded-lg
+                transition-colors cursor-pointer
+                ${isCollapsed ? 'px-0 justify-center' : 'px-3'}
+                ${pathname === '/dashboard/settings'
+                  ? 'text-white'
+                  : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                }
+                ${pathname === '/dashboard/settings' && !isCollapsed ? 'pl-[10px]' : ''}
+              `}
+              style={pathname === '/dashboard/settings' && !isCollapsed ? {
+                borderLeft: `2px solid ${accentColor}`
+              } : {}}
+            >
+              <div className="flex items-center justify-center w-5 h-5 flex-shrink-0">
+                <Settings className="w-5 h-5" strokeWidth={1.5} />
+              </div>
+              {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
+            </Link>
+
+            {/* Tooltip - only show when collapsed */}
+            {isCollapsed && (
+              <div
+                className="
+                  absolute left-full ml-2 top-1/2 -translate-y-1/2
+                  px-3 py-1.5 rounded-md whitespace-nowrap
+                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                  transition-all duration-150 ease-in pointer-events-none z-50
+                "
+                style={{ 
+                  backgroundColor: '#121A24',
+                  border: `1px solid ${accentColor}`
+                }}
+              >
+                <span className="text-white/90 font-body text-xs">
+                  Control Center
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
     </aside>
