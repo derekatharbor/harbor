@@ -14,6 +14,7 @@ import {
   Search
 } from 'lucide-react'
 import Link from 'next/link'
+import { useBrand } from '@/contexts/BrandContext'
 
 interface ScanData {
   shopping_visibility: number
@@ -25,20 +26,37 @@ interface ScanData {
 }
 
 export default function OverviewPage() {
+  const { currentDashboard } = useBrand()
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchLatestScan() {
+      if (!currentDashboard) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const response = await fetch('/api/scan/latest')
+        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         
         if (!response.ok) {
           throw new Error('Failed to fetch scan data')
         }
         
         const data = await response.json()
-        setScanData(data)
+        
+        // Map API response to overview format
+        const overviewData: ScanData = {
+          shopping_visibility: data.shopping?.score || 0,
+          brand_mentions: data.brand?.total_mentions || 0,
+          conversation_topics: data.conversations?.questions?.length || 0,
+          site_readability: data.website?.readability_score || 0,
+          brand_visibility: data.brand?.visibility_index || 0,
+          last_scan: data.scan?.finished_at || data.scan?.started_at || null
+        }
+        
+        setScanData(overviewData)
       } catch (error) {
         console.error('Error fetching scan:', error)
       } finally {
@@ -47,7 +65,7 @@ export default function OverviewPage() {
     }
 
     fetchLatestScan()
-  }, [])
+  }, [currentDashboard])
 
   const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return '2 hours ago'
@@ -68,8 +86,32 @@ export default function OverviewPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-softgray/60 font-body text-sm">Loading...</div>
+      <div>
+        {/* Header Skeleton */}
+        <div className="mb-8 animate-pulse">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-white/5 rounded-lg"></div>
+            <div className="h-10 w-48 bg-white/5 rounded"></div>
+          </div>
+          <div className="h-4 w-64 bg-white/5 rounded"></div>
+        </div>
+
+        {/* Metric Cards Skeleton */}
+        <div className="grid grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse h-40"></div>
+          ))}
+        </div>
+
+        {/* Brand Visibility Skeleton */}
+        <div className="bg-[#101C2C] rounded-lg p-8 border border-white/5 mb-8 animate-pulse h-96"></div>
+
+        {/* Actions Skeleton */}
+        <div className="grid grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-[#101C2C] rounded-lg p-6 border border-white/5 animate-pulse h-48"></div>
+          ))}
+        </div>
       </div>
     )
   }
