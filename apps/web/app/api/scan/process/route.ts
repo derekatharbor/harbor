@@ -181,8 +181,22 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
     }
 
     if (allResults.length > 0) {
-      await supabase.from('results_shopping').insert(allResults)
-    }
+  console.log('[Shopping] Attempting to insert', allResults.length, 'results')
+  console.log('[Shopping] Sample result:', allResults[0])
+  
+  const { error: insertError } = await supabase.from('results_shopping').insert(allResults)
+  
+  if (insertError) {
+    console.error('[Shopping] ❌ INSERT FAILED:', insertError)
+    console.error('[Shopping] Error code:', insertError.code)
+    console.error('[Shopping] Error details:', insertError.details)
+    console.error('[Shopping] Sample data that failed:', JSON.stringify(allResults[0], null, 2))
+  } else {
+    console.log('[Shopping] ✅ Successfully inserted', allResults.length, 'results')
+  }
+} else {
+  console.log('[Shopping] ⚠️ No results to insert')
+}
 
     // CRITICAL: Update to 'done' status
     await supabase
