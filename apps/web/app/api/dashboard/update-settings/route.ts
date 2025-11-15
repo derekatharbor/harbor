@@ -1,72 +1,511 @@
-// apps/web/app/api/dashboard/update-settings/route.ts
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
-export async function POST(request: NextRequest) {
-  try {
-    const { dashboardId, settings } = await request.json()
+/* ========================================
+   HARBOR MULTI-ACCENT SYSTEM (CORRECTED)
+   Grounded Intelligence - No Cyber Glow
+   ======================================== */
 
-    if (!dashboardId || !settings) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
+:root {
+  --pageAccent: #2165CC;  /* Damped 25% from #2979FF */
+  --pageAccent-rgb: 33, 101, 204;
+}
 
-    // Initialize Supabase client with proper error handling
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+[data-page="overview"] {
+  --pageAccent: #2165CC;  /* Cerulean damped */
+  --pageAccent-rgb: 33, 101, 204;
+}
 
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('Missing Supabase environment variables')
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      )
-    }
+[data-page="shopping"] {
+  --pageAccent: #009E92;  /* Aqua damped */
+  --pageAccent-rgb: 0, 158, 146;
+}
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+[data-page="brand"] {
+  --pageAccent: #3BB8CC;  /* Periwinkle damped */
+  --pageAccent-rgb: 59, 184, 204;
+}
 
-    // TODO: Handle logo upload to Supabase Storage if settings.logo_url is a blob URL
-    // For now, we'll just save the metadata
+[data-page="conversations"] {
+  --pageAccent: #CC9239;  /* Amber/Gold damped 25% */
+  --pageAccent-rgb: 204, 146, 57;
+}
+
+[data-page="website"] {
+  --pageAccent: #B95BC4;  /* Magenta/Pink damped 25% */
+  --pageAccent-rgb: 185, 91, 196;
+}
+
+@layer base {
+  /* ========================================
+     LIGHT MODE (DEFAULT) - Professional SaaS look
+     ======================================== */
+  :root {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --bg-hover: #F8F9FA;
     
-    // Update the dashboard with the new settings
-    const { data, error } = await supabase
-      .from('dashboards')
-      .update({
-        brand_name: settings.brand_name,
-        domain: settings.domain,
-        logo_url: settings.logo_url, // TODO: Upload to Storage first if it's a blob
-        metadata: {
-          category: settings.category,
-          description: settings.description,
-          founding_year: settings.founding_year,
-          headquarters: settings.headquarters,
-          products: settings.products,
-          competitors: settings.competitors,
-          social_links: settings.social_links,
-          target_keywords: settings.target_keywords,
-        }
-      })
-      .eq('id', dashboardId)
-      .select()
-      .single()
+    --text-primary: #101A31;
+    --text-secondary: #64748B;
+    
+    --border: rgba(0, 0, 0, 0.08);
+    
+    /* Sidebar stays dark navy in both modes */
+    --sidebar-bg: #0B1521;
+    --sidebar-text: #F4F6F8;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+  }
 
-    if (error) {
-      console.error('Supabase error:', error)
-      return NextResponse.json(
-        { error: 'Failed to update dashboard', message: error.message },
-        { status: 500 }
-      )
+  /* ========================================
+     DARK MODE (OPT-IN) - Navy theme for night work
+     ======================================== */
+  :root[data-theme="dark"] {
+    --bg-primary: #0B1521;
+    --bg-secondary: #101A31;
+    --bg-card: #101C2C;
+    --bg-hover: rgba(255, 255, 255, 0.02);
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #F4F6F8;
+    
+    --border: rgba(255, 255, 255, 0.06);
+    
+    /* Sidebar stays dark navy in dark mode */
+    --sidebar-bg: #0B1521;
+    --sidebar-text: #F4F6F8;
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: normal;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-white;
+    letter-spacing: 0.3px;  /* Breathing room */
+  }
+}
+
+@layer components {
+  /* ========================================
+     SIDEBAR (FIXED, GROUNDED)
+     ======================================== */
+
+  .sidebar-container {
+    position: fixed;
+    height: 100vh;
+    overflow: hidden;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0B1521;  /* Matte navy, no gradient */
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0;
+    transition: all 100ms ease;
+    cursor: pointer;
+    color: rgba(244, 246, 248, 0.7);
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.03);  /* Subtle, no accent */
+    color: rgba(244, 246, 248, 0.95);
+  }
+
+  .nav-item.active {
+    color: var(--pageAccent);
+    border-left: 2px solid var(--pageAccent);
+    background: transparent;  /* No fill, just border */
+    padding-left: calc(1rem - 2px);
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .sidebar-section-header {
+    color: rgba(255, 255, 255, 0.4);  /* Lighter hierarchy */
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  /* ========================================
+     CARD STYLES (NO HOVER ON DATA CARDS)
+     ======================================== */
+
+  .harbor-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
+    transition: none;  /* Static cards don't react */
+  }
+
+  /* Only interactive cards respond */
+  .harbor-card[data-interactive="true"]:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    cursor: pointer;
+  }
+
+  /* Standard card depth */
+  .card-L2 {
+    background: var(--bg-card);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  /* Hover depth (interactive only) */
+  .card-L3 {
+    background: #141E38;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ========================================
+     PAGE LAYOUT
+     ======================================== */
+
+  .page-container {
+    background: var(--bg-primary);
+    min-height: 100vh;
+    margin-left: 240px;  /* Sidebar width */
+  }
+
+  /* Header with simple accent line (no glow) */
+  .page-header {
+    border-top: 1px solid var(--pageAccent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: border-color 200ms ease;
+  }
+
+  /* ========================================
+     BUTTONS
+     ======================================== */
+
+  .btn-primary {
+    @apply bg-teal text-white px-4 py-2 rounded-lg font-body font-medium;
+    @apply transition-all duration-150 hover:brightness-110 cursor-pointer;
+  }
+
+  .btn-primary:focus {
+    @apply outline-none ring-1 ring-teal;
+    box-shadow: 0 0 0 3px rgba(0, 198, 183, 0.2);
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-white px-4 py-2 rounded-lg font-body font-medium;
+    @apply border border-white transition-all duration-150 hover:bg-white hover:bg-opacity-5 cursor-pointer;
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    @apply opacity-30 cursor-not-allowed;
+  }
+
+  /* ========================================
+     INPUT STYLES
+     ======================================== */
+
+  .harbor-input {
+    @apply bg-navy-light text-white placeholder-softgray placeholder-opacity-60;
+    @apply rounded-lg px-4 py-2 border border-white border-opacity-10;
+    @apply focus:outline-none focus:ring-1 focus:ring-teal;
+  }
+
+  /* Themed input that respects light/dark mode */
+  .harbor-input-themed {
+    @apply rounded-lg px-4 py-3 border;
+    @apply focus:outline-none focus:ring-1 focus:ring-teal;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+
+  .harbor-input-themed::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+  }
+
+  /* ========================================
+     TABLE STYLES
+     ======================================== */
+
+  .harbor-table {
+    @apply w-full;
+  }
+
+  .harbor-table thead {
+    @apply text-left text-sm text-softgray text-opacity-75;
+  }
+
+  .harbor-table tbody tr {
+    @apply h-[52px] transition-colors;
+  }
+
+  .harbor-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);  /* Subtle */
+  }
+
+  .harbor-table tbody tr:nth-child(even) {
+    @apply bg-white bg-opacity-[0.01];
+  }
+
+  /* ========================================
+     DELTAS (SUBTLE TEXT GLOW)
+     ======================================== */
+
+  .delta-positive {
+    color: var(--pageAccent);
+    font-weight: 500;
+    text-shadow: 0 0 6px rgba(var(--pageAccent-rgb), 0.3);  /* Subtle */
+  }
+
+  .delta-negative {
+    color: #CC3E5C;  /* Damped coral */
+    font-weight: 500;
+  }
+
+  .delta-neutral {
+    color: rgba(244, 246, 248, 0.6);
+    font-weight: 500;
+  }
+
+  /* ========================================
+     SENTIMENT COLORS
+     ======================================== */
+
+  .sentiment-pos {
+    background: rgba(0, 158, 146, 0.12);  /* Damped */
+    color: #009E92;
+    border: 1px solid rgba(0, 158, 146, 0.25);
+  }
+
+  .sentiment-neu {
+    background: rgba(59, 184, 204, 0.12);
+    color: #3BB8CC;
+    border: 1px solid rgba(59, 184, 204, 0.25);
+  }
+
+  .sentiment-neg {
+    background: rgba(204, 62, 92, 0.12);
+    color: #CC3E5C;
+    border: 1px solid rgba(204, 62, 92, 0.25);
+  }
+
+  /* ========================================
+     PROGRESS BARS (NO GLOW)
+     ======================================== */
+
+  .progress-bar {
+    background: rgba(var(--pageAccent-rgb), 0.15);
+    border-radius: 9999px;
+    overflow: hidden;
+    height: 8px;
+  }
+
+  .progress-bar-fill {
+    background: var(--pageAccent);
+    height: 100%;
+    transition: width 400ms ease-out;
+    box-shadow: none;  /* Remove glow */
+  }
+
+  /* ========================================
+     ACCENT UTILITIES
+     ======================================== */
+
+  .text-accent {
+    color: var(--pageAccent);
+  }
+
+  .bg-accent {
+    background: var(--pageAccent);
+  }
+
+  .border-accent {
+    border-color: var(--pageAccent);
+  }
+}
+
+@layer utilities {
+  /* ========================================
+     ANIMATIONS (CALM, NO JITTER)
+     ======================================== */
+
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-in {
+    animation: fadeIn 250ms ease-out;
+  }
+
+  .fade-in {
+    animation: fadeIn 250ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);  /* Reduced from 20px */
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-    return NextResponse.json({ success: true, data })
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', message: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    )
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes sonarPulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .animate-sonar {
+    animation: sonarPulse 5s ease-out infinite;
+  }
+
+  .transition-harbor {
+    transition: all 100ms ease;  /* Reduced from 150ms */
+  }
+
+  /* ========================================
+     STAGGER ANIMATIONS
+     ======================================== */
+
+  .card-fade-in {
+    animation: fadeInUp 250ms ease-out forwards;
+    opacity: 0;
+  }
+
+  .stagger-children > * {
+    animation: fadeInUp 250ms ease-out forwards;
+    opacity: 0;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 600ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 700ms; }
+
+  /* ========================================
+     UTILITIES
+     ======================================== */
+
+  .border-harbor {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ========================================
+     CURSOR FIXES (FORCE POINTER ON INTERACTIVE ELEMENTS)
+     ======================================== */
+
+  /* NUCLEAR OPTION: Force pointer cursor on ALL interactive elements */
+  button,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  a,
+  [class*="hover:"],
+  [class*="cursor-pointer"],
+  .transition-colors,
+  .group {
+    cursor: pointer !important;
+  }
+
+  /* Exceptions */
+  [disabled],
+  [aria-disabled="true"],
+  [class*="cursor-not-allowed"],
+  [class*="cursor-default"] {
+    cursor: not-allowed !important;
+  }
+
+  input,
+  textarea,
+  select {
+    cursor: text !important;
+  }
+
+  /* Exclude user brand highlight cards from pointer */
+  [class*="border-[#00C6B7]/30"],
+  [class*="border-[#4EE4FF]/30"] {
+    cursor: default !important;
+  }
+
+  /* ========================================
+     THEME UTILITIES
+     ======================================== */
+  .bg-primary {
+    background-color: var(--bg-primary);
+  }
+  
+  .bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+  
+  .bg-card {
+    background-color: var(--bg-card);
+  }
+  
+  .bg-hover:hover {
+    background-color: var(--bg-hover);
+  }
+  
+  .text-primary {
+    color: var(--text-primary);
+  }
+  
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  
+  .border-border {
+    border-color: var(--border);
   }
 }

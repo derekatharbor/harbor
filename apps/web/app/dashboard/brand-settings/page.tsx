@@ -362,7 +362,7 @@ export default function BrandSettingsPage() {
 
               {/* Right: Actions */}
               <div className="flex-shrink-0">
-                <button className="px-4 py-2 border border-border hover:bg-muted rounded-lg text-sm font-body text-secondary transition-colors cursor-pointer">
+                <button className="cursor-pointer px-4 py-2 border border-border hover:bg-muted rounded-lg text-sm font-body text-secondary transition-colors cursor-pointer">
                   View Checklist
                 </button>
               </div>
@@ -441,7 +441,7 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, brand_name: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-card border border-border text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Your brand name"
                   />
                 </div>
@@ -458,7 +458,7 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, domain: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="yourbrand.com"
                   />
                 </div>
@@ -475,7 +475,7 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, category: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="e.g., SaaS, E-commerce"
                   />
                 </div>
@@ -492,7 +492,7 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, founding_year: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="2020"
                   />
                 </div>
@@ -509,7 +509,7 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, headquarters: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="San Francisco, CA"
                   />
                 </div>
@@ -528,7 +528,7 @@ export default function BrandSettingsPage() {
                       }
                     }}
                     rows={3}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors resize-none"
                     placeholder="Concise description for AI schema (max 150 characters)"
                   />
                   <p className="text-xs font-body text-secondary/60 mt-1 text-right">
@@ -549,7 +549,7 @@ export default function BrandSettingsPage() {
                 <h2 className="text-xl font-heading font-bold text-primary">
                   Products & Services
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
                   <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
@@ -561,7 +561,7 @@ export default function BrandSettingsPage() {
                     value={newProduct}
                     onChange={(e) => setNewProduct(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addProduct()}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Add a product or service"
                   />
                   <button
@@ -608,7 +608,7 @@ export default function BrandSettingsPage() {
                 <h2 className="text-xl font-heading font-bold text-primary">
                   Competitors to Track
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
                   <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
@@ -621,7 +621,7 @@ export default function BrandSettingsPage() {
                     onChange={(e) => setNewCompetitor(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCompetitor()}
                     disabled={settings.competitors.length >= 5}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder={settings.competitors.length >= 5 ? 'Maximum 5 competitors' : 'Add a competitor'}
                   />
                   <button
@@ -672,7 +672,7 @@ export default function BrandSettingsPage() {
                 <h2 className="text-xl font-heading font-bold text-primary">
                   Target Keywords
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
                   <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
@@ -684,7 +684,7 @@ export default function BrandSettingsPage() {
                     value={newKeyword}
                     onChange={(e) => setNewKeyword(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Add a target keyword"
                   />
                   <button
@@ -731,7 +731,7 @@ export default function BrandSettingsPage() {
                 <h2 className="text-xl font-heading font-bold text-primary">
                   Social & Authority Links
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
                   <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
@@ -754,7 +754,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="linkedin.com/company/..."
                     />
                   </div>
@@ -777,7 +777,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="twitter.com/..."
                     />
                   </div>
@@ -800,7 +800,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="facebook.com/..."
                     />
                   </div>
@@ -823,7 +823,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="instagram.com/..."
                     />
                   </div>
@@ -846,7 +846,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="crunchbase.com/organization/..."
                     />
                   </div>
@@ -869,7 +869,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="en.wikipedia.org/wiki/..."
                     />
                   </div>
@@ -892,7 +892,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-border rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="yourbrand.com/press"
                     />
                   </div>
