@@ -3,11 +3,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ShoppingBag, TrendingUp, Trophy, Target, ArrowRight } from 'lucide-react'
+import { ShoppingBag, TrendingUp, Trophy, Target } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
+import ActionCard from '@/components/optimization/ActionCard'
+import ActionModal from '@/components/optimization/ActionModal'
+import { analyzeShoppingData, ShoppingAnalysis, TaskRecommendation } from '@/lib/optimization/generator'
+import { OptimizationTask } from '@/lib/optimization/tasks'
 
 interface ShoppingData {
   score: number
@@ -35,6 +39,11 @@ export default function ShoppingVisibilityPage() {
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  
+  // Action items state
+  const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
+  const [selectedTask, setSelectedTask] = useState<OptimizationTask | null>(null)
+  const [showActionModal, setShowActionModal] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -59,6 +68,16 @@ export default function ShoppingVisibilityPage() {
         
         // Map shopping data from API
         setData(result.shopping)
+        
+        // Analyze data and generate task recommendations
+        if (result.shopping && result.shopping_raw) {
+          const analysis: ShoppingAnalysis = {
+            ...result.shopping,
+            raw_results: result.shopping_raw
+          }
+          const tasks = analyzeShoppingData(analysis)
+          setRecommendations(tasks)
+        }
       } catch (error) {
         console.error('Error fetching shopping data:', error)
       } finally {
@@ -82,6 +101,11 @@ export default function ShoppingVisibilityPage() {
     } catch {
       return 'No recent scan'
     }
+  }
+
+  const handleTaskClick = (task: OptimizationTask) => {
+    setSelectedTask(task)
+    setShowActionModal(true)
   }
 
   // Loading skeleton
@@ -327,36 +351,51 @@ export default function ShoppingVisibilityPage() {
             Optimize Shopping Visibility
           </h2>
           <p className="text-sm text-secondary/60 mt-1">
-            Actions to improve your product rankings
+            {recommendations.length > 0 
+              ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve your rankings`
+              : 'Actions to improve your product rankings'}
           </p>
         </div>
         <div className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#00C6B7]/30 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-[#00C6B7]/10 flex items-center justify-center flex-shrink-0">
-                <ShoppingBag className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-heading font-semibold text-primary mb-1">
-                  Add Product Schema
-                </h3>
-                <p className="text-sm text-secondary/70 mb-3">
-                  Implement Product JSON-LD schema on your product pages to help AI models understand your offerings.
-                </p>
-                <button className="text-sm text-[#00C6B7] hover:underline font-medium inline-flex items-center gap-1">
-                  Learn how <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+          {recommendations.length > 0 ? (
+            <div className="space-y-4">
+              {recommendations.slice(0, 5).map((rec) => (
+                <ActionCard
+                  key={rec.task.id}
+                  task={rec.task}
+                  onClick={() => handleTaskClick(rec.task)}
+                  context={rec.context}
+                />
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="text-center py-8 text-secondary/60">
+              <p className="mb-2">No specific recommendations at this time.</p>
+              <p className="text-sm">Run another scan after implementing changes to see updated suggestions.</p>
+            </div>
+          )}
         </div>
       </div>
 
+      {/* Modals */}
       <ScanProgressModal
         isOpen={showScanModal}
         onClose={() => setShowScanModal(false)}
         scanId={currentScanId}
       />
+      
+      {selectedTask && (
+        <ActionModal
+          isOpen={showActionModal}
+          onClose={() => {
+            setShowActionModal(false)
+            setSelectedTask(null)
+          }}
+          task={selectedTask}
+          dashboardId={currentDashboard?.id || ''}
+          brandName={currentDashboard?.brand_name || ''}
+        />
+      )}
       </div>
     </>
   )
