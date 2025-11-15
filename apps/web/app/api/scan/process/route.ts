@@ -12,6 +12,7 @@ import {
   getConversationPrompts,
   buildPromptConfig,
 } from '@/lib/prompts'
+import { crawlWebsite } from '@/lib/crawler/website-crawler'
 
 export async function POST(request: Request) {
   try {
@@ -483,7 +484,7 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
     job = newJob
   }
 
-  // CRITICAL: Update to 'running' status
+  // Update to 'running' status
   await supabase
     .from('scan_jobs')
     .update({
@@ -493,44 +494,86 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
     .eq('id', job.id)
 
   try {
-    // TODO: Implement actual website crawler
-    const mockIssues = [
-      {
-        scan_id: scanId,
-        url: `${metadata.domain}/`,
-        issue_code: 'missing_org_schema',
-        severity: 'high',
-        schema_found: false,
-        details: { message: 'Organization schema not found on homepage' },
-      },
-      {
-        scan_id: scanId,
-        url: `${metadata.domain}/products`,
-        issue_code: 'missing_product_schema',
-        severity: 'high',
-        schema_found: false,
-        details: { message: 'Product schema missing from product pages' },
-      },
-    ]
+    // Get dashboard to determine plan
+    const { data: scan } = await supabase
+      .from('scans')
+      .select(`
+        dashboard_id,
+        dashboards (
+          plan
+        )
+      `)
+      .eq('id', scanId)
+      .single()
 
-    await supabase.from('results_site').insert(mockIssues)
+    const plan = (scan?.dashboards as any)?.plan || 'solo'
 
-    // CRITICAL: Update to 'done' status
+    // Run the actual crawler
+    console.log(`[Website] Crawling ${metadata.domain} with plan: ${plan}`)
+    const crawlResult = await crawlWebsite(metadata.domain, plan)
+
+    console.log(`[Website] Crawl complete:`, {
+      pages: crawlResult.pages_analyzed,
+      readability: crawlResult.readability_score,
+      coverage: crawlResult.schema_coverage,
+      issues: crawlResult.issues.length,
+    })
+
+    // Insert issues into database
+    if (crawlResult.issues.length > 0) {
+      const issueRecords = crawlResult.issues.map((issue) => ({
+        scan_id: scanId,
+        url: issue.url,
+        issue_code: issue.issue_code,
+        severity: issue.severity,
+        schema_found: issue.schema_found,
+        details: { message: issue.message },
+      }))
+
+      const { error: insertError } = await supabase
+        .from('results_site')
+        .insert(issueRecords)
+
+      if (insertError) {
+        console.error('[Website] Error inserting issues:', insertError)
+      } else {
+        console.log(`[Website] Inserted ${issueRecords.length} issues`)
+      }
+    }
+
+    // Store schemas found in metadata (for future use)
+    if (crawlResult.schemas_found.length > 0) {
+      console.log(`[Website] Found ${crawlResult.schemas_found.length} schemas:`)
+      crawlResult.schemas_found.forEach((schema) => {
+        console.log(`  - ${schema.type} on ${schema.url} (${schema.complete ? 'complete' : 'incomplete'})`)
+      })
+    }
+
+    // Update job to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
         status: 'done',
-        token_used: 0,
+        token_used: 0, // No LLM tokens used
         finished_at: new Date().toISOString(),
       })
       .eq('id', job.id)
 
-    console.log('[Website] Complete (mock data)')
-    return { success: true, count: mockIssues.length }
+    console.log(
+      `[Website] Complete! Analyzed ${crawlResult.pages_analyzed} pages, found ${crawlResult.issues.length} issues`
+    )
+    
+    return { 
+      success: true, 
+      count: crawlResult.issues.length,
+      pages: crawlResult.pages_analyzed,
+      readability: crawlResult.readability_score,
+      coverage: crawlResult.schema_coverage,
+    }
   } catch (error: any) {
     console.error('[Website] Module error:', error)
 
-    // CRITICAL: Update to 'failed' status
+    // Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({

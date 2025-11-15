@@ -4,6 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { calculateWebsiteMetrics } from '@/lib/scan/website-metrics'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -68,18 +69,16 @@ export async function GET(req: NextRequest) {
     // Fetch results for each module
     console.log('🔍 [API] Fetching module results...')
     
-    const [shoppingResults, brandResults, conversationResults, websiteResults] = await Promise.all([
+    const [shoppingResults, brandResults, conversationResults] = await Promise.all([
       supabase.from('results_shopping').select('*').eq('scan_id', scan.id),
       supabase.from('results_brand').select('*').eq('scan_id', scan.id),
       supabase.from('results_conversations').select('*').eq('scan_id', scan.id),
-      supabase.from('results_site').select('*').eq('scan_id', scan.id),
     ])
 
     console.log('📈 [API] Results counts:')
     console.log('  - Shopping:', shoppingResults.data?.length || 0)
     console.log('  - Brand:', brandResults.data?.length || 0)
     console.log('  - Conversations:', conversationResults.data?.length || 0)
-    console.log('  - Website:', websiteResults.data?.length || 0)
 
     // Aggregate Shopping data
     const shoppingData = shoppingResults.data || []
@@ -183,23 +182,15 @@ export async function GET(req: NextRequest) {
     console.log('  - Volume Index:', volumeIndex)
     console.log('  - Intent breakdown:', intentCounts)
 
-    // Aggregate Website data
-    const websiteData = websiteResults.data || []
-    const issues = websiteData.map((issue) => ({
-      url: issue.url,
-      code: issue.issue_code,
-      severity: issue.severity,
-      message: issue.details?.message || 'No details available',
-      schema_found: issue.schema_found || false,
-    }))
+    // Aggregate Website data - Use proper metrics calculator
+    console.log('🌐 [API] Calculating website metrics...')
+    const website = await calculateWebsiteMetrics(supabase, scan.id)
     
-    const totalIssues = issues.length
-    const highSeverity = issues.filter(i => i.severity === 'high').length
-    const readabilityScore = Math.max(0, 100 - (highSeverity * 20) - (totalIssues * 5))
-    
-    const pagesWithSchema = issues.filter(i => i.schema_found).length
-    const totalPages = Math.max(issues.length, 1)
-    const schemaCoverage = Math.round((pagesWithSchema / totalPages) * 100)
+    console.log('🌐 [API] Website metrics:', {
+      readability: website.readability_score,
+      coverage: website.schema_coverage,
+      issues: website.issues.length,
+    })
 
     const response = {
       scan,
@@ -221,11 +212,7 @@ export async function GET(req: NextRequest) {
         questions,
         intent_breakdown: intentCounts,
       },
-      website: {
-        readability_score: Math.round(readabilityScore),
-        schema_coverage: schemaCoverage,
-        issues,
-      },
+      website,
     }
 
     console.log('✅ [API v3] Returning response with', questions.length, 'questions')
