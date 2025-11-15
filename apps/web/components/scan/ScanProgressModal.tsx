@@ -68,7 +68,8 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
         setCurrentMessage(data.message)
         setModuleStatus(data.modules)
 
-        if (data.status === 'done') {
+        // FIXED: Only mark complete if progress is 100% AND status is done
+        if (data.status === 'done' && data.progress === 100) {
           setIsComplete(true)
           return true // Stop polling
         } else if (data.status === 'failed') {
@@ -208,7 +209,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
 
         {/* Footer */}
         {isComplete ? (
-          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--pageAccent)]/10 border border-[var(--pageAccent)]/30">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--pageAccent)]/10">
             <div className="flex items-center gap-3">
               <CheckCircle className="w-5 h-5 text-[var(--pageAccent)]" strokeWidth={2} />
               <div className="text-sm font-body text-white">
@@ -217,13 +218,13 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             </div>
             <button
               onClick={handleClose}
-              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none"
+              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
             >
               View Results
             </button>
           </div>
         ) : hasFailed ? (
-          <div className="flex items-center justify-between p-4 rounded-lg bg-coral/10 border border-coral/30">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-coral/10">
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-coral" strokeWidth={2} />
               <div className="text-sm font-body text-white">
@@ -232,7 +233,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
             </div>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer outline-none"
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
             >
               Close
             </button>

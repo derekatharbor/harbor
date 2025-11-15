@@ -53,6 +53,13 @@ export async function GET(
     const failedModules = jobs.filter(j => j.status === 'failed').length
     const progress = Math.round((completedModules / totalModules) * 100)
 
+    // FIXED: Override scan status if not all modules are done yet
+    let actualStatus = scan.status
+    if (progress < 100 && scan.status === 'done') {
+      // Database says done, but modules aren't all complete yet
+      actualStatus = 'running'
+    }
+
     // Get module statuses
     const getModuleStatus = (module: string): 'pending' | 'running' | 'done' | 'failed' => {
       const job = jobs.find(j => j.module === module)
@@ -77,9 +84,9 @@ export async function GET(
     // Generate descriptive message
     let message = 'Initializing scan...'
     
-    if (scan.status === 'done') {
+    if (actualStatus === 'done') {
       message = 'Scan complete!'
-    } else if (scan.status === 'failed') {
+    } else if (actualStatus === 'failed') {
       message = 'Scan encountered errors'
     } else if (currentJob) {
       const moduleMessages: Record<string, string> = {
@@ -89,14 +96,14 @@ export async function GET(
         website: 'Validating website structure and schema...'
       }
       message = moduleMessages[currentJob.module] || 'Processing...'
-    } else if (scan.status === 'queued') {
+    } else if (actualStatus === 'queued') {
       message = 'Waiting to start...'
     } else if (completedModules > 0) {
       message = `Completed ${completedModules} of ${totalModules} modules...`
     }
 
     return NextResponse.json({
-      status: scan.status,
+      status: actualStatus,
       progress,
       currentModule: currentJob?.module || null,
       modules,
