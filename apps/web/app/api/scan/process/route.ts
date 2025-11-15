@@ -180,23 +180,34 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
       }
     }
 
+// Replace the Shopping insert section (around line 188-201) with this:
+
     if (allResults.length > 0) {
-  console.log('[Shopping] Attempting to insert', allResults.length, 'results')
-  console.log('[Shopping] Sample result:', allResults[0])
-  
-  const { error: insertError } = await supabase.from('results_shopping').insert(allResults)
-  
-  if (insertError) {
-    console.error('[Shopping] ❌ INSERT FAILED:', insertError)
-    console.error('[Shopping] Error code:', insertError.code)
-    console.error('[Shopping] Error details:', insertError.details)
-    console.error('[Shopping] Sample data that failed:', JSON.stringify(allResults[0], null, 2))
-  } else {
-    console.log('[Shopping] ✅ Successfully inserted', allResults.length, 'results')
-  }
-} else {
-  console.log('[Shopping] ⚠️ No results to insert')
-}
+      // Deduplicate by primary key (scan_id, model, category, product)
+      const uniqueResults = Array.from(
+        new Map(
+          allResults.map(r => [
+            `${r.scan_id}-${r.model}-${r.category}-${r.product}`,
+            r
+          ])
+        ).values()
+      )
+
+      console.log('[Shopping] Deduped:', allResults.length, '→', uniqueResults.length, 'unique results')
+      console.log('[Shopping] Sample result:', uniqueResults[0])
+      
+      const { error: insertError } = await supabase.from('results_shopping').insert(uniqueResults)
+      
+      if (insertError) {
+        console.error('[Shopping] ❌ INSERT FAILED:', insertError)
+        console.error('[Shopping] Error code:', insertError.code)
+        console.error('[Shopping] Sample data that failed:', JSON.stringify(uniqueResults[0], null, 2))
+      } else {
+        console.log('[Shopping] ✅ Successfully inserted', uniqueResults.length, 'results')
+      }
+    } else {
+      console.log('[Shopping] ⚠️ No results to insert')
+    }
 
     // CRITICAL: Update to 'done' status
     await supabase
