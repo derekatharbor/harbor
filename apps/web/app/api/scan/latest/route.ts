@@ -1,10 +1,14 @@
 // apps/web/app/api/scan/latest/route.ts
 // FIXED: Added debugging and proper error handling
+// Version: 2024-11-15-v3
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
+export const fetchCache = 'force-no-store'
+export const runtime = 'nodejs'
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -31,13 +35,14 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    console.log('📊 [API] Fetching latest scan for dashboard:', dashboardId)
+    console.log('📊 [API v3] Fetching latest scan for dashboard:', dashboardId)
 
-    // Get latest scan for this dashboard
+    // Get latest scan for this dashboard - ONLY 'done' scans
     const { data: scan, error: scanError } = await supabase
       .from('scans')
       .select('*')
       .eq('dashboard_id', dashboardId)
+      .eq('status', 'done') // CRITICAL: Only get completed scans
       .order('started_at', { ascending: false })
       .limit(1)
       .single()
@@ -48,7 +53,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (!scan || scanError?.code === 'PGRST116') {
-      console.log('⚠️ [API] No scans found for this dashboard')
+      console.log('⚠️ [API] No completed scans found for this dashboard')
       return NextResponse.json({
         scan: null,
         shopping: { score: 0, total_mentions: 0, categories: [], competitors: [], models: [] },
@@ -58,7 +63,7 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    console.log('✅ [API] Found scan:', scan.id, 'Status:', scan.status)
+    console.log('✅ [API v3] Found scan:', scan.id, 'Status:', scan.status)
 
     // Fetch results for each module
     console.log('🔍 [API] Fetching module results...')
@@ -223,7 +228,7 @@ export async function GET(req: NextRequest) {
       },
     }
 
-    console.log('✅ [API] Returning response with', questions.length, 'questions')
+    console.log('✅ [API v3] Returning response with', questions.length, 'questions')
     
     return NextResponse.json(response)
   } catch (error) {
