@@ -132,7 +132,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
           </div>
           <button
             onClick={onClose}
-            className="text-secondary/60 hover:text-primary transition-colors"
+            className="cursor-pointer text-secondary/60 hover:text-primary transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -172,7 +172,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
                   <button
                     onClick={handleGenerate}
                     disabled={isGenerating}
-                    className="px-6 py-3 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="cursor-pointer px-6 py-3 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {isGenerating ? (
                       <>
@@ -193,7 +193,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
                       </p>
                       <button
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-4 py-2 bg-card hover:bg-hover border border-border rounded-lg text-sm font-medium transition-colors"
+                        className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-card hover:bg-hover border border-border rounded-lg text-sm font-medium transition-colors"
                       >
                         {copySuccess ? (
                           <>
@@ -269,7 +269,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
                   <button
                     onClick={handleValidate}
                     disabled={!validationUrl || validationResult === 'loading'}
-                    className="px-6 py-2 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="cursor-pointer px-6 py-2 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     {validationResult === 'loading' ? (
                       <>
@@ -314,7 +314,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="px-6 py-2 border border-border hover:bg-hover rounded-lg font-medium transition-colors"
+              className="cursor-pointer px-6 py-2 border border-border hover:bg-hover rounded-lg font-medium transition-colors"
             >
               Close
             </button>
@@ -324,7 +324,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
                 onClose()
               }}
               disabled={validationResult !== 'success'}
-              className="px-6 py-2 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="cursor-pointer px-6 py-2 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Mark Complete
             </button>
