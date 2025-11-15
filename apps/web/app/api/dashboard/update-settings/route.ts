@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // TODO: Handle logo upload to Supabase Storage if settings.logo_url is a blob URL
-    // For now, we'll just save the metadata
+    // The logo_url should already be a Supabase Storage public URL
+    // uploaded via the /api/upload/logo endpoint
     
     // Update the dashboard with the new settings
     const { data, error } = await supabase

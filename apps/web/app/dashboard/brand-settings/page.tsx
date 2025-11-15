@@ -188,9 +188,51 @@ export default function BrandSettingsPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const objectUrl = URL.createObjectURL(file)
-    setSettings({ ...settings, logo_url: objectUrl })
-    setHasChanges(true)
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file (PNG, JPG, or SVG)')
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB')
+      return
+    }
+
+    try {
+      // Show loading state
+      const loadingUrl = URL.createObjectURL(file)
+      setSettings({ ...settings, logo_url: loadingUrl })
+
+      // Upload to Supabase Storage
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('dashboardId', currentDashboard?.id || '')
+
+      const response = await fetch('/api/upload/logo', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to upload logo')
+      }
+
+      const { publicUrl } = await response.json()
+
+      // Update with the actual public URL from Supabase
+      setSettings({ ...settings, logo_url: publicUrl })
+      setHasChanges(true)
+
+      // Clean up blob URL
+      URL.revokeObjectURL(loadingUrl)
+    } catch (error) {
+      console.error('Logo upload error:', error)
+      alert('Failed to upload logo. Please try again.')
+      // Reset to previous state
+      setSettings({ ...settings, logo_url: currentDashboard?.logo_url || null })
+    }
   }
 
   const triggerFileInput = () => {
