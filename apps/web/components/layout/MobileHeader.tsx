@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 import { 
   Menu,
   X,
-  LayoutDashboard,
+  Home,
   ShoppingBag, 
   Star,
   MessageSquare, 
@@ -17,7 +17,7 @@ import {
   FileText,
   Video,
   BookOpen,
-  Briefcase
+  User
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 
@@ -32,12 +32,15 @@ export default function MobileHeader() {
   ]
 
   const intelligence = [
-    { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
-    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: Briefcase },
+    { name: 'Overview', href: '/dashboard/overview', icon: Home },
     { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
+  ]
+
+  const brandSettings = [
+    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: User },
   ]
 
   // Get current page accent color
@@ -155,6 +158,36 @@ export default function MobileHeader() {
             </div>
             
             {intelligence.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={closeMenu}
+                  className={`
+                    flex items-center gap-3 px-3 py-3 rounded-lg mb-1
+                    transition-all duration-200 cursor-pointer
+                    ${isActive 
+                      ? 'text-white pl-[10px] bg-white/5' 
+                      : 'text-softgray/60 hover:text-white hover:bg-white/5 active:bg-white/10'
+                    }
+                  `}
+                  style={isActive ? {
+                    borderLeft: `2px solid ${accentColor}`
+                  } : {}}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                  <span className="text-sm font-body">{item.name}</span>
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Brand Settings Section - Below Intelligence with subtle divider */}
+          <div className="px-4 py-3 border-t border-white/[0.03]">
+            {brandSettings.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
               

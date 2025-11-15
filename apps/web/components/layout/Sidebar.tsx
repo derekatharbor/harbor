@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
-  LayoutDashboard,
+  Home,
   ShoppingBag, 
   Star,
   MessageSquare, 
@@ -19,7 +19,7 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  Briefcase
+  User
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 
@@ -76,12 +76,15 @@ export default function Sidebar() {
   ]
 
   const intelligence = [
-    { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
-    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: Briefcase },
+    { name: 'Overview', href: '/dashboard/overview', icon: Home },
     { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
+  ]
+
+  const brandSettings = [
+    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: User },
   ]
 
   // Get current page accent color
@@ -187,6 +190,52 @@ export default function Sidebar() {
             })}
           </div>
         )}
+        
+        {/* Favorites Section - Collapsed view with icons only */}
+        {isCollapsed && (
+          <div className="px-4 pt-6 pb-3">
+            {favorites.map((item) => {
+              const Icon = item.icon
+              const isActive = pathname === item.href
+              
+              return (
+                <div key={item.name} className="relative group">
+                  <Link
+                    href={item.href}
+                    className={`
+                      flex items-center rounded-lg mb-1 py-3 justify-center
+                      transition-colors cursor-pointer relative
+                      ${isActive 
+                        ? 'text-white' 
+                        : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                      }
+                    `}
+                  >
+                    <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                  </Link>
+                  
+                  {/* Tooltip */}
+                  <div
+                    className="
+                      absolute left-full ml-3 top-1/2 -translate-y-1/2
+                      px-3 py-2 rounded-md whitespace-nowrap
+                      bg-[#0B1521] shadow-lg border border-white/10
+                      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                      transition-all duration-150 ease-in pointer-events-none
+                    "
+                    style={{ 
+                      zIndex: 9999
+                    }}
+                  >
+                    <span className="text-white/90 font-body text-sm">
+                      {item.name}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         {/* Intelligence Section */}
         <div className="px-4 py-3">
@@ -228,7 +277,59 @@ export default function Sidebar() {
                     className="
                       absolute left-full ml-3 top-1/2 -translate-y-1/2
                       px-3 py-2 rounded-md whitespace-nowrap
-                      bg-[#0B1521] shadow-lg
+                      bg-[#0B1521] shadow-lg border border-white/10
+                      opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                      transition-all duration-150 ease-in pointer-events-none
+                    "
+                    style={{ 
+                      zIndex: 9999
+                    }}
+                  >
+                    <span className="text-white/90 font-body text-sm">
+                      {item.name}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Brand Settings Section - Below Intelligence with subtle divider */}
+        <div className="px-4 py-3 border-t border-white/[0.03]">
+          {brandSettings.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            
+            return (
+              <div key={item.name} className="relative group">
+                <Link
+                  href={item.href}
+                  className={`
+                    flex items-center rounded-lg mb-1
+                    transition-colors cursor-pointer relative
+                    ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+                    ${isActive 
+                      ? 'text-white' 
+                      : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    }
+                    ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
+                  `}
+                  style={isActive && !isCollapsed ? {
+                    borderLeft: `2px solid ${accentColor}`
+                  } : {}}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                  {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
+                </Link>
+                
+                {/* Tooltip - only show when collapsed */}
+                {isCollapsed && (
+                  <div
+                    className="
+                      absolute left-full ml-3 top-1/2 -translate-y-1/2
+                      px-3 py-2 rounded-md whitespace-nowrap
+                      bg-[#0B1521] shadow-lg border border-white/10
                       opacity-0 invisible group-hover:opacity-100 group-hover:visible
                       transition-all duration-150 ease-in pointer-events-none
                     "
@@ -248,32 +349,54 @@ export default function Sidebar() {
 
         {/* Theme Toggle - scrolls with content */}
         <div className="px-4 py-3 border-t border-white/5">
-          <div
-            onClick={toggleTheme}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                toggleTheme()
-              }
-            }}
-            className={`
-              flex items-center rounded-lg
-              transition-colors cursor-pointer
-              ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
-              text-softgray/60 hover:text-white hover:bg-white/5
-            `}
-          >
-            {theme === 'light' ? (
-              <Moon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-            ) : (
-              <Sun className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-            )}
-            {!isCollapsed && (
-              <span className="text-sm font-body">
-                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-              </span>
+          <div className="relative group">
+            <div
+              onClick={toggleTheme}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  toggleTheme()
+                }
+              }}
+              className={`
+                flex items-center rounded-lg
+                transition-colors cursor-pointer
+                ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+                text-softgray/60 hover:text-white hover:bg-white/5
+              `}
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+              ) : (
+                <Sun className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+              )}
+              {!isCollapsed && (
+                <span className="text-sm font-body">
+                  {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              )}
+            </div>
+            
+            {/* Tooltip - only show when collapsed */}
+            {isCollapsed && (
+              <div
+                className="
+                  absolute left-full ml-3 top-1/2 -translate-y-1/2
+                  px-3 py-2 rounded-md whitespace-nowrap
+                  bg-[#0B1521] shadow-lg border border-white/10
+                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                  transition-all duration-150 ease-in pointer-events-none
+                "
+                style={{ 
+                  zIndex: 9999
+                }}
+              >
+                <span className="text-white/90 font-body text-sm">
+                  {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -307,7 +430,7 @@ export default function Sidebar() {
                 className="
                   absolute left-full ml-3 top-1/2 -translate-y-1/2
                   px-3 py-2 rounded-md whitespace-nowrap
-                  bg-[#0B1521] shadow-lg
+                  bg-[#0B1521] shadow-lg border border-white/10
                   opacity-0 invisible group-hover:opacity-100 group-hover:visible
                   transition-all duration-150 ease-in pointer-events-none
                 "
