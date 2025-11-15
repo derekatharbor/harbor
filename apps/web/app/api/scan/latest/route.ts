@@ -1,6 +1,6 @@
 // apps/web/app/api/scan/latest/route.ts
-// FIXED: Added debugging and proper error handling
-// Version: 2024-11-15-v3
+// FIXED: Added shopping_raw for action items
+// Version: 2024-11-15-v4
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    console.log('📊 [API v3] Fetching latest scan for dashboard:', dashboardId)
+    console.log('📊 [API v4] Fetching latest scan for dashboard:', dashboardId)
 
     // Get latest scan for this dashboard - ONLY 'done' scans
     const { data: scan, error: scanError } = await supabase
@@ -58,13 +58,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         scan: null,
         shopping: { score: 0, total_mentions: 0, categories: [], competitors: [], models: [] },
+        shopping_raw: [], // Include empty array for no-scan state
         brand: { visibility_index: 0, descriptors: [], sentiment_breakdown: { positive: 0, neutral: 0, negative: 0 }, total_mentions: 0 },
         conversations: { volume_index: 0, questions: [], intent_breakdown: { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 } },
         website: { readability_score: 0, schema_coverage: 0, issues: [] },
       })
     }
 
-    console.log('✅ [API v3] Found scan:', scan.id, 'Status:', scan.status)
+    console.log('✅ [API v4] Found scan:', scan.id, 'Status:', scan.status)
 
     // Fetch results for each module
     console.log('🔍 [API] Fetching module results...')
@@ -151,7 +152,7 @@ export async function GET(req: NextRequest) {
       ? Math.min(100, totalWeightedMentions * 5)
       : 0
 
-    // Aggregate Conversation data - THIS IS THE KEY PART
+    // Aggregate Conversation data
     const conversationData = conversationResults.data || []
     
     console.log('🗣️ [API] Processing conversation data:', conversationData.length, 'rows')
@@ -201,6 +202,7 @@ export async function GET(req: NextRequest) {
         competitors,
         models,
       },
+      shopping_raw: shoppingData, // ⭐ ADDED: Raw data for action items analyzer
       brand: {
         visibility_index: Math.round(visibilityIndex),
         descriptors,
@@ -215,7 +217,7 @@ export async function GET(req: NextRequest) {
       website,
     }
 
-    console.log('✅ [API v3] Returning response with', questions.length, 'questions')
+    console.log('✅ [API v4] Returning response with shopping_raw:', shoppingData.length, 'rows')
     
     return NextResponse.json(response)
   } catch (error) {
