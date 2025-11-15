@@ -442,43 +442,6 @@
   }
 
   /* ========================================
-     CURSOR FIXES (FORCE POINTER ON INTERACTIVE ELEMENTS)
-     ======================================== */
-
-  /* NUCLEAR OPTION: Force pointer cursor on ALL interactive elements */
-  button,
-  [role="button"],
-  [type="button"],
-  [type="submit"],
-  a,
-  [class*="hover:"],
-  [class*="cursor-pointer"],
-  .transition-colors,
-  .group {
-    cursor: pointer !important;
-  }
-
-  /* Exceptions */
-  [disabled],
-  [aria-disabled="true"],
-  [class*="cursor-not-allowed"],
-  [class*="cursor-default"] {
-    cursor: not-allowed !important;
-  }
-
-  input,
-  textarea,
-  select {
-    cursor: text !important;
-  }
-
-  /* Exclude user brand highlight cards from pointer */
-  [class*="border-[#00C6B7]/30"],
-  [class*="border-[#4EE4FF]/30"] {
-    cursor: default !important;
-  }
-
-  /* ========================================
      THEME UTILITIES
      ======================================== */
   .bg-primary {
@@ -508,4 +471,43 @@
   .border-border {
     border-color: var(--border);
   }
+}
+
+/* ========================================
+   NUCLEAR CURSOR FIX - MAXIMUM SPECIFICITY
+   Applied OUTSIDE layers for highest priority
+   ======================================== */
+
+button,
+[role="button"],
+[type="button"],
+[type="submit"],
+a:not([href=""]):not([href="#"]),
+[class*="hover:"],
+[class*="cursor-pointer"],
+.transition-colors,
+.group,
+.nav-item,
+[onclick] {
+  cursor: pointer !important;
+}
+
+/* Exceptions */
+[disabled],
+[aria-disabled="true"],
+[class*="cursor-not-allowed"],
+[class*="cursor-default"],
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
+input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  cursor: text !important;
+}
+
+[type="checkbox"],
+[type="radio"] {
+  cursor: pointer !important;
 }
