@@ -85,7 +85,7 @@ async function callAnthropic(job: PromptJob): Promise<string> {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20240620', // FIXED: Correct date format
+      model: 'claude-3-5-sonnet-20241022', // FIXED: Correct date format
       max_tokens: job.maxTokens,
       messages: [
         { role: 'user', content: job.user }
@@ -108,9 +108,9 @@ async function callAnthropic(job: PromptJob): Promise<string> {
 async function callGemini(job: PromptJob): Promise<string> {
   const prompt = job.system ? `${job.system}\n\n${job.user}` : job.user
   
-  // FIXED: Use v1 instead of v1beta, and correct model name
+  // FIXED: Use v1beta (not v1) - v1 doesn't support gemini-1.5-flash with generateContent
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
