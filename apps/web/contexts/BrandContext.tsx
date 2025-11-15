@@ -11,8 +11,27 @@ export interface Dashboard {
   domain: string
   plan: 'solo' | 'agency' | 'enterprise'
   org_id: string
+  public_profile?: boolean
   last_fresh_scan_at: string | null
   created_at: string
+  
+  // Phase 2: Brand Dashboard fields
+  logo_url?: string | null
+  metadata?: {
+    category?: string
+    description?: string
+    founding_year?: string
+    headquarters?: string
+    products?: string[]
+    competitors?: string[]
+    social_links?: {
+      linkedin?: string
+      twitter?: string
+      facebook?: string
+      instagram?: string
+    }
+    target_keywords?: string[]
+  }
 }
 
 interface BrandContextType {
