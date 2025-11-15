@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
-  Home,
+  LayoutDashboard,
   ShoppingBag, 
   Star,
   MessageSquare, 
@@ -18,7 +18,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Moon,
-  Sun
+  Sun,
+  Briefcase
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 
@@ -75,7 +76,8 @@ export default function Sidebar() {
   ]
 
   const intelligence = [
-    { name: 'Overview', href: '/dashboard/overview', icon: Home },
+    { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
+    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: Briefcase },
     { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
@@ -85,6 +87,7 @@ export default function Sidebar() {
   // Get current page accent color
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#2979FF' // Cerulean
+    if (pathname === '/dashboard/brand-settings') return '#FF6B4A' // Coral
     if (pathname === '/dashboard/shopping') return '#00C6B7' // Aqua
     if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
     if (pathname === '/dashboard/conversations') return '#FFB84D' // Amber/Gold

@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 import { 
   Menu,
   X,
-  Home,
+  LayoutDashboard,
   ShoppingBag, 
   Star,
   MessageSquare, 
@@ -17,6 +17,7 @@ import {
   FileText,
   Video,
   BookOpen,
+  Briefcase
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 
@@ -31,7 +32,8 @@ export default function MobileHeader() {
   ]
 
   const intelligence = [
-    { name: 'Overview', href: '/dashboard/overview', icon: Home },
+    { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard },
+    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: Briefcase },
     { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
@@ -41,6 +43,7 @@ export default function MobileHeader() {
   // Get current page accent color
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#2979FF'
+    if (pathname === '/dashboard/brand-settings') return '#FF6B4A'
     if (pathname === '/dashboard/shopping') return '#00C6B7'
     if (pathname === '/dashboard/brand') return '#4EE4FF'
     if (pathname === '/dashboard/conversations') return '#FFB84D'
