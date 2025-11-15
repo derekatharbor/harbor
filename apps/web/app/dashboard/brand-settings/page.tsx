@@ -9,7 +9,6 @@ import {
   Instagram, ExternalLink, TrendingUp, AlertCircle, FileText, Info
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
-import MobileHeader from '@/components/layout/MobileHeader'
 
 interface BrandSettings {
   logo_url: string | null
@@ -266,29 +265,29 @@ export default function BrandSettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0E1623] flex items-center justify-center">
-        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center pt-20 lg:pt-0">
+        <div className="text-secondary">Loading...</div>
       </div>
     )
   }
 
   return (
     <>
-      <MobileHeader title="Brand Dashboard" />
-      <div className="min-h-screen bg-[#F7F9FB] dark:bg-[#0E1623] pb-32">
+      <MobileHeader />
+      <div className="min-h-screen bg-background pb-32 pt-20 lg:pt-0">
         {/* Header */}
         <div className="px-6 pt-8 pb-6">
-          <h1 className="text-3xl font-heading font-bold text-[#0F1C2E] dark:text-white mb-2">
+          <h1 className="text-3xl font-heading font-bold text-primary mb-2">
             Brand Dashboard
           </h1>
-          <p className="text-sm font-body text-[#444D59] dark:text-white/80">
+          <p className="text-sm font-body text-secondary/60">
             Complete your profile to improve AI analysis accuracy
           </p>
         </div>
 
         {/* AI Readiness Card - Horizontal Layout */}
         <div className="px-6 mb-12">
-          <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+          <div className="bg-card border border-border rounded-xl p-8">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8">
               {/* Left: Logo + Ring */}
               <div className="flex-shrink-0 relative">
@@ -301,7 +300,7 @@ export default function BrandSettingsPage() {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="6"
-                    className="text-[#E5E7EB] dark:text-white/[0.06]"
+                    className="text-border"
                   />
                   {/* Progress ring (270° arc) */}
                   <circle
@@ -313,7 +312,7 @@ export default function BrandSettingsPage() {
                     strokeWidth="6"
                     strokeLinecap="round"
                     strokeDasharray={`${(score / 100) * 251.2 * 0.75} 251.2`}
-                    className="text-[#2BCFCC] dark:text-[#2BCFCC] transition-all duration-500"
+                    className="text-[#2BCFCC] transition-all duration-500"
                   />
                 </svg>
                 {/* Avatar inside ring */}
@@ -332,8 +331,8 @@ export default function BrandSettingsPage() {
                       {lettermark.initials}
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <Building2 className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                      <Building2 className="w-8 h-8 text-muted-foreground" />
                     </div>
                   )}
                 </div>
@@ -341,23 +340,23 @@ export default function BrandSettingsPage() {
 
               {/* Middle: Score + Messaging */}
               <div className="flex-1">
-                <h2 className="text-base font-heading font-semibold text-[#0F1C2E] dark:text-white mb-1">
+                <h2 className="text-base font-heading font-semibold text-primary mb-1">
                   AI Readiness Profile
                 </h2>
-                <div className="text-5xl font-heading font-bold text-[#0F1C2E] dark:text-white mb-2">
+                <div className="text-5xl font-heading font-bold text-primary mb-2">
                   {score}%
                 </div>
-                <p className="text-sm font-body text-[#444D59] dark:text-white/80 mb-1">
+                <p className="text-sm font-body text-secondary/80 mb-1">
                   Your profile helps Harbor analyze your brand with higher accuracy.
                 </p>
-                <p className="text-xs font-body text-[#444D59] dark:text-white/60">
+                <p className="text-xs font-body text-secondary/60">
                   {score}% complete · {itemsRemaining} {itemsRemaining === 1 ? 'item' : 'items'} remaining
                 </p>
               </div>
 
               {/* Right: Actions */}
               <div className="flex-shrink-0">
-                <button className="text-sm font-body text-[#2979FF] hover:text-[#1E5FCC] dark:text-[#2979FF] dark:hover:text-[#4A8FFF] transition-colors">
+                <button className="text-sm font-body text-[#2979FF] hover:text-[#1E5FCC] transition-colors cursor-pointer">
                   View Checklist
                 </button>
               </div>
@@ -368,12 +367,12 @@ export default function BrandSettingsPage() {
         <div className="px-6 space-y-12">
           {/* Brand Identity */}
           <section>
-            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="bg-card border border-border rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <Building2 className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                <h2 className="text-xl font-heading font-bold text-primary">
                   Brand Identity
                 </h2>
               </div>
@@ -381,7 +380,7 @@ export default function BrandSettingsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Logo Upload */}
                 <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-3">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-3">
                     Brand Logo
                   </label>
                   <div className="flex items-center gap-4">
@@ -389,18 +388,18 @@ export default function BrandSettingsPage() {
                       <img
                         src={settings.logo_url}
                         alt="Brand logo"
-                        className="w-20 h-20 rounded-lg object-cover border border-[#E5E7EB] dark:border-white/6"
+                        className="w-20 h-20 rounded-lg object-cover border border-border"
                       />
                     ) : lettermark ? (
                       <div
-                        className="w-20 h-20 rounded-lg flex items-center justify-center text-white font-heading font-bold text-2xl border border-[#E5E7EB] dark:border-white/6"
+                        className="w-20 h-20 rounded-lg flex items-center justify-center text-white font-heading font-bold text-2xl border border-border"
                         style={{ backgroundColor: lettermark.color }}
                       >
                         {lettermark.initials}
                       </div>
                     ) : (
-                      <div className="w-20 h-20 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-dashed border-[#E3E5E8] dark:border-white/10 flex items-center justify-center">
-                        <Upload className="w-8 h-8 text-[#444D59] dark:text-white/40" strokeWidth={1.5} />
+                      <div className="w-20 h-20 rounded-lg bg-muted border border-dashed border-border flex items-center justify-center">
+                        <Upload className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
                       </div>
                     )}
                     <div>
@@ -413,11 +412,11 @@ export default function BrandSettingsPage() {
                       />
                       <button
                         onClick={triggerFileInput}
-                        className="px-5 py-2.5 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer"
+                        className="px-5 py-2.5 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer"
                       >
                         Upload Logo
                       </button>
-                      <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-2">
+                      <p className="text-xs font-body text-secondary/60 mt-2">
                         PNG or SVG recommended
                       </p>
                     </div>
@@ -426,7 +425,7 @@ export default function BrandSettingsPage() {
 
                 {/* Brand Name */}
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Brand Name
                   </label>
                   <input
@@ -436,14 +435,14 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, brand_name: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Your brand name"
                   />
                 </div>
 
                 {/* Domain */}
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Domain
                   </label>
                   <input
@@ -453,14 +452,14 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, domain: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="yourbrand.com"
                   />
                 </div>
 
                 {/* Category */}
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Category
                   </label>
                   <input
@@ -470,14 +469,14 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, category: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="e.g., SaaS, E-commerce"
                   />
                 </div>
 
                 {/* Founding Year */}
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Founding Year
                   </label>
                   <input
@@ -487,14 +486,14 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, founding_year: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="2020"
                   />
                 </div>
 
                 {/* Headquarters */}
                 <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Headquarters
                   </label>
                   <input
@@ -504,14 +503,14 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, headquarters: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="San Francisco, CA"
                   />
                 </div>
 
                 {/* Brand Description */}
                 <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
                     Brand Description
                   </label>
                   <textarea
@@ -523,10 +522,10 @@ export default function BrandSettingsPage() {
                       }
                     }}
                     rows={3}
-                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors resize-none"
                     placeholder="Concise description for AI schema (max 150 characters)"
                   />
-                  <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-1 text-right">
+                  <p className="text-xs font-body text-secondary/60 mt-1 text-right">
                     {settings.description.length}/150
                   </p>
                 </div>
@@ -536,16 +535,16 @@ export default function BrandSettingsPage() {
 
           {/* Products & Services */}
           <section>
-            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="bg-card border border-border rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <Package className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                <h2 className="text-xl font-heading font-bold text-primary">
                   Products & Services
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
-                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
@@ -556,12 +555,12 @@ export default function BrandSettingsPage() {
                     value={newProduct}
                     onChange={(e) => setNewProduct(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addProduct()}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="flex-1 px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Add a product or service"
                   />
                   <button
                     onClick={addProduct}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
                   >
                     <Plus className="w-4 h-4" strokeWidth={2.5} />
                     Add
@@ -573,19 +572,19 @@ export default function BrandSettingsPage() {
                 {settings.products.map((product, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
                   >
-                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{product}</span>
+                    <span className="text-sm font-body text-primary">{product}</span>
                     <button
                       onClick={() => removeProduct(index)}
-                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
+                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
                     >
-                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
                     </button>
                   </div>
                 ))}
                 {settings.products.length === 0 && (
-                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                  <p className="text-sm font-body text-secondary/60">
                     No products added yet
                   </p>
                 )}
@@ -595,16 +594,16 @@ export default function BrandSettingsPage() {
 
           {/* Competitors to Track */}
           <section>
-            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="bg-card border border-border rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                <h2 className="text-xl font-heading font-bold text-primary">
                   Competitors to Track
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
-                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
@@ -616,19 +615,19 @@ export default function BrandSettingsPage() {
                     onChange={(e) => setNewCompetitor(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCompetitor()}
                     disabled={settings.competitors.length >= 5}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder={settings.competitors.length >= 5 ? 'Maximum 5 competitors' : 'Add a competitor'}
                   />
                   <button
                     onClick={addCompetitor}
                     disabled={settings.competitors.length >= 5}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Plus className="w-4 h-4" strokeWidth={2.5} />
                     Add
                   </button>
                 </div>
-                <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-2">
+                <p className="text-xs font-body text-secondary/60 mt-2">
                   {settings.competitors.length}/5 competitors added
                 </p>
               </div>
@@ -637,19 +636,19 @@ export default function BrandSettingsPage() {
                 {settings.competitors.map((competitor, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
                   >
-                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{competitor}</span>
+                    <span className="text-sm font-body text-primary">{competitor}</span>
                     <button
                       onClick={() => removeCompetitor(index)}
-                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
+                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
                     >
-                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
                     </button>
                   </div>
                 ))}
                 {settings.competitors.length === 0 && (
-                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                  <p className="text-sm font-body text-secondary/60">
                     No competitors added yet
                   </p>
                 )}
@@ -659,16 +658,16 @@ export default function BrandSettingsPage() {
 
           {/* Target Keywords */}
           <section>
-            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="bg-card border border-border rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <Target className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                <h2 className="text-xl font-heading font-bold text-primary">
                   Target Keywords
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
-                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
@@ -679,12 +678,12 @@ export default function BrandSettingsPage() {
                     value={newKeyword}
                     onChange={(e) => setNewKeyword(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
-                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    className="flex-1 px-4 py-3 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                     placeholder="Add a target keyword"
                   />
                   <button
                     onClick={addKeyword}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
                   >
                     <Plus className="w-4 h-4" strokeWidth={2.5} />
                     Add
@@ -696,19 +695,19 @@ export default function BrandSettingsPage() {
                 {settings.target_keywords.map((keyword, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
                   >
-                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{keyword}</span>
+                    <span className="text-sm font-body text-primary">{keyword}</span>
                     <button
                       onClick={() => removeKeyword(index)}
-                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
+                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
                     >
-                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
                     </button>
                   </div>
                 ))}
                 {settings.target_keywords.length === 0 && (
-                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                  <p className="text-sm font-body text-secondary/60">
                     No keywords added yet
                   </p>
                 )}
@@ -718,27 +717,27 @@ export default function BrandSettingsPage() {
 
           {/* Social & Authority Links */}
           <section>
-            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="bg-card border border-border rounded-xl p-8">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
                   <Globe className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                <h2 className="text-xl font-heading font-bold text-primary">
                   Social & Authority Links
                 </h2>
-                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
-                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+                <button className="ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
+                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* LinkedIn */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <Linkedin className="w-5 h-5 text-[#0A66C2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">LinkedIn</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">LinkedIn</label>
                     <input
                       type="url"
                       value={settings.social_links.linkedin || ''}
@@ -749,7 +748,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="linkedin.com/company/..."
                     />
                   </div>
@@ -757,11 +756,11 @@ export default function BrandSettingsPage() {
 
                 {/* Twitter */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <Twitter className="w-5 h-5 text-[#1DA1F2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Twitter / X</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Twitter / X</label>
                     <input
                       type="url"
                       value={settings.social_links.twitter || ''}
@@ -772,7 +771,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="twitter.com/..."
                     />
                   </div>
@@ -780,11 +779,11 @@ export default function BrandSettingsPage() {
 
                 {/* Facebook */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <Facebook className="w-5 h-5 text-[#1877F2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Facebook</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Facebook</label>
                     <input
                       type="url"
                       value={settings.social_links.facebook || ''}
@@ -795,7 +794,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="facebook.com/..."
                     />
                   </div>
@@ -803,11 +802,11 @@ export default function BrandSettingsPage() {
 
                 {/* Instagram */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <Instagram className="w-5 h-5 text-[#E4405F]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Instagram</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Instagram</label>
                     <input
                       type="url"
                       value={settings.social_links.instagram || ''}
@@ -818,7 +817,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="instagram.com/..."
                     />
                   </div>
@@ -826,11 +825,11 @@ export default function BrandSettingsPage() {
 
                 {/* Crunchbase */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <ExternalLink className="w-5 h-5 text-[#0288D1]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Crunchbase</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Crunchbase</label>
                     <input
                       type="url"
                       value={settings.social_links.crunchbase || ''}
@@ -841,7 +840,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="crunchbase.com/organization/..."
                     />
                   </div>
@@ -849,11 +848,11 @@ export default function BrandSettingsPage() {
 
                 {/* Wikipedia */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
-                    <ExternalLink className="w-5 h-5 text-[#444D59] dark:text-[#F4F6F8]" strokeWidth={1.5} />
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
+                    <ExternalLink className="w-5 h-5 text-secondary" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Wikipedia</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Wikipedia</label>
                     <input
                       type="url"
                       value={settings.social_links.wikipedia || ''}
@@ -864,7 +863,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="en.wikipedia.org/wiki/..."
                     />
                   </div>
@@ -872,11 +871,11 @@ export default function BrandSettingsPage() {
 
                 {/* Press Kit */}
                 <div className="flex items-center gap-4 lg:col-span-2">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
                     <FileText className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Press Kit URL</label>
+                    <label className="block text-xs font-body text-secondary/50 mb-1">Press Kit URL</label>
                     <input
                       type="url"
                       value={settings.social_links.press_kit || ''}
@@ -887,7 +886,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                      className="w-full px-3 py-2 bg-input border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
                       placeholder="yourbrand.com/press"
                     />
                   </div>
@@ -899,9 +898,9 @@ export default function BrandSettingsPage() {
 
         {/* Success Toast */}
         {saveSuccess && (
-          <div className="fixed top-24 right-6 bg-white dark:bg-[#141E38] border border-[#2BCFCC] dark:border-[#2BCFCC] rounded-lg shadow-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-5 z-50">
+          <div className="fixed top-24 right-6 bg-card border border-[#2BCFCC] rounded-lg shadow-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-5 z-50">
             <CheckCircle className="w-5 h-5 text-[#2BCFCC]" strokeWidth={2} />
-            <span className="text-sm font-body text-[#0F1C2E] dark:text-white font-medium">Changes saved.</span>
+            <span className="text-sm font-body text-primary font-medium">Changes saved.</span>
           </div>
         )}
 
