@@ -9,6 +9,7 @@ import {
   Instagram, ExternalLink, TrendingUp, AlertCircle, FileText, Info
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
+import MobileHeader from '@/components/layout/MobileHeader'
 
 interface BrandSettings {
   logo_url: string | null
