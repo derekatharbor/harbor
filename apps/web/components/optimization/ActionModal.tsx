@@ -42,11 +42,18 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
         })
       })
       
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Generation failed:', response.status, errorData)
+        setGeneratedCode(`// Error: ${response.status} ${response.statusText}\n// ${errorData.error || 'Unknown error'}\n// Please check console for details`)
+        return
+      }
+      
       const data = await response.json()
       setGeneratedCode(data.code || data.content || '')
     } catch (error) {
       console.error('Generation failed:', error)
-      setGeneratedCode('// Error generating code. Please try again.')
+      setGeneratedCode(`// Error generating code: ${error instanceof Error ? error.message : 'Unknown error'}\n// Please check console and try again`)
     } finally {
       setIsGenerating(false)
     }
@@ -172,7 +179,8 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
                   <button
                     onClick={handleGenerate}
                     disabled={isGenerating}
-                    className="cursor-pointer px-6 py-3 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    style={{ cursor: isGenerating ? 'not-allowed' : 'pointer' }}
+                    className="px-6 py-3 bg-[#00C6B7] hover:bg-[#00C6B7]/90 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
                   >
                     {isGenerating ? (
                       <>

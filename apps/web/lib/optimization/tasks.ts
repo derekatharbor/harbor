@@ -134,7 +134,7 @@ export const SHOPPING_TASKS: OptimizationTask[] = [
     
     hasGenerator: true,
     hasValidator: true,
-    generatorEndpoint: '/api/gen/offers-schema',
+    generatorEndpoint: '/api/gen/product-schema', // Use same endpoint
     validatorEndpoint: '/api/validate/schema',
     
     shouldShow: (data) => {
