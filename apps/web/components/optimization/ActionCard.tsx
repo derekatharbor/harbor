@@ -79,11 +79,11 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
     
     if (products.length === 1) {
       const p = products[0]
-      return `${task.description} • Avg rank: ${p.avg_rank.toFixed(1)} across ${p.categories.length} categories`
+      return `${task.description} • Appears in ${p.categories.length} ${p.categories.length === 1 ? 'category' : 'categories'}`
     }
     
-    const avgRank = products.reduce((sum, p) => sum + p.avg_rank, 0) / products.length
-    return `${task.description} • Avg rank: ${avgRank.toFixed(1)} across ${products.length} products`
+    const totalCategories = new Set(products.flatMap(p => p.categories)).size
+    return `${task.description} • ${products.length} products across ${totalCategories} ${totalCategories === 1 ? 'category' : 'categories'}`
   }
 
   return (
@@ -112,10 +112,12 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
         {/* Product-specific context pills */}
         {context && (
           <div className="mb-3 flex flex-wrap gap-2">
-            {context.affected_products && context.affected_products.length > 2 && (
-              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
-                Products: {context.affected_products.slice(0, 2).map(p => p.product_name).join(', ')}
-                {context.affected_products.length > 2 && ` +${context.affected_products.length - 2} more`}
+            {context.affected_products && context.affected_products.length > 0 && (
+              <div className="text-xs px-3 py-1.5 bg-[#00C6B7]/10 border border-[#00C6B7]/30 rounded text-[#00C6B7] font-medium">
+                {context.affected_products.length === 1 
+                  ? context.affected_products[0].product_name
+                  : `${context.affected_products.length} products: ${context.affected_products.map(p => p.product_name).join(', ')}`
+                }
               </div>
             )}
             
@@ -128,12 +130,6 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
             {context.missing_categories && context.missing_categories.length > 0 && (
               <div className="text-xs px-2 py-1 bg-orange-500/10 border border-orange-500/30 rounded text-orange-400">
                 {context.missing_categories.length} missing {context.missing_categories.length === 1 ? 'category' : 'categories'}
-              </div>
-            )}
-            
-            {context.current_mentions !== undefined && (
-              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
-                {context.current_mentions} current mentions
               </div>
             )}
           </div>
