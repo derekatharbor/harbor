@@ -1,9 +1,9 @@
 // apps/web/app/api/scan/latest/route.ts
+// FIXED: Added debugging and proper error handling
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// Force dynamic rendering - don't pre-render at build time
 export const dynamic = 'force-dynamic'
 
 function getSupabaseClient() {
@@ -31,6 +31,8 @@ export async function GET(req: NextRequest) {
       )
     }
 
+    console.log('📊 [API] Fetching latest scan for dashboard:', dashboardId)
+
     // Get latest scan for this dashboard
     const { data: scan, error: scanError } = await supabase
       .from('scans')
@@ -40,8 +42,13 @@ export async function GET(req: NextRequest) {
       .limit(1)
       .single()
 
-    if (scanError || !scan) {
-      // No scans yet - return empty state
+    if (scanError && scanError.code !== 'PGRST116') {
+      console.error('❌ [API] Error fetching scan:', scanError)
+      return NextResponse.json({ error: scanError.message }, { status: 500 })
+    }
+
+    if (!scan || scanError?.code === 'PGRST116') {
+      console.log('⚠️ [API] No scans found for this dashboard')
       return NextResponse.json({
         scan: null,
         shopping: { score: 0, total_mentions: 0, categories: [], competitors: [], models: [] },
@@ -51,7 +58,11 @@ export async function GET(req: NextRequest) {
       })
     }
 
+    console.log('✅ [API] Found scan:', scan.id, 'Status:', scan.status)
+
     // Fetch results for each module
+    console.log('🔍 [API] Fetching module results...')
+    
     const [shoppingResults, brandResults, conversationResults, websiteResults] = await Promise.all([
       supabase.from('results_shopping').select('*').eq('scan_id', scan.id),
       supabase.from('results_brand').select('*').eq('scan_id', scan.id),
@@ -59,11 +70,16 @@ export async function GET(req: NextRequest) {
       supabase.from('results_site').select('*').eq('scan_id', scan.id),
     ])
 
+    console.log('📈 [API] Results counts:')
+    console.log('  - Shopping:', shoppingResults.data?.length || 0)
+    console.log('  - Brand:', brandResults.data?.length || 0)
+    console.log('  - Conversations:', conversationResults.data?.length || 0)
+    console.log('  - Website:', websiteResults.data?.length || 0)
+
     // Aggregate Shopping data
     const shoppingData = shoppingResults.data || []
     const totalMentions = shoppingData.length
     
-    // Group by category
     const categoryMap = new Map<string, { category: string; mentions: number; bestRank: number }>()
     shoppingData.forEach((item) => {
       const existing = categoryMap.get(item.category) || { category: item.category, mentions: 0, bestRank: 999 }
@@ -78,7 +94,6 @@ export async function GET(req: NextRequest) {
       .map(c => ({ category: c.category, rank: c.bestRank, mentions: c.mentions }))
       .sort((a, b) => b.mentions - a.mentions)
 
-    // Group by competitor
     const competitorMap = new Map<string, number>()
     shoppingData.forEach((item) => {
       if (item.brand) {
@@ -90,7 +105,6 @@ export async function GET(req: NextRequest) {
       .map(([brand, mentions]) => ({ brand, mentions }))
       .sort((a, b) => b.mentions - a.mentions)
 
-    // Group by model
     const modelMap = new Map<string, number>()
     shoppingData.forEach((item) => {
       if (item.model) {
@@ -103,7 +117,7 @@ export async function GET(req: NextRequest) {
       .sort((a, b) => b.mentions - a.mentions)
 
     const shoppingScore = totalMentions > 0 
-      ? Math.min(100, (totalMentions / categories.length) * 25)
+      ? Math.min(100, (totalMentions / Math.max(categories.length, 1)) * 25)
       : 0
 
     // Aggregate Brand data
@@ -133,8 +147,15 @@ export async function GET(req: NextRequest) {
       ? Math.min(100, totalWeightedMentions * 5)
       : 0
 
-    // Aggregate Conversation data
+    // Aggregate Conversation data - THIS IS THE KEY PART
     const conversationData = conversationResults.data || []
+    
+    console.log('🗣️ [API] Processing conversation data:', conversationData.length, 'rows')
+    
+    if (conversationData.length > 0) {
+      console.log('🗣️ [API] Sample conversation row:', conversationData[0])
+    }
+    
     const questions = conversationData.map((q) => ({
       question: q.question,
       intent: q.intent,
@@ -151,6 +172,11 @@ export async function GET(req: NextRequest) {
     })
     
     const volumeIndex = conversationData.reduce((sum, q) => sum + (q.score || 1), 0)
+
+    console.log('🗣️ [API] Conversations transformed:')
+    console.log('  - Questions:', questions.length)
+    console.log('  - Volume Index:', volumeIndex)
+    console.log('  - Intent breakdown:', intentCounts)
 
     // Aggregate Website data
     const websiteData = websiteResults.data || []
@@ -170,7 +196,7 @@ export async function GET(req: NextRequest) {
     const totalPages = Math.max(issues.length, 1)
     const schemaCoverage = Math.round((pagesWithSchema / totalPages) * 100)
 
-    return NextResponse.json({
+    const response = {
       scan,
       shopping: {
         score: Math.round(shoppingScore),
@@ -195,11 +221,15 @@ export async function GET(req: NextRequest) {
         schema_coverage: schemaCoverage,
         issues,
       },
-    })
+    }
+
+    console.log('✅ [API] Returning response with', questions.length, 'questions')
+    
+    return NextResponse.json(response)
   } catch (error) {
-    console.error('Error in GET /api/scan/latest:', error)
+    console.error('💥 [API] Critical error in GET /api/scan/latest:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown' },
       { status: 500 }
     )
   }
