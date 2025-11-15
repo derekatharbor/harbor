@@ -1,5 +1,5 @@
 // lib/optimization/generator.ts
-// Analyzes scan data and determines which tasks to show
+// ENHANCED VERSION - Product-specific analysis
 
 import { OptimizationTask, getTasksForModule, TaskModule } from './tasks'
 
@@ -31,14 +31,75 @@ export interface ShoppingAnalysis {
   }>
 }
 
+export interface ProductInsight {
+  product_name: string
+  categories: string[]
+  avg_rank: number
+  mention_count: number
+  models_present: string[]
+  best_rank: number
+  worst_rank: number
+}
+
 export interface TaskRecommendation {
   task: OptimizationTask
   priority: number // 1-100, higher = more urgent
   context: {
+    affected_products?: ProductInsight[]
     affected_categories?: string[]
     competitor_examples?: string[]
     current_performance?: any
+    product_count?: number
   }
+}
+
+/**
+ * Extract unique products for the user's brand
+ */
+function extractUserProducts(data: ShoppingAnalysis): ProductInsight[] {
+  const userRows = data.raw_results?.filter(r => r.is_user_brand) || []
+  
+  // Group by product name
+  const productMap = new Map<string, ProductInsight>()
+  
+  for (const row of userRows) {
+    const existing = productMap.get(row.product) || {
+      product_name: row.product,
+      categories: [],
+      avg_rank: 0,
+      mention_count: 0,
+      models_present: [],
+      best_rank: 999,
+      worst_rank: 0
+    }
+    
+    // Add category if not present
+    if (!existing.categories.includes(row.category)) {
+      existing.categories.push(row.category)
+    }
+    
+    // Add model if not present
+    if (!existing.models_present.includes(row.model)) {
+      existing.models_present.push(row.model)
+    }
+    
+    // Update ranks
+    existing.best_rank = Math.min(existing.best_rank, row.rank)
+    existing.worst_rank = Math.max(existing.worst_rank, row.rank)
+    existing.mention_count++
+    
+    productMap.set(row.product, existing)
+  }
+  
+  // Calculate average ranks
+  for (const [name, product] of productMap.entries()) {
+    const productRows = userRows.filter(r => r.product === name)
+    const totalRank = productRows.reduce((sum, r) => sum + r.rank, 0)
+    product.avg_rank = totalRank / productRows.length
+  }
+  
+  return Array.from(productMap.values())
+    .sort((a, b) => b.mention_count - a.mention_count)
 }
 
 /**
@@ -48,10 +109,15 @@ export function analyzeShoppingData(data: ShoppingAnalysis): TaskRecommendation[
   const tasks = getTasksForModule('shopping')
   const recommendations: TaskRecommendation[] = []
   
+  // Extract product-specific insights
+  const userProducts = extractUserProducts(data)
+  
+  console.log('🔍 [Analyzer] Found user products:', userProducts.map(p => p.product_name))
+  
   for (const task of tasks) {
     if (task.shouldShow(data)) {
-      const priority = calculatePriority(task, data)
-      const context = buildContext(task, data)
+      const priority = calculatePriority(task, data, userProducts)
+      const context = buildContext(task, data, userProducts)
       
       recommendations.push({
         task,
@@ -68,40 +134,44 @@ export function analyzeShoppingData(data: ShoppingAnalysis): TaskRecommendation[
 /**
  * Calculate task priority based on data analysis
  */
-function calculatePriority(task: OptimizationTask, data: ShoppingAnalysis): number {
+function calculatePriority(
+  task: OptimizationTask, 
+  data: ShoppingAnalysis,
+  products: ProductInsight[]
+): number {
   let priority = 50 // Base priority
   
   switch (task.id) {
     case 'add-product-schema':
-      // Higher priority if mentions are very low
-      if (data.total_mentions < 5) priority = 95
-      else if (data.total_mentions < 10) priority = 85
-      else priority = 70
+      // Higher priority based on number of products + performance
+      const avgRank = products.reduce((sum, p) => sum + p.avg_rank, 0) / (products.length || 1)
+      
+      if (products.length === 0) priority = 100 // No products found!
+      else if (avgRank > 5) priority = 90
+      else if (avgRank > 3) priority = 75
+      else if (products.length > 1) priority = 65 // Multiple products, medium priority
+      else priority = 55 // Maintenance task
       break
       
     case 'enrich-descriptions':
-      // Priority based on how many products appear but rank poorly
-      const userProducts = data.raw_results?.filter(r => r.is_user_brand) || []
-      const avgRank = userProducts.reduce((sum, p) => sum + p.rank, 0) / (userProducts.length || 1)
-      if (avgRank > 5) priority = 80
-      else if (avgRank > 3) priority = 65
-      else priority = 50
+      // Priority based on how many products rank poorly
+      const poorlyRanked = products.filter(p => p.avg_rank > 3)
+      priority = Math.min(90, 50 + (poorlyRanked.length * 10))
       break
       
     case 'add-offers-schema':
-      // Medium priority, but higher if product schema likely exists
-      priority = data.total_mentions > 10 ? 60 : 45
+      // Medium priority if products exist
+      priority = products.length > 0 ? 60 : 45
       break
       
     case 'add-review-schema':
-      // Higher if user has some presence but isn't winning
-      const userMentions = data.total_mentions
-      if (userMentions > 5 && userMentions < 20) priority = 70
-      else priority = 55
+      // Higher if products exist but aren't winning
+      const notWinning = products.filter(p => p.best_rank > 1)
+      priority = Math.min(80, 50 + (notWinning.length * 8))
       break
       
     case 'create-category-pages':
-      // High priority if there are obvious gaps
+      // High priority based on gap size
       const missingCategories = findMissingCategories(data)
       priority = Math.min(90, 50 + (missingCategories.length * 10))
       break
@@ -114,24 +184,44 @@ function calculatePriority(task: OptimizationTask, data: ShoppingAnalysis): numb
 }
 
 /**
- * Build contextual information for each task
+ * Build contextual information for each task - PRODUCT-SPECIFIC
  */
-function buildContext(task: OptimizationTask, data: ShoppingAnalysis): any {
-  const context: any = {}
+function buildContext(
+  task: OptimizationTask, 
+  data: ShoppingAnalysis,
+  products: ProductInsight[]
+): any {
+  const context: any = {
+    product_count: products.length,
+    affected_products: []
+  }
   
   switch (task.id) {
     case 'add-product-schema':
-      context.current_mentions = data.total_mentions
-      context.affected_categories = data.categories.map(c => c.category)
+      // List ALL products that need schema
+      context.affected_products = products
+      context.affected_categories = Array.from(
+        new Set(products.flatMap(p => p.categories))
+      )
+      context.total_mentions = products.reduce((sum, p) => sum + p.mention_count, 0)
       break
       
     case 'enrich-descriptions':
-      const userProducts = data.raw_results?.filter(r => r.is_user_brand) || []
-      context.current_products = userProducts.map(p => ({
-        category: p.category,
-        rank: p.rank,
-        model: p.model
-      }))
+      // List products with poor rankings
+      const needsEnrichment = products.filter(p => p.avg_rank > 3)
+      context.affected_products = needsEnrichment
+      context.avg_rank = needsEnrichment.reduce((sum, p) => sum + p.avg_rank, 0) / (needsEnrichment.length || 1)
+      break
+      
+    case 'add-offers-schema':
+      // All products need this
+      context.affected_products = products
+      break
+      
+    case 'add-review-schema':
+      // Products not ranking #1
+      const notWinning = products.filter(p => p.best_rank > 1)
+      context.affected_products = notWinning
       break
       
     case 'create-category-pages':

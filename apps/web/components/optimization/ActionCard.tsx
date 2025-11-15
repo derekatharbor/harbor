@@ -5,10 +5,26 @@ import { ArrowRight } from 'lucide-react'
 import { OptimizationTask } from '@/lib/optimization/tasks'
 import * as LucideIcons from 'lucide-react'
 
+interface ProductInsight {
+  product_name: string
+  categories: string[]
+  avg_rank: number
+  mention_count: number
+  best_rank: number
+  worst_rank: number
+}
+
 interface ActionCardProps {
   task: OptimizationTask
   onClick: () => void
-  context?: any
+  context?: {
+    affected_products?: ProductInsight[]
+    affected_categories?: string[]
+    product_count?: number
+    missing_categories?: string[]
+    current_mentions?: number
+    [key: string]: any
+  }
 }
 
 export default function ActionCard({ task, onClick, context }: ActionCardProps) {
@@ -33,6 +49,43 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
     }
   }
 
+  // Build smart title with product context
+  const buildSmartTitle = () => {
+    const products = context?.affected_products || []
+    
+    if (products.length === 0) {
+      return task.title // Generic fallback
+    }
+    
+    if (products.length === 1) {
+      return `${task.title} for ${products[0].product_name}`
+    }
+    
+    if (products.length === 2) {
+      return `${task.title} for ${products[0].product_name} and ${products[1].product_name}`
+    }
+    
+    // 3+ products
+    return `${task.title} (${products.length} products)`
+  }
+
+  // Build smart description
+  const buildSmartDescription = () => {
+    const products = context?.affected_products || []
+    
+    if (products.length === 0) {
+      return task.description
+    }
+    
+    if (products.length === 1) {
+      const p = products[0]
+      return `${task.description} • Avg rank: ${p.avg_rank.toFixed(1)} across ${p.categories.length} categories`
+    }
+    
+    const avgRank = products.reduce((sum, p) => sum + p.avg_rank, 0) / products.length
+    return `${task.description} • Avg rank: ${avgRank.toFixed(1)} across ${products.length} products`
+  }
+
   return (
     <div 
       onClick={onClick}
@@ -45,7 +98,7 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-4 mb-2">
           <h3 className="font-heading font-semibold text-primary group-hover:text-[#00C6B7] transition-colors">
-            {task.title}
+            {buildSmartTitle()}
           </h3>
           <span className={`text-xs px-2 py-1 rounded-full ${getImpactBadgeColor(task.impact)} whitespace-nowrap`}>
             {task.impact.toUpperCase()}
@@ -53,26 +106,35 @@ export default function ActionCard({ task, onClick, context }: ActionCardProps) 
         </div>
         
         <p className="text-sm text-secondary/70 mb-3 leading-relaxed">
-          {task.description}
+          {buildSmartDescription()}
         </p>
         
-        {/* Context info if available */}
+        {/* Product-specific context pills */}
         {context && (
           <div className="mb-3 flex flex-wrap gap-2">
-            {context.affected_categories && (
-              <span className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/60">
-                {context.affected_categories.length} categories
-              </span>
+            {context.affected_products && context.affected_products.length > 2 && (
+              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
+                Products: {context.affected_products.slice(0, 2).map(p => p.product_name).join(', ')}
+                {context.affected_products.length > 2 && ` +${context.affected_products.length - 2} more`}
+              </div>
             )}
-            {context.missing_categories && (
-              <span className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/60">
-                {context.missing_categories.length} missing categories
-              </span>
+            
+            {context.affected_categories && context.affected_categories.length > 0 && (
+              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
+                {context.affected_categories.length} {context.affected_categories.length === 1 ? 'category' : 'categories'}
+              </div>
             )}
+            
+            {context.missing_categories && context.missing_categories.length > 0 && (
+              <div className="text-xs px-2 py-1 bg-orange-500/10 border border-orange-500/30 rounded text-orange-400">
+                {context.missing_categories.length} missing {context.missing_categories.length === 1 ? 'category' : 'categories'}
+              </div>
+            )}
+            
             {context.current_mentions !== undefined && (
-              <span className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/60">
+              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
                 {context.current_mentions} current mentions
-              </span>
+              </div>
             )}
           </div>
         )}
