@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import { 
   Building2, Upload, X, Plus, Save, CheckCircle, 
   Package, Target, Globe, Linkedin, Twitter, Facebook, 
-  Instagram, ExternalLink, TrendingUp, AlertCircle, FileText
+  Instagram, ExternalLink, TrendingUp, AlertCircle, FileText, Info
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -229,7 +229,7 @@ export default function BrandSettingsPage() {
   }
 
   const addKeyword = () => {
-    if (!newKeyword.trim() || settings.target_keywords.length >= 10) return
+    if (!newKeyword.trim()) return
     setSettings({
       ...settings,
       target_keywords: [...settings.target_keywords, newKeyword.trim()]
@@ -246,498 +246,499 @@ export default function BrandSettingsPage() {
     setHasChanges(true)
   }
 
+  // Generate lettermark from brand name
+  const generateLettermark = (name: string) => {
+    const initials = name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2)
+    
+    // Generate color from hash of name
+    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const hue = hash % 360
+    
+    return { initials, color: `hsl(${hue}, 45%, 55%)` }
+  }
+
+  const lettermark = !settings.logo_url && settings.brand_name ? generateLettermark(settings.brand_name) : null
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
-        <div className="text-[#F4F6F8] font-body">Loading brand settings...</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-[#0E1623] flex items-center justify-center">
+        <div className="text-gray-600 dark:text-gray-400">Loading...</div>
       </div>
     )
   }
 
   return (
     <>
-      <MobileHeader />
-      
-      <div className="min-h-screen bg-[#101A31] px-6 py-8 lg:px-12 lg:py-12">
-        {/* Header Section - Strong Hierarchy */}
-        <div className="max-w-7xl mx-auto mb-12">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-            {/* Left: Title & Subtext */}
-            <div className="flex-1">
-              <h1 className="text-4xl font-heading font-bold text-white mb-3 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
-                Brand Dashboard
-              </h1>
-              <p className="text-base font-body text-[#F4F6F8]/75 max-w-2xl">
-                Manage your brand identity and power Harbor's AI intelligence.
-              </p>
-            </div>
+      <MobileHeader title="Brand Dashboard" />
+      <div className="min-h-screen bg-[#F7F9FB] dark:bg-[#0E1623] pb-32">
+        {/* Header */}
+        <div className="px-6 pt-8 pb-6">
+          <h1 className="text-3xl font-heading font-bold text-[#0F1C2E] dark:text-white mb-2">
+            Brand Dashboard
+          </h1>
+          <p className="text-sm font-body text-[#444D59] dark:text-white/80">
+            Complete your profile to improve AI analysis accuracy
+          </p>
+        </div>
 
-            {/* Right: AI Readiness Panel - HERO MODULE */}
-            <div className="w-full lg:w-80 bg-[#141E38] rounded-xl border border-white/5 shadow-lg p-6">
-              <div className="flex flex-col items-center text-center">
-                {/* Readiness Ring */}
-                <div className="relative w-32 h-32 mb-4">
-                  <svg className="w-full h-full -rotate-90">
-                    <circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      stroke="rgba(255,255,255,0.08)"
-                      strokeWidth="8"
-                      fill="none"
+        {/* AI Readiness Card - Horizontal Layout */}
+        <div className="px-6 mb-12">
+          <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8">
+              {/* Left: Logo + Ring */}
+              <div className="flex-shrink-0 relative">
+                <svg width="88" height="88" viewBox="0 0 88 88" className="transform -rotate-90">
+                  {/* Base track */}
+                  <circle
+                    cx="44"
+                    cy="44"
+                    r="40"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    className="text-[#E5E7EB] dark:text-white/[0.06]"
+                  />
+                  {/* Progress ring (270° arc) */}
+                  <circle
+                    cx="44"
+                    cy="44"
+                    r="40"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray={`${(score / 100) * 251.2 * 0.75} 251.2`}
+                    className="text-[#2BCFCC] dark:text-[#2BCFCC] transition-all duration-500"
+                  />
+                </svg>
+                {/* Avatar inside ring */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {settings.logo_url ? (
+                    <img
+                      src={settings.logo_url}
+                      alt={settings.brand_name}
+                      className="w-16 h-16 rounded-full object-cover"
                     />
-                    <circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      stroke={score >= 70 ? '#00C6B7' : score >= 40 ? '#2979FF' : '#FF6B4A'}
-                      strokeWidth="8"
-                      fill="none"
-                      strokeDasharray={`${(score / 100) * 351.86} 351.86`}
-                      strokeLinecap="round"
-                      className="transition-all duration-500"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-3xl font-heading font-bold text-white">{score}%</span>
-                  </div>
+                  ) : lettermark ? (
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center text-white font-heading font-bold text-xl"
+                      style={{ backgroundColor: lettermark.color }}
+                    >
+                      {lettermark.initials}
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <Building2 className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                {/* Label */}
-                <h3 className="text-lg font-heading font-semibold text-white mb-2">
+              {/* Middle: Score + Messaging */}
+              <div className="flex-1">
+                <h2 className="text-base font-heading font-semibold text-[#0F1C2E] dark:text-white mb-1">
                   AI Readiness Profile
-                </h3>
-                
-                {/* Description */}
-                <p className="text-sm font-body text-[#F4F6F8]/60 mb-4 leading-relaxed">
-                  Complete your profile to improve how AI engines understand and represent your brand.
-                </p>
-
-                {/* Progress Footer */}
-                <div className="w-full pt-4 border-t border-white/5">
-                  <div className="flex items-center justify-between text-xs font-body">
-                    <span className="text-[#F4F6F8]/50">Brand Profile</span>
-                    <span className="text-[#F4F6F8]/75 font-medium">{score}% complete</span>
-                  </div>
-                  <div className="mt-2 text-xs text-[#F4F6F8]/50">
-                    {itemsRemaining} {itemsRemaining === 1 ? 'item' : 'items'} remaining
-                  </div>
+                </h2>
+                <div className="text-5xl font-heading font-bold text-[#0F1C2E] dark:text-white mb-2">
+                  {score}%
                 </div>
+                <p className="text-sm font-body text-[#444D59] dark:text-white/80 mb-1">
+                  Your profile helps Harbor analyze your brand with higher accuracy.
+                </p>
+                <p className="text-xs font-body text-[#444D59] dark:text-white/60">
+                  {score}% complete · {itemsRemaining} {itemsRemaining === 1 ? 'item' : 'items'} remaining
+                </p>
+              </div>
+
+              {/* Right: Actions */}
+              <div className="flex-shrink-0">
+                <button className="text-sm font-body text-[#2979FF] hover:text-[#1E5FCC] dark:text-[#2979FF] dark:hover:text-[#4A8FFF] transition-colors">
+                  View Checklist
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="max-w-7xl mx-auto space-y-12">
-          
-          {/* SECTION 1: Brand Identity - Major Card */}
-          <section className="bg-[#141E38] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-            {/* Section Header */}
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Building2 className="w-6 h-6 text-[#FF6B4A]" strokeWidth={1.5} />
-                <div>
-                  <h2 className="text-2xl font-heading font-semibold text-white">Brand Identity</h2>
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mt-1">
-                    Core details used to understand your brand.
-                  </p>
+        <div className="px-6 space-y-12">
+          {/* Brand Identity */}
+          <section>
+            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <Building2 className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
+                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                  Brand Identity
+                </h2>
               </div>
-            </div>
 
-            {/* Section Content - Grid Layout */}
-            <div className="p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                {/* Left Column: Logo Block */}
-                <div className="lg:col-span-1">
-                  <div className="bg-[#101A31] rounded-lg border border-white/5 p-6 h-full flex flex-col items-center justify-center text-center">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Logo Upload */}
+                <div className="lg:col-span-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-3">
+                    Brand Logo
+                  </label>
+                  <div className="flex items-center gap-4">
                     {settings.logo_url ? (
-                      <div className="w-full">
-                        <img 
-                          src={settings.logo_url} 
-                          alt="Brand logo" 
-                          className="w-32 h-32 object-contain mx-auto mb-4 rounded-lg"
-                        />
-                        <button
-                          onClick={triggerFileInput}
-                          className="text-sm font-body text-[#2979FF] hover:text-[#FF6B4A] transition-colors cursor-pointer"
-                        >
-                          Change Logo
-                        </button>
+                      <img
+                        src={settings.logo_url}
+                        alt="Brand logo"
+                        className="w-20 h-20 rounded-lg object-cover border border-[#E5E7EB] dark:border-white/6"
+                      />
+                    ) : lettermark ? (
+                      <div
+                        className="w-20 h-20 rounded-lg flex items-center justify-center text-white font-heading font-bold text-2xl border border-[#E5E7EB] dark:border-white/6"
+                        style={{ backgroundColor: lettermark.color }}
+                      >
+                        {lettermark.initials}
                       </div>
                     ) : (
-                      <div className="w-full">
-                        <div className="w-32 h-32 mx-auto mb-4 bg-[#141E38] rounded-lg border-2 border-dashed border-white/10 flex items-center justify-center">
-                          <Upload className="w-12 h-12 text-[#F4F6F8]/30" strokeWidth={1.5} />
-                        </div>
-                        <button
-                          onClick={triggerFileInput}
-                          className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6B4A] hover:bg-[#FF7A59] text-white font-body text-sm rounded-lg transition-all cursor-pointer"
-                        >
-                          <Upload className="w-4 h-4" strokeWidth={2} />
-                          Upload Logo
-                        </button>
-                        <p className="text-xs font-body text-[#F4F6F8]/40 mt-3">
-                          PNG or JPG, max 2MB
-                        </p>
+                      <div className="w-20 h-20 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-dashed border-[#E3E5E8] dark:border-white/10 flex items-center justify-center">
+                        <Upload className="w-8 h-8 text-[#444D59] dark:text-white/40" strokeWidth={1.5} />
                       </div>
                     )}
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleLogoUpload}
-                      className="hidden"
-                    />
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                      <button
+                        onClick={triggerFileInput}
+                        className="px-5 py-2.5 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer"
+                      >
+                        Upload Logo
+                      </button>
+                      <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-2">
+                        PNG or SVG recommended
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Column: Core Info - Two-Column Grid */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Row 1: Brand Name | Domain */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                        Brand Name
-                      </label>
-                      <input
-                        type="text"
-                        value={settings.brand_name}
-                        onChange={(e) => {
-                          setSettings({ ...settings, brand_name: e.target.value })
-                          setHasChanges(true)
-                        }}
-                        className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                        placeholder="Your brand name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                        Primary Domain
-                      </label>
-                      <input
-                        type="text"
-                        value={settings.domain}
-                        onChange={(e) => {
-                          setSettings({ ...settings, domain: e.target.value })
-                          setHasChanges(true)
-                        }}
-                        className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                        placeholder="yourbrand.com"
-                      />
-                    </div>
-                  </div>
+                {/* Brand Name */}
+                <div>
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Brand Name
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.brand_name}
+                    onChange={(e) => {
+                      setSettings({ ...settings, brand_name: e.target.value })
+                      setHasChanges(true)
+                    }}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="Your brand name"
+                  />
+                </div>
 
-                  {/* Row 2: Industry | Founding Year */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                        Industry
-                      </label>
-                      <input
-                        type="text"
-                        value={settings.category}
-                        onChange={(e) => {
-                          setSettings({ ...settings, category: e.target.value })
-                          setHasChanges(true)
-                        }}
-                        className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                        placeholder="E.g. Business Credit Cards, SaaS Tools"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                        Founding Year
-                      </label>
-                      <input
-                        type="text"
-                        value={settings.founding_year}
-                        onChange={(e) => {
-                          setSettings({ ...settings, founding_year: e.target.value })
-                          setHasChanges(true)
-                        }}
-                        className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                        placeholder="2020"
-                      />
-                    </div>
-                  </div>
+                {/* Domain */}
+                <div>
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Domain
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.domain}
+                    onChange={(e) => {
+                      setSettings({ ...settings, domain: e.target.value })
+                      setHasChanges(true)
+                    }}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="yourbrand.com"
+                  />
+                </div>
 
-                  {/* Row 3: Headquarters (Full Width) */}
-                  <div>
-                    <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                      Headquarters
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.headquarters}
-                      onChange={(e) => {
-                        setSettings({ ...settings, headquarters: e.target.value })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                      placeholder="San Francisco, CA"
-                    />
-                  </div>
+                {/* Category */}
+                <div>
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.category}
+                    onChange={(e) => {
+                      setSettings({ ...settings, category: e.target.value })
+                      setHasChanges(true)
+                    }}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="e.g., SaaS, E-commerce"
+                  />
+                </div>
 
-                  {/* Row 4: Brand Description (Full Width, Larger) */}
-                  <div>
-                    <label className="block text-xs font-body text-[#F4F6F8]/75 uppercase tracking-wide mb-2">
-                      Brand Description
-                    </label>
-                    <textarea
-                      value={settings.description}
-                      onChange={(e) => {
+                {/* Founding Year */}
+                <div>
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Founding Year
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.founding_year}
+                    onChange={(e) => {
+                      setSettings({ ...settings, founding_year: e.target.value })
+                      setHasChanges(true)
+                    }}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="2020"
+                  />
+                </div>
+
+                {/* Headquarters */}
+                <div className="lg:col-span-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Headquarters
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.headquarters}
+                    onChange={(e) => {
+                      setSettings({ ...settings, headquarters: e.target.value })
+                      setHasChanges(true)
+                    }}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="San Francisco, CA"
+                  />
+                </div>
+
+                {/* Brand Description */}
+                <div className="lg:col-span-2">
+                  <label className="block text-xs font-body uppercase tracking-wide text-[#444D59] dark:text-white/75 mb-2">
+                    Brand Description
+                  </label>
+                  <textarea
+                    value={settings.description}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 150) {
                         setSettings({ ...settings, description: e.target.value })
                         setHasChanges(true)
-                      }}
-                      rows={4}
-                      className="w-full px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors resize-none"
-                      placeholder="Brief description of what your brand does and stands for. Minimum 50 characters."
-                    />
-                    <div className="mt-2 text-xs font-body text-[#F4F6F8]/40">
-                      {settings.description.length} / 50 characters minimum
-                    </div>
+                      }
+                    }}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors resize-none"
+                    placeholder="Concise description for AI schema (max 150 characters)"
+                  />
+                  <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-1 text-right">
+                    {settings.description.length}/150
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Products & Services */}
+          <section>
+            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <Package className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
+                </div>
+                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                  Products & Services
+                </h2>
+                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
+                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+                </button>
+              </div>
+
+              <div className="mb-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newProduct}
+                    onChange={(e) => setNewProduct(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addProduct()}
+                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="Add a product or service"
+                  />
+                  <button
+                    onClick={addProduct}
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" strokeWidth={2.5} />
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {settings.products.map((product, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                  >
+                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{product}</span>
+                    <button
+                      onClick={() => removeProduct(index)}
+                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                    </button>
                   </div>
-                </div>
+                ))}
+                {settings.products.length === 0 && (
+                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                    No products added yet
+                  </p>
+                )}
               </div>
             </div>
           </section>
 
-          {/* SECTION 2: Products & Services */}
-          <section className="bg-[#141E38] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Package className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-                <div>
-                  <h2 className="text-2xl font-heading font-semibold text-white">Products & Services</h2>
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mt-1">
-                    Add products to improve category coverage in AI responses.
-                  </p>
+          {/* Competitors to Track */}
+          <section>
+            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-              </div>
-            </div>
-
-            <div className="p-8">
-              {/* Add Product Input */}
-              <div className="flex gap-3 mb-6">
-                <input
-                  type="text"
-                  value={newProduct}
-                  onChange={(e) => setNewProduct(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addProduct()}
-                  className="flex-1 px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                  placeholder="Product or service name"
-                />
-                <button
-                  onClick={addProduct}
-                  className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" strokeWidth={2} />
-                  Add
+                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                  Competitors to Track
+                </h2>
+                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
+                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
-              {/* Product List */}
-              {settings.products.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {settings.products.map((product, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg group hover:border-white/10 transition-all"
+              <div className="mb-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCompetitor}
+                    onChange={(e) => setNewCompetitor(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addCompetitor()}
+                    disabled={settings.competitors.length >= 5}
+                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    placeholder={settings.competitors.length >= 5 ? 'Maximum 5 competitors' : 'Add a competitor'}
+                  />
+                  <button
+                    onClick={addCompetitor}
+                    disabled={settings.competitors.length >= 5}
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Plus className="w-4 h-4" strokeWidth={2.5} />
+                    Add
+                  </button>
+                </div>
+                <p className="text-xs font-body text-[#444D59] dark:text-white/60 mt-2">
+                  {settings.competitors.length}/5 competitors added
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {settings.competitors.map((competitor, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                  >
+                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{competitor}</span>
+                    <button
+                      onClick={() => removeCompetitor(index)}
+                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
                     >
-                      <span className="text-sm font-body text-white">{product}</span>
-                      <button
-                        onClick={() => removeProduct(index)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                      >
-                        <X className="w-4 h-4 text-[#F4F6F8]/60 hover:text-[#FF6B4A]" strokeWidth={2} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-[#101A31] rounded-lg border border-white/5">
-                  <Package className="w-12 h-12 text-[#F4F6F8]/20 mx-auto mb-4" strokeWidth={1.5} />
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mb-1">
-                    No products added yet.
+                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                    </button>
+                  </div>
+                ))}
+                {settings.competitors.length === 0 && (
+                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                    No competitors added yet
                   </p>
-                  <p className="text-xs font-body text-[#F4F6F8]/40">
-                    Adding at least one helps Harbor understand your category coverage.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </section>
 
-          {/* SECTION 3: Competitors to Track */}
-          <section className="bg-[#141E38] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-[#2979FF]" strokeWidth={1.5} />
-                <div>
-                  <h2 className="text-2xl font-heading font-semibold text-white">Competitors to Track</h2>
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mt-1">
-                    Track up to 5 competitors to compare category coverage.
-                  </p>
+          {/* Target Keywords */}
+          <section>
+            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-              </div>
-            </div>
-
-            <div className="p-8">
-              <div className="flex gap-3 mb-6">
-                <input
-                  type="text"
-                  value={newCompetitor}
-                  onChange={(e) => setNewCompetitor(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addCompetitor()}
-                  disabled={settings.competitors.length >= 5}
-                  className="flex-1 px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="Competitor name"
-                />
-                <button
-                  onClick={addCompetitor}
-                  disabled={settings.competitors.length >= 5}
-                  className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] disabled:bg-[#F4F6F8]/20 disabled:cursor-not-allowed text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" strokeWidth={2} />
-                  Add
+                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                  Target Keywords
+                </h2>
+                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
+                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-body text-[#F4F6F8]/50">
-                  {settings.competitors.length} / 5 competitors
-                </span>
+              <div className="mb-4">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
+                    className="flex-1 px-4 py-3 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
+                    placeholder="Add a target keyword"
+                  />
+                  <button
+                    onClick={addKeyword}
+                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] dark:bg-[#FF6A4A] dark:hover:bg-[#E55A3A] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" strokeWidth={2.5} />
+                    Add
+                  </button>
+                </div>
               </div>
 
-              {settings.competitors.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {settings.competitors.map((competitor, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg group hover:border-white/10 transition-all"
+              <div className="flex flex-wrap gap-2">
+                {settings.target_keywords.map((keyword, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#F7F9FB] dark:bg-[#0F1B2C] border border-[#E5E7EB] dark:border-white/6 rounded-lg"
+                  >
+                    <span className="text-sm font-body text-[#0F1C2E] dark:text-white">{keyword}</span>
+                    <button
+                      onClick={() => removeKeyword(index)}
+                      className="p-0.5 hover:bg-[#E5E7EB] dark:hover:bg-white/10 rounded transition-colors cursor-pointer"
                     >
-                      <span className="text-sm font-body text-white">{competitor}</span>
-                      <button
-                        onClick={() => removeCompetitor(index)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                      >
-                        <X className="w-4 h-4 text-[#F4F6F8]/60 hover:text-[#FF6B4A]" strokeWidth={2} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-[#101A31] rounded-lg border border-white/5">
-                  <TrendingUp className="w-12 h-12 text-[#F4F6F8]/20 mx-auto mb-4" strokeWidth={1.5} />
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mb-1">
-                    No competitors tracked yet.
+                      <X className="w-3.5 h-3.5 text-[#444D59] dark:text-white/60" strokeWidth={2} />
+                    </button>
+                  </div>
+                ))}
+                {settings.target_keywords.length === 0 && (
+                  <p className="text-sm font-body text-[#444D59] dark:text-white/60">
+                    No keywords added yet
                   </p>
-                  <p className="text-xs font-body text-[#F4F6F8]/40">
-                    Compare your brand model coverage against your category.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </section>
 
-          {/* SECTION 4: Target Keywords */}
-          <section className="bg-[#141E38] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Target className="w-6 h-6 text-[#FF6B4A]" strokeWidth={1.5} />
-                <div>
-                  <h2 className="text-2xl font-heading font-semibold text-white">Target Keywords</h2>
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mt-1">
-                    Signals your brand is commonly associated with or should be.
-                  </p>
+          {/* Social & Authority Links */}
+          <section>
+            <div className="bg-white dark:bg-[#162234] border border-[#E5E7EB] dark:border-white/6 rounded-xl shadow-sm dark:shadow-none p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-[#F7F9FB] dark:bg-[#0E1623] border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-              </div>
-            </div>
-
-            <div className="p-8">
-              <div className="flex gap-3 mb-6">
-                <input
-                  type="text"
-                  value={newKeyword}
-                  onChange={(e) => setNewKeyword(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
-                  disabled={settings.target_keywords.length >= 10}
-                  className="flex-1 px-4 py-3 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="Keyword or phrase"
-                />
-                <button
-                  onClick={addKeyword}
-                  disabled={settings.target_keywords.length >= 10}
-                  className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] disabled:bg-[#F4F6F8]/20 disabled:cursor-not-allowed text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" strokeWidth={2} />
-                  Add
+                <h2 className="text-xl font-heading font-bold text-[#0F1C2E] dark:text-white">
+                  Social & Authority Links
+                </h2>
+                <button className="ml-auto p-1.5 hover:bg-[#F7F9FB] dark:hover:bg-[#0E1623] rounded-lg transition-colors group">
+                  <Info className="w-4 h-4 text-[#444D59] dark:text-white/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
                 </button>
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-body text-[#F4F6F8]/50">
-                  {settings.target_keywords.length} / 10 keywords
-                </span>
-              </div>
-
-              {settings.target_keywords.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {settings.target_keywords.map((keyword, index) => (
-                    <div
-                      key={index}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#101A31] border border-white/5 rounded-full group hover:border-white/10 transition-all"
-                    >
-                      <span className="text-sm font-body text-white">{keyword}</span>
-                      <button
-                        onClick={() => removeKeyword(index)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5 text-[#F4F6F8]/60 hover:text-[#FF6B4A]" strokeWidth={2} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12 bg-[#101A31] rounded-lg border border-white/5">
-                  <Target className="w-12 h-12 text-[#F4F6F8]/20 mx-auto mb-4" strokeWidth={1.5} />
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mb-1">
-                    No keywords added yet.
-                  </p>
-                  <p className="text-xs font-body text-[#F4F6F8]/40">
-                    Harbor uses these when analyzing AI conversation topics.
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          {/* SECTION 5: Social & Authority Links */}
-          <section className="bg-[#141E38] rounded-xl border border-white/5 shadow-xl overflow-hidden">
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Globe className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-                <div>
-                  <h2 className="text-2xl font-heading font-semibold text-white">Social & Authority Links</h2>
-                  <p className="text-sm font-body text-[#F4F6F8]/60 mt-1">
-                    Used for organization schema and cross-model brand validation.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* LinkedIn */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
                     <Linkedin className="w-5 h-5 text-[#0A66C2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">LinkedIn</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">LinkedIn</label>
                     <input
                       type="url"
                       value={settings.social_links.linkedin || ''}
@@ -748,7 +749,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="linkedin.com/company/..."
                     />
                   </div>
@@ -756,11 +757,11 @@ export default function BrandSettingsPage() {
 
                 {/* Twitter */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
                     <Twitter className="w-5 h-5 text-[#1DA1F2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Twitter / X</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Twitter / X</label>
                     <input
                       type="url"
                       value={settings.social_links.twitter || ''}
@@ -771,7 +772,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="twitter.com/..."
                     />
                   </div>
@@ -779,11 +780,11 @@ export default function BrandSettingsPage() {
 
                 {/* Facebook */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
                     <Facebook className="w-5 h-5 text-[#1877F2]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Facebook</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Facebook</label>
                     <input
                       type="url"
                       value={settings.social_links.facebook || ''}
@@ -794,7 +795,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="facebook.com/..."
                     />
                   </div>
@@ -802,11 +803,11 @@ export default function BrandSettingsPage() {
 
                 {/* Instagram */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
                     <Instagram className="w-5 h-5 text-[#E4405F]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Instagram</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Instagram</label>
                     <input
                       type="url"
                       value={settings.social_links.instagram || ''}
@@ -817,7 +818,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="instagram.com/..."
                     />
                   </div>
@@ -825,11 +826,11 @@ export default function BrandSettingsPage() {
 
                 {/* Crunchbase */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
                     <ExternalLink className="w-5 h-5 text-[#0288D1]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Crunchbase</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Crunchbase</label>
                     <input
                       type="url"
                       value={settings.social_links.crunchbase || ''}
@@ -840,7 +841,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="crunchbase.com/organization/..."
                     />
                   </div>
@@ -848,11 +849,11 @@ export default function BrandSettingsPage() {
 
                 {/* Wikipedia */}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
-                    <ExternalLink className="w-5 h-5 text-[#F4F6F8]" strokeWidth={1.5} />
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                    <ExternalLink className="w-5 h-5 text-[#444D59] dark:text-[#F4F6F8]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Wikipedia</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Wikipedia</label>
                     <input
                       type="url"
                       value={settings.social_links.wikipedia || ''}
@@ -863,7 +864,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="en.wikipedia.org/wiki/..."
                     />
                   </div>
@@ -871,11 +872,11 @@ export default function BrandSettingsPage() {
 
                 {/* Press Kit */}
                 <div className="flex items-center gap-4 lg:col-span-2">
-                  <div className="flex-shrink-0 w-10 h-10 bg-[#101A31] rounded-lg border border-white/5 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
+                  <div className="flex-shrink-0 w-10 h-10 bg-[#F7F9FB] dark:bg-[#0E1623] rounded-lg border border-[#E5E7EB] dark:border-white/6 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-body text-[#F4F6F8]/50 mb-1">Press Kit URL</label>
+                    <label className="block text-xs font-body text-[#444D59] dark:text-white/50 mb-1">Press Kit URL</label>
                     <input
                       type="url"
                       value={settings.social_links.press_kit || ''}
@@ -886,7 +887,7 @@ export default function BrandSettingsPage() {
                         })
                         setHasChanges(true)
                       }}
-                      className="w-full px-3 py-2 bg-[#101A31] border border-white/5 rounded-lg text-white font-body text-sm focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                      className="w-full px-3 py-2 bg-white dark:bg-[#0F1B2C] border border-[#E3E5E8] dark:border-white/10 rounded-lg text-[#0F1C2E] dark:text-white font-body text-sm focus:outline-none focus:border-[#2BCFCC] dark:focus:border-[#2BCFCC] transition-colors"
                       placeholder="yourbrand.com/press"
                     />
                   </div>
@@ -898,9 +899,9 @@ export default function BrandSettingsPage() {
 
         {/* Success Toast */}
         {saveSuccess && (
-          <div className="fixed top-24 right-6 bg-[#141E38] border border-[#00C6B7] rounded-lg shadow-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-5 z-50">
-            <CheckCircle className="w-5 h-5 text-[#00C6B7]" strokeWidth={2} />
-            <span className="text-sm font-body text-white font-medium">Changes saved.</span>
+          <div className="fixed top-24 right-6 bg-white dark:bg-[#141E38] border border-[#2BCFCC] dark:border-[#2BCFCC] rounded-lg shadow-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-5 z-50">
+            <CheckCircle className="w-5 h-5 text-[#2BCFCC]" strokeWidth={2} />
+            <span className="text-sm font-body text-[#0F1C2E] dark:text-white font-medium">Changes saved.</span>
           </div>
         )}
 
@@ -912,7 +913,7 @@ export default function BrandSettingsPage() {
               disabled={saving}
               className="
                 flex items-center gap-3 px-8 py-4
-                bg-[#FF6B4A] hover:bg-[#FF7A59]
+                bg-[#FF6A4A] hover:bg-[#FF7A59]
                 disabled:opacity-50 disabled:cursor-not-allowed
                 text-white font-heading font-semibold text-base
                 rounded-lg
