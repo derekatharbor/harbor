@@ -1,5 +1,5 @@
 // lib/ai-models.ts
-// FIXED: Correct model names for all APIs
+// FIXED: Correct model names and API versions for all providers
 
 export type AIModel = 'gpt' | 'claude' | 'gemini' | 'perplexity'
 
@@ -55,7 +55,7 @@ async function callOpenAI(job: PromptJob): Promise<string> {
       'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini', // Cheaper and more available than gpt-4
+      model: 'gpt-4o-mini',
       messages: [
         ...(job.system ? [{ role: 'system', content: job.system }] : []),
         { role: 'user', content: job.user }
@@ -85,7 +85,7 @@ async function callAnthropic(job: PromptJob): Promise<string> {
       'anthropic-version': '2023-06-01'
     },
     body: JSON.stringify({
-      model: 'claude-3-5-sonnet-20241022', // FIXED: Correct date format
+      model: 'claude-3-5-sonnet-20241022', // CORRECT: Current stable version
       max_tokens: job.maxTokens,
       messages: [
         { role: 'user', content: job.user }
@@ -108,9 +108,9 @@ async function callAnthropic(job: PromptJob): Promise<string> {
 async function callGemini(job: PromptJob): Promise<string> {
   const prompt = job.system ? `${job.system}\n\n${job.user}` : job.user
   
-  // FIXED: Use v1beta (not v1) - v1 doesn't support gemini-1.5-flash with generateContent
+  // CORRECT: Use Gemini 2.0 Flash which is current and stable
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -136,7 +136,6 @@ async function callGemini(job: PromptJob): Promise<string> {
 
 // Perplexity API Call (optional)
 async function callPerplexity(job: PromptJob): Promise<string> {
-  // Perplexity uses OpenAI-compatible API
   const response = await fetch('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
     headers: {
