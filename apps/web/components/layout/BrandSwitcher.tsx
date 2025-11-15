@@ -48,9 +48,17 @@ export default function BrandSwitcher() {
           className="w-full p-3 hover:bg-white/3 transition-colors"
         >
           <div className="flex items-center gap-3">
-            {/* Brand Logo Placeholder */}
-            <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
-              <Building2 className="w-5 h-5 text-softgray/50" strokeWidth={1.5} />
+            {/* Brand Logo */}
+            <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {currentDashboard.logo_url ? (
+                <img 
+                  src={currentDashboard.logo_url} 
+                  alt={`${currentDashboard.brand_name} logo`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Building2 className="w-5 h-5 text-softgray/50" strokeWidth={1.5} />
+              )}
             </div>
             
             {/* Brand Info */}
@@ -89,9 +97,17 @@ export default function BrandSwitcher() {
                       }}
                       className="w-full px-3 py-2.5 flex items-center gap-3 text-softgray/60 hover:text-white hover:bg-white/3 transition-colors"
                     >
-                      {/* Brand Logo Placeholder */}
-                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
-                        <Building2 className="w-4 h-4 text-softgray/40" strokeWidth={1.5} />
+                      {/* Brand Logo */}
+                      <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {dashboard.logo_url ? (
+                          <img 
+                            src={dashboard.logo_url} 
+                            alt={`${dashboard.brand_name} logo`}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Building2 className="w-4 h-4 text-softgray/40" strokeWidth={1.5} />
+                        )}
                       </div>
                       
                       {/* Brand Info */}
