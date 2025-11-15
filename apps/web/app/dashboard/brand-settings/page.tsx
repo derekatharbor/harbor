@@ -256,7 +256,7 @@ export default function BrandSettingsPage() {
 
   return (
     <>
-      <MobileHeader title="Brand Dashboard" />
+      <MobileHeader />
       
       <div className="min-h-screen bg-[#101A31] px-6 py-8 lg:px-12 lg:py-12">
         {/* Header Section - Strong Hierarchy */}
