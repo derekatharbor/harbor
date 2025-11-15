@@ -109,9 +109,9 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-background rounded-xl border border-border shadow-2xl">
+      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-card rounded-xl border border-border shadow-2xl">
         {/* Header */}
-        <div className="sticky top-0 bg-background border-b border-border p-6 flex items-start justify-between">
+        <div className="sticky top-0 bg-card border-b border-border p-6 flex items-start justify-between">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-lg bg-[#00C6B7]/10 flex items-center justify-center flex-shrink-0">
               <IconComponent className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
@@ -301,7 +301,7 @@ export default function ActionModal({ isOpen, onClose, task, dashboardId, brandN
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-background border-t border-border p-6 flex items-center justify-between">
+        <div className="sticky bottom-0 bg-card border-t border-border p-6 flex items-center justify-between">
           <a
             href="https://docs.harbor.com/help"
             target="_blank"
