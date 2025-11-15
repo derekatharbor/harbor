@@ -361,9 +361,7 @@ export default function BrandSettingsPage() {
                           className="w-32 h-32 object-contain mx-auto mb-4 rounded-lg"
                         />
                         <button
-  style={{ cursor: "pointer" }}
                           onClick={triggerFileInput}
-    style={{ cursor: "pointer" }}
                           className="text-sm font-body text-[#2979FF] hover:text-[#FF6B4A] transition-colors cursor-pointer"
                         >
                           Change Logo
@@ -375,9 +373,7 @@ export default function BrandSettingsPage() {
                           <Upload className="w-12 h-12 text-[#F4F6F8]/30" strokeWidth={1.5} />
                         </div>
                         <button
-  style={{ cursor: "pointer" }}
                           onClick={triggerFileInput}
-    style={{ cursor: "pointer" }}
                           className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6B4A] hover:bg-[#FF7A59] text-white font-body text-sm rounded-lg transition-all cursor-pointer"
                         >
                           <Upload className="w-4 h-4" strokeWidth={2} />
@@ -535,7 +531,6 @@ export default function BrandSettingsPage() {
                   placeholder="Product or service name"
                 />
                 <button
-  style={{ cursor: "pointer" }}
                   onClick={addProduct}
                   className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2 cursor-pointer"
                 >
@@ -554,7 +549,6 @@ export default function BrandSettingsPage() {
                     >
                       <span className="text-sm font-body text-white">{product}</span>
                       <button
-  style={{ cursor: "pointer" }}
                         onClick={() => removeProduct(index)}
                         className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                       >
@@ -603,7 +597,6 @@ export default function BrandSettingsPage() {
                   placeholder="Competitor name"
                 />
                 <button
-  style={{ cursor: "pointer" }}
                   onClick={addCompetitor}
                   disabled={settings.competitors.length >= 5}
                   className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] disabled:bg-[#F4F6F8]/20 disabled:cursor-not-allowed text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2"
@@ -628,7 +621,6 @@ export default function BrandSettingsPage() {
                     >
                       <span className="text-sm font-body text-white">{competitor}</span>
                       <button
-  style={{ cursor: "pointer" }}
                         onClick={() => removeCompetitor(index)}
                         className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                       >
@@ -677,7 +669,6 @@ export default function BrandSettingsPage() {
                   placeholder="Keyword or phrase"
                 />
                 <button
-  style={{ cursor: "pointer" }}
                   onClick={addKeyword}
                   disabled={settings.target_keywords.length >= 10}
                   className="px-6 py-3 bg-[#FF6B4A] hover:bg-[#FF7A59] disabled:bg-[#F4F6F8]/20 disabled:cursor-not-allowed text-white font-body font-medium text-sm rounded-lg transition-all flex items-center gap-2"
@@ -702,7 +693,6 @@ export default function BrandSettingsPage() {
                     >
                       <span className="text-sm font-body text-white">{keyword}</span>
                       <button
-  style={{ cursor: "pointer" }}
                         onClick={() => removeKeyword(index)}
                         className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                       >
@@ -918,7 +908,6 @@ export default function BrandSettingsPage() {
         {hasChanges && (
           <div className="fixed bottom-8 right-8 z-50">
             <button
-  style={{ cursor: "pointer" }}
               onClick={handleSave}
               disabled={saving}
               className="
