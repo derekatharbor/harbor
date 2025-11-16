@@ -3,9 +3,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Star, TrendingUp, MessageSquare, Users, Target, ArrowRight } from 'lucide-react'
+import { Star, TrendingUp, MessageSquare, Users, Target } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
-import UniversalScanButton from '@/components/scan/UniversalScanButton'
+import ActionCard from '@/components/optimization/ActionCard'
+import ActionModal from '@/components/optimization/ActionModal'
+import { analyzeBrandData, TaskRecommendation } from '@/lib/optimization/generator'
+import { OptimizationTask } from '@/lib/optimization/tasks'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -32,6 +35,11 @@ export default function BrandVisibilityPage() {
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  
+  // NEW: State for recommendations
+  const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
+  const [selectedTask, setSelectedTask] = useState<OptimizationTask | null>(null)
+  const [showActionModal, setShowActionModal] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -56,6 +64,13 @@ export default function BrandVisibilityPage() {
         
         // Map brand data from API
         setData(result.brand)
+        
+        // NEW: Generate recommendations if we have brand data
+        if (result.brand) {
+          const tasks = analyzeBrandData(result.brand)
+          setRecommendations(tasks)
+          console.log('📋 [Brand] Recommendations:', tasks.length)
+        }
       } catch (error) {
         console.error('Error fetching brand data:', error)
       } finally {
@@ -292,37 +307,55 @@ export default function BrandVisibilityPage() {
         </div>
       </div>
 
-      {/* Optimize Section */}
+      {/* UPDATED: Optimize Section with ActionCards */}
       <div className="bg-card rounded-lg border border-border">
         <div className="p-6 border-b border-border">
           <h2 className="text-xl font-heading font-bold text-primary">
             Optimize Brand Visibility
           </h2>
           <p className="text-sm text-secondary/60 mt-1">
-            Actions to improve brand perception
+            {recommendations.length > 0 
+              ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve brand perception`
+              : 'Actions to improve brand perception'}
           </p>
         </div>
         <div className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#4EE4FF]/30 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-[#4EE4FF]/10 flex items-center justify-center flex-shrink-0">
-                <Star className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-heading font-semibold text-primary mb-1">
-                  Add Organization Schema
-                </h3>
-                <p className="text-sm text-secondary/70 mb-3">
-                  Implement Organization JSON-LD with brand description, logo, and social links to help AI understand your brand.
-                </p>
-                <button className="text-sm text-[#4EE4FF] hover:underline font-medium inline-flex items-center gap-1">
-                  Learn how <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+          {recommendations.length > 0 ? (
+            <div className="space-y-4">
+              {recommendations.slice(0, 5).map((rec) => (
+                <ActionCard
+                  key={rec.task.id}
+                  task={rec.task}
+                  onClick={() => {
+                    setSelectedTask(rec.task)
+                    setShowActionModal(true)
+                  }}
+                  context={rec.context}
+                />
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="text-center py-8 text-secondary/60">
+              <p className="mb-2">No specific recommendations at this time.</p>
+              <p className="text-sm">Run another scan after implementing changes to see updated suggestions.</p>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Action Modal */}
+      {selectedTask && (
+        <ActionModal
+          isOpen={showActionModal}
+          onClose={() => {
+            setShowActionModal(false)
+            setSelectedTask(null)
+          }}
+          task={selectedTask}
+          dashboardId={currentDashboard?.id || ''}
+          brandName={currentDashboard?.brand_name || ''}
+        />
+      )}
 
       <ScanProgressModal
         isOpen={showScanModal}

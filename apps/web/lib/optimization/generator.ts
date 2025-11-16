@@ -1,5 +1,5 @@
 // lib/optimization/generator.ts
-// ENHANCED VERSION - Product-specific analysis
+// ENHANCED VERSION - Product-specific analysis + Brand analysis
 
 import { OptimizationTask, getTasksForModule, TaskModule } from './tasks'
 
@@ -31,6 +31,21 @@ export interface ShoppingAnalysis {
   }>
 }
 
+export interface BrandAnalysis {
+  visibility_index: number
+  descriptors: Array<{
+    word: string
+    sentiment: string
+    weight: number
+  }>
+  sentiment_breakdown: {
+    positive: number
+    neutral: number
+    negative: number
+  }
+  total_mentions: number
+}
+
 export interface ProductInsight {
   product_name: string
   categories: string[]
@@ -52,6 +67,10 @@ export interface TaskRecommendation {
     product_count?: number
   }
 }
+
+// ============================================================================
+// SHOPPING ANALYSIS
+// ============================================================================
 
 /**
  * Extract unique products for the user's brand
@@ -116,8 +135,8 @@ export function analyzeShoppingData(data: ShoppingAnalysis): TaskRecommendation[
   
   for (const task of tasks) {
     if (task.shouldShow(data)) {
-      const priority = calculatePriority(task, data, userProducts)
-      const context = buildContext(task, data, userProducts)
+      const priority = calculateShoppingPriority(task, data, userProducts)
+      const context = buildShoppingContext(task, data, userProducts)
       
       recommendations.push({
         task,
@@ -134,7 +153,7 @@ export function analyzeShoppingData(data: ShoppingAnalysis): TaskRecommendation[
 /**
  * Calculate task priority based on data analysis
  */
-function calculatePriority(
+function calculateShoppingPriority(
   task: OptimizationTask, 
   data: ShoppingAnalysis,
   products: ProductInsight[]
@@ -186,7 +205,7 @@ function calculatePriority(
 /**
  * Build contextual information for each task - PRODUCT-SPECIFIC
  */
-function buildContext(
+function buildShoppingContext(
   task: OptimizationTask, 
   data: ShoppingAnalysis,
   products: ProductInsight[]
@@ -272,13 +291,108 @@ function findCompetitorExamples(data: ShoppingAnalysis): Array<{category: string
   return examples
 }
 
-/**
- * Generic task analyzer for other modules (we'll customize these later)
- */
-export function analyzeBrandData(data: any): TaskRecommendation[] {
-  // Placeholder - we'll build this for Brand module
-  return []
+// ============================================================================
+// BRAND ANALYSIS
+// ============================================================================
+
+export function analyzeBrandData(data: BrandAnalysis): TaskRecommendation[] {
+  const tasks = getTasksForModule('brand')
+  const recommendations: TaskRecommendation[] = []
+  
+  console.log('🔍 [Brand Analyzer] Visibility:', data.visibility_index, 'Sentiment:', data.sentiment_breakdown)
+  
+  for (const task of tasks) {
+    if (task.shouldShow(data)) {
+      const priority = calculateBrandPriority(task, data)
+      const context = buildBrandContext(task, data)
+      
+      recommendations.push({
+        task,
+        priority,
+        context
+      })
+    }
+  }
+  
+  return recommendations.sort((a, b) => b.priority - a.priority)
 }
+
+function calculateBrandPriority(task: OptimizationTask, data: BrandAnalysis): number {
+  let priority = 50
+  
+  switch (task.id) {
+    case 'add-organization-schema':
+      if (data.visibility_index < 30) priority = 95
+      else if (data.visibility_index < 60) priority = 80
+      else priority = 65
+      break
+      
+    case 'improve-negative-sentiment':
+      const negPct = data.sentiment_breakdown?.negative || 0
+      priority = Math.min(95, 50 + (negPct * 2))
+      break
+      
+    case 'unify-brand-language':
+      const scattered = data.descriptors?.filter(d => d.weight < 2).length || 0
+      priority = Math.min(75, 50 + scattered)
+      break
+      
+    case 'boost-positive-descriptors':
+      const posPct = data.sentiment_breakdown?.positive || 0
+      priority = posPct >= 60 ? 65 : 55
+      break
+      
+    case 'add-brand-authority-links':
+      priority = data.visibility_index < 40 ? 85 : 60
+      break
+  }
+  
+  if (task.impact === 'high') priority += 10
+  return Math.min(100, priority)
+}
+
+function buildBrandContext(task: OptimizationTask, data: BrandAnalysis): any {
+  const context: any = {}
+  
+  switch (task.id) {
+    case 'add-organization-schema':
+      context.current_visibility = data.visibility_index
+      context.total_mentions = data.total_mentions
+      break
+      
+    case 'improve-negative-sentiment':
+      const negativeTerms = data.descriptors?.filter(d => 
+        d.sentiment === 'neg' || d.sentiment === 'negative'
+      ) || []
+      context.negative_descriptors = negativeTerms.slice(0, 5).map(d => d.word)
+      context.negative_count = negativeTerms.length
+      break
+      
+    case 'unify-brand-language':
+      const allTerms = data.descriptors?.map(d => d.word) || []
+      context.descriptor_count = allTerms.length
+      context.scattered = allTerms.length > 15
+      break
+      
+    case 'boost-positive-descriptors':
+      const positiveTerms = data.descriptors?.filter(d => 
+        d.sentiment === 'pos' || d.sentiment === 'positive'
+      ).sort((a, b) => b.weight - a.weight) || []
+      context.positive_descriptors = positiveTerms.slice(0, 5).map(d => d.word)
+      context.positive_count = positiveTerms.length
+      break
+      
+    case 'add-brand-authority-links':
+      context.current_visibility = data.visibility_index
+      break
+  }
+  
+  return context
+}
+
+// ============================================================================
+// OTHER MODULE ANALYZERS (Placeholders)
+// ============================================================================
 
 export function analyzeConversationData(data: any): TaskRecommendation[] {
   // Placeholder - we'll build this for Conversations module
