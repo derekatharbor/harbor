@@ -240,6 +240,14 @@ export default function ConversationVolumesPage() {
             <div className="flex items-center gap-2 mb-4">
               <Target className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Volume Index</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#FFB84D]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  How often people ask AI about your brand or category. Higher volume means more opportunities to be mentioned.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.volume_index || 0}
@@ -251,6 +259,14 @@ export default function ConversationVolumesPage() {
             <div className="flex items-center gap-2 mb-4">
               <MessageSquare className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Questions</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#FFB84D]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Different questions users are asking AI. Each is a chance to show up in answers—answer them with content and schema.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.questions?.length || 0}
@@ -262,6 +278,14 @@ export default function ConversationVolumesPage() {
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Emerging</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#FFB84D]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  New trending questions with rising volume. Create content for these early and become the go-to answer before competitors do.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.questions?.filter(q => q.emerging).length || 0}
@@ -273,6 +297,14 @@ export default function ConversationVolumesPage() {
             <div className="flex items-center gap-2 mb-4">
               <Users className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Top Intent</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#FFB84D]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  What people want to know most—features, pricing, how-to, comparisons, or trust. Focus content on your top intent first.
+                </div>
+              </div>
             </div>
             <div className="text-2xl font-heading font-bold text-primary mb-2">
               {data.intent_breakdown && Object.keys(data.intent_breakdown).length > 0
