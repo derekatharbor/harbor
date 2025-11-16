@@ -76,15 +76,37 @@ export default function WebsiteAnalyticsPage() {
           return
         }
         
+        console.log('📊 [Website] Raw data:', result.website)
+        console.log('📊 [Website] Issues sample:', result.website?.issues?.slice(0, 3))
+        
         setData(result.website)
         
         // Generate recommendations
         if (result.website && result.website.issues) {
           // Ensure issues have message field (API might send it as details)
-          const normalizedIssues = result.website.issues.map((issue: any) => ({
-            ...issue,
-            message: issue.message || (typeof issue.details === 'string' ? JSON.parse(issue.details).message : issue.details?.message) || ''
-          }))
+          const normalizedIssues = result.website.issues.map((issue: any) => {
+            let message = issue.message
+            
+            // If no message, try to extract from details
+            if (!message && issue.details) {
+              try {
+                message = typeof issue.details === 'string' 
+                  ? JSON.parse(issue.details).message 
+                  : issue.details.message
+              } catch (e) {
+                console.warn('Failed to parse details:', issue.details)
+                message = ''
+              }
+            }
+            
+            return {
+              ...issue,
+              message: message || '',
+              issue_code: issue.issue_code || 'unknown'
+            }
+          })
+          
+          console.log('📊 [Website] Normalized issues sample:', normalizedIssues.slice(0, 3))
           
           const normalizedData = {
             ...result.website,
@@ -124,6 +146,9 @@ export default function WebsiteAnalyticsPage() {
     const groups = new Map<string, GroupedIssues>()
     
     for (const issue of issues) {
+      // Skip issues without issue_code
+      if (!issue.issue_code) continue
+      
       const existing = groups.get(issue.issue_code)
       
       if (existing) {
@@ -136,7 +161,7 @@ export default function WebsiteAnalyticsPage() {
           severity: issue.severity,
           count: 1,
           urls: [issue.url],
-          message: issue.message
+          message: issue.message || ''
         })
       }
     }
@@ -145,6 +170,8 @@ export default function WebsiteAnalyticsPage() {
   }
 
   const formatIssueTitle = (code: string): string => {
+    if (!code) return 'Unknown Issue'
+    
     const titles: Record<string, string> = {
       no_schema: 'Missing Schema Markup',
       low_readability: 'Low Content Readability',
