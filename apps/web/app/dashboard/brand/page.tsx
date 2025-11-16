@@ -345,17 +345,18 @@ export default function BrandVisibilityPage() {
 
       {/* Action Modal */}
       {selectedTask && (
-        <ActionModal
-          isOpen={showActionModal}
-          onClose={() => {
-            setShowActionModal(false)
-            setSelectedTask(null)
-          }}
-          task={selectedTask}
-          dashboardId={currentDashboard?.id || ''}
-          brandName={currentDashboard?.brand_name || ''}
-        />
-      )}
+  <ActionModal
+    isOpen={showActionModal}
+    onClose={() => {
+      setShowActionModal(false)
+      setSelectedTask(null)
+    }}
+    task={selectedTask}
+    dashboardId={currentDashboard?.id || ''}
+    brandName={currentDashboard?.brand_name || ''}
+    context={recommendations.find(r => r.task.id === selectedTask.id)?.context} // NEW LINE!
+  />
+)}
 
       <ScanProgressModal
         isOpen={showScanModal}
