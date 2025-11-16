@@ -1,43 +1,30 @@
 // apps/web/app/api/dashboards/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
-// Force dynamic rendering - don't pre-render at build time
+// Force dynamic rendering
 export const dynamic = 'force-dynamic'
-
-// Helper to create Supabase client with user's session
-function getSupabaseClient() {
-  const cookieStore = cookies()
-  
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, // ✅ Use ANON key to respect RLS
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    }
-  )
-}
 
 // GET /api/dashboards - List all dashboards user has access to
 export async function GET(req: NextRequest) {
   try {
-    const supabase = getSupabaseClient()
+    const supabase = createRouteHandlerClient({ cookies })
     
     // Get current user from session
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
     
-    if (authError || !user) {
+    if (authError || !session?.user) {
+      console.error('Auth error:', authError)
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Unauthorized', details: authError?.message || 'No session' },
         { status: 401 }
       )
     }
+
+    const user = session.user
+    console.log('✅ User authenticated:', user.id, user.email)
 
     // RLS will automatically filter to only dashboards user has access to
     const { data: dashboards, error } = await supabase
@@ -48,10 +35,12 @@ export async function GET(req: NextRequest) {
     if (error) {
       console.error('Error fetching dashboards:', error)
       return NextResponse.json(
-        { error: 'Failed to fetch dashboards' },
+        { error: 'Failed to fetch dashboards', details: error.message },
         { status: 500 }
       )
     }
+
+    console.log('✅ Dashboards fetched:', dashboards?.length || 0)
 
     return NextResponse.json({
       dashboards: dashboards || [],
@@ -68,18 +57,19 @@ export async function GET(req: NextRequest) {
 // POST /api/dashboards - Create new dashboard
 export async function POST(req: NextRequest) {
   try {
-    const supabase = getSupabaseClient()
+    const supabase = createRouteHandlerClient({ cookies })
     
     // Get current user from session
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
     
-    if (authError || !user) {
+    if (authError || !session?.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
-    
+
+    const user = session.user
     const body = await req.json()
     const { brand_name, domain, category } = body
 
@@ -91,16 +81,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user's org from user_roles
-    const { data: userRole } = await supabase
+    const { data: userRole, error: roleError } = await supabase
       .from('user_roles')
       .select('org_id')
       .eq('user_id', user.id)
       .limit(1)
       .single()
 
-    if (!userRole) {
+    if (roleError || !userRole) {
+      console.error('No org found for user:', user.id, roleError)
       return NextResponse.json(
-        { error: 'No organization found for user' },
+        { error: 'No organization found for user. Please complete onboarding first.' },
         { status: 404 }
       )
     }
