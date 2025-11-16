@@ -60,11 +60,31 @@ export interface TaskRecommendation {
   task: OptimizationTask
   priority: number // 1-100, higher = more urgent
   context: {
+    // Shopping context
     affected_products?: ProductInsight[]
     affected_categories?: string[]
     competitor_examples?: string[]
     current_performance?: any
     product_count?: number
+    
+    // Brand context
+    current_visibility?: number
+    total_mentions?: number
+    negative_descriptors?: string[]
+    negative_count?: number
+    descriptor_count?: number
+    scattered?: boolean
+    positive_descriptors?: string[]
+    positive_count?: number
+    
+    // Conversations context
+    questions?: string[]
+    count?: number
+    type?: 'brand_specific' | 'category_general'
+    competitors?: string[]
+    competitor_count?: number
+    intents?: string[]
+    brand_mentions?: number
   }
 }
 
