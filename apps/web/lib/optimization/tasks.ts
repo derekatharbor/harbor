@@ -223,6 +223,8 @@ export const SHOPPING_TASKS: OptimizationTask[] = [
 // BRAND VISIBILITY TASKS
 // ============================================================================
 
+// UPDATED BRAND_TASKS - Only measurable, code-based tasks
+
 export const BRAND_TASKS: OptimizationTask[] = [
   {
     id: 'add-organization-schema',
@@ -236,7 +238,7 @@ export const BRAND_TASKS: OptimizationTask[] = [
     whyMatters: 'AI models need to know your brand identity—who you are, what you do, and how to contact you. Organization schema provides this foundational information and helps AI understand your brand beyond just product mentions.',
     
     whatToDo: [
-      'We\'ll generate an Organization JSON-LD snippet with your brand info',
+      'Generate an Organization JSON-LD snippet with your brand info',
       'This includes name, URL, logo, description, and social links',
       'It tells AI your official brand identity'
     ],
@@ -260,32 +262,67 @@ export const BRAND_TASKS: OptimizationTask[] = [
   },
   
   {
-    id: 'improve-negative-sentiment',
+    id: 'add-faq-schema',
     module: 'brand',
-    title: 'Address Negative Descriptors',
-    description: 'Improve brand perception by addressing negative associations',
+    title: 'Add FAQ Schema',
+    description: 'Answer common questions about your brand directly in search results',
+    impact: 'medium',
+    difficulty: 'easy',
+    icon: 'MessageCircleQuestion',
+    
+    whyMatters: 'When users ask AI questions about your brand, FAQ schema helps provide accurate answers. This builds trust and increases visibility for informational queries.',
+    
+    whatToDo: [
+      'We\'ll generate FAQ schema for the most common questions about your brand',
+      'This structured data tells AI exactly how to answer questions',
+      'It increases your presence in conversational AI results'
+    ],
+    
+    whereToDoIt: [
+      'Add an FAQ section to your About or Support page (if you don\'t have one)',
+      'Paste the generated FAQ schema in the <head> section',
+      'Make sure the visible Q&A on the page matches the schema',
+      'Save and publish'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/faq-schema',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      return data.total_mentions < 50
+    }
+  },
+
+  {
+    id: 'fix-negative-descriptors',
+    module: 'brand',
+    title: 'Address Negative Brand Perception',
+    description: 'Create content to counter negative descriptors',
     impact: 'high',
     difficulty: 'medium',
     icon: 'AlertTriangle',
     
-    whyMatters: 'Negative descriptors hurt your brand reputation when AI recommends alternatives. If AI associates your brand with negative terms, users will choose competitors instead.',
+    whyMatters: 'AI has associated your brand with negative terms. These hurt your reputation when AI recommends alternatives. The only way to change this is by publishing content that addresses these concerns directly.',
     
     whatToDo: [
-      'We\'ll identify your top negative descriptors',
-      'Create content that addresses these perceptions',
-      'Add positive case studies and testimonials'
+      'Review the negative descriptors AI has learned',
+      'Create content that directly addresses each concern',
+      'Publish case studies, testimonials, or blog posts that counter these perceptions',
+      'Update your About page to clarify misconceptions'
     ],
     
     whereToDoIt: [
-      'Review your About page and homepage copy',
-      'Add customer success stories that counter negative perceptions',
-      'Update meta descriptions to emphasize positive attributes',
-      'Publish blog posts addressing common concerns'
+      'For "expensive" → Publish pricing transparency page or value comparison',
+      'For "complex" → Create "Getting Started" guide or simplified explainer',
+      'For "limited support" → Add support page with hours, channels, response times',
+      'For "overwhelming" → Create onboarding docs or quick-start guide',
+      'Link to all of these from your homepage or navigation'
     ],
     
-    hasGenerator: true,
+    hasGenerator: false, // NO CODE - this is strategic
     hasValidator: false,
-    generatorEndpoint: '/api/gen/sentiment-strategy',
     
     shouldShow: (data) => {
       const negPct = data.sentiment_breakdown?.negative || 0
@@ -294,102 +331,32 @@ export const BRAND_TASKS: OptimizationTask[] = [
   },
   
   {
-    id: 'unify-brand-language',
+    id: 'add-breadcrumb-schema',
     module: 'brand',
-    title: 'Unify Brand Descriptions',
-    description: 'Use consistent language across all pages',
-    impact: 'medium',
-    difficulty: 'medium',
-    icon: 'FileText',
-    
-    whyMatters: 'Inconsistent descriptions confuse AI models. If your About page says one thing, your homepage says another, and your press page says a third, AI doesn\'t know which version to trust.',
-    
-    whatToDo: [
-      'We\'ll analyze your current brand descriptions',
-      'Create one unified brand description (50-100 words)',
-      'Apply this consistently across key pages'
-    ],
-    
-    whereToDoIt: [
-      'Update your About page with unified description',
-      'Update homepage hero section',
-      'Update meta description on all main pages',
-      'Update social media bios to match',
-      'Add to Organization schema'
-    ],
-    
-    hasGenerator: true,
-    hasValidator: false,
-    generatorEndpoint: '/api/gen/brand-description',
-    
-    shouldShow: (data) => {
-      const lowWeightTerms = data.descriptors?.filter((d: any) => d.weight < 2).length || 0
-      return lowWeightTerms > 10
-    }
-  },
-  
-  {
-    id: 'boost-positive-descriptors',
-    module: 'brand',
-    title: 'Reinforce Positive Attributes',
-    description: 'Amplify the positive associations AI already has',
-    impact: 'medium',
+    title: 'Add Breadcrumb Navigation Schema',
+    description: 'Help AI understand your site structure',
+    impact: 'low',
     difficulty: 'easy',
-    icon: 'TrendingUp',
+    icon: 'Navigation',
     
-    whyMatters: 'Your positive descriptors are working! Reinforce them by using these terms consistently in your content so AI strengthens these associations.',
+    whyMatters: 'Breadcrumb schema helps AI understand how your pages relate to each other. This improves your overall brand comprehension and helps AI surface the right pages for specific queries.',
     
     whatToDo: [
-      'We\'ll identify your top positive descriptors',
-      'Create a list of these terms to use in content',
-      'Incorporate them naturally in headlines, meta descriptions, and copy'
+      'Generate breadcrumb schema for your main pages',
+      'This shows AI your site hierarchy (Home > Products > Product Name)',
+      'It helps AI understand context and relationships'
     ],
     
     whereToDoIt: [
-      'Review your homepage and key landing pages',
-      'Add positive descriptors to meta descriptions',
-      'Use them in blog post headlines',
-      'Include in product descriptions',
-      'Mention in About page and bios'
-    ],
-    
-    hasGenerator: true,
-    hasValidator: false,
-    generatorEndpoint: '/api/gen/positive-terms',
-    
-    shouldShow: (data) => {
-      const posPct = data.sentiment_breakdown?.positive || 0
-      return posPct >= 40 && posPct < 80
-    }
-  },
-  
-  {
-    id: 'add-brand-authority-links',
-    module: 'brand',
-    title: 'Add Authority Source Links',
-    description: 'Link to Wikipedia, Crunchbase, or press mentions',
-    impact: 'medium',
-    difficulty: 'easy',
-    icon: 'Link',
-    
-    whyMatters: 'AI models trust authority sources like Wikipedia, Crunchbase, and major press outlets. Linking to these in your Organization schema helps AI verify your brand is legitimate.',
-    
-    whatToDo: [
-      'Find your Wikipedia page, Crunchbase profile, or major press mentions',
-      'Add these URLs to your Organization schema in the "sameAs" property',
-      'Verify the links are active and point to official profiles'
-    ],
-    
-    whereToDoIt: [
-      'Update your Organization schema (from first task)',
-      'Add "sameAs" array with authority URLs',
-      'Include: Wikipedia, Crunchbase, LinkedIn, major press articles',
-      'Validate the updated schema'
+      'Add breadcrumb navigation to your pages (if you don\'t have it)',
+      'Paste the generated schema in the <head> of each page',
+      'Make sure the visible breadcrumbs match the schema',
+      'Repeat for all main pages (products, about, support, etc.)'
     ],
     
     hasGenerator: true,
     hasValidator: true,
-    generatorEndpoint: '/api/gen/authority-links',
+    generatorEndpoint: '/api/gen/breadcrumb-schema',
     validatorEndpoint: '/api/validate/schema',
     
     shouldShow: (data) => {
@@ -397,6 +364,17 @@ export const BRAND_TASKS: OptimizationTask[] = [
     }
   }
 ]
+
+// NOTES:
+// - Organization Schema: MEASURABLE - re-scan shows visibility increase
+// - FAQ Schema: MEASURABLE - re-scan shows mention increase in Q&A contexts
+// - Breadcrumb Schema: MEASURABLE - re-scan shows better page association
+// - Fix Negative Descriptors: STRATEGIC - no code, just guidance on what content to create
+//
+// Removed:
+// - "Boost positive descriptors" - not measurable, just content advice
+// - "Unify brand language" - not measurable, just copywriting
+// - "Add authority links" - this goes in Organization schema already
 
 // ============================================================================
 // CONVERSATION VOLUME TASKS (Placeholder)
