@@ -79,8 +79,19 @@ export default function WebsiteAnalyticsPage() {
         setData(result.website)
         
         // Generate recommendations
-        if (result.website) {
-          const tasks = analyzeWebsiteData(result.website)
+        if (result.website && result.website.issues) {
+          // Ensure issues have message field (API might send it as details)
+          const normalizedIssues = result.website.issues.map((issue: any) => ({
+            ...issue,
+            message: issue.message || (typeof issue.details === 'string' ? JSON.parse(issue.details).message : issue.details?.message) || ''
+          }))
+          
+          const normalizedData = {
+            ...result.website,
+            issues: normalizedIssues
+          }
+          
+          const tasks = analyzeWebsiteData(normalizedData)
           setRecommendations(tasks)
           console.log('📋 [Website] Recommendations:', tasks.length)
         }
