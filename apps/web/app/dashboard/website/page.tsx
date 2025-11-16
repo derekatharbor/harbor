@@ -348,6 +348,14 @@ export default function WebsiteAnalyticsPage() {
             <div className="flex items-center gap-2 mb-4">
               <Target className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Readability Score</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  How easy it is for AI to understand your content. Higher scores mean AI can read and cite your pages more accurately.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.readability_score}<span className="text-2xl text-secondary/40">%</span>
@@ -359,6 +367,14 @@ export default function WebsiteAnalyticsPage() {
             <div className="flex items-center gap-2 mb-4">
               <FileCode className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Schema Coverage</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Percentage of pages with structured data. Schema tells AI what your pages are about—without it, AI skips your content.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.schema_coverage}<span className="text-2xl text-secondary/40">%</span>
@@ -370,6 +386,14 @@ export default function WebsiteAnalyticsPage() {
             <div className="flex items-center gap-2 mb-4">
               <AlertTriangle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Issues</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Technical problems preventing AI from understanding your site. Fix high priority issues first for the biggest impact.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {data.issues.length}
@@ -381,6 +405,14 @@ export default function WebsiteAnalyticsPage() {
             <div className="flex items-center gap-2 mb-4">
               <XCircle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">High Priority</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Critical issues that significantly hurt your AI visibility. Start here—these are quick wins with big results.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {highSeverity}
