@@ -150,7 +150,10 @@ export default function WebsiteAnalyticsPage() {
     
     for (const issue of issues) {
       // Skip issues without issue_code
-      if (!issue.issue_code) continue
+      if (!issue.issue_code) {
+        console.warn('Issue without code:', issue)
+        continue
+      }
       
       const existing = groups.get(issue.issue_code)
       
@@ -158,9 +161,14 @@ export default function WebsiteAnalyticsPage() {
         existing.count++
         existing.urls.push(issue.url)
       } else {
+        const title = formatIssueTitle(issue.issue_code)
+        if (title === 'Unknown Issue' || issue.issue_code === 'unknown') {
+          console.log('Unknown issue code:', issue.issue_code, 'Message:', issue.message)
+        }
+        
         groups.set(issue.issue_code, {
           code: issue.issue_code,
-          title: formatIssueTitle(issue.issue_code),
+          title,
           severity: issue.severity,
           count: 1,
           urls: [issue.url],
@@ -187,9 +195,16 @@ export default function WebsiteAnalyticsPage() {
       invalid_schema: 'Invalid Schema Markup',
       duplicate_content: 'Duplicate Content',
       missing_canonical: 'Missing Canonical Tag',
-      broken_links: 'Broken Internal Links'
+      broken_links: 'Broken Internal Links',
+      // Handle variations
+      'missing-product-schema': 'Missing Product Schema',
+      'no-schema': 'Missing Schema Markup',
+      'low-readability': 'Low Content Readability',
+      'multiple-h1': 'Multiple H1 Tags'
     }
-    return titles[code] || code.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+    
+    // Return mapped title or format the code
+    return titles[code] || titles[code.replace(/_/g, '-')] || code.split(/[_-]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   }
 
   const getSeverityColor = (severity: string) => {
@@ -542,7 +557,7 @@ export default function WebsiteAnalyticsPage() {
             <p className="text-sm text-secondary/60 mt-1">
               {recommendations.length > 0 
                 ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve AI readability`
-                : 'Actions to improve your AI readability'}
+                : 'Actions to improve AI readability'}
             </p>
           </div>
           <div className="p-6">
