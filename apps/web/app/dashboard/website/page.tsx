@@ -97,10 +97,30 @@ export default function WebsiteAnalyticsPage() {
               }
             }
             
+            // Infer issue_code from message if missing
+            let issueCode = issue.issue_code
+            if (!issueCode && message) {
+              if (message.includes('Missing Product schema')) {
+                issueCode = 'missing_product_schema'
+              } else if (message.includes('No structured data found')) {
+                issueCode = 'no_schema'
+              } else if (message.includes('Content is complex') || message.includes('simplify for AI parsing')) {
+                issueCode = 'low_readability'
+              } else if (message.includes('Multiple H1 tags')) {
+                issueCode = 'multiple_h1'
+              } else if (message.includes('Missing meta description')) {
+                issueCode = 'missing_meta_description'
+              } else if (message.includes('Missing FAQ schema')) {
+                issueCode = 'missing_faq_schema'
+              } else {
+                issueCode = 'unknown'
+              }
+            }
+            
             return {
               ...issue,
               message: message || '',
-              issue_code: issue.issue_code || 'unknown'
+              issue_code: issueCode || 'unknown'
             }
           })
           
