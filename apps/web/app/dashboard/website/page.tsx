@@ -542,7 +542,7 @@ export default function WebsiteAnalyticsPage() {
             <p className="text-sm text-secondary/60 mt-1">
               {recommendations.length > 0 
                 ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve AI readability`
-                : 'Actions to improve AI readability'}
+                : 'Actions to improve your AI readability'}
             </p>
           </div>
           <div className="p-6">
