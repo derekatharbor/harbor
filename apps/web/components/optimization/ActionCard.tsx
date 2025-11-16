@@ -1,144 +1,146 @@
 // components/optimization/ActionCard.tsx
+
 'use client'
 
-import { ArrowRight } from 'lucide-react'
 import { OptimizationTask } from '@/lib/optimization/tasks'
 import * as LucideIcons from 'lucide-react'
-
-interface ProductInsight {
-  product_name: string
-  categories: string[]
-  avg_rank: number
-  mention_count: number
-  best_rank: number
-  worst_rank: number
-}
+import { ArrowRight } from 'lucide-react'
 
 interface ActionCardProps {
   task: OptimizationTask
   onClick: () => void
-  context?: {
-    affected_products?: ProductInsight[]
-    affected_categories?: string[]
-    product_count?: number
-    missing_categories?: string[]
-    current_mentions?: number
-    [key: string]: any
-  }
+  context?: any
 }
 
 export default function ActionCard({ task, onClick, context }: ActionCardProps) {
-  // Get the icon component dynamically
-  const IconComponent = (LucideIcons as any)[task.icon] || LucideIcons.ShoppingBag
+  // @ts-ignore - Dynamic icon import
+  const Icon = LucideIcons[task.icon] || LucideIcons.AlertCircle
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'high': return 'text-[#00C6B7]'
-      case 'medium': return 'text-blue-400'
-      case 'low': return 'text-secondary/60'
-      default: return 'text-secondary/60'
-    }
-  }
+  // Format context for display based on task type
+  const getContextDisplay = () => {
+    if (!context) return null
 
-  const getImpactBadgeColor = (impact: string) => {
-    switch (impact) {
-      case 'high': return 'bg-[#00C6B7]/10 text-[#00C6B7]'
-      case 'medium': return 'bg-blue-500/10 text-blue-400'
-      case 'low': return 'bg-secondary/10 text-secondary/60'
-      default: return 'bg-secondary/10 text-secondary/60'
+    // SHOPPING CONTEXT
+    if (task.module === 'shopping') {
+      if (context.affected_products && context.affected_products.length > 0) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            <span className="font-medium text-[#00C6B7]">
+              {context.affected_products.length} product{context.affected_products.length === 1 ? '' : 's'}
+            </span>
+            {' '}need attention: {context.affected_products.slice(0, 3).map((p: any) => p.product_name).join(', ')}
+            {context.affected_products.length > 3 && ` +${context.affected_products.length - 3} more`}
+          </div>
+        )
+      }
+      
+      if (context.missing_categories && context.missing_categories.length > 0) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            Missing from <span className="font-medium text-[#00C6B7]">{context.missing_categories.length} categor{context.missing_categories.length === 1 ? 'y' : 'ies'}</span>: {context.missing_categories.slice(0, 2).join(', ')}
+            {context.missing_categories.length > 2 && ` +${context.missing_categories.length - 2} more`}
+          </div>
+        )
+      }
     }
-  }
 
-  // Build smart title with product context
-  const buildSmartTitle = () => {
-    const products = context?.affected_products || []
-    
-    if (products.length === 0) {
-      return task.title // Generic fallback
-    }
-    
-    if (products.length === 1) {
-      return `${task.title} for ${products[0].product_name}`
-    }
-    
-    if (products.length === 2) {
-      return `${task.title} for ${products[0].product_name} and ${products[1].product_name}`
-    }
-    
-    // 3+ products
-    return `${task.title} (${products.length} products)`
-  }
+    // BRAND CONTEXT
+    if (task.module === 'brand') {
+      // Negative sentiment task
+      if (task.id === 'improve-negative-sentiment' && context.negative_descriptors) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            <span className="font-medium text-red-400">{context.negative_count} negative descriptor{context.negative_count === 1 ? '' : 's'}</span>
+            {' '}found: {context.negative_descriptors.slice(0, 3).join(', ')}
+            {context.negative_descriptors.length > 3 && ` +${context.negative_descriptors.length - 3} more`}
+          </div>
+        )
+      }
 
-  // Build smart description
-  const buildSmartDescription = () => {
-    const products = context?.affected_products || []
-    
-    if (products.length === 0) {
-      return task.description
+      // Positive descriptors task
+      if (task.id === 'boost-positive-descriptors' && context.positive_descriptors) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            <span className="font-medium text-[#00C6B7]">{context.positive_count} positive descriptor{context.positive_count === 1 ? '' : 's'}</span>
+            {' '}to reinforce: {context.positive_descriptors.slice(0, 3).join(', ')}
+            {context.positive_descriptors.length > 3 && ` +${context.positive_descriptors.length - 3} more`}
+          </div>
+        )
+      }
+
+      // Organization schema task
+      if (task.id === 'add-organization-schema' && context.current_visibility !== undefined) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            Current visibility: <span className="font-medium text-[#4EE4FF]">{context.current_visibility}</span>
+            {context.current_visibility < 50 && ' • Low visibility'}
+          </div>
+        )
+      }
+
+      // Unify brand language task
+      if (task.id === 'unify-brand-language' && context.descriptor_count) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            <span className="font-medium text-blue-400">{context.descriptor_count} different descriptor{context.descriptor_count === 1 ? '' : 's'}</span>
+            {' '}• {context.scattered ? 'Language is scattered' : 'Some consolidation needed'}
+          </div>
+        )
+      }
+
+      // Authority links task
+      if (task.id === 'add-brand-authority-links' && context.current_visibility !== undefined) {
+        return (
+          <div className="mt-2 text-sm text-secondary/70">
+            Visibility: <span className="font-medium text-[#4EE4FF]">{context.current_visibility}</span>
+            {context.current_visibility < 60 && ' • Authority links will help'}
+          </div>
+        )
+      }
     }
-    
-    if (products.length === 1) {
-      const p = products[0]
-      return `${task.description} • Appears in ${p.categories.length} ${p.categories.length === 1 ? 'category' : 'categories'}`
-    }
-    
-    const totalCategories = new Set(products.flatMap(p => p.categories)).size
-    return `${task.description} • ${products.length} products across ${totalCategories} ${totalCategories === 1 ? 'category' : 'categories'}`
+
+    return null
   }
 
   return (
-    <div 
+    <button
       onClick={onClick}
-      className="group flex items-start gap-4 p-5 rounded-lg border border-border hover:border-[#00C6B7]/30 bg-card hover:bg-hover transition-all cursor-pointer"
+      className="w-full flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#4EE4FF]/30 transition-all bg-card hover:bg-card/80 text-left group"
     >
-      <div className={`w-12 h-12 rounded-lg bg-[#00C6B7]/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
-        <IconComponent className={`w-6 h-6 ${getImpactColor(task.impact)}`} strokeWidth={1.5} />
+      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+        task.module === 'shopping' ? 'bg-[#00C6B7]/10' :
+        task.module === 'brand' ? 'bg-[#4EE4FF]/10' :
+        task.module === 'conversations' ? 'bg-purple-500/10' :
+        'bg-blue-500/10'
+      }`}>
+        <Icon className={`w-5 h-5 ${
+          task.module === 'shopping' ? 'text-[#00C6B7]' :
+          task.module === 'brand' ? 'text-[#4EE4FF]' :
+          task.module === 'conversations' ? 'text-purple-400' :
+          'text-blue-400'
+        }`} strokeWidth={1.5} />
       </div>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-4 mb-2">
-          <h3 className="font-heading font-semibold text-primary group-hover:text-[#00C6B7] transition-colors">
-            {buildSmartTitle()}
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="font-heading font-semibold text-primary group-hover:text-[#4EE4FF] transition-colors">
+            {task.title}
           </h3>
-          <span className={`text-xs px-2 py-1 rounded-full ${getImpactBadgeColor(task.impact)} whitespace-nowrap`}>
-            {task.impact.toUpperCase()}
-          </span>
+          {task.impact === 'high' && (
+            <span className="px-2 py-0.5 bg-[#FF6B4A]/10 text-[#FF6B4A] text-xs rounded-full font-medium uppercase tracking-wider">
+              High Impact
+            </span>
+          )}
         </div>
-        
-        <p className="text-sm text-secondary/70 mb-3 leading-relaxed">
-          {buildSmartDescription()}
+        <p className="text-sm text-secondary/70 mb-1">
+          {task.description}
         </p>
-        
-        {/* Product-specific context pills */}
-        {context && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {context.affected_products && context.affected_products.length > 0 && (
-              <div className="text-xs px-3 py-1.5 bg-[#00C6B7]/10 border border-[#00C6B7]/30 rounded text-[#00C6B7] font-medium">
-                {context.affected_products.length === 1 
-                  ? context.affected_products[0].product_name
-                  : `${context.affected_products.length} products: ${context.affected_products.map(p => p.product_name).join(', ')}`
-                }
-              </div>
-            )}
-            
-            {context.affected_categories && context.affected_categories.length > 0 && (
-              <div className="text-xs px-2 py-1 bg-secondary/5 border border-border rounded text-secondary/80">
-                {context.affected_categories.length} {context.affected_categories.length === 1 ? 'category' : 'categories'}
-              </div>
-            )}
-            
-            {context.missing_categories && context.missing_categories.length > 0 && (
-              <div className="text-xs px-2 py-1 bg-orange-500/10 border border-orange-500/30 rounded text-orange-400">
-                {context.missing_categories.length} missing {context.missing_categories.length === 1 ? 'category' : 'categories'}
-              </div>
-            )}
-          </div>
-        )}
-        
-        <button className="text-sm text-[#00C6B7] hover:text-[#00C6B7]/80 font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-          Get Started <ArrowRight className="w-4 h-4" />
-        </button>
+        {getContextDisplay()}
       </div>
-    </div>
+      
+      <div className="flex-shrink-0 text-secondary/40 group-hover:text-[#4EE4FF] transition-colors">
+        <ArrowRight className="w-5 h-5" />
+      </div>
+    </button>
   )
 }
