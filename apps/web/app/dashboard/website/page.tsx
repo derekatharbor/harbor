@@ -409,7 +409,7 @@ export default function WebsiteAnalyticsPage() {
                 <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
                   ?
                 </div>
-                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
                   Critical issues that significantly hurt your AI visibility. Start here—these are quick wins with big results.
                 </div>
               </div>
