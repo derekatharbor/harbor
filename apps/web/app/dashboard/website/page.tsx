@@ -79,9 +79,7 @@ export default function WebsiteAnalyticsPage() {
         console.log('📊 [Website] Raw data:', result.website)
         console.log('📊 [Website] Issues sample:', result.website?.issues?.slice(0, 3))
         
-        setData(result.website)
-        
-        // Generate recommendations
+        // Generate recommendations AND update data with normalized issues
         if (result.website && result.website.issues) {
           // Ensure issues have message field (API might send it as details)
           const normalizedIssues = result.website.issues.map((issue: any) => {
@@ -113,9 +111,14 @@ export default function WebsiteAnalyticsPage() {
             issues: normalizedIssues
           }
           
+          // Update data state with normalized issues
+          setData(normalizedData)
+          
           const tasks = analyzeWebsiteData(normalizedData)
           setRecommendations(tasks)
           console.log('📋 [Website] Recommendations:', tasks.length)
+        } else {
+          setData(result.website)
         }
       } catch (error) {
         console.error('Error fetching website data:', error)
