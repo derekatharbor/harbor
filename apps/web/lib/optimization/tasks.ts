@@ -225,6 +225,7 @@ export const SHOPPING_TASKS: OptimizationTask[] = [
 
 // UPDATED BRAND_TASKS - Only measurable, code-based tasks
 
+
 export const BRAND_TASKS: OptimizationTask[] = [
   {
     id: 'add-organization-schema',
@@ -268,7 +269,7 @@ export const BRAND_TASKS: OptimizationTask[] = [
     description: 'Answer common questions about your brand directly in search results',
     impact: 'medium',
     difficulty: 'easy',
-    icon: 'MessageCircleQuestion',
+    icon: 'MessageCircle',
     
     whyMatters: 'When users ask AI questions about your brand, FAQ schema helps provide accurate answers. This builds trust and increases visibility for informational queries.',
     
@@ -364,6 +365,7 @@ export const BRAND_TASKS: OptimizationTask[] = [
     }
   }
 ]
+
 
 // NOTES:
 // - Organization Schema: MEASURABLE - re-scan shows visibility increase
