@@ -391,13 +391,184 @@ function buildBrandContext(task: OptimizationTask, data: BrandAnalysis): any {
 }
 
 // ============================================================================
-// OTHER MODULE ANALYZERS (Placeholders)
+// CONVERSATIONS ANALYSIS
 // ============================================================================
 
-export function analyzeConversationData(data: any): TaskRecommendation[] {
-  // Placeholder - we'll build this for Conversations module
-  return []
+export function analyzeConversationsData(data: any): TaskRecommendation[] {
+  const tasks = getTasksForModule('conversations')
+  const recommendations: TaskRecommendation[] = []
+  
+  console.log('📋 [Conversations Analyzer] Questions:', data.questions?.length || 0)
+  
+  for (const task of tasks) {
+    if (task.shouldShow(data)) {
+      const priority = calculateConversationsPriority(task, data)
+      const context = buildConversationsContext(task, data)
+      
+      recommendations.push({
+        task,
+        priority,
+        context
+      })
+    }
+  }
+  
+  return recommendations.sort((a, b) => {
+    // Brand-specific tasks first
+    if (a.context.type === 'brand_specific' && b.context.type !== 'brand_specific') return -1
+    if (b.context.type === 'brand_specific' && a.context.type !== 'brand_specific') return 1
+    
+    // Then by priority
+    return b.priority - a.priority
+  })
 }
+
+function calculateConversationsPriority(task: OptimizationTask, data: any): number {
+  let priority = 50
+  
+  switch (task.id) {
+    case 'claim-brand-questions':
+      const brandQuestions = data.questions?.filter((q: any) => q.mentions_brand === true) || []
+      priority = Math.min(95, 60 + (brandQuestions.length * 2))
+      break
+      
+    case 'create-competitor-comparisons':
+      const competitorQuestions = data.questions?.filter((q: any) => q.mentions_competitor === true) || []
+      const competitors = new Set(
+        competitorQuestions.map((q: any) => q.competitor_name).filter((n: string) => n && n.trim())
+      )
+      priority = Math.min(90, 60 + (competitors.size * 5))
+      break
+      
+    case 'add-faq-page-schema':
+      const categoryQuestions = data.questions?.filter((q: any) => q.score >= 50 && q.mentions_brand === false) || []
+      priority = Math.min(85, 55 + (categoryQuestions.length * 2))
+      break
+      
+    case 'create-how-to-guides':
+      const howToQuestions = data.questions?.filter((q: any) => q.intent === 'how_to') || []
+      priority = Math.min(75, 50 + (howToQuestions.length * 2))
+      break
+      
+    case 'add-pricing-transparency':
+      const priceQuestions = data.questions?.filter((q: any) => q.intent === 'price') || []
+      priority = Math.min(70, 50 + (priceQuestions.length * 3))
+      break
+      
+    case 'address-trust-concerns':
+      const trustQuestions = data.questions?.filter((q: any) => q.intent === 'trust') || []
+      priority = Math.min(75, 50 + (trustQuestions.length * 3))
+      break
+      
+    case 'optimize-emerging-topics':
+      const emergingQuestions = data.questions?.filter((q: any) => q.emerging === true) || []
+      const emergingBrandMentions = emergingQuestions.filter((q: any) => q.mentions_brand === true).length
+      priority = Math.min(85, 60 + (emergingBrandMentions * 5) + (emergingQuestions.length * 2))
+      break
+  }
+  
+  if (task.impact === 'high') priority += 10
+  return Math.min(100, priority)
+}
+
+function buildConversationsContext(task: OptimizationTask, data: any): any {
+  const context: any = {}
+  
+  switch (task.id) {
+    case 'claim-brand-questions':
+      const brandQuestions = data.questions
+        ?.filter((q: any) => q.mentions_brand === true)
+        .sort((a: any, b: any) => b.score - a.score)
+        .map((q: any) => q.question) || []
+      context.questions = brandQuestions
+      context.count = brandQuestions.length
+      context.type = 'brand_specific'
+      break
+      
+    case 'add-faq-page-schema':
+      const categoryQuestions = data.questions
+        ?.filter((q: any) => q.score >= 50 && q.mentions_brand === false)
+        .sort((a: any, b: any) => b.score - a.score)
+        .slice(0, 15)
+        .map((q: any) => q.question) || []
+      context.questions = categoryQuestions
+      context.count = categoryQuestions.length
+      context.type = 'category_general'
+      break
+      
+    case 'create-competitor-comparisons':
+      const competitorQuestions = data.questions
+        ?.filter((q: any) => q.mentions_competitor === true)
+        .sort((a: any, b: any) => b.score - a.score) || []
+      
+      const competitors = new Set(
+        competitorQuestions
+          .map((q: any) => q.competitor_name)
+          .filter((name: string) => name && name.trim())
+      )
+      
+      context.questions = competitorQuestions.map((q: any) => q.question)
+      context.competitors = Array.from(competitors)
+      context.count = competitorQuestions.length
+      context.competitor_count = competitors.size
+      break
+      
+    case 'create-how-to-guides':
+      const howToQuestions = data.questions
+        ?.filter((q: any) => q.intent === 'how_to')
+        .sort((a: any, b: any) => b.score - a.score)
+        .map((q: any) => q.question) || []
+      context.questions = howToQuestions
+      context.intents = ['how_to']
+      context.count = howToQuestions.length
+      break
+      
+    case 'add-pricing-transparency':
+      const priceQuestions = data.questions
+        ?.filter((q: any) => q.intent === 'price')
+        .sort((a: any, b: any) => b.score - a.score)
+        .map((q: any) => q.question) || []
+      context.questions = priceQuestions
+      context.intents = ['price']
+      context.count = priceQuestions.length
+      break
+      
+    case 'address-trust-concerns':
+      const trustQuestions = data.questions
+        ?.filter((q: any) => q.intent === 'trust')
+        .sort((a: any, b: any) => b.score - a.score)
+        .map((q: any) => q.question) || []
+      context.questions = trustQuestions
+      context.intents = ['trust']
+      context.count = trustQuestions.length
+      break
+      
+    case 'optimize-emerging-topics':
+      const emergingQuestions = data.questions
+        ?.filter((q: any) => q.emerging === true)
+        .sort((a: any, b: any) => {
+          if (a.mentions_brand && !b.mentions_brand) return -1
+          if (!a.mentions_brand && b.mentions_brand) return 1
+          return b.score - a.score
+        })
+        .map((q: any) => ({
+          question: q.question,
+          mentions_brand: q.mentions_brand,
+          score: q.score
+        })) || []
+      
+      context.questions = emergingQuestions.map((q: any) => q.question)
+      context.brand_mentions = emergingQuestions.filter((q: any) => q.mentions_brand).length
+      context.count = emergingQuestions.length
+      break
+  }
+  
+  return context
+}
+
+// ============================================================================
+// WEBSITE ANALYSIS (Placeholder)
+// ============================================================================
 
 export function analyzeWebsiteData(data: any): TaskRecommendation[] {
   // Placeholder - we'll build this for Website module

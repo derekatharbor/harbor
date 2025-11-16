@@ -1,11 +1,14 @@
 // apps/web/app/dashboard/conversations/page.tsx
-// FIXED: Properly handle API response structure
 
 'use client'
 
 import { useEffect, useState } from 'react'
 import { MessageSquare, TrendingUp, Users, Target, ArrowRight } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
+import ActionCard from '@/components/optimization/ActionCard'
+import ActionModal from '@/components/optimization/ActionModal'
+import { analyzeConversationsData, TaskRecommendation } from '@/lib/optimization/generator'
+import { OptimizationTask } from '@/lib/optimization/tasks'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -34,6 +37,11 @@ export default function ConversationVolumesPage() {
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  
+  // State for recommendations
+  const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
+  const [selectedTask, setSelectedTask] = useState<OptimizationTask | null>(null)
+  const [showActionModal, setShowActionModal] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -65,6 +73,11 @@ export default function ConversationVolumesPage() {
         if (result.conversations && result.conversations.questions && result.conversations.questions.length > 0) {
           console.log('✅ Setting conversations data:', result.conversations.questions.length, 'questions')
           setData(result.conversations)
+          
+          // Generate recommendations
+          const tasks = analyzeConversationsData(result.conversations)
+          setRecommendations(tasks)
+          console.log('📋 [Conversations] Recommendations:', tasks.length)
         } else {
           console.log('⚠️ No questions found in conversations data')
           console.log('Raw conversations:', result.conversations)
@@ -359,30 +372,49 @@ export default function ConversationVolumesPage() {
               Optimize Conversation Coverage
             </h2>
             <p className="text-sm text-secondary/60 mt-1">
-              Actions to improve question coverage
+              {recommendations.length > 0 
+                ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve question coverage`
+                : 'Actions to improve question coverage'}
             </p>
           </div>
           <div className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#FFB84D]/30 transition-colors">
-                <div className="w-10 h-10 rounded-lg bg-[#FFB84D]/10 flex items-center justify-center flex-shrink-0">
-                  <MessageSquare className="w-5 h-5 text-[#FFB84D]" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-heading font-semibold text-primary mb-1">
-                    Add FAQ Schema
-                  </h3>
-                  <p className="text-sm text-secondary/70 mb-3">
-                    Create an FAQ page with JSON-LD schema for your top questions to help AI provide better answers.
-                  </p>
-                  <button className="text-sm text-[#FFB84D] hover:underline font-medium inline-flex items-center gap-1">
-                    Learn how <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
+            {recommendations.length > 0 ? (
+              <div className="space-y-4">
+                {recommendations.map((rec) => (
+                  <ActionCard
+                    key={rec.task.id}
+                    task={rec.task}
+                    onClick={() => {
+                      setSelectedTask(rec.task)
+                      setShowActionModal(true)
+                    }}
+                    context={rec.context}
+                  />
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-8 text-secondary/60">
+                <p className="mb-2">No specific recommendations at this time.</p>
+                <p className="text-sm">Run another scan after implementing changes to see updated suggestions.</p>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Action Modal */}
+        {selectedTask && (
+          <ActionModal
+            isOpen={showActionModal}
+            onClose={() => {
+              setShowActionModal(false)
+              setSelectedTask(null)
+            }}
+            task={selectedTask}
+            dashboardId={currentDashboard?.id || ''}
+            brandName={currentDashboard?.brand_name || ''}
+            context={recommendations.find(r => r.task.id === selectedTask.id)?.context}
+          />
+        )}
 
         <ScanProgressModal
           isOpen={showScanModal}

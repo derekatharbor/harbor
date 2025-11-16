@@ -379,11 +379,271 @@ export const BRAND_TASKS: OptimizationTask[] = [
 // - "Add authority links" - this goes in Organization schema already
 
 // ============================================================================
-// CONVERSATION VOLUME TASKS (Placeholder)
+// CONVERSATION VOLUME TASKS
 // ============================================================================
 
 export const CONVERSATION_TASKS: OptimizationTask[] = [
-  // We'll add these when we build the Conversations module
+  {
+    id: 'claim-brand-questions',
+    module: 'conversations',
+    title: 'Answer Questions About Your Brand',
+    description: 'Create FAQ schema for questions that already mention your brand',
+    impact: 'high',
+    difficulty: 'easy',
+    icon: 'Target',
+    
+    whyMatters: 'Users are already asking AI about YOUR brand specifically. If you don\'t provide answers, AI will either skip you or use outdated/competitor information. These are the highest-intent questions to answer.',
+    
+    whatToDo: [
+      'We\'ll identify questions that explicitly mention your brand name',
+      'Generate FAQPage schema with authoritative answers',
+      'These questions show what people already want to know about you'
+    ],
+    
+    whereToDoIt: [
+      'Create a brand-specific FAQ page (e.g., /about/faq)',
+      'Answer each question that mentions your brand',
+      'Paste the generated FAQPage schema in the <head>',
+      'Make visible Q&As match the schema',
+      'Link from your homepage or About page'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/brand-faq-schema',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      // Show if there are questions that mention the brand
+      const brandQuestions = data.questions?.filter((q: any) => q.mentions_brand === true) || []
+      return brandQuestions.length >= 3
+    }
+  },
+  
+  {
+    id: 'add-faq-page-schema',
+    module: 'conversations',
+    title: 'Add Category FAQ Schema',
+    description: 'Answer common category questions to increase visibility',
+    impact: 'high',
+    difficulty: 'easy',
+    icon: 'MessageCircle',
+    
+    whyMatters: 'When users ask AI general questions about your category, FAQ schema helps you appear in those answers even if they don\'t know your brand yet. This builds awareness and positions you as an authority.',
+    
+    whatToDo: [
+      'We\'ll generate FAQPage schema for high-scoring category questions',
+      'Focus on questions that don\'t mention your brand (opportunity to get mentioned)',
+      'Each Q&A increases your chances of being cited by AI'
+    ],
+    
+    whereToDoIt: [
+      'Create an FAQ or Resources page',
+      'Answer the top category questions from your industry',
+      'Paste the generated schema in the <head> section',
+      'Make sure visible Q&As match the schema',
+      'Save and publish'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/faq-schema',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      // Show if there are high-scoring questions that DON'T mention the brand
+      const categoryQuestions = data.questions?.filter((q: any) => q.score >= 50 && q.mentions_brand === false) || []
+      return categoryQuestions.length >= 5
+    }
+  },
+  
+  {
+    id: 'create-competitor-comparisons',
+    module: 'conversations',
+    title: 'Build Competitor Comparison Pages',
+    description: 'Answer direct "X vs Y" questions with fair comparisons',
+    impact: 'high',
+    difficulty: 'medium',
+    icon: 'GitCompare',
+    
+    whyMatters: 'Users are directly comparing you to specific competitors in AI. If you don\'t have comparison pages, AI pulls from competitor content—giving them the advantage. Balanced comparison pages let you control the narrative and highlight your strengths.',
+    
+    whatToDo: [
+      'We\'ll identify which competitors users are comparing you against',
+      'Generate fair, factual comparison outlines for each matchup',
+      'Create pages that acknowledge competitor strengths but highlight your advantages',
+      'Add structured data so AI understands the comparison clearly'
+    ],
+    
+    whereToDoIt: [
+      'Create a comparison page for each top competitor',
+      'URL structure: /compare/your-brand-vs-[competitor]',
+      'Use our generated outline with a feature comparison table',
+      'Be fair and factual—AI rewards balanced comparisons',
+      'Add ComparisonTable or Product schema to both offerings',
+      'Link from your pricing or features page'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: false,
+    generatorEndpoint: '/api/gen/competitor-comparison',
+    
+    shouldShow: (data) => {
+      // Show if there are questions that mention competitors
+      const competitorQuestions = data.questions?.filter((q: any) => q.mentions_competitor === true) || []
+      return competitorQuestions.length >= 3
+    }
+  },
+  
+  {
+    id: 'create-how-to-guides',
+    module: 'conversations',
+    title: 'Create How-To Guides',
+    description: 'Answer "how to" questions with step-by-step guides',
+    impact: 'medium',
+    difficulty: 'medium',
+    icon: 'BookOpen',
+    
+    whyMatters: 'When users ask AI "how to" questions, they want clear instructions. If you don\'t have guides, AI either won\'t mention you or will piece together answers from scattered content. Dedicated how-to pages position you as the authority.',
+    
+    whatToDo: [
+      'We\'ll identify your top "how to" questions',
+      'For each, we\'ll suggest a guide structure with clear steps',
+      'You\'ll create pages with numbered steps, screenshots, and HowTo schema',
+      'This helps AI cite you as the authoritative source'
+    ],
+    
+    whereToDoIt: [
+      'Create a /guides or /how-to section on your site',
+      'Write a guide for each top question (3-8 numbered steps)',
+      'Add HowTo schema (we\'ll generate the JSON-LD)',
+      'Include clear headings like "How to [do X]"',
+      'Link to these guides from related product pages'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/howto-outline',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      // Show if there are "how_to" intent questions
+      const howToQuestions = data.questions?.filter((q: any) => q.intent === 'how_to') || []
+      return howToQuestions.length >= 4
+    }
+  },
+  
+  {
+    id: 'add-pricing-transparency',
+    module: 'conversations',
+    title: 'Add Pricing Transparency Page',
+    description: 'Answer pricing questions with clear, structured information',
+    impact: 'medium',
+    difficulty: 'easy',
+    icon: 'DollarSign',
+    
+    whyMatters: 'Pricing questions are common and high-intent. If AI can\'t find your pricing, it either won\'t mention you or will say "pricing not available." A clear pricing page with schema helps AI provide accurate cost information.',
+    
+    whatToDo: [
+      'We\'ll generate a pricing page structure with PriceSpecification schema',
+      'This tells AI your exact pricing tiers and what\'s included',
+      'Even if you have custom pricing, you can show starting prices'
+    ],
+    
+    whereToDoIt: [
+      'Create or update your /pricing page',
+      'List your plans/tiers with clear prices',
+      'Add PriceSpecification schema (we\'ll generate this)',
+      'Include currency, billing period, and what\'s included',
+      'Link to this page from your navigation'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/pricing-schema',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      // Show if there are price-related questions
+      const priceQuestions = data.questions?.filter((q: any) => q.intent === 'price') || []
+      return priceQuestions.length >= 2
+    }
+  },
+  
+  {
+    id: 'address-trust-concerns',
+    module: 'conversations',
+    title: 'Address Trust & Security Questions',
+    description: 'Create content to answer credibility and safety questions',
+    impact: 'medium',
+    difficulty: 'medium',
+    icon: 'Shield',
+    
+    whyMatters: 'Trust questions ("Is X reliable?", "Is X safe?", "Is X legit?") directly impact whether AI recommends you. Without clear trust signals, AI may mention competitors with better documentation or skip you entirely.',
+    
+    whatToDo: [
+      'We\'ll identify your top trust-related questions',
+      'Create dedicated pages for: security, privacy, certifications, testimonials',
+      'Add structured data for reviews, certifications, and security badges',
+      'This helps AI cite your credibility'
+    ],
+    
+    whereToDoIt: [
+      'Create a /security or /trust page',
+      'List certifications, compliance standards, security measures',
+      'Add customer testimonials with Review schema',
+      'Include "About Us" section with founding date and team size',
+      'Add these trust signals to your Organization schema too'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: false,
+    generatorEndpoint: '/api/gen/trust-page-outline',
+    
+    shouldShow: (data) => {
+      // Show if there are trust-related questions
+      const trustQuestions = data.questions?.filter((q: any) => q.intent === 'trust') || []
+      return trustQuestions.length >= 2
+    }
+  },
+  
+  {
+    id: 'optimize-emerging-topics',
+    module: 'conversations',
+    title: 'Create Content for Emerging Questions',
+    description: 'Get ahead of new trends before competitors do',
+    impact: 'high',
+    difficulty: 'hard',
+    icon: 'TrendingUp',
+    
+    whyMatters: 'Emerging questions represent new market trends or changing user needs. If you create content early—especially for questions that mention your brand—you become the authoritative source before the topic gets crowded. This is your competitive advantage window.',
+    
+    whatToDo: [
+      'We\'ll highlight questions marked as "emerging"',
+      'Prioritize those that mention your brand (high intent)',
+      'Create blog posts, guides, or landing pages addressing these topics',
+      'Add relevant schema (Article, BlogPosting, or HowTo) to each'
+    ],
+    
+    whereToDoIt: [
+      'For each emerging question, decide the best content format',
+      'Brand-mention emerging = priority landing page or guide',
+      'Category emerging = blog post or thought leadership',
+      'Technical emerging = how-to guide with HowTo schema',
+      'Add Article or BlogPosting schema to blog content',
+      'Publish and share on social to accelerate indexing'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: false,
+    generatorEndpoint: '/api/gen/emerging-topic-outline',
+    
+    shouldShow: (data) => {
+      // Show if there are any emerging questions
+      const emergingQuestions = data.questions?.filter((q: any) => q.emerging === true) || []
+      return emergingQuestions.length >= 2
+    }
+  }
 ]
 
 // ============================================================================
