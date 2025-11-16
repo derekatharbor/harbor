@@ -21,26 +21,31 @@ export default function LoginPage() {
     setError(null)
 
     try {
+      console.log('🔐 Attempting login for:', email)
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) throw error
-
-      // Check if user has completed onboarding
-      const { data: userRoles } = await supabase
-        .from('user_roles')
-        .select('org_id')
-        .eq('user_id', data.user.id)
-        .single()
-
-      if (userRoles?.org_id) {
-        router.push('/dashboard')
-      } else {
-        router.push('/onboarding')
+      if (error) {
+        console.error('❌ Login error:', error)
+        throw error
       }
+
+      if (!data.user) {
+        throw new Error('No user returned from login')
+      }
+
+      console.log('✅ Login successful:', data.user.id)
+
+      // Always redirect to dashboard
+      // The dashboard will handle redirecting to onboarding if needed
+      router.push('/dashboard')
+      router.refresh()
+      
     } catch (err: any) {
+      console.error('❌ Login failed:', err)
       setError(err.message || 'Invalid email or password')
     } finally {
       setLoading(false)
@@ -52,15 +57,11 @@ export default function LoginPage() {
       {/* Left Side - Login Form */}
       <div className="flex-1 flex items-center justify-center bg-white p-8 py-12">
         <div className="w-full max-w-md">
-          {/* Logo - Replace /images/harbor-logo.svg with your logo path */}
+          {/* Logo */}
           <div className="mb-8 lg:mb-12">
-            <Image
-              src="/images/harbor-logo.svg"
-              alt="Harbor"
-              width={120}
-              height={40}
-              className="h-10 w-auto"
-            />
+            <h1 className="text-3xl font-bold text-[#101A31]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              Harbor
+            </h1>
           </div>
 
           <div className="mb-6 lg:mb-8">
@@ -164,14 +165,17 @@ export default function LoginPage() {
 
       {/* Right Side - Topographic Map Background */}
       <div className="hidden lg:flex flex-1 relative bg-[#101A31]">
-        {/* Replace /images/topo-map.png with your topographic map image path */}
-        <Image
-          src="/images/topo-map.png"
-          alt=""
-          fill
-          className="object-cover opacity-80"
-          priority
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#101A31] to-[#1a2845] opacity-90" />
+        <div className="relative z-10 flex items-center justify-center p-12">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+              Get your brand mentioned by AI
+            </h2>
+            <p className="text-xl text-gray-300" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+              ChatGPT • Claude • Gemini • Perplexity
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
