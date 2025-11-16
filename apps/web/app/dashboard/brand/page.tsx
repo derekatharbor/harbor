@@ -202,6 +202,14 @@ export default function BrandVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <Target className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Visibility Index</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#4EE4FF]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                How prominently AI mentions your brand. Higher visibility means AI talks about you more often and with more context.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.visibility_index}
@@ -213,6 +221,14 @@ export default function BrandVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Mentions</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#4EE4FF]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                How many times AI models referenced your brand. More mentions means greater awareness and reach in AI responses.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.total_mentions}
@@ -224,6 +240,14 @@ export default function BrandVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Positive Sentiment</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#4EE4FF]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                Percentage of positive words AI uses to describe you. Higher is better—it means AI portrays your brand favorably.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.sentiment_breakdown.positive}<span className="text-2xl text-secondary/40">%</span>
@@ -235,6 +259,14 @@ export default function BrandVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <Users className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Descriptors</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#4EE4FF]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                Unique words and phrases AI associates with your brand. These shape how people learn about you through AI.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.descriptors.length}
