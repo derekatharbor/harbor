@@ -696,7 +696,7 @@ function buildWebsiteContext(task: OptimizationTask, data: any): any {
           url: i.url,
           score: parseInt(i.message?.match(/score: (\d+)/)?.[1] || '100')
         }))
-        .sort((a, b) => a.score - b.score)
+        .sort((a: { url: string; score: number }, b: { url: string; score: number }) => a.score - b.score)
         .slice(0, 20)
       context.affected_urls = worstPages
       context.count = readabilityIssues.length
