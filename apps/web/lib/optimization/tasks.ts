@@ -647,11 +647,184 @@ export const CONVERSATION_TASKS: OptimizationTask[] = [
 ]
 
 // ============================================================================
-// WEBSITE ANALYTICS TASKS (Placeholder)
+// WEBSITE ANALYTICS TASKS
 // ============================================================================
 
 export const WEBSITE_TASKS: OptimizationTask[] = [
-  // We'll add these when we build the Website module
+  {
+    id: 'add-missing-schema',
+    module: 'website',
+    title: 'Add Missing Schema Markup',
+    description: 'Add JSON-LD structured data to pages without any schema',
+    impact: 'high',
+    difficulty: 'easy',
+    icon: 'FileCode',
+    
+    whyMatters: 'Pages without schema markup are invisible to AI crawlers. Schema tells AI what your pages are about, who you are, and what you offer. This is foundational for AI visibility.',
+    
+    whatToDo: [
+      'We\'ll identify which pages need schema and what type',
+      'Generate the appropriate JSON-LD for each page type',
+      'Start with Organization, Product, and Breadcrumb schemas'
+    ],
+    
+    whereToDoIt: [
+      'Add Organization schema to your homepage',
+      'Add Product schema to product pages',
+      'Add Breadcrumb schema to all internal pages',
+      'Paste generated code in the <head> section of each page',
+      'Validate with Google\'s Rich Results Test'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/schema-bulk',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      const noSchemaIssues = data.issues?.filter((i: any) => i.issue_code === 'no_schema') || []
+      return noSchemaIssues.length >= 5
+    }
+  },
+  
+  {
+    id: 'add-faq-schema-pages',
+    module: 'website',
+    title: 'Add FAQ Schema to Support Pages',
+    description: 'Missing FAQ schema on pages with Q&A content',
+    impact: 'high',
+    difficulty: 'easy',
+    icon: 'MessageCircle',
+    
+    whyMatters: 'Support and help pages without FAQ schema miss opportunities for AI to cite your answers. AI models prioritize structured Q&A data when responding to user questions.',
+    
+    whatToDo: [
+      'We\'ll identify pages with FAQ/support content',
+      'Generate FAQPage JSON-LD for each page',
+      'Include questions and answers in structured format'
+    ],
+    
+    whereToDoIt: [
+      'Add FAQPage schema to support/help pages',
+      'Ensure visible Q&A matches schema',
+      'Paste in <head> section',
+      'Validate and run verification scan'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: true,
+    generatorEndpoint: '/api/gen/faq-schema-pages',
+    validatorEndpoint: '/api/validate/schema',
+    
+    shouldShow: (data) => {
+      const faqIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_faq_schema') || []
+      return faqIssues.length >= 1
+    }
+  },
+  
+  {
+    id: 'fix-multiple-h1',
+    module: 'website',
+    title: 'Fix Multiple H1 Tags',
+    description: 'Pages with multiple H1 tags confuse AI about primary topic',
+    impact: 'medium',
+    difficulty: 'medium',
+    icon: 'Type',
+    
+    whyMatters: 'Multiple H1 tags confuse AI about what your page is actually about. AI uses H1 as the primary signal for page topic. Multiple H1s dilute this signal and hurt comprehension.',
+    
+    whatToDo: [
+      'We\'ll identify pages with multiple H1s and show the count',
+      'You\'ll need to change extra H1s to H2 or H3 tags',
+      'Keep only ONE H1 per page that clearly states the main topic'
+    ],
+    
+    whereToDoIt: [
+      'Open each flagged page in your CMS',
+      'Find all H1 tags (<h1>)',
+      'Keep the most important one as H1',
+      'Change others to H2 (<h2>) or H3 (<h3>)',
+      'Save and re-scan to verify'
+    ],
+    
+    hasGenerator: false,
+    hasValidator: false,
+    
+    shouldShow: (data) => {
+      const h1Issues = data.issues?.filter((i: any) => i.issue_code === 'multiple_h1') || []
+      return h1Issues.length >= 10
+    }
+  },
+  
+  {
+    id: 'add-meta-descriptions',
+    module: 'website',
+    title: 'Add Missing Meta Descriptions',
+    description: 'AI uses meta descriptions for page context',
+    impact: 'medium',
+    difficulty: 'easy',
+    icon: 'FileText',
+    
+    whyMatters: 'Meta descriptions help AI understand what each page is about. Missing meta descriptions force AI to guess from content, often getting it wrong. Clear descriptions improve AI citation accuracy.',
+    
+    whatToDo: [
+      'We\'ll generate 50-160 character meta descriptions for each page',
+      'Descriptions will be factual, clear, and AI-optimized',
+      'No marketing fluff—just what the page contains'
+    ],
+    
+    whereToDoIt: [
+      'Add generated meta descriptions to page <head> sections',
+      'Format: <meta name="description" content="...">',
+      'Keep between 50-160 characters',
+      'Update in your CMS or template'
+    ],
+    
+    hasGenerator: true,
+    hasValidator: false,
+    generatorEndpoint: '/api/gen/meta-descriptions',
+    
+    shouldShow: (data) => {
+      const metaIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_meta_description') || []
+      return metaIssues.length >= 5
+    }
+  },
+  
+  {
+    id: 'improve-readability',
+    module: 'website',
+    title: 'Improve Content Readability',
+    description: 'Simplify complex content for better AI parsing',
+    impact: 'low',
+    difficulty: 'hard',
+    icon: 'BookOpen',
+    
+    whyMatters: 'AI models struggle with complex, jargon-heavy content. Low readability scores mean AI may misunderstand or skip your content entirely. Simpler language improves AI comprehension and citation rate.',
+    
+    whatToDo: [
+      'We\'ll identify pages with lowest readability scores',
+      'Provide guidelines for simplifying each page',
+      'Focus on: shorter sentences, simpler words, clear structure'
+    ],
+    
+    whereToDoIt: [
+      'Review pages with readability scores below 50',
+      'Break long sentences into shorter ones',
+      'Replace jargon with plain language',
+      'Add clear headings and bullet points',
+      'Use active voice instead of passive'
+    ],
+    
+    hasGenerator: false,
+    hasValidator: false,
+    
+    shouldShow: (data) => {
+      const readabilityIssues = data.issues?.filter((i: any) => 
+        i.issue_code === 'low_readability' && (i.message?.includes('score: 0') || i.message?.includes('score: 1') || i.message?.includes('score: 2'))
+      ) || []
+      return readabilityIssues.length >= 20
+    }
+  }
 ]
 
 // ============================================================================

@@ -85,6 +85,10 @@ export interface TaskRecommendation {
     competitor_count?: number
     intents?: string[]
     brand_mentions?: number
+    
+    // Website context
+    affected_urls?: any[]
+    issue_code?: string
   }
 }
 
@@ -590,7 +594,115 @@ function buildConversationsContext(task: OptimizationTask, data: any): any {
 // WEBSITE ANALYSIS (Placeholder)
 // ============================================================================
 
+// ============================================================================
+// WEBSITE ANALYSIS
+// ============================================================================
+
 export function analyzeWebsiteData(data: any): TaskRecommendation[] {
-  // Placeholder - we'll build this for Website module
-  return []
+  const tasks = getTasksForModule('website')
+  const recommendations: TaskRecommendation[] = []
+  
+  console.log('📋 [Website Analyzer] Issues:', data.issues?.length || 0)
+  
+  for (const task of tasks) {
+    if (task.shouldShow(data)) {
+      const priority = calculateWebsitePriority(task, data)
+      const context = buildWebsiteContext(task, data)
+      
+      recommendations.push({
+        task,
+        priority,
+        context
+      })
+    }
+  }
+  
+  return recommendations.sort((a, b) => b.priority - a.priority)
+}
+
+function calculateWebsitePriority(task: OptimizationTask, data: any): number {
+  let priority = 50
+  
+  switch (task.id) {
+    case 'add-missing-schema':
+      const noSchemaIssues = data.issues?.filter((i: any) => i.issue_code === 'no_schema') || []
+      priority = Math.min(95, 60 + (noSchemaIssues.length * 0.5))
+      break
+      
+    case 'add-faq-schema-pages':
+      const faqIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_faq_schema') || []
+      priority = Math.min(90, 70 + (faqIssues.length * 5))
+      break
+      
+    case 'fix-multiple-h1':
+      const h1Issues = data.issues?.filter((i: any) => i.issue_code === 'multiple_h1') || []
+      priority = Math.min(75, 50 + (h1Issues.length * 0.3))
+      break
+      
+    case 'add-meta-descriptions':
+      const metaIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_meta_description') || []
+      priority = Math.min(70, 50 + (metaIssues.length * 0.8))
+      break
+      
+    case 'improve-readability':
+      const readabilityIssues = data.issues?.filter((i: any) => i.issue_code === 'low_readability') || []
+      priority = Math.min(60, 40 + (readabilityIssues.length * 0.1))
+      break
+  }
+  
+  if (task.impact === 'high') priority += 10
+  return Math.min(100, priority)
+}
+
+function buildWebsiteContext(task: OptimizationTask, data: any): any {
+  const context: any = {}
+  
+  switch (task.id) {
+    case 'add-missing-schema':
+      const noSchemaIssues = data.issues?.filter((i: any) => i.issue_code === 'no_schema') || []
+      context.affected_urls = noSchemaIssues.map((i: any) => i.url).slice(0, 20)
+      context.count = noSchemaIssues.length
+      context.issue_code = 'no_schema'
+      break
+      
+    case 'add-faq-schema-pages':
+      const faqIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_faq_schema') || []
+      context.affected_urls = faqIssues.map((i: any) => i.url)
+      context.count = faqIssues.length
+      context.issue_code = 'missing_faq_schema'
+      break
+      
+    case 'fix-multiple-h1':
+      const h1Issues = data.issues?.filter((i: any) => i.issue_code === 'multiple_h1') || []
+      context.affected_urls = h1Issues.map((i: any) => ({
+        url: i.url,
+        h1_count: parseInt(i.message?.match(/\d+/)?.[0] || '0')
+      })).slice(0, 20)
+      context.count = h1Issues.length
+      context.issue_code = 'multiple_h1'
+      break
+      
+    case 'add-meta-descriptions':
+      const metaIssues = data.issues?.filter((i: any) => i.issue_code === 'missing_meta_description') || []
+      context.affected_urls = metaIssues.map((i: any) => i.url).slice(0, 20)
+      context.count = metaIssues.length
+      context.issue_code = 'missing_meta_description'
+      break
+      
+    case 'improve-readability':
+      const readabilityIssues = data.issues?.filter((i: any) => i.issue_code === 'low_readability') || []
+      const worstPages = readabilityIssues
+        .map((i: any) => ({
+          url: i.url,
+          score: parseInt(i.message?.match(/score: (\d+)/)?.[1] || '100')
+        }))
+        .sort((a, b) => a.score - b.score)
+        .slice(0, 20)
+      context.affected_urls = worstPages
+      context.count = readabilityIssues.length
+      context.issue_code = 'low_readability'
+      break
+  }
+  
+  return context
 }

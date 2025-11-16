@@ -3,22 +3,36 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ArrowRight, FileCode } from 'lucide-react'
+import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ChevronDown, ChevronRight, FileCode } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
-import UniversalScanButton from '@/components/scan/UniversalScanButton'
+import ActionCard from '@/components/optimization/ActionCard'
+import ActionModal from '@/components/optimization/ActionModal'
+import { analyzeWebsiteData, TaskRecommendation } from '@/lib/optimization/generator'
+import { OptimizationTask } from '@/lib/optimization/tasks'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
+
+interface WebsiteIssue {
+  url: string
+  issue_code: string
+  severity: string
+  message: string
+  schema_found: boolean
+}
 
 interface WebsiteData {
   readability_score: number
   schema_coverage: number
-  issues: Array<{
-    url: string
-    code: string
-    severity: string
-    message: string
-    schema_found: boolean
-  }>
+  issues: WebsiteIssue[]
+}
+
+interface GroupedIssues {
+  code: string
+  title: string
+  severity: string
+  count: number
+  urls: string[]
+  message: string
 }
 
 export default function WebsiteAnalyticsPage() {
@@ -29,6 +43,18 @@ export default function WebsiteAnalyticsPage() {
   const [loading, setLoading] = useState(true)
   const [showScanModal, setShowScanModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  
+  // Recommendations state
+  const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
+  const [selectedTask, setSelectedTask] = useState<OptimizationTask | null>(null)
+  const [showActionModal, setShowActionModal] = useState(false)
+  
+  // UI state for collapsible sections
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    high: true,
+    med: false,
+    low: false
+  })
 
   useEffect(() => {
     async function fetchData() {
@@ -44,15 +70,20 @@ export default function WebsiteAnalyticsPage() {
         const result = await response.json()
         setScanData(result)
         
-        // If no scan exists, don't set data
         if (!result.scan) {
           setData(null)
           setLoading(false)
           return
         }
         
-        // Map website data from API
         setData(result.website)
+        
+        // Generate recommendations
+        if (result.website) {
+          const tasks = analyzeWebsiteData(result.website)
+          setRecommendations(tasks)
+          console.log('📋 [Website] Recommendations:', tasks.length)
+        }
       } catch (error) {
         console.error('Error fetching website data:', error)
       } finally {
@@ -78,16 +109,59 @@ export default function WebsiteAnalyticsPage() {
     }
   }
 
-  const getSeverityIcon = (severity: string) => {
-    if (severity === 'high') return <XCircle className="w-5 h-5 text-red-400" strokeWidth={1.5} />
-    if (severity === 'med') return <AlertTriangle className="w-5 h-5 text-amber-400" strokeWidth={1.5} />
-    return <CheckCircle className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
+  const groupIssuesByCode = (issues: WebsiteIssue[]): GroupedIssues[] => {
+    const groups = new Map<string, GroupedIssues>()
+    
+    for (const issue of issues) {
+      const existing = groups.get(issue.issue_code)
+      
+      if (existing) {
+        existing.count++
+        existing.urls.push(issue.url)
+      } else {
+        groups.set(issue.issue_code, {
+          code: issue.issue_code,
+          title: formatIssueTitle(issue.issue_code),
+          severity: issue.severity,
+          count: 1,
+          urls: [issue.url],
+          message: issue.message
+        })
+      }
+    }
+    
+    return Array.from(groups.values()).sort((a, b) => b.count - a.count)
+  }
+
+  const formatIssueTitle = (code: string): string => {
+    const titles: Record<string, string> = {
+      no_schema: 'Missing Schema Markup',
+      low_readability: 'Low Content Readability',
+      multiple_h1: 'Multiple H1 Tags',
+      missing_meta_description: 'Missing Meta Description',
+      missing_faq_schema: 'Missing FAQ Schema',
+      missing_org_schema: 'Missing Organization Schema',
+      missing_product_schema: 'Missing Product Schema',
+      missing_breadcrumb_schema: 'Missing Breadcrumb Schema',
+      invalid_schema: 'Invalid Schema Markup',
+      duplicate_content: 'Duplicate Content',
+      missing_canonical: 'Missing Canonical Tag',
+      broken_links: 'Broken Internal Links'
+    }
+    return titles[code] || code.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   }
 
   const getSeverityColor = (severity: string) => {
-    if (severity === 'high') return 'bg-red-500/10 text-red-400 border-red-500/30'
-    if (severity === 'med') return 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-    return 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+    if (severity === 'high') return 'text-red-400'
+    if (severity === 'med') return 'text-amber-400'
+    return 'text-blue-400'
+  }
+
+  const toggleSection = (severity: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [severity]: !prev[severity]
+    }))
   }
 
   // Loading skeleton
@@ -108,14 +182,12 @@ export default function WebsiteAnalyticsPage() {
               <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
             ))}
           </div>
-
-          <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
         </div>
       </>
     )
   }
 
-  // Empty state - no scans yet
+  // Empty state
   if (!data || !scanData?.scan) {
     return (
       <>
@@ -159,8 +231,14 @@ export default function WebsiteAnalyticsPage() {
   const highSeverity = data.issues.filter(i => i.severity === 'high').length
   const medSeverity = data.issues.filter(i => i.severity === 'med').length
   const lowSeverity = data.issues.filter(i => i.severity === 'low').length
+  
+  const groupedIssues = {
+    high: groupIssuesByCode(data.issues.filter(i => i.severity === 'high')),
+    med: groupIssuesByCode(data.issues.filter(i => i.severity === 'med')),
+    low: groupIssuesByCode(data.issues.filter(i => i.severity === 'low'))
+  }
 
-  // Main content with data
+  // Main content
   return (
     <>
       <MobileHeader />
@@ -190,184 +268,286 @@ export default function WebsiteAnalyticsPage() {
 
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-card rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <Target className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-            <p className="text-xs text-secondary/60 uppercase tracking-wider">Readability Score</p>
-          </div>
-          <div className="text-4xl font-heading font-bold text-primary mb-2">
-            {data.readability_score}<span className="text-2xl text-secondary/40">%</span>
-          </div>
-          <p className="text-sm text-secondary/60">AI optimization</p>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <FileCode className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-            <p className="text-xs text-secondary/60 uppercase tracking-wider">Schema Coverage</p>
-          </div>
-          <div className="text-4xl font-heading font-bold text-primary mb-2">
-            {data.schema_coverage}<span className="text-2xl text-secondary/40">%</span>
-          </div>
-          <p className="text-sm text-secondary/60">Pages with schema</p>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-            <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Issues</p>
-          </div>
-          <div className="text-4xl font-heading font-bold text-primary mb-2">
-            {data.issues.length}
-          </div>
-          <p className="text-sm text-secondary/60">Across all pages</p>
-        </div>
-
-        <div className="bg-card rounded-lg p-6 border border-border">
-          <div className="flex items-center gap-2 mb-4">
-            <XCircle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-            <p className="text-xs text-secondary/60 uppercase tracking-wider">High Priority</p>
-          </div>
-          <div className="text-4xl font-heading font-bold text-primary mb-2">
-            {highSeverity}
-          </div>
-          <p className="text-sm text-secondary/60">Critical issues</p>
-        </div>
-      </div>
-
-      {/* Issues Breakdown */}
-      <div className="bg-card rounded-lg border border-border mb-8">
-        <div className="p-6 border-b border-border">
-          <h2 className="text-xl font-heading font-bold text-primary">
-            Issues by Severity
-          </h2>
-          <p className="text-sm text-secondary/60 mt-1">
-            Technical issues affecting AI readability
-          </p>
-        </div>
-        
-        <div className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-red-400 mb-2">
-                {highSeverity}
-              </div>
-              <p className="text-sm text-secondary/70">High Severity</p>
+          <div className="bg-card rounded-lg p-6 border border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <Target className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
+              <p className="text-xs text-secondary/60 uppercase tracking-wider">Readability Score</p>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-amber-400 mb-2">
-                {medSeverity}
-              </div>
-              <p className="text-sm text-secondary/70">Medium Severity</p>
+            <div className="text-4xl font-heading font-bold text-primary mb-2">
+              {data.readability_score}<span className="text-2xl text-secondary/40">%</span>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-heading font-bold text-blue-400 mb-2">
-                {lowSeverity}
-              </div>
-              <p className="text-sm text-secondary/70">Low Severity</p>
+            <p className="text-sm text-secondary/60">AI optimization</p>
+          </div>
+
+          <div className="bg-card rounded-lg p-6 border border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <FileCode className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
+              <p className="text-xs text-secondary/60 uppercase tracking-wider">Schema Coverage</p>
             </div>
+            <div className="text-4xl font-heading font-bold text-primary mb-2">
+              {data.schema_coverage}<span className="text-2xl text-secondary/40">%</span>
+            </div>
+            <p className="text-sm text-secondary/60">Pages with schema</p>
+          </div>
+
+          <div className="bg-card rounded-lg p-6 border border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
+              <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Issues</p>
+            </div>
+            <div className="text-4xl font-heading font-bold text-primary mb-2">
+              {data.issues.length}
+            </div>
+            <p className="text-sm text-secondary/60">Across all pages</p>
+          </div>
+
+          <div className="bg-card rounded-lg p-6 border border-border">
+            <div className="flex items-center gap-2 mb-4">
+              <XCircle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
+              <p className="text-xs text-secondary/60 uppercase tracking-wider">High Priority</p>
+            </div>
+            <div className="text-4xl font-heading font-bold text-primary mb-2">
+              {highSeverity}
+            </div>
+            <p className="text-sm text-secondary/60">Critical issues</p>
           </div>
         </div>
-      </div>
 
-      {/* Issues Table */}
-      <div className="bg-card rounded-lg border border-border mb-8">
-        <div className="p-6 border-b border-border">
-          <h2 className="text-xl font-heading font-bold text-primary">
-            Technical Issues
-          </h2>
-          <p className="text-sm text-secondary/60 mt-1">
-            Schema markup and structural problems
-          </p>
-        </div>
-        
-        <div className="overflow-x-auto">
-          {data.issues.length > 0 ? (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Severity</th>
-                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">URL</th>
-                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Issue</th>
-                  <th className="text-left p-4 text-xs text-secondary/60 uppercase tracking-wider font-medium">Schema</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.issues.map((issue, index) => (
-                  <tr 
-                    key={index}
-                    className="border-b border-border last:border-0 hover:bg-hover transition-colors"
-                  >
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        {getSeverityIcon(issue.severity)}
-                        <span className={`px-3 py-1 rounded-full border text-xs font-medium ${getSeverityColor(issue.severity)}`}>
-                          {issue.severity === 'med' ? 'Medium' : issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1)}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-secondary/80 text-sm font-mono truncate max-w-xs">
-                      {issue.url}
-                    </td>
-                    <td className="p-4 text-primary text-sm">
-                      {issue.message}
-                    </td>
-                    <td className="p-4">
-                      {issue.schema_found ? (
-                        <CheckCircle className="w-5 h-5 text-green-400" strokeWidth={1.5} />
-                      ) : (
-                        <XCircle className="w-5 h-5 text-red-400" strokeWidth={1.5} />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="p-12 text-center text-secondary/60">
-              No issues found - great job!
-            </div>
-          )}
-        </div>
-      </div>
+        {/* Grouped Issues */}
+        <div className="bg-card rounded-lg border border-border mb-8">
+          <div className="p-6 border-b border-border">
+            <h2 className="text-xl font-heading font-bold text-primary">
+              Technical Issues
+            </h2>
+            <p className="text-sm text-secondary/60 mt-1">
+              Grouped by type and severity
+            </p>
+          </div>
 
-      {/* Optimize Section */}
-      <div className="bg-card rounded-lg border border-border">
-        <div className="p-6 border-b border-border">
-          <h2 className="text-xl font-heading font-bold text-primary">
-            Optimize Website Structure
-          </h2>
-          <p className="text-sm text-secondary/60 mt-1">
-            Actions to improve AI readability
-          </p>
-        </div>
-        <div className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg border border-border hover:border-[#E879F9]/30 transition-colors">
-              <div className="w-10 h-10 rounded-lg bg-[#E879F9]/10 flex items-center justify-center flex-shrink-0">
-                <FileCode className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-heading font-semibold text-primary mb-1">
-                  Fix Missing Schema
-                </h3>
-                <p className="text-sm text-secondary/70 mb-3">
-                  Add JSON-LD schema markup to pages without it. Start with Organization, Product, and Breadcrumb schemas.
-                </p>
-                <button className="text-sm text-[#E879F9] hover:underline font-medium inline-flex items-center gap-1">
-                  Learn how <ArrowRight className="w-4 h-4" />
+          <div className="divide-y divide-border">
+            {/* High Severity Section */}
+            {highSeverity > 0 && (
+              <div>
+                <button
+                  onClick={() => toggleSection('high')}
+                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {expandedSections.high ? (
+                      <ChevronDown className="w-5 h-5 text-secondary/60" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-secondary/60" />
+                    )}
+                    <XCircle className="w-5 h-5 text-red-400" strokeWidth={1.5} />
+                    <span className="font-heading font-semibold text-primary">
+                      High Priority Issues
+                    </span>
+                    <span className="px-2 py-0.5 bg-red-500/10 text-red-400 text-sm font-medium rounded">
+                      {highSeverity}
+                    </span>
+                  </div>
                 </button>
+                
+                {expandedSections.high && (
+                  <div className="px-6 pb-6 space-y-3">
+                    {groupedIssues.high.map((group, idx) => (
+                      <details key={idx} className="group">
+                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-red-500/30 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-primary">{group.title}</span>
+                            <span className="text-sm text-secondary/60">{group.count} pages</span>
+                          </div>
+                        </summary>
+                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
+                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
+                          <div className="space-y-1 max-h-40 overflow-y-auto">
+                            {group.urls.slice(0, 10).map((url, i) => (
+                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
+                                {url}
+                              </div>
+                            ))}
+                            {group.urls.length > 10 && (
+                              <div className="text-xs text-secondary/50 italic">
+                                +{group.urls.length - 10} more pages
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+
+            {/* Medium Severity Section */}
+            {medSeverity > 0 && (
+              <div>
+                <button
+                  onClick={() => toggleSection('med')}
+                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {expandedSections.med ? (
+                      <ChevronDown className="w-5 h-5 text-secondary/60" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-secondary/60" />
+                    )}
+                    <AlertTriangle className="w-5 h-5 text-amber-400" strokeWidth={1.5} />
+                    <span className="font-heading font-semibold text-primary">
+                      Medium Priority Issues
+                    </span>
+                    <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-sm font-medium rounded">
+                      {medSeverity}
+                    </span>
+                  </div>
+                </button>
+                
+                {expandedSections.med && (
+                  <div className="px-6 pb-6 space-y-3">
+                    {groupedIssues.med.map((group, idx) => (
+                      <details key={idx} className="group">
+                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-amber-500/30 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-primary">{group.title}</span>
+                            <span className="text-sm text-secondary/60">{group.count} pages</span>
+                          </div>
+                        </summary>
+                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
+                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
+                          <div className="space-y-1 max-h-40 overflow-y-auto">
+                            {group.urls.slice(0, 10).map((url, i) => (
+                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
+                                {url}
+                              </div>
+                            ))}
+                            {group.urls.length > 10 && (
+                              <div className="text-xs text-secondary/50 italic">
+                                +{group.urls.length - 10} more pages
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Low Severity Section */}
+            {lowSeverity > 0 && (
+              <div>
+                <button
+                  onClick={() => toggleSection('low')}
+                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {expandedSections.low ? (
+                      <ChevronDown className="w-5 h-5 text-secondary/60" />
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-secondary/60" />
+                    )}
+                    <CheckCircle className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
+                    <span className="font-heading font-semibold text-primary">
+                      Low Priority Issues
+                    </span>
+                    <span className="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-sm font-medium rounded">
+                      {lowSeverity}
+                    </span>
+                  </div>
+                </button>
+                
+                {expandedSections.low && (
+                  <div className="px-6 pb-6 space-y-3">
+                    {groupedIssues.low.map((group, idx) => (
+                      <details key={idx} className="group">
+                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-blue-500/30 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-primary">{group.title}</span>
+                            <span className="text-sm text-secondary/60">{group.count} pages</span>
+                          </div>
+                        </summary>
+                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
+                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
+                          <div className="space-y-1 max-h-40 overflow-y-auto">
+                            {group.urls.slice(0, 10).map((url, i) => (
+                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
+                                {url}
+                              </div>
+                            ))}
+                            {group.urls.length > 10 && (
+                              <div className="text-xs text-secondary/50 italic">
+                                +{group.urls.length - 10} more pages
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      <ScanProgressModal
-        isOpen={showScanModal}
-        onClose={() => setShowScanModal(false)}
-        scanId={currentScanId}
-      />
+        {/* Optimize Section */}
+        <div className="bg-card rounded-lg border border-border">
+          <div className="p-6 border-b border-border">
+            <h2 className="text-xl font-heading font-bold text-primary">
+              Optimize Website Structure
+            </h2>
+            <p className="text-sm text-secondary/60 mt-1">
+              {recommendations.length > 0 
+                ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve AI readability`
+                : 'Actions to improve AI readability'}
+            </p>
+          </div>
+          <div className="p-6">
+            {recommendations.length > 0 ? (
+              <div className="space-y-4">
+                {recommendations.map((rec) => (
+                  <ActionCard
+                    key={rec.task.id}
+                    task={rec.task}
+                    onClick={() => {
+                      setSelectedTask(rec.task)
+                      setShowActionModal(true)
+                    }}
+                    context={rec.context}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-secondary/60">
+                <p className="mb-2">No specific recommendations at this time.</p>
+                <p className="text-sm">Run another scan after implementing changes to see updated suggestions.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Action Modal */}
+        {selectedTask && (
+          <ActionModal
+            isOpen={showActionModal}
+            onClose={() => {
+              setShowActionModal(false)
+              setSelectedTask(null)
+            }}
+            task={selectedTask}
+            dashboardId={currentDashboard?.id || ''}
+            brandName={currentDashboard?.brand_name || ''}
+            context={recommendations.find(r => r.task.id === selectedTask.id)?.context}
+          />
+        )}
+
+        <ScanProgressModal
+          isOpen={showScanModal}
+          onClose={() => setShowScanModal(false)}
+          scanId={currentScanId}
+        />
       </div>
     </>
   )
