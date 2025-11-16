@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 
 const CATEGORIES = [
   'E-commerce',
@@ -29,9 +28,38 @@ export default function OnboardingPage() {
   const [products, setProducts] = useState<string[]>([''])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [checking, setChecking] = useState(true)
 
   const router = useRouter()
   const supabase = createClientComponentClient()
+
+  // Check if user already has a dashboard
+  useEffect(() => {
+    async function checkOnboarding() {
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session) {
+        router.push('/auth/login')
+        return
+      }
+
+      // Check if user already has dashboards
+      const { data: dashboards } = await supabase
+        .from('dashboards')
+        .select('id')
+        .limit(1)
+
+      if (dashboards && dashboards.length > 0) {
+        // Already completed onboarding, redirect to dashboard
+        router.push('/dashboard')
+        return
+      }
+
+      setChecking(false)
+    }
+
+    checkOnboarding()
+  }, [supabase, router])
 
   const addProduct = () => {
     setProducts([...products, ''])
@@ -53,21 +81,17 @@ export default function OnboardingPage() {
     setError(null)
 
     try {
+      console.log('🚀 Starting onboarding...')
+      
       // Get current user session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
-      if (sessionError) {
-        console.error('Session error:', sessionError)
-        throw new Error('Session error: ' + sessionError.message)
-      }
-      
-      if (!session?.user) {
-        console.error('No session found')
+      if (sessionError || !session?.user) {
         throw new Error('No active session. Please log in again.')
       }
 
       const user = session.user
-      console.log('User found:', user.id)
+      console.log('✅ User:', user.id)
 
       // Get user's org
       const { data: userRole, error: roleError } = await supabase
@@ -76,50 +100,73 @@ export default function OnboardingPage() {
         .eq('user_id', user.id)
         .single()
 
-      if (roleError) {
-        console.error('Role error:', roleError)
-        throw new Error('Could not find organization: ' + roleError.message)
-      }
-
-      if (!userRole?.org_id) {
-        console.error('No org found for user')
+      if (roleError || !userRole?.org_id) {
+        console.error('❌ Role error:', roleError)
         throw new Error('No organization found. Please contact support.')
       }
 
-      console.log('Org found:', userRole.org_id)
+      console.log('✅ Org:', userRole.org_id)
+
+      // Check if user already has a dashboard (double-check)
+      const { data: existingDashboards } = await supabase
+        .from('dashboards')
+        .select('id')
+        .eq('org_id', userRole.org_id)
+        .limit(1)
+
+      if (existingDashboards && existingDashboards.length > 0) {
+        console.log('⚠️ Dashboard already exists, redirecting...')
+        router.push('/dashboard')
+        return
+      }
 
       // Filter out empty products
       const filteredProducts = products.filter(p => p.trim() !== '')
 
       // Create dashboard with metadata
-      const { error: dashboardError } = await supabase
+      const { data: dashboard, error: dashboardError } = await supabase
         .from('dashboards')
         .insert({
           org_id: userRole.org_id,
           brand_name: brandName,
-          domain: domain,
+          domain: domain.replace(/^(https?:\/\/)?(www\.)?/, ''), // Strip protocol and www
           plan: 'solo',
           metadata: {
             category: category,
             products: filteredProducts,
           }
         })
+        .select()
+        .single()
 
       if (dashboardError) {
-        console.error('Dashboard error:', dashboardError)
+        console.error('❌ Dashboard error:', dashboardError)
         throw dashboardError
       }
 
-      console.log('Dashboard created successfully')
+      console.log('✅ Dashboard created:', dashboard.id)
 
       // Redirect to dashboard
       router.push('/dashboard')
+      router.refresh()
+      
     } catch (err: any) {
-      console.error('Full error:', err)
+      console.error('❌ Onboarding error:', err)
       setError(err.message || 'Failed to create dashboard')
     } finally {
       setLoading(false)
     }
+  }
+
+  // Show loading while checking onboarding status
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-[#101A31] flex items-center justify-center">
+        <div className="text-white" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+          Loading...
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -127,13 +174,6 @@ export default function OnboardingPage() {
       <div className="w-full max-w-2xl">
         {/* Logo */}
         <div className="mb-12 text-center">
-          <Image
-            src="/images/harbor-logo-white.svg"
-            alt="Harbor"
-            width={120}
-            height={40}
-            className="h-10 w-auto mx-auto mb-8"
-          />
           <h1 
             className="text-4xl font-bold text-white mb-3" 
             style={{ fontFamily: 'Space Grotesk, sans-serif' }}
@@ -218,10 +258,7 @@ export default function OnboardingPage() {
                 onChange={(e) => setCategory(e.target.value)}
                 required
                 className="w-full px-4 py-3 bg-[#101A31] border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white appearance-none"
-                style={{ 
-                  fontFamily: 'Source Code Pro, monospace',
-                  backgroundImage: 'linear-gradient(to bottom, transparent 0%, transparent calc(100% - 20px), rgba(255, 107, 74, 0.05) 100%)'
-                }}
+                style={{ fontFamily: 'Source Code Pro, monospace' }}
               >
                 <option value="">Select a category</option>
                 {CATEGORIES.map((cat) => (
@@ -230,9 +267,8 @@ export default function OnboardingPage() {
                   </option>
                 ))}
               </select>
-              {/* Dropdown arrow */}
               <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
                   <path d="M1 1.5L6 6.5L11 1.5" stroke="white" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
@@ -245,10 +281,10 @@ export default function OnboardingPage() {
               className="block text-sm font-medium text-white mb-2 uppercase tracking-wide"
               style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
             >
-              Key Products or Services (as customers would search them)
+              Key Products or Services
             </label>
             <p className="text-xs text-white/50 mb-3" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              Add 2–5 key products or services you want tracked in AI search results (e.g., "Business Checking Account", "Analytics Platform", "CRM Software")
+              Add 2–5 key products or services (e.g., "Business Checking Account", "Analytics Platform")
             </p>
             
             <div className="space-y-3">
