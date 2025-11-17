@@ -208,6 +208,14 @@ export default function ShoppingVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <Trophy className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Visibility Score</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#00C6B7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                How often your products show up when people ask AI for shopping recommendations. Higher scores mean more visibility.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.score}<span className="text-2xl text-secondary/40">%</span>
@@ -219,6 +227,14 @@ export default function ShoppingVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <Target className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Mentions</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#00C6B7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                Times AI recommended your products across all models. More mentions means you're winning more shopping queries.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.total_mentions}
@@ -230,6 +246,14 @@ export default function ShoppingVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <ShoppingBag className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Categories</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#00C6B7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                Product categories where you appear in AI results. More categories means broader discoverability across different searches.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.categories.length}
@@ -241,6 +265,14 @@ export default function ShoppingVisibilityPage() {
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
             <p className="text-xs text-secondary/60 uppercase tracking-wider">Coverage</p>
+            <div className="group relative">
+              <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                ?
+              </div>
+              <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#00C6B7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                How many different AI models mention your products. More coverage means you're visible across ChatGPT, Claude, Gemini, and Perplexity.
+              </div>
+            </div>
           </div>
           <div className="text-4xl font-heading font-bold text-primary mb-2">
             {data.models.length}
