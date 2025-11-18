@@ -109,7 +109,7 @@ export default function SolutionSection() {
         {/* Dashboard Preview */}
         <div className="mt-12 lg:mt-16">
           <div className="relative mx-auto max-w-[1200px]">
-            <div className="rounded-[28px] overflow-hidden bg-white shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+            <div className="rounded-[28px] overflow-hidden bg-[#1A2332] shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
               <Image
                 key={activeTab}
                 src={previewByTab[activeTab]}
