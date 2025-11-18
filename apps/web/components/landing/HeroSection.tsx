@@ -14,14 +14,18 @@ const AI_PLATFORMS = [
 export default function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Fade in on mount
+    setMounted(true)
+
     const interval = setInterval(() => {
       setIsAnimating(true)
       setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % AI_PLATFORMS.length)
         setIsAnimating(false)
-      }, 400)
+      }, 300)
     }, 3500)
 
     return () => clearInterval(interval)
@@ -37,30 +41,28 @@ export default function HeroSection() {
           Get your brand mentioned by
         </h1>
 
-        {/* Rotating AI Platform Logo */}
-        <div className="flex items-center justify-center mb-8">
+        {/* Rotating AI Platform Logo - Single wrapper for both logo and text */}
+        <div className="flex items-center justify-center mb-8 h-24">
           <div
-            className={`transition-all duration-400 ${
-              isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+            className={`flex items-center justify-center space-x-4 transition-all duration-300 ${
+              !mounted || isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
             }`}
           >
-            <div className="flex items-center justify-center space-x-4">
-              {/* Logo */}
-              <div className="h-12 w-auto flex items-center">
-                <Image
-                  src={AI_PLATFORMS[currentIndex].icon}
-                  alt={AI_PLATFORMS[currentIndex].name}
-                  width={48}
-                  height={48}
-                  className="h-12 w-auto object-contain"
-                />
-              </div>
-
-              {/* Platform Name */}
-              <span className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-none">
-                {AI_PLATFORMS[currentIndex].name}
-              </span>
+            {/* Logo - scaled up to match text better */}
+            <div className="h-16 w-16 flex items-center justify-center flex-shrink-0">
+              <Image
+                src={AI_PLATFORMS[currentIndex].icon}
+                alt={AI_PLATFORMS[currentIndex].name}
+                width={64}
+                height={64}
+                className="h-16 w-16 object-contain"
+              />
             </div>
+
+            {/* Platform Name */}
+            <span className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-none">
+              {AI_PLATFORMS[currentIndex].name}
+            </span>
           </div>
         </div>
 
