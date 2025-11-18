@@ -21,20 +21,30 @@ export default function CTASection() {
   }
 
   return (
-    <section id="early-access" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <section id="early-access" className="bg-[#1A2332] py-20 lg:py-28">
+      <div className="mx-auto max-w-4xl px-6">
         {/* Main CTA Card */}
-        <div className="relative rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 p-8 sm:p-12 overflow-hidden">
-          {/* Glow Effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-transparent pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl bg-[#0C1422] border border-white/10 px-8 py-12 md:px-12 md:py-16">
+          {/* Subtle Grid Pattern Background */}
+          <div 
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, white 1px, transparent 1px),
+                linear-gradient(to bottom, white 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }}
+          />
 
+          {/* Content */}
           <div className="relative z-10">
             {/* Headline */}
             <div className="text-center mb-8">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-white mb-4 tracking-tight">
                 Get early access
               </h2>
-              <p className="text-lg sm:text-xl text-white/75 max-w-2xl mx-auto">
+              <p className="text-base md:text-lg text-[#A4B1C3] max-w-2xl mx-auto">
                 Join forward-thinking brands optimizing for AI search visibility.
               </p>
             </div>
@@ -49,12 +59,12 @@ export default function CTASection() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    className="flex-1 px-5 py-3.5 rounded-lg bg-[#0F1B2C] border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all"
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-coral text-white font-medium hover:bg-coral/90 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-white text-[#0C1422] font-semibold hover:bg-white/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       'Submitting...'
@@ -67,49 +77,49 @@ export default function CTASection() {
                   </button>
                 </div>
 
-                <p className="text-sm text-white/50 text-center mt-4">
+                <p className="text-sm text-[#A4B1C3] text-center mt-4">
                   No credit card required. We'll be in touch soon.
                 </p>
               </form>
             ) : (
               <div className="text-center py-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-teal-500/20 mb-4">
-                  <Check className="w-8 h-8 text-teal-400" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 mb-4">
+                  <Check className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-display font-bold text-white mb-2">
+                <h3 className="text-2xl font-heading font-bold text-white mb-2">
                   You're on the list!
                 </h3>
-                <p className="text-white/75">
+                <p className="text-[#A4B1C3]">
                   We'll send you an invite as soon as spots open up.
                 </p>
               </div>
             )}
 
             {/* Trust Indicators */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 pt-10 border-t border-white/5">
               <div className="text-center">
-                <div className="text-teal-400 font-display font-bold text-lg mb-1">
+                <div className="text-white font-heading font-bold text-lg mb-1">
                   SOC 2 Ready
                 </div>
-                <div className="text-sm text-white/60">
+                <div className="text-sm text-[#A4B1C3]">
                   Enterprise-grade security
                 </div>
               </div>
 
               <div className="text-center">
-                <div className="text-teal-400 font-display font-bold text-lg mb-1">
+                <div className="text-white font-heading font-bold text-lg mb-1">
                   Weekly Scans
                 </div>
-                <div className="text-sm text-white/60">
+                <div className="text-sm text-[#A4B1C3]">
                   Always up-to-date insights
                 </div>
               </div>
 
               <div className="text-center">
-                <div className="text-teal-400 font-display font-bold text-lg mb-1">
+                <div className="text-white font-heading font-bold text-lg mb-1">
                   4 AI Models
                 </div>
-                <div className="text-sm text-white/60">
+                <div className="text-sm text-[#A4B1C3]">
                   Complete coverage
                 </div>
               </div>
