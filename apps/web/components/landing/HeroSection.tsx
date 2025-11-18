@@ -37,37 +37,37 @@ export default function HeroSection() {
       <div className="w-full max-w-[900px] mx-auto text-center mb-32">
         
         {/* Headline */}
-        <h1 className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-[1.15] tracking-tight mb-6">
+        <h1 className="text-[clamp(2.5rem,8vw,4rem)] font-heading font-bold text-white leading-[1.15] tracking-tight mb-6">
           Get your brand mentioned by
         </h1>
 
         {/* Rotating AI Platform Logo - Single wrapper for both logo and text */}
-        <div className="flex items-center justify-center mb-6 h-24">
+        <div className="flex items-center justify-center mb-6 h-20 md:h-24">
           <div
-            className={`flex items-center justify-center space-x-4 transition-all duration-300 ${
+            className={`flex items-center justify-center space-x-3 md:space-x-4 transition-all duration-300 ${
               !mounted || isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
             }`}
           >
             {/* Logo - scaled up to match text better */}
-            <div className="h-16 w-16 flex items-center justify-center flex-shrink-0">
+            <div className="h-12 w-12 md:h-16 md:w-16 flex items-center justify-center flex-shrink-0">
               <Image
                 src={AI_PLATFORMS[currentIndex].icon}
                 alt={AI_PLATFORMS[currentIndex].name}
                 width={64}
                 height={64}
-                className="h-16 w-16 object-contain"
+                className="h-12 w-12 md:h-16 md:w-16 object-contain"
               />
             </div>
 
             {/* Platform Name */}
-            <span className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-none">
+            <span className="text-[clamp(2rem,7vw,4rem)] font-heading font-bold text-white leading-none">
               {AI_PLATFORMS[currentIndex].name}
             </span>
           </div>
         </div>
 
         {/* Subheadline */}
-        <p className="text-lg text-[#CBD4E1] leading-relaxed mb-12 font-mono max-w-[800px] mx-auto">
+        <p className="text-base md:text-lg text-[#CBD4E1] leading-relaxed mb-12 font-mono max-w-[800px] mx-auto">
           Harbor shows you exactly how ChatGPT, Claude, Gemini, and Perplexity talk about your brand—and what to do about it.
         </p>
 
