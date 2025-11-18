@@ -92,7 +92,7 @@ export default function HeroSection() {
           src="/waves.svg"
           alt=""
           width={3840}
-          height={480}
+          height={479}
           className="w-full h-auto"
           priority
         />
