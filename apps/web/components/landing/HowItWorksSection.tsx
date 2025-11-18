@@ -12,92 +12,74 @@ export default function HowItWorksSection() {
         </div>
 
         {/* Headline */}
-        <h2 className="text-3xl md:text-4xl font-heading font-semibold text-white tracking-tight text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-heading font-semibold text-white tracking-tight text-center mb-10 lg:mb-12">
           Three steps to AI visibility
         </h2>
 
-        {/* Steps Grid */}
+        {/* Steps Grid - Card Based */}
         <div className="grid gap-6 md:grid-cols-3">
           {/* Step 1 */}
-          <div className="relative">
-            <div className="text-center">
-              {/* Icon Container */}
-              <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-6">
-                <Search className="h-6 w-6 text-white" strokeWidth={1.5} />
-              </div>
-
-              {/* Step Label */}
-              <div className="mb-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-white/5 text-xs text-white/50 font-mono tracking-wide">
-                  Step 1
-                </span>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-lg font-semibold text-white mb-3">
-                Scan Your Brand
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-[#A4B1C3] leading-relaxed">
-                Connect your brand and run a comprehensive scan across all four AI models to see exactly how they perceive you.
-              </p>
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 px-5 py-6 hover:border-white/20 hover:bg-[#0E1727] transition-colors duration-150">
+            <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-4">
+              <Search className="h-6 w-6 text-white" strokeWidth={1.5} />
             </div>
-          </div>
+
+            <div className="mb-3">
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/5 text-xs text-white/50 font-mono">
+                Step 1
+              </span>
+            </div>
+
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Scan Your Brand
+            </h3>
+
+            <p className="text-sm text-[#A4B1C3] leading-relaxed">
+              Run a comprehensive scan across all four AI models to see how they perceive you.
+            </p>
+          </article>
 
           {/* Step 2 */}
-          <div className="relative">
-            <div className="text-center">
-              {/* Icon Container */}
-              <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-6">
-                <Lightbulb className="h-6 w-6 text-white" strokeWidth={1.5} />
-              </div>
-
-              {/* Step Label */}
-              <div className="mb-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-white/5 text-xs text-white/50 font-mono tracking-wide">
-                  Step 2
-                </span>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-lg font-semibold text-white mb-3">
-                Get Actionable Insights
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-[#A4B1C3] leading-relaxed">
-                Receive specific, prioritized actions to improve your visibility—from schema fixes to content optimization.
-              </p>
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 px-5 py-6 hover:border-white/20 hover:bg-[#0E1727] transition-colors duration-150">
+            <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-4">
+              <Lightbulb className="h-6 w-6 text-white" strokeWidth={1.5} />
             </div>
-          </div>
+
+            <div className="mb-3">
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/5 text-xs text-white/50 font-mono">
+                Step 2
+              </span>
+            </div>
+
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Get Actionable Insights
+            </h3>
+
+            <p className="text-sm text-[#A4B1C3] leading-relaxed">
+              Receive prioritized actions to improve visibility—from schema fixes to content optimization.
+            </p>
+          </article>
 
           {/* Step 3 */}
-          <div className="relative">
-            <div className="text-center">
-              {/* Icon Container */}
-              <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-6">
-                <TrendingUp className="h-6 w-6 text-white" strokeWidth={1.5} />
-              </div>
-
-              {/* Step Label */}
-              <div className="mb-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-white/5 text-xs text-white/50 font-mono tracking-wide">
-                  Step 3
-                </span>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-lg font-semibold text-white mb-3">
-                Track Your Growth
-              </h3>
-
-              {/* Description */}
-              <p className="text-sm text-[#A4B1C3] leading-relaxed">
-                Run verification scans to measure impact and watch your visibility scores improve across all platforms.
-              </p>
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 px-5 py-6 hover:border-white/20 hover:bg-[#0E1727] transition-colors duration-150">
+            <div className="inline-flex items-center justify-center rounded-xl bg-[#0F1B2C] p-3 mb-4">
+              <TrendingUp className="h-6 w-6 text-white" strokeWidth={1.5} />
             </div>
-          </div>
+
+            <div className="mb-3">
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/5 text-xs text-white/50 font-mono">
+                Step 3
+              </span>
+            </div>
+
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Track Your Growth
+            </h3>
+
+            <p className="text-sm text-[#A4B1C3] leading-relaxed">
+              Run verification scans to measure impact and watch your visibility scores improve.
+            </p>
+          </article>
         </div>
 
         {/* Bottom Features */}
@@ -108,7 +90,7 @@ export default function HowItWorksSection() {
                 Weekly Scans
               </div>
               <div className="text-sm text-[#A4B1C3]">
-                Stay current with automated monitoring
+                Automated monitoring
               </div>
             </div>
 
@@ -126,7 +108,7 @@ export default function HowItWorksSection() {
                 Smart Generators
               </div>
               <div className="text-sm text-[#A4B1C3]">
-                Auto-create optimized schema & content
+                Auto-create optimized content
               </div>
             </div>
 
@@ -135,7 +117,7 @@ export default function HowItWorksSection() {
                 Verification
               </div>
               <div className="text-sm text-[#A4B1C3]">
-                Targeted re-scans to prove impact
+                Targeted re-scans
               </div>
             </div>
           </div>
