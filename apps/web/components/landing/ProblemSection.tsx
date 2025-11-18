@@ -6,6 +6,13 @@ export default function ProblemSection() {
       <div className="mx-auto max-w-5xl px-6">
         {/* Header Block */}
         <div className="mx-auto max-w-3xl text-center">
+          {/* Section Tag */}
+          <div className="mb-6">
+            <span className="inline-block px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/75 uppercase tracking-wider">
+              The Shift
+            </span>
+          </div>
+          
           <h2 className="text-3xl md:text-4xl font-heading font-semibold text-white tracking-tight">
             AI is the new search engine
           </h2>
