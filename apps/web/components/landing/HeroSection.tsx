@@ -32,9 +32,9 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 py-20">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20">
       {/* Main Content Container - MAX 900px */}
-      <div className="w-full max-w-[900px] mx-auto text-center">
+      <div className="w-full max-w-[900px] mx-auto text-center mb-20">
         
         {/* Headline */}
         <h1 className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-[1.15] tracking-tight mb-10">
