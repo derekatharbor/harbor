@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { X, Linkedin, Twitter } from 'lucide-react'
+import { X } from 'lucide-react'
+import Image from 'next/image'
 
 interface FullscreenMenuProps {
   isOpen?: boolean
@@ -31,18 +32,24 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-harbor-navy"
+      className="fixed inset-0 z-[100] bg-[#1A2332]"
       style={{
         animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      <div className="absolute inset-0 flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 sm:px-8 py-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 rounded-lg" />
-            <span className="text-xl font-bold text-white font-display">Harbor</span>
-          </div>
+      {/* Header */}
+      <div className="border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex items-center justify-between">
+          <a href="/" className="flex items-center space-x-3">
+            <Image 
+              src="/logo-icon.png" 
+              alt="Harbor" 
+              width={32} 
+              height={32}
+              className="w-8 h-8"
+            />
+            <span className="text-xl font-bold text-white font-heading">Harbor</span>
+          </a>
           
           <button
             onClick={onClose}
@@ -52,76 +59,112 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
             <X className="w-6 h-6 text-white" />
           </button>
         </div>
+      </div>
 
-        {/* Main Nav Links */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 space-y-8">
-          <a
-            href="/"
-            onClick={onClose}
-            className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-white hover:text-teal-400 transition-colors duration-300"
-          >
-            Home
-          </a>
-          <a
-            href="#how-it-works"
-            onClick={onClose}
-            className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-white hover:text-teal-400 transition-colors duration-300"
-          >
-            How It Works
-          </a>
-          <a
-            href="#pricing"
-            onClick={onClose}
-            className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-white hover:text-teal-400 transition-colors duration-300"
-          >
-            Pricing
-          </a>
-          <a
-            href="/login"
-            onClick={onClose}
-            className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-white hover:text-teal-400 transition-colors duration-300"
-          >
-            Login
-          </a>
+      {/* Content - Desktop Grid / Mobile Stack */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
           
-          <div className="pt-8">
-            <a
-              href="#early-access"
-              onClick={onClose}
-              className="inline-flex items-center px-8 py-4 rounded-lg bg-coral text-white text-lg font-medium hover:bg-coral/90 transition-all duration-200"
-            >
-              Request Early Access
-            </a>
+          {/* Column 1 - Main Navigation */}
+          <div>
+            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Navigation</h3>
+            <nav className="space-y-4">
+              <a
+                href="/"
+                onClick={onClose}
+                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Home
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={onClose}
+                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                How It Works
+              </a>
+              <a
+                href="#pricing"
+                onClick={onClose}
+                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Pricing
+              </a>
+              <a
+                href="/login"
+                onClick={onClose}
+                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Log in
+              </a>
+            </nav>
+          </div>
+
+          {/* Column 2 - Resources (Desktop only for now) */}
+          <div className="hidden lg:block">
+            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Resources</h3>
+            <nav className="space-y-4">
+              <a
+                href="/blog"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Blog
+              </a>
+              <a
+                href="/docs"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Documentation
+              </a>
+              <a
+                href="/case-studies"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Case Studies
+              </a>
+            </nav>
+          </div>
+
+          {/* Column 3 - Company (Desktop only for now) */}
+          <div className="hidden lg:block">
+            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Company</h3>
+            <nav className="space-y-4">
+              <a
+                href="/about"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                About
+              </a>
+              <a
+                href="/contact"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Contact
+              </a>
+              <a
+                href="/careers"
+                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Careers
+              </a>
+            </nav>
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="px-6 sm:px-8 py-6">
-          <div className="flex items-center justify-between border-t border-white/8 pt-6">
-            <div className="text-sm text-white/50">
-              © 2024 Harbor
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <a
-                href="https://linkedin.com/company/harbor"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5 text-white/75 hover:text-white transition-colors" />
-              </a>
-              <a
-                href="https://x.com/harbor"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
-                aria-label="X (Twitter)"
-              >
-                <Twitter className="w-5 h-5 text-white/75 hover:text-white transition-colors" />
-              </a>
-            </div>
+      {/* Footer - CTA + Social */}
+      <div className="absolute bottom-0 left-0 right-0 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-4">
+          <a
+            href="#early-access"
+            onClick={onClose}
+            className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+          >
+            Get started
+          </a>
+          
+          <div className="text-sm text-white/50">
+            © 2024 Harbor
           </div>
         </div>
       </div>
@@ -130,11 +173,9 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: scale(0.96);
           }
           to {
             opacity: 1;
-            transform: scale(1);
           }
         }
       `}</style>
