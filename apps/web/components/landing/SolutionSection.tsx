@@ -76,10 +76,10 @@ export default function SolutionSection() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`
                   relative text-left rounded-[20px] p-6 lg:p-8 cursor-pointer
-                  transition-all duration-200
+                  transition-all duration-200 border-2
                   ${isActive 
-                    ? 'bg-[#0f1b2d] border-2 border-[#1FE0B7] -translate-y-1' 
-                    : 'bg-[#0f1b2d] border border-white/[0.04] hover:-translate-y-0.5 hover:shadow-2xl'
+                    ? 'bg-[#0f1b2d] border-[#1FE0B7] -translate-y-1' 
+                    : 'bg-[#0f1b2d] border-transparent hover:-translate-y-0.5 hover:shadow-2xl'
                   }
                 `}
               >
