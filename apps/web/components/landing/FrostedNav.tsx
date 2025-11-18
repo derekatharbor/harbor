@@ -12,7 +12,7 @@ export default function FrostedNav() {
     <>
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
-          className="backdrop-blur-xl bg-[#2A3B54]/90 rounded-2xl shadow-2xl border border-white/10"
+          className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
           style={{ backdropFilter: 'blur(12px)' }}
         >
           <div className="px-6 lg:px-8">
