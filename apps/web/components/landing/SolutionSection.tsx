@@ -1,123 +1,90 @@
 import { ShoppingBag, Sparkles, MessageSquare } from 'lucide-react'
+import Image from 'next/image'
 
 export default function SolutionSection() {
   return (
-    <section className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white/[0.02]">
-      <div className="max-w-6xl mx-auto">
-        {/* Section Tag */}
-        <div className="text-center mb-8">
-          <span className="inline-block px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/75 uppercase tracking-wider">
-            Intelligence Layer
-          </span>
+    <section className="bg-[#1A2332] py-24 lg:py-28">
+      <div className="mx-auto max-w-7xl px-6">
+        {/* Header Block */}
+        <div className="mx-auto max-w-3xl text-center">
+          {/* Section Tag */}
+          <div className="mb-6">
+            <span className="inline-block px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/75 uppercase tracking-wider">
+              Intelligence Layer
+            </span>
+          </div>
+          
+          <h2 className="text-3xl md:text-[2.625rem] font-heading font-bold text-white tracking-tight leading-tight">
+            Harbor shows you how AI sees your brand
+          </h2>
+          
+          <p className="mt-6 text-lg md:text-xl text-[#CBD3E2] leading-relaxed max-w-[720px] mx-auto">
+            Get real-time intelligence across shopping visibility, brand perception, and customer conversations.
+          </p>
         </div>
 
-        {/* Main Headline */}
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white text-center leading-tight mb-6">
-          Harbor shows you how AI sees your brand
-        </h2>
-
-        <p className="text-lg sm:text-xl text-white/75 text-center max-w-2xl mx-auto mb-16">
-          Get real-time intelligence across shopping, brand perception, and customer conversations.
-        </p>
-
-        {/* Three Module Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {/* Shopping Visibility */}
-          <div className="group p-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-teal-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center mb-6 group-hover:bg-teal-500/20 transition-colors">
-              <ShoppingBag className="w-6 h-6 text-teal-400" />
+        {/* Dashboard Screenshot */}
+        <div className="mt-16 lg:mt-20">
+          <div className="relative mx-auto max-w-[1240px]">
+            <div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+              <Image
+                src="/dashboard-preview.png"
+                alt="Harbor Dashboard - Shopping Visibility"
+                width={2480}
+                height={1600}
+                className="w-full h-auto"
+                priority
+              />
             </div>
+          </div>
+        </div>
 
-            <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-3">
+        {/* Three Pillars */}
+        <div className="mt-18 lg:mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Shopping Visibility */}
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 p-8">
+            <div className="mb-4">
+              <ShoppingBag className="h-7 w-7 text-white" strokeWidth={1.5} />
+            </div>
+            
+            <h3 className="text-xl font-semibold text-white mb-3">
               Shopping Visibility
             </h3>
-
-            <p className="text-white/75 leading-relaxed mb-4">
-              See how your products surface in AI shopping recommendations across ChatGPT, Claude, Gemini, and Perplexity.
+            
+            <p className="text-[15.5px] text-[#A4B1C3] leading-relaxed">
+              See how often your products appear in AI shopping recommendations across ChatGPT, Claude, Gemini, and Perplexity. Track rankings, category coverage, competitor share, and model-specific visibility.
             </p>
-
-            <ul className="space-y-2 text-sm text-white/60">
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Category coverage and rank positions</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Competitor comparison analysis</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Model-specific mention frequency</span>
-              </li>
-            </ul>
-          </div>
+          </article>
 
           {/* Brand Visibility */}
-          <div className="group p-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-teal-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center mb-6 group-hover:bg-teal-500/20 transition-colors">
-              <Sparkles className="w-6 h-6 text-teal-400" />
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 p-8">
+            <div className="mb-4">
+              <Sparkles className="h-7 w-7 text-white" strokeWidth={1.5} />
             </div>
-
-            <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-3">
+            
+            <h3 className="text-xl font-semibold text-white mb-3">
               Brand Visibility
             </h3>
-
-            <p className="text-white/75 leading-relaxed mb-4">
-              Understand how AI models describe and associate your brand with descriptors, entities, and sentiment.
+            
+            <p className="text-[15.5px] text-[#A4B1C3] leading-relaxed">
+              Understand how AI models perceive your brand with descriptors, sentiment, associations, and consistency across models. Identify what you're known for — and what's missing.
             </p>
-
-            <ul className="space-y-2 text-sm text-white/60">
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Descriptor cloud with polarity</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Entity graph relationships</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Visibility index over time</span>
-              </li>
-            </ul>
-          </div>
+          </article>
 
           {/* Conversation Volumes */}
-          <div className="group p-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/[0.07] hover:border-teal-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center mb-6 group-hover:bg-teal-500/20 transition-colors">
-              <MessageSquare className="w-6 h-6 text-teal-400" />
+          <article className="rounded-2xl bg-[#0C1422] border border-white/5 p-8">
+            <div className="mb-4">
+              <MessageSquare className="h-7 w-7 text-white" strokeWidth={1.5} />
             </div>
-
-            <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-3">
+            
+            <h3 className="text-xl font-semibold text-white mb-3">
               Conversation Volumes
             </h3>
-
-            <p className="text-white/75 leading-relaxed mb-4">
-              Discover what users ask AI about your brand and category, with intent classification and emerging topics.
+            
+            <p className="text-[15.5px] text-[#A4B1C3] leading-relaxed">
+              Discover what users ask AI about your brand and category. Monitor intent categories, trending topics, and co-mentions with competitors.
             </p>
-
-            <ul className="space-y-2 text-sm text-white/60">
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Top questions by intent type</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Emerging topic detection</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-teal-400 mr-2">•</span>
-                <span>Co-mention competitor analysis</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-12">
-          <p className="text-white/60 text-sm mb-4">
-            Plus: Website Analytics to audit your AI readability
-          </p>
+          </article>
         </div>
       </div>
     </section>
