@@ -25,6 +25,7 @@
   "packageManager": "npm@10.0.0",
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
-    "cheerio": "^1.1.2"
+    "cheerio": "^1.1.2",
+    "lucide-react": "^0.554.0"
   }
 }

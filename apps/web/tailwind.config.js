@@ -25,10 +25,15 @@ module.exports = {
         softgray: {
           DEFAULT: '#A9B4C5',
         },
+        coral: '#FF6B4A',
+        // Landing page specific
+        'harbor-navy': '#0A1628',
       },
       fontFamily: {
         heading: ['Space Grotesk', 'sans-serif'],
         body: ['DM Sans', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
+        mono: ['Source Code Pro', 'monospace'],
       },
       borderRadius: {
         card: '8px',
