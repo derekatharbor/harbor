@@ -32,17 +32,17 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-32">
       {/* Main Content Container - MAX 900px */}
-      <div className="w-full max-w-[900px] mx-auto text-center mb-20">
+      <div className="w-full max-w-[900px] mx-auto text-center mb-32">
         
         {/* Headline */}
-        <h1 className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-[1.15] tracking-tight mb-10">
+        <h1 className="text-[clamp(2rem,5vw,4rem)] font-heading font-bold text-white leading-[1.15] tracking-tight mb-6">
           Get your brand mentioned by
         </h1>
 
         {/* Rotating AI Platform Logo - Single wrapper for both logo and text */}
-        <div className="flex items-center justify-center mb-8 h-24">
+        <div className="flex items-center justify-center mb-6 h-24">
           <div
             className={`flex items-center justify-center space-x-4 transition-all duration-300 ${
               !mounted || isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'

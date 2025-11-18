@@ -33,14 +33,14 @@ export default function FrostedNav() {
               <div className="flex items-center space-x-4">
                 <a 
                   href="/login" 
-                  className="text-white text-base hover:text-white/80 transition-colors duration-200"
+                  className="hidden md:block text-white text-base hover:text-white/80 transition-colors duration-200"
                 >
                   Log in
                 </a>
                 
                 <a
                   href="#early-access"
-                  className="inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+                  className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
                 >
                   Get started
                 </a>
