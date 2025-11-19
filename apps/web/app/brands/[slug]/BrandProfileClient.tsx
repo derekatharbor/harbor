@@ -22,13 +22,31 @@ interface Props {
   brand: Brand
 }
 
-export default function BrandProfileClient({ brand }: Props) {
+export default function BrandProfileClient({ brand: initialBrand }: Props) {
+  const [brand, setBrand] = useState<Brand>(initialBrand)
+  const [loading, setLoading] = useState(initialBrand.brand_name === 'Loading...')
   const [showClaimModal, setShowClaimModal] = useState(false)
   const [claimStep, setClaimStep] = useState<'email' | 'code'>('email')
   const [email, setEmail] = useState('')
   const [code, setCode] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [claimLoading, setClaimLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Fetch brand data if not provided
+  useEffect(() => {
+    if (initialBrand.brand_name === 'Loading...') {
+      fetch(`/api/brands/${initialBrand.slug}`)
+        .then(res => res.json())
+        .then(data => {
+          setBrand(data)
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error('Failed to fetch brand:', err)
+          setLoading(false)
+        })
+    }
+  }, [initialBrand])
 
   const handleSendCode = async () => {
     setError('')
@@ -40,7 +58,7 @@ export default function BrandProfileClient({ brand }: Props) {
       return
     }
 
-    setLoading(true)
+    setClaimLoading(true)
     
     try {
       const res = await fetch('/api/claim/start', {
@@ -287,7 +305,7 @@ export default function BrandProfileClient({ brand }: Props) {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={`you@${brand.domain}`}
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#FF6B4A] transition-colors"
-                    disabled={loading}
+                    disabled={claimLoading}
                   />
                 </div>
 
@@ -302,7 +320,7 @@ export default function BrandProfileClient({ brand }: Props) {
                   disabled={loading || !email}
                   className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Sending...' : 'Send verification code'}
+                  {claimLoading ? 'Sending...' : 'Send verification code'}
                 </button>
               </div>
             )}
@@ -325,7 +343,7 @@ export default function BrandProfileClient({ brand }: Props) {
                     placeholder="000000"
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-center text-2xl tracking-widest placeholder-white/40 focus:outline-none focus:border-[#FF6B4A] transition-colors font-mono"
                     maxLength={6}
-                    disabled={loading}
+                    disabled={claimLoading}
                   />
                 </div>
 
@@ -340,7 +358,7 @@ export default function BrandProfileClient({ brand }: Props) {
                   disabled={loading || code.length !== 6}
                   className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-3"
                 >
-                  {loading ? 'Verifying...' : 'Verify'}
+                  {claimLoading ? 'Verifying...' : 'Verify'}
                 </button>
 
                 <button

@@ -22,10 +22,28 @@ interface Props {
 }
 
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
-  const [brands] = useState<Brand[]>(initialBrands)
+  const [brands, setBrands] = useState<Brand[]>(initialBrands)
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands)
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [loading, setLoading] = useState(initialBrands.length === 0)
+
+  // Fetch brands if not provided
+  useEffect(() => {
+    if (initialBrands.length === 0) {
+      fetch('/api/brands')
+        .then(res => res.json())
+        .then(data => {
+          setBrands(data)
+          setFilteredBrands(data)
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error('Failed to fetch brands:', err)
+          setLoading(false)
+        })
+    }
+  }, [initialBrands])
 
   // Filter brands based on industry
   useEffect(() => {
@@ -414,7 +432,17 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Leaderboard Table */}
       <section className="relative z-10 px-4 md:px-6 pb-16 md:pb-20">
         <div className="max-w-7xl mx-auto">
-          <div className="rounded-xl md:rounded-2xl bg-[#0C1422] border border-white/5 overflow-hidden">
+          {loading ? (
+            <div className="text-center py-20">
+              <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4" />
+              <p className="text-white/50">Loading brands...</p>
+            </div>
+          ) : filteredBrands.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-white/50">No brands found</p>
+            </div>
+          ) : (
+            <div className="rounded-xl md:rounded-2xl bg-[#0C1422] border border-white/5 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px]">
                 <thead>
@@ -495,6 +523,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
               </table>
             </div>
           </div>
+          )}
         </div>
       </section>
 
