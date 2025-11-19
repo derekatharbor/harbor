@@ -18,29 +18,15 @@ interface Brand {
   accesses_last_30_days: number
 }
 
-export default function IndexClient() {
-  const [brands, setBrands] = useState<Brand[]>([])
-  const [filteredBrands, setFilteredBrands] = useState<Brand[]>([])
+interface Props {
+  initialBrands: Brand[]
+}
+
+export default function IndexClient({ initialBrands }: Props) {
+  const [brands] = useState<Brand[]>(initialBrands)
+  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
-  const [loading, setLoading] = useState(true)
-
-  // Fetch brands from API
-  useEffect(() => {
-    async function fetchBrands() {
-      try {
-        const response = await fetch('/api/index/brands')
-        const data = await response.json()
-        setBrands(data)
-        setFilteredBrands(data)
-      } catch (error) {
-        console.error('Failed to load brands:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchBrands()
-  }, [])
 
   // Filter brands based on search and industry
   useEffect(() => {
@@ -133,12 +119,7 @@ export default function IndexClient() {
       {/* Table Section */}
       <section className="px-6 pb-20">
         <div className="max-w-7xl mx-auto">
-          {loading ? (
-            <div className="text-center py-20">
-              <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-              <p className="mt-4 text-white/50">Loading brands...</p>
-            </div>
-          ) : filteredBrands.length === 0 ? (
+          {filteredBrands.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-xl text-white/50">No brands found</p>
               <p className="mt-2 text-sm text-white/30">Try a different search or filter</p>
