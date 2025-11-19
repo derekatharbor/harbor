@@ -147,7 +147,11 @@ Generate the profile now:`;
       }]
     });
     
-    const content = message.content[0].text;
+    const firstContent = message.content[0];
+    if (firstContent.type !== 'text') {
+      throw new Error('Expected text response from Claude');
+    }
+    const content = firstContent.text;
     
     // Extract JSON (handle markdown code blocks)
     let jsonText = content;
