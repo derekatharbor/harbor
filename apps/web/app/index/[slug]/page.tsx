@@ -5,6 +5,8 @@ import { ArrowLeft, ExternalLink, Check, Copy, TrendingUp, Clock } from 'lucide-
 import Image from 'next/image'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 interface BrandProfile {
   id: string
   brand_name: string
