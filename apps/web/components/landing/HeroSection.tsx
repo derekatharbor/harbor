@@ -32,7 +32,10 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-32">
+    <section 
+      className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-32"
+      style={{ backgroundColor: '#101A31' }}
+    >
       {/* Main Content Container - MAX 900px */}
       <div className="w-full max-w-[900px] mx-auto text-center mb-32">
         
