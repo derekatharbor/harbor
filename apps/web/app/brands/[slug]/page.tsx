@@ -1,23 +1,15 @@
-// apps/web/app/brands/[slug]/page.tsx
-// Individual brand profile page with claiming functionality
+// apps/web/app/brands/page.tsx
 
 import { createClient } from '@supabase/supabase-js'
-import { notFound } from 'next/navigation'
-import BrandProfileClient from './BrandProfileClient'
+import HarborIndexClient from './HarborIndexClient'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-// Tell Next.js not to statically generate any brand pages at build time
-export async function generateStaticParams() {
-  return []
-}
-
-async function getBrandBySlug(slug: string) {
-  // Check for env vars
+async function getBrands() {
+  // Return empty array during build
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('Missing Supabase credentials')
-    return null
+    return []
   }
 
   const supabase = createClient(
@@ -25,36 +17,17 @@ async function getBrandBySlug(slug: string) {
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 
-  const { data: brand } = await supabase
-    .from('public_index') // This is the view from the ai_profiles schema
+  const { data: brands } = await supabase
+    .from('public_index')
     .select('*')
-    .eq('slug', slug)
-    .single()
+    .order('rank_global', { ascending: true })
+    .limit(1000)
 
-  return brand
+  return brands || []
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const brand = await getBrandBySlug(params.slug)
-  
-  if (!brand) {
-    return {
-      title: 'Brand Not Found - Harbor Index'
-    }
-  }
+export default async function BrandsPage() {
+  const brands = await getBrands()
 
-  return {
-    title: `${brand.brand_name} - AI Visibility Profile | Harbor Index`,
-    description: `Track ${brand.brand_name}'s visibility across ChatGPT, Claude, Gemini, and Perplexity. Visibility Score: ${brand.visibility_score}%`,
-  }
-}
-
-export default async function BrandProfilePage({ params }: { params: { slug: string } }) {
-  const brand = await getBrandBySlug(params.slug)
-
-  if (!brand) {
-    notFound()
-  }
-
-  return <BrandProfileClient brand={brand} />
+  return <HarborIndexClient brands={brands} />
 }
