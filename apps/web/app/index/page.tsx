@@ -1,42 +1,48 @@
 // apps/web/app/index/page.tsx
-// Fixed version with proper imports
+// SIMPLEST VERSION - Pure server component, no client interactivity yet
 
 import { createClient } from '@supabase/supabase-js'
-import dynamic from 'next/dynamic'
+import Link from 'next/link'
 
-// Use dynamic import to avoid build-time issues
-const IndexClient = dynamic(() => import('./IndexClient'), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-[#0A0F1A] flex items-center justify-center">
-      <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
-    </div>
-  )
-})
+export const dynamic = 'force-dynamic'
 
 async function getBrands() {
-  try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 
-    const { data: brands, error } = await supabase
-      .from('public_index')
-      .select('*')
-      .order('rank_global', { ascending: true })
-      .limit(1000)
+  const { data: brands } = await supabase
+    .from('public_index')
+    .select('*')
+    .order('rank_global', { ascending: true })
+    .limit(100)
 
-    if (error) throw error
-    return brands || []
-  } catch (error) {
-    console.error('Error fetching brands:', error)
-    return []
-  }
+  return brands || []
 }
 
 export default async function IndexPage() {
-  const initialBrands = await getBrands()
-  
-  return <IndexClient initialBrands={initialBrands} />
+  const brands = await getBrands()
+
+  return (
+    <div className="min-h-screen bg-[#0A0F1A] text-white p-12">
+      <h1 className="text-4xl font-bold mb-8">Harbor AI Index</h1>
+      <p className="mb-8 text-white/70">
+        {brands.length} brands found
+      </p>
+
+      <div className="space-y-4">
+        {brands.map((brand: any) => (
+          <Link
+            key={brand.id}
+            href={`/index/${brand.slug}`}
+            className="block p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            <div className="font-bold">{brand.brand_name}</div>
+            <div className="text-sm text-white/50">{brand.domain}</div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  )
 }
