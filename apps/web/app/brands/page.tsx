@@ -1,11 +1,7 @@
 // apps/web/app/brands/page.tsx
-// Public brand leaderboard
 
 import { createClient } from '@supabase/supabase-js'
-import Link from 'next/link'
-import Image from 'next/image'
-import { TrendingUp, ArrowRight } from 'lucide-react'
-import BrandsClient from './BrandsClient'
+import HarborIndexClient from './HarborIndexClient'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,5 +23,5 @@ async function getBrands() {
 export default async function BrandsPage() {
   const brands = await getBrands()
 
-  return <BrandsClient brands={brands} />
+  return <HarborIndexClient brands={brands} />
 }
