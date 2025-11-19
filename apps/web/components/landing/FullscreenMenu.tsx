@@ -32,7 +32,7 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-[#1A2332]"
+      className="fixed inset-0 z-[100] bg-[#101A31]"
       style={{
         animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
@@ -48,7 +48,7 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
               height={32}
               className="w-8 h-8"
             />
-            <span className="text-xl font-bold text-white font-heading">Harbor</span>
+            <span className="text-xl font-bold text-white">Harbor</span>
           </a>
           
           <button
@@ -61,91 +61,117 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
         </div>
       </div>
 
-      {/* Content - Desktop Grid / Mobile Stack */}
+      {/* Content - 4 Column Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
           
           {/* Column 1 - Main Navigation */}
           <div>
-            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Navigation</h3>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Navigation</h3>
             <nav className="space-y-4">
               <a
                 href="/"
                 onClick={onClose}
-                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Home
               </a>
               <a
-                href="#how-it-works"
+                href="/#how-it-works"
                 onClick={onClose}
-                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 How It Works
               </a>
               <a
-                href="#pricing"
+                href="/#pricing"
                 onClick={onClose}
-                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Pricing
               </a>
               <a
                 href="/login"
                 onClick={onClose}
-                className="block text-2xl lg:text-3xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Log in
               </a>
             </nav>
           </div>
 
-          {/* Column 2 - Resources (Desktop only for now) */}
-          <div className="hidden lg:block">
-            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Resources</h3>
-            <nav className="space-y-4">
-              <a
-                href="/blog"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Blog
-              </a>
-              <a
-                href="/docs"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Documentation
-              </a>
-              <a
-                href="/case-studies"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Case Studies
-              </a>
-            </nav>
+          {/* Column 2 - Harbor Index (Featured) */}
+          <div>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Harbor Index</h3>
+            
+            <a 
+              href="/brands" 
+              onClick={onClose}
+              className="block group"
+            >
+              {/* Image placeholder */}
+              <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
+              </div>
+              
+              <h4 className="text-xl font-bold text-white mb-3 uppercase group-hover:text-white/70 transition-colors">
+                Claim your brand's AI profile
+              </h4>
+              
+              <p className="text-sm text-white/60 leading-relaxed font-mono">
+                Our Harbor Index is home to AI profiles for thousands of brands.
+                <br /><br />
+                Don't see yours listed? Set up your AI profile page for free and start getting discovered by AI models.
+              </p>
+            </a>
           </div>
 
-          {/* Column 3 - Company (Desktop only for now) */}
-          <div className="hidden lg:block">
-            <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Company</h3>
+          {/* Column 3 - Company */}
+          <div>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Company</h3>
             <nav className="space-y-4">
               <a
                 href="/about"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 About
               </a>
               <a
                 href="/contact"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Contact
               </a>
               <a
                 href="/careers"
-                className="block text-xl font-heading text-white hover:text-white/70 transition-colors duration-200"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Careers
+              </a>
+            </nav>
+          </div>
+
+          {/* Column 4 - Resources */}
+          <div>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Resources</h3>
+            <nav className="space-y-4">
+              <a
+                href="/blog"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Blog
+              </a>
+              <a
+                href="/docs"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Documentation
+              </a>
+              <a
+                href="/case-studies"
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Case Studies
               </a>
             </nav>
           </div>

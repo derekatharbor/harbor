@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, X, TrendingUp, TrendingDown, Search } from 'lucide-react'
+import { Menu, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import FullscreenMenu from '@/components/FullscreenMenu' // Import the unified menu
 
 interface Brand {
   id: string
@@ -64,25 +65,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     setFilteredBrands(filtered)
   }, [searchQuery, selectedIndustry, brands])
 
-  // Close menu on escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsMenuOpen(false)
-      }
-    }
-
-    if (isMenuOpen) {
-      document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isMenuOpen])
-
   // Get unique industries
   const industries = ['all', ...Array.from(new Set(brands.map(b => b.industry).filter(Boolean)))]
   
@@ -101,6 +83,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       <div className="fixed inset-0 pointer-events-none opacity-40">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/50 to-[#101A31]" />
       </div>
+
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -150,245 +133,41 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </nav>
 
-      {/* Fullscreen Menu */}
-      {isMenuOpen && (
-        <div 
-          className="fixed inset-0 z-[100] bg-[#101A31]"
-          style={{
-            animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        >
-          {/* Header */}
-          <div className="border-b border-white/10">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex items-center justify-between">
-              <a href="/" className="flex items-center space-x-3">
-                <Image 
-                  src="/logo-icon.png" 
-                  alt="Harbor" 
-                  width={32} 
-                  height={32}
-                  className="w-8 h-8"
-                />
-                <span className="text-xl font-bold text-white">Harbor</span>
-              </a>
-              
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
-                aria-label="Close menu"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Content - 4 Column Grid */}
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
-              
-              {/* Column 1 - Main Navigation */}
-              <div>
-                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Navigation</h3>
-                <nav className="space-y-4">
-                  <a
-                    href="/"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Home
-                  </a>
-                  <a
-                    href="/#how-it-works"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    How It Works
-                  </a>
-                  <a
-                    href="/#pricing"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Pricing
-                  </a>
-                  <a
-                    href="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Log in
-                  </a>
-                </nav>
-              </div>
-
-              {/* Column 2 - Harbor Index (Featured) */}
-              <div>
-                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Harbor Index</h3>
-                
-                <a 
-                  href="/brands" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block group"
-                >
-                  {/* Image placeholder - you'll replace this */}
-                  <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
-                    {/* Add your index image here */}
-                    <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
-                  </div>
-                  
-                  <h4 className="text-xl font-bold text-white mb-3 uppercase group-hover:text-white/70 transition-colors">
-                    Claim your brand's AI profile
-                  </h4>
-                  
-                  <p className="text-sm text-white/60 leading-relaxed font-mono mb-3">
-                    Our Harbor Index is home to over 10,000 AI profiles for brands.
-                    <br /><br />
-                    Don't see yours listed? Set up your AI profile page for free and start getting discovered by AI models.
-                  </p>
-
-                  <div className="text-xs uppercase tracking-wider text-white/30 font-mono">
-                    10,000+ brands
-                  </div>
-                </a>
-              </div>
-
-              {/* Column 3 - Company */}
-              <div>
-                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Company</h3>
-                <nav className="space-y-4">
-                  <a
-                    href="/about"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    About
-                  </a>
-                  <a
-                    href="/contact"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Contact
-                  </a>
-                  <a
-                    href="/careers"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Careers
-                  </a>
-                </nav>
-              </div>
-
-              {/* Column 4 - Resources */}
-              <div>
-                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Resources</h3>
-                <nav className="space-y-4">
-                  <a
-                    href="/blog"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Blog
-                  </a>
-                  <a
-                    href="/docs"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Documentation
-                  </a>
-                  <a
-                    href="/case-studies"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Case Studies
-                  </a>
-                </nav>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer CTA */}
-          <div className="absolute bottom-0 left-0 right-0 border-t border-white/10">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-              <a
-                href="/dashboard"
-                onClick={() => setIsMenuOpen(false)}
-                className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
-              >
-                Get started
-              </a>
-              
-              <div className="text-sm text-white/50">
-                © 2024 Harbor
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Use the unified FullscreenMenu component */}
+      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       {/* Spacer for fixed nav */}
       <div className="h-24 md:h-28" />
 
       {/* Hero Section */}
       <section className="relative pt-16 md:pt-24 lg:pt-32 pb-12 md:pb-16 px-4 md:px-6 z-10">
-        {/* Wireframe Background Image */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-          <Image
-            src="/wireframe-hero.png"
-            alt=""
-            width={1200}
-            height={800}
-            className="max-w-4xl w-full h-auto"
-            priority
-          />
-        </div>
-
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          {/* Tag */}
-          <div className="mb-4 md:mb-6">
-            <span className="inline-block px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-[#6B7CFF] uppercase tracking-wider font-medium">
-              Harbor Index
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight tracking-tight mb-4 md:mb-6 px-4">
-            How AI sees the<br />world's top brands
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">
+            The Harbor Index
           </h1>
-
-          {/* Subheadline */}
-          <p className="text-base md:text-lg lg:text-xl text-[#CBD4E1]/70 leading-relaxed max-w-4xl mx-auto px-4 mb-8">
-            Track brand visibility across ChatGPT, Claude, Gemini, and Perplexity. 
-            Real-time insights from AI-powered search.
+          <p className="text-base md:text-lg text-white/70 mb-8 md:mb-12 max-w-2xl mx-auto">
+            Track how AI models see your brand. Real-time visibility scores across ChatGPT, Claude, Gemini, and Perplexity.
           </p>
 
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-              <input
-                type="text"
-                placeholder="Search for your brand (e.g., Nike, Shopify)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
-              />
-            </div>
-            {searchQuery && filteredBrands.length > 0 && (
-              <p className="mt-3 text-sm text-white/50">
-                Found {filteredBrands.length} brand{filteredBrands.length !== 1 ? 's' : ''}
-              </p>
-            )}
+          <div className="relative max-w-2xl mx-auto mb-6 md:mb-8">
+            <Search className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+            <input
+              type="text"
+              placeholder="Search brands..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 md:pl-14 pr-4 md:pr-6 py-3 md:py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl md:rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-all text-sm md:text-base"
+            />
           </div>
-        </div>
-      </section>
 
-      {/* Industry Filter Tabs */}
-      <section className="px-4 md:px-6 py-4 md:py-5 sticky top-20 md:top-24 bg-[#101A31]/80 backdrop-blur-xl z-20 border-b border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-0 scrollbar-hide">
+          {/* Industry Filters */}
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
             {industries.map((industry) => (
               <button
                 key={industry}
                 onClick={() => setSelectedIndustry(industry)}
-                className={`px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
+                className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all ${
                   selectedIndustry === industry
                     ? 'bg-white text-black'
                     : 'bg-transparent text-white/70 hover:bg-white/5'
