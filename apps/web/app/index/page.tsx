@@ -1,11 +1,18 @@
 // apps/web/app/index/page.tsx
-// Fully server-side rendered index page
+// Fixed version with proper imports
 
 import { createClient } from '@supabase/supabase-js'
-import IndexPageClient from './IndexClient'
+import dynamic from 'next/dynamic'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Use dynamic import to avoid build-time issues
+const IndexClient = dynamic(() => import('./IndexClient'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-[#0A0F1A] flex items-center justify-center">
+      <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+    </div>
+  )
+})
 
 async function getBrands() {
   try {
@@ -31,5 +38,5 @@ async function getBrands() {
 export default async function IndexPage() {
   const initialBrands = await getBrands()
   
-  return <IndexPageClient initialBrands={initialBrands} />
+  return <IndexClient initialBrands={initialBrands} />
 }
