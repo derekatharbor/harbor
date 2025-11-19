@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, TrendingUp, TrendingDown } from 'lucide-react'
+import { Menu, X, TrendingUp, TrendingDown } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -25,6 +25,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [brands] = useState<Brand[]>(initialBrands)
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands)
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Filter brands based on industry
   useEffect(() => {
@@ -34,6 +35,25 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       setFilteredBrands(brands.filter(brand => brand.industry === selectedIndustry))
     }
   }, [selectedIndustry, brands])
+
+  // Close menu on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMenuOpen])
 
   // Get unique industries
   const industries = ['all', ...Array.from(new Set(brands.map(b => b.industry).filter(Boolean)))]
@@ -48,7 +68,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0F1A]">
+    <div className="min-h-screen bg-[#1A2332] relative">
+      {/* Wireframe Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-40">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1A2332]/50 to-[#1A2332]" />
+      </div>
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -73,28 +97,159 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
               <div className="flex items-center space-x-2 md:space-x-4">
                 <a 
                   href="/login" 
-                  className="text-white text-sm md:text-base hover:text-white/80 transition-colors duration-200"
+                  className="hidden md:block text-white text-sm md:text-base hover:text-white/80 transition-colors duration-200"
                 >
                   Log in
                 </a>
                 
                 <a
                   href="/dashboard"
-                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
+                  className="hidden md:inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
                 >
                   Get started
                 </a>
+
+                <button
+                  onClick={() => setIsMenuOpen(true)}
+                  className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
+                  aria-label="Open menu"
+                >
+                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
+      {/* Fullscreen Menu */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 z-[100] bg-[#1A2332]"
+          style={{
+            animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          {/* Header */}
+          <div className="border-b border-white/10">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex items-center justify-between">
+              <a href="/" className="flex items-center space-x-3">
+                <Image 
+                  src="/logo-icon.png" 
+                  alt="Harbor" 
+                  width={32} 
+                  height={32}
+                  className="w-8 h-8"
+                />
+                <span className="text-xl font-bold text-white">Harbor</span>
+              </a>
+              
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
+                aria-label="Close menu"
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+              
+              {/* Column 1 - Main Navigation */}
+              <div>
+                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Navigation</h3>
+                <nav className="space-y-4">
+                  <a
+                    href="/"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Home
+                  </a>
+                  <a
+                    href="/brands"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Harbor Index
+                  </a>
+                  <a
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Log in
+                  </a>
+                </nav>
+              </div>
+
+              {/* Column 2 - Resources */}
+              <div className="hidden lg:block">
+                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Resources</h3>
+                <nav className="space-y-4">
+                  <a
+                    href="/blog"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Blog
+                  </a>
+                  <a
+                    href="/docs"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Documentation
+                  </a>
+                </nav>
+              </div>
+
+              {/* Column 3 - Company */}
+              <div className="hidden lg:block">
+                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Company</h3>
+                <nav className="space-y-4">
+                  <a
+                    href="/about"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    About
+                  </a>
+                  <a
+                    href="/contact"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Contact
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer CTA */}
+          <div className="absolute bottom-0 left-0 right-0 border-t border-white/10">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-4">
+              <a
+                href="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+              >
+                Get started
+              </a>
+              
+              <div className="text-sm text-white/50">
+                © 2024 Harbor
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Spacer for fixed nav */}
       <div className="h-24 md:h-28" />
 
       {/* Hero Section */}
-      <section className="relative pt-16 md:pt-24 lg:pt-32 pb-12 md:pb-16 px-4 md:px-6">
+      <section className="relative pt-16 md:pt-24 lg:pt-32 pb-12 md:pb-16 px-4 md:px-6 z-10">
         <div className="max-w-7xl mx-auto text-center">
           {/* Tag */}
           <div className="mb-4 md:mb-6">
@@ -117,7 +272,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </section>
 
       {/* Industry Filter Tabs */}
-      <section className="px-4 md:px-6 pb-6 md:pb-8 sticky top-20 md:top-24 bg-[#0A0F1A]/80 backdrop-blur-xl z-10 border-b border-white/5">
+      <section className="px-4 md:px-6 pb-6 md:pb-8 sticky top-20 md:top-24 bg-[#1A2332]/80 backdrop-blur-xl z-20 border-b border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
             {industries.map((industry) => (
@@ -138,7 +293,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </section>
 
       {/* Top 3 Featured Cards */}
-      <section className="px-4 md:px-6 py-8 md:py-12">
+      <section className="relative z-10 px-4 md:px-6 py-8 md:py-12">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">
             Top {selectedIndustry === 'all' ? '' : selectedIndustry} brands this week
@@ -207,7 +362,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </section>
 
       {/* Leaderboard Table */}
-      <section className="px-4 md:px-6 pb-16 md:pb-20">
+      <section className="relative z-10 px-4 md:px-6 pb-16 md:pb-20">
         <div className="max-w-7xl mx-auto">
           <div className="rounded-xl md:rounded-2xl bg-[#0C1422] border border-white/5 overflow-hidden">
             <div className="overflow-x-auto">
@@ -300,6 +455,14 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
       `}</style>
     </div>
