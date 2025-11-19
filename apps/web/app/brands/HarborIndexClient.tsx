@@ -68,10 +68,10 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#1A2332] relative">
+    <div className="min-h-screen bg-[#101A31] relative">
       {/* Wireframe Background */}
       <div className="fixed inset-0 pointer-events-none opacity-40">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1A2332]/50 to-[#1A2332]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/50 to-[#101A31]" />
       </div>
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
@@ -125,7 +125,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Fullscreen Menu */}
       {isMenuOpen && (
         <div 
-          className="fixed inset-0 z-[100] bg-[#1A2332]"
+          className="fixed inset-0 z-[100] bg-[#101A31]"
           style={{
             animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -154,41 +154,104 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </div>
           </div>
 
-          {/* Content */}
+          {/* Content - 4 Column Grid */}
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
               
               {/* Column 1 - Main Navigation */}
               <div>
-                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Navigation</h3>
+                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Navigation</h3>
                 <nav className="space-y-4">
                   <a
                     href="/"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
                   >
                     Home
                   </a>
                   <a
-                    href="/brands"
+                    href="/#how-it-works"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
                   >
-                    Harbor Index
+                    How It Works
+                  </a>
+                  <a
+                    href="/#pricing"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Pricing
                   </a>
                   <a
                     href="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block text-2xl lg:text-3xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                    className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
                   >
                     Log in
                   </a>
                 </nav>
               </div>
 
-              {/* Column 2 - Resources */}
-              <div className="hidden lg:block">
-                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Resources</h3>
+              {/* Column 2 - Harbor Index (Featured) */}
+              <div>
+                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Harbor Index</h3>
+                
+                <a 
+                  href="/brands" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block group"
+                >
+                  <h4 className="text-2xl font-bold text-white mb-4 group-hover:text-white/70 transition-colors">
+                    HARBOR INDEX
+                  </h4>
+                  
+                  {/* Image placeholder - you'll replace this */}
+                  <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
+                    {/* Add your index image here */}
+                    <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
+                  </div>
+                  
+                  <h5 className="text-base font-semibold text-white mb-2">
+                    Claim your brand's AI profile
+                  </h5>
+                  
+                  <p className="text-sm text-white/60 leading-relaxed font-mono">
+                    Our Harbor Index is home to over 10,000 AI profiles for brands.
+                    <br /><br />
+                    Don't see yours listed? Set up your AI profile page for free and start getting discovered by AI models.
+                  </p>
+                </a>
+              </div>
+
+              {/* Column 3 - Company */}
+              <div>
+                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Company</h3>
+                <nav className="space-y-4">
+                  <a
+                    href="/about"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    About
+                  </a>
+                  <a
+                    href="/contact"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Contact
+                  </a>
+                  <a
+                    href="/careers"
+                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                  >
+                    Careers
+                  </a>
+                </nav>
+              </div>
+
+              {/* Column 4 - Resources */}
+              <div>
+                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Resources</h3>
                 <nav className="space-y-4">
                   <a
                     href="/blog"
@@ -202,24 +265,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   >
                     Documentation
                   </a>
-                </nav>
-              </div>
-
-              {/* Column 3 - Company */}
-              <div className="hidden lg:block">
-                <h3 className="text-sm uppercase tracking-wider text-white/50 mb-6">Company</h3>
-                <nav className="space-y-4">
                   <a
-                    href="/about"
+                    href="/case-studies"
                     className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
                   >
-                    About
-                  </a>
-                  <a
-                    href="/contact"
-                    className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-                  >
-                    Contact
+                    Case Studies
                   </a>
                 </nav>
               </div>
@@ -272,7 +322,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </section>
 
       {/* Industry Filter Tabs */}
-      <section className="px-4 md:px-6 pb-6 md:pb-8 sticky top-20 md:top-24 bg-[#1A2332]/80 backdrop-blur-xl z-20 border-b border-white/5">
+      <section className="px-4 md:px-6 pb-6 md:pb-8 sticky top-20 md:top-24 bg-[#101A31]/80 backdrop-blur-xl z-20 border-b border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
             {industries.map((industry) => (
