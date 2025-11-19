@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Menu, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import FullscreenMenu from '@/components/FullscreenMenu' // Import the unified menu
+import FullscreenMenu from '@/components/landing/FullscreenMenu' // Correct path
 
 interface Brand {
   id: string
