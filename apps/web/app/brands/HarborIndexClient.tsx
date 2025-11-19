@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, X, TrendingUp, TrendingDown } from 'lucide-react'
+import { Menu, X, TrendingUp, TrendingDown, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -27,6 +27,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Fetch brands if not provided
   useEffect(() => {
@@ -45,14 +46,23 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [initialBrands])
 
-  // Filter brands based on industry
+  // Filter brands based on industry and search
   useEffect(() => {
-    if (selectedIndustry === 'all') {
-      setFilteredBrands(brands)
-    } else {
-      setFilteredBrands(brands.filter(brand => brand.industry === selectedIndustry))
+    let filtered = brands
+
+    if (searchQuery) {
+      filtered = filtered.filter(brand =>
+        brand.brand_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        brand.domain.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     }
-  }, [selectedIndustry, brands])
+
+    if (selectedIndustry !== 'all') {
+      filtered = filtered.filter(brand => brand.industry === selectedIndustry)
+    }
+
+    setFilteredBrands(filtered)
+  }, [searchQuery, selectedIndustry, brands])
 
   // Close menu on escape key
   useEffect(() => {
@@ -318,7 +328,19 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Hero Section */}
       <section className="relative pt-16 md:pt-24 lg:pt-32 pb-12 md:pb-16 px-4 md:px-6 z-10">
-        <div className="max-w-7xl mx-auto text-center">
+        {/* Wireframe Background Image */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+          <Image
+            src="/wireframe-hero.png"
+            alt=""
+            width={1200}
+            height={800}
+            className="max-w-4xl w-full h-auto"
+            priority
+          />
+        </div>
+
+        <div className="max-w-7xl mx-auto text-center relative z-10">
           {/* Tag */}
           <div className="mb-4 md:mb-6">
             <span className="inline-block px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm text-[#6B7CFF] uppercase tracking-wider font-medium">
@@ -332,22 +354,41 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-base md:text-lg lg:text-xl text-[#CBD4E1]/70 leading-relaxed max-w-4xl mx-auto px-4">
+          <p className="text-base md:text-lg lg:text-xl text-[#CBD4E1]/70 leading-relaxed max-w-4xl mx-auto px-4 mb-8">
             Track brand visibility across ChatGPT, Claude, Gemini, and Perplexity. 
             Real-time insights from AI-powered search.
           </p>
+
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search for your brand (e.g., Nike, Shopify)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-6 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
+              />
+            </div>
+            {searchQuery && filteredBrands.length > 0 && (
+              <p className="mt-3 text-sm text-white/50">
+                Found {filteredBrands.length} brand{filteredBrands.length !== 1 ? 's' : ''}
+              </p>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Industry Filter Tabs */}
-      <section className="px-4 md:px-6 pb-6 md:pb-8 sticky top-20 md:top-24 bg-[#101A31]/80 backdrop-blur-xl z-20 border-b border-white/5">
+      <section className="px-4 md:px-6 py-4 md:py-5 sticky top-20 md:top-24 bg-[#101A31]/80 backdrop-blur-xl z-20 border-b border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-0 scrollbar-hide">
             {industries.map((industry) => (
               <button
                 key={industry}
                 onClick={() => setSelectedIndustry(industry)}
-                className={`px-4 md:px-6 py-2 md:py-3 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all ${
+                className={`px-4 md:px-6 py-2 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
                   selectedIndustry === industry
                     ? 'bg-white text-black'
                     : 'bg-transparent text-white/70 hover:bg-white/5'
