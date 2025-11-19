@@ -21,7 +21,7 @@ export default function CTASection() {
   }
 
   return (
-    <section id="early-access" className="bg-[#1A2332] py-20 lg:py-28">
+    <section id="early-access" className="py-20 lg:py-28" style={{ backgroundColor: '#101A31' }}>
       <div className="mx-auto max-w-4xl px-6">
         {/* Main CTA Card */}
         <div className="relative overflow-hidden rounded-3xl bg-[#0C1422] border border-white/10 px-8 py-12 md:px-12 md:py-16">

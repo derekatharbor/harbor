@@ -2,7 +2,7 @@ import { Search, Lightbulb, TrendingUp } from 'lucide-react'
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="bg-[#1A2332] py-20 lg:py-28">
+    <section id="how-it-works" className="py-20 lg:py-28" style={{ backgroundColor: '#101A31' }}>
       <div className="mx-auto max-w-5xl px-6">
         {/* Section Tag */}
         <div className="text-center mb-6">

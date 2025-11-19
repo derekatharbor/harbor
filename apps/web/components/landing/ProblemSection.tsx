@@ -2,7 +2,7 @@ import { TrendingUp, MousePointerClick, Network } from 'lucide-react'
 
 export default function ProblemSection() {
   return (
-    <section className="bg-[#1A2332] py-20 lg:py-28">
+    <section className="py-20 lg:py-28" style={{ backgroundColor: '#101A31' }}>
       <div className="mx-auto max-w-5xl px-6">
         {/* Header Block */}
         <div className="mx-auto max-w-3xl text-center">

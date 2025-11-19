@@ -44,7 +44,7 @@ export default function SolutionSection() {
   const [activeTab, setActiveTab] = useState<IntelligenceTab>('shopping')
 
   return (
-    <section className="bg-[#1A2332] py-24 lg:py-28">
+    <section className="py-24 lg:py-28" style={{ backgroundColor: '#101A31' }}>
       <div className="mx-auto max-w-7xl px-6">
         {/* Header Block */}
         <div className="mx-auto max-w-3xl text-center">
@@ -109,7 +109,7 @@ export default function SolutionSection() {
         {/* Dashboard Preview */}
         <div className="mt-12 lg:mt-16">
           <div className="relative mx-auto max-w-[1200px]">
-            <div className="rounded-[28px] overflow-hidden bg-[#1A2332] shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+            <div className="rounded-[28px] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.35)]" style={{ backgroundColor: '#101A31' }}>
               <Image
                 key={activeTab}
                 src={previewByTab[activeTab]}
