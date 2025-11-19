@@ -202,25 +202,25 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   onClick={() => setIsMenuOpen(false)}
                   className="block group"
                 >
-                  <h4 className="text-2xl font-bold text-white mb-4 group-hover:text-white/70 transition-colors">
-                    HARBOR INDEX
-                  </h4>
-                  
                   {/* Image placeholder - you'll replace this */}
                   <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
                     {/* Add your index image here */}
                     <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
                   </div>
                   
-                  <h5 className="text-base font-semibold text-white mb-2">
+                  <h4 className="text-xl font-bold text-white mb-3 uppercase group-hover:text-white/70 transition-colors">
                     Claim your brand's AI profile
-                  </h5>
+                  </h4>
                   
-                  <p className="text-sm text-white/60 leading-relaxed font-mono">
+                  <p className="text-sm text-white/60 leading-relaxed font-mono mb-3">
                     Our Harbor Index is home to over 10,000 AI profiles for brands.
                     <br /><br />
                     Don't see yours listed? Set up your AI profile page for free and start getting discovered by AI models.
                   </p>
+
+                  <div className="text-xs uppercase tracking-wider text-white/30 font-mono">
+                    10,000+ brands
+                  </div>
                 </a>
               </div>
 
