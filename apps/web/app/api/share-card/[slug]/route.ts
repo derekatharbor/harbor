@@ -91,8 +91,9 @@ export async function GET(
     ctx.textBaseline = 'top'
     ctx.textAlign = 'left'
 
-    // Brand Logo (if exists and is valid URL)
-    if (brand.logo_url) {
+    // Brand Logo - TEMPORARILY DISABLED (307 redirect issue)
+    // TODO: Fix after text is working
+    if (false && brand.logo_url) {
       try {
         // Convert relative URLs to absolute
         let logoUrl = brand.logo_url
