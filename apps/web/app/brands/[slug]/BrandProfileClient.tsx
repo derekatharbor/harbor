@@ -98,8 +98,8 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
         throw new Error(data.error || 'Invalid or expired code')
       }
 
-      // Redirect to dashboard
-      window.location.href = `/dashboard/brand/${brand.id}`
+      // Redirect to profile manager
+      window.location.href = `/brands/${brand.slug}/manage`
     } catch (err: any) {
       setError(err.message)
     } finally {
