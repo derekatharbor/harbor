@@ -777,7 +777,7 @@ export default function ProfileManagerPage() {
           </div>
         </div>
 
-        {/* Model Snapshot Preview - NEW */}
+        {/* Model Snapshot Preview - WITH REAL LOGOS */}
         <div className="bg-gradient-to-br from-[#0C1422] to-[#141E38] rounded-2xl border border-white/10 p-6">
           <div className="flex items-center gap-3 mb-6">
             <Sparkles className="w-6 h-6 text-[#4EE4FF]" />
@@ -788,12 +788,20 @@ export default function ProfileManagerPage() {
           </div>
 
           <div className="space-y-4">
+            {/* ChatGPT */}
             <div className="p-4 rounded-lg bg-white/5 border border-white/10">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-green-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold text-green-400">GPT</span>
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 p-1">
+                  <Image
+                    src="/models/chatgpt-logo.png"
+                    alt="ChatGPT"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="flex-1">
+                  <div className="text-white/50 text-xs mb-1 font-medium">ChatGPT</div>
                   <p className="text-white/70 text-sm italic">
                     "{brand.brand_name} is a leading {brand.industry} company known for innovation and quality..."
                   </p>
@@ -801,12 +809,20 @@ export default function ProfileManagerPage() {
               </div>
             </div>
 
+            {/* Claude */}
             <div className="p-4 rounded-lg bg-white/5 border border-white/10">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#FF6B4A]/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold text-[#FF6B4A]">CLD</span>
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 p-1">
+                  <Image
+                    src="/models/claude-logo.png"
+                    alt="Claude"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="flex-1">
+                  <div className="text-white/50 text-xs mb-1 font-medium">Claude</div>
                   <p className="text-white/70 text-sm italic">
                     "{brand.brand_name} provides {brand.industry} solutions with a focus on customer satisfaction..."
                   </p>
@@ -814,12 +830,20 @@ export default function ProfileManagerPage() {
               </div>
             </div>
 
+            {/* Perplexity */}
             <div className="p-4 rounded-lg bg-white/5 border border-white/10">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-400/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-xs font-bold text-blue-400">PPX</span>
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5 p-1">
+                  <Image
+                    src="/models/perplexity-logo.png"
+                    alt="Perplexity"
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="flex-1">
+                  <div className="text-white/50 text-xs mb-1 font-medium">Perplexity</div>
                   <p className="text-white/70 text-sm italic">
                     "{brand.brand_name} offers comprehensive {brand.industry} services to businesses worldwide..."
                   </p>
