@@ -65,6 +65,7 @@ export default function ProfileManagerPage() {
     headquarters: '',
     employees: ''
   })
+  const [shareCardTheme, setShareCardTheme] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
     fetchBrandData()
@@ -620,7 +621,7 @@ export default function ProfileManagerPage() {
           </div>
         </div>
 
-        {/* SHARE CARD */}
+        {/* SHARE CARD SECTION - With Theme Toggle and Live Preview */}
         <div className="mb-20 p-8 bg-white/[0.02] border border-white/5 rounded">
           <div className="mb-8">
             <h3 className="text-white text-xl font-normal mb-2">Share Your Profile</h3>
@@ -628,40 +629,50 @@ export default function ProfileManagerPage() {
               Show how your brand ranks across AI models.
             </p>
           </div>
-          
-          {/* White Card - Will be replaced with dynamic image */}
-          <div className="bg-white p-12 rounded mb-6">
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded overflow-hidden bg-gray-100">
-                <Image
-                  src={brand.logo_url}
-                  alt={brand.brand_name}
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="text-gray-900 text-3xl font-normal mb-2">{brand.brand_name}</div>
-              <div className="text-gray-500 font-mono text-sm mb-8">{getPercentileMessage(brand.rank_global)}</div>
-              <div className="flex items-center justify-center gap-12 mb-8">
-                <div>
-                  <div className="text-gray-400 font-mono text-xs mb-1">RANK</div>
-                  <div className="text-gray-900 font-mono text-2xl">#{brand.rank_global}</div>
-                </div>
-                <div className="w-px h-12 bg-gray-200" />
-                <div>
-                  <div className="text-gray-400 font-mono text-xs mb-1">SCORE</div>
-                  <div className="text-gray-900 font-mono text-2xl">{brand.visibility_score.toFixed(1)}%</div>
-                </div>
-              </div>
-              <div className="pt-6 border-t border-gray-200">
-                <div className="text-gray-400 font-mono text-xs">
-                  Powered by <span className="text-gray-600">Harbor</span>
-                </div>
-              </div>
+
+          {/* Theme Selector */}
+          <div className="mb-6">
+            <div className="text-white/60 font-mono text-sm mb-3">Choose your share card theme</div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShareCardTheme('light')}
+                className={`flex-1 p-4 rounded-lg border transition-colors ${
+                  shareCardTheme === 'light'
+                    ? 'border-white/20 bg-white/5'
+                    : 'border-white/10 hover:border-white/15'
+                }`}
+              >
+                <div className="text-white font-mono text-sm mb-1">Light</div>
+                <div className="text-white/40 font-mono text-xs">Recommended for LinkedIn</div>
+              </button>
+              <button
+                onClick={() => setShareCardTheme('dark')}
+                className={`flex-1 p-4 rounded-lg border transition-colors ${
+                  shareCardTheme === 'dark'
+                    ? 'border-white/20 bg-white/5'
+                    : 'border-white/10 hover:border-white/15'
+                }`}
+              >
+                <div className="text-white font-mono text-sm mb-1">Dark</div>
+                <div className="text-white/40 font-mono text-xs">Recommended for Twitter</div>
+              </button>
             </div>
           </div>
+          
+          {/* Live Preview - Shows Actual Generated Image */}
+          <div className="mb-6 rounded-lg overflow-hidden border border-white/10 bg-gray-100">
+            <img 
+              src={`/api/share-card/${slug}?theme=${shareCardTheme}`}
+              alt={`${brand.brand_name} share card preview`}
+              className="w-full h-auto"
+              key={shareCardTheme}
+              onError={(e) => {
+                console.error('Failed to load share card preview')
+              }}
+            />
+          </div>
 
+          {/* Share Buttons */}
           <div className="flex gap-3">
             <button
               onClick={shareToLinkedIn}
@@ -681,7 +692,7 @@ export default function ProfileManagerPage() {
           </div>
 
           <p className="text-white/30 font-mono text-xs mt-4">
-            LinkedIn share image: <code className="text-white/40">/api/share-card/{slug}</code>
+            Preview updates in real-time. LinkedIn will display this image when you share.
           </p>
         </div>
 

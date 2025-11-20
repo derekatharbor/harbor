@@ -41,9 +41,12 @@ export async function generateMetadata({
       return {}
     }
 
-    const title = `${brand.brand_name} - AI Visibility Profile`
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
+    const title = `${brand.brand_name} - AI Visibility Profile | Harbor`
     const description = `${brand.brand_name} ranks #${brand.rank_global} in ${brand.industry} with a ${brand.visibility_score.toFixed(1)}% AI visibility score across ChatGPT, Claude, Gemini, and Perplexity.`
-    const shareImageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'}/api/share-card/${params.slug}`
+    
+    // Use light theme by default for LinkedIn
+    const shareImageUrl = `${siteUrl}/api/share-card/${params.slug}?theme=light`
 
     return {
       title,
@@ -51,21 +54,31 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
+        url: `${siteUrl}/brands/${params.slug}`,
+        siteName: 'Harbor',
         images: [
           {
             url: shareImageUrl,
             width: 1200,
             height: 627,
-            alt: `${brand.brand_name} AI Visibility Report Card`
+            alt: `${brand.brand_name} AI Visibility Report Card`,
+            type: 'image/png',
           }
         ],
         type: 'website',
+        locale: 'en_US',
       },
       twitter: {
         card: 'summary_large_image',
         title,
         description,
         images: [shareImageUrl],
+        creator: '@useharbor',
+      },
+      // Additional meta tags for better social sharing
+      other: {
+        'og:image:width': '1200',
+        'og:image:height': '627',
       }
     }
   } catch (error) {
