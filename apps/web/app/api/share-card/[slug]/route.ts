@@ -15,8 +15,14 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
+    console.log('=== ENV CHECK ===')
+    console.log('SUPABASE_URL exists:', !!process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    console.log('SUPABASE_URL value:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30) + '...')
+    
     // Validate environment variables
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing env vars!')
       return new NextResponse('Server configuration error', { status: 500 })
     }
 
@@ -24,12 +30,17 @@ export async function GET(
     const { searchParams } = new URL(request.url)
     const theme = searchParams.get('theme') || 'light'
 
+    console.log('=== SHARE CARD DEBUG START ===')
+    console.log('Slug:', params.slug)
+    console.log('Theme:', theme)
+
     // Fetch brand data
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 
+    console.log('Fetching from Supabase...')
     const { data: brand, error } = await supabase
       .from('ai_profiles')
       .select('*')
@@ -41,8 +52,7 @@ export async function GET(
       return new NextResponse('Brand not found', { status: 404 })
     }
 
-    // Debug: Log what we got
-    console.log('Brand data:', {
+    console.log('Brand fetched:', {
       name: brand.brand_name,
       rank: brand.rank_global,
       score: brand.visibility_score,
@@ -122,14 +132,17 @@ export async function GET(
     }
 
     // Brand Name (higher up, to the right of logo area)
+    console.log('Drawing brand name:', brand.brand_name)
     ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.fillText(brand.brand_name, 410, 190)
 
     // Percentile Line (under brand name)
+    const percentile = getPercentileMessage(brand.rank_global)
+    console.log('Drawing percentile:', percentile)
     ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#A0A0A0'
-    ctx.fillText(getPercentileMessage(brand.rank_global), 410, 235)
+    ctx.fillText(percentile, 410, 235)
 
     // Rank Value (below labels that are already in template)
     ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
@@ -145,7 +158,10 @@ export async function GET(
     ctx.fillText(scoreText, 735, 375)
 
     // Convert canvas to buffer
+    console.log('Converting canvas to buffer...')
     const buffer = canvas.toBuffer('image/png')
+    console.log('Buffer size:', buffer.length, 'bytes')
+    console.log('=== SHARE CARD DEBUG END ===')
 
     // Return image with caching headers (convert buffer to proper type)
     return new NextResponse(buffer as unknown as BodyInit, {
