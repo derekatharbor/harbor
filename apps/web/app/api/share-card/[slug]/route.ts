@@ -148,31 +148,42 @@ export async function GET(
       }
     }
 
-    // Brand Name
+    console.log('Available fonts:', GlobalFonts.families)
+    
+    // Brand Name - use strokeText + fillText for maximum visibility
     console.log('Drawing brand name:', brand.brand_name)
-    ctx.font = 'bold 42px "DejaVu Sans Bold"'
+    ctx.font = 'bold 42px sans-serif'
     ctx.fillStyle = '#FFFFFF'
+    ctx.strokeStyle = '#000000'
+    ctx.lineWidth = 2
     ctx.textAlign = 'left'
+    
+    // Draw stroke first (outline)
+    ctx.strokeText(brand.brand_name, 350, 185)
+    // Then fill
     ctx.fillText(brand.brand_name, 350, 185)
 
     // Percentile Line
     const percentile = getPercentileMessage(brand.rank_global)
     console.log('Drawing percentile:', percentile)
-    ctx.font = '22px "DejaVu Sans"'
-    ctx.fillStyle = '#A0A0A0'
+    ctx.font = '22px sans-serif'
+    ctx.fillStyle = '#CCCCCC'
+    ctx.strokeText(percentile, 350, 225)
     ctx.fillText(percentile, 350, 225)
 
     // Rank Value (centered under "Rank" label)
-    ctx.font = 'bold 56px "DejaVu Sans Bold"'
+    ctx.font = 'bold 56px sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'center'
     const rankText = `#${brand.rank_global}`
-    console.log('Drawing rank:', rankText)
+    console.log('Drawing rank:', rankText, 'at 363, 380')
+    ctx.strokeText(rankText, 363, 380)
     ctx.fillText(rankText, 363, 380)
 
     // Score Value (centered under "Score" label)
     const scoreText = `${brand.visibility_score.toFixed(1)}%`
-    console.log('Drawing score:', scoreText)
+    console.log('Drawing score:', scoreText, 'at 613, 380')
+    ctx.strokeText(scoreText, 613, 380)
     ctx.fillText(scoreText, 613, 380)
 
     // Convert canvas to buffer (no resize needed - template is already 1200x627)
