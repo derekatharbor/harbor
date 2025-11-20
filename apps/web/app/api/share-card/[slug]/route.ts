@@ -138,29 +138,45 @@ export async function GET(
       }
     }
 
-    // Brand Name (top area, to the right of where logo would be)
+    // Brand Name (with red background so we can see it)
     console.log('Drawing brand name:', brand.brand_name)
+    
+    // Draw red rectangle behind text
+    ctx.fillStyle = '#FF0000'
+    ctx.fillRect(340, 150, 400, 50)
+    
     ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'left'
     ctx.fillText(brand.brand_name, 340, 190)
 
-    // Percentile Line (under brand name)
+    // Percentile Line (with blue background)
     const percentile = getPercentileMessage(brand.rank_global)
     console.log('Drawing percentile:', percentile)
+    
+    ctx.fillStyle = '#0000FF'
+    ctx.fillRect(340, 210, 400, 40)
+    
     ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#A0A0A0'
+    ctx.fillStyle = '#FFFFFF'
     ctx.fillText(percentile, 340, 235)
 
-    // Rank Value (centered under "Rank" label)
+    // Rank Value (with green background)
     ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.fillStyle = '#00FF00'
+    ctx.fillRect(300, 330, 126, 70)
+    
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'center'
     const rankText = `#${brand.rank_global}`
     console.log('Drawing rank:', rankText)
     ctx.fillText(rankText, 363, 375)
 
-    // Score Value (centered under "Score" label)
+    // Score Value (with yellow background)
+    ctx.fillStyle = '#FFFF00'
+    ctx.fillRect(550, 330, 126, 70)
+    
+    ctx.fillStyle = '#000000'
     const scoreText = `${brand.visibility_score.toFixed(1)}%`
     console.log('Drawing score:', scoreText)
     ctx.fillText(scoreText, 613, 375)
