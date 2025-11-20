@@ -127,8 +127,8 @@ export async function GET(
     // Convert canvas to buffer
     const buffer = canvas.toBuffer('image/png')
 
-    // Return image with caching headers
-    return new NextResponse(buffer, {
+    // Return image with caching headers (convert buffer to proper type)
+    return new NextResponse(buffer as unknown as BodyInit, {
       headers: {
         'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
