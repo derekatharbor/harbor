@@ -138,32 +138,23 @@ export async function GET(
       }
     }
 
-    // Brand Name (scaled for 2000x1045 template)
+    // TEST: Draw text in SUPER OBVIOUS places
     console.log('Drawing brand name:', brand.brand_name)
-    ctx.font = '600 70px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#FFFFFF'
+    
+    // Draw in top-left corner - impossible to miss
+    ctx.font = '700 100px system-ui'
+    ctx.fillStyle = '#FF0000' // RED so it's obvious
     ctx.textAlign = 'left'
-    ctx.fillText(brand.brand_name, 680, 315)
-
-    // Percentile Line (under brand name)
-    const percentile = getPercentileMessage(brand.rank_global)
-    console.log('Drawing percentile:', percentile)
-    ctx.font = '400 37px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#A0A0A0'
-    ctx.fillText(percentile, 680, 390)
-
-    // Rank Value (centered under "Rank" label)
-    ctx.font = '700 93px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#FFFFFF'
+    ctx.fillText('TEST', 50, 100)
+    
+    // Draw brand name in center
+    ctx.fillStyle = '#00FF00' // GREEN
     ctx.textAlign = 'center'
-    const rankText = `#${brand.rank_global}`
-    console.log('Drawing rank:', rankText, 'at', 725, 625)
-    ctx.fillText(rankText, 725, 625)
-
-    // Score Value (centered under "Score" label)
-    const scoreText = `${brand.visibility_score.toFixed(1)}%`
-    console.log('Drawing score:', scoreText, 'at', 1225, 625)
-    ctx.fillText(scoreText, 1225, 625)
+    ctx.fillText(brand.brand_name, width / 2, height / 2)
+    
+    // Draw rank and score big in center
+    ctx.fillStyle = '#FFFF00' // YELLOW
+    ctx.fillText(`#${brand.rank_global} - ${brand.visibility_score}%`, width / 2, height / 2 + 150)
 
     // Convert canvas to buffer
     console.log('Converting canvas to buffer...')
