@@ -82,9 +82,17 @@ export async function GET(
     ctx.textAlign = 'left'
 
     // Brand Logo (if exists and is valid URL)
-    if (brand.logo_url && brand.logo_url.startsWith('http')) {
+    if (brand.logo_url) {
       try {
-        const logo = await loadImage(brand.logo_url)
+        // Convert relative URLs to absolute
+        let logoUrl = brand.logo_url
+        if (!logoUrl.startsWith('http')) {
+          const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
+          logoUrl = `${siteUrl}${logoUrl.startsWith('/') ? '' : '/'}${logoUrl}`
+        }
+        
+        console.log('Loading logo from:', logoUrl)
+        const logo = await loadImage(logoUrl)
         
         // Draw logo at 120x120px
         const logoSize = 120
