@@ -1,11 +1,14 @@
 // apps/web/app/api/share-card/[slug]/route.ts
-// Generates LinkedIn share cards using custom templates with canvas overlay
+// Canvas-based share card with proper Vercel paths
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createCanvas, loadImage } from '@napi-rs/canvas'
+import path from 'path'
+import fs from 'fs'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
@@ -17,7 +20,7 @@ export async function GET(
       return new NextResponse('Server configuration error', { status: 500 })
     }
 
-    // Get theme from query params (default to light for LinkedIn)
+    // Get theme from query params
     const { searchParams } = new URL(request.url)
     const theme = searchParams.get('theme') || 'light'
 
@@ -45,11 +48,17 @@ export async function GET(
       return 'Top 25% of brands'
     }
 
-    // Load template image (1200x627px)
-    const templatePath = theme === 'dark' 
-      ? './public/share_card_dark.png' 
-      : './public/share_card_light.png'
+    // Resolve template path - works in both dev and production
+    const templateFileName = theme === 'dark' ? 'share_card_dark.png' : 'share_card_light.png'
+    const templatePath = path.join(process.cwd(), 'public', templateFileName)
     
+    // Check if template exists
+    if (!fs.existsSync(templatePath)) {
+      console.error(`Template not found: ${templatePath}`)
+      return new NextResponse(`Template not found: ${templateFileName}`, { status: 500 })
+    }
+    
+    // Load template image
     const template = await loadImage(templatePath)
     
     // Create canvas with same dimensions as template
@@ -63,7 +72,7 @@ export async function GET(
     ctx.textBaseline = 'top'
     ctx.textAlign = 'left'
 
-    // 1. Brand Logo (if exists)
+    // Brand Logo (if exists)
     if (brand.logo_url) {
       try {
         const logo = await loadImage(brand.logo_url)
@@ -73,12 +82,12 @@ export async function GET(
         const logoX = 270
         const logoY = 160
         
-        // Calculate scaling to fit within logoSize while maintaining aspect ratio
+        // Calculate scaling to maintain aspect ratio
         const scale = Math.min(logoSize / logo.width, logoSize / logo.height)
         const scaledWidth = logo.width * scale
         const scaledHeight = logo.height * scale
         
-        // Center the logo within the logoSize box
+        // Center the logo
         const offsetX = (logoSize - scaledWidth) / 2
         const offsetY = (logoSize - scaledHeight) / 2
         
@@ -91,26 +100,27 @@ export async function GET(
         )
       } catch (logoError) {
         console.error('Failed to load brand logo:', logoError)
+        // Continue without logo if it fails
       }
     }
 
-    // 2. Brand Name (to the right of logo)
-    ctx.font = '600 48px system-ui, -apple-system, sans-serif'
+    // Brand Name
+    ctx.font = '600 48px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.fillText(brand.brand_name, 420, 185)
 
-    // 3. Percentile Line
-    ctx.font = '400 26px system-ui, -apple-system, sans-serif'
+    // Percentile Line
+    ctx.font = '400 26px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#D0D0D0'
     ctx.fillText(getPercentileMessage(brand.rank_global), 420, 245)
 
-    // 4. Rank Value
-    ctx.font = '600 54px system-ui, -apple-system, sans-serif'
+    // Rank Value
+    ctx.font = '600 54px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.fillText(`#${brand.rank_global}`, 350, 360)
 
-    // 5. Score Value
-    ctx.font = '600 54px system-ui, -apple-system, sans-serif'
+    // Score Value
+    ctx.font = '600 54px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.fillText(`${brand.visibility_score.toFixed(1)}%`, 620, 360)
 
@@ -126,6 +136,6 @@ export async function GET(
     })
   } catch (error) {
     console.error('Share card generation error:', error)
-    return new NextResponse('Failed to generate image', { status: 500 })
+    return new NextResponse(`Failed to generate image: ${error.message}`, { status: 500 })
   }
 }
