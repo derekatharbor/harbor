@@ -1,20 +1,29 @@
+// apps/web/app/api/brands/[slug]/update/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const dynamic = 'force-dynamic'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
   try {
+    // Check for env vars - critical for build time
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+
     const { brand_id, description, products, faqs, company_info } = await request.json()
 
-    // TODO: Add authentication check here
-    // For now, we'll just save the data
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     // Fetch the brand to get its ID
     const { data: brand, error: brandError } = await supabase
