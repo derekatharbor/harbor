@@ -81,8 +81,8 @@ export async function GET(
     ctx.textBaseline = 'top'
     ctx.textAlign = 'left'
 
-    // Brand Logo (if exists)
-    if (brand.logo_url) {
+    // Brand Logo (if exists and is valid URL)
+    if (brand.logo_url && brand.logo_url.startsWith('http')) {
       try {
         const logo = await loadImage(brand.logo_url)
         
