@@ -136,6 +136,7 @@ export async function GET(
     })
   } catch (error) {
     console.error('Share card generation error:', error)
-    return new NextResponse(`Failed to generate image: ${error.message}`, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    return new NextResponse(`Failed to generate image: ${errorMessage}`, { status: 500 })
   }
 }
