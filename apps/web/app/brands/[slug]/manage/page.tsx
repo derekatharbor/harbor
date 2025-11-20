@@ -14,7 +14,14 @@ import {
   Share2,
   ExternalLink,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Target,
+  FileText,
+  MessageSquare,
+  Building2,
+  Eye,
+  Zap,
+  BarChart3
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -58,6 +65,8 @@ interface QuickWin {
   impact: string
   completed: boolean
   action: 'edit' | 'generate' | 'complete'
+  icon: any
+  category: 'schema' | 'content' | 'structure'
 }
 
 export default function ProfileManagerPage() {
@@ -70,8 +79,9 @@ export default function ProfileManagerPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(true) // Show success message on first load
+  const [showSuccess, setShowSuccess] = useState(true)
 
   // Editable fields
   const [description, setDescription] = useState('')
@@ -85,6 +95,7 @@ export default function ProfileManagerPage() {
 
   // Quick wins calculation
   const [quickWins, setQuickWins] = useState<QuickWin[]>([])
+  const [profileStrength, setProfileStrength] = useState(0)
 
   useEffect(() => {
     fetchBrandData()
@@ -98,8 +109,10 @@ export default function ProfileManagerPage() {
         title: 'Add Organization Schema',
         description: 'Add structured data to help AI models understand your brand better.',
         impact: '+2.4%',
-        completed: !!profile.company_info?.founded && !!profile.company_info?.headquarters,
-        action: 'complete'
+        completed: !!companyInfo.founded && !!companyInfo.headquarters,
+        action: 'complete',
+        icon: Building2,
+        category: 'schema'
       },
       {
         id: 'faqs',
@@ -107,7 +120,9 @@ export default function ProfileManagerPage() {
         description: 'Answer questions users frequently ask AI about your brand.',
         impact: '+1.8%',
         completed: (faqs?.length || 0) >= 3,
-        action: 'edit'
+        action: 'edit',
+        icon: MessageSquare,
+        category: 'content'
       },
       {
         id: 'description',
@@ -115,7 +130,9 @@ export default function ProfileManagerPage() {
         description: 'Keep your description fresh and optimized for AI discovery.',
         impact: '+1.1%',
         completed: (description?.length || 0) > 100,
-        action: 'edit'
+        action: 'edit',
+        icon: FileText,
+        category: 'content'
       },
       {
         id: 'products',
@@ -123,7 +140,9 @@ export default function ProfileManagerPage() {
         description: 'Showcase your key products with descriptions.',
         impact: '+0.8%',
         completed: (products?.length || 0) >= 3,
-        action: 'edit'
+        action: 'edit',
+        icon: Target,
+        category: 'structure'
       },
       {
         id: 'info',
@@ -131,10 +150,17 @@ export default function ProfileManagerPage() {
         description: 'Fill in founding date, headquarters, and employee count.',
         impact: '+0.5%',
         completed: !!companyInfo.founded && !!companyInfo.headquarters && !!companyInfo.employees,
-        action: 'complete'
+        action: 'complete',
+        icon: Building2,
+        category: 'schema'
       }
     ]
     setQuickWins(wins)
+
+    // Calculate profile strength
+    const completedCount = wins.filter(w => w.completed).length
+    const strength = Math.round((completedCount / wins.length) * 100)
+    setProfileStrength(strength)
   }, [description, products, faqs, companyInfo, profile])
 
   const fetchBrandData = async () => {
@@ -143,8 +169,6 @@ export default function ProfileManagerPage() {
       const brandData = await res.json()
       setBrand(brandData)
 
-      // Fetch canonical profile if exists
-      // For now, use placeholder - you'll implement the API route
       setDescription(brandData.description || '')
       setProducts(brandData.products || [])
       setFaqs(brandData.faqs || [])
@@ -160,7 +184,6 @@ export default function ProfileManagerPage() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      // TODO: Implement save to canonical_profiles table
       const payload = {
         brand_id: brand?.id,
         description,
@@ -169,7 +192,6 @@ export default function ProfileManagerPage() {
         company_info: companyInfo
       }
 
-      // Placeholder - you'll create this API route
       await fetch(`/api/brands/${slug}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -215,7 +237,6 @@ export default function ProfileManagerPage() {
   }
 
   const getPercentileMessage = (rank: number) => {
-    // Assume 10,000 brands total for now
     const totalBrands = 10000
     const percentile = ((totalBrands - rank) / totalBrands) * 100
 
@@ -235,8 +256,15 @@ export default function ProfileManagerPage() {
   const getProjectedRank = () => {
     if (!brand) return 1
     const impact = parseFloat(getTotalImpact())
-    const ranksToGain = Math.floor(impact / 2) // Rough estimate: 2% = 1 rank
+    const ranksToGain = Math.floor(impact / 2)
     return Math.max(1, brand.rank_global - ranksToGain)
+  }
+
+  const getStrengthColor = () => {
+    if (profileStrength >= 80) return 'text-green-400'
+    if (profileStrength >= 60) return 'text-[#4EE4FF]'
+    if (profileStrength >= 40) return 'text-yellow-400'
+    return 'text-[#FF6B4A]'
   }
 
   if (loading) {
@@ -296,7 +324,7 @@ export default function ProfileManagerPage() {
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 space-y-8">
         
-        {/* Success Message (shows once after claim) */}
+        {/* Success Message */}
         {showSuccess && (
           <div className="bg-green-400/10 border border-green-400/20 rounded-xl p-6 flex items-start gap-4">
             <div className="w-10 h-10 rounded-full bg-green-400/20 flex items-center justify-center flex-shrink-0">
@@ -373,83 +401,147 @@ export default function ProfileManagerPage() {
           </div>
         </div>
 
-        {/* Quick Wins Section */}
-        <div className="bg-[#0C1422] rounded-2xl border border-white/5">
-          <div className="p-6 border-b border-white/5">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-1">5 Quick Wins to Reach #{getProjectedRank()}</h2>
-                <p className="text-white/60 text-sm">
-                  Complete these optimizations to improve by +{getTotalImpact()}% and climb {brand.rank_global - getProjectedRank()} spots
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-white">
-                  {quickWins.filter(w => w.completed).length}/{quickWins.length}
-                </div>
-                <div className="text-xs text-white/50">Complete</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6 space-y-4">
-            {quickWins.map((win, index) => (
-              <div
-                key={win.id}
-                className={`p-4 rounded-xl border transition-all ${
-                  win.completed
-                    ? 'bg-green-400/5 border-green-400/20'
-                    : 'bg-white/5 border-white/10 hover:border-[#FF6B4A]/30'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    win.completed ? 'bg-green-400/20 text-green-400' : 'bg-white/10 text-white/40'
-                  }`}>
-                    {win.completed ? <Check className="w-5 h-5" /> : <span className="text-sm font-bold">{index + 1}</span>}
+        {/* Quick Wins Section - ELEVATED */}
+        <div className="relative">
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FF6B4A]/10 via-[#4EE4FF]/10 to-[#FF6B4A]/10 rounded-2xl blur-xl"></div>
+          
+          <div className="relative bg-gradient-to-br from-[#141E38] to-[#0C1422] rounded-2xl border border-[#FF6B4A]/20 shadow-2xl">
+            <div className="p-6 border-b border-white/5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-[#FF6B4A]/20 flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-5 h-5 text-[#FF6B4A]" />
                   </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-white font-semibold">{win.title}</h3>
-                      <span className="text-sm font-medium text-[#FF6B4A]">
-                        Impact: {win.impact}
+                  <div>
+                    <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">
+                      5 Quick Wins to Reach #{getProjectedRank()}
+                      <TrendingUp className="w-5 h-5 text-[#4EE4FF]" />
+                    </h2>
+                    <p className="text-white/60 text-sm">
+                      Boost your AI Visibility Score by <span className="text-[#FF6B4A] font-semibold">+{getTotalImpact()}%</span> with these high-impact improvements
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div className="relative w-16 h-16">
+                    {/* Progress circle */}
+                    <svg className="w-16 h-16 transform -rotate-90">
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="rgba(255,255,255,0.1)"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <circle
+                        cx="32"
+                        cy="32"
+                        r="28"
+                        stroke="#FF6B4A"
+                        strokeWidth="4"
+                        fill="none"
+                        strokeDasharray={`${2 * Math.PI * 28}`}
+                        strokeDashoffset={`${2 * Math.PI * 28 * (1 - quickWins.filter(w => w.completed).length / quickWins.length)}`}
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl font-bold text-white">
+                        {quickWins.filter(w => w.completed).length}/{quickWins.length}
                       </span>
                     </div>
-                    <p className="text-white/60 text-sm mb-3">{win.description}</p>
-
-                    {!win.completed && (
-                      <button
-                        onClick={() => {
-                          setEditMode(true)
-                          // Scroll to relevant section
-                          if (win.id === 'description' || win.id === 'products' || win.id === 'faqs') {
-                            document.getElementById('edit-section')?.scrollIntoView({ behavior: 'smooth' })
-                          } else if (win.id === 'info') {
-                            document.getElementById('company-info')?.scrollIntoView({ behavior: 'smooth' })
-                          }
-                        }}
-                        className="text-sm text-[#FF6B4A] hover:text-[#FF6B4A]/80 transition-colors flex items-center gap-1"
-                      >
-                        {win.action === 'edit' ? 'Edit Now' : win.action === 'generate' ? 'Generate' : 'Complete'}
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="p-6 space-y-4">
+              {quickWins.map((win, index) => {
+                const Icon = win.icon
+                return (
+                  <div
+                    key={win.id}
+                    className={`p-4 rounded-xl border transition-all ${
+                      win.completed
+                        ? 'bg-green-400/5 border-green-400/20'
+                        : 'bg-white/5 border-white/10 hover:border-[#FF6B4A]/30 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        win.completed ? 'bg-green-400/20 text-green-400' : 'bg-[#FF6B4A]/10 text-[#FF6B4A]'
+                      }`}>
+                        {win.completed ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-white font-semibold">{win.title}</h3>
+                          <span className="px-2 py-0.5 rounded-full bg-[#FF6B4A]/20 text-[#FF6B4A] text-xs font-bold">
+                            {win.impact}
+                          </span>
+                        </div>
+                        <p className="text-white/60 text-sm mb-3">{win.description}</p>
+
+                        {!win.completed && (
+                          <button
+                            onClick={() => {
+                              setEditMode(true)
+                              if (win.id === 'description' || win.id === 'products' || win.id === 'faqs') {
+                                document.getElementById('ai-profile-section')?.scrollIntoView({ behavior: 'smooth' })
+                              } else if (win.id === 'info') {
+                                document.getElementById('company-info')?.scrollIntoView({ behavior: 'smooth' })
+                              }
+                            }}
+                            className="text-sm text-[#FF6B4A] hover:text-[#FF6B4A]/80 transition-colors flex items-center gap-1 font-medium"
+                          >
+                            {win.action === 'edit' ? 'Edit Now' : win.action === 'generate' ? 'Generate' : 'Complete'}
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Edit Profile Section */}
-        <div id="edit-section" className="bg-[#0C1422] rounded-2xl border border-white/5">
+        {/* AI Profile Strength */}
+        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <BarChart3 className="w-5 h-5 text-[#4EE4FF]" />
+              <h3 className="text-lg font-semibold text-white">AI Profile Strength</h3>
+            </div>
+            <span className={`text-2xl font-bold ${getStrengthColor()}`}>
+              {profileStrength}%
+            </span>
+          </div>
+          <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-[#FF6B4A] via-[#4EE4FF] to-green-400 transition-all duration-500 rounded-full"
+              style={{ width: `${profileStrength}%` }}
+            />
+          </div>
+          <p className="text-white/50 text-sm mt-3">
+            {profileStrength < 40 && 'Complete more fields to strengthen your AI profile'}
+            {profileStrength >= 40 && profileStrength < 80 && 'Good progress! Keep filling out details'}
+            {profileStrength >= 80 && 'Excellent! Your AI profile is nearly complete'}
+          </p>
+        </div>
+
+        {/* AI Profile Section (renamed from "Edit Profile") */}
+        <div id="ai-profile-section" className="bg-[#0C1422] rounded-2xl border border-white/5">
           <div className="p-6 border-b border-white/5">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-1">Edit Your Profile</h2>
-                <p className="text-white/60 text-sm">
-                  Keep your information current for AI models
+                <h2 className="text-2xl font-bold text-white mb-1">AI Profile</h2>
+                <p className="text-white/60 text-sm italic">
+                  How AI should understand your brand
                 </p>
               </div>
               {!editMode ? (
@@ -486,7 +578,9 @@ export default function ProfileManagerPage() {
             {/* Description */}
             <div>
               <label className="block text-white font-medium mb-2">Brand Description</label>
-              <p className="text-white/50 text-sm mb-3">How should AI describe your brand?</p>
+              <p className="text-white/40 text-sm mb-3 italic">
+                Tip: Describe your brand in simple, factual language. Imagine you're explaining it to a smart intern.
+              </p>
               {editMode ? (
                 <textarea
                   value={description}
@@ -505,7 +599,9 @@ export default function ProfileManagerPage() {
             {/* Products */}
             <div>
               <label className="block text-white font-medium mb-2">Products</label>
-              <p className="text-white/50 text-sm mb-3">Key products AI should know about</p>
+              <p className="text-white/40 text-sm mb-3 italic">
+                List your key products. These help AI models map what you actually offer.
+              </p>
               <div className="space-y-3">
                 {products.map((product, index) => (
                   <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
@@ -571,7 +667,9 @@ export default function ProfileManagerPage() {
             {/* FAQs */}
             <div>
               <label className="block text-white font-medium mb-2">Frequently Asked Questions</label>
-              <p className="text-white/50 text-sm mb-3">Common questions users ask AI about your brand</p>
+              <p className="text-white/40 text-sm mb-3 italic">
+                Add the top questions customers ask about your product. These reduce AI hallucinations.
+              </p>
               <div className="space-y-3">
                 {faqs.map((faq, index) => (
                   <div key={index} className="p-4 rounded-lg bg-white/5 border border-white/10">
@@ -623,7 +721,9 @@ export default function ProfileManagerPage() {
             {/* Company Info */}
             <div id="company-info">
               <label className="block text-white font-medium mb-2">Company Information</label>
-              <p className="text-white/50 text-sm mb-3">Basic details about your company</p>
+              <p className="text-white/40 text-sm mb-3 italic">
+                Give AI the basics: founding year, HQ, and employee count.
+              </p>
               {editMode ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
@@ -677,7 +777,81 @@ export default function ProfileManagerPage() {
           </div>
         </div>
 
-        {/* Share Section */}
+        {/* Model Snapshot Preview - NEW */}
+        <div className="bg-gradient-to-br from-[#0C1422] to-[#141E38] rounded-2xl border border-white/10 p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Sparkles className="w-6 h-6 text-[#4EE4FF]" />
+            <div>
+              <h2 className="text-xl font-bold text-white">How AI Describes You Today</h2>
+              <p className="text-white/50 text-sm">Based on your latest profile updates</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-green-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-green-400">GPT</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/70 text-sm italic">
+                    "{brand.brand_name} is a leading {brand.industry} company known for innovation and quality..."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#FF6B4A]/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-[#FF6B4A]">CLD</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/70 text-sm italic">
+                    "{brand.brand_name} provides {brand.industry} solutions with a focus on customer satisfaction..."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-400/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-blue-400">PPX</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/70 text-sm italic">
+                    "{brand.brand_name} offers comprehensive {brand.industry} services to businesses worldwide..."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-white/40 text-xs mt-4 text-center italic">
+            These are example descriptions. Upgrade to Intelligence Dashboard for real-time AI monitoring.
+          </p>
+        </div>
+
+        {/* Public Profile Preview Button */}
+        <div className="flex gap-4">
+          <button
+            onClick={() => setShowPreviewModal(true)}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-colors"
+          >
+            <Eye className="w-5 h-5" />
+            Preview Public Profile
+          </button>
+          <Link 
+            href={`/brands/${slug}`}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-colors"
+          >
+            <ExternalLink className="w-5 h-5" />
+            View Live Profile
+          </Link>
+        </div>
+
+        {/* Share Section - UPGRADED WITH WHITE CARD */}
         <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6">
           <div className="flex items-center gap-3 mb-4">
             <Share2 className="w-6 h-6 text-[#FF6B4A]" />
@@ -687,23 +861,49 @@ export default function ProfileManagerPage() {
             Let others know you're optimizing for AI visibility
           </p>
 
-          {/* Share Card Preview */}
-          <div className="mb-6 p-8 rounded-xl bg-gradient-to-br from-[#FF6B4A]/10 to-transparent border border-[#FF6B4A]/20">
+          {/* WHITE LINKEDIN-STYLE SHARE CARD */}
+          <div className="mb-6 p-8 rounded-xl bg-white border border-gray-200 shadow-lg">
             <div className="text-center">
-              <div className="text-sm text-white/50 mb-2">HARBOR INDEX</div>
-              <div className="text-3xl font-bold text-white mb-2">{brand.brand_name}</div>
-              <div className="text-lg text-white/70 mb-4">{getPercentileMessage(brand.rank_global)}</div>
-              <div className="flex items-center justify-center gap-8 mb-4">
+              {/* Logo */}
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                <Image
+                  src={brand.logo_url}
+                  alt={brand.brand_name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none'
+                  }}
+                />
+              </div>
+
+              {/* Brand Name */}
+              <div className="text-3xl font-bold text-gray-900 mb-2">{brand.brand_name}</div>
+              
+              {/* Percentile */}
+              <div className="text-lg text-gray-600 mb-6">{getPercentileMessage(brand.rank_global)}</div>
+              
+              {/* Stats Grid */}
+              <div className="flex items-center justify-center gap-8 mb-6">
                 <div>
-                  <div className="text-xs text-white/50 mb-1">Rank</div>
-                  <div className="text-2xl font-bold text-white">#{brand.rank_global}</div>
+                  <div className="text-xs text-gray-500 mb-1">Rank</div>
+                  <div className="text-2xl font-bold text-gray-900">#{brand.rank_global}</div>
                 </div>
+                <div className="w-px h-12 bg-gray-300" />
                 <div>
-                  <div className="text-xs text-white/50 mb-1">Score</div>
-                  <div className="text-2xl font-bold text-white">{brand.visibility_score.toFixed(1)}%</div>
+                  <div className="text-xs text-gray-500 mb-1">Score</div>
+                  <div className="text-2xl font-bold text-gray-900">{brand.visibility_score.toFixed(1)}%</div>
                 </div>
               </div>
-              <div className="text-xs text-white/40">Powered by Harbor</div>
+
+              {/* Footer */}
+              <div className="pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+                  <span>Powered by</span>
+                  <span className="font-semibold text-gray-600">Harbor</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -728,6 +928,34 @@ export default function ProfileManagerPage() {
             >
               Copy Link
             </button>
+          </div>
+        </div>
+
+        {/* Update Log - Placeholder */}
+        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Recent Profile Improvements</h3>
+          <div className="space-y-3">
+            {description && (
+              <div className="flex items-center gap-3 text-sm text-white/60">
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <span>Brand description updated</span>
+              </div>
+            )}
+            {faqs.length > 0 && (
+              <div className="flex items-center gap-3 text-sm text-white/60">
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <span>{faqs.length} FAQ{faqs.length !== 1 ? 's' : ''} added</span>
+              </div>
+            )}
+            {products.length > 0 && (
+              <div className="flex items-center gap-3 text-sm text-white/60">
+                <div className="w-2 h-2 rounded-full bg-green-400" />
+                <span>Product list refined ({products.length} products)</span>
+              </div>
+            )}
+            {!description && !faqs.length && !products.length && (
+              <p className="text-white/40 text-sm italic">No updates yet. Start editing your profile above!</p>
+            )}
           </div>
         </div>
 
