@@ -3,12 +3,22 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { createCanvas, loadImage } from '@napi-rs/canvas'
+import { createCanvas, loadImage, GlobalFonts } from '@napi-rs/canvas'
 import path from 'path'
 import fs from 'fs'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+
+// Register a system font that's available in Vercel's environment
+// DejaVu Sans is included in most Linux environments
+try {
+  GlobalFonts.registerFromPath('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 'DejaVu Sans')
+  GlobalFonts.registerFromPath('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 'DejaVu Sans Bold')
+  console.log('Fonts registered successfully')
+} catch (e) {
+  console.log('Font registration failed, will use default:', e)
+}
 
 export async function GET(
   request: NextRequest,
@@ -138,46 +148,29 @@ export async function GET(
       }
     }
 
-    // Brand Name (with red background so we can see it)
+    // Brand Name
     console.log('Drawing brand name:', brand.brand_name)
-    
-    // Draw red rectangle behind text
-    ctx.fillStyle = '#FF0000'
-    ctx.fillRect(340, 150, 400, 50)
-    
-    // Use 'sans-serif' only - most reliable
-    ctx.font = 'bold 42px sans-serif'
+    ctx.font = 'bold 42px "DejaVu Sans Bold"'
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'left'
     ctx.fillText(brand.brand_name, 350, 185)
 
-    // Percentile Line (with blue background)
+    // Percentile Line
     const percentile = getPercentileMessage(brand.rank_global)
     console.log('Drawing percentile:', percentile)
-    
-    ctx.fillStyle = '#0000FF'
-    ctx.fillRect(340, 210, 400, 40)
-    
-    ctx.font = '22px sans-serif'
-    ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(percentile, 350, 235)
+    ctx.font = '22px "DejaVu Sans"'
+    ctx.fillStyle = '#A0A0A0'
+    ctx.fillText(percentile, 350, 225)
 
-    // Rank Value (with green background)
-    ctx.font = 'bold 56px sans-serif'
-    ctx.fillStyle = '#00FF00'
-    ctx.fillRect(300, 330, 126, 70)
-    
-    ctx.fillStyle = '#000000'
+    // Rank Value (centered under "Rank" label)
+    ctx.font = 'bold 56px "DejaVu Sans Bold"'
+    ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'center'
     const rankText = `#${brand.rank_global}`
     console.log('Drawing rank:', rankText)
     ctx.fillText(rankText, 363, 380)
 
-    // Score Value (with yellow background)
-    ctx.fillStyle = '#FFFF00'
-    ctx.fillRect(550, 330, 126, 70)
-    
-    ctx.fillStyle = '#000000'
+    // Score Value (centered under "Score" label)
     const scoreText = `${brand.visibility_score.toFixed(1)}%`
     console.log('Drawing score:', scoreText)
     ctx.fillText(scoreText, 613, 380)
