@@ -6,6 +6,13 @@ import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
+  
+  // Skip middleware entirely if env vars are missing (during build)
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn('⚠️  Supabase env vars missing - skipping middleware (build time)')
+    return res
+  }
+
   const supabase = createMiddlewareClient({ req, res })
 
   const {
