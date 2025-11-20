@@ -138,33 +138,36 @@ export async function GET(
       }
     }
 
-    // TEST: Draw text in SUPER OBVIOUS places
+    // Brand Name (top area, to the right of where logo would be)
     console.log('Drawing brand name:', brand.brand_name)
-    
-    // Draw in top-left corner - impossible to miss
-    ctx.font = '700 100px system-ui'
-    ctx.fillStyle = '#FF0000' // RED so it's obvious
+    ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'left'
-    ctx.fillText('TEST', 50, 100)
-    
-    // Draw brand name in center
-    ctx.fillStyle = '#00FF00' // GREEN
-    ctx.textAlign = 'center'
-    ctx.fillText(brand.brand_name, width / 2, height / 2)
-    
-    // Draw rank and score big in center
-    ctx.fillStyle = '#FFFF00' // YELLOW
-    ctx.fillText(`#${brand.rank_global} - ${brand.visibility_score}%`, width / 2, height / 2 + 150)
+    ctx.fillText(brand.brand_name, 340, 190)
 
-    // Convert canvas to buffer
+    // Percentile Line (under brand name)
+    const percentile = getPercentileMessage(brand.rank_global)
+    console.log('Drawing percentile:', percentile)
+    ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.fillStyle = '#A0A0A0'
+    ctx.fillText(percentile, 340, 235)
+
+    // Rank Value (centered under "Rank" label)
+    ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.fillStyle = '#FFFFFF'
+    ctx.textAlign = 'center'
+    const rankText = `#${brand.rank_global}`
+    console.log('Drawing rank:', rankText)
+    ctx.fillText(rankText, 363, 375)
+
+    // Score Value (centered under "Score" label)
+    const scoreText = `${brand.visibility_score.toFixed(1)}%`
+    console.log('Drawing score:', scoreText)
+    ctx.fillText(scoreText, 613, 375)
+
+    // Convert canvas to buffer (no resize needed - template is already 1200x627)
     console.log('Converting canvas to buffer...')
-    
-    // Resize to LinkedIn's required dimensions (1200x627)
-    const resizedCanvas = createCanvas(1200, 627)
-    const resizedCtx = resizedCanvas.getContext('2d')
-    resizedCtx.drawImage(canvas, 0, 0, width, height, 0, 0, 1200, 627)
-    
-    const buffer = resizedCanvas.toBuffer('image/png')
+    const buffer = canvas.toBuffer('image/png')
     console.log('Buffer size:', buffer.length, 'bytes')
     console.log('=== SHARE CARD DEBUG END ===')
 
