@@ -145,10 +145,11 @@ export async function GET(
     ctx.fillStyle = '#FF0000'
     ctx.fillRect(340, 150, 400, 50)
     
-    ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    // Use 'sans-serif' only - most reliable
+    ctx.font = 'bold 42px sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'left'
-    ctx.fillText(brand.brand_name, 340, 190)
+    ctx.fillText(brand.brand_name, 350, 185)
 
     // Percentile Line (with blue background)
     const percentile = getPercentileMessage(brand.rank_global)
@@ -157,20 +158,20 @@ export async function GET(
     ctx.fillStyle = '#0000FF'
     ctx.fillRect(340, 210, 400, 40)
     
-    ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.font = '22px sans-serif'
     ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(percentile, 340, 235)
+    ctx.fillText(percentile, 350, 235)
 
     // Rank Value (with green background)
-    ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.font = 'bold 56px sans-serif'
     ctx.fillStyle = '#00FF00'
     ctx.fillRect(300, 330, 126, 70)
     
-    ctx.fillStyle = '#FFFFFF'
+    ctx.fillStyle = '#000000'
     ctx.textAlign = 'center'
     const rankText = `#${brand.rank_global}`
     console.log('Drawing rank:', rankText)
-    ctx.fillText(rankText, 363, 375)
+    ctx.fillText(rankText, 363, 380)
 
     // Score Value (with yellow background)
     ctx.fillStyle = '#FFFF00'
@@ -179,7 +180,7 @@ export async function GET(
     ctx.fillStyle = '#000000'
     const scoreText = `${brand.visibility_score.toFixed(1)}%`
     console.log('Drawing score:', scoreText)
-    ctx.fillText(scoreText, 613, 375)
+    ctx.fillText(scoreText, 613, 380)
 
     // Convert canvas to buffer (no resize needed - template is already 1200x627)
     console.log('Converting canvas to buffer...')
