@@ -80,12 +80,18 @@ export async function GET(
     // Load template image
     const template = await loadImage(templatePath)
     
+    // Get template dimensions
+    const width = template.width
+    const height = template.height
+    
+    console.log('Template dimensions:', width, 'x', height)
+    
     // Create canvas with same dimensions as template
-    const canvas = createCanvas(1200, 627)
+    const canvas = createCanvas(width, height)
     const ctx = canvas.getContext('2d')
 
     // Draw template background
-    ctx.drawImage(template, 0, 0, 1200, 627)
+    ctx.drawImage(template, 0, 0, width, height)
 
     // Text rendering settings
     ctx.textBaseline = 'top'
@@ -132,35 +138,42 @@ export async function GET(
       }
     }
 
-    // Brand Name (higher up, to the right of logo area)
+    // Brand Name (scaled for 2000x1045 template)
     console.log('Drawing brand name:', brand.brand_name)
-    ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.font = '600 70px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(brand.brand_name, 410, 190)
+    ctx.textAlign = 'left'
+    ctx.fillText(brand.brand_name, 680, 315)
 
     // Percentile Line (under brand name)
     const percentile = getPercentileMessage(brand.rank_global)
     console.log('Drawing percentile:', percentile)
-    ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.font = '400 37px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#A0A0A0'
-    ctx.fillText(percentile, 410, 235)
+    ctx.fillText(percentile, 680, 390)
 
-    // Rank Value (below labels that are already in template)
-    ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    // Rank Value (centered under "Rank" label)
+    ctx.font = '700 93px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
     ctx.textAlign = 'center'
     const rankText = `#${brand.rank_global}`
-    console.log('Drawing rank:', rankText, 'at', 435, 375)
-    ctx.fillText(rankText, 435, 375)
+    console.log('Drawing rank:', rankText, 'at', 725, 625)
+    ctx.fillText(rankText, 725, 625)
 
-    // Score Value (below score label)
+    // Score Value (centered under "Score" label)
     const scoreText = `${brand.visibility_score.toFixed(1)}%`
-    console.log('Drawing score:', scoreText, 'at', 735, 375)
-    ctx.fillText(scoreText, 735, 375)
+    console.log('Drawing score:', scoreText, 'at', 1225, 625)
+    ctx.fillText(scoreText, 1225, 625)
 
     // Convert canvas to buffer
     console.log('Converting canvas to buffer...')
-    const buffer = canvas.toBuffer('image/png')
+    
+    // Resize to LinkedIn's required dimensions (1200x627)
+    const resizedCanvas = createCanvas(1200, 627)
+    const resizedCtx = resizedCanvas.getContext('2d')
+    resizedCtx.drawImage(canvas, 0, 0, width, height, 0, 0, 1200, 627)
+    
+    const buffer = resizedCanvas.toBuffer('image/png')
     console.log('Buffer size:', buffer.length, 'bytes')
     console.log('=== SHARE CARD DEBUG END ===')
 
