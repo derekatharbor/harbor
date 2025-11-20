@@ -6,10 +6,8 @@ const nextConfig = {
   images: {
     domains: [],
   },
-  env: {
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  },
+  // Don't try to access env vars at build time
+  // They're automatically available as NEXT_PUBLIC_ vars in the browser
 }
 
 module.exports = nextConfig
