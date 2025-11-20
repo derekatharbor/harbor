@@ -1,156 +1,183 @@
-import { NextRequest, NextResponse } from 'next/server'
+// apps/web/app/api/claim/start/route.ts
+// Sends verification code to email via Resend
+
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Initialize Resend (only if API key is set)
+const resend = process.env.RESEND_API_KEY 
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY!)
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const { email, brandId } = await request.json()
+    const { brandId, email } = await request.json()
 
-    // Validate input
-    if (!email || !brandId) {
+    if (!brandId || !email) {
       return NextResponse.json(
-        { error: 'Email and brand ID are required' },
+        { error: 'Missing brandId or email' },
         { status: 400 }
       )
     }
 
-    // Fetch the brand
-    const { data: brand, error: brandError } = await supabase
+    // Create Supabase client
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+
+    // Get brand profile
+    const { data: brand } = await supabase
       .from('ai_profiles')
       .select('*')
       .eq('id', brandId)
       .single()
 
-    if (brandError || !brand) {
+    if (!brand) {
       return NextResponse.json(
         { error: 'Brand not found' },
         { status: 404 }
       )
     }
 
-    // Check if brand is already claimed
+    // Check if already claimed
     if (brand.claimed) {
       return NextResponse.json(
-        { error: 'This brand has already been claimed' },
+        { error: `This profile is already claimed by the verified domain @${brand.domain}` },
         { status: 400 }
       )
     }
 
-    // Verify email domain matches brand domain
-    const emailDomain = email.split('@')[1].toLowerCase()
-    const brandDomain = brand.domain.toLowerCase()
-
-    if (emailDomain !== brandDomain) {
+    // Validate email domain
+    const emailDomain = email.split('@')[1]
+    if (emailDomain !== brand.domain) {
       return NextResponse.json(
-        { error: `Email must be from @${brandDomain}` },
+        { error: `You must use an email ending in @${brand.domain}` },
         { status: 400 }
       )
     }
 
-    // Generate 6-digit verification code
+    // Generate 6-digit code
     const code = Math.floor(100000 + Math.random() * 900000).toString()
 
-    // Store verification code in database
-    const expiresAt = new Date()
-    expiresAt.setMinutes(expiresAt.getMinutes() + 10) // 10 minute expiry
+    // Store code in DB (expires in 10 minutes)
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
 
-    const { error: insertError } = await supabase
+    await supabase
       .from('verification_codes')
       .insert({
+        profile_id: brandId,
         email,
         code,
-        brand_id: brandId,
-        expires_at: expiresAt.toISOString(),
+        expires_at: expiresAt,
+        status: 'pending'
       })
 
-    if (insertError) {
-      console.error('Error inserting verification code:', insertError)
-      return NextResponse.json(
-        { error: 'Failed to generate verification code' },
-        { status: 500 }
-      )
-    }
-
-    // Send email via Resend
-    try {
-      await resend.emails.send({
-        from: 'Harbor <verify@useharbor.io>',
-        to: email,
-        subject: `Verify your ${brand.brand_name} profile claim`,
-        html: `
-          <!DOCTYPE html>
-          <html>
+    // Send email
+    if (resend) {
+      try {
+        await resend.emails.send({
+          from: 'Harbor <verify@useharbor.io>',
+          to: email,
+          subject: `Your Harbor verification code: ${code}`,
+          html: `
+            <!DOCTYPE html>
+            <html>
             <head>
               <meta charset="utf-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
             </head>
-            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #101A31;">
-              <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-                
-                <!-- Header -->
-                <div style="text-align: center; margin-bottom: 40px;">
-                  <h1 style="color: #FFFFFF; font-size: 24px; font-weight: 700; margin: 0 0 8px 0;">
-                    Verify Your Profile Claim
-                  </h1>
-                  <p style="color: #A4B1C3; font-size: 16px; margin: 0;">
-                    Someone requested to claim ${brand.brand_name} on Harbor
-                  </p>
-                </div>
+            <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f4;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
+                <tr>
+                  <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                      
+                      <!-- Header -->
+                      <tr>
+                        <td style="background-color: #101A31; padding: 32px; text-align: center;">
+                          <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
+                            Harbor
+                          </h1>
+                        </td>
+                      </tr>
 
-                <!-- Code Card -->
-                <div style="background-color: #0C1422; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px 32px; text-align: center; margin-bottom: 32px;">
-                  <p style="color: #CBD3E2; font-size: 14px; margin: 0 0 16px 0; text-transform: uppercase; letter-spacing: 1px;">
-                    Your Verification Code
-                  </p>
-                  <div style="font-size: 48px; font-weight: 700; color: #FFFFFF; letter-spacing: 8px; font-family: 'Courier New', monospace; margin: 0 0 16px 0;">
-                    ${code}
-                  </div>
-                  <p style="color: #A4B1C3; font-size: 14px; margin: 0;">
-                    This code expires in 10 minutes
-                  </p>
-                </div>
+                      <!-- Content -->
+                      <tr>
+                        <td style="padding: 40px 32px;">
+                          <h2 style="margin: 0 0 16px 0; color: #101A31; font-size: 20px; font-weight: 600;">
+                            Verify your email
+                          </h2>
+                          <p style="margin: 0 0 24px 0; color: #6B7280; font-size: 16px; line-height: 1.5;">
+                            You're claiming <strong style="color: #101A31;">${brand.brand_name}</strong>'s profile on Harbor. Enter this code to verify your email:
+                          </p>
 
-                <!-- Instructions -->
-                <div style="background-color: rgba(255,255,255,0.03); border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-                  <p style="color: #CBD3E2; font-size: 14px; line-height: 1.6; margin: 0 0 12px 0;">
-                    Enter this code on the Harbor claim page to verify your ownership of <strong style="color: #FFFFFF;">${brand.brand_name}</strong>.
-                  </p>
-                  <p style="color: #A4B1C3; font-size: 13px; line-height: 1.5; margin: 0;">
-                    If you didn't request this verification, you can safely ignore this email.
-                  </p>
-                </div>
+                          <!-- Code Box -->
+                          <div style="background-color: #F3F4F6; border: 2px solid #E5E7EB; border-radius: 8px; padding: 24px; text-align: center; margin: 0 0 24px 0;">
+                            <div style="font-size: 36px; font-weight: 700; color: #101A31; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+                              ${code}
+                            </div>
+                          </div>
 
-                <!-- Footer -->
-                <div style="text-align: center; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.05);">
-                  <p style="color: #A4B1C3; font-size: 13px; margin: 0 0 8px 0;">
-                    Sent by Harbor
-                  </p>
-                  <p style="color: #6B7280; font-size: 12px; margin: 0;">
-                    The first platform for AI search visibility
-                  </p>
-                </div>
-              </div>
+                          <p style="margin: 0 0 8px 0; color: #6B7280; font-size: 14px; line-height: 1.5;">
+                            This code will expire in <strong>10 minutes</strong>.
+                          </p>
+                          <p style="margin: 0; color: #6B7280; font-size: 14px; line-height: 1.5;">
+                            If you didn't request this code, you can safely ignore this email.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <!-- Footer -->
+                      <tr>
+                        <td style="background-color: #F9FAFB; padding: 24px 32px; text-align: center; border-top: 1px solid #E5E7EB;">
+                          <p style="margin: 0 0 8px 0; color: #9CA3AF; font-size: 12px;">
+                            Harbor - AI Visibility Platform
+                          </p>
+                          <p style="margin: 0; color: #9CA3AF; font-size: 12px;">
+                            <a href="https://useharbor.io" style="color: #FF6B4A; text-decoration: none;">useharbor.io</a>
+                          </p>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+              </table>
             </body>
-          </html>
-        `,
-      })
+            </html>
+          `
+        })
+        console.log(`✓ Verification code sent to ${email}`)
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError)
+        // Don't fail the request if email fails - log and continue
+      }
+    } else {
+      // Development mode - log to console
+      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+      console.log(`📧 VERIFICATION CODE FOR ${email}`)
+      console.log(`   Code: ${code}`)
+      console.log(`   Brand: ${brand.brand_name}`)
+      console.log(`   Expires: ${new Date(expiresAt).toLocaleString()}`)
+      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+    }
 
-      console.log(`✅ Verification code sent to ${email}: ${code}`)
-    } catch (emailError) {
-      console.error('Error sending email:', emailError)
-      return NextResponse.json(
-        { error: 'Failed to send verification email' },
-        { status: 500 }
-      )
+    // In development, return the code for easy testing
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json({ 
+        success: true,
+        message: 'Verification code sent',
+        devCode: code // Remove in production or protect with flag
+      })
     }
 
     return NextResponse.json({ 
@@ -158,8 +185,8 @@ export async function POST(request: NextRequest) {
       message: 'Verification code sent to your email'
     })
 
-  } catch (error) {
-    console.error('Error in claim start:', error)
+  } catch (error: any) {
+    console.error('Claim start error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
