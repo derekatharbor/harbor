@@ -37,8 +37,17 @@ export async function GET(
       .single()
 
     if (error || !brand) {
+      console.error('Brand fetch error:', error)
       return new NextResponse('Brand not found', { status: 404 })
     }
+
+    // Debug: Log what we got
+    console.log('Brand data:', {
+      name: brand.brand_name,
+      rank: brand.rank_global,
+      score: brand.visibility_score,
+      logo: brand.logo_url
+    })
 
     // Calculate percentile message
     const getPercentileMessage = (rank: number): string => {
@@ -104,25 +113,28 @@ export async function GET(
       }
     }
 
-    // Brand Name
-    ctx.font = '600 48px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    // Brand Name (higher up, to the right of logo area)
+    ctx.font = '600 42px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(brand.brand_name, 420, 185)
+    ctx.fillText(brand.brand_name, 410, 190)
 
-    // Percentile Line
-    ctx.font = '400 26px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#D0D0D0'
-    ctx.fillText(getPercentileMessage(brand.rank_global), 420, 245)
+    // Percentile Line (under brand name)
+    ctx.font = '400 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    ctx.fillStyle = '#A0A0A0'
+    ctx.fillText(getPercentileMessage(brand.rank_global), 410, 235)
 
-    // Rank Value
-    ctx.font = '600 54px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    // Rank Value (below labels that are already in template)
+    ctx.font = '700 56px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(`#${brand.rank_global}`, 350, 360)
+    ctx.textAlign = 'center'
+    const rankText = `#${brand.rank_global}`
+    console.log('Drawing rank:', rankText, 'at', 435, 375)
+    ctx.fillText(rankText, 435, 375)
 
-    // Score Value
-    ctx.font = '600 54px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-    ctx.fillStyle = '#FFFFFF'
-    ctx.fillText(`${brand.visibility_score.toFixed(1)}%`, 620, 360)
+    // Score Value (below score label)
+    const scoreText = `${brand.visibility_score.toFixed(1)}%`
+    console.log('Drawing score:', scoreText, 'at', 735, 375)
+    ctx.fillText(scoreText, 735, 375)
 
     // Convert canvas to buffer
     const buffer = canvas.toBuffer('image/png')
