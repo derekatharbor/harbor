@@ -77,13 +77,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
     } catch (err: any) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setClaimLoading(false)
     }
   }
 
   const handleVerifyCode = async () => {
     setError('')
-    setLoading(true)
+    setClaimLoading(true)
 
     try {
       const res = await fetch('/api/claim/verify', {
@@ -103,7 +103,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
     } catch (err: any) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setClaimLoading(false)
     }
   }
 
@@ -317,7 +317,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
                 <button
                   onClick={handleSendCode}
-                  disabled={loading || !email}
+                  disabled={claimLoading || !email}
                   className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {claimLoading ? 'Sending...' : 'Send verification code'}
@@ -355,7 +355,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
                 <button
                   onClick={handleVerifyCode}
-                  disabled={loading || code.length !== 6}
+                  disabled={claimLoading || code.length !== 6}
                   className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-3"
                 >
                   {claimLoading ? 'Verifying...' : 'Verify'}
