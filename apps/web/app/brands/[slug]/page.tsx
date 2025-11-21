@@ -37,7 +37,7 @@ export async function generateMetadata({
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
     const canonicalUrl = `${siteUrl}/brands/${params.slug}`
-    const jsonFeedUrl = `${siteUrl}/brands/${params.slug}/harbor.json`
+    const jsonFeedUrl = `${siteUrl}/api/feed/${params.slug}`
     const shareImageUrl = `${siteUrl}/api/share-card/${params.slug}?theme=light`
     
     const title = `${brand.brand_name} - AI Visibility Profile | Harbor`
@@ -109,11 +109,11 @@ export default async function BrandProfilePage({
     <>
       {/* Explicit JSON feed link in head (Next.js will render this) */}
       <link 
-        rel="alternate" 
-        type="application/json" 
-        href={`/brands/${params.slug}/harbor.json`}
-        title="AI-Ready Profile Feed"
-      />
+  rel="alternate" 
+  type="application/json" 
+  href={`/api/feed/${params.slug}`}
+  title="AI-Ready Profile Feed"
+/>
       
       <BrandProfileClient brand={brand} />
     </>
