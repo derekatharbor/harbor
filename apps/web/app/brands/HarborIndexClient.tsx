@@ -115,9 +115,9 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       <div className="h-28" />
 
       {/* Hero Section with Wireframe */}
-      <section className="relative min-h-[600px]">
+      <section className="relative min-h-[420px]">
         {/* Wireframe Background - Scrolls with page, hero only */}
-        <div className="absolute top-0 left-0 right-0 pointer-events-none overflow-hidden z-0 h-full">
+        <div className="absolute top-0 left-0 right-0 pointer-events-none overflow-hidden z-0" style={{ height: '420px' }}>
           <div className="relative w-full h-full">
             <Image
               src="/images/wireframe-wave.png"
