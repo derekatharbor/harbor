@@ -112,20 +112,28 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </nav>
 
       {/* Hero Container - Starts below navbar */}
-      <div className="relative pt-[140px]">
+      <div className="relative pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative pb-32">
-          {/* Wireframe Background - Full-width, behind everything */}
-          <div className="absolute left-1/2 top-12 -translate-x-1/2 w-[900px] h-[300px] z-0 pointer-events-none">
-  <Image
-    src="/images/wireframe-wave.png"
-    alt=""
-    fill
-    className="object-contain opacity-[0.14]"
-    priority
-  />
-</div>
-
+        <section className="relative min-h-[500px] pt-16 pb-12 z-[1]">
+          {/* Wireframe Background - Centered, behind everything */}
+          <div 
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
+            style={{ 
+              width: '80vw',
+              maxWidth: '1600px',
+              opacity: 0.25
+            }}
+          >
+            <div className="relative w-full aspect-[2/1]">
+              <Image
+                src="/images/wireframe-wave.png"
+                alt=""
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
 
           {/* Hero Content */}
           <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
