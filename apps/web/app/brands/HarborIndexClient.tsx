@@ -25,11 +25,9 @@ interface Props {
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands.slice(0, 50))
-  const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
-  const [showAllFilters, setShowAllFilters] = useState(false)
 
   // Fetch brands if not provided
   useEffect(() => {
@@ -48,7 +46,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [initialBrands])
 
-  // Filter brands based on industry and search
+  // Filter brands based on search only
   useEffect(() => {
     let filtered = brands
 
@@ -59,25 +57,9 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       )
     }
 
-    if (selectedIndustry !== 'all') {
-      filtered = filtered.filter(brand => brand.industry === selectedIndustry)
-    }
-
     // Limit to top 50 for display
     setFilteredBrands(filtered.slice(0, 50))
-  }, [searchQuery, selectedIndustry, brands])
-
-  // Get unique industries with counts
-  const industryData = brands.reduce((acc: Record<string, number>, brand) => {
-    if (brand.industry) {
-      acc[brand.industry] = (acc[brand.industry] || 0) + 1
-    }
-    return acc
-  }, {})
-
-  // Top industries to show
-  const topIndustries = ['Technology', 'SaaS', 'E-commerce', 'AI', 'Payments', 'Fintech', 'Consulting']
-  const otherIndustries = Object.keys(industryData).filter(i => !topIndustries.includes(i)).sort()
+  }, [searchQuery, brands])
 
   const totalBrands = brands.length
   const displayedBrands = filteredBrands.length
@@ -155,14 +137,13 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
         {/* Explainer */}
         <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-12">
-          AI Visibility Score shows how well AI systems understand and surface your brand across ChatGPT, Claude, Gemini, and Perplexity.
+          The global leaderboard for how AI models interpret and surface the world's brands.
         </p>
 
-        {/* Glowing Search Box */}
+        {/* Search Box */}
         <div className="max-w-2xl mx-auto relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur-lg opacity-30" />
-          <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-cyan-500/30 p-2">
-            <Search className="w-5 h-5 text-cyan-400 ml-4" />
+          <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
+            <Search className="w-5 h-5 text-white/40 ml-4" />
             <input
               type="text"
               value={searchQuery}
@@ -177,69 +158,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pb-20">
         
-        {/* Industry Filters */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2 items-center">
-            {/* All button */}
-            <button
-              onClick={() => setSelectedIndustry('all')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                selectedIndustry === 'all'
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
-              }`}
-            >
-              All ({totalBrands})
-            </button>
-
-            {/* Top industries */}
-            {topIndustries.map(industry => (
-              industryData[industry] && (
-                <button
-                  key={industry}
-                  onClick={() => setSelectedIndustry(industry)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    selectedIndustry === industry
-                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                      : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
-                  }`}
-                >
-                  {industry} ({industryData[industry]})
-                </button>
-              )
-            ))}
-
-            {/* More button */}
-            {otherIndustries.length > 0 && (
-              <button
-                onClick={() => setShowAllFilters(!showAllFilters)}
-                className="px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 transition-all"
-              >
-                {showAllFilters ? 'Less' : `More (${otherIndustries.length})`}
-              </button>
-            )}
-          </div>
-
-          {/* Expanded filters */}
-          {showAllFilters && (
-            <div className="mt-2 flex flex-wrap gap-2">
-              {otherIndustries.map(industry => (
-                <button
-                  key={industry}
-                  onClick={() => setSelectedIndustry(industry)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    selectedIndustry === industry
-                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                      : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
-                  }`}
-                >
-                  {industry} ({industryData[industry]})
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
           <div className="overflow-x-auto">
@@ -250,7 +168,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Brand</th>
                   <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Industry</th>
                   <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Visibility Score</th>
-                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -297,17 +214,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                             {isPositive ? '+' : ''}{delta.toFixed(1)}%
                           </span>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        {brand.claimed ? (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-400/10 text-green-400 text-xs font-medium">
-                            Verified
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-white/5 text-white/40 text-xs font-medium">
-                            Unclaimed
-                          </span>
-                        )}
                       </td>
                     </tr>
                   )

@@ -175,6 +175,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </nav>
 
@@ -185,7 +186,18 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 relative z-10">
         
         {/* Header Card */}
-        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8 relative overflow-hidden">
+          {/* Wireframe Background */}
+          <div className="absolute inset-0 pointer-events-none opacity-20">
+            <Image
+              src="/images/wireframe-wave.png"
+              alt=""
+              fill
+              className="object-cover"
+            />
+          </div>
+          
+          <div className="relative z-10">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
             {/* Logo */}
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
@@ -203,6 +215,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
             {/* Brand Info */}
             <div className="flex-1">
+              {/* Profile Type Label */}
+              <div className="inline-flex items-center px-3 py-1 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-3">
+                <span className="text-white/90 text-xs font-medium tracking-wide uppercase">
+                  AI Visibility Profile
+                </span>
+              </div>
+              
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-4xl md:text-5xl font-bold text-white">
                   {brand.brand_name}
@@ -313,17 +332,16 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           )}
         </div>
 
-        {/* Unclaimed CTA - Moved up for prominence */}
+        {/* Unclaimed CTA - Clean integrated style */}
         {!brand.claimed && (
-          <div className="mb-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
+          <div className="mb-8 p-6 bg-[#0C1422] border border-white/10 rounded-xl">
             <div className="flex items-start gap-4">
-              <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-white mb-2">
-                  This profile is unclaimed
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  This profile is unclaimed.
                 </h3>
-                <p className="text-white/70 text-sm mb-4">
-                  Are you from {brand.brand_name}? Claim this profile for free to manage how AI models understand your brand.
+                <p className="text-white/60 text-sm mb-4">
+                  Are you from {brand.brand_name}? Claim this profile to manage how AI models understand your brand.
                 </p>
                 <button
                   onClick={() => setShowClaimModal(true)}
