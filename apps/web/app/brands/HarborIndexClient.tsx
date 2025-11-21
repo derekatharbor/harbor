@@ -70,19 +70,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const displayedBrands = filteredBrands.length
 
   return (
-    <div className="min-h-screen bg-[#101A31] relative overflow-hidden">
-      {/* Wireframe Background - Top of page only */}
-      <div className="fixed top-0 left-0 right-0 pointer-events-none z-0" style={{ height: '800px' }}>
-        <Image
-          src="/images/wireframe-wave.png"
-          alt=""
-          fill
-          className="object-cover opacity-[0.32]"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/60 to-[#101A31]" />
-      </div>
-
+    <div className="min-h-screen bg-[#101A31] relative">
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -128,6 +116,20 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Hero Section */}
       <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center z-10">
+        {/* Wireframe Background - Hero only */}
+        <div className="absolute inset-0 -mx-[100vw] pointer-events-none overflow-hidden">
+          <div className="relative w-[200vw] h-full">
+            <Image
+              src="/images/wireframe-wave.png"
+              alt=""
+              fill
+              className="object-cover opacity-[0.32]"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/60 to-[#101A31]" />
+          </div>
+        </div>
+
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
