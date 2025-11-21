@@ -116,19 +116,16 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         {/* Hero Section with Wireframe */}
         <section className="relative pb-32">
           {/* Wireframe Background - Full-width, behind everything */}
-          <div className="absolute inset-0 z-0 overflow-visible pointer-events-none">
-            <div className="relative w-full h-full">
-              <Image
-                src="/images/wireframe-wave.png"
-                alt=""
-                fill
-                className="object-cover object-center opacity-[0.14]"
-                priority
-              />
-            </div>
-            {/* Fade-out gradient at bottom */}
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#101A31] to-transparent" />
-          </div>
+          <div className="absolute left-1/2 top-12 -translate-x-1/2 w-[900px] h-[300px] z-0 pointer-events-none">
+  <Image
+    src="/images/wireframe-wave.png"
+    alt=""
+    fill
+    className="object-contain opacity-[0.14]"
+    priority
+  />
+</div>
+
 
           {/* Hero Content */}
           <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
