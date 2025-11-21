@@ -112,19 +112,19 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </nav>
 
       {/* Hero Container - Starts below navbar */}
-      <div className="relative pt-16">
+      <div className="relative pt-12 md:pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[500px] pt-16 pb-6 z-[1]">
+        <section className="relative min-h-[400px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1]">
           {/* Wireframe Background - Centered, behind everything */}
           <div 
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
             style={{ 
-              width: '80vw',
+              width: '95vw',
               maxWidth: '1600px',
-              opacity: 0.25
+              opacity: 0.2
             }}
           >
-            <div className="relative w-full aspect-[2/1]">
+            <div className="relative w-full aspect-[3/1] md:aspect-[2/1]">
               <Image
                 src="/images/wireframe-wave.png"
                 alt=""
@@ -136,7 +136,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </div>
 
           {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[500px]">
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px]">
             {/* Frosted Glass Pill */}
             <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
               <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -145,12 +145,12 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </div>
 
                 {/* Gradient Title */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
               The AI Visibility Index
             </h1>
 
             {/* Explainer */}
-            <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-8">
+            <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-3xl mx-auto mb-6 md:mb-8 px-4">
               The global leaderboard for how AI models interpret and surface the world's brands.
             </p>
 
@@ -256,7 +256,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </div>
 
       {/* Table Section - No wireframe */}
-      <section className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      <section className="relative max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
         
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -264,10 +264,10 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Rank</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Brand</th>
-                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Industry</th>
-                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Visibility Score</th>
+                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Rank</th>
+                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Brand</th>
+                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">Industry</th>
+                  <th className="text-right text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Score</th>
                 </tr>
               </thead>
               <tbody>
@@ -281,12 +281,12 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                       className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
                       onClick={() => window.location.href = `/brands/${brand.slug}`}
                     >
-                      <td className="px-6 py-4">
-                        <span className="text-white/60 font-mono text-sm">#{brand.rank_global}</span>
+                      <td className="px-3 md:px-6 py-3 md:py-4">
+                        <span className="text-white/60 font-mono text-xs md:text-sm">#{brand.rank_global}</span>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                      <td className="px-3 md:px-6 py-3 md:py-4">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
                             <Image
                               src={brand.logo_url}
                               alt={brand.brand_name}
@@ -299,18 +299,19 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                             />
                           </div>
                           <div>
-                            <div className="text-white font-medium">{brand.brand_name}</div>
-                            <div className="text-white/40 text-sm">{brand.domain}</div>
+                            <div className="text-white font-medium text-sm md:text-base">{brand.brand_name}</div>
+                            <div className="text-white/40 text-xs md:text-sm">{brand.domain}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="text-white/60 text-sm">{brand.industry}</span>
+                      <td className="px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">
+                        <span className="text-white/60 text-xs md:text-sm">{brand.industry}</span>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <span className="text-white font-bold">{brand.visibility_score.toFixed(1)}%</span>
-                          <span className={`text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                      <td className="px-3 md:px-6 py-3 md:py-4 text-right">
+                      <td className="px-3 md:px-6 py-3 md:py-4 text-right">
+                        <div className="flex items-center justify-end gap-1 md:gap-2">
+                          <span className="text-white font-bold text-sm md:text-base">{brand.visibility_score.toFixed(1)}%</span>
+                          <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
                             {isPositive ? '+' : ''}{delta.toFixed(1)}%
                           </span>
                         </div>
