@@ -1,3 +1,5 @@
+// Path: /apps/web/app/brands/[slug]/BrandProfileClient.tsx
+
 'use client'
 
 import { useState, useEffect } from 'react'

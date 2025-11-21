@@ -1,7 +1,9 @@
+// Path: /apps/web/app/brands/HarborIndexClient.tsx
+
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, Search, ArrowRight } from 'lucide-react'
+import { Menu, Search, ArrowRight, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
@@ -28,6 +30,8 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [searchResults, setSearchResults] = useState<Brand[]>([])
 
   // Fetch brands if not provided
   useEffect(() => {
@@ -46,19 +50,20 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [initialBrands])
 
-  // Filter brands based on search only
+  // Handle search with dropdown
   useEffect(() => {
-    let filtered = brands
-
-    if (searchQuery) {
-      filtered = filtered.filter(brand =>
+    if (searchQuery.trim()) {
+      const results = brands.filter(brand =>
         brand.brand_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         brand.domain.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      ).slice(0, 5) // Show top 5 results
+      
+      setSearchResults(results)
+      setShowSearchDropdown(true)
+    } else {
+      setSearchResults([])
+      setShowSearchDropdown(false)
     }
-
-    // Limit to top 50 for display
-    setFilteredBrands(filtered.slice(0, 50))
   }, [searchQuery, brands])
 
   const totalBrands = brands.length
@@ -66,6 +71,22 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
   return (
     <div className="min-h-screen bg-[#101A31]">
+      {/* Index Background Container with Wireframe */}
+      <div className="relative">
+        {/* Wireframe Background - Gradient Mask Fade */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/images/wireframe-wave.png)',
+            backgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.32,
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
+          }}
+        />
+
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -109,23 +130,8 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Spacer */}
       <div className="h-28" />
 
-      {/* Hero Section with Wireframe Background */}
+      {/* Hero Section */}
       <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center">
-        {/* Wireframe Background - Hero Only */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden -top-12">
-          <Image
-            src="/images/wireframe-wave.png"
-            alt=""
-            fill
-            className="object-cover opacity-[0.14]"
-            priority
-          />
-          {/* Fade-out gradient at bottom */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/40 to-[#101A31]" />
-        </div>
-
-        {/* Hero Content - Above wireframe */}
-        <div className="relative z-10">
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -143,7 +149,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           The global leaderboard for how AI models interpret and surface the world's brands.
         </p>
 
-        {/* Search Box */}
+        {/* Search Box with Dropdown */}
         <div className="max-w-2xl mx-auto relative">
           <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
             <Search className="w-5 h-5 text-white/40 ml-4" />
@@ -151,15 +157,98 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => searchQuery && setShowSearchDropdown(true)}
+              onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
               placeholder="Search brands..."
               className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
             />
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery('')
+                  setShowSearchDropdown(false)
+                }}
+                className="mr-4 text-white/40 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-        </div>
+
+          {/* Search Dropdown */}
+          {showSearchDropdown && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
+              {searchResults.map((brand) => {
+                const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+                const isPositive = delta > 0
+
+                return (
+                  <Link
+                    key={brand.id}
+                    href={`/brands/${brand.slug}`}
+                    className="flex items-center gap-4 px-6 py-4 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                  >
+                    {/* Logo */}
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                      <Image
+                        src={brand.logo_url}
+                        alt={brand.brand_name}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none'
+                        }}
+                      />
+                    </div>
+
+                    {/* Brand Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium truncate">{brand.brand_name}</div>
+                      <div className="text-white/40 text-sm truncate">{brand.domain}</div>
+                    </div>
+
+                    {/* Rank */}
+                    <div className="text-white/60 text-sm font-mono">#{brand.rank_global}</div>
+
+                    {/* Score */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-semibold">{brand.visibility_score.toFixed(1)}%</span>
+                      <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                        {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                      </span>
+                    </div>
+
+                    {/* Arrow */}
+                    <ArrowRight className="w-4 h-4 text-white/40" />
+                  </Link>
+                )
+              })}
+
+              {/* View All Results */}
+              {searchResults.length === 5 && (
+                <div className="px-6 py-3 bg-white/5 border-t border-white/10">
+                  <Link
+                    href={`/brands/search?q=${encodeURIComponent(searchQuery)}`}
+                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    View all results for "{searchQuery}"
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* No Results */}
+          {showSearchDropdown && searchQuery && searchResults.length === 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-6 text-center z-50">
+              <p className="text-white/60 text-sm">No brands found for "{searchQuery}"</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Main Content - No wireframe */}
+      {/* Main Content - Wireframe fades by here */}
       <div className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
         
         {/* Brand Table */}
@@ -250,6 +339,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Fullscreen Menu */}
       <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      </div>
     </div>
   )
 }
