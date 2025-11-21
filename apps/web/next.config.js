@@ -4,7 +4,10 @@ const nextConfig = {
   swcMinify: true,
   transpilePackages: ['@harbor/db', '@harbor/adapters'],
   images: {
-    domains: [],
+    domains: [
+      'cdn.brandfetch.io',
+      'logo.clearbit.com', // Keep as fallback during migration
+    ],
   },
   
   // Rewrite /brands/[slug]/harbor.json to /api/feed/[slug]
