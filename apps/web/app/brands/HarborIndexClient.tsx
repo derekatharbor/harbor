@@ -114,7 +114,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[500px] pt-13 pb-6 z-[1]">
+        <section className="relative min-h-[500px] pt-16 pb-6 z-[1]">
           {/* Wireframe Background - Centered, behind everything */}
           <div 
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
@@ -136,7 +136,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </div>
 
           {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[500px]">
             {/* Frosted Glass Pill */}
             <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
               <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
