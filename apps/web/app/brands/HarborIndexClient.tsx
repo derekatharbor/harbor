@@ -132,51 +132,51 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
           {/* Hero Content */}
           <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
-        {/* Frosted Glass Pill */}
-        <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
-          <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
-            HARBOR INDEX
-          </span>
-        </div>
+            {/* Frosted Glass Pill */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
+              <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
+                HARBOR INDEX
+              </span>
+            </div>
 
-        {/* Gradient Title */}
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
-          The AI Visibility Index
-        </h1>
+                {/* Gradient Title */}
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+              The AI Visibility Index
+            </h1>
 
-        {/* Explainer */}
-        <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-12">
-          The global leaderboard for how AI models interpret and surface the world's brands.
-        </p>
+            {/* Explainer */}
+            <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-12">
+              The global leaderboard for how AI models interpret and surface the world's brands.
+            </p>
 
-        {/* Search Box with Dropdown */}
-        <div className="max-w-2xl mx-auto relative">
-          <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
-            <Search className="w-5 h-5 text-white/40 ml-4" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => searchQuery && setShowSearchDropdown(true)}
-              onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-              placeholder="Search brands..."
-              className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => {
-                  setSearchQuery('')
-                  setShowSearchDropdown(false)
-                }}
-                className="mr-4 text-white/40 hover:text-white transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+            {/* Search Box with Dropdown */}
+                <div className="max-w-2xl mx-auto relative">
+              <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
+                <Search className="w-5 h-5 text-white/40 ml-4" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery && setShowSearchDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+                  placeholder="Search brands..."
+                  className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('')
+                      setShowSearchDropdown(false)
+                    }}
+                    className="mr-4 text-white/40 hover:text-white transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                  </div>
 
-          {/* Search Dropdown */}
-          {showSearchDropdown && searchResults.length > 0 && (
+              {/* Search Dropdown */}
+              {showSearchDropdown && searchResults.length > 0 && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
               {searchResults.map((brand) => {
                 const delta = brand.rank_global <= 10 ? 5.8 : -1.2
@@ -239,13 +239,14 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </div>
           )}
 
-          {/* No Results */}
-          {showSearchDropdown && searchQuery && searchResults.length === 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-6 text-center z-50">
-              <p className="text-white/60 text-sm">No brands found for "{searchQuery}"</p>
+              {/* No Results */}
+              {showSearchDropdown && searchQuery && searchResults.length === 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-6 text-center z-50">
+                  <p className="text-white/60 text-sm">No brands found for "{searchQuery}"</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
         </section>
       </div>
 
