@@ -178,7 +178,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                     <X className="w-4 h-4" />
                   </button>
                 )}
-                  </div>
+              </div>
 
               {/* Search Dropdown */}
               {showSearchDropdown && searchResults.length > 0 && (
