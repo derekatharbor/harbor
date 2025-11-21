@@ -114,7 +114,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[500px] pt-16 pb-6 z-[1]">
+        <section className="relative min-h-[500px] pt-22 pb-6 z-[1]">
           {/* Wireframe Background - Centered, behind everything */}
           <div 
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
