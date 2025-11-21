@@ -136,7 +136,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </div>
 
           {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 pt-24 md:pt-32 lg:pt-40">
             {/* Frosted Glass Pill */}
             <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
               <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
