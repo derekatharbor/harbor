@@ -114,7 +114,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[500px] pt-16 pb-12 z-[1]">
+        <section className="relative min-h-[500px] pt-16 pb-6 z-[1]">
           {/* Wireframe Background - Centered, behind everything */}
           <div 
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
@@ -138,19 +138,19 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           {/* Hero Content */}
           <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
             {/* Frosted Glass Pill */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
               <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
                 HARBOR INDEX
               </span>
             </div>
 
                 {/* Gradient Title */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
               The AI Visibility Index
             </h1>
 
             {/* Explainer */}
-            <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-12">
+            <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-8">
               The global leaderboard for how AI models interpret and surface the world's brands.
             </p>
 
