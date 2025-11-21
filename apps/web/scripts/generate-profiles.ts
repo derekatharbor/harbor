@@ -367,10 +367,10 @@ export async function generateAIProfile(
       verified: false
     };
     
-    // Step 8: Save to database
+    // Step 8: Save to database (upsert to allow re-crawls)
     const { data: profile, error: dbError } = await supabase
       .from('ai_profiles')
-      .insert({
+      .upsert({
         brand_name: brandName,
         slug: slug,
         domain: domain,
@@ -381,6 +381,8 @@ export async function generateAIProfile(
         generation_method: 'batch_v2',
         generation_cost_usd: ESTIMATED_COST,
         feed_url: feedUrl
+      }, {
+        onConflict: 'slug'
       })
       .select('id')
       .single();

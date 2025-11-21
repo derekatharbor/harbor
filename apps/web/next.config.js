@@ -7,6 +7,17 @@ const nextConfig = {
     domains: [],
   },
   
+  // Rewrite /brands/[slug]/harbor.json to /api/feed/[slug]
+  // This gives us the canonical URL structure while keeping the working API route
+  async rewrites() {
+    return [
+      {
+        source: '/brands/:slug/harbor.json',
+        destination: '/api/feed/:slug'
+      }
+    ]
+  },
+  
   // Webpack config to handle @napi-rs/canvas
   webpack: (config, { isServer }) => {
     if (isServer) {

@@ -1,5 +1,5 @@
 // apps/web/app/brands/[slug]/page.tsx
-// Canonical human-readable brand profile page
+// Canonical human-readable brand profile page with Schema.org markup
 
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -37,7 +37,7 @@ export async function generateMetadata({
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
     const canonicalUrl = `${siteUrl}/brands/${params.slug}`
-    const jsonFeedUrl = `${siteUrl}/api/feed/${params.slug}`
+    const jsonFeedUrl = `${siteUrl}/brands/${params.slug}/harbor.json`
     const shareImageUrl = `${siteUrl}/api/share-card/${params.slug}?theme=light`
     
     const title = `${brand.brand_name} - AI Visibility Profile | Harbor`
@@ -49,7 +49,7 @@ export async function generateMetadata({
       alternates: {
         canonical: canonicalUrl,
         types: {
-          // THIS IS KEY: Links to the machine-readable feed
+          // Link to the machine-readable feed
           'application/json': jsonFeedUrl,
         }
       },
@@ -75,7 +75,6 @@ export async function generateMetadata({
         images: [shareImageUrl],
       },
       other: {
-        // Additional canonical feed meta
         'json-feed-url': jsonFeedUrl,
       }
     }
@@ -105,15 +104,55 @@ export default async function BrandProfilePage({
     notFound()
   }
 
+  // Prepare Schema.org structured data for SEO
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
+  const schemaOrgData = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    'mainEntity': {
+      '@type': 'Organization',
+      'name': brand.brand_name,
+      'url': `https://${brand.domain}`,
+      'logo': brand.logo_url,
+      'description': `AI visibility profile for ${brand.brand_name}`,
+      'sameAs': `${siteUrl}/brands/${params.slug}/harbor.json`
+    },
+    'breadcrumb': {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Brands',
+          'item': `${siteUrl}/brands`
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': brand.brand_name,
+          'item': `${siteUrl}/brands/${params.slug}`
+        }
+      ]
+    }
+  }
+
   return (
     <>
-      {/* Explicit JSON feed link in head (Next.js will render this) */}
+      {/* Schema.org JSON-LD for SEO (Google, Bing, etc.) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schemaOrgData)
+        }}
+      />
+      
+      {/* Explicit JSON feed link for AI crawlers */}
       <link 
-  rel="alternate" 
-  type="application/json" 
-  href={`/api/feed/${params.slug}`}
-  title="AI-Ready Profile Feed"
-/>
+        rel="alternate" 
+        type="application/json" 
+        href={`/brands/${params.slug}/harbor.json`}
+        title="AI-Ready Profile Feed"
+      />
       
       <BrandProfileClient brand={brand} />
     </>
