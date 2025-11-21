@@ -114,21 +114,23 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Spacer */}
       <div className="h-28" />
 
-      {/* Wireframe Background - Fixed, Hero Height Only */}
-      <div className="fixed top-28 left-0 right-0 pointer-events-none overflow-hidden z-0" style={{ height: '600px' }}>
-        <Image
-          src="/images/wireframe-wave.png"
-          alt=""
-          fill
-          className="object-cover object-center opacity-[0.14]"
-          priority
-        />
-        {/* Subtle fade at bottom only */}
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#101A31] to-transparent" />
-      </div>
+      {/* Hero Section with Wireframe */}
+      <section className="relative">
+        {/* Wireframe Background - Scrolls with page, hero only */}
+        <div className="absolute top-0 left-0 right-0 pointer-events-none overflow-hidden z-0" style={{ height: '65%' }}>
+          <Image
+            src="/images/wireframe-wave.png"
+            alt=""
+            fill
+            className="object-cover object-center opacity-[0.14]"
+            priority
+          />
+          {/* Fade-out gradient at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#101A31] to-transparent" />
+        </div>
 
-      {/* Hero Section */}
-      <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center z-10">
+        {/* Hero Content */}
+        <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center z-10">
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -244,9 +246,10 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           )}
         </div>
       </div>
+      </section>
 
-      {/* Main Content - Clean table area, no wireframe */}
-      <div className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      {/* Table Section - No wireframe */}
+      <section className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
         
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -332,7 +335,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             Showing {displayedBrands} of {totalBrands} brands • Updated daily
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Fullscreen Menu */}
       <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
