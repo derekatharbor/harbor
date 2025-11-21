@@ -1,6 +1,4 @@
-// apps/web/app/brands/[slug]/harbor.json/route.ts
-// Canonical machine-readable AI profile feed
-
+// apps/web/app/api/feed/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -12,57 +10,73 @@ export async function GET(
   { params }: { params: { slug: string } }
 ) {
   try {
-    // Validate params
     if (!params.slug) {
-      return new NextResponse('Slug required', { status: 400 })
+      return NextResponse.json({ error: 'Slug required' }, { status: 400 })
     }
 
-    // Fetch profile
+    // DEBUG: Log what we're searching for
+    console.log('🔍 Searching for slug:', params.slug)
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
+    // DEBUG: Log Supabase connection
+    console.log('📡 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30) + '...')
+
     const { data: profile, error } = await supabase
       .from('ai_profiles')
-      .select('feed_data, visibility_score, rank_global, updated_at')
+      .select('feed_data, visibility_score, rank_global, updated_at, slug, brand_name')
       .eq('slug', params.slug)
       .single()
 
-    // Handle not found
+    // DEBUG: Log query result
+    console.log('📊 Query result:', { 
+      found: !!profile, 
+      error: error?.message,
+      brandName: profile?.brand_name 
+    })
+
     if (error || !profile) {
+      console.error('❌ Profile not found:', { slug: params.slug, error })
       return NextResponse.json(
-        { error: 'Profile not found' },
+        { 
+          error: 'Profile not found',
+          slug: params.slug,
+          hint: 'Check if this brand exists in ai_profiles table'
+        },
         { status: 404 }
       )
     }
 
-    // Ensure feed_data exists
     if (!profile.feed_data) {
+      console.error('❌ No feed_data:', profile.brand_name)
       return NextResponse.json(
-        { error: 'Profile data not available' },
+        { 
+          error: 'Profile data not available',
+          brand: profile.brand_name
+        },
         { status: 500 }
       )
     }
 
-    // Return the canonical feed
-    // This is the permanent, machine-readable representation
+    console.log('✅ Success! Returning feed for:', profile.brand_name)
+
     return NextResponse.json(profile.feed_data, {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
         'X-Robots-Tag': 'all',
-        'Access-Control-Allow-Origin': '*', // Allow AI crawlers
+        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
         'Last-Modified': new Date(profile.updated_at || Date.now()).toUTCString(),
       }
     })
     
   } catch (error) {
-    console.error('Harbor JSON feed error:', error)
-    
-    // Never leak internal errors to crawlers
+    console.error('💥 Harbor feed error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
