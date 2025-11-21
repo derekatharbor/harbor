@@ -15,7 +15,7 @@ interface Brand {
   industry: string
   rank_global: number
   claimed: boolean
-  accesses_last_30_days: number
+  
 }
 
 interface Props {
@@ -222,12 +222,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
             </div>
 
-            <div className="bg-white/5 rounded-xl p-6">
-              <div className="text-white/50 text-sm mb-2">Profile Views (30d)</div>
-              <div className="text-4xl font-bold text-white">
-                {brand.accesses_last_30_days.toLocaleString()}
-              </div>
-            </div>
+            
           </div>
 
           {/* Unclaimed Notice / Claim Button */}
