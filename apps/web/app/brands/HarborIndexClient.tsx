@@ -116,7 +116,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         {/* Hero Section with Wireframe */}
         <section className="relative pb-32">
           {/* Wireframe Background - Full-width, behind everything */}
-          <div className="absolute inset-0 -z-10 overflow-visible">
+          <div className="absolute inset-0 z-0 overflow-visible pointer-events-none">
             <div className="relative w-full h-full">
               <Image
                 src="/images/wireframe-wave.png"
