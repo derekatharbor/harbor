@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Check, AlertCircle, TrendingUp, TrendingDown, Shield } from 'lucide-react'
+import { X, Check, AlertCircle, TrendingUp, TrendingDown, Shield, Lock, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -15,7 +15,7 @@ interface Brand {
   industry: string
   rank_global: number
   claimed: boolean
-  
+  feed_data?: any
 }
 
 interface Props {
@@ -106,6 +106,32 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       setClaimLoading(false)
     }
   }
+
+  // Parse feed data
+  const feedData = brand.feed_data || {}
+  const scoring = feedData.visibility_scoring || {}
+  
+  // Calculate visibility gaps
+  const gaps = [
+    { 
+      issue: 'Brand clarity',
+      current: scoring.brand_clarity_0_25 || 0,
+      max: 25,
+      impact: '+' + (25 - (scoring.brand_clarity_0_25 || 0)) + '%'
+    },
+    {
+      issue: 'Offerings clarity', 
+      current: scoring.offerings_clarity_0_25 || 0,
+      max: 25,
+      impact: '+' + (25 - (scoring.offerings_clarity_0_25 || 0)) + '%'
+    },
+    {
+      issue: 'Trust & basics',
+      current: scoring.trust_and_basics_0_20 || 0,
+      max: 20,
+      impact: '+' + (20 - (scoring.trust_and_basics_0_20 || 0)) + '%'
+    }
+  ].filter(gap => gap.current < gap.max).sort((a, b) => (b.max - b.current) - (a.max - a.current)).slice(0, 3)
 
   // Mock delta calculation
   const delta = brand.rank_global <= 10 ? 5.8 : -1.2
@@ -199,7 +225,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
 
           {/* Visibility Score */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-white/5 rounded-xl p-6">
               <div className="flex items-center gap-2 text-white/50 text-sm mb-2">
                 <div className="w-3 h-3 rounded-full bg-white/20" />
@@ -221,42 +247,180 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 #{brand.rank_global}
               </div>
             </div>
-
-            
           </div>
 
-          {/* Unclaimed Notice / Claim Button */}
-          {!brand.claimed && (
-            <div className="mt-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
-              <div className="flex items-start gap-4">
-                <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white mb-2">
-                    This profile is unclaimed
+          {/* AI Description Hero Block - NEW */}
+          {feedData.short_description && (
+            <div className="bg-gradient-to-br from-[#FF6B4A]/10 to-transparent border border-[#FF6B4A]/20 rounded-xl p-6 mb-8">
+              <h2 className="text-lg font-bold text-white mb-4">
+                How AI Describes {brand.brand_name} Today
+              </h2>
+              <p className="text-white/80 text-sm leading-relaxed mb-4">
+                "{feedData.short_description}"
+              </p>
+              {scoring.score_rationale && (
+                <p className="text-white/50 text-xs font-mono">
+                  {scoring.score_rationale}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Visibility Gaps - NEW */}
+          {gaps.length > 0 && (
+            <div className="bg-white/5 rounded-xl p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">
+                    Visibility Opportunities
                   </h3>
-                  <p className="text-white/70 text-sm mb-4">
-                    Are you from {brand.brand_name}? Claim this profile to manage how AI models see your brand.
+                  <p className="text-white/50 text-sm">
+                    Based on your visibility score, AI models are missing critical information
                   </p>
-                  <button
-                    onClick={() => setShowClaimModal(true)}
-                    className="px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all"
-                  >
-                    Claim this profile
-                  </button>
                 </div>
+                {!brand.claimed && (
+                  <Lock className="w-5 h-5 text-white/30" />
+                )}
               </div>
+              
+              <div className="space-y-3">
+                {gaps.map((gap, idx) => (
+                  <div 
+                    key={idx}
+                    className={`flex items-center justify-between p-4 rounded-lg ${brand.claimed ? 'bg-white/5' : 'bg-white/5 opacity-60'}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-[#FF6B4A]" />
+                      <span className="text-white font-medium">{gap.issue}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-white/50 text-sm">{gap.current}/{gap.max} points</span>
+                      <span className="text-green-400 font-medium text-sm">{gap.impact}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {!brand.claimed && (
+                <div className="mt-4 p-3 bg-[#FF6B4A]/5 rounded-lg border border-[#FF6B4A]/20">
+                  <p className="text-white/70 text-sm">
+                    <Lock className="w-4 h-4 inline mr-1" />
+                    Claim this profile to see detailed recommendations and fix these issues
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* AI Profile Data (placeholder for now) */}
-        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12">
-          <h2 className="text-2xl font-bold text-white mb-6">AI Visibility Profile</h2>
-          <p className="text-white/50 font-mono text-sm">
-            Full AI profile data coming soon. This will show how ChatGPT, Claude, Gemini, 
-            and Perplexity describe {brand.brand_name}.
-          </p>
-        </div>
+        {/* Unclaimed CTA - Moved up for prominence */}
+        {!brand.claimed && (
+          <div className="mb-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
+            <div className="flex items-start gap-4">
+              <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-white mb-2">
+                  This profile is unclaimed
+                </h3>
+                <p className="text-white/70 text-sm mb-4">
+                  Are you from {brand.brand_name}? Claim this profile for free to manage how AI models understand your brand.
+                </p>
+                <button
+                  onClick={() => setShowClaimModal(true)}
+                  className="px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all"
+                >
+                  Claim this profile — it's free
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Offerings - NEW: Display actual data */}
+        {feedData.offerings && feedData.offerings.length > 0 && (
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Products & Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {feedData.offerings.map((offering: any, idx: number) => (
+                <div key={idx} className="bg-white/5 rounded-lg p-4 border border-white/5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-[#2979FF] mt-2 flex-shrink-0" />
+                    <div>
+                      <h3 className="text-white font-medium mb-1">{offering.name}</h3>
+                      <p className="text-white/60 text-sm">{offering.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* FAQs - NEW: Display actual data */}
+        {feedData.faqs && feedData.faqs.length > 0 && (
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Common Questions</h2>
+            <div className="space-y-4">
+              {feedData.faqs.map((faq: any, idx: number) => (
+                <div key={idx} className="bg-white/5 rounded-lg p-5 border border-white/5">
+                  <h3 className="text-white font-medium mb-2">{faq.question}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Company Info - NEW: Display actual data */}
+        {feedData.company_info && (
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12">
+            <h2 className="text-2xl font-bold text-white mb-6">Company Information</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {feedData.company_info.founded_year && (
+                <div>
+                  <div className="text-white/50 text-sm mb-1">Founded</div>
+                  <div className="text-white font-medium">{feedData.company_info.founded_year}</div>
+                </div>
+              )}
+              {feedData.company_info.hq_location && (
+                <div>
+                  <div className="text-white/50 text-sm mb-1">Headquarters</div>
+                  <div className="text-white font-medium">{feedData.company_info.hq_location}</div>
+                </div>
+              )}
+              {feedData.company_info.employee_band && (
+                <div>
+                  <div className="text-white/50 text-sm mb-1">Employees</div>
+                  <div className="text-white font-medium">{feedData.company_info.employee_band}</div>
+                </div>
+              )}
+              {feedData.company_info.industry_tags && feedData.company_info.industry_tags.length > 0 && (
+                <div>
+                  <div className="text-white/50 text-sm mb-1">Industries</div>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {feedData.company_info.industry_tags.map((tag: string, idx: number) => (
+                      <span key={idx} className="px-2 py-1 rounded bg-white/5 text-white text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-white/5">
+              <a
+                href={`https://${brand.domain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-[#2979FF] hover:text-[#2979FF]/80 transition-colors"
+              >
+                Visit {brand.brand_name}
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Claim Modal */}

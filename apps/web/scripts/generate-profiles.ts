@@ -207,7 +207,9 @@ Your goals:
 5. Assign visibility subscores based ONLY on the website content provided
 6. Return a single JSON object matching the exact schema
 
-If information is not present, use null or "unknown" instead of guessing.`;
+If information is not present, use null or "unknown" instead of guessing.
+
+CRITICAL: For company_info.founded_year and company_info.hq_location, ONLY include if explicitly stated on the website. If not found, use null. DO NOT infer or guess based on context.`;
 
   const userPrompt = `Here is cleaned text from the brand's website:
 
@@ -244,8 +246,8 @@ Return ONLY a JSON object with this exact structure:
     }
   ],
   "company_info": {
-    "hq_location": "string|null",
-    "founded_year": 2020,
+    "hq_location": "string or null if not found",
+    "founded_year": "number or null if not found - DO NOT GUESS",
     "employee_band": "1-10|11-50|51-200|201-1000|1000+|unknown",
     "industry_tags": ["string", "string"]
   },
