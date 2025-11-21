@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
-// NO EDGE RUNTIME - use nodejs like your other routes
 
 export async function GET(
   request: NextRequest,
@@ -21,7 +20,7 @@ export async function GET(
 
     const { data: profile, error } = await supabase
       .from('ai_profiles')
-      .select('feed_data, visibility_score, rank_global, updated_at, slug, brand_name')
+      .select('feed_data, visibility_score, rank_global, last_updated_at, slug, brand_name')
       .eq('slug', params.slug)
       .single()
 
@@ -53,7 +52,7 @@ export async function GET(
         'X-Robots-Tag': 'all',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
-        'Last-Modified': new Date(profile.updated_at || Date.now()).toUTCString(),
+        'Last-Modified': new Date(profile.last_updated_at || Date.now()).toUTCString(),
       }
     })
     
