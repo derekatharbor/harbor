@@ -1,6 +1,37 @@
 #!/usr/bin/env tsx
+
+import { config } from 'dotenv';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory of this script
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from project root (3 levels up from apps/web/scripts)
+config({ path: resolve(__dirname, '../../../.env') });
+
+// Debug: Check if env vars loaded
+console.log('🔑 Checking environment variables...');
+console.log('   OPENAI_API_KEY:', process.env.OPENAI_API_KEY ? '✓ Loaded' : '✗ Missing');
+console.log('   SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✓ Loaded' : '✗ Missing');
+console.log('   SERVICE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✓ Loaded' : '✗ Missing');
+console.log('');
+
+if (!process.env.OPENAI_API_KEY) {
+  console.error('❌ OPENAI_API_KEY not found in environment');
+  console.error('   Make sure .env file exists at project root');
+  process.exit(1);
+}
+
 /**
- * Harbor AI Profile Generator
+ * Harbor AI Profile Generator - Updated v2
+ * 
+ * Changes:
+ * - Multi-page crawling (/, /about, /products, /company)
+ * - Switched from Claude to OpenAI (cheaper for batch generation)
+ * - Structured visibility scoring with subscores
+ * - Correct feed URL: https://useharbor.io/brands/{slug}/harbor.json
  * 
  * Usage:
  *   npm run generate:profiles              # Generate 10 profiles (test)
@@ -8,15 +39,15 @@
  *   npm run generate:profiles -- --dry-run
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // SETUP
 // ============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const supabase = createClient(
@@ -24,176 +55,253 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Cost per profile (Claude Sonnet 4): ~$0.10
-const ESTIMATED_COST = 0.10;
+// Cost per profile (GPT-4o-mini): ~$0.02
+const ESTIMATED_COST = 0.02;
+
+// Candidate paths for multi-page crawling
+const ABOUT_PATHS = ["/about", "/about-us", "/our-story", "/company"];
+const PRODUCTS_PATHS = ["/products", "/product", "/services", "/solutions", "/what-we-do"];
+const COMPANY_PATHS = ["/company", "/about", "/team", "/who-we-are"];
+
+const MAX_CHARS_PER_PAGE = 4000;
 
 // ============================================================================
-// WEBSITE CRAWLER
+// TYPES
 // ============================================================================
 
-async function crawlWebsite(domain: string): Promise<string> {
-  const url = domain.startsWith('http') ? domain : `https://${domain}`;
-  
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-    
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'HarborBot/1.0 (AI Profile Generator; +https://harbor.io/bot)'
-      },
-      signal: controller.signal
-    });
-    
-    clearTimeout(timeout);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const html = await response.text();
-    
-    // Simple text extraction (remove scripts, styles, etc)
-    const cleanText = html
-      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 10000); // Limit to 10K chars
-    
-    return cleanText;
-    
-  } catch (error: any) {
-    console.error(`Failed to crawl ${domain}:`, error);
-    throw new Error(`Crawl failed: ${error.message}`);
-  }
+interface VisibilityScoring {
+  brand_clarity_0_25: number;
+  offerings_clarity_0_25: number;
+  trust_and_basics_0_20: number;
+  structure_for_ai_0_20: number;
+  breadth_of_coverage_0_10: number;
+  total_visibility_score_0_100: number;
+  score_rationale: string;
+}
+
+interface AIProfileResponse {
+  brand_name: string;
+  one_line_summary: string;
+  short_description: string;
+  offerings: Array<{
+    name: string;
+    type: 'product_line' | 'service' | 'platform' | 'other';
+    description: string;
+  }>;
+  faqs: Array<{
+    question: string;
+    answer: string;
+  }>;
+  company_info: {
+    hq_location: string | null;
+    founded_year: number | null;
+    employee_band: '1-10' | '11-50' | '51-200' | '201-1000' | '1000+' | 'unknown';
+    industry_tags: string[];
+  };
+  visibility_scoring: VisibilityScoring;
 }
 
 // ============================================================================
-// AI PROFILE GENERATOR
+// WEBSITE CRAWLER - Multi-page with 404-safe fallbacks
 // ============================================================================
 
-async function generateProfile(
+function sanitizeHtmlToText(html: string): string {
+  // Remove scripts, styles, and tags
+  const clean = html
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  return clean;
+}
+
+async function fetchFirstOkPath(baseUrl: string, paths: string[]): Promise<string | null> {
+  for (const path of paths) {
+    const url = new URL(path, baseUrl).toString();
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      
+      const res = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'HarborBot/1.0 (AI Profile Generator; +https://useharbor.io/bot)'
+        },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeout);
+      
+      if (res.ok) {
+        const html = await res.text();
+        const text = sanitizeHtmlToText(html);
+        return text || null;
+      }
+    } catch (err) {
+      // Swallow and try next path
+      continue;
+    }
+  }
+  return null;
+}
+
+function clip(text: string | null): string {
+  return text ? text.slice(0, MAX_CHARS_PER_PAGE) : '';
+}
+
+async function crawlMultiplePages(domain: string): Promise<string> {
+  const baseUrl = `https://${domain}`;
+  
+  console.log(`  → Crawling multiple pages for ${domain}...`);
+  
+  // Fetch all pages in parallel
+  const [homepageText, aboutText, productsText, companyText] = await Promise.all([
+    fetchFirstOkPath(baseUrl, ['/']),
+    fetchFirstOkPath(baseUrl, ABOUT_PATHS),
+    fetchFirstOkPath(baseUrl, PRODUCTS_PATHS),
+    fetchFirstOkPath(baseUrl, COMPANY_PATHS),
+  ]);
+  
+  const combinedText = [
+    clip(homepageText),
+    clip(aboutText),
+    clip(productsText),
+    clip(companyText),
+  ]
+    .filter(Boolean)
+    .join('\n\n-----\n\n');
+  
+  if (!combinedText) {
+    throw new Error('No content found - all pages returned 404 or empty');
+  }
+  
+  console.log(`  → Extracted ${combinedText.length} chars from ${domain}`);
+  
+  return combinedText;
+}
+
+// ============================================================================
+// AI PROFILE GENERATOR - OpenAI with structured scoring
+// ============================================================================
+
+async function generateProfileWithOpenAI(
   brandName: string,
   domain: string,
   websiteContent: string
-): Promise<any> {
+): Promise<AIProfileResponse> {
   
-  const prompt = `You are generating a structured AI Profile for the brand "${brandName}" (${domain}).
+  console.log(`  → Generating profile with OpenAI...`);
+  
+  const systemPrompt = `You are analyzing the public website of a brand to create an AI-ready profile and visibility score.
 
-This profile will be consumed by AI systems (ChatGPT, Claude, Perplexity, Gemini) to provide accurate information about the brand.
+You will receive cleaned text from the brand's website.
 
-WEBSITE CONTENT:
+Your goals:
+1. Extract a concise but accurate description of the brand
+2. Identify their main offerings as product lines or services (not individual SKUs)
+3. Infer 3-6 realistic FAQs and answers if possible
+4. Infer basic company info where reasonably clear
+5. Assign visibility subscores based ONLY on the website content provided
+6. Return a single JSON object matching the exact schema
+
+If information is not present, use null or "unknown" instead of guessing.`;
+
+  const userPrompt = `Here is cleaned text from the brand's website:
+
 ${websiteContent}
 
-TASK:
-Generate a complete AI Profile in JSON format with this exact structure:
+Using ONLY this text, create a profile and score the brand's AI visibility.
 
+For visibility scoring, use this rubric:
+
+1. brand_clarity_0_25: Is it clear what the company does and who it's for? (0-25 points)
+2. offerings_clarity_0_25: Are the main products/services understandable and reusable in AI answers? (0-25 points)
+3. trust_and_basics_0_20: Can you identify basic trust elements (what they do, who they serve, location/contact)? (0-20 points)
+4. structure_for_ai_0_20: Is the content structured in a way that makes it easy for AI to extract (headings, sections, Q&A)? (0-20 points)
+5. breadth_of_coverage_0_10: Does the site cover typical questions (what, who, how, pricing, support)? (0-10 points)
+
+Score each subdimension strictly within its range. Sum them into total_visibility_score_0_100.
+
+Return ONLY a JSON object with this exact structure:
 {
-  "version": "1.0",
-  "generated_at": "${new Date().toISOString()}",
-  "name": "${brandName}",
-  "description": "Clear 2-3 sentence description of what the brand does",
-  "website": "https://${domain}",
-  "industry": "Industry category",
-  "contact": {
-    "email": "if found on website",
-    "phone": "if found"
-  },
-  "social_links": [
-    {"platform": "twitter", "url": "https://twitter.com/..."},
-    {"platform": "linkedin", "url": "https://linkedin.com/company/..."}
-  ],
-  "products": [
+  "brand_name": "${brandName}",
+  "one_line_summary": "string",
+  "short_description": "string (2-3 sentences)",
+  "offerings": [
     {
-      "name": "Product name",
-      "description": "What it does (1-2 sentences)",
-      "category": "Product type",
-      "url": "Product page URL"
+      "name": "string",
+      "type": "product_line|service|platform|other",
+      "description": "string"
     }
   ],
   "faqs": [
     {
-      "question": "Common question",
-      "answer": "Clear answer"
+      "question": "string",
+      "answer": "string"
     }
   ],
-  "key_facts": [
-    "Founded in YEAR (if found)",
-    "Headquarters location (if found)",
-    "Known for X"
-  ]
-}
-
-CRITICAL RULES:
-1. Output ONLY valid JSON, nothing else
-2. Be factual - only include verifiable info from the website
-3. Keep descriptions clear and concise
-4. Include 3-5 products if this is a product company
-5. Include 3-5 FAQs answering common questions about this type of business
-6. If you can't find certain data, omit that field entirely
-7. No marketing fluff - just facts
-
-Generate the profile now:`;
+  "company_info": {
+    "hq_location": "string|null",
+    "founded_year": 2020,
+    "employee_band": "1-10|11-50|51-200|201-1000|1000+|unknown",
+    "industry_tags": ["string", "string"]
+  },
+  "visibility_scoring": {
+    "brand_clarity_0_25": 0,
+    "offerings_clarity_0_25": 0,
+    "trust_and_basics_0_20": 0,
+    "structure_for_ai_0_20": 0,
+    "breadth_of_coverage_0_10": 0,
+    "total_visibility_score_0_100": 0,
+    "score_rationale": "string (2-3 sentences explaining the score)"
+  }
+}`;
 
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
-      messages: [{
-        role: 'user',
-        content: prompt
-      }]
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      temperature: 0,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ]
     });
     
-    const firstContent = message.content[0];
-    if (firstContent.type !== 'text') {
-      throw new Error('Expected text response from Claude');
-    }
-    const content = firstContent.text;
-    
-    // Extract JSON (handle markdown code blocks)
-    let jsonText = content;
-    const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
-    if (jsonMatch) {
-      jsonText = jsonMatch[1];
+    const content = completion.choices[0].message.content;
+    if (!content) {
+      throw new Error('Empty response from OpenAI');
     }
     
-    const profile = JSON.parse(jsonText.trim());
+    const profile: AIProfileResponse = JSON.parse(content);
     
-    // Add verified: false flag
-    profile.verified = false;
-    profile.schema_url = `https://${domain}/.well-known/harbor-feed.json`;
+    // Validate and clamp scores
+    const vs = profile.visibility_scoring;
+    vs.brand_clarity_0_25 = Math.max(0, Math.min(25, vs.brand_clarity_0_25));
+    vs.offerings_clarity_0_25 = Math.max(0, Math.min(25, vs.offerings_clarity_0_25));
+    vs.trust_and_basics_0_20 = Math.max(0, Math.min(20, vs.trust_and_basics_0_20));
+    vs.structure_for_ai_0_20 = Math.max(0, Math.min(20, vs.structure_for_ai_0_20));
+    vs.breadth_of_coverage_0_10 = Math.max(0, Math.min(10, vs.breadth_of_coverage_0_10));
+    
+    // Recompute total in code (don't trust model's addition)
+    const computedTotal =
+      vs.brand_clarity_0_25 +
+      vs.offerings_clarity_0_25 +
+      vs.trust_and_basics_0_20 +
+      vs.structure_for_ai_0_20 +
+      vs.breadth_of_coverage_0_10;
+    
+    vs.total_visibility_score_0_100 = Math.max(0, Math.min(100, computedTotal));
     
     return profile;
     
   } catch (error: any) {
-    console.error('Failed to generate profile:', error);
+    console.error('Failed to generate profile with OpenAI:', error);
     throw error;
   }
-}
-
-// ============================================================================
-// VISIBILITY SCORE CALCULATOR
-// ============================================================================
-
-function calculateVisibilityScore(profile: any): number {
-  let score = 0;
-  
-  // Product count (0-40 points)
-  const productCount = profile.products?.length || 0;
-  score += Math.min(productCount * 8, 40);
-  
-  // Schema URL present (30 points)
-  if (profile.schema_url) score += 30;
-  
-  // Content richness (30 points)
-  if (profile.description?.length > 100) score += 10;
-  if (profile.faqs?.length >= 3) score += 10;
-  if (profile.social_links?.length >= 2) score += 10;
-  
-  return Math.min(Math.max(score, 0), 100);
 }
 
 // ============================================================================
@@ -207,7 +315,7 @@ export async function generateAIProfile(
   industry?: string
 ): Promise<{ success: boolean; profile_id?: string; error?: string }> {
   
-  console.log(`\n📝 Generating profile for ${brandName} (${domain})...`);
+  console.log(`\n🔍 Generating profile for ${brandName} (${domain})...`);
   
   try {
     // Step 1: Check if already exists
@@ -222,22 +330,44 @@ export async function generateAIProfile(
       return { success: true, profile_id: existing.id };
     }
     
-    // Step 2: Crawl website
-    console.log(`  → Crawling ${domain}...`);
-    const websiteContent = await crawlWebsite(domain);
+    // Step 2: Crawl multiple pages
+    const websiteContent = await crawlMultiplePages(domain);
     
-    // Step 3: Generate profile with Claude
-    console.log(`  → Generating with Claude...`);
-    const feedData = await generateProfile(brandName, domain, websiteContent);
+    // Step 3: Generate profile with OpenAI
+    const profileData = await generateProfileWithOpenAI(brandName, domain, websiteContent);
     
-    // Step 4: Calculate visibility score
-    const visibilityScore = calculateVisibilityScore(feedData);
-    console.log(`  → Visibility score: ${visibilityScore}%`);
+    // DEBUG: Log what we got from OpenAI
+    console.log(`  → Profile keys:`, Object.keys(profileData));
+    console.log(`  → Has offerings:`, !!profileData.offerings);
+    console.log(`  → Has FAQs:`, !!profileData.faqs);
+    console.log(`  → Has company_info:`, !!profileData.company_info);
+    console.log(`  → Has visibility_scoring:`, !!profileData.visibility_scoring);
     
-    // Step 5: Extract logo (using Clearbit or similar)
+    // Step 4: Extract visibility score
+    const visibilityScore = profileData.visibility_scoring.total_visibility_score_0_100;
+    console.log(`  → Visibility score: ${visibilityScore}/100`);
+    console.log(`     Brand clarity: ${profileData.visibility_scoring.brand_clarity_0_25}/25`);
+    console.log(`     Offerings: ${profileData.visibility_scoring.offerings_clarity_0_25}/25`);
+    console.log(`     Trust: ${profileData.visibility_scoring.trust_and_basics_0_20}/20`);
+    console.log(`     Structure: ${profileData.visibility_scoring.structure_for_ai_0_20}/20`);
+    console.log(`     Breadth: ${profileData.visibility_scoring.breadth_of_coverage_0_10}/10`);
+    
+    // Step 5: Logo URL (Clearbit)
     const logoUrl = `https://logo.clearbit.com/${domain}`;
     
-    // Step 6: Save to database
+    // Step 6: Correct feed URL
+    const feedUrl = `https://useharbor.io/brands/${slug}/harbor.json`;
+    
+    // Step 7: Prepare feed_data with all structured info
+    const feedData = {
+      version: '1.0',
+      generated_at: new Date().toISOString(),
+      ...profileData,
+      schema_url: feedUrl,
+      verified: false
+    };
+    
+    // Step 8: Save to database
     const { data: profile, error: dbError } = await supabase
       .from('ai_profiles')
       .insert({
@@ -247,10 +377,10 @@ export async function generateAIProfile(
         logo_url: logoUrl,
         feed_data: feedData,
         visibility_score: visibilityScore,
-        industry: feedData.industry || industry,
-        generation_method: 'batch',
+        industry: profileData.company_info.industry_tags[0] || industry || 'Unknown',
+        generation_method: 'batch_v2',
         generation_cost_usd: ESTIMATED_COST,
-        feed_url: `https://${slug}.harbor.io/ai-profile.json`
+        feed_url: feedUrl
       })
       .select('id')
       .single();
@@ -259,7 +389,7 @@ export async function generateAIProfile(
       throw new Error(`Database error: ${dbError.message}`);
     }
     
-    // Step 7: Update brand_list
+    // Step 9: Update brand_list
     await supabase
       .from('brand_list')
       .update({
@@ -307,13 +437,14 @@ export async function runBatchGeneration(options: {
   
   const { limit = 10, concurrency = 3, dryRun = false } = options;
   
-  console.log('\n🚀 Starting batch generation');
+  console.log('\n🚀 Starting batch generation (OpenAI v2)');
   console.log(`   Limit: ${limit}`);
   console.log(`   Concurrency: ${concurrency}`);
   console.log(`   Dry run: ${dryRun}`);
   console.log('');
   
   // Fetch brands to generate
+  console.log('🔍 Querying brand_list table...');
   const { data: brands, error } = await supabase
     .from('brand_list')
     .select('brand_name, domain, slug, industry')
@@ -321,8 +452,20 @@ export async function runBatchGeneration(options: {
     .order('priority', { ascending: false })
     .limit(limit);
   
-  if (error || !brands) {
-    throw new Error(`Failed to fetch brands: ${error?.message}`);
+  console.log('   Query error:', error);
+  console.log('   Brands returned:', brands?.length || 0);
+  if (brands && brands.length > 0) {
+    console.log('   First brand:', brands[0]);
+  }
+  
+  if (error) {
+    throw new Error(`Failed to fetch brands: ${error.message}`);
+  }
+  
+  if (!brands || brands.length === 0) {
+    console.log('\n⚠️  No brands found to generate');
+    console.log('   Check that brand_list has rows with profile_generated = false');
+    return { total: 0, successful: 0, failed: 0, cost: 0 };
   }
   
   console.log(`📋 Found ${brands.length} brands to generate\n`);
@@ -404,12 +547,11 @@ export async function runBatchGeneration(options: {
 // CLI RUNNER
 // ============================================================================
 
-// Parse CLI arguments
 const args = process.argv.slice(2);
 
 if (args.includes('--help')) {
   console.log(`
-Harbor AI Profile Generator
+Harbor AI Profile Generator v2 (OpenAI)
 
 Usage:
   npm run generate:profiles                    # Generate 10 profiles (default)
@@ -422,14 +564,22 @@ Options:
   --concurrency N   Number to process in parallel (default: 3)
   --dry-run         Show what would be generated without doing it
   --help            Show this help
+
+Changes in v2:
+  - Multi-page crawling (/, /about, /products, /company)
+  - Switched to OpenAI GPT-4o-mini (~$0.02/profile vs $0.10)
+  - Structured visibility scoring with subscores
+  - Correct feed URL: https://useharbor.io/brands/{slug}/harbor.json
   `);
   process.exit(0);
 }
 
-const limit = parseInt(args.find(a => a.startsWith('--limit'))?.split('=')[1] || 
-                      args[args.indexOf('--limit') + 1] || '10');
-const concurrency = parseInt(args.find(a => a.startsWith('--concurrency'))?.split('=')[1] || 
-                            args[args.indexOf('--concurrency') + 1] || '3');
+const limitIndex = args.indexOf('--limit');
+const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : 10;
+
+const concurrencyIndex = args.indexOf('--concurrency');
+const concurrency = concurrencyIndex !== -1 ? parseInt(args[concurrencyIndex + 1]) : 3;
+
 const dryRun = args.includes('--dry-run');
 
 runBatchGeneration({ limit, concurrency, dryRun })
