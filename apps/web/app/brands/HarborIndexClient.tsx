@@ -71,22 +71,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
   return (
     <div className="min-h-screen bg-[#101A31]">
-      {/* Index Background Container with Wireframe */}
-      <div className="relative">
-        {/* Wireframe Background - Gradient Mask Fade */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: 'url(/images/wireframe-wave.png)',
-            backgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.32,
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
-          }}
-        />
-
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -129,6 +113,23 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Spacer */}
       <div className="h-28" />
+
+      {/* Hero + Table Container with Wireframe */}
+      <div className="relative">
+        {/* Wireframe Background - Constrained to hero + table top */}
+        <div 
+          className="absolute top-0 left-0 right-0 pointer-events-none"
+          style={{
+            height: '1200px', // Covers hero + table fade zone
+            backgroundImage: 'url(/images/wireframe-wave.png)',
+            backgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.32,
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
+          }}
+        />
 
       {/* Hero Section */}
       <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center">

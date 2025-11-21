@@ -186,24 +186,8 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       {/* Profile Content */}
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 relative z-10">
         
-        {/* Header Card - Brand Header Zone with Wireframe */}
-        <div className="relative overflow-hidden rounded-2xl mb-8" style={{
-          background: 'radial-gradient(circle at center, #0e1725, #050816)'
-        }}>
-          {/* Wireframe Background - Header Zone Only */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: 'url(/images/wireframe-brand-card.png)',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              opacity: 0.24,
-            }}
-          />
-          
-          {/* Content wrapper with relative positioning */}
-          <div className="relative p-8 md:p-12">
+        {/* Header Card */}
+        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
             {/* Logo */}
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
@@ -274,12 +258,9 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             </div>
           </div>
 
-          {/* AI Description Hero Block - Solid background for readability */}
+          {/* AI Description Hero Block - NEW */}
           {feedData.short_description && (
-            <div className="relative rounded-xl p-6 mb-8" style={{
-              background: 'rgba(5, 8, 22, 0.96)',
-              backdropFilter: 'blur(8px)',
-            }}>
+            <div className="bg-gradient-to-br from-[#FF6B4A]/10 to-transparent border border-[#FF6B4A]/20 rounded-xl p-6 mb-8">
               <h2 className="text-lg font-bold text-white mb-4">
                 How AI Describes {brand.brand_name} Today
               </h2>
@@ -294,12 +275,9 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             </div>
           )}
 
-          {/* Visibility Gaps - Solid background for readability */}
+          {/* Visibility Gaps - NEW */}
           {gaps.length > 0 && (
-            <div className="relative rounded-xl p-6" style={{
-              background: 'rgba(5, 8, 22, 0.96)',
-              backdropFilter: 'blur(8px)',
-            }}>
+            <div className="bg-white/5 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1">
@@ -342,19 +320,19 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               )}
             </div>
           )}
-          </div>
         </div>
 
-        {/* Unclaimed CTA - Clean integrated style */}
+        {/* Unclaimed CTA - Moved up for prominence */}
         {!brand.claimed && (
-          <div className="mb-8 p-6 bg-[#0C1422] border border-white/10 rounded-xl">
+          <div className="mb-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
             <div className="flex items-start gap-4">
+              <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  This profile is unclaimed.
+                <h3 className="text-lg font-bold text-white mb-2">
+                  This profile is unclaimed
                 </h3>
-                <p className="text-white/60 text-sm mb-4">
-                  Are you from {brand.brand_name}? Claim this profile to manage how AI models understand your brand.
+                <p className="text-white/70 text-sm mb-4">
+                  Are you from {brand.brand_name}? Claim this profile for free to manage how AI models understand your brand.
                 </p>
                 <button
                   onClick={() => setShowClaimModal(true)}
