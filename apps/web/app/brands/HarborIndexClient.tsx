@@ -114,22 +114,21 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Spacer */}
       <div className="h-28" />
 
+      {/* Wireframe Background - Fixed, Hero Height Only */}
+      <div className="fixed top-28 left-0 right-0 pointer-events-none overflow-hidden z-0" style={{ height: '600px' }}>
+        <Image
+          src="/images/wireframe-wave.png"
+          alt=""
+          fill
+          className="object-cover object-center opacity-[0.14]"
+          priority
+        />
+        {/* Subtle fade at bottom only */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#101A31] to-transparent" />
+      </div>
+
       {/* Hero Section */}
       <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center z-10">
-        {/* Wireframe Background - Hero only */}
-        <div className="absolute inset-0 -mx-[100vw] pointer-events-none overflow-hidden">
-          <div className="relative w-[200vw] h-full">
-            <Image
-              src="/images/wireframe-wave.png"
-              alt=""
-              fill
-              className="object-cover opacity-[0.32]"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/60 to-[#101A31]" />
-          </div>
-        </div>
-
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
