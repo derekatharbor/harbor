@@ -114,25 +114,26 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Spacer */}
       <div className="h-28" />
 
-      {/* Hero + Table Container with Wireframe */}
-      <div className="relative">
-        {/* Wireframe Background - Constrained to hero + table top */}
-        <div 
-          className="absolute top-0 left-0 right-0 pointer-events-none"
-          style={{
-            height: '1200px', // Covers hero + table fade zone
-            backgroundImage: 'url(/images/wireframe-wave.png)',
-            backgroundPosition: 'center top',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.32,
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0) 100%)',
-          }}
-        />
-
-      {/* Hero Section */}
+      {/* Hero Section with Wireframe Background */}
       <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center">
+        {/* Wireframe Background - Hero Only */}
+        <div className="absolute inset-0 -top-12 left-1/2 -translate-x-1/2 w-screen max-w-[2000px] pointer-events-none overflow-hidden">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: 'url(/images/wireframe-wave.png)',
+              backgroundPosition: 'center center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.32,
+            }}
+          />
+          {/* Fade at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#101A31]" style={{ top: '60%' }} />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10">
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -249,7 +250,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </div>
 
-      {/* Main Content - Wireframe fades by here */}
+      {/* Main Content - Clean table area, no wireframe */}
       <div className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
         
         {/* Brand Table */}
