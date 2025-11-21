@@ -65,19 +65,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const displayedBrands = filteredBrands.length
 
   return (
-    <div className="min-h-screen bg-[#101A31] relative overflow-hidden">
-      {/* Wireframe Wave Background - Full Width */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <Image
-          src="/images/wireframe-wave.png"
-          alt=""
-          fill
-          className="object-cover opacity-30"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#101A31]/60 via-[#101A31]/80 to-[#101A31]" />
-      </div>
-
+    <div className="min-h-screen bg-[#101A31]">
       {/* Frosted Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
@@ -121,8 +109,23 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Spacer */}
       <div className="h-28" />
 
-      {/* Hero Section */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 pt-16 pb-12 text-center">
+      {/* Hero Section with Wireframe Background */}
+      <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-16 pb-12 text-center">
+        {/* Wireframe Background - Hero Only */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Image
+            src="/images/wireframe-wave.png"
+            alt=""
+            fill
+            className="object-cover opacity-[0.14]"
+            priority
+          />
+          {/* Fade-out gradient at bottom */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/40 to-[#101A31]" />
+        </div>
+
+        {/* Hero Content - Above wireframe */}
+        <div className="relative z-10">
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -153,10 +156,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             />
           </div>
         </div>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      {/* Main Content - No wireframe */}
+      <div className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
         
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -192,7 +196,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                               alt={brand.brand_name}
                               width={40}
                               height={40}
-                              className="w-full h-full object-contain p-1"
+                              className="w-full h-full object-cover"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none'
                               }}

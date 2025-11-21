@@ -186,17 +186,19 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
         
         {/* Header Card */}
         <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8 relative overflow-hidden">
-          {/* Wireframe Background */}
-          <div className="absolute inset-0 pointer-events-none opacity-20">
+          {/* Wireframe Background - Brand Card Variant */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.12]">
             <Image
-              src="/images/wireframe-wave.png"
+              src="/images/wireframe-brand-card.png"
               alt=""
               fill
               className="object-cover"
             />
+            {/* Subtle fade at edges */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0C1422]/60" />
           </div>
           
-          {/* All content needs relative positioning to sit above background */}
+          {/* Content wrapper with relative positioning */}
           <div className="relative">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
             {/* Logo */}
@@ -206,7 +208,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 alt={brand.brand_name}
                 width={96}
                 height={96}
-                className="w-full h-full object-contain p-2"
+                className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none'
                 }}
