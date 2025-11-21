@@ -72,7 +72,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
   return (
     <div className="min-h-screen bg-[#101A31] relative">
       {/* Frosted Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px] overflow-visible">
         <div 
           className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
           style={{ backdropFilter: 'blur(12px)' }}
@@ -111,28 +111,27 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </nav>
 
-      {/* Spacer */}
-      <div className="h-28" />
-
-      {/* Hero Section with Wireframe */}
-      <section className="relative min-h-[420px]">
-        {/* Wireframe Background - Scrolls with page, hero only */}
-        <div className="absolute top-0 left-0 right-0 pointer-events-none overflow-hidden z-0" style={{ height: '420px' }}>
-          <div className="relative w-full h-full">
-            <Image
-              src="/images/wireframe-wave.png"
-              alt=""
-              fill
-              className="object-cover object-center opacity-[0.14]"
-              priority
-            />
+      {/* Hero Container - Starts below navbar */}
+      <div className="relative pt-[140px]">
+        {/* Hero Section with Wireframe */}
+        <section className="relative pb-32">
+          {/* Wireframe Background - Full-width, behind everything */}
+          <div className="absolute inset-0 -z-10 overflow-visible">
+            <div className="relative w-full h-full">
+              <Image
+                src="/images/wireframe-wave.png"
+                alt=""
+                fill
+                className="object-cover object-center opacity-[0.14]"
+                priority
+              />
+            </div>
+            {/* Fade-out gradient at bottom */}
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#101A31] to-transparent" />
           </div>
-          {/* Fade-out gradient at bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#101A31] to-transparent" />
-        </div>
 
-        {/* Hero Content */}
-        <div className="relative max-w-5xl mx-auto px-4 md:px-6 pt-24 pb-12 text-center z-10">
+          {/* Hero Content */}
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10">
         {/* Frosted Glass Pill */}
         <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
           <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
@@ -247,8 +246,8 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </div>
           )}
         </div>
+        </section>
       </div>
-      </section>
 
       {/* Table Section - No wireframe */}
       <section className="relative max-w-7xl mx-auto px-4 md:px-6 pb-20">
