@@ -175,7 +175,6 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
             </div>
           </div>
-          </div>
         </div>
       </nav>
 
@@ -197,7 +196,8 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             />
           </div>
           
-          <div className="relative z-10">
+          {/* All content needs relative positioning to sit above background */}
+          <div className="relative">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
             {/* Logo */}
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
@@ -330,6 +330,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               )}
             </div>
           )}
+          </div>
         </div>
 
         {/* Unclaimed CTA - Clean integrated style */}
