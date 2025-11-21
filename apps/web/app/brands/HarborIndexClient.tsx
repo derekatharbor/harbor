@@ -308,7 +308,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                         <span className="text-white/60 text-xs md:text-sm">{brand.industry}</span>
                       </td>
                       <td className="px-3 md:px-6 py-3 md:py-4 text-right">
-                      <td className="px-3 md:px-6 py-3 md:py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
                           <span className="text-white font-bold text-sm md:text-base">{brand.visibility_score.toFixed(1)}%</span>
                           <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
