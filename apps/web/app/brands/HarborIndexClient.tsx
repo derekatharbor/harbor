@@ -155,7 +155,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </p>
 
             {/* Search Box with Dropdown */}
-                <div className="max-w-2xl mx-auto relative">
+                <div className="w-full max-w-2xl relative">
               <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
                 <Search className="w-5 h-5 text-white/40 ml-4" />
                 <input
