@@ -206,7 +206,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 alt={brand.brand_name}
                 width={96}
                 height={96}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain p-2"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none'
                 }}

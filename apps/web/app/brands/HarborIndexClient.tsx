@@ -192,7 +192,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                               alt={brand.brand_name}
                               width={40}
                               height={40}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain p-1"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none'
                               }}
