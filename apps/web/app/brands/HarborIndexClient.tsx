@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, Search } from 'lucide-react'
+import { Menu, Search, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import FullscreenMenu from '@/components/landing/FullscreenMenu' // Correct path
+import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
 interface Brand {
   id: string
@@ -24,20 +24,21 @@ interface Props {
 
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
-  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands)
+  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands.slice(0, 50))
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showAllFilters, setShowAllFilters] = useState(false)
 
   // Fetch brands if not provided
   useEffect(() => {
     if (initialBrands.length === 0) {
-      fetch('/api/brands')
+      fetch('/api/index/brands')
         .then(res => res.json())
         .then(data => {
           setBrands(data)
-          setFilteredBrands(data)
+          setFilteredBrands(data.slice(0, 50))
           setLoading(false)
         })
         .catch(err => {
@@ -62,26 +63,37 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       filtered = filtered.filter(brand => brand.industry === selectedIndustry)
     }
 
-    setFilteredBrands(filtered)
+    // Limit to top 50 for display
+    setFilteredBrands(filtered.slice(0, 50))
   }, [searchQuery, selectedIndustry, brands])
 
-  // Get unique industries
-  const industries = ['all', ...Array.from(new Set(brands.map(b => b.industry).filter(Boolean)))]
-  
-  // Top 3 brands
-  const topThree = filteredBrands.slice(0, 3)
-  
-  // Calculate mock delta (you'll replace with real data later)
-  const getDelta = (rank: number) => {
-    const deltas = [5.8, -3.0, 1.3, -0.6, 9.7, 1.5, 6.9, 6.3, 3.1, 2.1]
-    return deltas[rank - 1] || 0
-  }
+  // Get unique industries with counts
+  const industryData = brands.reduce((acc: Record<string, number>, brand) => {
+    if (brand.industry) {
+      acc[brand.industry] = (acc[brand.industry] || 0) + 1
+    }
+    return acc
+  }, {})
+
+  // Top industries to show
+  const topIndustries = ['Technology', 'SaaS', 'E-commerce', 'AI', 'Payments', 'Fintech', 'Consulting']
+  const otherIndustries = Object.keys(industryData).filter(i => !topIndustries.includes(i)).sort()
+
+  const totalBrands = brands.length
+  const displayedBrands = filteredBrands.length
 
   return (
-    <div className="min-h-screen bg-[#101A31] relative">
-      {/* Wireframe Background */}
-      <div className="fixed inset-0 pointer-events-none opacity-40">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#101A31]/50 to-[#101A31]" />
+    <div className="min-h-screen bg-[#101A31] relative overflow-hidden">
+      {/* Wireframe Wave Background - Full Width */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <Image
+          src="/images/wireframe-wave.png"
+          alt=""
+          fill
+          className="object-cover opacity-30"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#101A31]/60 via-[#101A31]/80 to-[#101A31]" />
       </div>
 
       {/* Frosted Nav */}
@@ -92,8 +104,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         >
           <div className="px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 md:h-16">
-              {/* Logo */}
-              <a href="/" className="flex items-center space-x-2 md:space-x-3">
+              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
                 <Image 
                   src="/logo-icon.png" 
                   alt="Harbor" 
@@ -102,268 +113,233 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   className="w-7 h-7 md:w-8 md:h-8"
                 />
                 <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
-              </a>
+              </Link>
 
-              {/* Right side */}
               <div className="flex items-center space-x-2 md:space-x-4">
-                <a 
-                  href="/login" 
-                  className="hidden md:block text-white text-sm md:text-base hover:text-white/80 transition-colors duration-200"
-                >
-                  Log in
-                </a>
-                
-                <a
-                  href="/dashboard"
-                  className="hidden md:inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
-                >
-                  Get started
-                </a>
-
                 <button
                   onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
-                  aria-label="Open menu"
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                  aria-label="Menu"
                 >
                   <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </button>
+                
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
+                >
+                  Dashboard
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Use the unified FullscreenMenu component */}
-      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-      {/* Spacer for fixed nav */}
-      <div className="h-24 md:h-28" />
+      {/* Spacer */}
+      <div className="h-28" />
 
       {/* Hero Section */}
-      <section className="relative pt-16 md:pt-24 lg:pt-32 pb-12 md:pb-16 px-4 md:px-6 z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">
-            The Harbor Index
-          </h1>
-          <p className="text-base md:text-lg text-white/70 mb-8 md:mb-12 max-w-2xl mx-auto">
-            Track how AI models see your brand. Real-time visibility scores across ChatGPT, Claude, Gemini, and Perplexity.
-          </p>
+      <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 pt-16 pb-12 text-center">
+        {/* Frosted Glass Pill */}
+        <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-6">
+          <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
+            HARBOR INDEX
+          </span>
+        </div>
 
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto mb-6 md:mb-8">
-            <Search className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+        {/* Gradient Title */}
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+          The AI Visibility Index
+        </h1>
+
+        {/* Explainer */}
+        <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto mb-12">
+          AI Visibility Score shows how well AI systems understand and surface your brand across ChatGPT, Claude, Gemini, and Perplexity.
+        </p>
+
+        {/* Glowing Search Box */}
+        <div className="max-w-2xl mx-auto relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur-lg opacity-30" />
+          <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-cyan-500/30 p-2">
+            <Search className="w-5 h-5 text-cyan-400 ml-4" />
             <input
               type="text"
-              placeholder="Search brands..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 md:pl-14 pr-4 md:pr-6 py-3 md:py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl md:rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-all text-sm md:text-base"
+              placeholder="Search brands..."
+              className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
             />
           </div>
-
-          {/* Industry Filters */}
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-            {industries.map((industry) => (
-              <button
-                key={industry}
-                onClick={() => setSelectedIndustry(industry)}
-                className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-all ${
-                  selectedIndustry === industry
-                    ? 'bg-white text-black'
-                    : 'bg-transparent text-white/70 hover:bg-white/5'
-                }`}
-              >
-                {industry === 'all' ? 'All' : industry}
-              </button>
-            ))}
-          </div>
         </div>
-      </section>
+      </div>
 
-      {/* Top 3 Featured Cards */}
-      <section className="relative z-10 px-4 md:px-6 py-8 md:py-12">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">
-            Top {selectedIndustry === 'all' ? '' : selectedIndustry} brands this week
-          </h2>
-          <p className="text-white/50 text-xs md:text-sm mb-6 md:mb-8">Week of Nov 10</p>
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pb-20">
+        
+        {/* Industry Filters */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* All button */}
+            <button
+              onClick={() => setSelectedIndustry('all')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                selectedIndustry === 'all'
+                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                  : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+              }`}
+            >
+              All ({totalBrands})
+            </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {topThree.map((brand, index) => {
-              const delta = getDelta(brand.rank_global)
-              const isPositive = delta > 0
-
-              return (
-                <Link
-                  key={brand.id}
-                  href={`/brands/${brand.slug}`}
-                  className="group relative bg-[#0C1422] rounded-xl md:rounded-2xl border border-white/5 p-6 md:p-8 hover:border-white/20 transition-all"
+            {/* Top industries */}
+            {topIndustries.map(industry => (
+              industryData[industry] && (
+                <button
+                  key={industry}
+                  onClick={() => setSelectedIndustry(industry)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    selectedIndustry === industry
+                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                  }`}
                 >
-                  {/* Visibility Score */}
-                  <div className="mb-6 md:mb-8">
-                    <div className="flex items-center gap-2 text-white/50 text-xs md:text-sm mb-2">
-                      <div className="w-3 h-3 md:w-4 md:h-4 rounded-full bg-white/5 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white/30" />
-                      </div>
-                      Visibility Score
-                    </div>
-                    <div className="flex items-baseline gap-2 md:gap-3">
-                      <span className="text-4xl md:text-5xl font-bold text-white">
-                        {brand.visibility_score.toFixed(1)}%
-                      </span>
-                      <span className={`text-base md:text-lg font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                        {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Brand Info */}
-                  <div className="flex items-center gap-3 md:gap-4">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg md:rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
-                      <Image
-                        src={brand.logo_url}
-                        alt={brand.brand_name}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none'
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-white/80 transition-colors">
-                        {brand.brand_name}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Rank Badge */}
-                  <div className="absolute top-4 md:top-6 right-4 md:right-6 w-7 h-7 md:w-8 md:h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-sm md:text-base font-bold">
-                    {index + 1}
-                  </div>
-                </Link>
+                  {industry} ({industryData[industry]})
+                </button>
               )
-            })}
+            ))}
+
+            {/* More button */}
+            {otherIndustries.length > 0 && (
+              <button
+                onClick={() => setShowAllFilters(!showAllFilters)}
+                className="px-4 py-2 rounded-lg text-sm font-medium bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 transition-all"
+              >
+                {showAllFilters ? 'Less' : `More (${otherIndustries.length})`}
+              </button>
+            )}
           </div>
-        </div>
-      </section>
 
-      {/* Leaderboard Table */}
-      <section className="relative z-10 px-4 md:px-6 pb-16 md:pb-20">
-        <div className="max-w-7xl mx-auto">
-          {loading ? (
-            <div className="text-center py-20">
-              <div className="inline-block w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4" />
-              <p className="text-white/50">Loading brands...</p>
+          {/* Expanded filters */}
+          {showAllFilters && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {otherIndustries.map(industry => (
+                <button
+                  key={industry}
+                  onClick={() => setSelectedIndustry(industry)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    selectedIndustry === industry
+                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+                  }`}
+                >
+                  {industry} ({industryData[industry]})
+                </button>
+              ))}
             </div>
-          ) : filteredBrands.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-white/50">No brands found</p>
-            </div>
-          ) : (
-            <div className="rounded-xl md:rounded-2xl bg-[#0C1422] border border-white/5 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px]">
-                <thead>
-                  <tr className="border-b border-white/5">
-                    <th className="text-left px-4 md:px-8 py-3 md:py-4 text-xs md:text-sm font-medium text-white/40 uppercase tracking-wider w-12 md:w-16">
-                      #
-                    </th>
-                    <th className="text-left px-4 md:px-8 py-3 md:py-4 text-xs md:text-sm font-medium text-white/40 uppercase tracking-wider">
-                      Company
-                    </th>
-                    <th className="text-right px-4 md:px-8 py-3 md:py-4 text-xs md:text-sm font-medium text-white/40 uppercase tracking-wider">
-                      <div className="flex items-center justify-end gap-2">
-                        <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white/10" />
-                        <span className="hidden md:inline">Visibility Score</span>
-                        <span className="md:hidden">Score</span>
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredBrands.slice(0, 50).map((brand) => {
-                    const delta = getDelta(brand.rank_global)
-                    const isPositive = delta > 0
-
-                    return (
-                      <tr
-                        key={brand.id}
-                        className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group"
-                      >
-                        {/* Rank */}
-                        <td className="px-4 md:px-8 py-4 md:py-6">
-                          <span className="text-base md:text-lg font-medium text-white/40 group-hover:text-white/60 transition-colors">
-                            {brand.rank_global}
-                          </span>
-                        </td>
-
-                        {/* Brand */}
-                        <td className="px-4 md:px-8 py-4 md:py-6">
-                          <Link
-                            href={`/brands/${brand.slug}`}
-                            className="flex items-center gap-3 md:gap-4"
-                          >
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
-                              <Image
-                                src={brand.logo_url}
-                                alt={brand.brand_name}
-                                width={48}
-                                height={48}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = 'none'
-                                }}
-                              />
-                            </div>
-                            <div>
-                              <div className="text-base md:text-lg font-medium text-white group-hover:text-white/80 transition-colors">
-                                {brand.brand_name}
-                              </div>
-                            </div>
-                          </Link>
-                        </td>
-
-                        {/* Visibility Score */}
-                        <td className="px-4 md:px-8 py-4 md:py-6 text-right">
-                          <div className="flex items-center justify-end gap-2 md:gap-4">
-                            <span className="text-xl md:text-2xl font-bold text-white">
-                              {brand.visibility_score.toFixed(1)}%
-                            </span>
-                            <span className={`text-xs md:text-sm font-medium min-w-[50px] md:min-w-[60px] ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                              {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
           )}
         </div>
-      </section>
 
-      <style jsx global>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
+        {/* Brand Table */}
+        <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Rank</th>
+                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Brand</th>
+                  <th className="text-left text-white/50 text-sm font-medium px-6 py-4">Industry</th>
+                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Visibility Score</th>
+                  <th className="text-right text-white/50 text-sm font-medium px-6 py-4">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredBrands.map((brand, index) => {
+                  const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+                  const isPositive = delta > 0
+
+                  return (
+                    <tr 
+                      key={brand.id}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                      onClick={() => window.location.href = `/brands/${brand.slug}`}
+                    >
+                      <td className="px-6 py-4">
+                        <span className="text-white/60 font-mono text-sm">#{brand.rank_global}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                            <Image
+                              src={brand.logo_url}
+                              alt={brand.brand_name}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none'
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <div className="text-white font-medium">{brand.brand_name}</div>
+                            <div className="text-white/40 text-sm">{brand.domain}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-white/60 text-sm">{brand.industry}</span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-white font-bold">{brand.visibility_score.toFixed(1)}%</span>
+                          <span className={`text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                            {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        {brand.claimed ? (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-green-400/10 text-green-400 text-xs font-medium">
+                            Verified
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full bg-white/5 text-white/40 text-xs font-medium">
+                            Unclaimed
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* View All Button */}
+          {displayedBrands < totalBrands && (
+            <div className="border-t border-white/10 p-6 text-center">
+              <Link
+                href="/brands/all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-medium hover:bg-cyan-500/30 transition-all"
+              >
+                View all {totalBrands} brands
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Stats Footer */}
+        <div className="mt-8 text-center">
+          <p className="text-white/40 text-sm">
+            Showing {displayedBrands} of {totalBrands} brands • Updated daily
+          </p>
+        </div>
+      </div>
+
+      {/* Fullscreen Menu */}
+      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }
