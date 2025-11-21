@@ -337,7 +337,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Fullscreen Menu */}
       <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      </div>
     </div>
   )
 }
