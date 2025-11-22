@@ -460,8 +460,6 @@ export default function ManageBrandPage({
             <p className="text-white/60 text-sm mb-6">
               Optional details that help AI models provide accurate factual information.
             </p>
-              Optional details that help AI models provide accurate information about your company.
-            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
