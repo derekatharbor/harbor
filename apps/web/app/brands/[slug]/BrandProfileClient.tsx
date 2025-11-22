@@ -96,21 +96,20 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
       const data = await res.json()
 
+      // Check if already claimed by this email - treat as success
       if (!res.ok) {
+        if (data.error?.includes('already claimed by this email')) {
+          // This is actually a success case - just redirect
+          window.location.href = `/brands/${brand.slug}/manage`
+          return
+        }
         throw new Error(data.error || 'Invalid or expired code')
       }
 
-      // Update local brand state immediately
-      setBrand({ ...brand, claimed: true })
-
-      // Small delay to allow DB propagation before redirect
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // Redirect to profile manager
+      // Success - redirect to profile manager
       window.location.href = `/brands/${brand.slug}/manage`
     } catch (err: any) {
       setError(err.message)
-    } finally {
       setClaimLoading(false)
     }
   }
