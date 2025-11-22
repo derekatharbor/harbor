@@ -320,8 +320,6 @@ export default function ManageBrandPage({
                 <p className="text-white/60 text-sm">
                   Completing this field improves AI understanding of your offerings.
                 </p>
-                  List your main products or service offerings.
-                </p>
               </div>
               <button
                 onClick={addOffering}
@@ -393,8 +391,6 @@ export default function ManageBrandPage({
                 </div>
                 <p className="text-white/60 text-sm">
                   Completing this field improves AI understanding of common questions about your brand.
-                </p>
-                  Add common questions and answers about your brand.
                 </p>
               </div>
               <button
