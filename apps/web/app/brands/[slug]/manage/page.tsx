@@ -17,7 +17,7 @@ import {
   AlertCircle,
   Shield
 } from 'lucide-react'
-import VisibilityScoreHeader from '../../../../components/manage/VisibilityScoreHeader'
+import VisibilityScoreHeader from '@/components/manage/VisibilityScoreHeader'
 
 interface Brand {
   id: string
