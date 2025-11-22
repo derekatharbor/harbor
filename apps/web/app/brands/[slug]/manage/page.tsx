@@ -664,6 +664,7 @@ export default function ProfileManagerPage() {
             </button>
           </div>
         </div>
+        </div>
 
         {/* Upgrade CTA */}
         <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
