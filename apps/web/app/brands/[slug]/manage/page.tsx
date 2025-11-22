@@ -261,7 +261,7 @@ export default function ManageBrandPage({
           </div>
 
           <p className="text-white/60 text-sm md:text-base">
-            Here's exactly what to fix next to increase your score.
+            Update your brand information. Scans reflect how AI models describe your brand.
           </p>
         </div>
 
@@ -271,13 +271,18 @@ export default function ManageBrandPage({
           {/* Brand Description */}
           <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-white">Brand Description</h2>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
-                <span className="text-[#6BC6FF] text-sm font-bold">+15</span>
-                <span className="text-white/40 text-xs">points</span>
+              <div>
+                <h2 className="text-xl font-bold text-white">Brand Description</h2>
+                <p className="text-white/60 text-sm mt-1">
+                  This field is used by AI models to infer your brand's purpose and category.
+                </p>
               </div>
+              {!description && (
+                <div className="px-3 py-1 rounded bg-[#F25A5A]/10 border border-[#F25A5A]/20">
+                  <span className="text-[#F25A5A] text-xs font-medium">Missing</span>
+                </div>
+              )}
             </div>
-            <p className="text-white/60 text-sm mb-4">
               Provide a clear, concise description of what your brand does. This helps AI models understand your business.
             </p>
             <textarea
@@ -308,12 +313,15 @@ export default function ManageBrandPage({
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                   <h2 className="text-xl font-bold text-white">Products & Services</h2>
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
-                    <span className="text-[#6BC6FF] text-sm font-bold">+10</span>
-                    <span className="text-white/40 text-xs">points</span>
-                  </div>
+                  {offerings.length === 0 && (
+                    <div className="px-3 py-1 rounded bg-[#F25A5A]/10 border border-[#F25A5A]/20">
+                      <span className="text-[#F25A5A] text-xs font-medium">Missing</span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-white/60 text-sm">
+                  Completing this field improves AI understanding of your offerings.
+                </p>
                   List your main products or service offerings.
                 </p>
               </div>
@@ -379,12 +387,15 @@ export default function ManageBrandPage({
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                   <h2 className="text-xl font-bold text-white">Frequently Asked Questions</h2>
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
-                    <span className="text-[#6BC6FF] text-sm font-bold">+10</span>
-                    <span className="text-white/40 text-xs">points</span>
-                  </div>
+                  {faqs.length === 0 && (
+                    <div className="px-3 py-1 rounded bg-[#F25A5A]/10 border border-[#F25A5A]/20">
+                      <span className="text-[#F25A5A] text-xs font-medium">Missing</span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-white/60 text-sm">
+                  Completing this field improves AI understanding of common questions about your brand.
+                </p>
                   Add common questions and answers about your brand.
                 </p>
               </div>
@@ -448,12 +459,13 @@ export default function ManageBrandPage({
           <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <h2 className="text-xl font-bold text-white">Company Information</h2>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
-                <span className="text-[#6BC6FF] text-sm font-bold">+5</span>
-                <span className="text-white/40 text-xs">points</span>
+              <div className="px-3 py-1 rounded bg-white/5 border border-white/10">
+                <span className="text-white/60 text-xs font-medium">Optional</span>
               </div>
             </div>
             <p className="text-white/60 text-sm mb-6">
+              Optional details that help AI models provide accurate factual information.
+            </p>
               Optional details that help AI models provide accurate information about your company.
             </p>
 
