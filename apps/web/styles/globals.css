@@ -486,6 +486,7 @@ a:not([href=""]):not([href="#"]),
 [class*="hover:"],
 [class*="cursor-pointer"],
 .transition-colors,
+.transition-all,
 .group,
 .nav-item,
 [onclick] {
