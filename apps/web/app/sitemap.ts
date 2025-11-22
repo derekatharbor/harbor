@@ -1,10 +1,11 @@
 // apps/web/app/sitemap.ts
 // Dynamic sitemap generation for all Harbor pages
-// Pulls from brand_list table and auto-updates when new brands are added
+// Pulls from ai_profiles table and auto-updates when new brands are added
 
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
+export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Regenerate every hour
 
@@ -27,18 +28,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Fetch all brands from brand_list
+  // Check environment variables
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error('Sitemap: Missing Supabase environment variables')
+    return staticUrls
+  }
+
+  // Fetch all brands from ai_profiles
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 
-  const { data: brands } = await supabase
+  const { data: brands, error } = await supabase
     .from('ai_profiles')
     .select('slug, updated_at, created_at')
     .order('rank_global', { ascending: true })
 
-  if (!brands) return staticUrls
+  if (error) {
+    console.error('Sitemap: Error fetching brands:', error)
+    return staticUrls
+  }
+
+  if (!brands || brands.length === 0) {
+    console.warn('Sitemap: No brands found in ai_profiles table')
+    return staticUrls
+  }
+
+  console.log(`Sitemap: Found ${brands.length} brands`)
 
   // Dynamic brand + feed URLs
   const dynamicUrls: MetadataRoute.Sitemap = brands.flatMap((brand) => {
