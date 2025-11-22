@@ -597,7 +597,6 @@ export default function ProfileManagerPage() {
         <div className="mb-8 sm:mb-12">
           <h2 className="text-[#e8f4ff] text-xl font-light mb-6">Share Your Profile</h2>
           <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
-          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
           <div className="mb-6">
             <h3 className="text-[#e8f4ff] text-lg font-light mb-2">Share Your Ranking</h3>
             <p className="text-[#94a3b8] font-mono text-sm">
