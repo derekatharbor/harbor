@@ -17,7 +17,7 @@ import {
   AlertCircle,
   Shield
 } from 'lucide-react'
-import VisibilityScoreCard from '@/components/manage/VisibilityScoreCard'
+import VisibilityScoreHeader from '@/components/manage/VisibilityScoreHeader'
 
 interface Brand {
   id: string
@@ -217,8 +217,20 @@ export default function ManageBrandPage({
         </div>
       </nav>
 
+      {/* Visibility Score Header - Full Width Health Bar */}
+      <VisibilityScoreHeader
+        score={brand?.visibility_score ?? null}
+        rankGlobal={brand?.rank_global ?? null}
+        lastScanAt={brand?.last_scan_at ?? null}
+        slug={params.slug}
+        hasDescription={!!description}
+        hasOfferings={offerings.length > 0}
+        hasFaqs={faqs.length > 0}
+        hasCompanyInfo={!!(companyInfo.hq_location || companyInfo.founded_year)}
+      />
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
         
         {/* Header */}
         <div className="mb-8">
@@ -249,19 +261,22 @@ export default function ManageBrandPage({
           </div>
 
           <p className="text-white/60 text-sm md:text-base">
-            Update your brand information to improve how AI models understand and represent your company.
+            Here's exactly what to fix next to increase your score.
           </p>
         </div>
 
-        {/* 2-Column Grid: Form + Sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Edit Form - Single Column */}
+        <div className="space-y-6">
           
-          {/* Left Column: Form Content (60-65% width on desktop) */}
-          <div className="lg:col-span-2 space-y-6">
-          
-            {/* Brand Description */}
-            <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
-            <h2 className="text-xl font-bold text-white mb-4">Brand Description</h2>
+          {/* Brand Description */}
+          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white">Brand Description</h2>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
+                <span className="text-[#6BC6FF] text-sm font-bold">+15</span>
+                <span className="text-white/40 text-xs">points</span>
+              </div>
+            </div>
             <p className="text-white/60 text-sm mb-4">
               Provide a clear, concise description of what your brand does. This helps AI models understand your business.
             </p>
@@ -290,9 +305,15 @@ export default function ManageBrandPage({
           {/* Products & Services */}
           <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-bold text-white">Products & Services</h2>
-                <p className="text-white/60 text-sm mt-1">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-1">
+                  <h2 className="text-xl font-bold text-white">Products & Services</h2>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
+                    <span className="text-[#6BC6FF] text-sm font-bold">+10</span>
+                    <span className="text-white/40 text-xs">points</span>
+                  </div>
+                </div>
+                <p className="text-white/60 text-sm">
                   List your main products or service offerings.
                 </p>
               </div>
@@ -355,9 +376,15 @@ export default function ManageBrandPage({
           {/* FAQs */}
           <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-bold text-white">Frequently Asked Questions</h2>
-                <p className="text-white/60 text-sm mt-1">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-1">
+                  <h2 className="text-xl font-bold text-white">Frequently Asked Questions</h2>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
+                    <span className="text-[#6BC6FF] text-sm font-bold">+10</span>
+                    <span className="text-white/40 text-xs">points</span>
+                  </div>
+                </div>
+                <p className="text-white/60 text-sm">
                   Add common questions and answers about your brand.
                 </p>
               </div>
@@ -419,7 +446,13 @@ export default function ManageBrandPage({
 
           {/* Company Information */}
           <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
-            <h2 className="text-xl font-bold text-white mb-4">Company Information</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-xl font-bold text-white">Company Information</h2>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#6BC6FF]/10 border border-[#6BC6FF]/20">
+                <span className="text-[#6BC6FF] text-sm font-bold">+5</span>
+                <span className="text-white/40 text-xs">points</span>
+              </div>
+            </div>
             <p className="text-white/60 text-sm mb-6">
               Optional details that help AI models provide accurate information about your company.
             </p>
@@ -510,20 +543,6 @@ export default function ManageBrandPage({
                 </button>
               )}
             </div>
-          </div>
-          
-          </div>
-          
-          {/* Right Column: Visibility Score Card (35-40% width on desktop, sticky) */}
-          <div className="lg:col-span-1">
-            <VisibilityScoreCard
-              score={brand?.visibility_score ?? null}
-              rankGlobal={brand?.rank_global ?? null}
-              rankInIndustry={brand?.rank_in_industry ?? null}
-              industry={brand?.industry ?? null}
-              lastScanAt={brand?.last_scan_at ?? null}
-              slug={params.slug}
-            />
           </div>
 
         </div>
