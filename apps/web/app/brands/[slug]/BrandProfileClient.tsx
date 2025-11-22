@@ -34,21 +34,27 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
   const [claimLoading, setClaimLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // Fetch brand data if not provided
+  // Fetch brand data if not provided OR refresh on mount to get latest claimed status
   useEffect(() => {
-    if (initialBrand.brand_name === 'Loading...') {
-      fetch(`/api/brands/${initialBrand.slug}`)
-        .then(res => res.json())
-        .then(data => {
-          setBrand(data)
-          setLoading(false)
-        })
-        .catch(err => {
-          console.error('Failed to fetch brand:', err)
-          setLoading(false)
-        })
+    const fetchBrand = async () => {
+      try {
+        const res = await fetch(`/api/brands/${initialBrand.slug}`)
+        const data = await res.json()
+        setBrand(data)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch brand:', err)
+        setLoading(false)
+      }
     }
-  }, [initialBrand])
+
+    if (initialBrand.brand_name === 'Loading...') {
+      fetchBrand()
+    } else {
+      // Always refresh on mount to get latest claimed status
+      fetchBrand()
+    }
+  }, [initialBrand.slug])
 
   const handleSendCode = async () => {
     setError('')
@@ -96,17 +102,18 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
       const data = await res.json()
 
-      // Check if already claimed by this email - treat as success
+      // Handle "already claimed by this email" as success
+      if (!res.ok && data.error?.includes('already claimed by this email')) {
+        // Profile already claimed by this user - redirect to manage
+        window.location.href = `/brands/${brand.slug}/manage`
+        return
+      }
+
       if (!res.ok) {
-        if (data.error?.includes('already claimed by this email')) {
-          // This is actually a success case - just redirect
-          window.location.href = `/brands/${brand.slug}/manage`
-          return
-        }
         throw new Error(data.error || 'Invalid or expired code')
       }
 
-      // Success - redirect to profile manager
+      // First-time claim success - redirect to manage
       window.location.href = `/brands/${brand.slug}/manage`
     } catch (err: any) {
       setError(err.message)
@@ -327,8 +334,9 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           )}
         </div>
 
-        {/* Unclaimed CTA - Moved up for prominence */}
-        {!brand.claimed && (
+        {/* Claim Status CTA */}
+        {!brand.claimed ? (
+          // UNCLAIMED: Show claim CTA
           <div className="mb-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
             <div className="flex items-start gap-4">
               <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
@@ -344,6 +352,27 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                   className="px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all"
                 >
                   Claim this profile — it's free
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // CLAIMED: Show sign-in CTA
+          <div className="mb-8 p-6 bg-[#2979FF]/10 border border-[#2979FF]/20 rounded-xl">
+            <div className="flex items-start gap-4">
+              <Shield className="w-6 h-6 text-[#2979FF] flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Brand claimed
+                </h3>
+                <p className="text-white/70 text-sm mb-4">
+                  This profile is verified and managed by {brand.brand_name}. Are you from this company?
+                </p>
+                <button
+                  onClick={() => setShowClaimModal(true)}
+                  className="px-6 py-3 rounded-lg bg-[#2979FF] text-white font-medium hover:bg-[#2979FF]/90 transition-all"
+                >
+                  Sign in to manage
                 </button>
               </div>
             </div>
@@ -460,10 +489,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             {claimStep === 'email' && (
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">
-                  Claim this Profile
+                  {brand.claimed ? 'Sign in to manage' : 'Claim this Profile'}
                 </h2>
                 <p className="text-white/60 text-sm mb-6">
-                  To verify ownership, enter an email with this domain:
+                  {brand.claimed 
+                    ? 'Enter your company email to access the management dashboard:'
+                    : 'To verify ownership, enter an email with this domain:'
+                  }
                 </p>
 
                 <div className="mb-4">
