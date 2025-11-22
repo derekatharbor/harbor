@@ -174,7 +174,7 @@ export default function LoginModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full py-3 px-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B4A] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed transition-all"
             style={{ fontFamily: 'Source Code Pro, monospace' }}
           >
             {loading ? 'Signing in...' : 'Sign In'}
