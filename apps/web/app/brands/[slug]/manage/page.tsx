@@ -669,7 +669,7 @@ export default function ProfileManagerPage() {
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
             <div className="flex-1">
               <h3 className="text-[#e8f4ff] text-xl font-light mb-3">
-                Get the Full Intelligence Dashboard
+                Access the Full Intelligence Dashboard
               </h3>
               <p className="text-[#94a3b8] font-mono text-sm leading-relaxed mb-6">
                 Your AI Profile is just the start. See real-time model descriptions, track weekly changes, 
