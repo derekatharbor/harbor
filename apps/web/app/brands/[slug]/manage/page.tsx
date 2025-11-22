@@ -90,13 +90,16 @@ export default function ManageBrandPage({
     setMessage(null)
     
     try {
+      // No validation - allow saving partial data
+      // Users can fill in what they want, when they want
+      
       const res = await fetch(`/api/brands/${params.slug}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           description,
-          offerings,
-          faqs,
+          offerings: offerings.filter(o => o.name || o.description), // Only save non-empty offerings
+          faqs: faqs.filter(f => f.question || f.answer), // Only save non-empty FAQs
           companyInfo
         })
       })
@@ -177,12 +180,15 @@ export default function ManageBrandPage({
   return (
     <div className="min-h-screen bg-[#101A31]">
       
-      {/* Navigation */}
-      <nav className="border-b border-white/5 bg-[#0C1422]">
-        <div className="max-w-5xl mx-auto px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 md:gap-4">
-              <Link href="/" className="flex items-center gap-2">
+      {/* Nav - Same style as BrandProfileClient */}
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
+        <div 
+          className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
+          style={{ backdropFilter: 'blur(12px)' }}
+        >
+          <div className="px-4 md:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14 md:h-16">
+              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
                 <Image 
                   src="/logo-icon.png" 
                   alt="Harbor" 
@@ -192,56 +198,68 @@ export default function ManageBrandPage({
                 />
                 <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
               </Link>
-              <span className="text-white/30">|</span>
-              <span className="text-white/70 text-sm md:text-base">Manage Profile</span>
+
+              <div className="flex items-center space-x-2 md:space-x-4">
+                <Link 
+                  href={`/brands/${params.slug}`}
+                  className="text-white/70 text-sm md:text-base hover:text-white transition-colors duration-200"
+                >
+                  ← View Public Profile
+                </Link>
+                
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
+                >
+                  Dashboard
+                </Link>
+              </div>
             </div>
-            
-            <Link 
-              href={`/brands/${params.slug}`}
-              className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm md:text-base"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">View Public Profile</span>
-              <span className="sm:hidden">Public</span>
-            </Link>
           </div>
         </div>
       </nav>
 
+      {/* Spacer for fixed nav */}
+      <div className="h-28" />
+
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
         
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-4">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
+        {/* Header Card */}
+        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-6">
+            {/* Logo */}
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
               <Image
                 src={brand.logo_url}
                 alt={brand.brand_name}
-                width={80}
-                height={80}
+                width={96}
+                height={96}
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none'
                 }}
               />
             </div>
+
+            {/* Brand Info */}
             <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              <div className="inline-flex items-center px-3 py-1 rounded-full backdrop-blur-md bg-[#2979FF]/10 border border-[#2979FF]/20 mb-3">
+                <Shield className="w-3.5 h-3.5 text-[#2979FF] mr-2" />
+                <span className="text-[#2979FF] text-xs font-medium tracking-wide uppercase">
+                  Verified • Claimed {new Date(brand.claimed_at).toLocaleDateString()}
+                </span>
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {brand.brand_name}
               </h1>
-              <div className="flex items-center gap-2 text-sm text-white/60">
-                <Shield className="w-4 h-4 text-green-400" />
-                <span>Verified Profile</span>
-                <span className="text-white/30">•</span>
-                <span>Claimed {new Date(brand.claimed_at).toLocaleDateString()}</span>
-              </div>
+              
+              <p className="text-white/60 text-base">
+                Update your brand information to improve how AI models understand and represent your company. All fields are optional — save as you go.
+              </p>
             </div>
           </div>
-
-          <p className="text-white/60 text-sm md:text-base">
-            Update your brand information to improve how AI models understand and represent your company.
-          </p>
         </div>
 
         {/* Status Message */}
@@ -266,7 +284,7 @@ export default function ManageBrandPage({
         <div className="space-y-6">
           
           {/* Brand Description */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6 md:p-8">
             <h2 className="text-xl font-bold text-white mb-4">Brand Description</h2>
             <p className="text-white/60 text-sm mb-4">
               Provide a clear, concise description of what your brand does. This helps AI models understand your business.
@@ -289,7 +307,7 @@ export default function ManageBrandPage({
           </div>
 
           {/* Products & Services */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold text-white">Products & Services</h2>
@@ -345,7 +363,7 @@ export default function ManageBrandPage({
           </div>
 
           {/* FAQs */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold text-white">Frequently Asked Questions</h2>
@@ -401,7 +419,7 @@ export default function ManageBrandPage({
           </div>
 
           {/* Company Information */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-6 md:p-8">
             <h2 className="text-xl font-bold text-white mb-4">Company Information</h2>
             <p className="text-white/60 text-sm mb-6">
               Optional details that help AI models provide accurate information about your company.
@@ -449,7 +467,7 @@ export default function ManageBrandPage({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50"
             >
               <Save className="w-5 h-5" />
               {saving ? 'Saving...' : 'Save Changes'}
