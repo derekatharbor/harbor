@@ -62,8 +62,8 @@ export function ProfileSummaryCard({ brand, onScanClick, scanInProgress }: Profi
   }
 
   return (
-    <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
-      <div className="flex items-start justify-between gap-8 mb-8">
+    <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8 mb-8">
         {/* Left: Brand Info */}
         <div className="flex items-start gap-6">
           <div className="w-16 h-16 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -82,8 +82,8 @@ export function ProfileSummaryCard({ brand, onScanClick, scanInProgress }: Profi
             )}
           </div>
           <div>
-            <h2 className="text-white text-2xl font-light mb-2">{brand.brand_name}</h2>
-            <div className="flex items-center gap-4 text-white/50 font-mono text-sm">
+            <h2 className="text-[#e8f4ff] text-2xl font-light mb-2">{brand.brand_name}</h2>
+            <div className="flex items-center gap-4 text-[#94a3b8] font-mono text-sm">
               <span>{brand.domain}</span>
               <span className="text-white/20">•</span>
               <span>{brand.industry}</span>
@@ -95,10 +95,10 @@ export function ProfileSummaryCard({ brand, onScanClick, scanInProgress }: Profi
         <button
           onClick={onScanClick}
           disabled={scanInProgress}
-          className={`px-6 py-3 rounded font-mono text-sm flex items-center gap-2 transition-all ${
+          className={`px-6 py-3 rounded font-mono text-sm flex items-center justify-center gap-2 transition-all w-full sm:w-auto ${
             scanInProgress
-              ? 'bg-white/5 text-white/40 cursor-not-allowed'
-              : 'bg-[#2DD4BF] text-[#0A0F1E] hover:bg-[#14B8A6]'
+              ? 'bg-white/[0.03] text-[#94a3b8] cursor-not-allowed'
+              : 'bg-[#2DD4BF] text-[#0c162b] hover:bg-[#14B8A6]'
           }`}
         >
           <Play className={`w-4 h-4 ${scanInProgress ? 'animate-pulse' : ''}`} />
@@ -107,53 +107,59 @@ export function ProfileSummaryCard({ brand, onScanClick, scanInProgress }: Profi
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Visibility Score */}
-        <div className="p-6 bg-white/[0.02] border border-white/5 rounded">
-          <div className="text-white/50 font-mono text-xs mb-2">Visibility Score</div>
-          <div className="text-white text-3xl font-light mb-1">
+        <div className="p-6 bg-white/[0.03] border border-white/[0.06] rounded">
+          <div className="text-[#94a3b8] font-mono text-xs mb-2">Visibility Score</div>
+          <div className="text-[#e8f4ff] text-3xl font-light mb-1">
             {brand.visibility_score.toFixed(1)}%
           </div>
-          <div className="flex items-center gap-1 text-[#2DD4BF] font-mono text-xs">
+          <div className="flex items-center gap-1 text-[#34d399] font-mono text-xs">
             <TrendingUp className="w-3 h-3" />
             <span>+2.3% vs last scan</span>
           </div>
         </div>
 
         {/* Global Rank */}
-        <div className="p-6 bg-white/[0.02] border border-white/5 rounded">
-          <div className="text-white/50 font-mono text-xs mb-2">Global Rank</div>
-          <div className="text-white text-3xl font-light mb-1">
+        <div className="p-6 bg-white/[0.03] border border-white/[0.06] rounded">
+          <div className="text-[#94a3b8] font-mono text-xs mb-2">Global Rank</div>
+          <div className="text-[#e8f4ff] text-3xl font-light mb-1">
             #{brand.rank_global}
           </div>
-          <div className="text-white/40 font-mono text-xs">
+          <div className="text-[#94a3b8] font-mono text-xs">
             {getPercentileMessage(brand.rank_global)}
           </div>
         </div>
 
         {/* Last Scanned */}
-        <div className="p-6 bg-white/[0.02] border border-white/5 rounded">
-          <div className="text-white/50 font-mono text-xs mb-2">Last Scanned</div>
-          <div className="text-white text-lg font-light mb-1">
+        <div className="p-6 bg-white/[0.03] border border-white/[0.06] rounded">
+          <div className="text-[#94a3b8] font-mono text-xs mb-2">Last Scanned</div>
+          <div className="text-[#e8f4ff] text-lg font-light mb-1">
             {formatLastScanDate()}
           </div>
           {nextScanDate && (
-            <div className="text-white/40 font-mono text-xs">
+            <div className="text-[#94a3b8] font-mono text-xs">
               Next in {getTimeUntilNextScan()}
             </div>
           )}
         </div>
+
+        {/* Last AI Sync */}
+        <div className="p-6 bg-white/[0.03] border border-white/[0.06] rounded">
+          <div className="text-[#94a3b8] font-mono text-xs mb-2">Last AI Sync</div>
+          <div className="text-[#94a3b8] text-base font-light">—</div>
+        </div>
       </div>
 
       {/* Verified Badge */}
-      <div className="mt-6 pt-6 border-t border-white/5">
+      <div className="mt-6 pt-6 border-t border-white/[0.06]">
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-full bg-[#2DD4BF] flex items-center justify-center">
-            <svg className="w-3 h-3 text-[#0A0F1E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-3 h-3 text-[#0c162b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <span className="text-white/70 font-mono text-sm">Verified Owner</span>
+          <span className="text-[#94a3b8] font-mono text-sm">Verified Owner</span>
         </div>
       </div>
     </div>

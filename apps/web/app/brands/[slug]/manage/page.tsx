@@ -226,12 +226,12 @@ export default function ProfileManagerPage() {
   }
 
   const calculateProfileCompleteness = () => {
-    let score = 0
-    if (description && description.length > 100) score += 25
-    if (products.length >= 3) score += 25
-    if (faqs.length >= 3) score += 25
-    if (companyInfo.founded_year && companyInfo.hq_location && companyInfo.employee_band) score += 25
-    return score
+    let score = 25 // Baseline from existing scan data
+    if (description && description.length > 100) score += 19
+    if (products.length >= 3) score += 19
+    if (faqs.length >= 3) score += 19
+    if (companyInfo.founded_year && companyInfo.hq_location && companyInfo.employee_band) score += 18
+    return Math.min(score, 100)
   }
 
   if (loading) {
@@ -253,10 +253,24 @@ export default function ProfileManagerPage() {
   const profileCompleteness = calculateProfileCompleteness()
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E]">
+    <div className="min-h-screen bg-[#0c162b] relative overflow-hidden">
+      {/* Wireframe Background - Behind header only */}
+      <div 
+        className="absolute inset-x-0 top-0 h-[600px] opacity-[0.3] pointer-events-none"
+        style={{
+          backgroundImage: "url('/images/wireframe-wave.png')",
+          backgroundPosition: 'center top',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      
+      {/* Content */}
+      <div className="relative z-10">
+      
       {/* Minimal Header */}
-      <header className="border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-8 py-5 flex items-center justify-between">
+      <header className="border-b border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
           <Link 
             href={`/brands/${slug}`}
             className="text-white/70 font-mono text-sm hover:text-white transition-colors flex items-center gap-2"
@@ -274,14 +288,14 @@ export default function ProfileManagerPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-8 py-12">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-white text-3xl font-light mb-3">
+          <h1 className="text-[#e8f4ff] text-2xl sm:text-3xl font-light mb-3">
             Manage Your AI Visibility Profile
           </h1>
-          <p className="text-white/50 font-mono text-base">
+          <p className="text-[#94a3b8] font-mono text-sm sm:text-base">
             Control how AI models understand and represent your brand
           </p>
         </div>
@@ -292,56 +306,66 @@ export default function ProfileManagerPage() {
         </div>
 
         {/* Profile Summary Card */}
-        <div className="mb-12">
+        <div className="mb-8">
           <ProfileSummaryCard 
             brand={brand}
             onScanClick={handleScanClick}
             scanInProgress={scanInProgress}
           />
+          <p className="text-[#94a3b8] font-mono text-xs mt-4">
+            Changes may take time to propagate across AI models.
+          </p>
         </div>
 
         {/* Edit Mode Toggle */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-white text-xl font-light">Profile Information</h2>
-          {!editMode ? (
-            <button
-              onClick={() => setEditMode(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 hover:text-white transition-colors rounded"
-            >
-              <Edit className="w-4 h-4" />
-              Edit Profile
-            </button>
-          ) : (
-            <div className="flex items-center gap-3">
+        <div className="mb-8">
+          <h2 className="text-[#e8f4ff] text-xl font-light mb-6">Profile Information</h2>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            {!editMode ? (
+              <div className="flex-1" />
+            ) : (
+              <div className="flex-1" />
+            )}
+            {!editMode ? (
               <button
-                onClick={() => setEditMode(false)}
-                className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 transition-colors rounded"
+                onClick={() => setEditMode(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2 border border-white/[0.06] text-[#94a3b8] font-mono text-sm hover:bg-white/[0.03] hover:text-[#e8f4ff] transition-colors rounded"
               >
-                <X className="w-4 h-4" />
-                Cancel
+                <Edit className="w-4 h-4" />
+                Edit Profile
               </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 bg-[#2DD4BF] text-[#0A0F1E] font-mono text-sm hover:bg-[#14B8A6] transition-colors rounded disabled:opacity-50"
-              >
-                <Save className="w-4 h-4" />
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                <button
+                  onClick={() => setEditMode(false)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 border border-white/[0.06] text-[#94a3b8] font-mono text-sm hover:bg-white/[0.03] transition-colors rounded"
+                >
+                  <X className="w-4 h-4" />
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-[#2DD4BF] text-[#0c162b] font-mono text-sm hover:bg-[#14B8A6] transition-colors rounded disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4" />
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Editable Sections */}
-        <div className="space-y-8 mb-12">
+        <div className="space-y-6 sm:space-y-8 mb-8 sm:mb-12">
           
           {/* Brand Description */}
-          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg hover:border-white/10 transition-all group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-white font-mono text-sm">Brand Description</h3>
-              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+              <h3 className="text-[#e8f4ff] font-mono text-sm">Brand Description</h3>
+              <span className="text-[#34d399] font-mono text-xs">+19 pts</span>
             </div>
-            <p className="text-white/40 font-mono text-xs mb-4">
+            <p className="text-[#94a3b8] font-mono text-xs mb-4">
               Imagine you're explaining your brand to a smart intern
             </p>
             {editMode ? (
@@ -349,31 +373,31 @@ export default function ProfileManagerPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="A clear 2-3 sentence description of what you do..."
-                className="w-full p-4 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                className="w-full p-3 sm:p-4 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
                 rows={4}
               />
             ) : (
-              <div className="text-white/70 font-mono text-sm leading-relaxed">
+              <div className="text-[#94a3b8] font-mono text-sm leading-relaxed">
                 {description || <span className="text-white/30">No description yet</span>}
               </div>
             )}
-            <div className="mt-2 text-white/30 font-mono text-xs">
+            <div className="mt-2 text-[#94a3b8] font-mono text-xs">
               {description.length} / 250 characters {description.length >= 100 && '✓'}
             </div>
           </div>
 
           {/* Products & Services */}
-          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg hover:border-white/10 transition-all group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-white font-mono text-sm">Products & Services</h3>
-              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+              <h3 className="text-[#e8f4ff] font-mono text-sm">Products & Services</h3>
+              <span className="text-[#34d399] font-mono text-xs">+19 pts</span>
             </div>
-            <p className="text-white/40 font-mono text-xs mb-4">
+            <p className="text-[#94a3b8] font-mono text-xs mb-4">
               List your core offerings with clear descriptions
             </p>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {products.map((product, idx) => (
-                <div key={idx} className="p-4 bg-white/[0.02] border border-white/5 rounded">
+                <div key={idx} className="p-3 sm:p-4 bg-white/[0.03] border border-white/[0.06] rounded">
                   {editMode ? (
                     <div className="space-y-3">
                       <div className="flex gap-3">
@@ -382,11 +406,11 @@ export default function ProfileManagerPage() {
                           value={product.name}
                           onChange={(e) => updateProduct(idx, 'name', e.target.value)}
                           placeholder="Product/service name"
-                          className="flex-1 p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                          className="flex-1 p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                         />
                         <button
                           onClick={() => removeProduct(idx)}
-                          className="px-3 py-2 border border-white/10 text-white/50 hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
+                          className="px-3 py-2 border border-white/[0.06] text-[#94a3b8] hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -395,14 +419,14 @@ export default function ProfileManagerPage() {
                         value={product.description}
                         onChange={(e) => updateProduct(idx, 'description', e.target.value)}
                         placeholder="Brief description..."
-                        className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                        className="w-full p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
                         rows={2}
                       />
                     </div>
                   ) : (
                     <div>
-                      <div className="text-white/90 font-mono text-sm mb-1">{product.name}</div>
-                      <div className="text-white/50 font-mono text-xs">{product.description}</div>
+                      <div className="text-[#e8f4ff] font-mono text-sm mb-1">{product.name}</div>
+                      <div className="text-[#94a3b8] font-mono text-xs">{product.description}</div>
                     </div>
                   )}
                 </div>
@@ -410,7 +434,7 @@ export default function ProfileManagerPage() {
               {editMode && (
                 <button
                   onClick={addProduct}
-                  className="w-full p-3 border border-dashed border-white/10 text-white/40 hover:text-white/60 hover:border-white/20 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
+                  className="w-full p-3 border border-dashed border-white/[0.06] text-[#94a3b8] hover:text-[#e8f4ff] hover:border-white/10 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Add Product/Service
@@ -420,17 +444,17 @@ export default function ProfileManagerPage() {
           </div>
 
           {/* FAQs */}
-          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg hover:border-white/10 transition-all group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-white font-mono text-sm">Frequently Asked Questions</h3>
-              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+              <h3 className="text-[#e8f4ff] font-mono text-sm">Frequently Asked Questions</h3>
+              <span className="text-[#34d399] font-mono text-xs">+19 pts</span>
             </div>
-            <p className="text-white/40 font-mono text-xs mb-4">
+            <p className="text-[#94a3b8] font-mono text-xs mb-4">
               Answer common questions AI models ask about brands like yours
             </p>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {faqs.map((faq, idx) => (
-                <div key={idx} className="p-4 bg-white/[0.02] border border-white/5 rounded">
+                <div key={idx} className="p-3 sm:p-4 bg-white/[0.03] border border-white/[0.06] rounded">
                   {editMode ? (
                     <div className="space-y-3">
                       <div className="flex gap-3">
@@ -439,11 +463,11 @@ export default function ProfileManagerPage() {
                           value={faq.question}
                           onChange={(e) => updateFaq(idx, 'question', e.target.value)}
                           placeholder="Question"
-                          className="flex-1 p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                          className="flex-1 p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                         />
                         <button
                           onClick={() => removeFaq(idx)}
-                          className="px-3 py-2 border border-white/10 text-white/50 hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
+                          className="px-3 py-2 border border-white/[0.06] text-[#94a3b8] hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -452,14 +476,14 @@ export default function ProfileManagerPage() {
                         value={faq.answer}
                         onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
                         placeholder="Answer"
-                        className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                        className="w-full p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
                         rows={2}
                       />
                     </div>
                   ) : (
                     <div>
-                      <div className="text-white/90 font-mono text-sm mb-1">{faq.question}</div>
-                      <div className="text-white/50 font-mono text-xs">{faq.answer}</div>
+                      <div className="text-[#e8f4ff] font-mono text-sm mb-1">{faq.question}</div>
+                      <div className="text-[#94a3b8] font-mono text-xs">{faq.answer}</div>
                     </div>
                   )}
                 </div>
@@ -467,7 +491,7 @@ export default function ProfileManagerPage() {
               {editMode && (
                 <button
                   onClick={addFaq}
-                  className="w-full p-3 border border-dashed border-white/10 text-white/40 hover:text-white/60 hover:border-white/20 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
+                  className="w-full p-3 border border-dashed border-white/[0.06] text-[#94a3b8] hover:text-[#e8f4ff] hover:border-white/10 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Add FAQ
@@ -477,42 +501,42 @@ export default function ProfileManagerPage() {
           </div>
 
           {/* Company Information */}
-          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg hover:border-white/10 transition-all group">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-white font-mono text-sm">Company Information</h3>
-              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+              <h3 className="text-[#e8f4ff] font-mono text-sm">Company Information</h3>
+              <span className="text-[#34d399] font-mono text-xs">+18 pts</span>
             </div>
-            <p className="text-white/40 font-mono text-xs mb-4">
+            <p className="text-[#94a3b8] font-mono text-xs mb-4">
               Help AI models understand your company's scale and presence
             </p>
             {editMode ? (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-white/60 font-mono text-xs mb-2 block">Founded</label>
+                  <label className="text-[#94a3b8] font-mono text-xs mb-2 block">Founded</label>
                   <input
                     type="text"
                     value={companyInfo.founded_year}
                     onChange={(e) => setCompanyInfo({ ...companyInfo, founded_year: e.target.value })}
                     placeholder="2020"
-                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                    className="w-full p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                   />
                 </div>
                 <div>
-                  <label className="text-white/60 font-mono text-xs mb-2 block">Headquarters</label>
+                  <label className="text-[#94a3b8] font-mono text-xs mb-2 block">Headquarters</label>
                   <input
                     type="text"
                     value={companyInfo.hq_location}
                     onChange={(e) => setCompanyInfo({ ...companyInfo, hq_location: e.target.value })}
                     placeholder="San Francisco, CA"
-                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                    className="w-full p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                   />
                 </div>
                 <div>
-                  <label className="text-white/60 font-mono text-xs mb-2 block">Employees</label>
+                  <label className="text-[#94a3b8] font-mono text-xs mb-2 block">Employees</label>
                   <select
                     value={companyInfo.employee_band}
                     onChange={(e) => setCompanyInfo({ ...companyInfo, employee_band: e.target.value })}
-                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                    className="w-full p-2 bg-white/[0.03] border border-white/[0.06] rounded text-[#e8f4ff] font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                   >
                     <option value="">Select...</option>
                     <option value="1-10">1-10</option>
@@ -524,23 +548,23 @@ export default function ProfileManagerPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex gap-12">
+              <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
                 {companyInfo.founded_year && (
                   <div>
-                    <div className="text-white/50 font-mono text-sm mb-1">Founded</div>
-                    <div className="text-white/80 font-mono text-base">{companyInfo.founded_year}</div>
+                    <div className="text-[#94a3b8] font-mono text-sm mb-1">Founded</div>
+                    <div className="text-[#e8f4ff] font-mono text-base">{companyInfo.founded_year}</div>
                   </div>
                 )}
                 {companyInfo.hq_location && (
                   <div>
-                    <div className="text-white/50 font-mono text-sm mb-1">Headquarters</div>
-                    <div className="text-white/80 font-mono text-base">{companyInfo.hq_location}</div>
+                    <div className="text-[#94a3b8] font-mono text-sm mb-1">Headquarters</div>
+                    <div className="text-[#e8f4ff] font-mono text-base">{companyInfo.hq_location}</div>
                   </div>
                 )}
                 {companyInfo.employee_band && (
                   <div>
-                    <div className="text-white/50 font-mono text-sm mb-1">Employees</div>
-                    <div className="text-white/80 font-mono text-base">{companyInfo.employee_band}</div>
+                    <div className="text-[#94a3b8] font-mono text-sm mb-1">Employees</div>
+                    <div className="text-[#e8f4ff] font-mono text-base">{companyInfo.employee_band}</div>
                   </div>
                 )}
                 {!companyInfo.founded_year && !companyInfo.hq_location && !companyInfo.employee_band && (
@@ -552,7 +576,8 @@ export default function ProfileManagerPage() {
         </div>
 
         {/* Visibility Opportunities */}
-        <div className="mb-12">
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-[#e8f4ff] text-xl font-light mb-6">Visibility Opportunities</h2>
           <VisibilityOpportunities 
             opportunities={opportunities}
             loading={loadingOpportunities}
@@ -560,7 +585,8 @@ export default function ProfileManagerPage() {
         </div>
 
         {/* Version History */}
-        <div className="mb-12">
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-[#e8f4ff] text-xl font-light mb-6">Version History</h2>
           <VersionHistory 
             history={history}
             loading={loadingHistory}
@@ -568,43 +594,46 @@ export default function ProfileManagerPage() {
         </div>
 
         {/* Share Card Section */}
-        <div className="mb-12 p-8 bg-white/[0.02] border border-white/5 rounded-lg">
-          <div className="mb-8">
-            <h3 className="text-white text-xl font-light mb-2">Share Your Profile</h3>
-            <p className="text-white/40 font-mono text-sm">
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-[#e8f4ff] text-xl font-light mb-6">Share Your Profile</h2>
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
+          <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
+          <div className="mb-6">
+            <h3 className="text-[#e8f4ff] text-lg font-light mb-2">Share Your Ranking</h3>
+            <p className="text-[#94a3b8] font-mono text-sm">
               Show how your brand ranks across AI models
             </p>
           </div>
 
           <div className="mb-6">
-            <div className="text-white/60 font-mono text-sm mb-3">Choose theme</div>
+            <div className="text-[#94a3b8] font-mono text-sm mb-3">Choose theme</div>
             <div className="flex gap-3">
               <button
                 onClick={() => setShareCardTheme('light')}
                 className={`flex-1 p-4 rounded-lg border transition-colors ${
                   shareCardTheme === 'light'
-                    ? 'border-white/20 bg-white/5'
-                    : 'border-white/10 hover:border-white/15'
+                    ? 'border-white/[0.12] bg-white/[0.05]'
+                    : 'border-white/[0.06] hover:border-white/10'
                 }`}
               >
-                <div className="text-white font-mono text-sm mb-1">Light</div>
-                <div className="text-white/40 font-mono text-xs">For LinkedIn</div>
+                <div className="text-[#e8f4ff] font-mono text-sm mb-1">Light</div>
+                <div className="text-[#94a3b8] font-mono text-xs">For LinkedIn</div>
               </button>
               <button
                 onClick={() => setShareCardTheme('dark')}
                 className={`flex-1 p-4 rounded-lg border transition-colors ${
                   shareCardTheme === 'dark'
-                    ? 'border-white/20 bg-white/5'
-                    : 'border-white/10 hover:border-white/15'
+                    ? 'border-white/[0.12] bg-white/[0.05]'
+                    : 'border-white/[0.06] hover:border-white/10'
                 }`}
               >
-                <div className="text-white font-mono text-sm mb-1">Dark</div>
-                <div className="text-white/40 font-mono text-xs">For Twitter</div>
+                <div className="text-[#e8f4ff] font-mono text-sm mb-1">Dark</div>
+                <div className="text-[#94a3b8] font-mono text-xs">For Twitter</div>
               </button>
             </div>
           </div>
           
-          <div className="mb-6 rounded-lg overflow-hidden border border-white/10">
+          <div className="mb-6 rounded-lg overflow-hidden border border-white/[0.06]">
             <img 
               src={`/api/share-card/${slug}?theme=${shareCardTheme}`}
               alt={`${brand.brand_name} share card`}
@@ -612,7 +641,7 @@ export default function ProfileManagerPage() {
             />
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
                 window.open(
@@ -620,7 +649,7 @@ export default function ProfileManagerPage() {
                   '_blank'
                 )
               }}
-              className="flex-1 py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 rounded transition-colors"
+              className="flex-1 py-3 border border-white/[0.06] text-[#94a3b8] font-mono text-sm hover:bg-white/[0.03] rounded transition-colors text-center"
             >
               Share to LinkedIn
             </button>
@@ -629,7 +658,7 @@ export default function ProfileManagerPage() {
                 navigator.clipboard.writeText(`https://useharbor.io/brands/${slug}`)
                 alert('Link copied!')
               }}
-              className="px-6 py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 rounded transition-colors"
+              className="sm:px-6 py-3 border border-white/[0.06] text-[#94a3b8] font-mono text-sm hover:bg-white/[0.03] rounded transition-colors text-center"
             >
               Copy Link
             </button>
@@ -637,45 +666,46 @@ export default function ProfileManagerPage() {
         </div>
 
         {/* Upgrade CTA */}
-        <div className="p-8 bg-white/[0.03] border border-white/10 rounded-lg">
-          <div className="flex items-start justify-between gap-8">
+        <div className="p-6 sm:p-8 bg-white/[0.03] border border-white/[0.06] rounded-lg">
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8">
             <div className="flex-1">
-              <h3 className="text-white text-xl font-light mb-3">
+              <h3 className="text-[#e8f4ff] text-xl font-light mb-3">
                 Get the Full Intelligence Dashboard
               </h3>
-              <p className="text-white/60 font-mono text-sm leading-relaxed mb-6">
+              <p className="text-[#94a3b8] font-mono text-sm leading-relaxed mb-6">
                 Your AI Profile is just the start. See real-time model descriptions, track weekly changes, 
                 monitor competitors, and get optimization recommendations.
               </p>
               <ul className="space-y-2 mb-6">
-                <li className="text-white/50 font-mono text-sm flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-white/30" />
+                <li className="text-[#94a3b8] font-mono text-sm flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-[#94a3b8]" />
                   Weekly automated scans across all 4 AI models
                 </li>
-                <li className="text-white/50 font-mono text-sm flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-white/30" />
+                <li className="text-[#94a3b8] font-mono text-sm flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-[#94a3b8]" />
                   Competitor tracking and benchmarking
                 </li>
-                <li className="text-white/50 font-mono text-sm flex items-center gap-2">
-                  <div className="w-1 h-1 rounded-full bg-white/30" />
+                <li className="text-[#94a3b8] font-mono text-sm flex items-center gap-2">
+                  <div className="w-1 h-1 rounded-full bg-[#94a3b8]" />
                   Actionable optimization tasks with impact estimates
                 </li>
               </ul>
             </div>
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 w-full sm:w-auto">
               <Link 
                 href="/signup"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/15 text-white font-mono text-sm rounded transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/[0.06] hover:bg-white/[0.09] text-[#e8f4ff] font-mono text-sm rounded transition-colors w-full sm:w-auto"
               >
                 Get started
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <p className="text-white/30 font-mono text-xs mt-2 text-right">From $79/month</p>
+              <p className="text-[#94a3b8] font-mono text-xs mt-2 text-center sm:text-right">From $79/month</p>
             </div>
           </div>
         </div>
 
       </main>
+      </div>
     </div>
   )
 }
