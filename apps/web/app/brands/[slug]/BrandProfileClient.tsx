@@ -100,6 +100,12 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
         throw new Error(data.error || 'Invalid or expired code')
       }
 
+      // Update local brand state immediately
+      setBrand({ ...brand, claimed: true })
+
+      // Small delay to allow DB propagation before redirect
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
       // Redirect to profile manager
       window.location.href = `/brands/${brand.slug}/manage`
     } catch (err: any) {

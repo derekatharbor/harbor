@@ -25,12 +25,13 @@ export async function GET(
     )
 
     const { data: brand, error } = await supabase
-      .from('public_index')
+      .from('ai_profiles')
       .select('*')
       .eq('slug', params.slug)
       .single()
 
     if (error || !brand) {
+      console.error('Brand fetch error:', error)
       return NextResponse.json(
         { error: 'Brand not found' },
         { status: 404 }
