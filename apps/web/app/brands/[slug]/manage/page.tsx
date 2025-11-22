@@ -8,10 +8,15 @@ import {
   X, 
   Plus,
   ExternalLink,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ProfileSummaryCard } from '@/components/manage/ProfileSummaryCard'
+import { VisibilityOpportunities } from '@/components/manage/VisibilityOpportunities'
+import { VersionHistory } from '@/components/manage/VersionHistory'
+import { ProfileCompletenessBar } from '@/components/manage/ProfileCompletenessBar'
 
 interface Brand {
   id: string
@@ -25,24 +30,9 @@ interface Brand {
   claimed: boolean
   claimed_at: string
   claimed_by_email: string
-}
-
-interface CanonicalProfile {
-  description?: string
-  products?: Array<{
-    name: string
-    description?: string
-    url?: string
-  }>
-  faqs?: Array<{
-    question: string
-    answer: string
-  }>
-  company_info?: {
-    founded?: string
-    headquarters?: string
-    employees?: string
-  }
+  last_scan_at?: string
+  next_scan_scheduled_at?: string
+  feed_data: any
 }
 
 export default function ProfileManagerPage() {
@@ -51,25 +41,39 @@ export default function ProfileManagerPage() {
   const slug = params.slug as string
 
   const [brand, setBrand] = useState<Brand | null>(null)
-  const [profile, setProfile] = useState<CanonicalProfile>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [scanInProgress, setScanInProgress] = useState(false)
 
   // Editable fields
   const [description, setDescription] = useState('')
-  const [products, setProducts] = useState<Array<{ name: string; description?: string; url?: string }>>([])
+  const [products, setProducts] = useState<Array<{ name: string; description?: string; type?: string }>>([])
   const [faqs, setFaqs] = useState<Array<{ question: string; answer: string }>>([])
   const [companyInfo, setCompanyInfo] = useState({
-    founded: '',
-    headquarters: '',
-    employees: ''
+    founded_year: '',
+    hq_location: '',
+    employee_band: '',
+    industry_tags: [] as string[]
   })
+
+  // UI state
   const [shareCardTheme, setShareCardTheme] = useState<'light' | 'dark'>('light')
+  const [opportunities, setOpportunities] = useState<any>({})
+  const [history, setHistory] = useState<any[]>([])
+  const [loadingOpportunities, setLoadingOpportunities] = useState(false)
+  const [loadingHistory, setLoadingHistory] = useState(false)
 
   useEffect(() => {
     fetchBrandData()
   }, [slug])
+
+  useEffect(() => {
+    if (brand) {
+      fetchOpportunities()
+      fetchHistory()
+    }
+  }, [brand])
 
   const fetchBrandData = async () => {
     try {
@@ -77,15 +81,47 @@ export default function ProfileManagerPage() {
       const brandData = await res.json()
       setBrand(brandData)
 
-      setDescription(brandData.description || '')
-      setProducts(brandData.products || [])
-      setFaqs(brandData.faqs || [])
-      setCompanyInfo(brandData.company_info || { founded: '', headquarters: '', employees: '' })
-
+      // Populate form fields from feed_data
+      const feedData = brandData.feed_data || {}
+      setDescription(feedData.short_description || '')
+      setProducts(feedData.offerings || [])
+      setFaqs(feedData.faqs || [])
+      setCompanyInfo({
+        founded_year: feedData.company_info?.founded_year?.toString() || '',
+        hq_location: feedData.company_info?.hq_location || '',
+        employee_band: feedData.company_info?.employee_band || '',
+        industry_tags: feedData.company_info?.industry_tags || []
+      })
     } catch (error) {
       console.error('Failed to fetch brand:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchOpportunities = async () => {
+    setLoadingOpportunities(true)
+    try {
+      const res = await fetch(`/api/brands/${slug}/opportunities`)
+      const data = await res.json()
+      setOpportunities(data.opportunities || {})
+    } catch (error) {
+      console.error('Failed to fetch opportunities:', error)
+    } finally {
+      setLoadingOpportunities(false)
+    }
+  }
+
+  const fetchHistory = async () => {
+    setLoadingHistory(true)
+    try {
+      const res = await fetch(`/api/brands/${slug}/history`)
+      const data = await res.json()
+      setHistory(data.history || [])
+    } catch (error) {
+      console.error('Failed to fetch history:', error)
+    } finally {
+      setLoadingHistory(false)
     }
   }
 
@@ -97,16 +133,29 @@ export default function ProfileManagerPage() {
         description,
         products,
         faqs,
-        company_info: companyInfo
+        company_info: {
+          founded_year: companyInfo.founded_year ? parseInt(companyInfo.founded_year) : null,
+          hq_location: companyInfo.hq_location,
+          employee_band: companyInfo.employee_band,
+          industry_tags: companyInfo.industry_tags
+        }
       }
 
-      await fetch(`/api/brands/${slug}/update`, {
+      const res = await fetch(`/api/brands/${slug}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
 
+      if (!res.ok) throw new Error('Failed to save')
+
       setEditMode(false)
+      
+      // Refresh data
+      await fetchBrandData()
+      await fetchOpportunities()
+      await fetchHistory()
+      
       alert('Profile updated successfully!')
     } catch (error) {
       console.error('Failed to save:', error)
@@ -116,8 +165,40 @@ export default function ProfileManagerPage() {
     }
   }
 
+  const handleScanClick = async () => {
+    if (scanInProgress) return
+
+    setScanInProgress(true)
+    try {
+      const res = await fetch(`/api/brands/${slug}/scan`, {
+        method: 'POST'
+      })
+      
+      const data = await res.json()
+
+      if (!res.ok) {
+        alert(data.message || 'Failed to start scan')
+        return
+      }
+
+      alert(data.message || 'Scan started successfully!')
+      
+      // Refresh data after scan completes (3 minutes)
+      setTimeout(() => {
+        fetchBrandData()
+        fetchHistory()
+        setScanInProgress(false)
+      }, 180000)
+
+    } catch (error) {
+      console.error('Failed to trigger scan:', error)
+      alert('Failed to start scan')
+      setScanInProgress(false)
+    }
+  }
+
   const addProduct = () => {
-    setProducts([...products, { name: '', description: '', url: '' }])
+    setProducts([...products, { name: '', description: '', type: 'product_line' }])
   }
 
   const removeProduct = (index: number) => {
@@ -144,34 +225,13 @@ export default function ProfileManagerPage() {
     setFaqs(updated)
   }
 
-  const calculateProfileStrength = () => {
-    let strength = 0
-    if (description && description.length > 100) strength += 25
-    if (products.length >= 3) strength += 25
-    if (faqs.length >= 3) strength += 25
-    if (companyInfo.founded && companyInfo.headquarters && companyInfo.employees) strength += 25
-    return strength
-  }
-
-  const getPercentileMessage = (rank: number) => {
-    if (rank <= 10) return 'Top 1% of brands'
-    if (rank <= 50) return 'Top 5% of brands'
-    if (rank <= 100) return 'Top 10% of brands'
-    return 'Top 25% of brands'
-  }
-
-  // Generate LinkedIn share image (this would ideally be a server-side API endpoint)
-  const shareToLinkedIn = () => {
-    // LinkedIn Share Image Path: /api/share-card/[slug]
-    // This API endpoint should generate an image with brand data overlaid
-    const shareImageUrl = `https://useharbor.io/api/share-card/${slug}`
-    const shareUrl = `https://useharbor.io/brands/${slug}`
-    const text = `${brand?.brand_name} ranks in the ${getPercentileMessage(brand?.rank_global || 0).toLowerCase()} for AI visibility.\n\nRank: #${brand?.rank_global}\nScore: ${brand?.visibility_score.toFixed(1)}%\n\nManaging our AI presence with Harbor.`
-    
-    // LinkedIn requires the og:image meta tag to be set on the URL being shared
-    // So we actually need to share the brand profile page, not pass image directly
-    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
-    window.open(linkedinUrl, '_blank')
+  const calculateProfileCompleteness = () => {
+    let score = 0
+    if (description && description.length > 100) score += 25
+    if (products.length >= 3) score += 25
+    if (faqs.length >= 3) score += 25
+    if (companyInfo.founded_year && companyInfo.hq_location && companyInfo.employee_band) score += 25
+    return score
   }
 
   if (loading) {
@@ -190,449 +250,334 @@ export default function ProfileManagerPage() {
     )
   }
 
-  const profileStrength = calculateProfileStrength()
+  const profileCompleteness = calculateProfileCompleteness()
 
   return (
     <div className="min-h-screen bg-[#0A0F1E]">
       {/* Minimal Header */}
       <header className="border-b border-white/5">
-        <div className="max-w-5xl mx-auto px-8 py-5 flex items-center justify-between">
-          <Link href="/" className="text-white/70 font-mono text-sm hover:text-white transition-colors">
-            ← Harbor
-          </Link>
+        <div className="max-w-6xl mx-auto px-8 py-5 flex items-center justify-between">
           <Link 
             href={`/brands/${slug}`}
-            className="text-white/50 font-mono text-sm hover:text-white/70 transition-colors flex items-center gap-2"
+            className="text-white/70 font-mono text-sm hover:text-white transition-colors flex items-center gap-2"
           >
-            View public profile
-            <ExternalLink className="w-3 h-3" />
+            <ArrowLeft className="w-4 h-4" />
+            Back to public profile
+          </Link>
+          <Link 
+            href="/"
+            className="text-white/50 font-mono text-sm hover:text-white/70 transition-colors"
+          >
+            Harbor
           </Link>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-8 py-20">
+      <main className="max-w-6xl mx-auto px-8 py-12">
         
-        {/* BRAND HEADER - Logo + Name */}
-        <div className="mb-12 flex items-center gap-6">
-          <div className="w-20 h-20 rounded-lg overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
-            <Image
-              src={brand.logo_url}
-              alt={brand.brand_name}
-              width={80}
-              height={80}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none'
-              }}
-            />
-          </div>
-          <div>
-            <h1 className="text-white text-3xl font-normal mb-1">{brand.brand_name}</h1>
-            <p className="text-white/50 font-mono text-sm">{brand.domain}</p>
-          </div>
+        {/* Page Title */}
+        <div className="mb-8">
+          <h1 className="text-white text-3xl font-light mb-3">
+            Manage Your AI Visibility Profile
+          </h1>
+          <p className="text-white/50 font-mono text-base">
+            Control how AI models understand and represent your brand
+          </p>
         </div>
 
-        {/* VERIFIED STATUS - Permanent Indicator */}
-        <div className="mb-16 p-5 bg-white/[0.02] border border-white/5 rounded">
-          <div className="flex items-start gap-4">
-            <div className="w-2 h-2 rounded-full bg-green-500/60 flex-shrink-0 mt-2" />
-            <div>
-              <div className="text-white text-base font-mono mb-1">Profile: Verified</div>
-              <div className="text-white/50 font-mono text-sm leading-relaxed">
-                Updates you make here will influence how AI models understand your brand.
-              </div>
-            </div>
-          </div>
+        {/* Profile Completeness */}
+        <div className="mb-8">
+          <ProfileCompletenessBar completeness={profileCompleteness} />
         </div>
 
-        {/* HERO METRICS - Identity Summary */}
-        <div className="mb-20 p-8 bg-white/[0.02] border border-white/5 rounded">
-          <div className="flex items-center divide-x divide-white/5">
-            <div className="flex-1 pr-8">
-              <div className="text-white/50 font-mono text-xs uppercase tracking-wider mb-3">
-                AI Visibility Score
-              </div>
-              <div className="text-white text-4xl font-mono tabular-nums">
-                {brand.visibility_score.toFixed(1)}%
-              </div>
-            </div>
-            <div className="flex-1 px-8">
-              <div className="text-white/50 font-mono text-xs uppercase tracking-wider mb-3">
-                Global Rank
-              </div>
-              <div className="text-white text-4xl font-mono tabular-nums">
-                #{brand.rank_global}
-              </div>
-            </div>
-            <div className="flex-1 pl-8">
-              <div className="text-white/50 font-mono text-xs uppercase tracking-wider mb-3">
-                Industry
-              </div>
-              <div className="text-white text-xl font-mono mt-2">
-                {brand.industry}
-              </div>
-            </div>
-          </div>
+        {/* Profile Summary Card */}
+        <div className="mb-12">
+          <ProfileSummaryCard 
+            brand={brand}
+            onScanClick={handleScanClick}
+            scanInProgress={scanInProgress}
+          />
         </div>
 
-        {/* PROFILE STRENGTH - Muted Progress */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-white/60 font-mono text-sm uppercase tracking-wider">
-              AI Profile Strength
-            </div>
-            <div className="text-white/50 font-mono text-sm tabular-nums">
-              {profileStrength}%
-            </div>
-          </div>
-          <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-[#5B7C99] transition-all duration-500"
-              style={{ width: `${profileStrength}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-white/5 mb-16" />
-
-        {/* AI PROFILE SECTION */}
-        <div className="mb-20">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <h2 className="text-white text-2xl font-normal mb-2">AI Profile</h2>
-              <p className="text-white/50 font-mono text-sm">
-                How AI should understand your brand
-              </p>
-            </div>
-            {!editMode ? (
+        {/* Edit Mode Toggle */}
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-white text-xl font-light">Profile Information</h2>
+          {!editMode ? (
+            <button
+              onClick={() => setEditMode(true)}
+              className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 hover:text-white transition-colors rounded"
+            >
+              <Edit className="w-4 h-4" />
+              Edit Profile
+            </button>
+          ) : (
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => setEditMode(true)}
-                className="text-white/60 hover:text-white font-mono text-sm flex items-center gap-2 transition-colors"
+                onClick={() => setEditMode(false)}
+                className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 transition-colors rounded"
               >
-                <Edit className="w-4 h-4" />
-                Edit
+                <X className="w-4 h-4" />
+                Cancel
               </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-2 px-4 py-2 bg-[#2DD4BF] text-[#0A0F1E] font-mono text-sm hover:bg-[#14B8A6] transition-colors rounded disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Editable Sections */}
+        <div className="space-y-8 mb-12">
+          
+          {/* Brand Description */}
+          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-mono text-sm">Brand Description</h3>
+              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+            </div>
+            <p className="text-white/40 font-mono text-xs mb-4">
+              Imagine you're explaining your brand to a smart intern
+            </p>
+            {editMode ? (
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="A clear 2-3 sentence description of what you do..."
+                className="w-full p-4 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                rows={4}
+              />
             ) : (
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setEditMode(false)}
-                  className="text-white/50 hover:text-white/70 font-mono text-sm transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="text-white hover:text-white/80 font-mono text-sm flex items-center gap-2 transition-colors disabled:opacity-50"
-                >
-                  <Save className="w-4 h-4" />
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
+              <div className="text-white/70 font-mono text-sm leading-relaxed">
+                {description || <span className="text-white/30">No description yet</span>}
               </div>
             )}
+            <div className="mt-2 text-white/30 font-mono text-xs">
+              {description.length} / 250 characters {description.length >= 100 && '✓'}
+            </div>
           </div>
 
-          {/* Form Fields */}
-          <div className="space-y-16">
-            
-            {/* Description */}
-            <div>
-              <div className="mb-4">
-                <label className="text-white/70 font-mono text-sm uppercase tracking-wider block mb-1">
-                  Description
-                </label>
-                <p className="text-white/40 font-mono text-sm">
-                  How AI introduces your company in answers.
-                </p>
-              </div>
-              {editMode ? (
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={4}
-                  className="w-full bg-transparent border border-white/10 rounded p-4 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors resize-none"
-                  placeholder="Describe your brand in simple, factual language..."
-                />
-              ) : (
-                <div className="text-white/80 font-mono text-base leading-relaxed">
-                  {description || <span className="text-white/30">No description yet</span>}
-                </div>
-              )}
+          {/* Products & Services */}
+          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-mono text-sm">Products & Services</h3>
+              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
             </div>
-
-            {/* Products */}
-            <div>
-              <div className="mb-4 flex items-end justify-between">
-                <div>
-                  <label className="text-white/70 font-mono text-sm uppercase tracking-wider block mb-1">
-                    Products
-                  </label>
-                  <p className="text-white/40 font-mono text-sm">
-                    Helps AI models map what you actually offer.
-                  </p>
-                </div>
-                {editMode && (
-                  <button
-                    onClick={addProduct}
-                    className="text-white/50 hover:text-white font-mono text-sm flex items-center gap-1 transition-colors"
-                  >
-                    <Plus className="w-3 h-3" />
-                    Add
-                  </button>
-                )}
-              </div>
-              
-              {editMode ? (
-                <div className="space-y-2">
-                  {products.map((product, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={product.name}
-                        onChange={(e) => updateProduct(index, 'name', e.target.value)}
-                        placeholder="Product name"
-                        className="flex-1 bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors"
-                      />
-                      <button
-                        onClick={() => removeProduct(index)}
-                        className="text-white/30 hover:text-white/50 transition-colors p-2"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                  {products.length === 0 && (
-                    <div className="text-white/30 font-mono text-base">No products added yet</div>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {products.length > 0 ? (
-                    products.map((product, index) => (
-                      <div key={index} className="text-white/80 font-mono text-base">
-                        • {product.name}
+            <p className="text-white/40 font-mono text-xs mb-4">
+              List your core offerings with clear descriptions
+            </p>
+            <div className="space-y-4">
+              {products.map((product, idx) => (
+                <div key={idx} className="p-4 bg-white/[0.02] border border-white/5 rounded">
+                  {editMode ? (
+                    <div className="space-y-3">
+                      <div className="flex gap-3">
+                        <input
+                          type="text"
+                          value={product.name}
+                          onChange={(e) => updateProduct(idx, 'name', e.target.value)}
+                          placeholder="Product/service name"
+                          className="flex-1 p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                        />
+                        <button
+                          onClick={() => removeProduct(idx)}
+                          className="px-3 py-2 border border-white/10 text-white/50 hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
-                    ))
+                      <textarea
+                        value={product.description}
+                        onChange={(e) => updateProduct(idx, 'description', e.target.value)}
+                        placeholder="Brief description..."
+                        className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                        rows={2}
+                      />
+                    </div>
                   ) : (
-                    <div className="text-white/30 font-mono text-base">No products yet</div>
+                    <div>
+                      <div className="text-white/90 font-mono text-sm mb-1">{product.name}</div>
+                      <div className="text-white/50 font-mono text-xs">{product.description}</div>
+                    </div>
                   )}
                 </div>
+              ))}
+              {editMode && (
+                <button
+                  onClick={addProduct}
+                  className="w-full p-3 border border-dashed border-white/10 text-white/40 hover:text-white/60 hover:border-white/20 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Product/Service
+                </button>
               )}
             </div>
+          </div>
 
-            {/* FAQs */}
-            <div>
-              <div className="mb-4 flex items-end justify-between">
-                <div>
-                  <label className="text-white/70 font-mono text-sm uppercase tracking-wider block mb-1">
-                    FAQs
-                  </label>
-                  <p className="text-white/40 font-mono text-sm">
-                    Reduces AI hallucinations and confusion.
-                  </p>
-                </div>
-                {editMode && (
-                  <button
-                    onClick={addFaq}
-                    className="text-white/50 hover:text-white font-mono text-sm flex items-center gap-1 transition-colors"
-                  >
-                    <Plus className="w-3 h-3" />
-                    Add
-                  </button>
-                )}
-              </div>
-              
-              {editMode ? (
-                <div className="space-y-4">
-                  {faqs.map((faq, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex gap-2">
+          {/* FAQs */}
+          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-mono text-sm">Frequently Asked Questions</h3>
+              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+            </div>
+            <p className="text-white/40 font-mono text-xs mb-4">
+              Answer common questions AI models ask about brands like yours
+            </p>
+            <div className="space-y-4">
+              {faqs.map((faq, idx) => (
+                <div key={idx} className="p-4 bg-white/[0.02] border border-white/5 rounded">
+                  {editMode ? (
+                    <div className="space-y-3">
+                      <div className="flex gap-3">
                         <input
                           type="text"
                           value={faq.question}
-                          onChange={(e) => updateFaq(index, 'question', e.target.value)}
+                          onChange={(e) => updateFaq(idx, 'question', e.target.value)}
                           placeholder="Question"
-                          className="flex-1 bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors"
+                          className="flex-1 p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
                         />
                         <button
-                          onClick={() => removeFaq(index)}
-                          className="text-white/30 hover:text-white/50 transition-colors p-2"
+                          onClick={() => removeFaq(idx)}
+                          className="px-3 py-2 border border-white/10 text-white/50 hover:text-red-400 hover:border-red-400/50 transition-colors rounded"
                         >
                           <X className="w-4 h-4" />
                         </button>
                       </div>
                       <textarea
                         value={faq.answer}
-                        onChange={(e) => updateFaq(index, 'answer', e.target.value)}
-                        rows={2}
+                        onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
                         placeholder="Answer"
-                        className="w-full bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors resize-none"
+                        className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF] resize-none"
+                        rows={2}
                       />
                     </div>
-                  ))}
-                  {faqs.length === 0 && (
-                    <div className="text-white/30 font-mono text-base">No FAQs added yet</div>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {faqs.length > 0 ? (
-                    faqs.map((faq, index) => (
-                      <div key={index} className="border-l border-white/10 pl-4">
-                        <div className="text-white/80 font-mono text-base mb-1">{faq.question}</div>
-                        <div className="text-white/50 font-mono text-sm">{faq.answer}</div>
-                      </div>
-                    ))
                   ) : (
-                    <div className="text-white/30 font-mono text-base">No FAQs yet</div>
+                    <div>
+                      <div className="text-white/90 font-mono text-sm mb-1">{faq.question}</div>
+                      <div className="text-white/50 font-mono text-xs">{faq.answer}</div>
+                    </div>
                   )}
                 </div>
+              ))}
+              {editMode && (
+                <button
+                  onClick={addFaq}
+                  className="w-full p-3 border border-dashed border-white/10 text-white/40 hover:text-white/60 hover:border-white/20 font-mono text-sm transition-colors rounded flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add FAQ
+                </button>
               )}
             </div>
+          </div>
 
-            {/* Company Info */}
-            <div>
-              <div className="mb-4">
-                <label className="text-white/70 font-mono text-sm uppercase tracking-wider block mb-1">
-                  Company Info
-                </label>
-                <p className="text-white/40 font-mono text-sm">
-                  Provides grounding data: founding year, HQ, team size.
-                </p>
+          {/* Company Information */}
+          <div className="p-8 bg-white/[0.02] border border-white/5 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-mono text-sm">Company Information</h3>
+              <span className="text-[#2DD4BF] font-mono text-xs">+25 pts</span>
+            </div>
+            <p className="text-white/40 font-mono text-xs mb-4">
+              Help AI models understand your company's scale and presence
+            </p>
+            {editMode ? (
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="text-white/60 font-mono text-xs mb-2 block">Founded</label>
+                  <input
+                    type="text"
+                    value={companyInfo.founded_year}
+                    onChange={(e) => setCompanyInfo({ ...companyInfo, founded_year: e.target.value })}
+                    placeholder="2020"
+                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                  />
+                </div>
+                <div>
+                  <label className="text-white/60 font-mono text-xs mb-2 block">Headquarters</label>
+                  <input
+                    type="text"
+                    value={companyInfo.hq_location}
+                    onChange={(e) => setCompanyInfo({ ...companyInfo, hq_location: e.target.value })}
+                    placeholder="San Francisco, CA"
+                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                  />
+                </div>
+                <div>
+                  <label className="text-white/60 font-mono text-xs mb-2 block">Employees</label>
+                  <select
+                    value={companyInfo.employee_band}
+                    onChange={(e) => setCompanyInfo({ ...companyInfo, employee_band: e.target.value })}
+                    className="w-full p-2 bg-white/5 border border-white/10 rounded text-white/90 font-mono text-sm focus:outline-none focus:border-[#2DD4BF]"
+                  >
+                    <option value="">Select...</option>
+                    <option value="1-10">1-10</option>
+                    <option value="11-50">11-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="201-1000">201-1000</option>
+                    <option value="1000+">1000+</option>
+                  </select>
+                </div>
               </div>
-              {editMode ? (
-                <div className="grid grid-cols-3 gap-3">
-                  <input
-                    type="text"
-                    value={companyInfo.founded}
-                    onChange={(e) => setCompanyInfo({...companyInfo, founded: e.target.value})}
-                    placeholder="Founded"
-                    className="bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors"
-                  />
-                  <input
-                    type="text"
-                    value={companyInfo.headquarters}
-                    onChange={(e) => setCompanyInfo({...companyInfo, headquarters: e.target.value})}
-                    placeholder="HQ"
-                    className="bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors"
-                  />
-                  <input
-                    type="text"
-                    value={companyInfo.employees}
-                    onChange={(e) => setCompanyInfo({...companyInfo, employees: e.target.value})}
-                    placeholder="Employees"
-                    className="bg-transparent border border-white/10 rounded px-4 py-3 text-white font-mono text-base focus:border-white/20 focus:outline-none transition-colors"
-                  />
-                </div>
-              ) : (
-                <div className="flex gap-12">
-                  {companyInfo.founded && (
-                    <div>
-                      <div className="text-white/50 font-mono text-sm mb-1">Founded</div>
-                      <div className="text-white/80 font-mono text-base">{companyInfo.founded}</div>
-                    </div>
-                  )}
-                  {companyInfo.headquarters && (
-                    <div>
-                      <div className="text-white/50 font-mono text-sm mb-1">Headquarters</div>
-                      <div className="text-white/80 font-mono text-base">{companyInfo.headquarters}</div>
-                    </div>
-                  )}
-                  {companyInfo.employees && (
-                    <div>
-                      <div className="text-white/50 font-mono text-sm mb-1">Employees</div>
-                      <div className="text-white/80 font-mono text-base">{companyInfo.employees}</div>
-                    </div>
-                  )}
-                  {!companyInfo.founded && !companyInfo.headquarters && !companyInfo.employees && (
-                    <div className="text-white/30 font-mono text-base">No company info yet</div>
-                  )}
-                </div>
-              )}
-            </div>
-
+            ) : (
+              <div className="flex gap-12">
+                {companyInfo.founded_year && (
+                  <div>
+                    <div className="text-white/50 font-mono text-sm mb-1">Founded</div>
+                    <div className="text-white/80 font-mono text-base">{companyInfo.founded_year}</div>
+                  </div>
+                )}
+                {companyInfo.hq_location && (
+                  <div>
+                    <div className="text-white/50 font-mono text-sm mb-1">Headquarters</div>
+                    <div className="text-white/80 font-mono text-base">{companyInfo.hq_location}</div>
+                  </div>
+                )}
+                {companyInfo.employee_band && (
+                  <div>
+                    <div className="text-white/50 font-mono text-sm mb-1">Employees</div>
+                    <div className="text-white/80 font-mono text-base">{companyInfo.employee_band}</div>
+                  </div>
+                )}
+                {!companyInfo.founded_year && !companyInfo.hq_location && !companyInfo.employee_band && (
+                  <div className="text-white/30 font-mono text-base">No company info yet</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-white/5 mb-16" />
-
-        {/* MODEL SNAPSHOTS - Full Color Logos */}
-        <div className="mb-20">
-          <div className="mb-8">
-            <h3 className="text-white text-xl font-normal mb-2">How AI Describes You Today</h3>
-            <p className="text-white/40 font-mono text-sm">Based on your latest profile updates.</p>
-          </div>
-          
-          <div className="space-y-px bg-white/5">
-            <div className="bg-[#0A0F1E] p-6 flex items-start gap-5">
-              <div className="w-10 h-10 flex-shrink-0">
-                <Image
-                  src="/models/chatgpt-logo.png"
-                  alt="ChatGPT"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="text-white/50 font-mono text-sm mb-3">ChatGPT</div>
-                <p className="text-white/70 font-mono text-base leading-relaxed">
-                  "{brand.brand_name} is a leading {brand.industry} company known for innovation and quality..."
-                </p>
-              </div>
-            </div>
-            <div className="bg-[#0A0F1E] p-6 flex items-start gap-5">
-              <div className="w-10 h-10 flex-shrink-0">
-                <Image
-                  src="/models/claude-logo.png"
-                  alt="Claude"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="text-white/50 font-mono text-sm mb-3">Claude</div>
-                <p className="text-white/70 font-mono text-base leading-relaxed">
-                  "{brand.brand_name} provides {brand.industry} solutions with a focus on customer satisfaction..."
-                </p>
-              </div>
-            </div>
-            <div className="bg-[#0A0F1E] p-6 flex items-start gap-5">
-              <div className="w-10 h-10 flex-shrink-0">
-                <Image
-                  src="/models/perplexity-logo.png"
-                  alt="Perplexity"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="flex-1">
-                <div className="text-white/50 font-mono text-sm mb-3">Perplexity</div>
-                <p className="text-white/70 font-mono text-base leading-relaxed">
-                  "{brand.brand_name} offers comprehensive {brand.industry} services to businesses worldwide..."
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Visibility Opportunities */}
+        <div className="mb-12">
+          <VisibilityOpportunities 
+            opportunities={opportunities}
+            loading={loadingOpportunities}
+          />
         </div>
 
-        {/* SHARE CARD SECTION - With Theme Toggle and Live Preview */}
-        <div className="mb-20 p-8 bg-white/[0.02] border border-white/5 rounded">
+        {/* Version History */}
+        <div className="mb-12">
+          <VersionHistory 
+            history={history}
+            loading={loadingHistory}
+          />
+        </div>
+
+        {/* Share Card Section */}
+        <div className="mb-12 p-8 bg-white/[0.02] border border-white/5 rounded-lg">
           <div className="mb-8">
-            <h3 className="text-white text-xl font-normal mb-2">Share Your Profile</h3>
+            <h3 className="text-white text-xl font-light mb-2">Share Your Profile</h3>
             <p className="text-white/40 font-mono text-sm">
-              Show how your brand ranks across AI models.
+              Show how your brand ranks across AI models
             </p>
           </div>
 
-          {/* Theme Selector */}
           <div className="mb-6">
-            <div className="text-white/60 font-mono text-sm mb-3">Choose your share card theme</div>
+            <div className="text-white/60 font-mono text-sm mb-3">Choose theme</div>
             <div className="flex gap-3">
               <button
                 onClick={() => setShareCardTheme('light')}
@@ -643,7 +588,7 @@ export default function ProfileManagerPage() {
                 }`}
               >
                 <div className="text-white font-mono text-sm mb-1">Light</div>
-                <div className="text-white/40 font-mono text-xs">Recommended for LinkedIn</div>
+                <div className="text-white/40 font-mono text-xs">For LinkedIn</div>
               </button>
               <button
                 onClick={() => setShareCardTheme('dark')}
@@ -654,53 +599,48 @@ export default function ProfileManagerPage() {
                 }`}
               >
                 <div className="text-white font-mono text-sm mb-1">Dark</div>
-                <div className="text-white/40 font-mono text-xs">Recommended for Twitter</div>
+                <div className="text-white/40 font-mono text-xs">For Twitter</div>
               </button>
             </div>
           </div>
           
-          {/* Live Preview - Shows Actual Generated Image */}
-          <div className="mb-6 rounded-lg overflow-hidden border border-white/10 bg-gray-100">
+          <div className="mb-6 rounded-lg overflow-hidden border border-white/10">
             <img 
               src={`/api/share-card/${slug}?theme=${shareCardTheme}`}
-              alt={`${brand.brand_name} share card preview`}
+              alt={`${brand.brand_name} share card`}
               className="w-full h-auto"
-              key={shareCardTheme}
-              onError={(e) => {
-                console.error('Failed to load share card preview')
-              }}
             />
           </div>
 
-          {/* Share Buttons */}
           <div className="flex gap-3">
             <button
-              onClick={shareToLinkedIn}
-              className="flex-1 text-center py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 hover:text-white transition-colors rounded"
+              onClick={() => {
+                window.open(
+                  `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://useharbor.io/brands/${slug}`)}`,
+                  '_blank'
+                )
+              }}
+              className="flex-1 py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 rounded transition-colors"
             >
               Share to LinkedIn
             </button>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(`https://useharbor.io/brands/${slug}`)
-                alert('Link copied')
+                alert('Link copied!')
               }}
-              className="px-6 py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 hover:text-white transition-colors rounded"
+              className="px-6 py-3 border border-white/10 text-white/70 font-mono text-sm hover:bg-white/5 rounded transition-colors"
             >
               Copy Link
             </button>
           </div>
-
-          <p className="text-white/30 font-mono text-xs mt-4">
-            Preview updates in real-time. LinkedIn will display this image when you share.
-          </p>
         </div>
 
-        {/* UPGRADE CTA - Clear Purpose */}
-        <div className="p-8 bg-white/[0.03] border border-white/10 rounded">
+        {/* Upgrade CTA */}
+        <div className="p-8 bg-white/[0.03] border border-white/10 rounded-lg">
           <div className="flex items-start justify-between gap-8">
             <div className="flex-1">
-              <h3 className="text-white text-xl font-normal mb-3">
+              <h3 className="text-white text-xl font-light mb-3">
                 Get the Full Intelligence Dashboard
               </h3>
               <p className="text-white/60 font-mono text-sm leading-relaxed mb-6">
