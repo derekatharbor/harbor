@@ -283,8 +283,6 @@ export default function ManageBrandPage({
                 </div>
               )}
             </div>
-              Provide a clear, concise description of what your brand does. This helps AI models understand your business.
-            </p>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
