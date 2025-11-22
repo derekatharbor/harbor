@@ -255,17 +255,6 @@ export default function ProfileManagerPage() {
 
   return (
     <div className="min-h-screen bg-[#0c162b] relative overflow-hidden">
-      {/* Wireframe Background - Behind header only */}
-      <div 
-        className="absolute inset-x-0 top-0 h-[600px] opacity-[0.3] pointer-events-none"
-        style={{
-          backgroundImage: "url('/images/wireframe-wave.png')",
-          backgroundPosition: 'center top',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
-        }}
-      />
-      
       {/* Content */}
       <div className="relative z-10">
       
