@@ -43,12 +43,6 @@ module.exports = {
         card: '0px 4px 16px rgba(0,0,0,0.25)',
         'teal-glow': '0 4px 10px rgba(0,198,183,0.08)',
       },
-      // ADD THIS - Enable cursor utilities
-      cursor: {
-        pointer: 'pointer',
-        default: 'default',
-        'not-allowed': 'not-allowed',
-      },
     },
   },
   plugins: [],

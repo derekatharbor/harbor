@@ -486,7 +486,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleSendCode}
                   disabled={claimLoading || !email}
-                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50"
                 >
                   {claimLoading ? 'Sending...' : 'Send verification code'}
                 </button>
@@ -524,7 +524,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleVerifyCode}
                   disabled={claimLoading || code.length !== 6}
-                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed mb-3"
+                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 mb-3"
                 >
                   {claimLoading ? 'Verifying...' : 'Verify'}
                 </button>
