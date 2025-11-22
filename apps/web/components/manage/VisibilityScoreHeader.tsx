@@ -63,10 +63,10 @@ export default function VisibilityScoreHeader({
 
   // Get messaging based on score
   const getMessage = () => {
-    if (!score) return 'AI doesn't know your brand yet — run your first scan'
+    if (!score) return 'AI doesn\'t know your brand yet - run your first scan'
     if (score >= 85) return 'AI has strong clarity on your brand'
-    if (score >= 70) return 'Visibility improving — small updates unlock major gains'
-    if (score >= 50) return 'You're partially understood — filling in the gaps boosts accuracy'
+    if (score >= 70) return 'Visibility improving - small updates unlock major gains'
+    if (score >= 50) return 'You\'re partially understood - filling in the gaps boosts accuracy'
     return 'AI is unsure about parts of your brand'
   }
 
@@ -214,7 +214,7 @@ export default function VisibilityScoreHeader({
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#58E0C0]/10 border border-[#58E0C0]/20">
               <Zap className="w-4 h-4 text-[#58E0C0]" />
               <span className="text-[#58E0C0] text-sm font-medium">
-                Profile complete — re-scan to see your updated score
+                Profile complete - re-scan to see your updated score
               </span>
             </div>
           )}
