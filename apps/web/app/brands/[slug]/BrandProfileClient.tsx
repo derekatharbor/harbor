@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react'
 import { X, Check, AlertCircle, TrendingUp, TrendingDown, Shield, Lock, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import CompleteSignupModal from '@/components/auth/CompleteSignupModal'
 
 interface Brand {
   id: string
@@ -25,11 +27,14 @@ interface Props {
 }
 
 export default function BrandProfileClient({ brand: initialBrand }: Props) {
+  const router = useRouter()
   const [brand, setBrand] = useState<Brand>(initialBrand)
   const [loading, setLoading] = useState(initialBrand.brand_name === 'Loading...')
   const [showClaimModal, setShowClaimModal] = useState(false)
+  const [showSignupModal, setShowSignupModal] = useState(false)
   const [claimStep, setClaimStep] = useState<'email' | 'code'>('email')
   const [email, setEmail] = useState('')
+  const [claimedEmail, setClaimedEmail] = useState('')
   const [code, setCode] = useState('')
   const [claimLoading, setClaimLoading] = useState(false)
   const [error, setError] = useState('')
@@ -105,7 +110,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       // Handle "already claimed by this email" as success
       if (!res.ok && data.error?.includes('already claimed by this email')) {
         // Profile already claimed by this user - redirect to manage
-        window.location.href = `/brands/${brand.slug}/manage`
+        router.push(`/brands/${brand.slug}/manage`)
         return
       }
 
@@ -113,8 +118,16 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
         throw new Error(data.error || 'Invalid or expired code')
       }
 
-      // First-time claim success - redirect to manage
-      window.location.href = `/brands/${brand.slug}/manage`
+      // Check if user needs to complete signup
+      if (data.needsSignup) {
+        // Show signup modal
+        setClaimedEmail(data.email)
+        setShowSignupModal(true)
+        setShowClaimModal(false)
+      } else {
+        // User already has auth account - redirect to manage
+        router.push(`/brands/${brand.slug}/manage`)
+      }
     } catch (err: any) {
       setError(err.message)
       setClaimLoading(false)
@@ -577,6 +590,17 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         </div>
       )}
+
+      {/* Complete Signup Modal */}
+      <CompleteSignupModal
+        isOpen={showSignupModal}
+        email={claimedEmail}
+        brandSlug={brand.slug}
+        onSuccess={() => {
+          router.push(`/brands/${brand.slug}/manage`)
+        }}
+        onClose={() => setShowSignupModal(false)}
+      />
     </div>
   )
 }

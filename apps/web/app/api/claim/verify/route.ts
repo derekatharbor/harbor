@@ -189,15 +189,39 @@ export async function POST(request: Request) {
     console.log(`   User ID: ${user.id}`)
 
     // ========================================================================
-    // STEP 8: Return success
+    // STEP 8: Check if user has Supabase Auth account
+    // ========================================================================
+    
+    let needsSignup = false
+    
+    if (!user.supabase_uid) {
+      // User doesn't have a Supabase Auth account yet - they need to complete signup
+      needsSignup = true
+      console.log('⚠️  User needs to complete signup')
+    } else {
+      // Check if the auth account still exists
+      const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(user.supabase_uid)
+      
+      if (authError || !authUser) {
+        // Auth account doesn't exist, user needs to create one
+        needsSignup = true
+        console.log('⚠️  Auth account not found, user needs to complete signup')
+      }
+    }
+
+    // ========================================================================
+    // STEP 9: Return success with signup status
     // ========================================================================
     
     return NextResponse.json({
       success: true,
+      needsSignup,
       userId: user.id,
       email: user.email,
       brandSlug: brand.slug,
-      message: 'Profile claimed successfully!'
+      message: needsSignup 
+        ? 'Verification successful! Please create your account.' 
+        : 'Profile claimed successfully!'
     })
 
   } catch (error: any) {
