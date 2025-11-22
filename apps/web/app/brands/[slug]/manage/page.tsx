@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Shield
 } from 'lucide-react'
+import VisibilityScoreCard from '@/components/manage/VisibilityScoreCard'
 
 interface Brand {
   id: string
@@ -25,6 +26,10 @@ interface Brand {
   domain: string
   logo_url: string
   visibility_score: number
+  rank_global: number
+  rank_in_industry: number
+  industry: string
+  last_scan_at: string
   claimed: boolean
   claimed_at: string
   claimed_by_email: string
@@ -213,7 +218,7 @@ export default function ManageBrandPage({
       </nav>
 
       {/* Main Content */}
-      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
         
         {/* Header */}
         <div className="mb-8">
@@ -248,29 +253,14 @@ export default function ManageBrandPage({
           </p>
         </div>
 
-        {/* Status Message */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg border flex items-start gap-3 ${
-            message.type === 'success' 
-              ? 'bg-green-400/10 border-green-400/20' 
-              : 'bg-red-400/10 border-red-400/20'
-          }`}>
-            {message.type === 'success' ? (
-              <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-            ) : (
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-            )}
-            <p className={message.type === 'success' ? 'text-green-400' : 'text-red-400'}>
-              {message.text}
-            </p>
-          </div>
-        )}
-
-        {/* Edit Form */}
-        <div className="space-y-6">
+        {/* 2-Column Grid: Form + Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Brand Description */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+          {/* Left Column: Form Content (60-65% width on desktop) */}
+          <div className="lg:col-span-2 space-y-6">
+          
+            {/* Brand Description */}
+            <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
             <h2 className="text-xl font-bold text-white mb-4">Brand Description</h2>
             <p className="text-white/60 text-sm mb-4">
               Provide a clear, concise description of what your brand does. This helps AI models understand your business.
@@ -520,6 +510,20 @@ export default function ManageBrandPage({
                 </button>
               )}
             </div>
+          </div>
+          
+          </div>
+          
+          {/* Right Column: Visibility Score Card (35-40% width on desktop, sticky) */}
+          <div className="lg:col-span-1">
+            <VisibilityScoreCard
+              score={brand?.visibility_score ?? null}
+              rankGlobal={brand?.rank_global ?? null}
+              rankInIndustry={brand?.rank_in_industry ?? null}
+              industry={brand?.industry ?? null}
+              lastScanAt={brand?.last_scan_at ?? null}
+              slug={params.slug}
+            />
           </div>
 
         </div>
