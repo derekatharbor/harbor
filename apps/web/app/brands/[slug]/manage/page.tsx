@@ -250,6 +250,7 @@ export default function ProfileManagerPage() {
     )
   }
 
+  // Calculate completeness for rendering
   const profileCompleteness = calculateProfileCompleteness()
 
   return (
