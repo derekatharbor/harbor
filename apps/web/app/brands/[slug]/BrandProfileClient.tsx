@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import CompleteSignupModal from '@/components/auth/CompleteSignupModal'
+import LoginModal from '@/components/auth/LoginModal'
 
 interface Brand {
   id: string
@@ -31,6 +32,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
   const [brand, setBrand] = useState<Brand>(initialBrand)
   const [loading, setLoading] = useState(initialBrand.brand_name === 'Loading...')
   const [showClaimModal, setShowClaimModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const [showSignupModal, setShowSignupModal] = useState(false)
   const [claimStep, setClaimStep] = useState<'email' | 'code'>('email')
   const [email, setEmail] = useState('')
@@ -382,7 +384,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                   This profile is verified and managed by {brand.brand_name}. Are you from this company?
                 </p>
                 <button
-                  onClick={() => setShowClaimModal(true)}
+                  onClick={() => setShowLoginModal(true)}
                   className="px-6 py-3 rounded-lg bg-[#2979FF] text-white font-medium hover:bg-[#2979FF]/90 transition-all"
                 >
                   Sign in to manage
@@ -590,6 +592,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         </div>
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        brandSlug={brand.slug}
+        onClose={() => setShowLoginModal(false)}
+      />
 
       {/* Complete Signup Modal */}
       <CompleteSignupModal
