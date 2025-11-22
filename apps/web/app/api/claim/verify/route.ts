@@ -170,13 +170,13 @@ export async function POST(request: Request) {
       .update({
         claimed: true,
         claimed_at: new Date().toISOString(),
-        claimed_by_email: email
+        claimed_by_user_id: user.id  // Use user_id, not email
       })
       .eq('id', brandId)
 
     if (updateError) {
       console.error('Failed to update profile:', updateError)
-      // Don't fail the request - the profile is already linked
+      // Still return success since the link in verified_profiles is what matters
     }
 
     // ========================================================================
