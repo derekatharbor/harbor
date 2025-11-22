@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: brands, error } = await supabase
     .from('ai_profiles')
-    .select('slug, updated_at, created_at')
+    .select('slug, created_at')
     .order('rank_global', { ascending: true })
 
   if (error) {
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic brand + feed URLs
   const dynamicUrls: MetadataRoute.Sitemap = brands.flatMap((brand) => {
-    const lastMod = brand.updated_at || brand.created_at || new Date().toISOString()
+    const lastMod = brand.created_at || new Date().toISOString()
 
     return [
       // Brand profile page
