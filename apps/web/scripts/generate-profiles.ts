@@ -354,8 +354,10 @@ export async function generateAIProfile(
     console.log(`     Structure: ${profileData.visibility_scoring.structure_for_ai_0_20}/20`);
     console.log(`     Breadth: ${profileData.visibility_scoring.breadth_of_coverage_0_10}/10`);
     
-    // Step 5: Logo URL (Clearbit)
-    const logoUrl = `https://logo.clearbit.com/${domain}`;
+    // Step 5: Logo URL (Brandfetch)
+    const logoUrl = process.env.BRANDFETCH_API_KEY 
+      ? `https://img.logo.dev/${domain}?token=${process.env.BRANDFETCH_API_KEY}`
+      : `https://img.logo.dev/${domain}`; // Fallback without token (lower rate limit)
     
     // Step 6: Correct feed URL
     const feedUrl = `https://useharbor.io/brands/${slug}/harbor.json`;

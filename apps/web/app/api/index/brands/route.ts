@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export async function GET() {
   try {
@@ -16,14 +17,21 @@ export async function GET() {
     const { data: brands, error } = await supabase
       .from('public_index')
       .select('*')
+      .gt('visibility_score', 0)
       .order('rank_global', { ascending: true })
-      .limit(1000) // Return top 1000 for performance
+      .limit(1000)
 
     if (error) {
       throw error
     }
 
-    return NextResponse.json(brands)
+    console.log(`📊 Fetched ${brands?.length || 0} brands from public_index`)
+
+    return NextResponse.json(brands || [], {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      }
+    })
   } catch (error: any) {
     console.error('Error fetching brands:', error)
     return NextResponse.json(
