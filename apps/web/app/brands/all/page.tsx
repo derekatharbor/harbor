@@ -22,6 +22,8 @@ interface Brand {
 export default function AllBrandsPage() {
   const [brands, setBrands] = useState<Brand[]>([])
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>([])
+  const [displayedBrands, setDisplayedBrands] = useState<Brand[]>([])
+  const [displayCount, setDisplayCount] = useState(100)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedIndustry, setSelectedIndustry] = useState<string>('all')
@@ -74,6 +76,16 @@ export default function AllBrandsPage() {
 
     setFilteredBrands(filtered)
   }, [searchQuery, selectedIndustry, sortBy, brands])
+
+  // Update displayed brands when filter or displayCount changes
+  useEffect(() => {
+    setDisplayedBrands(filteredBrands.slice(0, displayCount))
+  }, [filteredBrands, displayCount])
+
+  // Reset display count when filters change
+  useEffect(() => {
+    setDisplayCount(100)
+  }, [searchQuery, selectedIndustry, sortBy])
 
   // Get unique industries
   const industries = ['all', ...Array.from(new Set(brands.map(b => b.industry)))]
@@ -138,7 +150,7 @@ export default function AllBrandsPage() {
         {/* Stats Bar */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-white/60 text-sm">
-            Showing {filteredBrands.length} of {brands.length} brands
+            Showing {displayedBrands.length} of {filteredBrands.length} brands
             {selectedIndustry !== 'all' && ` in ${selectedIndustry}`}
           </p>
           {searchQuery && (
@@ -153,7 +165,7 @@ export default function AllBrandsPage() {
 
         {/* Grid View */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredBrands.map((brand) => {
+          {displayedBrands.map((brand) => {
             const delta = brand.rank_global <= 10 ? 5.8 : -1.2
             const isPositive = delta > 0
 
@@ -218,6 +230,21 @@ export default function AllBrandsPage() {
             )
           })}
         </div>
+
+        {/* Load More Button */}
+        {displayedBrands.length < filteredBrands.length && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => setDisplayCount(prev => prev + 100)}
+              className="px-8 py-4 bg-cyan-500/20 text-cyan-400 rounded-xl border border-cyan-500/30 font-medium hover:bg-cyan-500/30 transition-all"
+            >
+              Load 100 More Brands
+              <span className="ml-2 text-white/60">
+                ({filteredBrands.length - displayedBrands.length} remaining)
+              </span>
+            </button>
+          </div>
+        )}
 
         {/* Empty State */}
         {filteredBrands.length === 0 && !loading && (

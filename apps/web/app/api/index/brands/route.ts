@@ -19,7 +19,6 @@ export async function GET() {
       .select('*')
       .gt('visibility_score', 0)
       .order('rank_global', { ascending: true })
-      .limit(1000)
 
     if (error) {
       throw error
