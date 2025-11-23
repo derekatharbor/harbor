@@ -18,6 +18,8 @@ import {
   Shield
 } from 'lucide-react'
 import VisibilityScoreHeader from '@/components/manage/VisibilityScoreHeader'
+import { RescanButton } from '@/components/RescanButton'
+import { ScoreDisplay } from '@/components/ScoreDisplay'
 
 interface Brand {
   id: string
@@ -26,6 +28,9 @@ interface Brand {
   domain: string
   logo_url: string
   visibility_score: number
+  previous_visibility_score?: number
+  score_change?: number
+  scan_count?: number
   rank_global: number
   rank_in_industry: number
   industry: string
@@ -263,6 +268,56 @@ export default function ManageBrandPage({
           <p className="text-white/60 text-sm md:text-base">
             Update your brand information. Scans reflect how AI models describe your brand.
           </p>
+        </div>
+
+        {/* Re-scan Section */}
+        <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8 mb-6">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            {/* Left: Score Display */}
+            <div>
+              <h2 className="text-xl font-bold text-white mb-4">Your AI Visibility Score</h2>
+              <ScoreDisplay 
+                score={brand.visibility_score}
+                previousScore={brand.previous_visibility_score}
+                scoreChange={brand.score_change}
+                size="lg"
+                showLabel={false}
+              />
+              {brand.last_scan_at && (
+                <p className="mt-4 text-sm text-white/50">
+                  Last scanned: {new Date(brand.last_scan_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                  })}
+                </p>
+              )}
+            </div>
+
+            {/* Right: Re-scan Button */}
+            <div className="flex flex-col justify-center">
+              <h3 className="text-lg font-semibold text-white mb-2">Update Your Score</h3>
+              <p className="text-white/60 text-sm mb-4">
+                Made improvements to your website? Re-scan to see your updated visibility score and track your progress.
+              </p>
+              <RescanButton 
+                slug={params.slug}
+                onSuccess={(newProfile) => {
+                  // Refresh the brand data
+                  setBrand(prev => prev ? {
+                    ...prev,
+                    visibility_score: newProfile.visibility_score,
+                    previous_visibility_score: newProfile.previous_visibility_score,
+                    score_change: newProfile.score_change,
+                    last_scan_at: newProfile.last_scan_at,
+                    scan_count: newProfile.scan_count
+                  } : null)
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Edit Form - Single Column */}
