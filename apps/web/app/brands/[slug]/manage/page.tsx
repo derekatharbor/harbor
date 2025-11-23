@@ -21,6 +21,15 @@ import FrostedNav from '@/components/landing/FrostedNav'
 import { RescanButton } from '@/components/RescanButton'
 import { ScoreDisplay } from '@/components/ScoreDisplay'
 import CompetitorModule from '@/components/manage/CompetitorModule'
+import { HarborScoreBreakdown } from '@/components/manage/HarborScoreBreakdown'
+import { ProfileCompletenessBar } from '@/components/manage/ProfileCompletenessBar'
+import { 
+  calculateWebsiteReadiness, 
+  calculateProfileCompleteness,
+  calculateHarborScore,
+  getImprovementSuggestions,
+  calculatePotentialImprovement
+} from '@/lib/scoring'
 
 interface Brand {
   id: string
@@ -54,6 +63,12 @@ export default function ManageBrandPage({
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [isEditing, setIsEditing] = useState(false) // New: track if user is editing
   const [competitorData, setCompetitorData] = useState<any>(null)
+  
+  // Calculated scores
+  const [websiteReadiness, setWebsiteReadiness] = useState(0)
+  const [profileCompleteness, setProfileCompleteness] = useState(0)
+  const [harborScore, setHarborScore] = useState(0)
+  const [suggestions, setSuggestions] = useState<string[]>([])
   
   // Editable fields
   const [description, setDescription] = useState('')
@@ -93,6 +108,24 @@ export default function ManageBrandPage({
       setOfferings(feedData.offerings || [])
       setFaqs(feedData.faqs || [])
       setCompanyInfo(feedData.company_info || {})
+      
+      // Calculate scores
+      const profileData = {
+        description: feedData.short_description || '',
+        offerings: feedData.offerings || [],
+        faqs: feedData.faqs || [],
+        companyInfo: feedData.company_info || {}
+      }
+      
+      const readiness = calculateWebsiteReadiness(profileData)
+      const completeness = calculateProfileCompleteness(profileData)
+      const harbor = calculateHarborScore(data.visibility_score || 0, readiness)
+      const improvementTips = getImprovementSuggestions(profileData)
+      
+      setWebsiteReadiness(readiness)
+      setProfileCompleteness(completeness)
+      setHarborScore(harbor)
+      setSuggestions(improvementTips)
       
       // Load competitor data
       if (data.id) {
@@ -150,6 +183,24 @@ export default function ManageBrandPage({
       // Success: lock editing and show notification
       setIsEditing(false)
       setMessage({ type: 'success', text: 'Changes saved successfully!' })
+      
+      // Recalculate scores with new data
+      const newProfileData = {
+        description,
+        offerings,
+        faqs,
+        companyInfo
+      }
+      
+      const newReadiness = calculateWebsiteReadiness(newProfileData)
+      const newCompleteness = calculateProfileCompleteness(newProfileData)
+      const newHarbor = calculateHarborScore(brand?.visibility_score || 0, newReadiness)
+      const newSuggestions = getImprovementSuggestions(newProfileData)
+      
+      setWebsiteReadiness(newReadiness)
+      setProfileCompleteness(newCompleteness)
+      setHarborScore(newHarbor)
+      setSuggestions(newSuggestions)
       
       // Auto-hide success message after 3 seconds
       setTimeout(() => setMessage(null), 3000)
@@ -260,55 +311,73 @@ export default function ManageBrandPage({
           </p>
         </div>
 
-        {/* Re-scan Section */}
-        <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8 mb-6">
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            {/* Left: Score Display */}
-            <div>
-              <h2 className="text-xl font-bold text-white mb-4">Your AI Visibility Score</h2>
-              <ScoreDisplay 
-                score={brand.visibility_score}
-                previousScore={brand.previous_visibility_score}
-                scoreChange={brand.score_change}
-                size="lg"
-                showLabel={false}
-              />
-              {brand.last_scan_at && (
-                <p className="mt-4 text-sm text-white/50">
-                  Last scanned: {new Date(brand.last_scan_at).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit'
-                  })}
-                </p>
-              )}
-            </div>
+        {/* Harbor Score + Rescan */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Left: Harbor Score Breakdown */}
+          <HarborScoreBreakdown
+            harborScore={harborScore}
+            visibilityScore={brand.visibility_score}
+            websiteReadiness={websiteReadiness}
+            previousHarborScore={brand.previous_harbor_score}
+            scoreChange={brand.harbor_score_change}
+          />
 
-            {/* Right: Re-scan Button */}
-            <div className="flex flex-col justify-center">
-              <h3 className="text-lg font-semibold text-white mb-2">Update Your Score</h3>
-              <p className="text-white/60 text-sm mb-4">
-                Made improvements to your website? Re-scan to see your updated visibility score and track your progress.
+          {/* Right: Rescan */}
+          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8 flex flex-col justify-center">
+            <h3 className="text-lg font-semibold text-white mb-2">Update Your Score</h3>
+            <p className="text-white/60 text-sm mb-4">
+              Made improvements to your website? Re-scan to see your updated Harbor Score.
+            </p>
+            <RescanButton 
+              slug={params.slug}
+              onSuccess={(newProfile) => {
+                // Refresh the brand data
+                setBrand(prev => prev ? {
+                  ...prev,
+                  visibility_score: newProfile.visibility_score,
+                  previous_visibility_score: newProfile.previous_visibility_score,
+                  score_change: newProfile.score_change,
+                  last_scan_at: newProfile.last_scan_at,
+                  scan_count: newProfile.scan_count
+                } : null)
+                
+                // Recalculate Harbor Score with new visibility
+                const newReadiness = calculateWebsiteReadiness({
+                  description,
+                  offerings,
+                  faqs,
+                  companyInfo
+                })
+                const newHarbor = calculateHarborScore(newProfile.visibility_score, newReadiness)
+                setHarborScore(newHarbor)
+              }}
+            />
+            {brand.last_scan_at && (
+              <p className="mt-4 text-sm text-white/50">
+                Last scanned: {new Date(brand.last_scan_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit'
+                })}
               </p>
-              <RescanButton 
-                slug={params.slug}
-                onSuccess={(newProfile) => {
-                  // Refresh the brand data
-                  setBrand(prev => prev ? {
-                    ...prev,
-                    visibility_score: newProfile.visibility_score,
-                    previous_visibility_score: newProfile.previous_visibility_score,
-                    score_change: newProfile.score_change,
-                    last_scan_at: newProfile.last_scan_at,
-                    scan_count: newProfile.scan_count
-                  } : null)
-                }}
-              />
-            </div>
+            )}
           </div>
         </div>
+
+        {/* Profile Progress */}
+        <ProfileCompletenessBar
+          completeness={profileCompleteness}
+          potentialImprovement={calculatePotentialImprovement(websiteReadiness, {
+            description,
+            offerings,
+            faqs,
+            companyInfo
+          })}
+          suggestions={suggestions}
+          className="mb-6"
+        />
 
         {/* Competitor Analysis - Positioned prominently after score */}
         {competitorData && (
