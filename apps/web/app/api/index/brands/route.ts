@@ -11,30 +11,43 @@ export async function GET() {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        global: {
-          headers: {
-            'Prefer': 'return=representation',
-          },
-        },
-      }
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const { data: brands, error } = await supabase
-      .from('public_index')
-      .select('*')
-      .gt('visibility_score', 0)
-      .order('rank_global', { ascending: true })
-      .range(0, 10000)
+    // Fetch all brands in batches (Supabase has 1000 row limit per query)
+    let allBrands: any[] = []
+    let from = 0
+    const batchSize = 1000
+    let hasMore = true
 
-    if (error) {
-      throw error
+    while (hasMore) {
+      const { data: batch, error } = await supabase
+        .from('public_index')
+        .select('*')
+        .gt('visibility_score', 0)
+        .order('rank_global', { ascending: true })
+        .range(from, from + batchSize - 1)
+
+      if (error) {
+        throw error
+      }
+
+      if (batch && batch.length > 0) {
+        allBrands = [...allBrands, ...batch]
+        from += batchSize
+        
+        // If we got less than a full batch, we're done
+        if (batch.length < batchSize) {
+          hasMore = false
+        }
+      } else {
+        hasMore = false
+      }
     }
 
-    console.log(`📊 Fetched ${brands?.length || 0} brands from public_index`)
+    console.log(`📊 Fetched ${allBrands.length} brands from public_index (in ${Math.ceil(allBrands.length / batchSize)} batches)`)
 
-    return NextResponse.json(brands || [], {
+    return NextResponse.json(allBrands, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',
       }
