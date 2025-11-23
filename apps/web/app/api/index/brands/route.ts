@@ -14,17 +14,18 @@ export async function GET() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const { data: brands, error } = await supabase
-      .from('public_index')
-      .select('*')
-      .gt('visibility_score', 0)
-      .order('rank_global', { ascending: true })
+    const { data: brands, error, count } = await supabase
+  .from('public_index')
+  .select('*', { count: 'exact' })
+  .gt('visibility_score', 0)
+  .order('rank_global', { ascending: true })
+  .range(0, 9999)  // Get up to 10,000 rows (you have 1,326)
 
-    if (error) {
-      throw error
-    }
+if (error) {
+  throw error
+}
 
-    console.log(`📊 Fetched ${brands?.length || 0} brands from public_index`)
+console.log(`📊 Total count: ${count}, Fetched: ${brands?.length || 0} brands from public_index`)
 
     return NextResponse.json(brands || [], {
       headers: {
