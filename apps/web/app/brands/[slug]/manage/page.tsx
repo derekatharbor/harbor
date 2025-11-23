@@ -67,13 +67,16 @@ export default function ManageBrandPage({
 
   async function loadBrand() {
     try {
+      console.log('Fetching brand:', params.slug)
       const res = await fetch(`/api/brands/${params.slug}`)
+      console.log('API Response status:', res.status)
       
       if (!res.ok) {
         throw new Error('Failed to load brand')
       }
 
       const data = await res.json()
+      console.log('Brand data:', data)
       
       // Check if claimed
       if (!data.claimed) {
@@ -82,6 +85,7 @@ export default function ManageBrandPage({
       }
       
       setBrand(data)
+      console.log('Brand set in state, ID:', data.id)
       
       // Load editable data from feed_data
       const feedData = data.feed_data || {}
@@ -92,7 +96,10 @@ export default function ManageBrandPage({
       
       // Load competitor data
       if (data.id) {
+        console.log('Loading competitors for ID:', data.id)
         loadCompetitors(data.id)
+      } else {
+        console.log('ERROR: No brand ID found!')
       }
       
     } catch (error) {
@@ -104,10 +111,13 @@ export default function ManageBrandPage({
   }
 
   async function loadCompetitors(brandId: string) {
+    console.log('Calling competitors API with brandId:', brandId)
     try {
       const res = await fetch(`/api/brands/competitors?brandId=${brandId}`)
+      console.log('Competitors API response status:', res.status)
       if (!res.ok) throw new Error('Failed to load competitors')
       const data = await res.json()
+      console.log('Competitor data received:', data)
       setCompetitorData(data)
     } catch (error) {
       console.error('Failed to load competitors:', error)
