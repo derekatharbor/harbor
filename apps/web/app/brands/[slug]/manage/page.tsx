@@ -20,6 +20,8 @@ import {
 import FrostedNav from '@/components/landing/FrostedNav'
 import { RescanButton } from '@/components/RescanButton'
 import { ScoreDisplay } from '@/components/ScoreDisplay'
+import CompetitorModule from '@/components/manage/CompetitorModule'
+import { getCompetitors } from '@/lib/competitors'
 
 interface Brand {
   id: string
@@ -52,6 +54,7 @@ export default function ManageBrandPage({
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [isEditing, setIsEditing] = useState(false) // New: track if user is editing
+  const [competitorData, setCompetitorData] = useState<any>(null)
   
   // Editable fields
   const [description, setDescription] = useState('')
@@ -88,11 +91,27 @@ export default function ManageBrandPage({
       setFaqs(feedData.faqs || [])
       setCompanyInfo(feedData.company_info || {})
       
+      // Load competitor data
+      if (data.id) {
+        loadCompetitors(data.id)
+      }
+      
     } catch (error) {
       console.error('Failed to load brand:', error)
       setMessage({ type: 'error', text: 'Failed to load brand. Please try again.' })
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function loadCompetitors(brandId: string) {
+    try {
+      const competitors = await getCompetitors(brandId, 5)
+      setCompetitorData(competitors)
+    } catch (error) {
+      console.error('Failed to load competitors:', error)
+      // Don't show error to user, just fail silently
+      setCompetitorData(null)
     }
   }
 
@@ -279,6 +298,21 @@ export default function ManageBrandPage({
             </div>
           </div>
         </div>
+
+        {/* Competitor Module */}
+        {competitorData && (
+          <CompetitorModule
+            competitors={competitorData.competitors}
+            userRank={competitorData.userRank}
+            totalInCategory={competitorData.totalInCategory}
+            category={competitorData.category}
+            isPro={false} // TODO: Check if user has Pro
+            onUpgrade={() => {
+              // TODO: Show upgrade modal or redirect to pricing
+              alert('Harbor Pro upgrade coming soon! Get notified: derek@useharbor.io')
+            }}
+          />
+        )}
 
         {/* Edit Form - Single Column */}
         <div className="space-y-6">
