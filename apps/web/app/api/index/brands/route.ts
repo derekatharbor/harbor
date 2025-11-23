@@ -14,12 +14,12 @@ export async function GET() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const { data: brands, error, count } = await supabase
+const { data: brands, error, count } = await supabase
   .from('public_index')
-  .select('*', { count: 'exact' })
+  .select('*', { count: 'exact', head: false })
   .gt('visibility_score', 0)
   .order('rank_global', { ascending: true })
-  .range(0, 9999)  // Get up to 10,000 rows (you have 1,326)
+  .limit(10000)  // Set explicit high limit
 
 if (error) {
   throw error
