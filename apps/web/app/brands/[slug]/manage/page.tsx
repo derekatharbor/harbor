@@ -72,6 +72,7 @@ export default function ManageBrandPage({
   const [profileCompleteness, setProfileCompleteness] = useState(0)
   const [harborScore, setHarborScore] = useState(0)
   const [suggestions, setSuggestions] = useState<string[]>([])
+  const [rescanning, setRescanning] = useState(false)
   
   // Editable fields
   const [description, setDescription] = useState('')
@@ -159,6 +160,49 @@ export default function ManageBrandPage({
       console.error('Failed to load competitors:', error)
       // Don't show error to user, just fail silently
       setCompetitorData(null)
+    }
+  }
+
+  async function handleRescan() {
+    setRescanning(true)
+    try {
+      const res = await fetch(`/api/brands/${params.slug}/rescan`, {
+        method: 'POST'
+      })
+      
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to rescan')
+      }
+      
+      const newProfile = await res.json()
+      
+      // Update brand data
+      setBrand(prev => prev ? {
+        ...prev,
+        visibility_score: newProfile.visibility_score,
+        previous_visibility_score: newProfile.previous_visibility_score,
+        score_change: newProfile.score_change,
+        last_scan_at: newProfile.last_scan_at,
+        scan_count: newProfile.scan_count
+      } : null)
+      
+      // Recalculate Harbor Score with new visibility
+      const newReadiness = calculateWebsiteReadiness({
+        description,
+        offerings,
+        faqs,
+        companyInfo
+      })
+      const newHarbor = calculateHarborScore(newProfile.visibility_score, newReadiness)
+      setHarborScore(newHarbor)
+      
+      setMessage({ type: 'success', text: 'Score updated successfully!' })
+      setTimeout(() => setMessage(null), 3000)
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Failed to rescan' })
+    } finally {
+      setRescanning(false)
     }
   }
 
@@ -322,41 +366,10 @@ export default function ManageBrandPage({
           previousHarborScore={brand.previous_harbor_score}
           scoreChange={brand.harbor_score_change}
           lastScanAt={brand.last_scan_at}
-          onRescan={() => {
-            // Trigger rescan
-            const rescanBtn = document.querySelector('[data-rescan-button]') as HTMLButtonElement
-            if (rescanBtn) rescanBtn.click()
-          }}
+          onRescan={handleRescan}
+          rescanning={rescanning}
           className="mb-6"
         />
-
-        {/* Hidden RescanButton for functionality */}
-        <div className="hidden">
-          <RescanButton 
-            slug={params.slug}
-            onSuccess={(newProfile) => {
-              // Refresh the brand data
-              setBrand(prev => prev ? {
-                ...prev,
-                visibility_score: newProfile.visibility_score,
-                previous_visibility_score: newProfile.previous_visibility_score,
-                score_change: newProfile.score_change,
-                last_scan_at: newProfile.last_scan_at,
-                scan_count: newProfile.scan_count
-              } : null)
-              
-              // Recalculate Harbor Score with new visibility
-              const newReadiness = calculateWebsiteReadiness({
-                description,
-                offerings,
-                faqs,
-                companyInfo
-              })
-              const newHarbor = calculateHarborScore(newProfile.visibility_score, newReadiness)
-              setHarborScore(newHarbor)
-            }}
-          />
-        </div>
 
         {/* Profile Progress */}
         <ProfileCompletenessBar
@@ -382,6 +395,7 @@ export default function ManageBrandPage({
             onUpgrade={() => {
               alert('Harbor Pro upgrade coming soon! Get notified: derek@useharbor.io')
             }}
+            className="mb-6"
           />
         )}
 

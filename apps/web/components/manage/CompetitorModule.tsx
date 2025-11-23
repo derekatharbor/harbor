@@ -22,6 +22,7 @@ interface CompetitorModuleProps {
   category: string
   isPro?: boolean
   onUpgrade?: () => void
+  className?: string
 }
 
 export default function CompetitorModule({
@@ -30,7 +31,8 @@ export default function CompetitorModule({
   totalInCategory,
   category,
   isPro = false,
-  onUpgrade
+  onUpgrade,
+  className = ''
 }: CompetitorModuleProps) {
   
   const topThree = competitors.slice(0, 3)
@@ -40,7 +42,7 @@ export default function CompetitorModule({
     : 0
   
   return (
-    <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
+    <div className={`bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8 ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
