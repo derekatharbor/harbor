@@ -48,7 +48,7 @@ export function RescanButton({ slug, onSuccess }: RescanButtonProps) {
 
     const updateTimer = () => {
       const now = Date.now()
-      const cooldownEnd = new Date(status.cooldownEndsAt).getTime()
+      const cooldownEnd = new Date(status.cooldownEndsAt!).getTime()
       const diff = cooldownEnd - now
 
       if (diff <= 0) {
