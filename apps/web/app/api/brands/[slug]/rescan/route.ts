@@ -36,12 +36,25 @@ export async function POST(
       return NextResponse.json({ error: 'Brand not found' }, { status: 404 })
     }
 
-    // Verify user owns this brand (check verified_profiles table)
+    // Find the app user record linked to this auth user
+    const { data: appUser, error: appUserError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('supabase_uid', user.id)
+      .single()
+
+    if (appUserError || !appUser) {
+      return NextResponse.json({ 
+        error: 'User account not found. Please contact support.' 
+      }, { status: 404 })
+    }
+
+    // Verify user owns this brand (check verified_profiles with app user id)
     const { data: verified, error: verifyError } = await supabase
       .from('verified_profiles')
       .select('user_id, dashboard_id')
       .eq('profile_id', profile.id)
-      .eq('user_id', user.id)
+      .eq('user_id', appUser.id)  // Use app user id, not auth user id
       .single()
 
     if (verifyError || !verified) {
@@ -195,12 +208,26 @@ export async function GET(
       })
     }
 
+    // Find the app user record linked to this auth user
+    const { data: appUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('supabase_uid', user.id)
+      .single()
+
+    if (!appUser) {
+      return NextResponse.json({ 
+        canRescan: false, 
+        reason: 'User account not found' 
+      })
+    }
+
     // Check if user owns this brand
     const { data: verified } = await supabase
       .from('verified_profiles')
       .select('user_id')
       .eq('profile_id', profile.id)
-      .eq('user_id', user.id)
+      .eq('user_id', appUser.id)  // Use app user id
       .single()
 
     if (!verified) {

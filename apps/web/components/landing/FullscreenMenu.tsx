@@ -1,15 +1,17 @@
 'use client'
 
 import { useEffect } from 'react'
-import { X } from 'lucide-react'
+import { X, User } from 'lucide-react'
 import Image from 'next/image'
 
 interface FullscreenMenuProps {
   isOpen?: boolean
   onClose?: () => void
+  user?: any
+  onLogout?: () => void
 }
 
-export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMenuProps) {
+export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout }: FullscreenMenuProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && onClose) {
@@ -51,6 +53,14 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
             <span className="text-xl font-bold text-white">Harbor</span>
           </a>
           
+          {/* User indicator in mobile menu */}
+          {user && (
+            <div className="flex items-center gap-3 text-white/60 text-sm">
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">{user.email}</span>
+            </div>
+          )}
+          
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-white/5 transition-colors duration-200"
@@ -90,13 +100,27 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
               >
                 Pricing
               </a>
-              <a
-                href="/login"
-                onClick={onClose}
-                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Log in
-              </a>
+              
+              {/* Auth-aware navigation */}
+              {user ? (
+                <button
+                  onClick={() => {
+                    onLogout?.()
+                    onClose?.()
+                  }}
+                  className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200 text-left"
+                >
+                  Log out
+                </button>
+              ) : (
+                <a
+                  href="/login"
+                  onClick={onClose}
+                  className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+                >
+                  Log in
+                </a>
+              )}
             </nav>
           </div>
 
@@ -181,13 +205,23 @@ export default function FullscreenMenu({ isOpen = false, onClose }: FullscreenMe
       {/* Footer - CTA + Social */}
       <div className="absolute bottom-0 left-0 right-0 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-          <a
-            href="#early-access"
-            onClick={onClose}
-            className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
-          >
-            Get started
-          </a>
+          {user ? (
+            <a
+              href="/brands"
+              onClick={onClose}
+              className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+            >
+              Browse Index
+            </a>
+          ) : (
+            <a
+              href="#early-access"
+              onClick={onClose}
+              className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+            >
+              Get started
+            </a>
+          )}
           
           <div className="text-sm text-white/50">
             © 2024 Harbor

@@ -1,12 +1,34 @@
 'use client'
 
-import { useState } from 'react'
-import { Menu } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Menu, User } from 'lucide-react'
 import FullscreenMenu from './FullscreenMenu'
 import Image from 'next/image'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function FrostedNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const supabase = createClientComponentClient()
+
+  useEffect(() => {
+    // Get current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user)
+    })
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
 
   return (
     <>
@@ -29,21 +51,42 @@ export default function FrostedNav() {
                 <span className="text-xl font-bold text-white font-heading">Harbor</span>
               </a>
 
-              {/* Right side - Log in + Get started + Menu */}
+              {/* Right side - Auth-aware */}
               <div className="flex items-center space-x-4">
-                <a 
-                  href="/login" 
-                  className="hidden md:block text-white text-base hover:text-white/80 transition-colors duration-200"
-                >
-                  Log in
-                </a>
-                
-                <a
-                  href="#early-access"
-                  className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
-                >
-                  Get started
-                </a>
+                {user ? (
+                  <>
+                    {/* User indicator */}
+                    <div className="hidden md:flex items-center gap-2 text-white/70 text-sm">
+                      <User className="w-4 h-4" />
+                      <span>{user.email}</span>
+                    </div>
+
+                    {/* Logout */}
+                    <button
+                      onClick={handleLogout}
+                      className="hidden md:block text-white text-base hover:text-white/80 transition-colors duration-200"
+                    >
+                      Log out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {/* Not logged in */}
+                    <a 
+                      href="/login" 
+                      className="hidden md:block text-white text-base hover:text-white/80 transition-colors duration-200"
+                    >
+                      Log in
+                    </a>
+                    
+                    <a
+                      href="#early-access"
+                      className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
+                    >
+                      Get started
+                    </a>
+                  </>
+                )}
                 
                 <button
                   onClick={() => setIsMenuOpen(true)}
@@ -58,11 +101,16 @@ export default function FrostedNav() {
         </div>
       </nav>
 
-      {/* Spacer - smaller since nav is floating */}
+      {/* Spacer */}
       <div className="h-24" />
 
       {/* Fullscreen Menu */}
-      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <FullscreenMenu 
+        isOpen={isMenuOpen} 
+        onClose={() => setIsMenuOpen(false)}
+        user={user}
+        onLogout={handleLogout}
+      />
     </>
   )
 }
