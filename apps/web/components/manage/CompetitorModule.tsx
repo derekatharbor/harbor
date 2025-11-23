@@ -43,7 +43,7 @@ export default function CompetitorModule({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            🎯 Your Competitive Position
+            Your Competitive Position
           </h2>
           <p className="text-white/60 text-sm mt-1">
             Top competitors in {category}
@@ -147,7 +147,7 @@ export default function CompetitorModule({
         <div className="mt-6 pt-6 border-t border-white/5">
           <div className="text-center">
             <h3 className="text-white font-semibold mb-2">
-              🔓 Unlock Full Competitive Intelligence
+              Unlock Full Competitive Intelligence
             </h3>
             <p className="text-white/60 text-sm mb-4">
               See competitor scores, historical trends, and detailed analysis

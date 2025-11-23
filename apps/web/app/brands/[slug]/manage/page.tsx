@@ -21,7 +21,6 @@ import FrostedNav from '@/components/landing/FrostedNav'
 import { RescanButton } from '@/components/RescanButton'
 import { ScoreDisplay } from '@/components/ScoreDisplay'
 import CompetitorModule from '@/components/manage/CompetitorModule'
-import { getCompetitors } from '@/lib/competitors'
 
 interface Brand {
   id: string
@@ -106,8 +105,10 @@ export default function ManageBrandPage({
 
   async function loadCompetitors(brandId: string) {
     try {
-      const competitors = await getCompetitors(brandId, 5)
-      setCompetitorData(competitors)
+      const res = await fetch(`/api/brands/competitors?brandId=${brandId}`)
+      if (!res.ok) throw new Error('Failed to load competitors')
+      const data = await res.json()
+      setCompetitorData(data)
     } catch (error) {
       console.error('Failed to load competitors:', error)
       // Don't show error to user, just fail silently
