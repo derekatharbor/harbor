@@ -40,6 +40,9 @@ interface Brand {
   visibility_score: number
   previous_visibility_score?: number
   score_change?: number
+  harbor_score?: number
+  previous_harbor_score?: number
+  harbor_score_change?: number
   scan_count?: number
   rank_global: number
   rank_in_industry: number
