@@ -34,6 +34,7 @@ export default function CompetitorModule({
 }: CompetitorModuleProps) {
   
   const topThree = competitors.slice(0, 3)
+  const displayCompetitors = topThree // Only show top 3
   const avgTopThreeScore = topThree.length > 0
     ? parseFloat((topThree.reduce((sum, c) => sum + c.visibility_score, 0) / topThree.length).toFixed(1))
     : 0
@@ -47,7 +48,7 @@ export default function CompetitorModule({
             Your Competitive Position
           </h2>
           <p className="text-white/60 text-sm mt-1">
-            Top competitors in {category}
+            Top 3 competitors in {category}
           </p>
         </div>
         
@@ -64,13 +65,13 @@ export default function CompetitorModule({
 
       {/* Competitor List */}
       <div className="space-y-6 mb-6">
-        {competitors.length === 0 ? (
+        {displayCompetitors.length === 0 ? (
           <div className="text-center py-8 text-white/40">
             <p>No competitors found in {category}</p>
             <p className="text-sm mt-2">You're one of the first in this category!</p>
           </div>
         ) : (
-          competitors.map((comp, index) => (
+          displayCompetitors.map((comp, index) => (
             <div
               key={comp.id}
               className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors border border-white/5"
@@ -145,7 +146,7 @@ export default function CompetitorModule({
       </div>
 
       {/* User Position Summary */}
-      {competitors.length > 0 && (
+      {displayCompetitors.length > 0 && (
         <div className="p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -165,7 +166,7 @@ export default function CompetitorModule({
       )}
 
       {/* Pro Upgrade CTA */}
-      {!isPro && competitors.length > 0 && (
+      {!isPro && displayCompetitors.length > 0 && (
         <div className="mt-6 pt-6 border-t border-white/5">
           <div className="text-center">
             <h3 className="text-white font-semibold mb-2">

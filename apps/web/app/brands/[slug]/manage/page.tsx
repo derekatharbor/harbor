@@ -314,59 +314,48 @@ export default function ManageBrandPage({
           </p>
         </div>
 
-        {/* Harbor Score + Rescan */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Left: Harbor Score Breakdown */}
-          <HarborScoreBreakdown
-            harborScore={harborScore}
-            visibilityScore={brand.visibility_score}
-            websiteReadiness={websiteReadiness}
-            previousHarborScore={brand.previous_harbor_score}
-            scoreChange={brand.harbor_score_change}
-          />
+        {/* Harbor Score (Horizontal with Rescan) */}
+        <HarborScoreBreakdown
+          harborScore={harborScore}
+          visibilityScore={brand.visibility_score}
+          websiteReadiness={websiteReadiness}
+          previousHarborScore={brand.previous_harbor_score}
+          scoreChange={brand.harbor_score_change}
+          lastScanAt={brand.last_scan_at}
+          onRescan={() => {
+            // Trigger rescan
+            const rescanBtn = document.querySelector('[data-rescan-button]') as HTMLButtonElement
+            if (rescanBtn) rescanBtn.click()
+          }}
+          className="mb-6"
+        />
 
-          {/* Right: Rescan */}
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8 flex flex-col justify-center">
-            <h3 className="text-lg font-semibold text-white mb-2">Update Your Score</h3>
-            <p className="text-white/60 text-sm mb-4">
-              Made improvements to your website? Re-scan to see your updated Harbor Score.
-            </p>
-            <RescanButton 
-              slug={params.slug}
-              onSuccess={(newProfile) => {
-                // Refresh the brand data
-                setBrand(prev => prev ? {
-                  ...prev,
-                  visibility_score: newProfile.visibility_score,
-                  previous_visibility_score: newProfile.previous_visibility_score,
-                  score_change: newProfile.score_change,
-                  last_scan_at: newProfile.last_scan_at,
-                  scan_count: newProfile.scan_count
-                } : null)
-                
-                // Recalculate Harbor Score with new visibility
-                const newReadiness = calculateWebsiteReadiness({
-                  description,
-                  offerings,
-                  faqs,
-                  companyInfo
-                })
-                const newHarbor = calculateHarborScore(newProfile.visibility_score, newReadiness)
-                setHarborScore(newHarbor)
-              }}
-            />
-            {brand.last_scan_at && (
-              <p className="mt-4 text-sm text-white/50">
-                Last scanned: {new Date(brand.last_scan_at).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                  hour: 'numeric',
-                  minute: '2-digit'
-                })}
-              </p>
-            )}
-          </div>
+        {/* Hidden RescanButton for functionality */}
+        <div className="hidden">
+          <RescanButton 
+            slug={params.slug}
+            onSuccess={(newProfile) => {
+              // Refresh the brand data
+              setBrand(prev => prev ? {
+                ...prev,
+                visibility_score: newProfile.visibility_score,
+                previous_visibility_score: newProfile.previous_visibility_score,
+                score_change: newProfile.score_change,
+                last_scan_at: newProfile.last_scan_at,
+                scan_count: newProfile.scan_count
+              } : null)
+              
+              // Recalculate Harbor Score with new visibility
+              const newReadiness = calculateWebsiteReadiness({
+                description,
+                offerings,
+                faqs,
+                companyInfo
+              })
+              const newHarbor = calculateHarborScore(newProfile.visibility_score, newReadiness)
+              setHarborScore(newHarbor)
+            }}
+          />
         </div>
 
         {/* Profile Progress */}
