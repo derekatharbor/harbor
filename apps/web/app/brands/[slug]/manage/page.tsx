@@ -310,26 +310,6 @@ export default function ManageBrandPage({
           </div>
         </div>
 
-        {/* Competitor Module */}
-        {competitorData ? (
-          <CompetitorModule
-            competitors={competitorData.competitors}
-            userRank={competitorData.userRank}
-            totalInCategory={competitorData.totalInCategory}
-            category={competitorData.category}
-            isPro={false}
-            onUpgrade={() => {
-              alert('Harbor Pro upgrade coming soon! Get notified: derek@useharbor.io')
-            }}
-          />
-        ) : (
-          <div className="bg-[#0C1422] rounded-xl border border-white/5 p-6 md:p-8">
-            <h3 className="text-white font-bold mb-2">Competitor Module Debug</h3>
-            <p className="text-white/60 text-sm mb-2">Status: {competitorData === null ? 'NULL (not loaded yet or failed)' : 'Loading...'}</p>
-            <p className="text-white/40 text-xs font-mono">State: {JSON.stringify(competitorData)}</p>
-          </div>
-        )}
-
         {/* Edit Form - Single Column */}
         <div className="space-y-6">
           
@@ -565,11 +545,10 @@ export default function ManageBrandPage({
               competitors={competitorData.competitors}
               userRank={competitorData.userRank}
               totalInCategory={competitorData.totalInCategory || competitorData.competitors.length}
-              category={brand.industry}
+              category={competitorData.category || brand.industry}
               isPro={false}
               onUpgrade={() => {
-                // TODO: Navigate to upgrade page or open modal
-                console.log('Upgrade clicked')
+                alert('Harbor Pro upgrade coming soon! Get notified: derek@useharbor.io')
               }}
             />
           )}
