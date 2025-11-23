@@ -12,6 +12,7 @@ interface Competitor {
   industry: string
   visibility_score: number
   rank_global?: number
+  logo_url: string
 }
 
 interface CompetitorModuleProps {
@@ -74,15 +75,36 @@ export default function CompetitorModule({
               key={comp.id}
               className="flex items-center justify-between p-4 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition-colors border border-white/5"
             >
-              {/* Left: Rank + Name */}
+              {/* Left: Logo + Name + Rank */}
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 text-sm font-mono">
-                  #{index + 1}
+                {/* Logo */}
+                <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0 relative">
+                  <img 
+                    src={comp.logo_url} 
+                    alt={comp.brand_name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to initials if logo fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.classList.add('flex', 'items-center', 'justify-center');
+                        parent.innerHTML = `<span class="text-white/60 text-sm font-medium">${comp.brand_name.charAt(0)}</span>`;
+                      }
+                    }}
+                  />
                 </div>
                 
+                {/* Name + Industry + Rank Badge */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-white font-medium truncate">
-                    {comp.brand_name}
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <div className="text-white font-medium truncate">
+                      {comp.brand_name}
+                    </div>
+                    <div className="px-2 py-0.5 rounded bg-white/5 text-white/60 text-xs font-mono flex-shrink-0">
+                      #{index + 1}
+                    </div>
                   </div>
                   <div className="text-white/40 text-xs">
                     {comp.industry}
