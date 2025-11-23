@@ -11,21 +11,28 @@ export async function GET() {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        global: {
+          headers: {
+            'Prefer': 'return=representation',
+          },
+        },
+      }
     )
 
-const { data: brands, error, count } = await supabase
-  .from('public_index')
-  .select('*', { count: 'exact', head: false })
-  .gt('visibility_score', 0)
-  .order('rank_global', { ascending: true })
-  .limit(10000)  // Set explicit high limit
+    const { data: brands, error } = await supabase
+      .from('public_index')
+      .select('*')
+      .gt('visibility_score', 0)
+      .order('rank_global', { ascending: true })
+      .range(0, 10000)
 
-if (error) {
-  throw error
-}
+    if (error) {
+      throw error
+    }
 
-console.log(`📊 Total count: ${count}, Fetched: ${brands?.length || 0} brands from public_index`)
+    console.log(`📊 Fetched ${brands?.length || 0} brands from public_index`)
 
     return NextResponse.json(brands || [], {
       headers: {
