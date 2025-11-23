@@ -564,7 +564,13 @@ export default function ManageBrandPage({
             <CompetitorModule 
               competitors={competitorData.competitors}
               userRank={competitorData.userRank}
-              industry={brand.industry}
+              totalInCategory={competitorData.totalInCategory || competitorData.competitors.length}
+              category={brand.industry}
+              isPro={false}
+              onUpgrade={() => {
+                // TODO: Navigate to upgrade page or open modal
+                console.log('Upgrade clicked')
+              }}
             />
           )}
 
