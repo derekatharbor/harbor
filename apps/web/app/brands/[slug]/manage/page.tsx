@@ -559,6 +559,27 @@ export default function ManageBrandPage({
             </div>
           </div>
 
+          {/* Competitor Analysis */}
+          {competitorData && (
+            <CompetitorModule 
+              competitors={competitorData.competitors}
+              userRank={competitorData.userRank}
+              industry={brand.industry}
+            />
+          )}
+
+          {/* Debug Card - Remove after confirming it works */}
+          {!competitorData && (
+            <div className="bg-[#0C1422] rounded-xl border border-yellow-400/20 p-6 mb-6">
+              <h3 className="text-yellow-400 font-bold mb-2">Debug: Competitor Module</h3>
+              <div className="text-white/60 text-sm space-y-1">
+                <p>Status: {competitorData === null ? 'NULL (not loaded yet or failed)' : 'Data exists'}</p>
+                <p>Brand ID: {brand.id}</p>
+                <p>Industry: {brand.industry}</p>
+              </div>
+            </div>
+          )}
+
           {/* Action Bar with Inline Notification */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4">
             <a
