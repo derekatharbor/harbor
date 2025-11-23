@@ -63,7 +63,7 @@ export default function CompetitorModule({
       </div>
 
       {/* Competitor List */}
-      <div className="space-y-3 mb-6">
+      <div className="space-y-6 mb-6">
         {competitors.length === 0 ? (
           <div className="text-center py-8 text-white/40">
             <p>No competitors found in {category}</p>
