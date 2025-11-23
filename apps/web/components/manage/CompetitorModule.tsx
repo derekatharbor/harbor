@@ -34,7 +34,7 @@ export default function CompetitorModule({
   
   const topThree = competitors.slice(0, 3)
   const avgTopThreeScore = topThree.length > 0
-    ? (topThree.reduce((sum, c) => sum + c.visibility_score, 0) / topThree.length).toFixed(1)
+    ? parseFloat((topThree.reduce((sum, c) => sum + c.visibility_score, 0) / topThree.length).toFixed(1))
     : 0
   
   return (
