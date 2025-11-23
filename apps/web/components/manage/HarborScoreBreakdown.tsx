@@ -149,7 +149,8 @@ export function HarborScoreBreakdown({
           <button
             onClick={onRescan}
             disabled={rescanning}
-            className="px-6 py-3 rounded-lg bg-[#2DD4BF] hover:bg-[#2DD4BF]/90 text-[#0C1422] font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            style={{ cursor: rescanning ? 'not-allowed' : 'pointer' }}
+            className="px-6 py-3 rounded-lg bg-[#2DD4BF] hover:bg-[#2DD4BF]/90 text-[#0C1422] font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${rescanning ? 'animate-spin' : ''}`} />
             {rescanning ? 'Scanning...' : 'Re-scan Now'}
