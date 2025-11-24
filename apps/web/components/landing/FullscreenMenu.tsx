@@ -133,9 +133,15 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
               onClick={onClose}
               className="block group"
             >
-              {/* Image placeholder - you can add Harbor Index graphic here */}
+              {/* Harbor Index Preview Image */}
               <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
+                <Image 
+                  src="/images/harbor-index-preview.png"
+                  alt="Harbor Index Preview"
+                  width={280}
+                  height={128}
+                  className="w-full h-full object-cover"
+                />
               </div>
               
               <h4 className="text-xl font-bold text-white mb-3 group-hover:text-white/70 transition-colors">

@@ -3,10 +3,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, Search, ArrowRight, X, Plus } from 'lucide-react'
+import { Search, ArrowRight, X, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import FullscreenMenu from '@/components/landing/FullscreenMenu'
+import FrostedNav from '@/components/landing/FrostedNav'
 
 interface Brand {
   id: string
@@ -27,7 +27,6 @@ interface Props {
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands.slice(0, 50))
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
@@ -71,50 +70,13 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
   return (
     <div className="min-h-screen bg-[#101A31] relative">
-      {/* Frosted Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px] overflow-visible">
-        <div 
-          className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
-          style={{ backdropFilter: 'blur(12px)' }}
-        >
-          <div className="px-4 md:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-14 md:h-16">
-              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
-                <Image 
-                  src="/logo-icon.png" 
-                  alt="Harbor" 
-                  width={32} 
-                  height={32}
-                  className="w-7 h-7 md:w-8 md:h-8"
-                />
-                <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
-              </Link>
-
-              <div className="flex items-center space-x-2 md:space-x-4">
-                <button
-                  onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                  aria-label="Menu"
-                >
-                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                </button>
-                
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* Use FrostedNav from landing */}
+      <FrostedNav />
 
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-12 md:pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[420px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1] overflow-hidden">
+        <section className="relative min-h-[420px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 overflow-hidden">
           
           {/* Radial Gradient Glow - Subtle accent */}
           <div 
@@ -126,7 +88,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
           {/* Wireframe Background - Fixed for mobile */}
           <div 
-            className="absolute inset-0 pointer-events-none z-0"
+            className="absolute inset-0 pointer-events-none"
             style={{ 
               opacity: 0.15
             }}
@@ -156,7 +118,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </div>
 
           {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[420px] md:min-h-[500px]">
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-20 flex flex-col items-center justify-center min-h-[420px] md:min-h-[500px]">
             
             {/* Frosted Glass Pill */}
             <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
@@ -178,7 +140,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </p>
 
             {/* Search Box with Dropdown */}
-            <div className="w-full max-w-2xl relative">
+            <div className="w-full max-w-2xl relative z-30">
               
               {/* Subtle glow behind search */}
               <div 
@@ -294,8 +256,8 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </section>
       </div>
 
-      {/* Table Section - No wireframe */}
-      <section className="relative max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
+      {/* Table Section */}
+      <section className="relative z-10 max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
         
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
@@ -383,8 +345,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </section>
 
-      {/* Fullscreen Menu */}
-      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   )
 }
