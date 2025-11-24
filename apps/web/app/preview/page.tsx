@@ -1,11 +1,21 @@
+// apps/web/app/preview/page.tsx
 import FrostedNav from '@/components/landing/FrostedNav'
 import NewHeroSection from '@/components/landing/NewHeroSection'
+import TheShiftSection from '@/components/landing/TheShiftSection'
+import Footer from '@/components/landing/Footer'
 
 export default function PreviewPage() {
   return (
     <div className="relative min-h-screen bg-[#101A31]">
       <FrostedNav />
-      <NewHeroSection />
+      
+      <main>
+        <NewHeroSection />
+        <TheShiftSection />
+        {/* Add more sections here as we build them */}
+      </main>
+      
+      <Footer />
     </div>
   )
 }
