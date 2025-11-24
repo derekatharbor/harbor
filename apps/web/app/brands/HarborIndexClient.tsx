@@ -140,7 +140,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             </p>
 
             {/* Search Box with Dropdown */}
-            <div className="w-full max-w-2xl relative z-30">
+            <div className="w-full max-w-2xl relative z-[100]">
               
               {/* Subtle glow behind search */}
               <div 
@@ -257,7 +257,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       </div>
 
       {/* Table Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
+      <section className="relative z-0 max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
         
         {/* Brand Table */}
         <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
