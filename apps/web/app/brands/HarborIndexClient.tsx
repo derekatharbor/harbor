@@ -76,7 +76,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-12 md:pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[420px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 overflow-hidden">
+        <section className="relative min-h-[420px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6">
           
           {/* Radial Gradient Glow - Subtle accent */}
           <div 
