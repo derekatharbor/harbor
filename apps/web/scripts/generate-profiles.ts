@@ -444,19 +444,19 @@ export async function runBatchGeneration(options: {
   const { limit = 10, concurrency = 3, dryRun = false } = options;
   
   console.log('\n🚀 Starting batch generation (OpenAI v2)');
-  console.log(`   Limit: ${limit}`);
+  console.log(`   Processing: ALL ungenerated brands`);
   console.log(`   Concurrency: ${concurrency}`);
   console.log(`   Dry run: ${dryRun}`);
   console.log('');
   
-  // Fetch brands to generate
+  // Fetch brands to generate (override Supabase default 1000 row limit)
   console.log('🔍 Querying brand_list table...');
   const { data: brands, error } = await supabase
     .from('brand_list')
     .select('brand_name, domain, slug, industry')
     .eq('profile_generated', false)
     .order('priority', { ascending: false })
-    .limit(limit);
+    .limit(10000);
   
   console.log('   Query error:', error);
   console.log('   Brands returned:', brands?.length || 0);

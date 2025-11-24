@@ -4,6 +4,7 @@ import NewHeroSection from '@/components/landing/NewHeroSection'
 import TheShiftSection from '@/components/landing/TheShiftSection'
 import HarborIndexSection from '@/components/landing/HarborIndexSection'
 import HowHarborWorksSection from '@/components/landing/HowHarborWorksSection'
+import FinalCTASection from '@/components/landing/FinalCTASection'
 import Footer from '@/components/landing/Footer'
 
 export default function PreviewPage() {
@@ -16,7 +17,7 @@ export default function PreviewPage() {
         <TheShiftSection />
         <HarborIndexSection />
         <HowHarborWorksSection />
-        {/* Add more sections here as we build them */}
+        <FinalCTASection />
       </main>
       
       <Footer />
