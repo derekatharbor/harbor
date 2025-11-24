@@ -3,7 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, Search, ArrowRight, X } from 'lucide-react'
+import { Menu, Search, ArrowRight, X, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
@@ -114,50 +114,82 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-12 md:pt-16">
         {/* Hero Section with Wireframe */}
-        <section className="relative min-h-[400px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1]">
-          {/* Wireframe Background - Centered, behind everything */}
+        <section className="relative min-h-[420px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1] overflow-hidden">
+          
+          {/* Radial Gradient Glow - Subtle accent */}
           <div 
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgba(34, 211, 238, 0.08) 0%, rgba(59, 130, 246, 0.04) 40%, transparent 70%)',
+            }}
+          />
+
+          {/* Wireframe Background - Fixed for mobile */}
+          <div 
+            className="absolute inset-0 pointer-events-none z-0"
             style={{ 
-              width: '95vw',
-              maxWidth: '1600px',
-              opacity: 0.2
+              opacity: 0.15
             }}
           >
-            <div className="relative w-full aspect-[3/1] md:aspect-[2/1]">
-              <Image
-                src="/images/wireframe-wave.png"
-                alt=""
-                fill
-                className="object-contain"
-                priority
-              />
+            {/* Mobile: Use CSS background for better scaling */}
+            <div 
+              className="absolute inset-0 md:hidden"
+              style={{
+                backgroundImage: 'url(/images/wireframe-wave.png)',
+                backgroundSize: '180% auto',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
+            {/* Desktop: Use Next Image */}
+            <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-[1600px]">
+              <div className="relative w-full aspect-[2/1]">
+                <Image
+                  src="/images/wireframe-wave.png"
+                  alt=""
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
           </div>
 
           {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px]">
+          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[420px] md:min-h-[500px]">
+            
             {/* Frosted Glass Pill */}
             <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
-              <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
-                HARBOR INDEX
+              <span className="text-white/90 text-xs md:text-sm font-medium tracking-wide uppercase">
+                Harbor Index
               </span>
             </div>
 
-                {/* Gradient Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
-              The AI Visibility Index
+            {/* Gradient Title */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 leading-[1.1]">
+              <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+                The AI Visibility Index
+              </span>
             </h1>
 
             {/* Explainer */}
-            <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-3xl mx-auto mb-6 md:mb-8 px-4">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/60 max-w-3xl mx-auto mb-6 md:mb-8 px-2">
               The global leaderboard for how AI models interpret and surface the world's brands.
             </p>
 
             {/* Search Box with Dropdown */}
-                <div className="w-full max-w-2xl relative">
-              <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
-                <Search className="w-5 h-5 text-white/40 ml-4" />
+            <div className="w-full max-w-2xl relative">
+              
+              {/* Subtle glow behind search */}
+              <div 
+                className="absolute -inset-1 rounded-2xl opacity-50 blur-xl"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(59, 130, 246, 0.2))'
+                }}
+              />
+              
+              <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-white/10 p-2 shadow-2xl">
+                <Search className="w-5 h-5 text-white/40 ml-3 md:ml-4" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -165,7 +197,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   onFocus={() => searchQuery && setShowSearchDropdown(true)}
                   onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
                   placeholder="Search brands..."
-                  className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
+                  className="flex-1 px-3 md:px-4 py-2.5 md:py-3 bg-transparent text-white placeholder-white/40 focus:outline-none text-sm md:text-base"
                 />
                 {searchQuery && (
                   <button
@@ -173,7 +205,7 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                       setSearchQuery('')
                       setShowSearchDropdown(false)
                     }}
-                    className="mr-4 text-white/40 hover:text-white transition-colors"
+                    className="mr-3 md:mr-4 text-white/40 hover:text-white transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -182,72 +214,79 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
               {/* Search Dropdown */}
               {showSearchDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
-              {searchResults.map((brand) => {
-                const delta = brand.rank_global <= 10 ? 5.8 : -1.2
-                const isPositive = delta > 0
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
+                  {searchResults.map((brand) => {
+                    const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+                    const isPositive = delta > 0
 
-                return (
-                  <Link
-                    key={brand.id}
-                    href={`/brands/${brand.slug}`}
-                    className="flex items-center gap-4 px-6 py-4 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
-                  >
-                    {/* Logo */}
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                      <Image
-                        src={brand.logo_url}
-                        alt={brand.brand_name}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none'
-                        }}
-                      />
+                    return (
+                      <Link
+                        key={brand.id}
+                        href={`/brands/${brand.slug}`}
+                        className="flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                      >
+                        {/* Logo */}
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                          <Image
+                            src={brand.logo_url}
+                            alt={brand.brand_name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none'
+                            }}
+                          />
+                        </div>
+
+                        {/* Brand Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-white font-medium truncate text-sm md:text-base">{brand.brand_name}</div>
+                          <div className="text-white/40 text-xs md:text-sm truncate">{brand.domain}</div>
+                        </div>
+
+                        {/* Rank - Hidden on small mobile */}
+                        <div className="text-white/60 text-sm font-mono hidden sm:block">#{brand.rank_global}</div>
+
+                        {/* Score */}
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <span className="text-white font-semibold text-sm md:text-base">{brand.visibility_score.toFixed(1)}%</span>
+                          <span className={`text-xs font-medium hidden sm:inline ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                            {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                          </span>
+                        </div>
+
+                        {/* Arrow */}
+                        <ArrowRight className="w-4 h-4 text-white/40 hidden md:block" />
+                      </Link>
+                    )
+                  })}
+
+                  {/* View All Results */}
+                  {searchResults.length === 5 && (
+                    <div className="px-4 md:px-6 py-3 bg-white/5 border-t border-white/10">
+                      <Link
+                        href={`/brands/search?q=${encodeURIComponent(searchQuery)}`}
+                        className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                      >
+                        View all results for "{searchQuery}"
+                      </Link>
                     </div>
-
-                    {/* Brand Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-white font-medium truncate">{brand.brand_name}</div>
-                      <div className="text-white/40 text-sm truncate">{brand.domain}</div>
-                    </div>
-
-                    {/* Rank */}
-                    <div className="text-white/60 text-sm font-mono">#{brand.rank_global}</div>
-
-                    {/* Score */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-white font-semibold">{brand.visibility_score.toFixed(1)}%</span>
-                      <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                        {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                      </span>
-                    </div>
-
-                    {/* Arrow */}
-                    <ArrowRight className="w-4 h-4 text-white/40" />
-                  </Link>
-                )
-              })}
-
-              {/* View All Results */}
-              {searchResults.length === 5 && (
-                <div className="px-6 py-3 bg-white/5 border-t border-white/10">
-                  <Link
-                    href={`/brands/search?q=${encodeURIComponent(searchQuery)}`}
-                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-                  >
-                    View all results for "{searchQuery}"
-                  </Link>
+                  )}
                 </div>
               )}
-            </div>
-          )}
 
-              {/* No Results */}
+              {/* No Results - Add Brand CTA */}
               {showSearchDropdown && searchQuery && searchResults.length === 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-6 text-center z-50">
-                  <p className="text-white/60 text-sm">No brands found for "{searchQuery}"</p>
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-5 md:p-6 z-50">
+                  <p className="text-white/60 text-sm mb-4 text-center">No brands found for "{searchQuery}"</p>
+                  <Link
+                    href="/auth/signup"
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-all text-sm"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add "{searchQuery}" to the Index
+                  </Link>
                 </div>
               )}
             </div>
