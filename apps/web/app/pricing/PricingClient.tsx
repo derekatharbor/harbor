@@ -97,7 +97,7 @@ export default function PricingClient() {
         >
           <div className="px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 md:h-16">
-              <Link href="/" className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
                 <Image 
                   src="/images/harbor-dark-solo.svg" 
                   alt="Harbor" 
@@ -105,6 +105,7 @@ export default function PricingClient() {
                   height={32}
                   className="h-7 md:h-8 w-auto"
                 />
+                <span className="text-lg md:text-xl font-bold text-[#101A31]">Harbor</span>
               </Link>
 
               <div className="flex items-center space-x-2 md:space-x-4">
