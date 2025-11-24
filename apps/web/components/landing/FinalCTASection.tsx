@@ -31,7 +31,7 @@ export default function FinalCTASection() {
       />
 
       {/* Main Dark Section */}
-      <div className="relative bg-[#101A31] py-24 md:py-32 overflow-hidden">
+      <div className="relative bg-[#101A31] py-20 md:py-32 overflow-hidden">
         
         {/* Wireframe Background */}
         <div 
@@ -46,13 +46,13 @@ export default function FinalCTASection() {
 
         {/* Subtle radial glow behind search */}
         <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[800px] h-[300px] md:h-[400px] pointer-events-none"
           style={{
             background: 'radial-gradient(ellipse, rgba(34, 211, 238, 0.08) 0%, transparent 70%)'
           }}
         />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
           
           {/* Eyebrow */}
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-6">
@@ -62,14 +62,14 @@ export default function FinalCTASection() {
           </div>
 
           {/* Headline */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-6 leading-tight">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4 md:mb-6 leading-tight">
             <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
               See how AI sees you
             </span>
           </h2>
 
           {/* Subhead */}
-          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10">
+          <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto mb-8 md:mb-10 px-2">
             Search for your brand in the Harbor Index. Claim your profile and start improving your AI visibility.
           </p>
 
@@ -77,11 +77,14 @@ export default function FinalCTASection() {
           <form onSubmit={handleSubmit} className="relative max-w-xl mx-auto">
             
             {/* Animated gradient border container */}
-            <div className="relative p-[2px] rounded-2xl animated-border">
+            <div className="relative p-[2px] rounded-xl md:rounded-2xl gradient-border-wrapper">
+              <div className="gradient-border"></div>
               
               {/* Inner input container */}
-              <div className="relative bg-[#0a0f1a] rounded-2xl">
-                <div className="flex items-center">
+              <div className="relative bg-[#0a0f1a] rounded-xl md:rounded-2xl">
+                
+                {/* Desktop layout */}
+                <div className="hidden md:flex items-center">
                   <div className="pl-5 text-white/40">
                     <Search className="w-5 h-5" />
                   </div>
@@ -102,6 +105,34 @@ export default function FinalCTASection() {
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
+
+                {/* Mobile layout - stacked */}
+                <div className="md:hidden">
+                  <div className="flex items-center px-4 py-4">
+                    <div className="text-white/40">
+                      <Search className="w-5 h-5" />
+                    </div>
+                    <input
+                      type="text"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      onFocus={() => setIsFocused(true)}
+                      onBlur={() => setIsFocused(false)}
+                      placeholder="Search for a brand..."
+                      className="flex-1 bg-transparent text-white text-base px-3 py-1 outline-none placeholder:text-white/30"
+                    />
+                  </div>
+                  <div className="px-3 pb-3">
+                    <button
+                      type="submit"
+                      className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-400 via-cyan-200 to-white text-[#101A31] font-semibold flex items-center justify-center gap-2 hover:brightness-90 transition-all"
+                    >
+                      Search
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </div>
 
@@ -115,33 +146,39 @@ export default function FinalCTASection() {
         </div>
       </div>
 
-      {/* CSS for animated border */}
+      {/* CSS for smooth animated border */}
       <style jsx>{`
-        .animated-border {
-          background: linear-gradient(
-            var(--angle, 0deg),
+        .gradient-border-wrapper {
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .gradient-border {
+          position: absolute;
+          inset: 0;
+          background: conic-gradient(
+            from 0deg,
             #3b82f6,
             #22d3ee,
             #ffffff,
             #22d3ee,
             #3b82f6
           );
-          animation: rotate-gradient 4s linear infinite;
+          animation: spin 3s linear infinite;
         }
         
-        @keyframes rotate-gradient {
-          0% {
-            --angle: 0deg;
-          }
-          100% {
-            --angle: 360deg;
-          }
+        .gradient-border-wrapper > div:last-child {
+          position: relative;
+          z-index: 1;
         }
         
-        @property --angle {
-          syntax: '<angle>';
-          initial-value: 0deg;
-          inherits: false;
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </section>
