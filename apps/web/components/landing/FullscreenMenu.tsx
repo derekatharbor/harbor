@@ -34,13 +34,13 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-[#101A31]"
+      className="fixed inset-0 z-[100] bg-[#101A31] overflow-y-auto"
       style={{
         animation: 'fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      {/* Header */}
-      <div className="border-b border-white/10">
+      {/* Header - Sticky */}
+      <div className="sticky top-0 bg-[#101A31] border-b border-white/10 z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 flex items-center justify-between">
           <a href="/" className="flex items-center space-x-3">
             <Image 
@@ -203,8 +203,8 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
       </div>
 
       {/* Footer - CTA + Social */}
-      <div className="absolute bottom-0 left-0 right-0 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="border-t border-white/10 mt-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 pb-safe flex flex-col lg:flex-row items-center justify-between gap-4">
           {user ? (
             <a
               href="/brands"
