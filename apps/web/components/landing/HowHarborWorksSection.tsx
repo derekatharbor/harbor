@@ -36,22 +36,27 @@ const steps = [
 ]
 
 export default function HowHarborWorksSection() {
-  const [activeStep, setActiveStep] = useState('scan')
+  const [activeStep, setActiveStep] = useState<string | null>('scan')
 
   const activeStepData = steps.find(s => s.id === activeStep) || steps[0]
+
+  const handleStepClick = (stepId: string) => {
+    // Toggle: if clicking active step, close it; otherwise open the new one
+    setActiveStep(activeStep === stepId ? null : stepId)
+  }
 
   return (
     <section className="relative bg-white py-20 md:py-32" data-nav-theme="light">
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        {/* Two Column Layout - items-stretch makes both columns same height */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
-          {/* Left: Image Preview */}
-          <div className="relative order-2 lg:order-1">
+          {/* Left: Image Preview - sticky so it stays in view while scrolling accordion */}
+          <div className="relative order-2 lg:order-1 lg:sticky lg:top-32 lg:self-start">
             
-            {/* Image Container with subtle shadow */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50">
+            {/* Image Container with subtle shadow - full height */}
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50 h-full min-h-[400px] lg:min-h-[500px]">
               
               {/* Gradient top bar - like Plaid's teal bar */}
               <div 
@@ -61,8 +66,8 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              {/* Image area */}
-              <div className="relative bg-[#f8fafc] aspect-[4/3]">
+              {/* Image area - fills remaining space */}
+              <div className="relative bg-[#f8fafc] h-[calc(100%-8px)]">
                 {/* 
                   Derek: Add your screenshots. They'll swap based on active accordion.
                   Recommended size: 800x600px each
@@ -76,7 +81,7 @@ export default function HowHarborWorksSection() {
                   <div
                     key={step.id}
                     className={`absolute inset-0 transition-opacity duration-300 ${
-                      activeStep === step.id ? 'opacity-100' : 'opacity-0'
+                      activeStep === step.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
                     }`}
                   >
                     <Image
@@ -124,7 +129,7 @@ export default function HowHarborWorksSection() {
 
             {/* Accordion */}
             <div className="space-y-4">
-              {steps.map((step) => {
+              {steps.map((step, index) => {
                 const isActive = activeStep === step.id
                 const Icon = step.icon
 
@@ -138,7 +143,7 @@ export default function HowHarborWorksSection() {
                     }`}
                   >
                     <button
-                      onClick={() => setActiveStep(step.id)}
+                      onClick={() => handleStepClick(step.id)}
                       className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
                     >
                       <div className="flex items-center gap-4">
@@ -151,14 +156,14 @@ export default function HowHarborWorksSection() {
                           <h3 className={`text-lg font-semibold transition-colors ${
                             isActive ? 'text-[#101A31]' : 'text-gray-700'
                           }`}>
-                            Step {steps.indexOf(step) + 1}: {step.title}
+                            Step {index + 1}: {step.title}
                           </h3>
                           <p className="text-sm text-gray-500 mt-0.5">
                             {step.description}
                           </p>
                         </div>
                       </div>
-                      <div className={`p-1 rounded transition-colors ${
+                      <div className={`p-1 rounded transition-colors flex-shrink-0 ${
                         isActive ? 'text-[#101A31]' : 'text-gray-400'
                       }`}>
                         {isActive ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
