@@ -7,61 +7,56 @@ export default function HarborIndexSection() {
   return (
     <section className="relative bg-white py-20 md:py-32" data-nav-theme="light">
       <div className="max-w-6xl mx-auto px-6">
-        
-        {/* Eyebrow Pill - Matching TheShiftSection style */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#101A31]/5 backdrop-blur-sm border border-[#101A31]/10">
-            <p className="text-sm font-mono uppercase tracking-wider text-[#101A31]/70">
-              The Harbor Index
-            </p>
-          </div>
-        </div>
 
         {/* Main Navy Card with Glow */}
         <div className="relative">
           
           {/* Outer Glow Effect */}
           <div 
-            className="absolute -inset-1 rounded-[2rem] opacity-50 blur-xl"
+            className="absolute -inset-1 rounded-[2rem] opacity-40 blur-2xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(59, 130, 246, 0.2))'
+              background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.4), rgba(96, 165, 250, 0.3), rgba(255, 255, 255, 0.1))'
             }}
           />
           
-          {/* Card Container */}
-          <div className="relative bg-[#0f1629] rounded-[1.5rem] overflow-hidden">
+          {/* Card Container - overflow hidden clips the leaderboard */}
+          <div className="relative bg-[#101A31] rounded-[1.5rem] overflow-hidden">
             
             {/* Wireframe Background Pattern */}
+            {/* 
+              Derek: Add wireframe image at /public/wireframe-index-card.png
+              Recommended size: 1400x800px, PNG with transparency
+              Should be subtle abstract lines/grid pattern
+            */}
             <div 
-              className="absolute inset-0 pointer-events-none opacity-[0.07]"
+              className="absolute inset-0 pointer-events-none opacity-[0.08]"
               style={{
-                backgroundImage: 'url(/wireframe-arc.svg)',
-                backgroundSize: '120%',
+                backgroundImage: 'url(/wireframe-index-card.png)',
+                backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
               }}
             />
 
             {/* Card Content */}
-            <div className="relative z-10 px-8 md:px-16 pt-16 md:pt-20 pb-8 md:pb-12">
+            <div className="relative z-10 px-8 md:px-16 pt-12 md:pt-16">
               
-              {/* Headline - Gradient Text */}
+              {/* Eyebrow Pill - INSIDE the card */}
+              <div className="flex justify-center mb-6">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
+                  <p className="text-sm font-mono uppercase tracking-wider text-white/60">
+                    The Harbor Index
+                  </p>
+                </div>
+              </div>
+
+              {/* Headline - Using hero gradient (white → cyan → blue) */}
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-center mb-6 leading-tight">
-                <span 
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: 'linear-gradient(90deg, #a78bfa, #22d3ee, #60a5fa)'
-                  }}
-                >
+                <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
                   An AI visibility index built from
                 </span>
                 <br />
-                <span 
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: 'linear-gradient(90deg, #a78bfa, #22d3ee, #60a5fa)'
-                  }}
-                >
+                <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
                   15,000+ brands.
                 </span>
               </h2>
@@ -74,23 +69,20 @@ export default function HarborIndexSection() {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 md:mb-16">
                 
-                {/* Primary Button - Gradient Fill */}
+                {/* Primary Button - Reversed gradient (blue → cyan → white) */}
                 <a
                   href="/brands"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 rounded-full text-lg font-semibold text-[#0f1629] transition-all duration-200 hover:scale-[1.02]"
-                  style={{
-                    background: 'linear-gradient(135deg, #a78bfa, #67e8f9)'
-                  }}
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-[#101A31] transition-all duration-200 hover:brightness-90 bg-gradient-to-r from-blue-400 via-cyan-200 to-white"
                 >
                   Browse the Index
                 </a>
 
-                {/* Secondary Button - Gradient Border */}
+                {/* Secondary Button - Same gradient as border */}
                 <a
                   href="/auth/signup"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 rounded-full text-lg font-semibold text-white transition-all duration-200 hover:bg-white/5"
+                  className="relative inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-white transition-all duration-200 hover:bg-white/5"
                   style={{
-                    background: 'linear-gradient(#0f1629, #0f1629) padding-box, linear-gradient(135deg, #f472b6, #facc15, #34d399, #22d3ee) border-box',
+                    background: 'linear-gradient(#101A31, #101A31) padding-box, linear-gradient(to right, #3b82f6, #67e8f9, #ffffff) border-box',
                     border: '2px solid transparent'
                   }}
                 >
@@ -100,63 +92,67 @@ export default function HarborIndexSection() {
 
             </div>
 
-            {/* Screenshot/Leaderboard Preview Area */}
-            <div className="relative px-6 md:px-12 pb-8 md:pb-12">
-              <div className="relative bg-[#0a0f1a] rounded-xl overflow-hidden border border-white/10">
+            {/* Leaderboard Preview Area - Positioned to clip at bottom */}
+            <div className="relative h-[320px] md:h-[380px] px-6 md:px-12">
+              
+              {/* Glow behind leaderboard */}
+              <div 
+                className="absolute inset-x-12 top-0 h-[300px] rounded-xl opacity-30 blur-2xl"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(34, 211, 238, 0.3), rgba(96, 165, 250, 0.2), transparent)'
+                }}
+              />
+
+              {/* Leaderboard Container - Will be clipped by parent overflow-hidden */}
+              <div className="relative bg-[#0a0f1a] rounded-t-xl border border-white/10 border-b-0">
                 
-                {/* Tab Bar - Like Plaid's /auth/get */}
+                {/* Tab Bar */}
                 <div className="flex items-center gap-4 px-6 py-4 border-b border-white/10">
                   <span className="text-sm font-mono text-white/50">/brands/leaderboard</span>
                 </div>
 
-                {/* Leaderboard Preview Content */}
+                {/* Leaderboard Content */}
                 <div className="p-6">
-                  {/* This is where your screenshot will go */}
-                  {/* For now, showing a stylized placeholder that looks like a leaderboard */}
                   
-                  <div className="space-y-3">
+                  <div className="space-y-0">
                     {/* Header Row */}
-                    <div className="flex items-center gap-4 text-xs font-mono text-white/40 pb-2 border-b border-white/10">
-                      <span className="w-8">#</span>
+                    <div className="flex items-center text-xs font-mono text-white/40 pb-3 border-b border-white/10">
+                      <span className="w-16">Rank</span>
                       <span className="flex-1">Brand</span>
-                      <span className="w-24 text-right">Category</span>
-                      <span className="w-20 text-right">Score</span>
+                      <span className="w-32 text-left hidden md:block">Industry</span>
+                      <span className="w-24 text-right">Score</span>
                     </div>
 
-                    {/* Sample Rows */}
+                    {/* Sample Rows - Matching your screenshot style */}
                     {[
-                      { rank: 1, name: 'Stripe', category: 'Fintech', score: 94 },
-                      { rank: 2, name: 'Notion', category: 'Productivity', score: 91 },
-                      { rank: 3, name: 'Figma', category: 'Design', score: 89 },
-                      { rank: 4, name: 'Linear', category: 'Dev Tools', score: 87 },
-                      { rank: 5, name: 'Vercel', category: 'Infrastructure', score: 85 },
+                      { rank: 1, name: 'Microsoft', domain: 'microsoft.com', industry: 'Technology', score: '100.0%', delta: '+5.8%' },
+                      { rank: 2, name: 'SketchUp', domain: 'sketchup.com', industry: '3D Design', score: '100.0%', delta: '+5.8%' },
+                      { rank: 3, name: 'SpotHero', domain: 'spothero.com', industry: 'Transportation', score: '100.0%', delta: '+5.8%' },
+                      { rank: 4, name: 'Nike', domain: 'nike.com', industry: 'Retail', score: '95.2%', delta: '+5.8%' },
+                      { rank: 5, name: 'Lumion', domain: 'lumion.com', industry: '3D Rendering', score: '95.0%', delta: '+5.8%' },
                     ].map((item, i) => (
                       <div 
                         key={item.rank}
-                        className="flex items-center gap-4 py-2 text-sm"
-                        style={{ opacity: 1 - (i * 0.12) }}
+                        className="flex items-center py-4 border-b border-white/5"
                       >
-                        <span className="w-8 font-mono text-white/50">{item.rank}</span>
-                        <span className="flex-1 font-medium text-white">{item.name}</span>
-                        <span className="w-24 text-right text-white/50">{item.category}</span>
-                        <span className="w-20 text-right">
-                          <span 
-                            className="inline-flex items-center justify-center px-2 py-0.5 rounded text-xs font-semibold"
-                            style={{
-                              background: `linear-gradient(135deg, rgba(34, 211, 238, ${0.2 + (5-i) * 0.05}), rgba(167, 139, 250, ${0.2 + (5-i) * 0.05}))`,
-                              color: '#22d3ee'
-                            }}
-                          >
-                            {item.score}
-                          </span>
-                        </span>
+                        <span className="w-16 text-sm text-white/50">#{item.rank}</span>
+                        <div className="flex-1 flex items-center gap-3">
+                          {/* Placeholder for logo */}
+                          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+                            <span className="text-xs text-white/30">{item.name.charAt(0)}</span>
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-white">{item.name}</p>
+                            <p className="text-xs text-white/40">{item.domain}</p>
+                          </div>
+                        </div>
+                        <span className="w-32 text-sm text-white/50 text-left hidden md:block">{item.industry}</span>
+                        <div className="w-24 text-right">
+                          <span className="text-sm font-semibold text-white">{item.score}</span>
+                          <span className="text-xs text-emerald-400 ml-2">{item.delta}</span>
+                        </div>
                       </div>
                     ))}
-
-                    {/* Fade out indicator */}
-                    <div className="flex items-center justify-center pt-4">
-                      <span className="text-xs text-white/30 font-mono">+ 5,739 more brands</span>
-                    </div>
                   </div>
                 </div>
 
