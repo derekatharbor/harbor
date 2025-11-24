@@ -151,7 +151,7 @@ export default function PricingClient() {
         </div>
       </section>
 
-      /* Pricing Cards */}
+      {/* Pricing Cards */}
       <section className="pb-20 md:pb-28 px-6">
         <div className="max-w-5xl mx-auto">
           
