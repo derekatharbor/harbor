@@ -45,7 +45,7 @@ export default function HowHarborWorksSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
           {/* Left: Image Preview */}
-          <div className="relative order-2 lg:order-1">
+          <div className="relative order-2 lg:order-1 lg:sticky lg:top-32 lg:self-start">
             
             <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50">
               
