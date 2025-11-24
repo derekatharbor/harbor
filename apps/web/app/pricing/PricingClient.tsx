@@ -53,30 +53,38 @@ const plans = [
 
 const faqs = [
   {
-    question: 'What does Harbor actually do?',
-    answer: 'Harbor shows you how AI models like ChatGPT, Claude, Gemini, and Perplexity talk about your brand. We query these models with real customer prompts, analyze the responses, and give you a visibility score plus actionable recommendations to improve your AI presence.',
+    question: 'Is the Free plan really free forever?',
+    answer: 'Yes. You can claim your brand profile, see your visibility score, and keep your public page live indefinitely. No credit card, no trial period, no catch.',
   },
   {
-    question: 'What is a "fresh scan"?',
-    answer: 'A fresh scan queries all major AI models with prompts your customers actually use. We analyze how each model talks about your brand, what they recommend, and where you rank against competitors. Pro plans include weekly fresh scans to track changes over time.',
+    question: 'What do I get with Pro that I don\'t get for free?',
+    answer: 'Pro gives you ongoing monitoring. You get weekly scans to track how your visibility changes, tools to improve your AI presence, and the ability to see what competitors are doing. Free is a snapshot; Pro is the full picture over time.',
   },
   {
-    question: 'What are the 4 intelligence modules?',
-    answer: 'Shopping Visibility (product recommendations), Brand Visibility (how AI describes you), Conversation Volumes (what people ask about you), and Website Analytics (how AI-friendly your site is).',
+    question: 'Can I cancel anytime?',
+    answer: 'Yes. Cancel from your dashboard whenever you want. You\'ll keep Pro access through the end of your billing period, then you\'ll drop back to Free.',
   },
   {
-    question: 'Do you offer team or agency plans?',
-    answer: 'We\'re building Agency plans for teams managing multiple brands. Contact us at hello@useharbor.io to learn more and get early access.',
+    question: 'How does annual billing work?',
+    answer: 'Pay upfront for a year and save 20%. That\'s $63/month instead of $79, billed as one payment of $759. You can switch between monthly and annual anytime from your dashboard.',
   },
   {
-    question: 'How do I cancel?',
-    answer: 'You can cancel anytime from your dashboard settings. Your Pro access continues until the end of your billing period, then you\'ll revert to the Free plan.',
+    question: 'What if I manage multiple brands?',
+    answer: 'We\'re building Agency plans for teams and consultants. Contact us at hello@useharbor.io to get early access.',
   },
 ]
 
 export default function PricingClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
+
+  const getPrice = (basePrice: number) => {
+    if (billingCycle === 'annual') {
+      return Math.round(basePrice * 0.8) // 20% off
+    }
+    return basePrice
+  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
@@ -89,15 +97,14 @@ export default function PricingClient() {
         >
           <div className="px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 md:h-16">
-              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
+              <Link href="/" className="flex items-center">
                 <Image 
-                  src="/logo-icon.png" 
+                  src="/images/harbor-dark-solo.svg" 
                   alt="Harbor" 
-                  width={32} 
+                  width={120} 
                   height={32}
-                  className="w-7 h-7 md:w-8 md:h-8"
+                  className="h-7 md:h-8 w-auto"
                 />
-                <span className="text-lg md:text-xl font-bold text-[#101A31]">Harbor</span>
               </Link>
 
               <div className="flex items-center space-x-2 md:space-x-4">
@@ -144,9 +151,39 @@ export default function PricingClient() {
         </div>
       </section>
 
-      {/* Pricing Cards */}
+      /* Pricing Cards */}
       <section className="pb-20 md:pb-28 px-6">
         <div className="max-w-5xl mx-auto">
+          
+          {/* Billing Toggle */}
+          <div className="flex justify-center mb-10">
+            <div className="inline-flex items-center p-1 rounded-full bg-gray-100 border border-gray-200">
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+                  billingCycle === 'monthly'
+                    ? 'bg-white text-[#101A31] shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBillingCycle('annual')}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
+                  billingCycle === 'annual'
+                    ? 'bg-white text-[#101A31] shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                Annual
+                <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
+                  Save 20%
+                </span>
+              </button>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
             {plans.map((plan) => (
               <div
@@ -214,7 +251,7 @@ export default function PricingClient() {
                           <span className={`text-5xl lg:text-6xl font-heading font-bold ${
                             plan.dark ? 'text-white' : 'text-[#101A31]'
                           }`}>
-                            ${plan.price}
+                            ${getPrice(plan.price)}
                           </span>
                         </>
                       )}
@@ -224,6 +261,13 @@ export default function PricingClient() {
                         /month
                       </span>
                     </div>
+                    {plan.price > 0 && billingCycle === 'annual' && (
+                      <p className={`text-sm mt-1 ${
+                        plan.dark ? 'text-emerald-400' : 'text-emerald-600'
+                      }`}>
+                        ${getPrice(plan.price) * 12}/year · Save ${(plan.price * 12) - (getPrice(plan.price) * 12)}/year
+                      </p>
+                    )}
                   </div>
 
                   {/* CTA Button */}
