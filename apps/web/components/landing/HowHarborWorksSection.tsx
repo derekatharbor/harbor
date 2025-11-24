@@ -2,7 +2,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { Scan, Brain, TrendingUp, Plus, Minus } from 'lucide-react'
 
 const steps = [
@@ -33,12 +32,10 @@ const steps = [
 ]
 
 export default function HowHarborWorksSection() {
-  const [activeStep, setActiveStep] = useState<string | null>('scan')
-
-  const activeStepData = steps.find(s => s.id === activeStep) || steps[0]
+  const [activeStep, setActiveStep] = useState<string>('scan')
 
   const handleStepClick = (stepId: string) => {
-    setActiveStep(activeStep === stepId ? null : stepId)
+    setActiveStep(activeStep === stepId ? 'scan' : stepId)
   }
 
   return (
@@ -48,10 +45,11 @@ export default function HowHarborWorksSection() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
           {/* Left: Image Preview */}
-          <div className="relative order-2 lg:order-1 lg:sticky lg:top-32 lg:self-start">
+          <div className="relative order-2 lg:order-1">
             
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50 h-full min-h-[300px] lg:min-h-[500px]">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50">
               
+              {/* Gradient bar */}
               <div 
                 className="h-2"
                 style={{
@@ -59,30 +57,19 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              <div className="relative bg-[#f8fafc] h-[calc(100%-8px)]">
-                
+              {/* Image container - uses background-image to avoid any alt text issues */}
+              <div className="relative h-[350px] md:h-[450px] bg-[#101A31]">
                 {steps.map((step) => (
                   <div
                     key={step.id}
-                    className={`absolute inset-0 transition-opacity duration-300 ${
-                      activeStep === step.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    className={`absolute inset-0 bg-cover bg-top transition-opacity duration-300 ${
+                      activeStep === step.id ? 'opacity-100' : 'opacity-0'
                     }`}
-                  >
-                    <Image
-                      src={step.image}
-                      alt={`Harbor ${step.title} step`}
-                      fill
-                      className="object-cover object-top"
-                    />
-                  </div>
+                    style={{ backgroundImage: `url(${step.image})` }}
+                    role="img"
+                    aria-label={`Harbor ${step.title} step preview`}
+                  />
                 ))}
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-gray-400">
-                    <activeStepData.icon className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                    <p className="text-sm font-mono opacity-50">{activeStepData.image}</p>
-                  </div>
-                </div>
               </div>
             </div>
 
