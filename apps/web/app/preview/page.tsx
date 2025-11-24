@@ -3,6 +3,7 @@ import FrostedNav from '@/components/landing/FrostedNav'
 import NewHeroSection from '@/components/landing/NewHeroSection'
 import TheShiftSection from '@/components/landing/TheShiftSection'
 import HarborIndexSection from '@/components/landing/HarborIndexSection'
+import HowHarborWorksSection from '@/components/landing/HowHarborWorksSection'
 import Footer from '@/components/landing/Footer'
 
 export default function PreviewPage() {
@@ -14,6 +15,7 @@ export default function PreviewPage() {
         <NewHeroSection />
         <TheShiftSection />
         <HarborIndexSection />
+        <HowHarborWorksSection />
         {/* Add more sections here as we build them */}
       </main>
       
