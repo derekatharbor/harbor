@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
+// Using native img tag to avoid Next.js Image alt text overlay issues
 import { Scan, Brain, TrendingUp, Plus, Minus } from 'lucide-react'
 
 const steps = [
@@ -45,6 +45,7 @@ function StepPlaceholder({ step }: { step: typeof steps[0] }) {
 
 function StepImage({ step, isActive }: { step: typeof steps[0]; isActive: boolean }) {
   const [hasError, setHasError] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   return (
     <div
@@ -52,16 +53,19 @@ function StepImage({ step, isActive }: { step: typeof steps[0]; isActive: boolea
         isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
-      {hasError ? (
-        <StepPlaceholder step={step} />
-      ) : (
-        <Image
+      {/* Show placeholder while loading or on error */}
+      {(!isLoaded || hasError) && <StepPlaceholder step={step} />}
+      
+      {/* Image - hidden until loaded, uses img tag to avoid Next.js alt text overlay */}
+      {!hasError && (
+        <img
           src={step.image}
           alt={`Harbor ${step.title} step`}
-          fill
-          className="object-cover object-top"
+          className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
-          sizes="(max-width: 1024px) 100vw, 50vw"
         />
       )}
     </div>
