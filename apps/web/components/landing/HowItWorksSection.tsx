@@ -2,7 +2,6 @@
 'use client'
 
 import { useState } from 'react'
-// Using native img tag to avoid Next.js Image alt text overlay issues
 import { Scan, Brain, TrendingUp, Plus, Minus } from 'lucide-react'
 
 const steps = [
@@ -32,46 +31,6 @@ const steps = [
   }
 ]
 
-function StepPlaceholder({ step }: { step: typeof steps[0] }) {
-  const Icon = step.icon
-  return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#101A31] to-[#1a2a4a] text-white p-8">
-      <Icon className="w-16 h-16 mb-4 text-cyan-400" />
-      <p className="text-xl font-semibold mb-2">{step.title}</p>
-      <p className="text-sm text-gray-400 text-center max-w-xs">{step.description}</p>
-    </div>
-  )
-}
-
-function StepImage({ step, isActive }: { step: typeof steps[0]; isActive: boolean }) {
-  const [hasError, setHasError] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  return (
-    <div
-      className={`absolute inset-0 transition-opacity duration-300 ${
-        isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
-    >
-      {/* Show placeholder while loading or on error */}
-      {(!isLoaded || hasError) && <StepPlaceholder step={step} />}
-      
-      {/* Image - hidden until loaded, uses img tag to avoid Next.js alt text overlay */}
-      {!hasError && (
-        <img
-          src={step.image}
-          alt={`Harbor ${step.title} step`}
-          className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setHasError(true)}
-        />
-      )}
-    </div>
-  )
-}
-
 export default function HowHarborWorksSection() {
   const [activeStep, setActiveStep] = useState<string>('scan')
 
@@ -90,6 +49,7 @@ export default function HowHarborWorksSection() {
             
             <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50">
               
+              {/* Gradient bar */}
               <div 
                 className="h-2"
                 style={{
@@ -97,12 +57,17 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              <div className="relative bg-[#101A31] h-[350px] md:h-[450px]">
+              {/* Image container - uses background-image to avoid any alt text issues */}
+              <div className="relative h-[350px] md:h-[450px] bg-[#101A31]">
                 {steps.map((step) => (
-                  <StepImage 
-                    key={step.id} 
-                    step={step} 
-                    isActive={activeStep === step.id} 
+                  <div
+                    key={step.id}
+                    className={`absolute inset-0 bg-cover bg-top transition-opacity duration-300 ${
+                      activeStep === step.id ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{ backgroundImage: `url(${step.image})` }}
+                    role="img"
+                    aria-label={`Harbor ${step.title} step preview`}
                   />
                 ))}
               </div>
