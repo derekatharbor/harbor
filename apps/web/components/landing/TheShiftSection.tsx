@@ -57,7 +57,7 @@ export default function TheShiftSection() {
                 <div className="absolute top-8 left-4 md:left-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-[300px] transform -rotate-2">
                   <div className="flex items-center gap-3">
                     <Image 
-                      src="/logos/chatgpt.svg" 
+                      src="/logos/chatgpt-dark.svg" 
                       alt="ChatGPT" 
                       width={32} 
                       height={32}
@@ -77,7 +77,7 @@ export default function TheShiftSection() {
                 <div className="absolute top-1/3 right-4 md:right-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-[300px] transform rotate-1">
                   <div className="flex items-center gap-3">
                     <Image 
-                      src="/logos/perplexity.svg" 
+                      src="/logos/perplexity-dark.svg" 
                       alt="Perplexity" 
                       width={32} 
                       height={32}
@@ -97,7 +97,7 @@ export default function TheShiftSection() {
                 <div className="absolute bottom-1/4 left-8 md:left-16 bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-[300px] transform -rotate-1">
                   <div className="flex items-center gap-3">
                     <Image 
-                      src="/logos/claude.svg" 
+                      src="/logos/claude-dark.svg" 
                       alt="Claude" 
                       width={32} 
                       height={32}
@@ -117,7 +117,7 @@ export default function TheShiftSection() {
                 <div className="absolute bottom-8 right-12 md:right-20 bg-white rounded-xl shadow-xl border border-gray-100 p-4 max-w-[300px] transform rotate-2">
                   <div className="flex items-center gap-3">
                     <Image 
-                      src="/logos/gemini.svg" 
+                      src="/logos/gemini-dark.svg" 
                       alt="Gemini" 
                       width={32} 
                       height={32}
