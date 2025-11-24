@@ -126,26 +126,24 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
 
           {/* Column 2 - Harbor Index (Featured) */}
           <div>
-            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Harbor Index</h3>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Featured</h3>
             
             <a 
               href="/brands" 
               onClick={onClose}
               className="block group"
             >
-              {/* Image placeholder */}
+              {/* Image placeholder - you can add Harbor Index graphic here */}
               <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
                 <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
               </div>
               
-              <h4 className="text-xl font-bold text-white mb-3 uppercase group-hover:text-white/70 transition-colors">
-                Claim your brand's AI profile
+              <h4 className="text-xl font-bold text-white mb-3 group-hover:text-white/70 transition-colors">
+                Harbor Index
               </h4>
               
-              <p className="text-sm text-white/60 leading-relaxed font-mono">
-                Our Harbor Index is home to AI profiles for thousands of brands.
-                <br /><br />
-                Don't see yours listed? Set up your AI profile page for free and start getting discovered by AI models.
+              <p className="text-sm text-white/60 leading-relaxed">
+                Browse thousands of brand profiles and see how AI models understand your industry. Claim your brand's profile to control your AI presence.
               </p>
             </a>
           </div>
