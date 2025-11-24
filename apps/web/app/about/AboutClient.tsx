@@ -128,18 +128,18 @@ export default function AboutClient() {
               </div>
 
               {/* Right Side */}
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3 md:space-x-4">
                 <button
                   onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors md:hidden"
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
                   aria-label="Menu"
                 >
-                  <Menu className="w-6 h-6 text-white" />
+                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </button>
                 
                 <Link
                   href="/auth/signup"
-                  className="hidden md:inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-[#101A31] text-sm font-medium hover:bg-gray-100 transition-all"
+                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-[#101A31] text-sm font-medium hover:bg-gray-100 transition-all"
                 >
                   Get Started
                 </Link>
@@ -150,12 +150,12 @@ export default function AboutClient() {
       </nav>
 
       {/* Hero Section */}
-      <section id="vision" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+      <section id="vision" className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center pt-20 pb-12 md:pb-0 overflow-hidden">
         
         {/* Radial Wireframe Background */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div 
-            className="w-[150%] max-w-[1800px] aspect-square opacity-20"
+            className="w-[200%] md:w-[150%] max-w-[1800px] aspect-square opacity-20"
             style={{
               background: `
                 repeating-radial-gradient(
@@ -180,12 +180,12 @@ export default function AboutClient() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           
           {/* Year Tag */}
-          <div className="mb-6">
-            <span className="text-white/40 text-lg font-light tracking-widest">2025</span>
+          <div className="mb-4 md:mb-6">
+            <span className="text-white/40 text-base md:text-lg font-light tracking-widest">2025</span>
           </div>
 
           {/* Main Headline - Gradient Text */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-8 leading-[0.95]">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 md:mb-8 leading-[1] md:leading-[0.95]">
             <span 
               className="bg-clip-text text-transparent"
               style={{
@@ -206,14 +206,14 @@ export default function AboutClient() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed px-2">
             Harbor is building the infrastructure for how brands are represented across AI. One score. Every model. Complete visibility.
           </p>
 
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+        {/* Scroll Indicator - Hidden on mobile */}
+        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 hidden md:block">
           <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
             <div className="w-1 h-2 bg-white/40 rounded-full animate-bounce" />
           </div>
