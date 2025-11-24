@@ -110,7 +110,7 @@ export default function FrostedNav() {
               {/* Logo */}
               <a href="/" className="flex items-center space-x-3">
                 <Image 
-                  src={isDarkMode ? "/logo-icon.png" : "/images/harbor-logo.svg"}
+                  src={isDarkMode ? "/logo-icon.png" : "/images/harbor-dark-solo.svg"}
                   alt="Harbor" 
                   width={32} 
                   height={32}

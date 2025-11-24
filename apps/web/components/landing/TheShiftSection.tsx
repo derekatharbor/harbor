@@ -7,15 +7,15 @@ export default function TheShiftSection() {
   return (
     <section className="relative">
       
-      {/* Color Noise Transition Bar */}
+      {/* Color Noise Transition Bar - Thin strip like currency security strip */}
       {/* 
         Your image specs:
         - Width: 1920px (or 100% scalable)
-        - Height: 60-100px
+        - Height: 20-30px
         - Place at: /public/color-noise-bar.png
       */}
       <div 
-        className="w-full h-16 md:h-24"
+        className="w-full h-4 md:h-6"
         style={{
           backgroundImage: 'url(/color-noise-bar.png)',
           backgroundSize: 'cover',
