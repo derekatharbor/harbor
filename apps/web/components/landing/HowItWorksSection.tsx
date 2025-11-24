@@ -32,13 +32,47 @@ const steps = [
   }
 ]
 
-export default function HowHarborWorksSection() {
-  const [activeStep, setActiveStep] = useState<string | null>('scan')
+function StepPlaceholder({ step }: { step: typeof steps[0] }) {
+  const Icon = step.icon
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#101A31] to-[#1a2a4a] text-white p-8">
+      <Icon className="w-16 h-16 mb-4 text-cyan-400" />
+      <p className="text-xl font-semibold mb-2">{step.title}</p>
+      <p className="text-sm text-gray-400 text-center max-w-xs">{step.description}</p>
+    </div>
+  )
+}
 
-  const activeStepData = steps.find(s => s.id === activeStep) || steps[0]
+function StepImage({ step, isActive }: { step: typeof steps[0]; isActive: boolean }) {
+  const [hasError, setHasError] = useState(false)
+
+  return (
+    <div
+      className={`absolute inset-0 transition-opacity duration-300 ${
+        isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
+      {hasError ? (
+        <StepPlaceholder step={step} />
+      ) : (
+        <Image
+          src={step.image}
+          alt={`Harbor ${step.title} step`}
+          fill
+          className="object-cover object-top"
+          onError={() => setHasError(true)}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
+      )}
+    </div>
+  )
+}
+
+export default function HowHarborWorksSection() {
+  const [activeStep, setActiveStep] = useState<string>('scan')
 
   const handleStepClick = (stepId: string) => {
-    setActiveStep(activeStep === stepId ? null : stepId)
+    setActiveStep(activeStep === stepId ? 'scan' : stepId)
   }
 
   return (
@@ -59,24 +93,14 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              <div className="relative bg-[#f8fafc] h-[350px] md:h-[450px]">
-                
+              <div className="relative bg-[#101A31] h-[350px] md:h-[450px]">
                 {steps.map((step) => (
-                  <div
-                    key={step.id}
-                    className={`absolute inset-0 z-10 transition-opacity duration-300 ${
-                      activeStep === step.id ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                    }`}
-                  >
-                    <Image
-                      src={step.image}
-                      alt={`Harbor ${step.title} step`}
-                      fill
-                      className="object-cover object-top"
-                    />
-                  </div>
+                  <StepImage 
+                    key={step.id} 
+                    step={step} 
+                    isActive={activeStep === step.id} 
+                  />
                 ))}
-
               </div>
             </div>
 
