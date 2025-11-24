@@ -1,20 +1,76 @@
 // apps/web/components/landing/FinalCTASection.tsx
 'use client'
 
-import { useState } from 'react'
-import { Search, ArrowRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { Search, ArrowRight, X, Plus } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+interface Brand {
+  id: string
+  brand_name: string
+  slug: string
+  domain: string
+  logo_url: string
+  visibility_score: number
+  industry: string
+  rank_global: number
+  claimed: boolean
+}
 
 export default function FinalCTASection() {
   const [query, setQuery] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const router = useRouter()
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [searchResults, setSearchResults] = useState<Brand[]>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [hasFetched, setHasFetched] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (query.trim()) {
-      router.push(`/brands?q=${encodeURIComponent(query.trim())}`)
+  // Fetch brands on first focus (lazy load)
+  useEffect(() => {
+    if (isFocused && !hasFetched) {
+      setLoading(true)
+      fetch('/api/index/brands')
+        .then(res => res.json())
+        .then(data => {
+          setBrands(data)
+          setHasFetched(true)
+          setLoading(false)
+        })
+        .catch(err => {
+          console.error('Failed to fetch brands:', err)
+          setLoading(false)
+        })
     }
+  }, [isFocused, hasFetched])
+
+  // Filter results based on query
+  useEffect(() => {
+    if (query.trim() && brands.length > 0) {
+      const results = brands.filter(brand =>
+        brand.brand_name.toLowerCase().includes(query.toLowerCase()) ||
+        brand.domain.toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 5)
+      
+      setSearchResults(results)
+      setShowDropdown(true)
+    } else if (query.trim() && hasFetched) {
+      // Query exists but no results
+      setSearchResults([])
+      setShowDropdown(true)
+    } else {
+      setSearchResults([])
+      setShowDropdown(false)
+    }
+  }, [query, brands, hasFetched])
+
+  const handleBlur = () => {
+    // Delay to allow click on dropdown items
+    setTimeout(() => {
+      setIsFocused(false)
+      setShowDropdown(false)
+    }, 200)
   }
 
   return (
@@ -73,8 +129,8 @@ export default function FinalCTASection() {
             Search for your brand in the Harbor Index. Claim your profile and start improving your AI visibility.
           </p>
 
-          {/* Animated Search Input */}
-          <form onSubmit={handleSubmit} className="relative max-w-xl mx-auto">
+          {/* Search Input with Dropdown */}
+          <div className="relative max-w-xl mx-auto">
             
             {/* Animated gradient border container */}
             <div className="relative p-[2px] rounded-xl md:rounded-2xl gradient-border-wrapper">
@@ -92,17 +148,28 @@ export default function FinalCTASection() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onFocus={() => setIsFocused(true)}
-                    onBlur={() => setIsFocused(false)}
+                    onBlur={handleBlur}
                     placeholder="Search for a brand..."
                     className="flex-1 bg-transparent text-white text-lg px-4 py-5 outline-none placeholder:text-white/30"
                   />
-                  <button
-                    type="submit"
+                  {query && (
+                    <button
+                      onClick={() => {
+                        setQuery('')
+                        setShowDropdown(false)
+                      }}
+                      className="mr-2 text-white/40 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <Link
+                    href="/brands"
                     className="m-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-400 via-cyan-200 to-white text-[#101A31] font-semibold flex items-center gap-2 hover:brightness-90 transition-all"
                   >
-                    Search
+                    Browse All
                     <ArrowRight className="w-4 h-4" />
-                  </button>
+                  </Link>
                 </div>
 
                 {/* Mobile layout - stacked */}
@@ -116,26 +183,133 @@ export default function FinalCTASection() {
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
+                      onBlur={handleBlur}
                       placeholder="Search for a brand..."
                       className="flex-1 bg-transparent text-white text-base px-3 py-1 outline-none placeholder:text-white/30"
                     />
+                    {query && (
+                      <button
+                        onClick={() => {
+                          setQuery('')
+                          setShowDropdown(false)
+                        }}
+                        className="text-white/40 hover:text-white transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                   <div className="px-3 pb-3">
-                    <button
-                      type="submit"
+                    <Link
+                      href="/brands"
                       className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-400 via-cyan-200 to-white text-[#101A31] font-semibold flex items-center justify-center gap-2 hover:brightness-90 transition-all"
                     >
-                      Search
+                      Browse All
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
               </div>
             </div>
 
-          </form>
+            {/* Search Results Dropdown */}
+            {showDropdown && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
+                
+                {/* Loading state */}
+                {loading && (
+                  <div className="px-6 py-4 text-center">
+                    <p className="text-white/40 text-sm">Loading brands...</p>
+                  </div>
+                )}
+
+                {/* Results */}
+                {!loading && searchResults.length > 0 && (
+                  <>
+                    {searchResults.map((brand) => {
+                      const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+                      const isPositive = delta > 0
+
+                      return (
+                        <Link
+                          key={brand.id}
+                          href={`/brands/${brand.slug}`}
+                          className="flex items-center gap-4 px-6 py-4 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                        >
+                          {/* Logo */}
+                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                            {brand.logo_url && (
+                              <Image
+                                src={brand.logo_url}
+                                alt={brand.brand_name}
+                                width={40}
+                                height={40}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = 'none'
+                                }}
+                              />
+                            )}
+                          </div>
+
+                          {/* Brand Info */}
+                          <div className="flex-1 min-w-0 text-left">
+                            <div className="text-white font-medium truncate">{brand.brand_name}</div>
+                            <div className="text-white/40 text-sm truncate">{brand.domain}</div>
+                          </div>
+
+                          {/* Rank */}
+                          <div className="text-white/60 text-sm font-mono hidden sm:block">#{brand.rank_global}</div>
+
+                          {/* Score */}
+                          <div className="flex items-center gap-2">
+                            <span className="text-white font-semibold">{brand.visibility_score.toFixed(1)}%</span>
+                            <span className={`text-xs font-medium hidden sm:inline ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                              {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                            </span>
+                          </div>
+
+                          {/* Arrow */}
+                          <ArrowRight className="w-4 h-4 text-white/40" />
+                        </Link>
+                      )
+                    })}
+
+                    {/* View All Results */}
+                    {searchResults.length === 5 && (
+                      <div className="px-6 py-3 bg-white/5 border-t border-white/10">
+                        <Link
+                          href={`/brands?q=${encodeURIComponent(query)}`}
+                          className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                        >
+                          View all results for "{query}"
+                        </Link>
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* No Results - Add Your Brand */}
+                {!loading && query.trim() && searchResults.length === 0 && (
+                  <div className="p-6">
+                    <p className="text-white/60 text-sm mb-4 text-center">
+                      No brands found for "{query}"
+                    </p>
+                    <Link
+                      href="/auth/signup"
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-all"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add "{query}" to the Index
+                    </Link>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+          </div>
 
           {/* Helper text */}
           <p className="mt-6 text-sm text-white/40">
