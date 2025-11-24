@@ -59,7 +59,7 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              <div className="relative bg-[#f8fafc] aspect-[4/3]">
+              <div className="relative bg-[#f8fafc] h-[350px] md:h-[450px]">
                 
                 {steps.map((step) => (
                   <div
