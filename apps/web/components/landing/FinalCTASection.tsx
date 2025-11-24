@@ -78,7 +78,6 @@ export default function FinalCTASection() {
             
             {/* Animated gradient border container */}
             <div className="relative p-[2px] rounded-xl md:rounded-2xl gradient-border-wrapper">
-              <div className="gradient-border"></div>
               
               {/* Inner input container */}
               <div className="relative bg-[#0a0f1a] rounded-xl md:rounded-2xl">
@@ -150,34 +149,28 @@ export default function FinalCTASection() {
       <style jsx>{`
         .gradient-border-wrapper {
           position: relative;
-          overflow: hidden;
-        }
-        
-        .gradient-border {
-          position: absolute;
-          inset: 0;
-          background: conic-gradient(
-            from 0deg,
+          background: linear-gradient(
+            90deg,
+            #3b82f6,
+            #22d3ee,
+            #ffffff,
+            #22d3ee,
             #3b82f6,
             #22d3ee,
             #ffffff,
             #22d3ee,
             #3b82f6
           );
-          animation: spin 3s linear infinite;
+          background-size: 300% 100%;
+          animation: shimmer 4s linear infinite;
         }
         
-        .gradient-border-wrapper > div:last-child {
-          position: relative;
-          z-index: 1;
-        }
-        
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
+        @keyframes shimmer {
+          0% {
+            background-position: 100% 50%;
           }
-          to {
-            transform: rotate(360deg);
+          100% {
+            background-position: 0% 50%;
           }
         }
       `}</style>
