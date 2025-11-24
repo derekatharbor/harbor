@@ -44,7 +44,7 @@
      LIGHT MODE (DEFAULT) - Professional SaaS look
      ======================================== */
   :root {
-    --bg-primary: #FFFFFF;
+    --bg-primary: #101A31;  /* Navy for landing pages */
     --bg-secondary: #F8F9FA;
     --bg-card: #FFFFFF;
     --bg-hover: #F8F9FA;
@@ -64,7 +64,7 @@
      DARK MODE (OPT-IN) - Navy theme for night work
      ======================================== */
   :root[data-theme="dark"] {
-    --bg-primary: #0B1521;
+    --bg-primary: #101A31;  /* Match hero navy */
     --bg-secondary: #101A31;
     --bg-card: #101C2C;
     --bg-hover: rgba(255, 255, 255, 0.02);
