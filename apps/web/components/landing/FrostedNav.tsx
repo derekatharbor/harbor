@@ -78,9 +78,6 @@ export default function FrostedNav() {
         </div>
       </nav>
 
-      {/* Spacer */}
-      <div className="h-24" />
-
       {/* Fullscreen Menu */}
       <FullscreenMenu 
         isOpen={isMenuOpen} 
