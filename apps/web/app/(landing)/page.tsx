@@ -9,7 +9,7 @@ import Footer from '@/components/landing/Footer'
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-[#1A2332] overflow-hidden">
+    <div className="relative min-h-screen bg-[#101A31] overflow-hidden">
       
       <div className="relative z-10">
         <FrostedNav />
