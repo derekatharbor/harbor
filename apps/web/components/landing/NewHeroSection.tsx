@@ -25,7 +25,7 @@ export default function NewHeroSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 text-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-48 pb-24 text-center">
         
         {/* Headline */}
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 leading-tight">
