@@ -10,27 +10,24 @@ const steps = [
     id: 'scan',
     icon: Scan,
     title: 'Scan',
-    description: 'We scan major AI models for your brand and competitors.',
-    expandedContent: 'Harbor queries ChatGPT, Claude, Gemini, and Perplexity with the prompts your customers actually use. We capture how each model talks about your brand, what it recommends, and where you rank against competitors.',
-    // Derek: Add screenshot at /public/previews/how-scan.png (recommended: 800x600px)
+    description: 'We query AI models the way your customers do.',
+    expandedContent: 'Harbor asks ChatGPT, Claude, Gemini, and Perplexity the questions your buyers actually ask. We record every mention, recommendation, and competitor comparison.',
     image: '/previews/how-scan.png'
   },
   {
     id: 'interpret',
     icon: Brain,
     title: 'Interpret',
-    description: 'We translate raw answers into a clear visibility and perception profile.',
-    expandedContent: 'Raw AI responses become structured insights: your visibility score, sentiment analysis, competitor comparisons, and the specific phrases models use to describe you. No guesswork—just data.',
-    // Derek: Add screenshot at /public/previews/how-interpret.png (recommended: 800x600px)
+    description: 'Raw AI responses become a clear visibility profile.',
+    expandedContent: 'You get a visibility score, sentiment breakdown, and the exact language models use to describe you. See where you rank and why.',
     image: '/previews/how-interpret.png'
   },
   {
     id: 'improve',
     icon: TrendingUp,
     title: 'Improve',
-    description: 'We give you concrete tasks on your own site and content, then track progress over time.',
-    expandedContent: 'Harbor generates specific, actionable recommendations: schema markup to add, content gaps to fill, pages to optimize. Complete tasks, re-scan, and watch your visibility improve.',
-    // Derek: Add screenshot at /public/previews/how-improve.png (recommended: 800x600px)
+    description: 'Concrete tasks to strengthen your AI presence.',
+    expandedContent: 'Harbor tells you what to fix: schema to add, content gaps to fill, pages to optimize. Make the changes, re-scan, and track your progress.',
     image: '/previews/how-improve.png'
   }
 ]
@@ -41,7 +38,6 @@ export default function HowHarborWorksSection() {
   const activeStepData = steps.find(s => s.id === activeStep) || steps[0]
 
   const handleStepClick = (stepId: string) => {
-    // Toggle: if clicking active step, close it; otherwise open the new one
     setActiveStep(activeStep === stepId ? null : stepId)
   }
 
@@ -49,16 +45,13 @@ export default function HowHarborWorksSection() {
     <section className="relative bg-white py-20 md:py-32" data-nav-theme="light">
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Two Column Layout - items-stretch makes both columns same height */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
-          {/* Left: Image Preview - sticky so it stays in view while scrolling accordion */}
+          {/* Left: Image Preview */}
           <div className="relative order-2 lg:order-1 lg:sticky lg:top-32 lg:self-start">
             
-            {/* Image Container with subtle shadow - full height */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50 h-full min-h-[400px] lg:min-h-[500px]">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/10 border border-gray-200/50 h-full min-h-[300px] lg:min-h-[500px]">
               
-              {/* Gradient top bar - like Plaid's teal bar */}
               <div 
                 className="h-2"
                 style={{
@@ -66,16 +59,7 @@ export default function HowHarborWorksSection() {
                 }}
               />
 
-              {/* Image area - fills remaining space */}
               <div className="relative bg-[#f8fafc] h-[calc(100%-8px)]">
-                {/* 
-                  Derek: Add your screenshots. They'll swap based on active accordion.
-                  Recommended size: 800x600px each
-                  Paths:
-                  - /public/previews/how-scan.png
-                  - /public/previews/how-interpret.png  
-                  - /public/previews/how-improve.png
-                */}
                 
                 {steps.map((step) => (
                   <div
@@ -93,7 +77,6 @@ export default function HowHarborWorksSection() {
                   </div>
                 ))}
 
-                {/* Fallback placeholder if images don't exist */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-gray-400">
                     <activeStepData.icon className="w-16 h-16 mx-auto mb-4 opacity-20" />
@@ -106,7 +89,7 @@ export default function HowHarborWorksSection() {
           </div>
 
           {/* Right: Copy + Accordion */}
-          <div className="order-1 lg:order-2">
+          <div className="order-1 lg:order-2 min-w-0">
 
             {/* Eyebrow */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#101A31]/5 backdrop-blur-sm border border-[#101A31]/10 mb-6">
@@ -124,7 +107,7 @@ export default function HowHarborWorksSection() {
 
             {/* Subhead */}
             <p className="text-lg text-gray-600 leading-relaxed mb-10">
-              Harbor gives you the visibility layer you've been missing. Three steps to understand and improve how AI models represent your brand.
+              Three steps to understand and improve how AI represents your brand.
             </p>
 
             {/* Accordion */}
@@ -136,7 +119,7 @@ export default function HowHarborWorksSection() {
                 return (
                   <div
                     key={step.id}
-                    className={`border rounded-xl transition-all duration-200 ${
+                    className={`border rounded-xl transition-all duration-200 overflow-hidden ${
                       isActive 
                         ? 'border-[#101A31]/20 bg-[#101A31]/[0.02]' 
                         : 'border-gray-200 hover:border-gray-300'
@@ -144,21 +127,21 @@ export default function HowHarborWorksSection() {
                   >
                     <button
                       onClick={() => handleStepClick(step.id)}
-                      className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
+                      className="w-full flex items-start justify-between p-4 md:p-5 text-left cursor-pointer gap-3"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded-lg transition-colors ${
+                      <div className="flex items-start gap-3 md:gap-4 min-w-0 flex-1">
+                        <div className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
                           isActive ? 'bg-[#101A31] text-white' : 'bg-gray-100 text-gray-500'
                         }`}>
                           <Icon className="w-5 h-5" />
                         </div>
-                        <div>
-                          <h3 className={`text-lg font-semibold transition-colors ${
+                        <div className="min-w-0">
+                          <h3 className={`text-base md:text-lg font-semibold transition-colors ${
                             isActive ? 'text-[#101A31]' : 'text-gray-700'
                           }`}>
                             Step {index + 1}: {step.title}
                           </h3>
-                          <p className="text-sm text-gray-500 mt-0.5">
+                          <p className="text-sm text-gray-500 mt-0.5 break-words">
                             {step.description}
                           </p>
                         </div>
@@ -171,11 +154,11 @@ export default function HowHarborWorksSection() {
                     </button>
 
                     {/* Expanded Content */}
-                    <div className={`overflow-hidden transition-all duration-300 ${
+                    <div className={`transition-all duration-300 ${
                       isActive ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
                     }`}>
-                      <div className="px-5 pb-5 pt-0">
-                        <p className="text-gray-600 leading-relaxed pl-14">
+                      <div className="px-4 md:px-5 pb-4 md:pb-5 pt-0">
+                        <p className="text-gray-600 leading-relaxed pl-11 md:pl-14 text-sm md:text-base">
                           {step.expandedContent}
                         </p>
                       </div>
