@@ -143,6 +143,31 @@ export async function POST(request: Request) {
 
     console.log('[Process] Scan complete:', finalStatus)
 
+    // 🆕 Process competitor data if scan succeeded
+    if (finalStatus === 'done' || finalStatus === 'partial') {
+      console.log('[Process] 🎯 Starting competitor processing...')
+      try {
+        const compResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/scan/process-competitors`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            scanId, 
+            dashboardId: scan.dashboard_id 
+          })
+        })
+        
+        if (compResponse.ok) {
+          const compResult = await compResponse.json()
+          console.log('[Process] ✅ Competitor processing complete:', compResult)
+        } else {
+          console.error('[Process] ⚠️ Competitor processing failed:', compResponse.status)
+        }
+      } catch (compError) {
+        console.error('[Process] ⚠️ Competitor processing error:', compError)
+        // Don't fail the whole scan if competitor processing fails
+      }
+    }
+
     return NextResponse.json({
       success: true,
       scanId,
