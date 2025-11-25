@@ -78,11 +78,6 @@ export async function GET(
       id: j.id
     }))))
 
-    const jobs = jobsRaw || []
-
-    console.log('[Status] 📊 Scan status:', scan.status)
-    console.log('[Status] 📋 Jobs:', jobs?.map((j: any) => `${j.module}:${j.status}`).join(', ') || 'none')
-
     if (!jobs || jobs.length === 0) {
       console.log('[Status] ⚠️ No jobs found for scan!')
     }
