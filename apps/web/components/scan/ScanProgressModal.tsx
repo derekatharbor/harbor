@@ -106,18 +106,19 @@ export default function ScanProgressModal({ isOpen, onClose, onComplete, scanId 
         }
         
         const data: ScanStatusResponse = await response.json()
-        console.log('[Modal] Status update:', data.status, data.progress, '%')
+        console.log('[Modal] Status update:', data.status, data.progress, '%', '| Modules:', 
+          Object.entries(data.modules).filter(([,status]) => status === 'done').length, '/4 done')
 
         setTargetProgress(data.progress)
         setCurrentMessage(data.message)
         setModuleStatus(data.modules)
 
         if (data.status === 'done' && data.progress === 100) {
-          console.log('[Modal] Scan complete!')
+          console.log('[Modal] 🎉 Scan complete!')
           setIsComplete(true)
           return true
         } else if (data.status === 'failed') {
-          console.log('[Modal] Scan failed')
+          console.log('[Modal] ❌ Scan failed')
           setHasFailed(true)
           return true
         }
@@ -128,6 +129,7 @@ export default function ScanProgressModal({ isOpen, onClose, onComplete, scanId 
       }
     }
 
+    // Poll immediately, then every 1 second (faster for better UX)
     fetchStatus()
 
     const pollInterval = setInterval(async () => {
@@ -135,7 +137,7 @@ export default function ScanProgressModal({ isOpen, onClose, onComplete, scanId 
       if (shouldStop) {
         clearInterval(pollInterval)
       }
-    }, 2000)
+    }, 1000) // Changed from 2000ms to 1000ms
 
     return () => clearInterval(pollInterval)
   }, [isOpen, scanId])

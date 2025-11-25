@@ -27,14 +27,20 @@ function getSupabaseClient() {
 }
 
 export async function POST(request: Request) {
+  const startTime = Date.now()
+  console.log('========================================')
+  console.log('[Process] ⚡ ENDPOINT INVOKED at', new Date().toISOString())
+  console.log('========================================')
+  
   try {
     const { scanId } = await request.json()
 
     if (!scanId) {
+      console.log('[Process] ❌ No scan ID provided')
       return NextResponse.json({ error: 'Scan ID required' }, { status: 400 })
     }
 
-    console.log('[Process] Starting scan:', scanId)
+    console.log('[Process] 🎯 Starting scan:', scanId)
     const supabase = getSupabaseClient()
 
     // Get scan info
@@ -45,11 +51,22 @@ export async function POST(request: Request) {
       .single()
 
     if (scanError || !scan) {
-      console.error('[Process] Scan not found:', scanError)
+      console.error('[Process] ❌ Scan not found:', scanError)
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
-    console.log('[Process] Found scan:', scan.dashboard_id)
+    console.log('[Process] ✅ Found scan for dashboard:', scan.dashboard_id, '| Current status:', scan.status)
+
+    // Check if scan is already running or done
+    if (scan.status === 'running') {
+      console.log('[Process] ⚠️ Scan already running - exiting to avoid duplicate processing')
+      return NextResponse.json({ error: 'Scan already in progress' }, { status: 409 })
+    }
+    
+    if (scan.status === 'done' || scan.status === 'failed') {
+      console.log('[Process] ⚠️ Scan already completed - exiting')
+      return NextResponse.json({ error: 'Scan already completed' }, { status: 409 })
+    }
 
     // Get dashboard separately
     const { data: dashboard, error: dashError } = await supabase
@@ -59,11 +76,11 @@ export async function POST(request: Request) {
       .single()
 
     if (dashError || !dashboard) {
-      console.error('[Process] Dashboard not found:', dashError)
+      console.error('[Process] ❌ Dashboard not found:', dashError)
       return NextResponse.json({ error: 'Dashboard not found' }, { status: 404 })
     }
 
-    console.log('[Process] Found dashboard:', dashboard.brand_name)
+    console.log('[Process] ✅ Found dashboard:', dashboard.brand_name)
 
     const metadata = {
       brandName: dashboard.brand_name,
@@ -73,15 +90,31 @@ export async function POST(request: Request) {
       competitors: dashboard.metadata?.competitors || [],
     }
 
-    console.log('[Process] Metadata:', metadata)
+    console.log('[Process] 📋 Metadata:', JSON.stringify(metadata))
 
     // Update scan status to running
-    await supabase
+    console.log('[Process] 🔄 Updating scan status to RUNNING...')
+    const { error: updateError } = await supabase
       .from('scans')
       .update({ status: 'running', started_at: new Date().toISOString() })
       .eq('id', scanId)
 
-    console.log('[Process] Scan marked as running, processing modules...')
+    if (updateError) {
+      console.error('[Process] ❌ Failed to update scan status:', updateError)
+    } else {
+      console.log('[Process] ✅ Scan marked as RUNNING')
+      
+      // Verify the update worked
+      const { data: verifyData } = await supabase
+        .from('scans')
+        .select('status')
+        .eq('id', scanId)
+        .single()
+      
+      console.log('[Process] 🔍 Verified scan status:', verifyData?.status)
+    }
+
+    console.log('[Process] 🚀 Processing 4 modules in parallel...')
 
     // Process all modules in parallel
     const results = await Promise.allSettled([
