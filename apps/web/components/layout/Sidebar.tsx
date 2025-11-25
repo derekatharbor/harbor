@@ -43,24 +43,22 @@ export default function Sidebar() {
     
     setTheme(initialTheme)
     
-    // Apply theme immediately
-    if (initialTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark')
-    } else {
-      document.documentElement.removeAttribute('data-theme')
-    }
+    // Always set the attribute explicitly
+    document.documentElement.setAttribute('data-theme', initialTheme)
   }, [])
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
+    console.log('🎨 Toggle theme:', theme, '→', newTheme)
     setTheme(newTheme)
     localStorage.setItem('harbor-theme', newTheme)
     
-    if (newTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark')
-    } else {
-      document.documentElement.removeAttribute('data-theme')
-    }
+    // Always set the attribute explicitly
+    document.documentElement.setAttribute('data-theme', newTheme)
+    console.log('✅ Applied data-theme:', document.documentElement.getAttribute('data-theme'))
+    
+    // Force a small reflow to ensure CSS updates
+    document.body.offsetHeight
   }
 
   // Update localStorage when collapsed state changes
