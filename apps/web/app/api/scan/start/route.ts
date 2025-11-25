@@ -1,10 +1,11 @@
 // apps/web/app/api/scan/start/route.ts
+// FIXED: Synchronously trigger scan process to work in serverless
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-// Force dynamic rendering - don't pre-render at build time
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // Allow up to 60 seconds
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -64,11 +65,9 @@ export async function POST(req: NextRequest) {
     let isWeeklyPlan = false
     
     if (planLimit.fresh_scans_week) {
-      // Weekly plan (Solo) - count from 7 days ago
       timeWindowStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
       isWeeklyPlan = true
     } else {
-      // Monthly plan (Agency/Enterprise) - count from start of month
       timeWindowStart = new Date()
       timeWindowStart.setDate(1)
       timeWindowStart.setHours(0, 0, 0, 0)
@@ -137,12 +136,49 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Trigger background processing
-    fetch(`${req.nextUrl.origin}/api/scan/process`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ scanId: scan.id }),
-    }).catch((err) => console.error('Error triggering scan process:', err))
+    console.log('[Scan Start] Scan created:', scan.id, '- Triggering process synchronously')
+
+    // CRITICAL FIX: Call process endpoint SYNCHRONOUSLY and wait for it
+    try {
+      const processResponse = await fetch(`${req.nextUrl.origin}/api/scan/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scanId: scan.id }),
+      })
+
+      if (!processResponse.ok) {
+        const errorText = await processResponse.text()
+        console.error('[Scan Start] Process endpoint failed:', errorText)
+        
+        // Mark scan as failed
+        await supabase
+          .from('scans')
+          .update({ status: 'failed' })
+          .eq('id', scan.id)
+          
+        return NextResponse.json(
+          { error: 'Scan processing failed', details: errorText },
+          { status: 500 }
+        )
+      }
+
+      const processResult = await processResponse.json()
+      console.log('[Scan Start] Process completed:', processResult)
+      
+    } catch (processError) {
+      console.error('[Scan Start] Failed to trigger process:', processError)
+      
+      // Mark scan as failed
+      await supabase
+        .from('scans')
+        .update({ status: 'failed' })
+        .eq('id', scan.id)
+      
+      return NextResponse.json(
+        { error: 'Failed to start scan processing' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({
       scan,
