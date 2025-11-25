@@ -1,40 +1,37 @@
 // apps/web/app/dashboard/overview/page.tsx
-// Redesigned with proper empty states and user flow
+// REDESIGNED: Proper dashboard with Harbor Score gauge, real trends, action items
 
 'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
-  Home,
-  ShoppingBag, 
-  Star, 
-  MessageSquare, 
-  Globe,
   TrendingUp,
+  TrendingDown,
   ArrowRight,
-  Sparkles,
-  Target
+  AlertCircle,
+  CheckCircle2,
+  Clock
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import { calculateWebsiteReadiness } from '@/lib/scoring'
 import MobileHeader from '@/components/layout/MobileHeader'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 
-interface OverviewData {
+interface ScanData {
   shopping_visibility: number
   brand_visibility: number
   conversation_topics: number
   site_readability: number
   brand_mentions: number
   last_scan: string | null
-  harbor_score?: number
-  visibility_score?: number
+  harbor_score: number
+  visibility_score: number
 }
 
 export default function OverviewPage() {
   const { currentDashboard } = useBrand()
-  const [scanData, setScanData] = useState<OverviewData | null>(null)
+  const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
   const [websiteReadiness, setWebsiteReadiness] = useState(0)
 
@@ -46,11 +43,11 @@ export default function OverviewPage() {
       }
 
       try {
-        // Calculate website readiness from profile
+        // Calculate website readiness
         const profileData = {
           description: currentDashboard.metadata?.description || '',
           offerings: currentDashboard.metadata?.products || [],
-          faqs: currentDashboard.metadata?.target_keywords || [], // Using keywords as proxy
+          faqs: currentDashboard.metadata?.target_keywords || [],
           companyInfo: {
             hq_location: currentDashboard.metadata?.headquarters,
             founded_year: currentDashboard.metadata?.founding_year ? parseInt(currentDashboard.metadata.founding_year) : undefined
@@ -60,13 +57,13 @@ export default function OverviewPage() {
         const readiness = calculateWebsiteReadiness(profileData)
         setWebsiteReadiness(readiness)
 
-        // Try to fetch scan data
+        // Fetch scan data
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         
         if (response.ok) {
           const data = await response.json()
           
-          // Transform API response to match component expectations
+          // Transform API response
           const transformedData = {
             shopping_visibility: data.shopping?.score || 0,
             brand_visibility: data.brand?.visibility_index || 0,
@@ -74,20 +71,19 @@ export default function OverviewPage() {
             site_readability: data.website?.readability_score || 0,
             brand_mentions: data.brand?.total_mentions || 0,
             last_scan: data.scan?.started_at || null,
-            // Calculate Harbor Score (weighted average)
+            // Harbor Score: 30% shopping + 30% brand + 40% website
             harbor_score: Math.round(
               (data.shopping?.score || 0) * 0.3 +
               (data.brand?.visibility_index || 0) * 0.3 +
               (data.website?.readability_score || 0) * 0.4
             ),
-            // Calculate Visibility Score
+            // Visibility Score: average of shopping + brand
             visibility_score: Math.round(
               ((data.shopping?.score || 0) + (data.brand?.visibility_index || 0)) / 2
             )
           }
           
           setScanData(transformedData)
-          console.log('[Overview] Scan data loaded:', transformedData)
         }
         
       } catch (error) {
@@ -100,7 +96,7 @@ export default function OverviewPage() {
     fetchLatestScan()
   }, [currentDashboard])
 
-  // Calculate profile completeness
+  // Profile completeness calculation
   const calculateCompleteness = () => {
     if (!currentDashboard) return 0
     
@@ -120,423 +116,258 @@ export default function OverviewPage() {
   }
 
   const profileCompleteness = calculateCompleteness()
-  const isProfileReady = profileCompleteness >= 80
+  const hasProfile = profileCompleteness >= 80
   const hasScanData = scanData && scanData.last_scan
 
-  // Loading state
   if (loading) {
     return (
-      <>
-        <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 animate-pulse space-y-8">
-          <div className="h-10 w-64 rounded" style={{ backgroundColor: 'var(--bg-card)' }} />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 rounded-lg" style={{ backgroundColor: 'var(--bg-card)' }} />
-            ))}
+      <div className="min-h-screen" data-page="overview">
+        <MobileHeader title="Overview" />
+        <div className="px-6 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-64"></div>
           </div>
         </div>
-      </>
-    )
-  }
-
-  // No dashboard selected
-  if (!currentDashboard) {
-    return (
-      <>
-        <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-          <div 
-            className="rounded-xl p-12 text-center"
-            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-          >
-            <Home className="w-16 h-16 mx-auto mb-6 opacity-30" style={{ color: 'var(--text-secondary)' }} />
-            <h2 className="text-2xl font-heading font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
-              No Brand Selected
-            </h2>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Select a brand from the sidebar to view its overview.
-            </p>
-          </div>
-        </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
-      <MobileHeader />
-      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-        {/* Page Header */}
+    <div className="min-h-screen" data-page="overview">
+      <MobileHeader title="Overview" />
+      
+      <div className="px-6 py-8 max-w-[1400px] mx-auto">
+        {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Home className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: 'var(--accent-teal)' }} strokeWidth={1.5} />
-            <h1 className="text-2xl lg:text-4xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
-              Overview
-            </h1>
-          </div>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <h1 className="text-3xl font-heading font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            Overview
+          </h1>
+          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
             Your AI visibility at a glance
           </p>
         </div>
 
-        {/* Empty State - No Scan Yet, Profile Incomplete */}
-        {!hasScanData && !isProfileReady && (
-          <div className="space-y-6">
+        {/* STATE 1: Profile Incomplete */}
+        {!hasProfile && (
+          <div className="max-w-3xl">
             {/* Welcome Card */}
             <div 
-              className="rounded-xl p-8 lg:p-10"
-              style={{ 
-                backgroundColor: 'var(--bg-card)', 
-                border: '1px solid var(--border)',
-                background: 'linear-gradient(135deg, var(--bg-card) 0%, rgba(34, 211, 238, 0.03) 100%)'
-              }}
+              className="rounded-xl p-8 mb-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-start gap-4 mb-6">
                 <div 
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(34, 211, 238, 0.1)' }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'var(--pageAccent)', opacity: 0.1 }}
                 >
-                  <Sparkles className="w-6 h-6" style={{ color: 'var(--accent-teal)' }} strokeWidth={1.5} />
+                  <AlertCircle style={{ color: 'var(--pageAccent)' }} className="w-6 h-6" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                     Welcome to Harbor
                   </h2>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    Let's get your brand ready for AI visibility analysis. Follow these steps to unlock your full dashboard.
+                  <p style={{ color: 'var(--text-secondary)' }}>
+                    Complete your brand profile to unlock AI visibility insights and start tracking your Harbor Score.
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                {/* Step 1 */}
-                <div className="flex items-start gap-4">
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
-                    style={{ 
-                      backgroundColor: 'var(--accent-teal)',
-                      color: '#0F172A'
-                    }}
-                  >
-                    1
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
-                      Complete your brand profile
-                    </div>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Add your brand details, products, and keywords to calculate your Website Readiness Score
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="flex items-start gap-4 opacity-50">
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
-                    style={{ 
-                      backgroundColor: 'var(--bg-muted)',
-                      color: 'var(--text-muted)',
-                      border: '1px solid var(--border)'
-                    }}
-                  >
-                    2
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
-                      Run your first AI scan
-                    </div>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Analyze how ChatGPT, Claude, Gemini, and Perplexity see your brand
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="flex items-start gap-4 opacity-50">
-                  <div 
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
-                    style={{ 
-                      backgroundColor: 'var(--bg-muted)',
-                      color: 'var(--text-muted)',
-                      border: '1px solid var(--border)'
-                    }}
-                  >
-                    3
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
-                      Track and improve your scores
-                    </div>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Monitor your Harbor Score and optimize for better AI visibility
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <Link
-                  href="/dashboard/brand-settings"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
-                  style={{
-                    backgroundColor: 'var(--accent-teal)',
-                    color: '#0F172A'
-                  }}
-                >
-                  Complete Brand Profile
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Profile Completeness Card */}
-            <div 
-              className="rounded-xl p-6"
-              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="font-heading font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              {/* Progress Bar */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                     Profile Completeness
-                  </h3>
-                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    {profileCompleteness < 80 
-                      ? `${Math.ceil((80 - profileCompleteness) / 12)} more fields to unlock scanning`
-                      : 'Profile ready for scanning!'}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-heading font-bold" style={{ color: 'var(--accent-teal)' }}>
+                  </span>
+                  <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
                     {profileCompleteness}%
-                  </div>
+                  </span>
+                </div>
+                <div className="h-2 rounded-full" style={{ backgroundColor: 'var(--bg-muted)' }}>
+                  <div 
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ 
+                      width: `${profileCompleteness}%`,
+                      backgroundColor: 'var(--pageAccent)'
+                    }}
+                  />
                 </div>
               </div>
 
-              <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-muted)' }}>
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{ 
-                    width: `${profileCompleteness}%`,
-                    backgroundColor: profileCompleteness >= 80 ? 'var(--accent-green)' : 'var(--accent-teal)'
-                  }}
-                />
-              </div>
+              <Link
+                href="/dashboard/brand-settings"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
+                style={{
+                  backgroundColor: 'var(--pageAccent)',
+                  color: '#FFFFFF'
+                }}
+              >
+                Complete Brand Profile
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         )}
 
-        {/* Empty State - Profile Ready, No Scan */}
-        {!hasScanData && isProfileReady && (
-          <div className="space-y-6">
-            {/* Metric Cards - Empty */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <MetricCardEmpty
-                icon={Target}
-                title="Harbor Score"
-                subtitle="Overall AI visibility"
-                value="--"
-              />
-              <MetricCardEmpty
-                icon={TrendingUp}
-                title="Website Readiness"
-                subtitle="Profile completion"
-                value={`${websiteReadiness}%`}
-                color="var(--accent-green)"
-              />
-              <MetricCardEmpty
-                icon={Star}
-                title="Visibility Score"
-                subtitle="AI mention frequency"
-                value="--"
-              />
-              <MetricCardEmpty
-                icon={MessageSquare}
-                title="AI Mentions"
-                subtitle="Across all models"
-                value="--"
-              />
-            </div>
-
-            {/* Ready to Scan Card */}
+        {/* STATE 2: Profile Complete, No Scan */}
+        {hasProfile && !hasScanData && (
+          <div className="max-w-3xl">
             <div 
-              className="rounded-xl p-8 lg:p-10"
-              style={{ 
-                backgroundColor: 'var(--bg-card)', 
-                border: '1px solid var(--border-strong)',
-                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--bg-card) 100%)'
-              }}
+              className="rounded-xl p-8 mb-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-start gap-4 mb-6">
                 <div 
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)' }}
+                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: '#22C55E', opacity: 0.1 }}
                 >
-                  <Target className="w-6 h-6" style={{ color: 'var(--accent-green)' }} strokeWidth={1.5} />
+                  <CheckCircle2 style={{ color: '#22C55E' }} className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                     Profile Complete
                   </h2>
-                  <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                    Your brand profile is ready. Run your first AI visibility scan to see how ChatGPT, Claude, Gemini, and Perplexity perceive your brand.
+                  <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+                    Your website readiness score is <strong>{websiteReadiness}%</strong>. Run your first scan to see how AI models perceive your brand.
+                  </p>
+                  <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <Clock className="w-4 h-4 inline mr-1" /> Takes 2-3 minutes
+                  </div>
+                </div>
+              </div>
+
+              <UniversalScanButton variant="large" />
+            </div>
+          </div>
+        )}
+
+        {/* STATE 3: Has Scan Data - PROPER DASHBOARD */}
+        {hasScanData && (
+          <div className="space-y-8">
+            {/* Top Row: Harbor Score Gauge + Key Metrics */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Harbor Score - Circular Gauge */}
+              <div 
+                className="lg:col-span-1 rounded-xl p-8 flex flex-col items-center justify-center"
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+              >
+                <div className="relative w-48 h-48 mb-4">
+                  {/* SVG Circle Gauge */}
+                  <svg className="transform -rotate-90 w-48 h-48">
+                    {/* Background circle */}
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      stroke="var(--border)"
+                      strokeWidth="12"
+                      fill="none"
+                    />
+                    {/* Progress circle */}
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      stroke="url(#harborGradient)"
+                      strokeWidth="12"
+                      fill="none"
+                      strokeDasharray={`${2 * Math.PI * 88}`}
+                      strokeDashoffset={`${2 * Math.PI * 88 * (1 - scanData.harbor_score / 100)}`}
+                      strokeLinecap="round"
+                      style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
+                    />
+                    {/* Gradient definition */}
+                    <defs>
+                      <linearGradient id="harborGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#00D9C0" />
+                        <stop offset="50%" stopColor="#2979FF" />
+                        <stop offset="100%" stopColor="#B95BC4" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  
+                  {/* Center text */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="text-5xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+                      {scanData.harbor_score}
+                    </div>
+                    <div className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                      OUT OF 100
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-sm font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-secondary)' }}>
+                    Harbor Score
+                  </div>
+                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                    Your overall AI visibility
                   </p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-muted)' }}>
-                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--accent-teal)' }} />
-                  <div className="flex-1">
-                    <div className="font-medium text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
-                      Scan Duration
-                    </div>
-                    <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Typically takes 2-3 minutes to complete
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-muted)' }}>
-                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--accent-teal)' }} />
-                  <div className="flex-1">
-                    <div className="font-medium text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
-                      What We Analyze
-                    </div>
-                    <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Product mentions, brand perception, conversation topics, and website structure
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8">
-                <UniversalScanButton variant="large" />
+              {/* Key Metrics - 2 columns */}
+              <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+                <MetricCard
+                  title="Shopping Visibility"
+                  value={scanData.shopping_visibility}
+                  suffix="%"
+                  color="var(--accent-teal)"
+                />
+                <MetricCard
+                  title="Brand Visibility"
+                  value={scanData.brand_visibility}
+                  suffix="%"
+                  color="var(--accent-blue)"
+                />
+                <MetricCard
+                  title="Website Readiness"
+                  value={websiteReadiness}
+                  suffix="%"
+                  color="var(--accent-green)"
+                />
+                <MetricCard
+                  title="Conversation Topics"
+                  value={scanData.conversation_topics}
+                  color="var(--accent-amber)"
+                />
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Has Scan Data - Show Full Dashboard */}
-        {hasScanData && (
-          <div className="space-y-6">
-            {/* Metric Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <MetricCard
-                icon={Target}
-                title="Harbor Score"
-                value={scanData.harbor_score || 0}
-                trend={+2.5}
-                color="var(--accent-teal)"
-              />
-              <MetricCard
-                icon={TrendingUp}
-                title="Website Readiness"
-                value={websiteReadiness}
-                trend={+5}
-                color="var(--accent-green)"
-              />
-              <MetricCard
-                icon={Star}
-                title="Visibility Score"
-                value={scanData.visibility_score || 0}
-                trend={-1.2}
-                color="var(--accent-blue)"
-              />
-              <MetricCard
-                icon={MessageSquare}
-                title="AI Mentions"
-                value={scanData.brand_mentions}
-                color="var(--accent-purple)"
-              />
+            {/* Action Items Section - PLACEHOLDER */}
+            <div 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  Priority Actions
+                </h2>
+                <Link
+                  href="/dashboard/optimize"
+                  className="text-sm font-medium flex items-center gap-1"
+                  style={{ color: 'var(--pageAccent)' }}
+                >
+                  View All
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+              
+              <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>
+                <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>Action items coming soon</p>
+                <p className="text-sm mt-1">We'll aggregate high-priority tasks from all modules here</p>
+              </div>
             </div>
 
-            {/* Quick Links */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <QuickLinkCard
-                href="/dashboard/shopping"
-                icon={ShoppingBag}
-                title="Shopping Visibility"
-                description="Product mentions"
-                color="var(--accent-teal)"
-              />
-              <QuickLinkCard
-                href="/dashboard/brand"
-                icon={Star}
-                title="Brand Visibility"
-                description="Brand perception"
-                color="var(--accent-blue)"
-              />
-              <QuickLinkCard
-                href="/dashboard/conversations"
-                icon={MessageSquare}
-                title="Conversations"
-                description="Topic analysis"
-                color="var(--accent-amber)"
-              />
-              <QuickLinkCard
-                href="/dashboard/website"
-                icon={Globe}
-                title="Website Analytics"
-                description="Technical audit"
-                color="var(--accent-purple)"
-              />
+            {/* Last Scan Info */}
+            <div className="flex items-center justify-between">
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Last scan: {new Date(scanData.last_scan!).toLocaleDateString()}
+              </div>
+              <UniversalScanButton />
             </div>
-          </div>
-        )}
-      </div>
-    </>
-  )
-}
-
-// Helper Components
-
-function MetricCardEmpty({ icon: Icon, title, subtitle, value, color }: any) {
-  return (
-    <div 
-      className="rounded-lg p-6"
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-    >
-      <div className="flex items-center gap-3 mb-4">
-        <Icon className="w-5 h-5" style={{ color: color || 'var(--text-muted)' }} strokeWidth={1.5} />
-        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-          {title}
-        </span>
-      </div>
-      <div className="text-3xl font-heading font-bold mb-1" style={{ color: color || 'var(--text-primary)' }}>
-        {value}
-      </div>
-      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-        {subtitle}
-      </p>
-    </div>
-  )
-}
-
-function MetricCard({ icon: Icon, title, value, trend, color }: any) {
-  return (
-    <div 
-      className="rounded-lg p-6"
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-    >
-      <div className="flex items-center gap-3 mb-4">
-        <Icon className="w-5 h-5" style={{ color: color || 'var(--text-muted)' }} strokeWidth={1.5} />
-        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-          {title}
-        </span>
-      </div>
-      <div className="flex items-end gap-3 mb-1">
-        <div className="text-3xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
-          {typeof value === 'number' ? Math.round(value) : value}
-          {title.includes('Score') || title.includes('Readiness') ? '%' : ''}
-        </div>
-        {trend !== undefined && (
-          <div 
-            className="text-sm font-medium pb-1"
-            style={{ color: trend >= 0 ? 'var(--accent-green)' : '#EF4444' }}
-          >
-            {trend >= 0 ? '+' : ''}{trend}%
           </div>
         )}
       </div>
@@ -544,23 +375,29 @@ function MetricCard({ icon: Icon, title, value, trend, color }: any) {
   )
 }
 
-function QuickLinkCard({ href, icon: Icon, title, description, color }: any) {
+// Metric Card Component
+function MetricCard({ 
+  title, 
+  value, 
+  suffix = '',
+  color 
+}: { 
+  title: string
+  value: number
+  suffix?: string
+  color: string
+}) {
   return (
-    <Link
-      href={href}
-      className="group rounded-lg p-6 transition-all"
+    <div 
+      className="rounded-xl p-6"
       style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
     >
-      <div className="flex items-center justify-between mb-3">
-        <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" style={{ color }} strokeWidth={1.5} />
-        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--text-muted)' }} />
-      </div>
-      <h3 className="font-heading font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+      <div className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
         {title}
-      </h3>
-      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-        {description}
-      </p>
-    </Link>
+      </div>
+      <div className="text-3xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+        {value}{suffix}
+      </div>
+    </div>
   )
 }
