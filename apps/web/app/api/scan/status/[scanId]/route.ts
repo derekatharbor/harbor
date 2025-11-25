@@ -15,7 +15,21 @@ function getSupabaseClient() {
     throw new Error('Missing Supabase environment variables')
   }
   
-  return createClient(supabaseUrl, supabaseKey)
+  // Create a completely fresh client with no caching
+  return createClient(supabaseUrl, supabaseKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+    db: {
+      schema: 'public',
+    },
+    global: {
+      headers: {
+        'x-no-cache': Date.now().toString(), // Force unique request
+      },
+    },
+  })
 }
 
 export async function GET(
@@ -27,6 +41,9 @@ export async function GET(
     const { scanId } = params
 
     console.log('[Status] 🔍 Fetching status for scan:', scanId)
+
+    // Small delay to allow database replication (Supabase issue)
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     // Fetch scan first
     const { data: scan, error: scanError } = await supabase
@@ -40,16 +57,28 @@ export async function GET(
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
-    // Fetch jobs separately to avoid caching
-    const { data: jobs, error: jobsError } = await supabase
+    // Fetch jobs separately with explicit maybeSingle to avoid caching
+    const { data: jobsRaw, error: jobsError } = await supabase
       .from('scan_jobs')
       .select('id, module, status, started_at, finished_at, error')
       .eq('scan_id', scanId)
+      .order('started_at', { ascending: false, nullsFirst: false })
 
     if (jobsError) {
       console.error('[Status] ❌ Failed to fetch jobs:', jobsError)
       return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 })
     }
+
+    const jobs = jobsRaw || []
+    
+    console.log('[Status] 📊 Scan status:', scan.status)
+    console.log('[Status] 📋 Raw jobs from DB:', JSON.stringify(jobs.map((j: any) => ({
+      module: j.module, 
+      status: j.status,
+      id: j.id
+    }))))
+
+    const jobs = jobsRaw || []
 
     console.log('[Status] 📊 Scan status:', scan.status)
     console.log('[Status] 📋 Jobs:', jobs?.map((j: any) => `${j.module}:${j.status}`).join(', ') || 'none')
