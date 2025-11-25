@@ -164,7 +164,7 @@ export default function CompetitorsPage() {
                   ?
                 </div>
                 <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#A855F7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
-                  Your position among all brands in {data.category} based on AI visibility score. Lower rank is better - #1 means you have the highest visibility.
+                  Where you rank among brands in your category based on AI Readiness score. #1 has the highest score.
                 </div>
               </div>
             </div>

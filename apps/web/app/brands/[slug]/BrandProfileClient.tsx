@@ -196,7 +196,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 </Link>
                 
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/overview"
                   className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
                 >
                   Dashboard
