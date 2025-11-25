@@ -270,7 +270,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
                   className="text-xs"
                   style={{ color: 'var(--text-muted)' }}
                 >
-                  {MODULE_MESSAGES[module as keyof typeof MODULE_MESSAGES][status]}
+                  {MODULE_MESSAGES[module as keyof typeof MODULE_MESSAGES][status as keyof typeof MODULE_MESSAGES[keyof typeof MODULE_MESSAGES]]}
                 </div>
               </div>
             </div>
