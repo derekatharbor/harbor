@@ -60,6 +60,8 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
     setIsScanning(true)
     
     try {
+      console.log('[Button] Starting scan for dashboard:', currentDashboard.id)
+      
       const response = await fetch('/api/scan/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -70,16 +72,19 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
       
       if (!response.ok) {
         const error = await response.json()
+        console.error('[Button] Scan failed:', error)
         throw new Error(error.error || 'Failed to start scan')
       }
       
       const data = await response.json()
+      console.log('[Button] Scan started:', data.scan.id)
       
-      // Open the progress modal with the scan ID
+      // Immediately open the progress modal with the scan ID
       setCurrentScanId(data.scan.id)
       setShowModal(true)
+      
     } catch (error) {
-      console.error('Scan error:', error)
+      console.error('[Button] Scan error:', error)
       alert(`Failed to start scan: ${error instanceof Error ? error.message : 'Unknown error'}`)
       setIsScanning(false)
     }

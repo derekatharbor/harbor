@@ -94,25 +94,36 @@ export default function ScanProgressModal({ isOpen, onClose, onComplete, scanId 
   useEffect(() => {
     if (!isOpen || !scanId) return
 
+    console.log('[Modal] Starting to poll scan:', scanId)
+
     const fetchStatus = async () => {
       try {
         const response = await fetch(`/api/scan/status/${scanId}`)
+        
+        if (!response.ok) {
+          console.error('[Modal] Status fetch failed:', response.status)
+          return false
+        }
+        
         const data: ScanStatusResponse = await response.json()
+        console.log('[Modal] Status update:', data.status, data.progress, '%')
 
         setTargetProgress(data.progress)
         setCurrentMessage(data.message)
         setModuleStatus(data.modules)
 
         if (data.status === 'done' && data.progress === 100) {
+          console.log('[Modal] Scan complete!')
           setIsComplete(true)
           return true
         } else if (data.status === 'failed') {
+          console.log('[Modal] Scan failed')
           setHasFailed(true)
           return true
         }
         return false
       } catch (error) {
-        console.error('Failed to fetch scan status:', error)
+        console.error('[Modal] Failed to fetch scan status:', error)
         return false
       }
     }

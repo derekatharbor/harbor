@@ -1,68 +1,55 @@
 // app/api/scan/status/[scanId]/route.ts
-// Real-time scan status polling for progress modal
+// FIXED: Remove auth requirement for status polling
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+  
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 export async function GET(
   request: Request,
   { params }: { params: { scanId: string } }
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
-    
-    // Get current user
-    const { data: { session } } = await supabase.auth.getSession()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+    const supabase = getSupabaseClient()
     const { scanId } = params
+
+    console.log('[Status] Fetching status for scan:', scanId)
 
     // Get scan with jobs
     const { data: scan, error } = await supabase
       .from('scans')
-      .select(`
-        id,
-        status,
-        started_at,
-        finished_at,
-        scan_jobs (
-          id,
-          module,
-          status,
-          started_at,
-          finished_at,
-          error
-        )
-      `)
+      .select('*, scan_jobs(*)')
       .eq('id', scanId)
       .single()
 
     if (error || !scan) {
+      console.error('[Status] Scan not found:', error)
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
     // Calculate progress based on module completion
     const jobs = scan.scan_jobs as any[]
     const totalModules = 4
-    const completedModules = jobs.filter(j => j.status === 'done').length
-    const failedModules = jobs.filter(j => j.status === 'failed').length
+    const completedModules = jobs.filter((j: any) => j.status === 'done').length
+    const failedModules = jobs.filter((j: any) => j.status === 'failed').length
     const progress = Math.round((completedModules / totalModules) * 100)
-
-    // FIXED: Override scan status if not all modules are done yet
-    let actualStatus = scan.status
-    if (progress < 100 && scan.status === 'done') {
-      // Database says done, but modules aren't all complete yet
-      actualStatus = 'running'
-    }
 
     // Get module statuses
     const getModuleStatus = (module: string): 'pending' | 'running' | 'done' | 'failed' => {
-      const job = jobs.find(j => j.module === module)
+      const job = jobs.find((j: any) => j.module === module)
       if (!job) return 'pending'
       
       if (job.status === 'done') return 'done'
@@ -79,41 +66,45 @@ export async function GET(
     }
 
     // Find currently running module
-    const currentJob = jobs.find(j => j.status === 'running')
+    const currentJob = jobs.find((j: any) => j.status === 'running')
     
     // Generate descriptive message
-    let message = 'Initializing scan...'
+    let message = 'Initializing scan'
     
-    if (actualStatus === 'done') {
-      message = 'Scan complete!'
-    } else if (actualStatus === 'failed') {
+    if (scan.status === 'done') {
+      message = 'Scan complete'
+    } else if (scan.status === 'failed') {
       message = 'Scan encountered errors'
     } else if (currentJob) {
       const moduleMessages: Record<string, string> = {
-        shopping: 'Analyzing product visibility across AI models...',
-        brand: 'Gathering brand perception data...',
-        conversations: 'Identifying conversation patterns...',
-        website: 'Validating website structure and schema...'
+        shopping: 'Analyzing product visibility',
+        brand: 'Gathering brand perception',
+        conversations: 'Identifying conversation patterns',
+        website: 'Validating website structure'
       }
-      message = moduleMessages[currentJob.module] || 'Processing...'
-    } else if (actualStatus === 'queued') {
-      message = 'Waiting to start...'
+      message = moduleMessages[currentJob.module] || 'Processing'
+    } else if (scan.status === 'queued') {
+      message = 'Starting scan'
     } else if (completedModules > 0) {
-      message = `Completed ${completedModules} of ${totalModules} modules...`
+      message = `${completedModules} of ${totalModules} modules complete`
     }
 
-    return NextResponse.json({
-      status: actualStatus,
+    const response = {
+      status: scan.status,
       progress,
       currentModule: currentJob?.module || null,
       modules,
       message,
       startedAt: scan.started_at,
       finishedAt: scan.finished_at,
-    })
+    }
+
+    console.log('[Status] Response:', { status: scan.status, progress, modules })
+
+    return NextResponse.json(response)
 
   } catch (error: any) {
-    console.error('Scan status fetch error:', error)
+    console.error('[Status] Error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch scan status' },
       { status: 500 }
