@@ -565,7 +565,7 @@ export default function BrandDashboardPage() {
             </div>
 
             {/* Public Profile Link */}
-            {currentDashboard && 'slug' in currentDashboard && currentDashboard.slug && (
+            {currentDashboard && 'slug' in currentDashboard && currentDashboard.slug ? (
               <div 
                 className="rounded-xl p-6"
                 style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
@@ -577,7 +577,7 @@ export default function BrandDashboardPage() {
                   Your brand has a public page in the Harbor Index.
                 </p>
                 <Link
-                  href={`/brands/${currentDashboard.slug}`}
+                  href={`/brands/${(currentDashboard as any).slug}`}
                   className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
                   style={{ color: 'var(--accent-teal)' }}
                 >
@@ -585,7 +585,7 @@ export default function BrandDashboardPage() {
                   <ExternalLink className="w-4 h-4" />
                 </Link>
               </div>
-            )}
+            ) : null}
 
             {/* Quick Actions */}
             <div 
