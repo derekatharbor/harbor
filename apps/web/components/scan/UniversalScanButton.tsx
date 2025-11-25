@@ -86,21 +86,25 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
       setShowModal(true)
       
       // Step 3: Trigger the process endpoint (fire and forget)
-      console.log('[Button] Triggering scan process...')
+      console.log('[Button] 🚀 Triggering scan process for scan:', scanId)
+      
       fetch('/api/scan/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scanId })
       })
-        .then(res => {
+        .then(async res => {
+          console.log('[Button] Process response status:', res.status)
           if (!res.ok) {
-            console.error('[Button] Process trigger failed:', res.status)
+            const errorText = await res.text()
+            console.error('[Button] ❌ Process trigger failed:', res.status, errorText)
           } else {
-            console.log('[Button] Process triggered successfully')
+            const data = await res.json()
+            console.log('[Button] ✅ Process triggered successfully:', data)
           }
         })
         .catch(err => {
-          console.error('[Button] Process trigger error:', err)
+          console.error('[Button] ❌ Process trigger error:', err.message)
         })
       
     } catch (error) {
@@ -123,11 +127,8 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
 
   if (checkingStatus) {
     return (
-      <div 
-        className="px-6 py-3 rounded-lg flex items-center justify-center"
-        style={{ backgroundColor: 'var(--bg-muted)' }}
-      >
-        <Loader2 className="w-5 h-5 animate-spin" style={{ color: 'var(--text-muted)' }} />
+      <div className="px-6 py-3 rounded-lg flex items-center justify-center bg-white/5">
+        <Loader2 className="w-5 h-5 animate-spin text-secondary/40" />
       </div>
     )
   }
@@ -139,22 +140,20 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
           <button
             onClick={isScanning ? () => setShowModal(true) : handleScan}
             disabled={!isScanning && scansRemaining <= 0}
-            className="
+            className={`
               group relative
               px-8 py-4
               rounded-xl
               font-heading font-semibold text-lg
-              transition-all duration-300
+              transition-all duration-200
               flex items-center justify-center gap-3
               overflow-hidden
-            "
-            style={{
-              backgroundColor: isScanning ? 'rgba(34, 211, 238, 0.1)' : 'var(--accent-teal)',
-              color: isScanning ? 'var(--accent-teal)' : '#0F172A',
-              border: isScanning ? '2px solid var(--accent-teal)' : 'none',
-              cursor: (!isScanning && scansRemaining <= 0) ? 'not-allowed' : 'pointer',
-              opacity: (!isScanning && scansRemaining <= 0) ? 0.5 : 1
-            }}
+              ${isScanning 
+                ? 'bg-[#009E92]/10 text-[#009E92] border-2 border-[#009E92]' 
+                : 'bg-[#009E92] text-white hover:bg-[#008578]'
+              }
+              ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+            `}
           >
             {isScanning ? (
               <>
@@ -172,8 +171,7 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
           {isScanning && (
             <button
               onClick={() => setShowModal(true)}
-              className="text-sm font-medium transition-colors"
-              style={{ color: 'var(--accent-teal)' }}
+              className="text-sm font-medium text-[#009E92] hover:text-[#008578] transition-colors"
             >
               View Progress →
             </button>
@@ -183,27 +181,15 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
             <div className="flex items-center justify-center gap-2">
               {scansRemaining > 0 ? (
                 <>
-                  <div 
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: 'var(--accent-green)' }}
-                  />
-                  <p 
-                    className="text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <p className="text-sm text-secondary/60">
                     {scansRemaining} {scansRemaining === 1 ? 'scan' : 'scans'} available this {currentDashboard?.plan === 'solo' ? 'week' : 'month'}
                   </p>
                 </>
               ) : (
                 <>
-                  <div 
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: '#EF4444' }}
-                  />
-                  <p 
-                    className="text-sm font-medium"
-                    style={{ color: '#EF4444' }}
-                  >
+                  <div className="w-2 h-2 rounded-full bg-red-500" />
+                  <p className="text-sm text-red-500">
                     Scan limit reached
                   </p>
                 </>
@@ -229,20 +215,18 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
         <button
           onClick={isScanning ? () => setShowModal(true) : handleScan}
           disabled={!isScanning && scansRemaining <= 0}
-          className="
+          className={`
             px-5 py-2.5
             rounded-lg
             font-heading font-semibold text-sm
-            transition-all duration-300
+            transition-all duration-200
             flex items-center gap-2
-          "
-          style={{
-            backgroundColor: isScanning ? 'rgba(34, 211, 238, 0.1)' : 'var(--accent-teal)',
-            color: isScanning ? 'var(--accent-teal)' : '#0F172A',
-            border: isScanning ? '1px solid var(--accent-teal)' : 'none',
-            cursor: (!isScanning && scansRemaining <= 0) ? 'not-allowed' : 'pointer',
-            opacity: (!isScanning && scansRemaining <= 0) ? 0.5 : 1
-          }}
+            ${isScanning 
+              ? 'bg-[#009E92]/10 text-[#009E92] border border-[#009E92]' 
+              : 'bg-[#009E92] text-white hover:bg-[#008578]'
+            }
+            ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
         >
           {isScanning ? (
             <>
@@ -260,27 +244,15 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
         <div className="flex items-center gap-1.5">
           {scansRemaining > 0 ? (
             <>
-              <div 
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: 'var(--accent-green)' }}
-              />
-              <p 
-                className="text-xs font-medium"
-                style={{ color: 'var(--text-secondary)' }}
-              >
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <p className="text-xs text-secondary/60">
                 {scansRemaining} remaining
               </p>
             </>
           ) : (
             <>
-              <div 
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: '#EF4444' }}
-              />
-              <p 
-                className="text-xs font-medium"
-                style={{ color: '#EF4444' }}
-              >
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+              <p className="text-xs text-red-500">
                 Limit reached
               </p>
             </>

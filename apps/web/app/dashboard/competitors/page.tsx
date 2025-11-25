@@ -28,7 +28,7 @@ interface CompetitorData {
 }
 
 export default function CompetitorsPage() {
-  const { currentDashboard } = useBrand()
+  const { currentDashboard, isLoading: brandLoading } = useBrand()
   
   const [data, setData] = useState<CompetitorData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -36,6 +36,9 @@ export default function CompetitorsPage() {
 
   useEffect(() => {
     async function fetchData() {
+      // Wait for brand context to load first
+      if (brandLoading) return
+      
       if (!currentDashboard) {
         setLoading(false)
         return
@@ -61,7 +64,7 @@ export default function CompetitorsPage() {
     }
 
     fetchData()
-  }, [currentDashboard])
+  }, [currentDashboard, brandLoading])
 
   // Calculate average competitor score
   const avgCompetitorScore = data?.competitors.length 
@@ -72,12 +75,12 @@ export default function CompetitorsPage() {
   const vsAverage = userScore - avgCompetitorScore
   const isAboveAverage = vsAverage > 0
 
-  // Loading skeleton
-  if (loading) {
+  // Loading skeleton - show while brand context or data is loading
+  if (loading || brandLoading) {
     return (
       <>
         <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
+        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0 px-4 lg:px-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-border rounded-lg"></div>
