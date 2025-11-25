@@ -22,6 +22,7 @@ interface Competitor {
 interface CompetitorData {
   competitors: Competitor[]
   userRank: number
+  userScore?: number
   totalInCategory: number
   category: string
 }
@@ -41,22 +42,16 @@ export default function CompetitorsPage() {
       }
 
       try {
-        // Fetch competitor data
+        // Fetch competitor data (includes user's AI Readiness score)
         const response = await fetch(`/api/competitors?brandId=${currentDashboard.id}`)
         if (!response.ok) throw new Error('Failed to fetch')
         
         const result = await response.json()
         setData(result)
         
-        // Also get user's own score from latest scan
-        const scanResponse = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
-        if (scanResponse.ok) {
-          const scanData = await scanResponse.json()
-          if (scanData.shopping?.score) {
-            setUserScore(scanData.shopping.score)
-          } else if (scanData.brand?.visibility_index) {
-            setUserScore(scanData.brand.visibility_index)
-          }
+        // Use the AI Readiness score from ai_profiles (same source as competitors)
+        if (result.userScore) {
+          setUserScore(result.userScore)
         }
       } catch (error) {
         console.error('Error fetching competitor data:', error)
@@ -281,9 +276,6 @@ export default function CompetitorsPage() {
 
             {/* Competitors */}
             {data.competitors.map((comp, index) => {
-              const diff = userScore - comp.visibility_score
-              const isAhead = diff > 0
-              
               return (
                 <div key={comp.id} className="p-4 lg:p-6 hover:bg-white/[0.02] transition-colors">
                   <div className="flex items-center justify-between">
@@ -315,13 +307,6 @@ export default function CompetitorsPage() {
                     </div>
                     
                     <div className="flex items-center gap-4 lg:gap-6">
-                      {/* Difference from you */}
-                      <div className="text-right hidden sm:block">
-                        <div className={`text-sm font-medium ${isAhead ? 'text-emerald-500' : 'text-red-400'}`}>
-                          {isAhead ? 'You lead by' : 'Ahead by'} {Math.abs(diff).toFixed(1)}%
-                        </div>
-                      </div>
-                      
                       {/* Score */}
                       <div className="text-right">
                         <div className="text-primary font-bold text-lg">
