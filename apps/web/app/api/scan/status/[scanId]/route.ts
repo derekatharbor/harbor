@@ -28,32 +28,40 @@ export async function GET(
 
     console.log('[Status] 🔍 Fetching status for scan:', scanId)
 
-    // Get scan with jobs
-    const { data: scan, error } = await supabase
+    // Fetch scan first
+    const { data: scan, error: scanError } = await supabase
       .from('scans')
-      .select('*, scan_jobs(*)')
+      .select('id, status, started_at, finished_at')
       .eq('id', scanId)
       .single()
 
-    if (error || !scan) {
-      console.error('[Status] ❌ Scan not found:', error)
+    if (scanError || !scan) {
+      console.error('[Status] ❌ Scan not found:', scanError)
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
-    console.log('[Status] 📊 Scan status:', scan.status)
-    console.log('[Status] 📋 Jobs:', scan.scan_jobs?.map((j: any) => `${j.module}:${j.status}`).join(', '))
+    // Fetch jobs separately to avoid caching
+    const { data: jobs, error: jobsError } = await supabase
+      .from('scan_jobs')
+      .select('id, module, status, started_at, finished_at, error')
+      .eq('scan_id', scanId)
 
-    // Calculate progress based on module completion
-    const jobs = scan.scan_jobs as any[]
-    
+    if (jobsError) {
+      console.error('[Status] ❌ Failed to fetch jobs:', jobsError)
+      return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 })
+    }
+
+    console.log('[Status] 📊 Scan status:', scan.status)
+    console.log('[Status] 📋 Jobs:', jobs?.map((j: any) => `${j.module}:${j.status}`).join(', ') || 'none')
+
     if (!jobs || jobs.length === 0) {
       console.log('[Status] ⚠️ No jobs found for scan!')
     }
     
     const totalModules = 4
-    const completedModules = jobs.filter((j: any) => j.status === 'done').length
-    const failedModules = jobs.filter((j: any) => j.status === 'failed').length
-    const runningModules = jobs.filter((j: any) => j.status === 'running').length
+    const completedModules = jobs?.filter((j: any) => j.status === 'done').length || 0
+    const failedModules = jobs?.filter((j: any) => j.status === 'failed').length || 0
+    const runningModules = jobs?.filter((j: any) => j.status === 'running').length || 0
     const progress = Math.round((completedModules / totalModules) * 100)
 
     console.log('[Status] 📈 Progress:', {
