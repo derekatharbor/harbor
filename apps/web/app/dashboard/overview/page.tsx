@@ -65,7 +65,29 @@ export default function OverviewPage() {
         
         if (response.ok) {
           const data = await response.json()
-          setScanData(data)
+          
+          // Transform API response to match component expectations
+          const transformedData = {
+            shopping_visibility: data.shopping?.score || 0,
+            brand_visibility: data.brand?.visibility_index || 0,
+            conversation_topics: data.conversations?.questions?.length || 0,
+            site_readability: data.website?.readability_score || 0,
+            brand_mentions: data.brand?.total_mentions || 0,
+            last_scan: data.scan?.started_at || null,
+            // Calculate Harbor Score (weighted average)
+            harbor_score: Math.round(
+              (data.shopping?.score || 0) * 0.3 +
+              (data.brand?.visibility_index || 0) * 0.3 +
+              (data.website?.readability_score || 0) * 0.4
+            ),
+            // Calculate Visibility Score
+            visibility_score: Math.round(
+              ((data.shopping?.score || 0) + (data.brand?.visibility_index || 0)) / 2
+            )
+          }
+          
+          setScanData(transformedData)
+          console.log('[Overview] Scan data loaded:', transformedData)
         }
         
       } catch (error) {
