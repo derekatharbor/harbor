@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
         profileData.id = existingProfile.id
         profileData.previous_visibility_score = existingProfile.visibility_score
         profileData.score_change = visibilityScore - (existingProfile.visibility_score || 0)
-        profileData.scan_count = supabase.raw('scan_count + 1')
+        // Note: scan_count will be incremented separately
       } else {
         // New profile
         profileData.generated_at = new Date().toISOString()
