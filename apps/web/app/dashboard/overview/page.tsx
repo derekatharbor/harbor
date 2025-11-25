@@ -390,7 +390,7 @@ export default function OverviewPage() {
               </div>
 
               <div className="mt-8">
-                <UniversalScanButton dashboardId={currentDashboard.id} />
+                <UniversalScanButton variant="large" />
               </div>
             </div>
           </div>
