@@ -122,7 +122,7 @@ export default function OverviewPage() {
   if (loading) {
     return (
       <div className="min-h-screen" data-page="overview">
-        <MobileHeader title="Overview" />
+        <MobileHeader />
         <div className="px-6 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
@@ -135,7 +135,7 @@ export default function OverviewPage() {
 
   return (
     <div className="min-h-screen" data-page="overview">
-      <MobileHeader title="Overview" />
+      <MobileHeader />
       
       <div className="px-6 py-8 max-w-[1400px] mx-auto">
         {/* Header */}
