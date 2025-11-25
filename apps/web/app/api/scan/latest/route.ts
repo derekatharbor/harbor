@@ -1,10 +1,19 @@
 // apps/web/app/api/scan/latest/route.ts
-// FIXED: Added shopping_raw for action items
-// Version: 2024-11-15-v4
+// UPDATED: Uses new meaningful visibility scoring system
+// Version: 2024-11-25-v5
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { calculateWebsiteMetrics } from '@/lib/scan/website-metrics'
+import {
+  calculateVisibilityScore,
+  calculateBrandVisibilityScore,
+  calculateWebsiteReadinessScore,
+  calculateHarborScore,
+  type ShoppingData,
+  type BrandData,
+  type WebsiteData
+} from '@/lib/scoring/visibility-score'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -36,14 +45,14 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    console.log('📊 [API v4] Fetching latest scan for dashboard:', dashboardId)
+    console.log('📊 [API v5] Fetching latest scan for dashboard:', dashboardId)
 
     // Get latest scan for this dashboard - ONLY 'done' scans
     const { data: scan, error: scanError } = await supabase
       .from('scans')
       .select('*')
       .eq('dashboard_id', dashboardId)
-      .eq('status', 'done') // CRITICAL: Only get completed scans
+      .eq('status', 'done')
       .order('started_at', { ascending: false })
       .limit(1)
       .single()
@@ -57,15 +66,38 @@ export async function GET(req: NextRequest) {
       console.log('⚠️ [API] No completed scans found for this dashboard')
       return NextResponse.json({
         scan: null,
-        shopping: { score: 0, total_mentions: 0, categories: [], competitors: [], models: [] },
-        shopping_raw: [], // Include empty array for no-scan state
-        brand: { visibility_index: 0, descriptors: [], sentiment_breakdown: { positive: 0, neutral: 0, negative: 0 }, total_mentions: 0 },
-        conversations: { volume_index: 0, questions: [], intent_breakdown: { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 } },
-        website: { readability_score: 0, schema_coverage: 0, issues: [] },
+        shopping: { 
+          score: 0, 
+          total_mentions: 0, 
+          categories: [], 
+          competitors: [], 
+          models: [],
+          breakdown: null
+        },
+        shopping_raw: [],
+        brand: { 
+          visibility_index: 0, 
+          descriptors: [], 
+          sentiment_breakdown: { positive: 0, neutral: 0, negative: 0 }, 
+          total_mentions: 0,
+          breakdown: null
+        },
+        conversations: { 
+          volume_index: 0, 
+          questions: [], 
+          intent_breakdown: { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 } 
+        },
+        website: { 
+          readability_score: 0, 
+          schema_coverage: 0, 
+          issues: [],
+          breakdown: null
+        },
+        harbor_score: null
       })
     }
 
-    console.log('✅ [API v4] Found scan:', scan.id, 'Status:', scan.status)
+    console.log('✅ [API v5] Found scan:', scan.id, 'Status:', scan.status)
 
     // Fetch results for each module
     console.log('🔍 [API] Fetching module results...')
@@ -81,27 +113,40 @@ export async function GET(req: NextRequest) {
     console.log('  - Brand:', brandResults.data?.length || 0)
     console.log('  - Conversations:', conversationResults.data?.length || 0)
 
-    // Aggregate Shopping data
+    // ============================================
+    // PROCESS SHOPPING DATA
+    // ============================================
     const shoppingData = shoppingResults.data || []
+    
+    // Count user mentions vs competitor mentions
+    const userMentions = shoppingData.filter(d => d.is_user_brand === true).length
     const totalMentions = shoppingData.length
     
-    const categoryMap = new Map<string, { category: string; mentions: number; bestRank: number }>()
-    shoppingData.forEach((item) => {
-      const existing = categoryMap.get(item.category) || { category: item.category, mentions: 0, bestRank: 999 }
-      categoryMap.set(item.category, {
-        category: item.category,
-        mentions: existing.mentions + 1,
-        bestRank: Math.min(existing.bestRank, item.rank || 999),
-      })
+    // Build category data
+    const categoryMap = new Map<string, { rank: number; mentions: number }>()
+    shoppingData.forEach(item => {
+      if (item.category) {
+        const existing = categoryMap.get(item.category)
+        if (existing) {
+          existing.mentions++
+          // Keep best (lowest) rank
+          if (item.rank && item.rank < existing.rank) {
+            existing.rank = item.rank
+          }
+        } else {
+          categoryMap.set(item.category, { rank: item.rank || 3, mentions: 1 })
+        }
+      }
     })
     
-    const categories = Array.from(categoryMap.values())
-      .map(c => ({ category: c.category, rank: c.bestRank, mentions: c.mentions }))
-      .sort((a, b) => b.mentions - a.mentions)
+    const categories = Array.from(categoryMap.entries())
+      .map(([category, data]) => ({ category, rank: data.rank, mentions: data.mentions }))
+      .sort((a, b) => a.rank - b.rank)
 
+    // Build competitor data
     const competitorMap = new Map<string, number>()
-    shoppingData.forEach((item) => {
-      if (item.brand) {
+    shoppingData.forEach(item => {
+      if (item.brand && !item.is_user_brand) {
         competitorMap.set(item.brand, (competitorMap.get(item.brand) || 0) + 1)
       }
     })
@@ -110,8 +155,9 @@ export async function GET(req: NextRequest) {
       .map(([brand, mentions]) => ({ brand, mentions }))
       .sort((a, b) => b.mentions - a.mentions)
 
+    // Build model data
     const modelMap = new Map<string, number>()
-    shoppingData.forEach((item) => {
+    shoppingData.forEach(item => {
       if (item.model) {
         modelMap.set(item.model, (modelMap.get(item.model) || 0) + 1)
       }
@@ -121,11 +167,27 @@ export async function GET(req: NextRequest) {
       .map(([model, mentions]) => ({ model, mentions }))
       .sort((a, b) => b.mentions - a.mentions)
 
-    const shoppingScore = totalMentions > 0 
-      ? Math.min(100, (totalMentions / Math.max(categories.length, 1)) * 25)
-      : 0
+    // Calculate MEANINGFUL shopping visibility score
+    const shoppingInput: ShoppingData = {
+      total_mentions: userMentions,
+      categories,
+      models,
+      competitors,
+      raw_results: shoppingData.map(d => ({
+        brand: d.brand,
+        model: d.model,
+        category: d.category,
+        rank: d.rank || 3,
+        is_user_brand: d.is_user_brand || false
+      }))
+    }
+    
+    const shoppingBreakdown = calculateVisibilityScore(shoppingInput)
+    console.log('🛒 [API] Shopping visibility breakdown:', shoppingBreakdown)
 
-    // Aggregate Brand data
+    // ============================================
+    // PROCESS BRAND DATA
+    // ============================================
     const brandData = brandResults.data || []
     const descriptors = brandData.map((d) => ({
       word: d.descriptor,
@@ -146,78 +208,101 @@ export async function GET(req: NextRequest) {
       neutral: totalSentiments > 0 ? Math.round((sentimentCounts.neutral / totalSentiments) * 100) : 0,
       negative: totalSentiments > 0 ? Math.round((sentimentCounts.negative / totalSentiments) * 100) : 0,
     }
-    
-    const totalWeightedMentions = brandData.reduce((sum, d) => sum + (d.weight || 1), 0)
-    const visibilityIndex = totalWeightedMentions > 0 
-      ? Math.min(100, totalWeightedMentions * 5)
-      : 0
 
-    // Aggregate Conversation data
-    const conversationData = conversationResults.data || []
-    
-    console.log('🗣️ [API] Processing conversation data:', conversationData.length, 'rows')
-    
-    if (conversationData.length > 0) {
-      console.log('🗣️ [API] Sample conversation row:', conversationData[0])
+    // Calculate MEANINGFUL brand visibility score
+    const brandInput: BrandData = {
+      descriptors,
+      sentiment_breakdown: sentimentCounts,
+      total_mentions: brandData.length
     }
     
-    const questions = conversationData.map((q) => ({
+    const brandBreakdown = calculateBrandVisibilityScore(brandInput)
+    console.log('⭐ [API] Brand visibility breakdown:', brandBreakdown)
+
+    // ============================================
+    // PROCESS CONVERSATIONS DATA
+    // ============================================
+    const conversationData = conversationResults.data || []
+    const questions = conversationData.map(q => ({
       question: q.question,
       intent: q.intent,
       score: q.score || 1,
       emerging: q.emerging || false,
     }))
-    
+
     const intentCounts = { how_to: 0, vs: 0, price: 0, trust: 0, features: 0 }
-    conversationData.forEach((q) => {
+    conversationData.forEach(q => {
       const intent = q.intent as keyof typeof intentCounts
       if (intent in intentCounts) {
         intentCounts[intent]++
       }
     })
-    
+
     const volumeIndex = conversationData.reduce((sum, q) => sum + (q.score || 1), 0)
 
-    console.log('🗣️ [API] Conversations transformed:')
-    console.log('  - Questions:', questions.length)
-    console.log('  - Volume Index:', volumeIndex)
-    console.log('  - Intent breakdown:', intentCounts)
-
-    // Aggregate Website data - Use proper metrics calculator
+    // ============================================
+    // PROCESS WEBSITE DATA
+    // ============================================
     console.log('🌐 [API] Calculating website metrics...')
-    const website = await calculateWebsiteMetrics(supabase, scan.id)
+    const websiteMetrics = await calculateWebsiteMetrics(supabase, scan.id)
     
-    console.log('🌐 [API] Website metrics:', {
-      readability: website.readability_score,
-      coverage: website.schema_coverage,
-      issues: website.issues.length,
-    })
+    // Calculate MEANINGFUL website readiness score
+    const websiteInput: WebsiteData = {
+      pages_analyzed: new Set(websiteMetrics.issues.map(i => i.url)).size,
+      schema_coverage: websiteMetrics.schema_coverage,
+      issues: websiteMetrics.issues.map(i => ({ severity: i.severity, code: i.code })),
+      readability_score: websiteMetrics.readability_score
+    }
+    
+    const websiteBreakdown = calculateWebsiteReadinessScore(websiteInput)
+    console.log('🌐 [API] Website readiness breakdown:', websiteBreakdown)
 
+    // ============================================
+    // CALCULATE OVERALL HARBOR SCORE
+    // ============================================
+    const harborScoreData = calculateHarborScore(shoppingInput, brandInput, websiteInput)
+    console.log('🏆 [API] Harbor Score:', harborScoreData.harbor_score)
+
+    // ============================================
+    // BUILD RESPONSE
+    // ============================================
     const response = {
       scan,
       shopping: {
-        score: Math.round(shoppingScore),
-        total_mentions: totalMentions,
+        score: shoppingBreakdown.total,
+        total_mentions: userMentions,
         categories,
         competitors,
         models,
+        breakdown: shoppingBreakdown
       },
-      shopping_raw: shoppingData, // ⭐ ADDED: Raw data for action items analyzer
+      shopping_raw: shoppingData,
       brand: {
-        visibility_index: Math.round(visibilityIndex),
+        visibility_index: brandBreakdown.total,
         descriptors,
         sentiment_breakdown: sentimentBreakdown,
         total_mentions: brandData.length,
+        breakdown: brandBreakdown
       },
       conversations: {
         volume_index: Math.round(volumeIndex),
         questions,
         intent_breakdown: intentCounts,
       },
-      website,
+      website: {
+        readability_score: websiteBreakdown.total,
+        schema_coverage: websiteMetrics.schema_coverage,
+        issues: websiteMetrics.issues,
+        breakdown: websiteBreakdown
+      },
+      harbor_score: harborScoreData
     }
 
-    console.log('✅ [API v4] Returning response with shopping_raw:', shoppingData.length, 'rows')
+    console.log('✅ [API v5] Returning response with new scoring')
+    console.log('   Shopping:', shoppingBreakdown.total)
+    console.log('   Brand:', brandBreakdown.total)
+    console.log('   Website:', websiteBreakdown.total)
+    console.log('   Harbor:', harborScoreData.harbor_score)
     
     return NextResponse.json(response)
   } catch (error) {
