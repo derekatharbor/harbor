@@ -1,4 +1,5 @@
 // apps/web/app/dashboard/competitors/page.tsx
+// UPDATED: Added tooltips to metric cards, fixed ranking display
 
 'use client'
 
@@ -51,8 +52,8 @@ export default function CompetitorsPage() {
         const scanResponse = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         if (scanResponse.ok) {
           const scanData = await scanResponse.json()
-          if (scanData.shopping?.visibility_score) {
-            setUserScore(scanData.shopping.visibility_score)
+          if (scanData.shopping?.score) {
+            setUserScore(scanData.shopping.score)
           } else if (scanData.brand?.visibility_index) {
             setUserScore(scanData.brand.visibility_index)
           }
@@ -163,6 +164,14 @@ export default function CompetitorsPage() {
             <div className="flex items-center gap-2 mb-4">
               <Crown className="w-5 h-5 text-[#A855F7]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Your Rank</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#A855F7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Your position among all brands in {data.category} based on AI visibility score. Lower rank is better - #1 means you have the highest visibility.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               #{data.userRank}
@@ -177,6 +186,14 @@ export default function CompetitorsPage() {
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-5 h-5 text-[#A855F7]" strokeWidth={1.5} />
               <p className="text-xs text-secondary/60 uppercase tracking-wider">Your Score</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#A855F7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  Your overall AI visibility score across ChatGPT, Claude, Gemini, and Perplexity. This measures how often and prominently you appear in AI recommendations.
+                </div>
+              </div>
             </div>
             <div className="text-4xl font-heading font-bold text-primary mb-2">
               {userScore.toFixed(1)}<span className="text-2xl text-secondary/40">%</span>
@@ -195,6 +212,14 @@ export default function CompetitorsPage() {
                 <TrendingDown className="w-5 h-5 text-red-400" strokeWidth={1.5} />
               )}
               <p className="text-xs text-secondary/60 uppercase tracking-wider">vs Category Avg</p>
+              <div className="group relative">
+                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
+                  ?
+                </div>
+                <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#A855F7]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
+                  How your visibility score compares to the average of all brands in {data.category}. Positive means you're outperforming the typical competitor.
+                </div>
+              </div>
             </div>
             <div className={`text-4xl font-heading font-bold mb-2 ${isAboveAverage ? 'text-emerald-500' : 'text-red-400'}`}>
               {isAboveAverage ? '+' : ''}{vsAverage.toFixed(1)}<span className="text-2xl opacity-60">%</span>
@@ -264,7 +289,7 @@ export default function CompetitorsPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-white/5 flex items-center justify-center text-secondary/60 font-mono text-sm">
-                        #{index + 1}
+                        #{comp.rank_global || (index + (data.userRank === 1 ? 2 : 1))}
                       </div>
                       <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
                         {comp.logo_url ? (
