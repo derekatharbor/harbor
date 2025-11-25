@@ -136,7 +136,13 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
             >
               {/* Image placeholder - you can add Harbor Index graphic here */}
               <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
+                <Image 
+                  src="/images/harbor-index-preview.png"
+                  alt="Harbor Index Preview"
+                  width={280}
+                  height={128}
+                  className="w-full h-full object-cover"
+                />
               </div>
               
               <h4 className="text-xl font-bold text-white mb-3 group-hover:text-white/70 transition-colors">
@@ -167,26 +173,47 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
               >
                 Contact
               </a>
-            </nav>
-          </div>
-
-          {/* Column 4 - Legal */}
-          <div>
-            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Legal</h3>
-            <nav className="space-y-4">
               <a
                 href="/privacy"
                 onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
-                Privacy Policy
+                Privacy
               </a>
               <a
                 href="/terms"
                 onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
-                Terms of Service
+                Terms
+              </a>
+            </nav>
+          </div>
+
+          {/* Column 4 - Resources */}
+          <div>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Resources</h3>
+            <nav className="space-y-4">
+              <a
+                href="/resources"
+                onClick={onClose}
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Resource Center
+              </a>
+              <a
+                href="/blog"
+                onClick={onClose}
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Blog
+              </a>
+              <a
+                href="/docs"
+                onClick={onClose}
+                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
+              >
+                Documentation
               </a>
             </nav>
           </div>

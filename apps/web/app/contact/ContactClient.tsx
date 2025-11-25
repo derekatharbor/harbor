@@ -41,7 +41,7 @@ export default function ContactClient() {
       <FrostedNav />
 
       {/* Main Content */}
-      <div className="pt-28 md:pt-32 pb-20 md:pb-32">
+      <div data-nav-theme="light" className="pt-28 md:pt-32 pb-20 md:pb-32">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
             
@@ -279,8 +279,8 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative py-12 px-6 rounded-t-[2rem] md:rounded-t-[3rem] bg-[#0a0f1a] border-t border-white/5">
+      {/* Footer - No rounded corners on this page */}
+      <footer className="relative py-12 px-6 bg-[#0a0f1a] border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
