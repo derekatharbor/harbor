@@ -319,39 +319,40 @@
   /* ========================================
      LEGACY COMPATIBILITY
      Map old classes to new CSS variables
+     WITHOUT !important so theme switching works
      ======================================== */
   
   /* Background colors */
   .bg-navy,
-  .bg-[#101A31] {
-    background-color: var(--bg-primary) !important;
+  .bg-\[#101A31\] {
+    background-color: var(--bg-primary);
   }
 
-  .bg-[#0C1422],
-  .bg-[#0B1521] {
-    background-color: var(--bg-card) !important;
+  .bg-\[#0C1422\],
+  .bg-\[#0B1521\] {
+    background-color: var(--bg-card);
   }
 
   /* Text colors */
   .text-white {
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
   }
 
   .text-softgray,
   .text-white\/60,
   .text-white\/70 {
-    color: var(--text-secondary) !important;
+    color: var(--text-secondary);
   }
 
   .text-white\/40,
   .text-white\/50 {
-    color: var(--text-muted) !important;
+    color: var(--text-muted);
   }
 
   /* Border colors */
   .border-white\/5,
   .border-white\/10 {
-    border-color: var(--border) !important;
+    border-color: var(--border);
   }
 
   /* ========================================
