@@ -1,12 +1,15 @@
-// apps/web/app/api/brands/competitors/route.ts
+// apps/web/app/api/competitors/route.ts
 // API endpoint to fetch competitors for a brand
 
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export async function GET(request: Request) {
+// Force dynamic rendering - this route uses query params
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    const searchParams = request.nextUrl.searchParams
     const brandId = searchParams.get('brandId')
     
     if (!brandId) {
@@ -40,7 +43,7 @@ export async function GET(request: Request) {
     // Get all brands in similar industries (fuzzy match)
     const { data: allCompetitors, error: compError } = await supabase
       .from('ai_profiles')
-      .select('id, slug, brand_name, industry, visibility_score, rank_global')
+      .select('id, slug, brand_name, industry, visibility_score, rank_global, logo_url')
       .neq('id', brandId)
       .not('visibility_score', 'is', null)
       .ilike('industry', `%${brand.industry}%`)
