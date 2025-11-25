@@ -54,6 +54,13 @@
     
     --border: rgba(0, 0, 0, 0.08);
     
+    /* Accent colors */
+    --accent-teal: #009E92;
+    --accent-blue: #2165CC;
+    --accent-green: #22C55E;
+    --accent-amber: #CC9239;
+    --accent-purple: #B95BC4;
+    
     /* Sidebar stays dark navy in both modes */
     --sidebar-bg: #0B1521;
     --sidebar-text: #F4F6F8;
