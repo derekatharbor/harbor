@@ -111,13 +111,12 @@ export default function OverviewPage() {
           }
 
           // Brand recommendations
-          if (data.brand && data.brand_raw) {
+          if (data.brand) {
             const brandAnalysis: BrandAnalysis = {
               visibility_index: data.brand.visibility_index,
               descriptors: data.brand.descriptors || [],
               sentiment_breakdown: data.brand.sentiment_breakdown,
-              total_mentions: data.brand.total_mentions,
-              raw_descriptors: data.brand_raw
+              total_mentions: data.brand.total_mentions
             }
             const brandTasks = analyzeBrandData(brandAnalysis)
             allTasks.push(...brandTasks.map(t => ({ ...t, module: 'brand' })))
