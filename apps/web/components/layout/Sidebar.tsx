@@ -105,9 +105,16 @@ export default function Sidebar() {
 
   return (
     <aside 
-      className={`hidden lg:flex fixed left-0 top-0 h-screen bg-[#0B1521] border-r border-white/5 flex-col transition-all duration-300 z-[100] ${
-        isCollapsed ? 'w-20' : 'w-60'
-      }`}
+      className={`
+        sidebar-dark
+        hidden lg:flex fixed left-0 top-0 h-screen 
+        border-r flex-col transition-all duration-300 z-[100] 
+        ${isCollapsed ? 'w-20' : 'w-60'}
+      `}
+      style={{
+        backgroundColor: '#0B1521',
+        borderColor: 'rgba(255, 255, 255, 0.05)'
+      }}
     >
       {/* Header with collapse button */}
       <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">

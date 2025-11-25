@@ -114,12 +114,45 @@
   /* ========================================
      SIDEBAR STYLES (ALWAYS DARK)
      ======================================== */
+  .sidebar-dark {
+    background-color: #0B1521 !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* All text inside sidebar stays white/gray */
+  .sidebar-dark,
+  .sidebar-dark * {
+    color: #F4F6F8;
+  }
+
+  /* Sidebar specific overrides that ignore theme */
+  .sidebar-dark .text-white {
+    color: #FFFFFF !important;
+  }
+
+  .sidebar-dark .text-softgray,
+  .sidebar-dark [class*="text-white/"] {
+    color: rgba(244, 246, 248, 0.7) !important;
+  }
+
+  .sidebar-dark .bg-white\/5 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .sidebar-dark .bg-white\/10 {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .sidebar-dark .border-white\/5 {
+    border-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
   .sidebar-container {
     position: fixed;
     height: 100vh;
     overflow: hidden;
-    border-right: 1px solid var(--sidebar-border);
-    background: var(--sidebar-bg);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    background: #0B1521;
   }
 
   .nav-item {
