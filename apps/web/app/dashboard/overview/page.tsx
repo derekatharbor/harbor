@@ -53,7 +53,7 @@ export default function OverviewPage() {
           faqs: currentDashboard.metadata?.target_keywords || [], // Using keywords as proxy
           companyInfo: {
             hq_location: currentDashboard.metadata?.headquarters,
-            founded_year: currentDashboard.metadata?.founding_year
+            founded_year: currentDashboard.metadata?.founding_year ? parseInt(currentDashboard.metadata.founding_year) : undefined
           }
         }
         
