@@ -82,23 +82,23 @@ export default function Sidebar() {
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
-    { name: 'Competitors', href: '/dashboard/competitors', icon: Users },
+    { name: 'Competitive Intel', href: '/dashboard/competitors', icon: Users },
   ]
 
   const brandSettings = [
-    { name: 'Brand Dashboard', href: '/dashboard/brand-settings', icon: User },
+    { name: 'Brand Profile', href: '/dashboard/brand-settings', icon: User },
   ]
 
   // Get current page accent color
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#2979FF' // Cerulean
-    if (pathname === '/dashboard/brand-settings') return '#FF6B4A' // Coral
+    if (pathname === '/dashboard/brand-settings') return '#22D3EE' // Teal (was coral)
     if (pathname === '/dashboard/shopping') return '#00C6B7' // Aqua
     if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
     if (pathname === '/dashboard/conversations') return '#FFB84D' // Amber/Gold
     if (pathname === '/dashboard/website') return '#E879F9' // Magenta/Pink
     if (pathname === '/dashboard/competitors') return '#A855F7' // Purple
-    return '#FF6B4A' // Coral fallback
+    return '#22D3EE' // Teal fallback (was coral)
   }
 
   const accentColor = getAccentColor()

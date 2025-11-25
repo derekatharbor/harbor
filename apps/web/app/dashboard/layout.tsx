@@ -23,62 +23,98 @@ export default function DashboardLayout({
       setSidebarCollapsed(collapsed)
     }
 
-    // Check on mount
     checkSidebarState()
 
-    // Listen for changes
     window.addEventListener('sidebar-toggle', checkSidebarState)
     return () => window.removeEventListener('sidebar-toggle', checkSidebarState)
   }, [])
 
   useEffect(() => {
-    // Show loader on route change
     setIsTransitioning(true)
     
-    // Hide loader after a short delay (allows page to start rendering)
     const timer = setTimeout(() => {
       setIsTransitioning(false)
-    }, 300)
+    }, 200) // Reduced from 300ms for snappier feel
 
     return () => clearTimeout(timer)
   }, [pathname])
 
-  // Note: Sidebar margin is now handled by CSS (ml-60 or ml-16 based on sidebar width)
-  // We use a fixed class here and let the sidebar handle its own width transition
-
   return (
     <BrandProvider>
-      <div className="flex min-h-screen bg-primary">
+      {/* 
+        Dashboard container uses CSS variables for theming.
+        The bg-primary class pulls from --bg-primary which changes with data-theme.
+      */}
+      <div 
+        className="flex min-h-screen"
+        style={{ backgroundColor: 'var(--bg-primary)' }}
+      >
         <Sidebar />
-        <main className={`flex-1 p-4 lg:p-8 relative transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-60'}`}>
-          {/* Route transition overlay */}
+        
+        <main 
+          className={`
+            flex-1 p-4 lg:p-8 relative 
+            transition-[margin] duration-300 
+            ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-60'}
+          `}
+          style={{ backgroundColor: 'var(--bg-primary)' }}
+        >
+          {/* Route transition overlay - uses same background */}
           {isTransitioning && (
-            <div className="absolute inset-0 bg-primary z-50 flex items-start justify-start pt-8">
+            <div 
+              className="absolute inset-0 z-50 flex items-start justify-start pt-8"
+              style={{ backgroundColor: 'var(--bg-primary)' }}
+            >
               <div className="animate-pulse space-y-8 w-full">
                 {/* Header skeleton */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-border rounded-lg"></div>
-                    <div className="h-10 w-64 bg-border rounded"></div>
+                    <div 
+                      className="w-8 h-8 rounded-lg"
+                      style={{ backgroundColor: 'var(--bg-card)' }}
+                    />
+                    <div 
+                      className="h-10 w-64 rounded"
+                      style={{ backgroundColor: 'var(--bg-card)' }}
+                    />
                   </div>
-                  <div className="h-10 w-40 bg-border rounded-lg hidden lg:block"></div>
+                  <div 
+                    className="h-10 w-40 rounded-lg hidden lg:block"
+                    style={{ backgroundColor: 'var(--bg-card)' }}
+                  />
                 </div>
 
                 {/* Cards skeleton */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
+                    <div 
+                      key={i} 
+                      className="rounded-lg p-6 h-32"
+                      style={{ 
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border)'
+                      }}
+                    />
                   ))}
                 </div>
 
                 {/* Chart skeleton */}
-                <div className="bg-card rounded-lg p-6 border border-border h-64"></div>
+                <div 
+                  className="rounded-lg p-6 h-64"
+                  style={{ 
+                    backgroundColor: 'var(--bg-card)',
+                    border: '1px solid var(--border)'
+                  }}
+                />
               </div>
             </div>
           )}
           
           {/* Actual page content */}
-          <div className={isTransitioning ? 'opacity-0' : 'opacity-100 transition-opacity duration-200'}>
+          <div className={`
+            transition-opacity duration-150
+            ${isTransitioning ? 'opacity-0' : 'opacity-100'}
+          `}>
             {children}
           </div>
         </main>

@@ -5,106 +5,113 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
 
 /* ========================================
-   HARBOR MULTI-ACCENT SYSTEM (CORRECTED)
-   Grounded Intelligence - No Cyber Glow
+   HARBOR THEME SYSTEM v2
+   Clean, Consistent, No Wonkiness
    ======================================== */
-
-:root {
-  --pageAccent: #2165CC;  /* Damped 25% from #2979FF */
-  --pageAccent-rgb: 33, 101, 204;
-}
-
-[data-page="overview"] {
-  --pageAccent: #2165CC;  /* Cerulean damped */
-  --pageAccent-rgb: 33, 101, 204;
-}
-
-[data-page="shopping"] {
-  --pageAccent: #009E92;  /* Aqua damped */
-  --pageAccent-rgb: 0, 158, 146;
-}
-
-[data-page="brand"] {
-  --pageAccent: #3BB8CC;  /* Periwinkle damped */
-  --pageAccent-rgb: 59, 184, 204;
-}
-
-[data-page="conversations"] {
-  --pageAccent: #CC9239;  /* Amber/Gold damped 25% */
-  --pageAccent-rgb: 204, 146, 57;
-}
-
-[data-page="website"] {
-  --pageAccent: #B95BC4;  /* Magenta/Pink damped 25% */
-  --pageAccent-rgb: 185, 91, 196;
-}
 
 @layer base {
   /* ========================================
-     LIGHT MODE (DEFAULT) - Professional SaaS look
+     DARK MODE (DEFAULT FOR DASHBOARD)
+     Navy theme - the Harbor signature look
      ======================================== */
   :root {
-    --bg-primary: #101A31;  /* Navy for landing pages */
-    --bg-secondary: #F8F9FA;
-    --bg-card: #FFFFFF;
-    --bg-hover: #F8F9FA;
+    --bg-primary: #101A31;
+    --bg-secondary: #0B1521;
+    --bg-card: #0C1422;
+    --bg-card-hover: #111D2E;
+    --bg-muted: rgba(255, 255, 255, 0.02);
     
-    --text-primary: #101A31;
-    --text-secondary: #64748B;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A4B1C3;
+    --text-muted: rgba(255, 255, 255, 0.5);
     
-    --border: rgba(0, 0, 0, 0.08);
+    --border: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.12);
     
-    /* Sidebar stays dark navy in both modes */
+    /* Accent colors */
+    --accent-teal: #22D3EE;
+    --accent-purple: #A855F7;
+    --accent-blue: #3B82F6;
+    --accent-green: #10B981;
+    --accent-amber: #F59E0B;
+    
+    /* Sidebar always dark */
     --sidebar-bg: #0B1521;
     --sidebar-text: #F4F6F8;
     --sidebar-border: rgba(255, 255, 255, 0.05);
   }
 
   /* ========================================
-     DARK MODE (OPT-IN) - Navy theme for night work
+     LIGHT MODE (OPT-IN)
+     Clean white theme for those who prefer it
      ======================================== */
-  :root[data-theme="dark"] {
-    --bg-primary: #101A31;  /* Match hero navy */
-    --bg-secondary: #101A31;
-    --bg-card: #101C2C;
-    --bg-hover: rgba(255, 255, 255, 0.02);
+  :root[data-theme="light"] {
+    --bg-primary: #F8FAFC;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F1F5F9;
+    --bg-muted: rgba(0, 0, 0, 0.02);
     
-    --text-primary: #FFFFFF;
-    --text-secondary: #F4F6F8;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --text-muted: rgba(0, 0, 0, 0.4);
     
-    --border: rgba(255, 255, 255, 0.06);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.15);
     
-    /* Sidebar stays dark navy in dark mode */
+    /* Sidebar stays dark in light mode too */
     --sidebar-bg: #0B1521;
     --sidebar-text: #F4F6F8;
     --sidebar-border: rgba(255, 255, 255, 0.05);
   }
 
+  /* Base styles */
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    background-color: var(--bg-primary);
-    color: var(--text-secondary);
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-feature-settings: normal;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading text-white;
-    letter-spacing: 0.3px;  /* Breathing room */
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
 @layer components {
   /* ========================================
-     SIDEBAR (FIXED, GROUNDED)
+     DASHBOARD SPECIFIC STYLES
      ======================================== */
+  
+  .dashboard-bg {
+    background-color: var(--bg-primary);
+    min-height: 100vh;
+  }
 
+  .dashboard-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .dashboard-card-hover:hover {
+    background-color: var(--bg-card-hover);
+  }
+
+  /* ========================================
+     SIDEBAR STYLES (ALWAYS DARK)
+     ======================================== */
   .sidebar-container {
     position: fixed;
     height: 100vh;
     overflow: hidden;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    background: #0B1521;  /* Matte navy, no gradient */
+    border-right: 1px solid var(--sidebar-border);
+    background: var(--sidebar-bg);
   }
 
   .nav-item {
@@ -112,337 +119,158 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.625rem 1rem;
-    border-radius: 0;
-    transition: all 100ms ease;
+    border-radius: 8px;
+    transition: all 150ms ease;
     cursor: pointer;
-    color: rgba(244, 246, 248, 0.7);
+    color: rgba(244, 246, 248, 0.6);
   }
 
   .nav-item:hover {
-    background: rgba(255, 255, 255, 0.03);  /* Subtle, no accent */
+    background: rgba(255, 255, 255, 0.05);
     color: rgba(244, 246, 248, 0.95);
   }
 
   .nav-item.active {
-    color: var(--pageAccent);
-    border-left: 2px solid var(--pageAccent);
-    background: transparent;  /* No fill, just border */
-    padding-left: calc(1rem - 2px);
-    font-weight: 600;
-  }
-
-  .nav-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .sidebar-section-header {
-    color: rgba(255, 255, 255, 0.4);  /* Lighter hierarchy */
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    padding: 0.5rem 1rem;
-    margin-top: 1.5rem;
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
   }
 
   /* ========================================
-     CARD STYLES (NO HOVER ON DATA CARDS)
+     BUTTON STYLES - CURSOR FIX
      ======================================== */
-
-  .harbor-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
-    transition: none;  /* Static cards don't react */
-  }
-
-  /* Only interactive cards respond */
-  .harbor-card[data-interactive="true"]:hover {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-    cursor: pointer;
-  }
-
-  /* Standard card depth */
-  .card-L2 {
-    background: var(--bg-card);
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.06);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-  }
-
-  /* Hover depth (interactive only) */
-  .card-L3 {
-    background: #141E38;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-  }
-
-  /* ========================================
-     PAGE LAYOUT
-     ======================================== */
-
-  .page-container {
-    background: var(--bg-primary);
-    min-height: 100vh;
-    margin-left: 240px;  /* Sidebar width */
-  }
-
-  /* Header with simple accent line (no glow) */
-  .page-header {
-    border-top: 1px solid var(--pageAccent);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: border-color 200ms ease;
-  }
-
-  /* ========================================
-     BUTTONS
-     ======================================== */
-
   .btn-primary {
-    @apply bg-teal text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply transition-all duration-150 hover:brightness-110 cursor-pointer;
+    @apply px-4 py-2.5 rounded-lg font-medium transition-all duration-150;
+    background: var(--accent-teal);
+    color: #0F172A;
+    cursor: pointer !important;
   }
 
-  .btn-primary:focus {
-    @apply outline-none ring-1 ring-teal;
-    box-shadow: 0 0 0 3px rgba(0, 198, 183, 0.2);
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
   }
 
   .btn-secondary {
-    @apply bg-transparent text-white px-4 py-2 rounded-lg font-body font-medium;
-    @apply border border-white transition-all duration-150 hover:bg-white hover:bg-opacity-5 cursor-pointer;
+    @apply px-4 py-2.5 rounded-lg font-medium transition-all duration-150;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    cursor: pointer !important;
   }
 
-  .btn-primary:disabled,
-  .btn-secondary:disabled {
-    @apply opacity-30 cursor-not-allowed;
+  .btn-secondary:hover {
+    background: var(--bg-muted);
+    border-color: var(--text-secondary);
   }
 
   /* ========================================
      INPUT STYLES
      ======================================== */
-
-  .harbor-input {
-    @apply bg-navy-light text-white placeholder-softgray placeholder-opacity-60;
-    @apply rounded-lg px-4 py-2 border border-white border-opacity-10;
-    @apply focus:outline-none focus:ring-1 focus:ring-teal;
-  }
-
-  /* Themed input that respects light/dark mode */
-  .harbor-input-themed {
-    @apply rounded-lg px-4 py-3 border;
-    @apply focus:outline-none focus:ring-1 focus:ring-teal;
-    background-color: var(--bg-card);
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg transition-all duration-150;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     color: var(--text-primary);
-    border-color: var(--border);
   }
 
-  .harbor-input-themed::placeholder {
-    color: var(--text-secondary);
-    opacity: 0.6;
+  .input-field::placeholder {
+    color: var(--text-muted);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+  }
+
+  /* ========================================
+     CARD STYLES
+     ======================================== */
+  .metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .metric-card-interactive {
+    cursor: pointer !important;
+    transition: all 150ms ease;
+  }
+
+  .metric-card-interactive:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
   }
 
   /* ========================================
      TABLE STYLES
      ======================================== */
-
-  .harbor-table {
+  .data-table {
     @apply w-full;
   }
 
-  .harbor-table thead {
-    @apply text-left text-sm text-softgray text-opacity-75;
+  .data-table thead {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
-  .harbor-table tbody tr {
-    @apply h-[52px] transition-colors;
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 150ms ease;
   }
 
-  .harbor-table tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.02);  /* Subtle */
-  }
-
-  .harbor-table tbody tr:nth-child(even) {
-    @apply bg-white bg-opacity-[0.01];
-  }
-
-  /* ========================================
-     DELTAS (SUBTLE TEXT GLOW)
-     ======================================== */
-
-  .delta-positive {
-    color: var(--pageAccent);
-    font-weight: 500;
-    text-shadow: 0 0 6px rgba(var(--pageAccent-rgb), 0.3);  /* Subtle */
-  }
-
-  .delta-negative {
-    color: #CC3E5C;  /* Damped coral */
-    font-weight: 500;
-  }
-
-  .delta-neutral {
-    color: rgba(244, 246, 248, 0.6);
-    font-weight: 500;
+  .data-table tbody tr:hover {
+    background: var(--bg-muted);
   }
 
   /* ========================================
-     SENTIMENT COLORS
+     PROGRESS & STATUS
      ======================================== */
-
-  .sentiment-pos {
-    background: rgba(0, 158, 146, 0.12);  /* Damped */
-    color: #009E92;
-    border: 1px solid rgba(0, 158, 146, 0.25);
-  }
-
-  .sentiment-neu {
-    background: rgba(59, 184, 204, 0.12);
-    color: #3BB8CC;
-    border: 1px solid rgba(59, 184, 204, 0.25);
-  }
-
-  .sentiment-neg {
-    background: rgba(204, 62, 92, 0.12);
-    color: #CC3E5C;
-    border: 1px solid rgba(204, 62, 92, 0.25);
-  }
-
-  /* ========================================
-     PROGRESS BARS (NO GLOW)
-     ======================================== */
-
   .progress-bar {
-    background: rgba(var(--pageAccent-rgb), 0.15);
+    background: var(--bg-muted);
     border-radius: 9999px;
     overflow: hidden;
     height: 8px;
   }
 
-  .progress-bar-fill {
-    background: var(--pageAccent);
+  .progress-fill {
     height: 100%;
+    border-radius: 9999px;
     transition: width 400ms ease-out;
-    box-shadow: none;  /* Remove glow */
+  }
+
+  .status-positive {
+    color: var(--accent-green);
+  }
+
+  .status-negative {
+    color: #EF4444;
+  }
+
+  .status-neutral {
+    color: var(--text-secondary);
   }
 
   /* ========================================
-     ACCENT UTILITIES
+     SECTION HEADERS
      ======================================== */
-
-  .text-accent {
-    color: var(--pageAccent);
-  }
-
-  .bg-accent {
-    background: var(--pageAccent);
-  }
-
-  .border-accent {
-    border-color: var(--pageAccent);
+  .section-header {
+    @apply text-xs uppercase tracking-wider mb-3 px-3;
+    color: var(--text-muted);
   }
 }
 
 @layer utilities {
   /* ========================================
-     ANIMATIONS (CALM, NO JITTER)
-     ======================================== */
-
-  .animate-pulse-slow {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .animate-in {
-    animation: fadeIn 250ms ease-out;
-  }
-
-  .fade-in {
-    animation: fadeIn 250ms ease-out;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);  /* Reduced from 20px */
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes sonarPulse {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-
-  .animate-sonar {
-    animation: sonarPulse 5s ease-out infinite;
-  }
-
-  .transition-harbor {
-    transition: all 100ms ease;  /* Reduced from 150ms */
-  }
-
-  /* ========================================
-     STAGGER ANIMATIONS
-     ======================================== */
-
-  .card-fade-in {
-    animation: fadeInUp 250ms ease-out forwards;
-    opacity: 0;
-  }
-
-  .stagger-children > * {
-    animation: fadeInUp 250ms ease-out forwards;
-    opacity: 0;
-  }
-
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 100ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 200ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 400ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 500ms; }
-  .stagger-children > *:nth-child(7) { animation-delay: 600ms; }
-  .stagger-children > *:nth-child(8) { animation-delay: 700ms; }
-
-  /* ========================================
-     UTILITIES
-     ======================================== */
-
-  .border-harbor {
-    border-color: rgba(255, 255, 255, 0.06);
-  }
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* ========================================
-     THEME UTILITIES
+     THEME-AWARE UTILITIES
      ======================================== */
   .bg-primary {
     background-color: var(--bg-primary);
@@ -456,8 +284,8 @@
     background-color: var(--bg-card);
   }
   
-  .bg-hover:hover {
-    background-color: var(--bg-hover);
+  .bg-muted {
+    background-color: var(--bg-muted);
   }
   
   .text-primary {
@@ -468,47 +296,137 @@
     color: var(--text-secondary);
   }
   
+  .text-muted {
+    color: var(--text-muted);
+  }
+  
   .border-border {
     border-color: var(--border);
+  }
+
+  .border-strong {
+    border-color: var(--border-strong);
+  }
+
+  /* ========================================
+     ANIMATIONS
+     ======================================== */
+  .animate-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  .fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s ease-in-out infinite;
+  }
+
+  /* ========================================
+     LINE CLAMP
+     ======================================== */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
 /* ========================================
-   NUCLEAR CURSOR FIX - MAXIMUM SPECIFICITY
-   Applied OUTSIDE layers for highest priority
+   GLOBAL CURSOR FIX
+   Applied outside layers for highest priority
    ======================================== */
 
-button,
-[role="button"],
-[type="button"],
-[type="submit"],
-a:not([href=""]):not([href="#"]),
-[class*="hover:"],
-[class*="cursor-pointer"],
-.transition-colors,
-.transition-all,
-.group,
-.nav-item,
-[onclick] {
+/* Everything clickable gets pointer */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[type="button"]:not(:disabled),
+[type="submit"]:not(:disabled),
+a[href],
+label[for],
+select:not(:disabled),
+[onclick],
+.cursor-pointer {
   cursor: pointer !important;
 }
 
-/* Exceptions */
-[disabled],
+/* Disabled elements */
+button:disabled,
 [aria-disabled="true"],
-[class*="cursor-not-allowed"],
-[class*="cursor-default"],
+input:disabled,
+select:disabled,
+textarea:disabled,
 .cursor-not-allowed {
   cursor: not-allowed !important;
 }
 
-input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
-textarea,
-select {
+/* Text inputs */
+input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not(:disabled),
+textarea:not(:disabled) {
   cursor: text !important;
 }
 
-[type="checkbox"],
-[type="radio"] {
+/* Checkboxes and radios */
+[type="checkbox"]:not(:disabled),
+[type="radio"]:not(:disabled) {
   cursor: pointer !important;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Light mode scrollbar */
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }

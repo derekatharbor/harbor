@@ -1,13 +1,15 @@
 // apps/web/app/dashboard/brand-settings/page.tsx
+// Redesigned Brand Dashboard - Clean, cohesive with Harbor aesthetic
 
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { 
   Building2, Upload, X, Plus, Save, CheckCircle, 
-  Package, Target, Globe, Linkedin, Twitter, Facebook, 
-  Instagram, ExternalLink, TrendingUp, AlertCircle, FileText, Info
+  Package, Globe, ExternalLink, TrendingUp, 
+  AlertCircle, Info, Shield, Sparkles, ArrowRight
 } from 'lucide-react'
+import Link from 'next/link'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -24,31 +26,12 @@ interface BrandSettings {
   social_links: {
     linkedin?: string
     twitter?: string
-    facebook?: string
-    instagram?: string
-    crunchbase?: string
-    wikipedia?: string
-    press_kit?: string
+    website?: string
   }
   target_keywords: string[]
 }
 
-interface ReadinessChecklist {
-  brand_name: boolean
-  domain: boolean
-  logo: boolean
-  description: boolean
-  category: boolean
-  headquarters: boolean
-  founding_year: boolean
-  one_product: boolean
-  three_products: boolean
-  one_competitor: boolean
-  three_keywords: boolean
-  one_social: boolean
-}
-
-export default function BrandSettingsPage() {
+export default function BrandDashboardPage() {
   const { currentDashboard } = useBrand()
   const fileInputRef = useRef<HTMLInputElement>(null)
   
@@ -71,7 +54,6 @@ export default function BrandSettingsPage() {
   const [hasChanges, setHasChanges] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [newProduct, setNewProduct] = useState('')
-  const [newCompetitor, setNewCompetitor] = useState('')
   const [newKeyword, setNewKeyword] = useState('')
 
   useEffect(() => {
@@ -105,50 +87,24 @@ export default function BrandSettingsPage() {
     loadSettings()
   }, [currentDashboard])
 
-  // Calculate AI Readiness Score
-  const calculateReadiness = (): { score: number; checklist: ReadinessChecklist; itemsRemaining: number } => {
-    const checklist: ReadinessChecklist = {
-      brand_name: !!settings.brand_name,
-      domain: !!settings.domain,
-      logo: !!settings.logo_url,
-      description: settings.description.length >= 50,
-      category: !!settings.category,
-      headquarters: !!settings.headquarters,
-      founding_year: !!settings.founding_year,
-      one_product: settings.products.length >= 1,
-      three_products: settings.products.length >= 3,
-      one_competitor: settings.competitors.length >= 1,
-      three_keywords: settings.target_keywords.length >= 3,
-      one_social: Object.values(settings.social_links).some(v => !!v)
-    }
+  // Calculate profile completeness
+  const calculateCompleteness = () => {
+    let completed = 0
+    let total = 8
 
-    const weights = {
-      brand_name: 10,
-      domain: 10,
-      logo: 8,
-      description: 10,
-      category: 8,
-      headquarters: 6,
-      founding_year: 6,
-      one_product: 10,
-      three_products: 8,
-      one_competitor: 8,
-      three_keywords: 8,
-      one_social: 8
-    }
+    if (settings.brand_name) completed++
+    if (settings.domain) completed++
+    if (settings.logo_url) completed++
+    if (settings.description && settings.description.length >= 50) completed++
+    if (settings.category) completed++
+    if (settings.products.length >= 1) completed++
+    if (settings.target_keywords.length >= 3) completed++
+    if (settings.headquarters || settings.founding_year) completed++
 
-    const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0)
-    const earnedWeight = Object.entries(checklist).reduce((sum, [key, completed]) => {
-      return sum + (completed ? weights[key as keyof typeof weights] : 0)
-    }, 0)
-
-    const score = Math.round((earnedWeight / totalWeight) * 100)
-    const itemsRemaining = Object.values(checklist).filter(v => !v).length
-
-    return { score, checklist, itemsRemaining }
+    return Math.round((completed / total) * 100)
   }
 
-  const { score, checklist, itemsRemaining } = calculateReadiness()
+  const completeness = calculateCompleteness()
 
   const handleSave = async () => {
     if (!currentDashboard) return
@@ -157,8 +113,6 @@ export default function BrandSettingsPage() {
     setSaveSuccess(false)
 
     try {
-      // TODO: The /api/dashboard/update-settings endpoint needs to be created
-      // It should handle logo upload to Supabase Storage and update metadata
       const response = await fetch('/api/dashboard/update-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -169,8 +123,7 @@ export default function BrandSettingsPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || 'Failed to save settings')
+        throw new Error('Failed to save')
       }
 
       setSaveSuccess(true)
@@ -178,7 +131,6 @@ export default function BrandSettingsPage() {
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error) {
       console.error('Save error:', error)
-      alert(`Failed to save settings: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setSaving(false)
     }
@@ -188,327 +140,217 @@ export default function BrandSettingsPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file (PNG, JPG, or SVG)')
+      alert('Please upload an image file')
       return
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('Image must be less than 5MB')
       return
     }
 
-    try {
-      // Show loading state
-      const loadingUrl = URL.createObjectURL(file)
-      setSettings({ ...settings, logo_url: loadingUrl })
-
-      // Upload to Supabase Storage
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('dashboardId', currentDashboard?.id || '')
-
-      const response = await fetch('/api/upload/logo', {
-        method: 'POST',
-        body: formData
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to upload logo')
-      }
-
-      const { publicUrl } = await response.json()
-
-      // Update with the actual public URL from Supabase
-      setSettings({ ...settings, logo_url: publicUrl })
-      setHasChanges(true)
-
-      // Clean up blob URL
-      URL.revokeObjectURL(loadingUrl)
-    } catch (error) {
-      console.error('Logo upload error:', error)
-      alert('Failed to upload logo. Please try again.')
-      // Reset to previous state
-      setSettings({ ...settings, logo_url: currentDashboard?.logo_url || null })
-    }
-  }
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click()
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file)
+    setSettings({ ...settings, logo_url: previewUrl })
+    setHasChanges(true)
   }
 
   const addProduct = () => {
     if (!newProduct.trim()) return
-    setSettings({
-      ...settings,
-      products: [...settings.products, newProduct.trim()]
-    })
+    setSettings({ ...settings, products: [...settings.products, newProduct.trim()] })
     setNewProduct('')
     setHasChanges(true)
   }
 
   const removeProduct = (index: number) => {
-    setSettings({
-      ...settings,
-      products: settings.products.filter((_, i) => i !== index)
-    })
-    setHasChanges(true)
-  }
-
-  const addCompetitor = () => {
-    if (!newCompetitor.trim() || settings.competitors.length >= 5) return
-    setSettings({
-      ...settings,
-      competitors: [...settings.competitors, newCompetitor.trim()]
-    })
-    setNewCompetitor('')
-    setHasChanges(true)
-  }
-
-  const removeCompetitor = (index: number) => {
-    setSettings({
-      ...settings,
-      competitors: settings.competitors.filter((_, i) => i !== index)
+    setSettings({ 
+      ...settings, 
+      products: settings.products.filter((_, i) => i !== index) 
     })
     setHasChanges(true)
   }
 
   const addKeyword = () => {
     if (!newKeyword.trim()) return
-    setSettings({
-      ...settings,
-      target_keywords: [...settings.target_keywords, newKeyword.trim()]
-    })
+    setSettings({ ...settings, target_keywords: [...settings.target_keywords, newKeyword.trim()] })
     setNewKeyword('')
     setHasChanges(true)
   }
 
   const removeKeyword = (index: number) => {
-    setSettings({
-      ...settings,
-      target_keywords: settings.target_keywords.filter((_, i) => i !== index)
+    setSettings({ 
+      ...settings, 
+      target_keywords: settings.target_keywords.filter((_, i) => i !== index) 
     })
     setHasChanges(true)
   }
 
-  // Generate lettermark from brand name
-  const generateLettermark = (name: string) => {
-    const initials = name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-    
-    // Generate color from hash of name
-    const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
-    const hue = hash % 360
-    
-    return { initials, color: `hsl(${hue}, 45%, 55%)` }
-  }
-
-  const lettermark = !settings.logo_url && settings.brand_name ? generateLettermark(settings.brand_name) : null
-
+  // Loading skeleton
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center pt-20 lg:pt-0">
-        <div className="text-secondary">Loading...</div>
-      </div>
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
+          <div className="h-10 w-64 rounded" style={{ backgroundColor: 'var(--bg-card)' }} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="h-64 rounded-xl" style={{ backgroundColor: 'var(--bg-card)' }} />
+              <div className="h-48 rounded-xl" style={{ backgroundColor: 'var(--bg-card)' }} />
+            </div>
+            <div className="h-96 rounded-xl" style={{ backgroundColor: 'var(--bg-card)' }} />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  // Empty state
+  if (!currentDashboard) {
+    return (
+      <>
+        <MobileHeader />
+        <div className="max-w-screen-xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+          <div 
+            className="rounded-xl p-12 text-center"
+            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+          >
+            <Building2 className="w-16 h-16 mx-auto mb-6 opacity-30" style={{ color: 'var(--text-secondary)' }} />
+            <h2 className="text-2xl font-heading font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+              No Brand Selected
+            </h2>
+            <p className="mb-6" style={{ color: 'var(--text-secondary)' }}>
+              Select a brand from the sidebar to manage its settings.
+            </p>
+          </div>
+        </div>
+      </>
     )
   }
 
   return (
     <>
       <MobileHeader />
-      <div className="min-h-screen bg-background pb-32 pt-20 lg:pt-0">
-        {/* Header */}
-        <div className="px-6 pt-8 pb-6">
-          <h1 className="text-3xl font-heading font-bold text-primary mb-2">
-            Brand Dashboard
-          </h1>
-          <p className="text-sm font-body text-secondary/60">
-            Complete your profile to improve AI analysis accuracy
+      <div className="max-w-screen-xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
+        {/* Page Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <Building2 className="w-7 h-7" style={{ color: 'var(--accent-teal)' }} strokeWidth={1.5} />
+            <h1 className="text-3xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+              Brand Profile
+            </h1>
+          </div>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            Manage your brand information to improve AI visibility
           </p>
         </div>
 
-        {/* AI Readiness Card - Horizontal Layout */}
-        <div className="px-6 mb-12">
-          <div className="bg-card border border-border rounded-xl p-8">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8">
-              {/* Left: Logo + Ring */}
-              <div className="flex-shrink-0 relative">
-                <svg width="88" height="88" viewBox="0 0 88 88" className="transform -rotate-90">
-                  {/* Base track */}
-                  <circle
-                    cx="44"
-                    cy="44"
-                    r="40"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    className="text-border"
-                  />
-                  {/* Progress ring (270° arc) */}
-                  <circle
-                    cx="44"
-                    cy="44"
-                    r="40"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                    strokeDasharray={`${(score / 100) * 251.2 * 0.75} 251.2`}
-                    className="text-[#2BCFCC] transition-all duration-500"
-                  />
-                </svg>
-                {/* Avatar inside ring */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {settings.logo_url ? (
-                    <img
-                      src={settings.logo_url}
-                      alt={settings.brand_name}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                  ) : lettermark ? (
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center text-white font-heading font-bold text-xl"
-                      style={{ backgroundColor: lettermark.color }}
-                    >
-                      {lettermark.initials}
-                    </div>
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                      <Building2 className="w-8 h-8 text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Brand Identity Card */}
+            <section 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <h2 className="text-lg font-heading font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>
+                Brand Identity
+              </h2>
 
-              {/* Middle: Score + Messaging */}
-              <div className="flex-1">
-                <h2 className="text-base font-heading font-semibold text-primary mb-1">
-                  AI Readiness Profile
-                </h2>
-                <div className="text-5xl font-heading font-bold text-primary mb-2">
-                  {score}%
-                </div>
-                <p className="text-sm font-body text-secondary/80 mb-1">
-                  Your profile helps Harbor analyze your brand with higher accuracy.
-                </p>
-                <p className="text-xs font-body text-secondary/60">
-                  {score}% complete · {itemsRemaining} {itemsRemaining === 1 ? 'item' : 'items'} remaining
-                </p>
-              </div>
-
-              {/* Right: Actions */}
-              <div className="flex-shrink-0">
-                <button className="cursor-pointer px-4 py-2 border border-border hover:bg-muted rounded-lg text-sm font-body text-secondary transition-colors cursor-pointer">
-                  View Checklist
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-6 space-y-12">
-          {/* Brand Identity */}
-          <section>
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-primary">
-                  Brand Identity
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="flex flex-col sm:flex-row gap-6 mb-6">
                 {/* Logo Upload */}
-                <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-3">
-                    Brand Logo
-                  </label>
-                  <div className="flex items-center gap-4">
+                <div className="flex-shrink-0">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-24 h-24 rounded-xl flex items-center justify-center overflow-hidden transition-all hover:opacity-80"
+                    style={{ 
+                      backgroundColor: 'var(--bg-muted)', 
+                      border: '2px dashed var(--border-strong)' 
+                    }}
+                  >
                     {settings.logo_url ? (
-                      <img
-                        src={settings.logo_url}
-                        alt="Brand logo"
-                        className="w-20 h-20 rounded-lg object-cover border border-border"
-                      />
-                    ) : lettermark ? (
-                      <div
-                        className="w-20 h-20 rounded-lg flex items-center justify-center text-white font-heading font-bold text-2xl border border-border"
-                        style={{ backgroundColor: lettermark.color }}
-                      >
-                        {lettermark.initials}
-                      </div>
+                      <img src={settings.logo_url} alt="Logo" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-20 h-20 rounded-lg bg-muted border border-dashed border-border flex items-center justify-center">
-                        <Upload className="w-8 h-8 text-muted-foreground" strokeWidth={1.5} />
-                      </div>
+                      <Upload className="w-6 h-6" style={{ color: 'var(--text-muted)' }} />
                     )}
-                    <div>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleLogoUpload}
-                        className="hidden"
-                      />
-                      <button
-                        onClick={triggerFileInput}
-                        className="px-5 py-2.5 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer"
-                      >
-                        Upload Logo
-                      </button>
-                      <p className="text-xs font-body text-secondary/60 mt-2">
-                        PNG or SVG recommended
-                      </p>
-                    </div>
+                  </button>
+                  <p className="text-xs mt-2 text-center" style={{ color: 'var(--text-muted)' }}>
+                    Upload logo
+                  </p>
+                </div>
+
+                {/* Brand Name & Domain */}
+                <div className="flex-1 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                      Brand Name
+                    </label>
+                    <input
+                      type="text"
+                      value={settings.brand_name}
+                      onChange={(e) => {
+                        setSettings({ ...settings, brand_name: e.target.value })
+                        setHasChanges(true)
+                      }}
+                      className="input-field"
+                      placeholder="Your brand name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                      Domain
+                    </label>
+                    <input
+                      type="text"
+                      value={settings.domain}
+                      onChange={(e) => {
+                        setSettings({ ...settings, domain: e.target.value })
+                        setHasChanges(true)
+                      }}
+                      className="input-field"
+                      placeholder="yourbrand.com"
+                    />
                   </div>
                 </div>
+              </div>
 
-                {/* Brand Name */}
-                <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
-                    Brand Name
-                  </label>
-                  <input
-                    type="text"
-                    value={settings.brand_name}
-                    onChange={(e) => {
-                      setSettings({ ...settings, brand_name: e.target.value })
-                      setHasChanges(true)
-                    }}
-                    className="w-full px-4 py-3 bg-card border border-border text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="Your brand name"
-                  />
-                </div>
+              {/* Description */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                  Brand Description
+                  <span className="ml-2 text-xs font-normal" style={{ color: 'var(--text-muted)' }}>
+                    (min 50 characters for best AI understanding)
+                  </span>
+                </label>
+                <textarea
+                  value={settings.description}
+                  onChange={(e) => {
+                    setSettings({ ...settings, description: e.target.value })
+                    setHasChanges(true)
+                  }}
+                  className="input-field resize-none"
+                  rows={3}
+                  placeholder="Describe what your brand does, who you serve, and what makes you unique..."
+                />
+                <p className="text-xs mt-1" style={{ color: settings.description.length >= 50 ? 'var(--accent-green)' : 'var(--text-muted)' }}>
+                  {settings.description.length}/50 characters
+                </p>
+              </div>
 
-                {/* Domain */}
+              {/* Category & Location */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
-                    Domain
-                  </label>
-                  <input
-                    type="text"
-                    value={settings.domain}
-                    onChange={(e) => {
-                      setSettings({ ...settings, domain: e.target.value })
-                      setHasChanges(true)
-                    }}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="yourbrand.com"
-                  />
-                </div>
-
-                {/* Category */}
-                <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
-                    Category
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    Category / Industry
                   </label>
                   <input
                     type="text"
@@ -517,31 +359,12 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, category: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="e.g., SaaS, E-commerce"
+                    className="input-field"
+                    placeholder="e.g., SaaS, E-commerce, Finance"
                   />
                 </div>
-
-                {/* Founding Year */}
                 <div>
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
-                    Founding Year
-                  </label>
-                  <input
-                    type="text"
-                    value={settings.founding_year}
-                    onChange={(e) => {
-                      setSettings({ ...settings, founding_year: e.target.value })
-                      setHasChanges(true)
-                    }}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="2020"
-                  />
-                </div>
-
-                {/* Headquarters */}
-                <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
+                  <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
                     Headquarters
                   </label>
                   <input
@@ -551,430 +374,281 @@ export default function BrandSettingsPage() {
                       setSettings({ ...settings, headquarters: e.target.value })
                       setHasChanges(true)
                     }}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="San Francisco, CA"
+                    className="input-field"
+                    placeholder="City, Country"
                   />
                 </div>
+              </div>
+            </section>
 
-                {/* Brand Description */}
-                <div className="lg:col-span-2">
-                  <label className="block text-xs font-body uppercase tracking-wide text-secondary/75 mb-2">
-                    Brand Description
-                  </label>
-                  <textarea
-                    value={settings.description}
-                    onChange={(e) => {
-                      if (e.target.value.length <= 150) {
-                        setSettings({ ...settings, description: e.target.value })
-                        setHasChanges(true)
-                      }
-                    }}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors resize-none"
-                    placeholder="Concise description for AI schema (max 150 characters)"
-                  />
-                  <p className="text-xs font-body text-secondary/60 mt-1 text-right">
-                    {settings.description.length}/150
+            {/* Products & Services */}
+            <section 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    Products & Services
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                    Help AI understand what you offer
                   </p>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Products & Services */}
-          <section>
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
-                  <Package className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-primary">
-                  Products & Services
-                </h2>
-                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
-                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
-                </button>
+                <Package className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
               </div>
 
-              <div className="mb-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newProduct}
-                    onChange={(e) => setNewProduct(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addProduct()}
-                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="Add a product or service"
-                  />
-                  <button
-                    onClick={addProduct}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" strokeWidth={2.5} />
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
+              {/* Product Tags */}
+              <div className="flex flex-wrap gap-2 mb-4">
                 {settings.products.map((product, index) => (
-                  <div
+                  <span 
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm"
+                    style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
                   >
-                    <span className="text-sm font-body text-primary">{product}</span>
+                    <span style={{ color: 'var(--text-primary)' }}>{product}</span>
                     <button
+                      type="button"
                       onClick={() => removeProduct(index)}
-                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
+                      className="hover:opacity-70 transition-opacity"
                     >
-                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
+                      <X className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
                     </button>
-                  </div>
+                  </span>
                 ))}
-                {settings.products.length === 0 && (
-                  <p className="text-sm font-body text-secondary/60">
-                    No products added yet
-                  </p>
-                )}
               </div>
-            </div>
-          </section>
 
-          {/* Competitors to Track */}
-          <section>
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-primary">
-                  Competitors to Track
-                </h2>
-                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
-                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
+              {/* Add Product */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newProduct}
+                  onChange={(e) => setNewProduct(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && addProduct()}
+                  className="input-field flex-1"
+                  placeholder="Add a product or service..."
+                />
+                <button
+                  type="button"
+                  onClick={addProduct}
+                  className="btn-secondary px-4"
+                >
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
+            </section>
 
-              <div className="mb-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newCompetitor}
-                    onChange={(e) => setNewCompetitor(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addCompetitor()}
-                    disabled={settings.competitors.length >= 5}
-                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder={settings.competitors.length >= 5 ? 'Maximum 5 competitors' : 'Add a competitor'}
-                  />
-                  <button
-                    onClick={addCompetitor}
-                    disabled={settings.competitors.length >= 5}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <Plus className="w-4 h-4" strokeWidth={2.5} />
-                    Add
-                  </button>
-                </div>
-                <p className="text-xs font-body text-secondary/60 mt-2">
-                  {settings.competitors.length}/5 competitors added
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {settings.competitors.map((competitor, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
-                  >
-                    <span className="text-sm font-body text-primary">{competitor}</span>
-                    <button
-                      onClick={() => removeCompetitor(index)}
-                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
-                    </button>
-                  </div>
-                ))}
-                {settings.competitors.length === 0 && (
-                  <p className="text-sm font-body text-secondary/60">
-                    No competitors added yet
+            {/* Target Keywords */}
+            <section 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    Target Keywords
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                    Keywords you want to rank for in AI responses
                   </p>
-                )}
-              </div>
-            </div>
-          </section>
-
-          {/* Target Keywords */}
-          <section>
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
-                  <Target className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-xl font-heading font-bold text-primary">
-                  Target Keywords
-                </h2>
-                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
-                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
-                </button>
+                <Sparkles className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
               </div>
 
-              <div className="mb-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newKeyword}
-                    onChange={(e) => setNewKeyword(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
-                    className="flex-1 px-4 py-3 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                    placeholder="Add a target keyword"
-                  />
-                  <button
-                    onClick={addKeyword}
-                    className="px-5 py-3 bg-[#FF6A4A] hover:bg-[#FF7A59] text-white font-heading font-semibold text-sm rounded-lg transition-colors cursor-pointer flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" strokeWidth={2.5} />
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
+              {/* Keyword Tags */}
+              <div className="flex flex-wrap gap-2 mb-4">
                 {settings.target_keywords.map((keyword, index) => (
-                  <div
+                  <span 
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-lg"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm"
+                    style={{ backgroundColor: 'rgba(34, 211, 238, 0.1)', border: '1px solid rgba(34, 211, 238, 0.2)' }}
                   >
-                    <span className="text-sm font-body text-primary">{keyword}</span>
+                    <span style={{ color: 'var(--accent-teal)' }}>{keyword}</span>
                     <button
+                      type="button"
                       onClick={() => removeKeyword(index)}
-                      className="p-0.5 hover:bg-hover rounded transition-colors cursor-pointer"
+                      className="hover:opacity-70 transition-opacity"
                     >
-                      <X className="w-3.5 h-3.5 text-secondary/60" strokeWidth={2} />
+                      <X className="w-3.5 h-3.5" style={{ color: 'var(--accent-teal)' }} />
                     </button>
-                  </div>
+                  </span>
                 ))}
-                {settings.target_keywords.length === 0 && (
-                  <p className="text-sm font-body text-secondary/60">
-                    No keywords added yet
-                  </p>
+              </div>
+
+              {/* Add Keyword */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newKeyword}
+                  onChange={(e) => setNewKeyword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && addKeyword()}
+                  className="input-field flex-1"
+                  placeholder="Add a keyword..."
+                />
+                <button
+                  type="button"
+                  onClick={addKeyword}
+                  className="btn-secondary px-4"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </section>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Profile Completeness */}
+            <div 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                Profile Completeness
+              </h3>
+              
+              <div className="relative mb-4">
+                <div className="progress-bar h-2">
+                  <div 
+                    className="progress-fill"
+                    style={{ 
+                      width: `${completeness}%`,
+                      backgroundColor: completeness >= 80 ? 'var(--accent-green)' : completeness >= 50 ? 'var(--accent-amber)' : 'var(--accent-teal)'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+                  {completeness}%
+                </span>
+                <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                  {completeness >= 80 ? 'Great!' : completeness >= 50 ? 'Good progress' : 'Just started'}
+                </span>
+              </div>
+
+              {/* Quick Tips */}
+              <div className="space-y-3">
+                <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                  Improve your score
+                </p>
+                
+                {!settings.description || settings.description.length < 50 ? (
+                  <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-amber)' }} />
+                    <span>Add a description (50+ chars)</span>
+                  </div>
+                ) : null}
+                
+                {settings.products.length === 0 ? (
+                  <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-amber)' }} />
+                    <span>Add at least one product</span>
+                  </div>
+                ) : null}
+
+                {settings.target_keywords.length < 3 ? (
+                  <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-amber)' }} />
+                    <span>Add 3+ target keywords</span>
+                  </div>
+                ) : null}
+
+                {completeness >= 80 && (
+                  <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--accent-green)' }}>
+                    <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                    <span>Profile looking good!</span>
+                  </div>
                 )}
               </div>
             </div>
-          </section>
 
-          {/* Social & Authority Links */}
-          <section>
-            <div className="bg-card border border-border rounded-xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-muted border border-border flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-primary">
-                  Social & Authority Links
-                </h2>
-                <button className="cursor-pointer ml-auto p-1.5 hover:bg-muted rounded-lg transition-colors group cursor-pointer">
-                  <Info className="w-4 h-4 text-secondary/60 group-hover:text-[#2979FF]" strokeWidth={1.5} />
-                </button>
+            {/* Public Profile Link */}
+            {currentDashboard.slug && (
+              <div 
+                className="rounded-xl p-6"
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+              >
+                <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
+                  Public Profile
+                </h3>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+                  Your brand has a public page in the Harbor Index.
+                </p>
+                <Link
+                  href={`/brands/${currentDashboard.slug}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+                  style={{ color: 'var(--accent-teal)' }}
+                >
+                  View public profile
+                  <ExternalLink className="w-4 h-4" />
+                </Link>
               </div>
+            )}
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* LinkedIn */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <Linkedin className="w-5 h-5 text-[#0A66C2]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">LinkedIn</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.linkedin || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, linkedin: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="linkedin.com/company/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Twitter */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <Twitter className="w-5 h-5 text-[#1DA1F2]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Twitter / X</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.twitter || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, twitter: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="twitter.com/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Facebook */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <Facebook className="w-5 h-5 text-[#1877F2]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Facebook</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.facebook || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, facebook: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="facebook.com/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Instagram */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <Instagram className="w-5 h-5 text-[#E4405F]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Instagram</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.instagram || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, instagram: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="instagram.com/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Crunchbase */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <ExternalLink className="w-5 h-5 text-[#0288D1]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Crunchbase</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.crunchbase || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, crunchbase: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="crunchbase.com/organization/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Wikipedia */}
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <ExternalLink className="w-5 h-5 text-secondary" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Wikipedia</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.wikipedia || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, wikipedia: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="en.wikipedia.org/wiki/..."
-                    />
-                  </div>
-                </div>
-
-                {/* Press Kit */}
-                <div className="flex items-center gap-4 lg:col-span-2">
-                  <div className="flex-shrink-0 w-10 h-10 bg-muted rounded-lg border border-border flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-[#2BCFCC]" strokeWidth={1.5} />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-xs font-body text-secondary/50 mb-1">Press Kit URL</label>
-                    <input
-                      type="url"
-                      value={settings.social_links.press_kit || ''}
-                      onChange={(e) => {
-                        setSettings({
-                          ...settings,
-                          social_links: { ...settings.social_links, press_kit: e.target.value }
-                        })
-                        setHasChanges(true)
-                      }}
-                      className="w-full px-3 py-2 bg-card border border-border rounded-lg text-primary font-body text-sm focus:outline-none focus:border-[#2BCFCC] transition-colors"
-                      placeholder="yourbrand.com/press"
-                    />
-                  </div>
-                </div>
+            {/* Quick Actions */}
+            <div 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
+                Quick Actions
+              </h3>
+              <div className="space-y-2">
+                <Link
+                  href="/dashboard/overview"
+                  className="flex items-center justify-between p-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: 'var(--bg-muted)' }}
+                >
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>View Overview</span>
+                  <ArrowRight className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                </Link>
+                <Link
+                  href="/dashboard/competitors"
+                  className="flex items-center justify-between p-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: 'var(--bg-muted)' }}
+                >
+                  <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Competitive Intel</span>
+                  <ArrowRight className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+                </Link>
               </div>
             </div>
-          </section>
+          </div>
         </div>
 
-        {/* Success Toast */}
-        {saveSuccess && (
-          <div className="fixed top-24 right-6 bg-card border border-[#2BCFCC] rounded-lg shadow-2xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-5 z-50">
-            <CheckCircle className="w-5 h-5 text-[#2BCFCC]" strokeWidth={2} />
-            <span className="text-sm font-body text-primary font-medium">Changes saved.</span>
-          </div>
-        )}
-
-        {/* Sticky Save Button */}
+        {/* Floating Save Button */}
         {hasChanges && (
           <div className="fixed bottom-8 right-8 z-50">
             <button
+              type="button"
               onClick={handleSave}
               disabled={saving}
-              className="
-                flex items-center gap-3 px-8 py-4
-                bg-[#FF6A4A] hover:bg-[#FF7A59]
-                disabled:opacity-50 disabled:cursor-not-allowed
-                text-white font-heading font-semibold text-base
-                rounded-lg
-                transition-all duration-200
-                border border-white/10
-                cursor-pointer
-              "
-              style={{
-                boxShadow: '0 8px 32px rgba(255, 107, 74, 0.4)'
+              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all shadow-lg"
+              style={{ 
+                backgroundColor: 'var(--accent-teal)',
+                boxShadow: '0 8px 32px rgba(34, 211, 238, 0.3)'
               }}
             >
-              <Save className="w-5 h-5" strokeWidth={2.5} />
-              {saving ? 'Saving...' : 'Save All Changes'}
+              <Save className="w-5 h-5" />
+              {saving ? 'Saving...' : 'Save Changes'}
             </button>
+          </div>
+        )}
+
+        {/* Success Toast */}
+        {saveSuccess && (
+          <div 
+            className="fixed top-24 right-6 rounded-xl shadow-2xl p-4 flex items-center gap-3 animate-in z-50"
+            style={{ 
+              backgroundColor: 'var(--bg-card)', 
+              border: '1px solid var(--accent-green)' 
+            }}
+          >
+            <CheckCircle className="w-5 h-5" style={{ color: 'var(--accent-green)' }} />
+            <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+              Changes saved successfully
+            </span>
           </div>
         )}
       </div>
