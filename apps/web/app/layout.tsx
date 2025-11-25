@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import { Metadata } from 'next'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 // Force dynamic rendering for all routes
 export const dynamic = 'force-dynamic'
@@ -16,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

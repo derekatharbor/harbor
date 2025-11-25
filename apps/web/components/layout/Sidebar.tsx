@@ -34,18 +34,20 @@ export default function Sidebar() {
     return false
   })
 
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark')
 
   useEffect(() => {
-    // Check localStorage or system preference on mount
+    // Check localStorage or default to dark
     const savedTheme = localStorage.getItem('harbor-theme') as 'light' | 'dark' | null
-    const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    const initialTheme = savedTheme || 'dark'
     
-    const initialTheme = savedTheme || systemPreference
     setTheme(initialTheme)
     
+    // Apply theme immediately
     if (initialTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark')
+    } else {
+      document.documentElement.removeAttribute('data-theme')
     }
   }, [])
 
@@ -78,11 +80,11 @@ export default function Sidebar() {
 
   const intelligence = [
     { name: 'Overview', href: '/dashboard/overview', icon: Home },
+    { name: 'Competitive Intel', href: '/dashboard/competitors', icon: Users },
     { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
-    { name: 'Competitive Intel', href: '/dashboard/competitors', icon: Users },
   ]
 
   const brandSettings = [

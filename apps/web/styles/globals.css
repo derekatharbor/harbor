@@ -14,7 +14,10 @@
      DARK MODE (DEFAULT FOR DASHBOARD)
      Navy theme - the Harbor signature look
      ======================================== */
-  :root {
+  :root,
+  :root[data-theme="dark"],
+  html,
+  html[data-theme="dark"] {
     --bg-primary: #101A31;
     --bg-secondary: #0B1521;
     --bg-card: #0C1422;
@@ -45,7 +48,8 @@
      LIGHT MODE (OPT-IN)
      Clean white theme for those who prefer it
      ======================================== */
-  :root[data-theme="light"] {
+  :root[data-theme="light"],
+  html[data-theme="light"] {
     --bg-primary: #F8FAFC;
     --bg-secondary: #FFFFFF;
     --bg-card: #FFFFFF;
@@ -68,6 +72,7 @@
   /* Base styles */
   html {
     scroll-behavior: smooth;
+    background-color: var(--bg-primary);
   }
 
   body {
@@ -75,11 +80,14 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
     letter-spacing: -0.02em;
+    color: var(--text-primary);
   }
 }
 
@@ -306,6 +314,44 @@
 
   .border-strong {
     border-color: var(--border-strong);
+  }
+
+  /* ========================================
+     LEGACY COMPATIBILITY
+     Map old classes to new CSS variables
+     ======================================== */
+  
+  /* Background colors */
+  .bg-navy,
+  .bg-[#101A31] {
+    background-color: var(--bg-primary) !important;
+  }
+
+  .bg-[#0C1422],
+  .bg-[#0B1521] {
+    background-color: var(--bg-card) !important;
+  }
+
+  /* Text colors */
+  .text-white {
+    color: var(--text-primary) !important;
+  }
+
+  .text-softgray,
+  .text-white\/60,
+  .text-white\/70 {
+    color: var(--text-secondary) !important;
+  }
+
+  .text-white\/40,
+  .text-white\/50 {
+    color: var(--text-muted) !important;
+  }
+
+  /* Border colors */
+  .border-white\/5,
+  .border-white\/10 {
+    border-color: var(--border) !important;
   }
 
   /* ========================================
