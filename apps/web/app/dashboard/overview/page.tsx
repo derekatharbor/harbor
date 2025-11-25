@@ -22,10 +22,14 @@ import { calculateWebsiteReadiness } from '@/lib/scoring'
 import MobileHeader from '@/components/layout/MobileHeader'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import ActionCard from '@/components/optimization/ActionCard'
-import { analyzeShoppingData, ShoppingAnalysis } from '@/lib/optimization/generator'
-import { analyzeBrandData, BrandAnalysis } from '@/lib/optimization/generator'
-import { analyzeConversationsData, ConversationsAnalysis } from '@/lib/optimization/generator'
-import { analyzeWebsiteData, WebsiteAnalysis } from '@/lib/optimization/generator'
+import { 
+  analyzeShoppingData, 
+  analyzeBrandData, 
+  analyzeConversationsData, 
+  analyzeWebsiteData,
+  ShoppingAnalysis,
+  BrandAnalysis
+} from '@/lib/optimization/generator'
 
 interface ScanData {
   shopping_visibility: number
@@ -121,7 +125,7 @@ export default function OverviewPage() {
 
           // Conversations recommendations
           if (data.conversations) {
-            const conversationsAnalysis: ConversationsAnalysis = {
+            const conversationsAnalysis = {
               volume_index: data.conversations.volume_index,
               questions: data.conversations.questions || [],
               intent_breakdown: data.conversations.intent_breakdown
@@ -132,7 +136,7 @@ export default function OverviewPage() {
 
           // Website recommendations
           if (data.website) {
-            const websiteAnalysis: WebsiteAnalysis = {
+            const websiteAnalysis = {
               readability_score: data.website.readability_score,
               schema_coverage: data.website.schema_coverage,
               issues: data.website.issues || []
