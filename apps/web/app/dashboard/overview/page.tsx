@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/overview/page.tsx
-// REDESIGNED: Rich Overview with insights, trends, and action items
+// Properly styled following module page patterns
 
 'use client'
 
@@ -10,20 +10,22 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  TrendingUp,
-  TrendingDown,
-  Minus,
   ShoppingBag,
   Star,
   MessageSquare,
   Globe,
-  Sparkles,
-  ArrowUpRight
+  Trophy,
+  TrendingUp
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import { calculateWebsiteReadiness } from '@/lib/scoring'
 import MobileHeader from '@/components/layout/MobileHeader'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
+import ActionCard from '@/components/optimization/ActionCard'
+import { analyzeShoppingData, ShoppingAnalysis } from '@/lib/optimization/generator'
+import { analyzeBrandData, BrandAnalysis } from '@/lib/optimization/generator'
+import { analyzeConversationsData, ConversationsAnalysis } from '@/lib/optimization/generator'
+import { analyzeWebsiteData, WebsiteAnalysis } from '@/lib/optimization/generator'
 
 interface ScanData {
   shopping_visibility: number
@@ -34,9 +36,6 @@ interface ScanData {
   last_scan: string | null
   harbor_score: number
   visibility_score: number
-  top_questions?: string[]
-  top_categories?: Array<{ name: string; mentions: number }>
-  schema_issues?: number
 }
 
 export default function OverviewPage() {
@@ -44,6 +43,7 @@ export default function OverviewPage() {
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
   const [websiteReadiness, setWebsiteReadiness] = useState(0)
+  const [allRecommendations, setAllRecommendations] = useState<any[]>([])
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -73,11 +73,6 @@ export default function OverviewPage() {
         if (response.ok) {
           const data = await response.json()
           
-          // Extract insights from API response
-          const topQuestions = data.conversations?.questions?.slice(0, 5).map((q: any) => q.question) || []
-          const topCategories = data.shopping?.categories?.slice(0, 3) || []
-          const schemaIssues = data.website?.issues?.filter((i: any) => i.severity === 'high').length || 0
-          
           // Transform API response
           const transformedData = {
             shopping_visibility: data.shopping?.score || 0,
@@ -93,13 +88,66 @@ export default function OverviewPage() {
             ),
             visibility_score: Math.round(
               ((data.shopping?.score || 0) + (data.brand?.visibility_index || 0)) / 2
-            ),
-            top_questions: topQuestions,
-            top_categories: topCategories,
-            schema_issues: schemaIssues
+            )
           }
           
           setScanData(transformedData)
+
+          // Generate action items from all modules
+          const allTasks: any[] = []
+
+          // Shopping recommendations
+          if (data.shopping && data.shopping_raw) {
+            const shoppingAnalysis: ShoppingAnalysis = {
+              ...data.shopping,
+              raw_results: data.shopping_raw
+            }
+            const shoppingTasks = analyzeShoppingData(shoppingAnalysis)
+            allTasks.push(...shoppingTasks.map(t => ({ ...t, module: 'shopping' })))
+          }
+
+          // Brand recommendations
+          if (data.brand && data.brand_raw) {
+            const brandAnalysis: BrandAnalysis = {
+              visibility_index: data.brand.visibility_index,
+              descriptors: data.brand.descriptors || [],
+              sentiment_breakdown: data.brand.sentiment_breakdown,
+              total_mentions: data.brand.total_mentions,
+              raw_descriptors: data.brand_raw
+            }
+            const brandTasks = analyzeBrandData(brandAnalysis)
+            allTasks.push(...brandTasks.map(t => ({ ...t, module: 'brand' })))
+          }
+
+          // Conversations recommendations
+          if (data.conversations) {
+            const conversationsAnalysis: ConversationsAnalysis = {
+              volume_index: data.conversations.volume_index,
+              questions: data.conversations.questions || [],
+              intent_breakdown: data.conversations.intent_breakdown
+            }
+            const conversationsTasks = analyzeConversationsData(conversationsAnalysis)
+            allTasks.push(...conversationsTasks.map(t => ({ ...t, module: 'conversations' })))
+          }
+
+          // Website recommendations
+          if (data.website) {
+            const websiteAnalysis: WebsiteAnalysis = {
+              readability_score: data.website.readability_score,
+              schema_coverage: data.website.schema_coverage,
+              issues: data.website.issues || []
+            }
+            const websiteTasks = analyzeWebsiteData(websiteAnalysis)
+            allTasks.push(...websiteTasks.map(t => ({ ...t, module: 'website' })))
+          }
+
+          // Sort by priority and take top 6
+          const sortedTasks = allTasks.sort((a, b) => {
+            const priorityOrder = { high: 0, medium: 1, low: 2 }
+            return priorityOrder[a.task.priority as keyof typeof priorityOrder] - priorityOrder[b.task.priority as keyof typeof priorityOrder]
+          })
+
+          setAllRecommendations(sortedTasks.slice(0, 6))
         }
         
       } catch (error) {
@@ -140,8 +188,8 @@ export default function OverviewPage() {
         <MobileHeader />
         <div className="px-6 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-64"></div>
+            <div className="h-8 bg-card rounded w-48 mb-4"></div>
+            <div className="h-4 bg-card rounded w-64"></div>
           </div>
         </div>
       </div>
@@ -156,10 +204,10 @@ export default function OverviewPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-heading font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="text-3xl font-heading font-bold text-primary mb-2">
               Overview
             </h1>
-            <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+            <p className="text-sm text-secondary/60">
               Your AI visibility at a glance
             </p>
           </div>
@@ -169,22 +217,19 @@ export default function OverviewPage() {
         {/* STATE 1: Profile Incomplete */}
         {!hasProfile && (
           <div className="max-w-3xl">
-            <div 
-              className="rounded-xl p-8 mb-6"
-              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-            >
+            <div className="bg-card rounded-lg border border-border p-8 mb-6">
               <div className="flex items-start gap-4 mb-6">
                 <div 
                   className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'var(--pageAccent)', opacity: 0.1 }}
+                  style={{ backgroundColor: 'rgba(0, 198, 183, 0.1)' }}
                 >
-                  <AlertCircle style={{ color: 'var(--pageAccent)' }} className="w-6 h-6" />
+                  <AlertCircle className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
                     Welcome to Harbor
                   </h2>
-                  <p style={{ color: 'var(--text-secondary)' }}>
+                  <p className="text-secondary/60">
                     Complete your brand profile to unlock AI visibility insights and start tracking your Harbor Score.
                   </p>
                 </div>
@@ -192,34 +237,23 @@ export default function OverviewPage() {
 
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                    Profile Completeness
-                  </span>
-                  <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                    {profileCompleteness}%
-                  </span>
+                  <span className="text-sm text-secondary/60">Profile Completeness</span>
+                  <span className="text-sm font-semibold text-primary">{profileCompleteness}%</span>
                 </div>
-                <div className="h-2 rounded-full" style={{ backgroundColor: 'var(--bg-hover)' }}>
+                <div className="h-2 bg-border rounded-full overflow-hidden">
                   <div 
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ 
-                      width: `${profileCompleteness}%`,
-                      backgroundColor: 'var(--pageAccent)'
-                    }}
+                    className="h-full bg-[#00C6B7] transition-all duration-500"
+                    style={{ width: `${profileCompleteness}%` }}
                   />
                 </div>
               </div>
 
               <Link
                 href="/dashboard/brand-settings"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
-                style={{
-                  backgroundColor: 'var(--pageAccent)',
-                  color: '#FFFFFF'
-                }}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] text-white rounded-lg font-medium transition-opacity hover:opacity-90"
               >
                 Complete Brand Profile
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
               </Link>
             </div>
           </div>
@@ -228,26 +262,24 @@ export default function OverviewPage() {
         {/* STATE 2: Profile Complete, No Scan */}
         {hasProfile && !hasScanData && (
           <div className="max-w-3xl">
-            <div 
-              className="rounded-xl p-8 mb-6"
-              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-            >
+            <div className="bg-card rounded-lg border border-border p-8 mb-6">
               <div className="flex items-start gap-4 mb-6">
                 <div 
                   className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#22C55E', opacity: 0.1 }}
+                  style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)' }}
                 >
-                  <CheckCircle2 style={{ color: '#22C55E' }} className="w-6 h-6" />
+                  <CheckCircle2 className="w-6 h-6 text-green-500" strokeWidth={1.5} />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
                     Profile Complete
                   </h2>
-                  <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                    Your website readiness score is <strong>{websiteReadiness}%</strong>. Run your first scan to see how AI models perceive your brand.
+                  <p className="text-secondary/60 mb-4">
+                    Your website readiness score is <strong className="text-primary">{websiteReadiness}%</strong>. Run your first scan to see how AI models perceive your brand.
                   </p>
-                  <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                    <Clock className="w-4 h-4 inline mr-1" /> Takes 2-3 minutes
+                  <div className="flex items-center gap-2 text-sm text-secondary/60">
+                    <Clock className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Takes 2-3 minutes</span>
                   </div>
                 </div>
               </div>
@@ -257,23 +289,20 @@ export default function OverviewPage() {
           </div>
         )}
 
-        {/* STATE 3: Has Scan Data - RICH DASHBOARD */}
+        {/* STATE 3: Has Scan Data */}
         {hasScanData && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Top Row: Harbor Score + Metrics */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Harbor Score Gauge */}
-              <div 
-                className="lg:col-span-1 rounded-xl p-8 flex flex-col items-center justify-center"
-                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-              >
+              <div className="lg:col-span-1 bg-card rounded-lg border border-border p-8 flex flex-col items-center justify-center">
                 <div className="relative w-48 h-48 mb-4">
                   <svg className="transform -rotate-90 w-48 h-48">
                     <circle
                       cx="96"
                       cy="96"
                       r="88"
-                      stroke="var(--border)"
+                      stroke="rgba(255,255,255,0.06)"
                       strokeWidth="12"
                       fill="none"
                     />
@@ -299,275 +328,121 @@ export default function OverviewPage() {
                   </svg>
                   
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="text-5xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+                    <div className="text-5xl font-heading font-bold text-primary">
                       {scanData.harbor_score}
                     </div>
-                    <div className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                      OUT OF 100
-                    </div>
+                    <div className="text-sm text-secondary/60">OUT OF 100</div>
                   </div>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-sm font-medium uppercase tracking-wider mb-1" style={{ color: 'var(--text-secondary)' }}>
-                    Harbor Score
-                  </div>
-                  <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                    Your overall AI visibility
-                  </p>
+                  <div className="text-xs text-secondary/60 uppercase tracking-wider mb-1">Harbor Score</div>
+                  <p className="text-xs text-secondary/60">Your overall AI visibility</p>
                 </div>
               </div>
 
-              {/* Key Metrics with Links */}
+              {/* Key Metrics */}
               <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-                <MetricCardLink
+                <Link
                   href="/dashboard/shopping"
-                  icon={ShoppingBag}
-                  title="Shopping Visibility"
-                  value={scanData.shopping_visibility}
-                  suffix="%"
-                  color="var(--accent-teal)"
-                  insight={scanData.top_categories && scanData.top_categories.length > 0 
-                    ? `Top: ${scanData.top_categories[0].name}`
-                    : undefined
-                  }
-                />
-                <MetricCardLink
+                  className="bg-card rounded-lg border border-border p-6 transition-colors hover:border-[#00C6B7]/30"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShoppingBag className="w-5 h-5 text-[#00C6B7]" strokeWidth={1.5} />
+                    <p className="text-xs text-secondary/60 uppercase tracking-wider">Shopping</p>
+                  </div>
+                  <div className="text-4xl font-heading font-bold text-primary mb-2">
+                    {scanData.shopping_visibility}<span className="text-2xl text-secondary/40">%</span>
+                  </div>
+                  <p className="text-sm text-secondary/60">Product visibility</p>
+                </Link>
+
+                <Link
                   href="/dashboard/brand"
-                  icon={Star}
-                  title="Brand Visibility"
-                  value={scanData.brand_visibility}
-                  suffix="%"
-                  color="var(--accent-blue)"
-                  insight={`${scanData.brand_mentions} mentions`}
-                />
-                <MetricCardLink
+                  className="bg-card rounded-lg border border-border p-6 transition-colors hover:border-[#00C6B7]/30"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Star className="w-5 h-5 text-[#4EE4FF]" strokeWidth={1.5} />
+                    <p className="text-xs text-secondary/60 uppercase tracking-wider">Brand</p>
+                  </div>
+                  <div className="text-4xl font-heading font-bold text-primary mb-2">
+                    {scanData.brand_visibility}<span className="text-2xl text-secondary/40">%</span>
+                  </div>
+                  <p className="text-sm text-secondary/60">Brand perception</p>
+                </Link>
+
+                <Link
                   href="/dashboard/website"
-                  icon={Globe}
-                  title="Website Readiness"
-                  value={websiteReadiness}
-                  suffix="%"
-                  color="var(--accent-green)"
-                  insight={scanData.schema_issues ? `${scanData.schema_issues} issues` : undefined}
-                />
-                <MetricCardLink
+                  className="bg-card rounded-lg border border-border p-6 transition-colors hover:border-[#00C6B7]/30"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Globe className="w-5 h-5 text-[#B95BC4]" strokeWidth={1.5} />
+                    <p className="text-xs text-secondary/60 uppercase tracking-wider">Website</p>
+                  </div>
+                  <div className="text-4xl font-heading font-bold text-primary mb-2">
+                    {websiteReadiness}<span className="text-2xl text-secondary/40">%</span>
+                  </div>
+                  <p className="text-sm text-secondary/60">Technical health</p>
+                </Link>
+
+                <Link
                   href="/dashboard/conversations"
-                  icon={MessageSquare}
-                  title="Conversation Topics"
-                  value={scanData.conversation_topics}
-                  color="var(--accent-amber)"
-                  insight="questions tracked"
-                />
+                  className="bg-card rounded-lg border border-border p-6 transition-colors hover:border-[#00C6B7]/30"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <MessageSquare className="w-5 h-5 text-[#FAAD14]" strokeWidth={1.5} />
+                    <p className="text-xs text-secondary/60 uppercase tracking-wider">Topics</p>
+                  </div>
+                  <div className="text-4xl font-heading font-bold text-primary mb-2">
+                    {scanData.conversation_topics}
+                  </div>
+                  <p className="text-sm text-secondary/60">Questions tracked</p>
+                </Link>
               </div>
             </div>
 
-            {/* Middle Row: Insights */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Top Questions */}
-              {scanData.top_questions && scanData.top_questions.length > 0 && (
-                <div 
-                  className="rounded-xl p-6"
-                  style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
-                      Top Questions About Your Brand
-                    </h3>
-                    <Link
-                      href="/dashboard/conversations"
-                      className="text-sm font-medium flex items-center gap-1 hover:opacity-80"
-                      style={{ color: 'var(--accent-amber)' }}
-                    >
-                      View All
-                      <ArrowUpRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                  <div className="space-y-3">
-                    {scanData.top_questions.slice(0, 5).map((question, idx) => (
-                      <div 
-                        key={idx}
-                        className="flex items-start gap-3 p-3 rounded-lg transition-colors"
-                        style={{ backgroundColor: 'var(--bg-hover)' }}
-                      >
-                        <div 
-                          className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0 text-xs font-semibold"
-                          style={{ backgroundColor: 'var(--accent-amber)', color: '#FFFFFF', opacity: 0.8 }}
-                        >
-                          {idx + 1}
-                        </div>
-                        <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
-                          {question}
-                        </p>
-                      </div>
+            {/* Priority Actions */}
+            {allRecommendations.length > 0 && (
+              <div className="bg-card rounded-lg border border-border">
+                <div className="p-6 border-b border-border">
+                  <h2 className="text-xl font-heading font-bold text-primary">
+                    Priority Actions
+                  </h2>
+                  <p className="text-sm text-secondary/60 mt-1">
+                    {allRecommendations.length} high-impact recommendations across all modules
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-4">
+                    {allRecommendations.map((rec, idx) => (
+                      <ActionCard
+                        key={`${rec.module}-${idx}`}
+                        task={rec.task}
+                        onClick={() => {
+                          // Navigate to module page
+                          window.location.href = `/dashboard/${rec.module}`
+                        }}
+                        context={rec.context}
+                      />
                     ))}
                   </div>
                 </div>
-              )}
-
-              {/* Quick Actions */}
-              <div 
-                className="rounded-xl p-6"
-                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-              >
-                <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-5 h-5" style={{ color: 'var(--pageAccent)' }} />
-                  <h3 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
-                    Quick Actions
-                  </h3>
-                </div>
-                <div className="space-y-3">
-                  {websiteReadiness < 80 && (
-                    <ActionItem
-                      title="Improve Website Readiness"
-                      description="Fix schema issues and improve technical SEO"
-                      href="/dashboard/website"
-                      priority="high"
-                    />
-                  )}
-                  {scanData.shopping_visibility < 70 && (
-                    <ActionItem
-                      title="Boost Shopping Visibility"
-                      description="Optimize product listings for AI discovery"
-                      href="/dashboard/shopping"
-                      priority="high"
-                    />
-                  )}
-                  {scanData.brand_visibility < 70 && (
-                    <ActionItem
-                      title="Strengthen Brand Presence"
-                      description="Improve brand perception across AI models"
-                      href="/dashboard/brand"
-                      priority="medium"
-                    />
-                  )}
-                  {scanData.conversation_topics < 20 && (
-                    <ActionItem
-                      title="Address Common Questions"
-                      description="Create content for popular queries"
-                      href="/dashboard/conversations"
-                      priority="medium"
-                    />
-                  )}
-                  {websiteReadiness >= 80 && scanData.shopping_visibility >= 70 && scanData.brand_visibility >= 70 && (
-                    <div className="text-center py-6" style={{ color: 'var(--text-secondary)' }}>
-                      <CheckCircle2 className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--accent-green)' }} />
-                      <p className="font-medium">All systems green!</p>
-                      <p className="text-sm mt-1">Keep monitoring your scores</p>
-                    </div>
-                  )}
-                </div>
               </div>
-            </div>
+            )}
 
-            {/* Bottom Info */}
-            <div className="flex items-center justify-between text-sm" style={{ color: 'var(--text-secondary)' }}>
-              <div>
-                Last scan: {new Date(scanData.last_scan!).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric', 
-                  year: 'numeric',
-                  hour: 'numeric',
-                  minute: '2-digit'
-                })}
-              </div>
+            {/* Last Scan Info */}
+            <div className="text-sm text-secondary/60">
+              Last scan: {new Date(scanData.last_scan!).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+              })}
             </div>
           </div>
         )}
       </div>
     </div>
-  )
-}
-
-// Metric Card with Link
-function MetricCardLink({ 
-  href,
-  icon: Icon,
-  title, 
-  value, 
-  suffix = '',
-  color,
-  insight
-}: { 
-  href: string
-  icon: any
-  title: string
-  value: number
-  suffix?: string
-  color: string
-  insight?: string
-}) {
-  return (
-    <Link
-      href={href}
-      className="rounded-xl p-6 transition-all hover:scale-[1.02] group"
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div 
-          className="w-10 h-10 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: color, opacity: 0.1 }}
-        >
-          <Icon className="w-5 h-5" style={{ color }} />
-        </div>
-        <ArrowUpRight 
-          className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" 
-          style={{ color: 'var(--text-secondary)' }} 
-        />
-      </div>
-      <div className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-        {title}
-      </div>
-      <div className="text-3xl font-heading font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
-        {value}{suffix}
-      </div>
-      {insight && (
-        <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-          {insight}
-        </div>
-      )}
-    </Link>
-  )
-}
-
-// Action Item Component
-function ActionItem({
-  title,
-  description,
-  href,
-  priority
-}: {
-  title: string
-  description: string
-  href: string
-  priority: 'high' | 'medium' | 'low'
-}) {
-  const priorityColors = {
-    high: '#EF4444',
-    medium: '#F59E0B',
-    low: '#6B7280'
-  }
-
-  return (
-    <Link
-      href={href}
-      className="block p-4 rounded-lg transition-all hover:scale-[1.01]"
-      style={{ backgroundColor: 'var(--bg-hover)', border: '1px solid var(--border)' }}
-    >
-      <div className="flex items-start gap-3">
-        <div 
-          className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
-          style={{ backgroundColor: priorityColors[priority] }}
-        />
-        <div className="flex-1 min-w-0">
-          <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
-            {title}
-          </div>
-          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            {description}
-          </p>
-        </div>
-        <ArrowRight className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: 'var(--text-secondary)' }} />
-      </div>
-    </Link>
   )
 }
