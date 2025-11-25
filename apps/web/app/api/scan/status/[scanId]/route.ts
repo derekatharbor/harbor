@@ -26,7 +26,7 @@ export async function GET(
     const supabase = getSupabaseClient()
     const { scanId } = params
 
-    console.log('[Status] Fetching status for scan:', scanId)
+    console.log('[Status] 🔍 Fetching status for scan:', scanId)
 
     // Get scan with jobs
     const { data: scan, error } = await supabase
@@ -36,16 +36,32 @@ export async function GET(
       .single()
 
     if (error || !scan) {
-      console.error('[Status] Scan not found:', error)
+      console.error('[Status] ❌ Scan not found:', error)
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
+    console.log('[Status] 📊 Scan status:', scan.status)
+    console.log('[Status] 📋 Jobs:', scan.scan_jobs?.map((j: any) => `${j.module}:${j.status}`).join(', '))
+
     // Calculate progress based on module completion
     const jobs = scan.scan_jobs as any[]
+    
+    if (!jobs || jobs.length === 0) {
+      console.log('[Status] ⚠️ No jobs found for scan!')
+    }
+    
     const totalModules = 4
     const completedModules = jobs.filter((j: any) => j.status === 'done').length
     const failedModules = jobs.filter((j: any) => j.status === 'failed').length
+    const runningModules = jobs.filter((j: any) => j.status === 'running').length
     const progress = Math.round((completedModules / totalModules) * 100)
+
+    console.log('[Status] 📈 Progress:', {
+      completed: completedModules,
+      running: runningModules,
+      failed: failedModules,
+      progress: progress + '%'
+    })
 
     // Get module statuses
     const getModuleStatus = (module: string): 'pending' | 'running' | 'done' | 'failed' => {
