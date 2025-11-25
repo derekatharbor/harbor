@@ -1,17 +1,24 @@
 // apps/web/app/dashboard/overview/page.tsx
-// REDESIGNED: Proper dashboard with Harbor Score gauge, real trends, action items
+// REDESIGNED: Rich Overview with insights, trends, and action items
 
 'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
-  TrendingUp,
-  TrendingDown,
   ArrowRight,
   AlertCircle,
   CheckCircle2,
-  Clock
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  ShoppingBag,
+  Star,
+  MessageSquare,
+  Globe,
+  Sparkles,
+  ArrowUpRight
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import { calculateWebsiteReadiness } from '@/lib/scoring'
@@ -27,6 +34,9 @@ interface ScanData {
   last_scan: string | null
   harbor_score: number
   visibility_score: number
+  top_questions?: string[]
+  top_categories?: Array<{ name: string; mentions: number }>
+  schema_issues?: number
 }
 
 export default function OverviewPage() {
@@ -63,6 +73,11 @@ export default function OverviewPage() {
         if (response.ok) {
           const data = await response.json()
           
+          // Extract insights from API response
+          const topQuestions = data.conversations?.questions?.slice(0, 5).map((q: any) => q.question) || []
+          const topCategories = data.shopping?.categories?.slice(0, 3) || []
+          const schemaIssues = data.website?.issues?.filter((i: any) => i.severity === 'high').length || 0
+          
           // Transform API response
           const transformedData = {
             shopping_visibility: data.shopping?.score || 0,
@@ -71,16 +86,17 @@ export default function OverviewPage() {
             site_readability: data.website?.readability_score || 0,
             brand_mentions: data.brand?.total_mentions || 0,
             last_scan: data.scan?.started_at || null,
-            // Harbor Score: 30% shopping + 30% brand + 40% website
             harbor_score: Math.round(
               (data.shopping?.score || 0) * 0.3 +
               (data.brand?.visibility_index || 0) * 0.3 +
               (data.website?.readability_score || 0) * 0.4
             ),
-            // Visibility Score: average of shopping + brand
             visibility_score: Math.round(
               ((data.shopping?.score || 0) + (data.brand?.visibility_index || 0)) / 2
-            )
+            ),
+            top_questions: topQuestions,
+            top_categories: topCategories,
+            schema_issues: schemaIssues
           }
           
           setScanData(transformedData)
@@ -96,7 +112,6 @@ export default function OverviewPage() {
     fetchLatestScan()
   }, [currentDashboard])
 
-  // Profile completeness calculation
   const calculateCompleteness = () => {
     if (!currentDashboard) return 0
     
@@ -139,19 +154,21 @@ export default function OverviewPage() {
       
       <div className="px-6 py-8 max-w-[1400px] mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-            Overview
-          </h1>
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-            Your AI visibility at a glance
-          </p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-heading font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+              Overview
+            </h1>
+            <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+              Your AI visibility at a glance
+            </p>
+          </div>
+          {hasScanData && <UniversalScanButton />}
         </div>
 
         {/* STATE 1: Profile Incomplete */}
         {!hasProfile && (
           <div className="max-w-3xl">
-            {/* Welcome Card */}
             <div 
               className="rounded-xl p-8 mb-6"
               style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
@@ -173,7 +190,6 @@ export default function OverviewPage() {
                 </div>
               </div>
 
-              {/* Progress Bar */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
@@ -183,7 +199,7 @@ export default function OverviewPage() {
                     {profileCompleteness}%
                   </span>
                 </div>
-                <div className="h-2 rounded-full" style={{ backgroundColor: 'var(--bg-muted)' }}>
+                <div className="h-2 rounded-full" style={{ backgroundColor: 'var(--bg-hover)' }}>
                   <div 
                     className="h-full rounded-full transition-all duration-500"
                     style={{ 
@@ -196,7 +212,7 @@ export default function OverviewPage() {
 
               <Link
                 href="/dashboard/brand-settings"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all hover:opacity-90"
                 style={{
                   backgroundColor: 'var(--pageAccent)',
                   color: '#FFFFFF'
@@ -241,20 +257,18 @@ export default function OverviewPage() {
           </div>
         )}
 
-        {/* STATE 3: Has Scan Data - PROPER DASHBOARD */}
+        {/* STATE 3: Has Scan Data - RICH DASHBOARD */}
         {hasScanData && (
-          <div className="space-y-8">
-            {/* Top Row: Harbor Score Gauge + Key Metrics */}
+          <div className="space-y-6">
+            {/* Top Row: Harbor Score + Metrics */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Harbor Score - Circular Gauge */}
+              {/* Harbor Score Gauge */}
               <div 
                 className="lg:col-span-1 rounded-xl p-8 flex flex-col items-center justify-center"
                 style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
               >
                 <div className="relative w-48 h-48 mb-4">
-                  {/* SVG Circle Gauge */}
                   <svg className="transform -rotate-90 w-48 h-48">
-                    {/* Background circle */}
                     <circle
                       cx="96"
                       cy="96"
@@ -263,7 +277,6 @@ export default function OverviewPage() {
                       strokeWidth="12"
                       fill="none"
                     />
-                    {/* Progress circle */}
                     <circle
                       cx="96"
                       cy="96"
@@ -276,7 +289,6 @@ export default function OverviewPage() {
                       strokeLinecap="round"
                       style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
                     />
-                    {/* Gradient definition */}
                     <defs>
                       <linearGradient id="harborGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor="#00D9C0" />
@@ -286,7 +298,6 @@ export default function OverviewPage() {
                     </defs>
                   </svg>
                   
-                  {/* Center text */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <div className="text-5xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
                       {scanData.harbor_score}
@@ -307,66 +318,158 @@ export default function OverviewPage() {
                 </div>
               </div>
 
-              {/* Key Metrics - 2 columns */}
+              {/* Key Metrics with Links */}
               <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-                <MetricCard
+                <MetricCardLink
+                  href="/dashboard/shopping"
+                  icon={ShoppingBag}
                   title="Shopping Visibility"
                   value={scanData.shopping_visibility}
                   suffix="%"
                   color="var(--accent-teal)"
+                  insight={scanData.top_categories && scanData.top_categories.length > 0 
+                    ? `Top: ${scanData.top_categories[0].name}`
+                    : undefined
+                  }
                 />
-                <MetricCard
+                <MetricCardLink
+                  href="/dashboard/brand"
+                  icon={Star}
                   title="Brand Visibility"
                   value={scanData.brand_visibility}
                   suffix="%"
                   color="var(--accent-blue)"
+                  insight={`${scanData.brand_mentions} mentions`}
                 />
-                <MetricCard
+                <MetricCardLink
+                  href="/dashboard/website"
+                  icon={Globe}
                   title="Website Readiness"
                   value={websiteReadiness}
                   suffix="%"
                   color="var(--accent-green)"
+                  insight={scanData.schema_issues ? `${scanData.schema_issues} issues` : undefined}
                 />
-                <MetricCard
+                <MetricCardLink
+                  href="/dashboard/conversations"
+                  icon={MessageSquare}
                   title="Conversation Topics"
                   value={scanData.conversation_topics}
                   color="var(--accent-amber)"
+                  insight="questions tracked"
                 />
               </div>
             </div>
 
-            {/* Action Items Section - PLACEHOLDER */}
-            <div 
-              className="rounded-xl p-6"
-              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
-                  Priority Actions
-                </h2>
-                <Link
-                  href="/dashboard/optimize"
-                  className="text-sm font-medium flex items-center gap-1"
-                  style={{ color: 'var(--pageAccent)' }}
+            {/* Middle Row: Insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Top Questions */}
+              {scanData.top_questions && scanData.top_questions.length > 0 && (
+                <div 
+                  className="rounded-xl p-6"
+                  style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
                 >
-                  View All
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-              
-              <div className="text-center py-12" style={{ color: 'var(--text-secondary)' }}>
-                <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>Action items coming soon</p>
-                <p className="text-sm mt-1">We'll aggregate high-priority tasks from all modules here</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      Top Questions About Your Brand
+                    </h3>
+                    <Link
+                      href="/dashboard/conversations"
+                      className="text-sm font-medium flex items-center gap-1 hover:opacity-80"
+                      style={{ color: 'var(--accent-amber)' }}
+                    >
+                      View All
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                  <div className="space-y-3">
+                    {scanData.top_questions.slice(0, 5).map((question, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex items-start gap-3 p-3 rounded-lg transition-colors"
+                        style={{ backgroundColor: 'var(--bg-hover)' }}
+                      >
+                        <div 
+                          className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0 text-xs font-semibold"
+                          style={{ backgroundColor: 'var(--accent-amber)', color: '#FFFFFF', opacity: 0.8 }}
+                        >
+                          {idx + 1}
+                        </div>
+                        <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
+                          {question}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick Actions */}
+              <div 
+                className="rounded-xl p-6"
+                style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-5 h-5" style={{ color: 'var(--pageAccent)' }} />
+                  <h3 className="text-lg font-heading font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    Quick Actions
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {websiteReadiness < 80 && (
+                    <ActionItem
+                      title="Improve Website Readiness"
+                      description="Fix schema issues and improve technical SEO"
+                      href="/dashboard/website"
+                      priority="high"
+                    />
+                  )}
+                  {scanData.shopping_visibility < 70 && (
+                    <ActionItem
+                      title="Boost Shopping Visibility"
+                      description="Optimize product listings for AI discovery"
+                      href="/dashboard/shopping"
+                      priority="high"
+                    />
+                  )}
+                  {scanData.brand_visibility < 70 && (
+                    <ActionItem
+                      title="Strengthen Brand Presence"
+                      description="Improve brand perception across AI models"
+                      href="/dashboard/brand"
+                      priority="medium"
+                    />
+                  )}
+                  {scanData.conversation_topics < 20 && (
+                    <ActionItem
+                      title="Address Common Questions"
+                      description="Create content for popular queries"
+                      href="/dashboard/conversations"
+                      priority="medium"
+                    />
+                  )}
+                  {websiteReadiness >= 80 && scanData.shopping_visibility >= 70 && scanData.brand_visibility >= 70 && (
+                    <div className="text-center py-6" style={{ color: 'var(--text-secondary)' }}>
+                      <CheckCircle2 className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--accent-green)' }} />
+                      <p className="font-medium">All systems green!</p>
+                      <p className="text-sm mt-1">Keep monitoring your scores</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Last Scan Info */}
-            <div className="flex items-center justify-between">
-              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                Last scan: {new Date(scanData.last_scan!).toLocaleDateString()}
+            {/* Bottom Info */}
+            <div className="flex items-center justify-between text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <div>
+                Last scan: {new Date(scanData.last_scan!).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit'
+                })}
               </div>
-              <UniversalScanButton />
             </div>
           </div>
         )}
@@ -375,29 +478,96 @@ export default function OverviewPage() {
   )
 }
 
-// Metric Card Component
-function MetricCard({ 
+// Metric Card with Link
+function MetricCardLink({ 
+  href,
+  icon: Icon,
   title, 
   value, 
   suffix = '',
-  color 
+  color,
+  insight
 }: { 
+  href: string
+  icon: any
   title: string
   value: number
   suffix?: string
   color: string
+  insight?: string
 }) {
   return (
-    <div 
-      className="rounded-xl p-6"
+    <Link
+      href={href}
+      className="rounded-xl p-6 transition-all hover:scale-[1.02] group"
       style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
     >
+      <div className="flex items-start justify-between mb-3">
+        <div 
+          className="w-10 h-10 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: color, opacity: 0.1 }}
+        >
+          <Icon className="w-5 h-5" style={{ color }} />
+        </div>
+        <ArrowUpRight 
+          className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" 
+          style={{ color: 'var(--text-secondary)' }} 
+        />
+      </div>
       <div className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
         {title}
       </div>
-      <div className="text-3xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+      <div className="text-3xl font-heading font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
         {value}{suffix}
       </div>
-    </div>
+      {insight && (
+        <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+          {insight}
+        </div>
+      )}
+    </Link>
+  )
+}
+
+// Action Item Component
+function ActionItem({
+  title,
+  description,
+  href,
+  priority
+}: {
+  title: string
+  description: string
+  href: string
+  priority: 'high' | 'medium' | 'low'
+}) {
+  const priorityColors = {
+    high: '#EF4444',
+    medium: '#F59E0B',
+    low: '#6B7280'
+  }
+
+  return (
+    <Link
+      href={href}
+      className="block p-4 rounded-lg transition-all hover:scale-[1.01]"
+      style={{ backgroundColor: 'var(--bg-hover)', border: '1px solid var(--border)' }}
+    >
+      <div className="flex items-start gap-3">
+        <div 
+          className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+          style={{ backgroundColor: priorityColors[priority] }}
+        />
+        <div className="flex-1 min-w-0">
+          <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+            {title}
+          </div>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            {description}
+          </p>
+        </div>
+        <ArrowRight className="w-4 h-4 flex-shrink-0 mt-1" style={{ color: 'var(--text-secondary)' }} />
+      </div>
+    </Link>
   )
 }
