@@ -565,7 +565,7 @@ export default function BrandDashboardPage() {
             </div>
 
             {/* Public Profile Link */}
-            {currentDashboard.slug && (
+            {currentDashboard && 'slug' in currentDashboard && currentDashboard.slug && (
               <div 
                 className="rounded-xl p-6"
                 style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
