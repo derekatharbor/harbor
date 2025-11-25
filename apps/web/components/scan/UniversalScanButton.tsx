@@ -62,6 +62,7 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
     try {
       console.log('[Button] Starting scan for dashboard:', currentDashboard.id)
       
+      // Step 1: Create the scan
       const response = await fetch('/api/scan/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -72,16 +73,35 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
       
       if (!response.ok) {
         const error = await response.json()
-        console.error('[Button] Scan failed:', error)
+        console.error('[Button] Scan creation failed:', error)
         throw new Error(error.error || 'Failed to start scan')
       }
       
       const data = await response.json()
-      console.log('[Button] Scan started:', data.scan.id)
+      const scanId = data.scan.id
+      console.log('[Button] Scan created:', scanId)
       
-      // Immediately open the progress modal with the scan ID
-      setCurrentScanId(data.scan.id)
+      // Step 2: Open modal immediately
+      setCurrentScanId(scanId)
       setShowModal(true)
+      
+      // Step 3: Trigger the process endpoint (fire and forget)
+      console.log('[Button] Triggering scan process...')
+      fetch('/api/scan/process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scanId })
+      })
+        .then(res => {
+          if (!res.ok) {
+            console.error('[Button] Process trigger failed:', res.status)
+          } else {
+            console.log('[Button] Process triggered successfully')
+          }
+        })
+        .catch(err => {
+          console.error('[Button] Process trigger error:', err)
+        })
       
     } catch (error) {
       console.error('[Button] Scan error:', error)

@@ -1,11 +1,10 @@
 // apps/web/app/api/scan/start/route.ts
-// FIXED: Synchronously trigger scan process to work in serverless
+// Return immediately - client will trigger process
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60 // Allow up to 60 seconds
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -31,6 +30,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
+
+    console.log('[Scan Start] Creating scan for dashboard:', dashboardId)
 
     // Get dashboard details
     const { data: dashboard, error: dashboardError } = await supabase
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Determine time window based on plan type
+    // Determine time window
     let timeWindowStart: Date
     let isWeeklyPlan = false
     
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
       timeWindowStart.setHours(0, 0, 0, 0)
     }
 
-    // Count scans in the appropriate time window
+    // Count scans
     const { count: scansInPeriod } = await supabase
       .from('scans')
       .select('*', { count: 'exact', head: true })
@@ -84,19 +85,15 @@ export async function POST(req: NextRequest) {
     const scansUsed = scansInPeriod || 0
     const scanLimit = isWeeklyPlan ? planLimit.fresh_scans_week : planLimit.fresh_scans_month
     
-    // Check if limit reached
     if (scansUsed >= scanLimit) {
       const period = isWeeklyPlan ? 'week' : 'month'
       return NextResponse.json(
-        {
-          error: `Scan limit reached (${scansUsed}/${scanLimit} per ${period}).`,
-          limitReached: true,
-        },
+        { error: `Scan limit reached (${scansUsed}/${scanLimit} per ${period}).`, limitReached: true },
         { status: 429 }
       )
     }
 
-    // Create scan record
+    // Create scan
     const { data: scan, error: scanError } = await supabase
       .from('scans')
       .insert({
@@ -109,14 +106,13 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (scanError || !scan) {
-      console.error('Error creating scan:', scanError)
-      return NextResponse.json(
-        { error: 'Failed to create scan' },
-        { status: 500 }
-      )
+      console.error('[Scan Start] Error creating scan:', scanError)
+      return NextResponse.json({ error: 'Failed to create scan' }, { status: 500 })
     }
 
-    // Create scan jobs for each module
+    console.log('[Scan Start] Scan created:', scan.id)
+
+    // Create jobs
     const modules = ['shopping', 'brand', 'conversations', 'website']
     const jobInserts = modules.map((module) => ({
       scan_id: scan.id,
@@ -129,66 +125,20 @@ export async function POST(req: NextRequest) {
       .insert(jobInserts)
 
     if (jobsError) {
-      console.error('Error creating scan jobs:', jobsError)
-      return NextResponse.json(
-        { error: 'Failed to create scan jobs' },
-        { status: 500 }
-      )
+      console.error('[Scan Start] Error creating jobs:', jobsError)
+      return NextResponse.json({ error: 'Failed to create scan jobs' }, { status: 500 })
     }
 
-    console.log('[Scan Start] Scan created:', scan.id, '- Triggering process synchronously')
+    console.log('[Scan Start] Jobs created successfully')
 
-    // CRITICAL FIX: Call process endpoint SYNCHRONOUSLY and wait for it
-    try {
-      const processResponse = await fetch(`${req.nextUrl.origin}/api/scan/process`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scanId: scan.id }),
-      })
-
-      if (!processResponse.ok) {
-        const errorText = await processResponse.text()
-        console.error('[Scan Start] Process endpoint failed:', errorText)
-        
-        // Mark scan as failed
-        await supabase
-          .from('scans')
-          .update({ status: 'failed' })
-          .eq('id', scan.id)
-          
-        return NextResponse.json(
-          { error: 'Scan processing failed', details: errorText },
-          { status: 500 }
-        )
-      }
-
-      const processResult = await processResponse.json()
-      console.log('[Scan Start] Process completed:', processResult)
-      
-    } catch (processError) {
-      console.error('[Scan Start] Failed to trigger process:', processError)
-      
-      // Mark scan as failed
-      await supabase
-        .from('scans')
-        .update({ status: 'failed' })
-        .eq('id', scan.id)
-      
-      return NextResponse.json(
-        { error: 'Failed to start scan processing' },
-        { status: 500 }
-      )
-    }
-
+    // Return immediately - client will trigger /api/scan/process
     return NextResponse.json({
       scan,
-      message: 'Scan started successfully',
+      message: 'Scan created - ready to process',
     })
+    
   } catch (error) {
-    console.error('Error in POST /api/scan/start:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[Scan Start] Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
