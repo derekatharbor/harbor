@@ -1,9 +1,10 @@
 // components/scan/ScanProgressModal.tsx
+// Redesigned to match Harbor landing page aesthetic
 
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+import { X, Check, Loader2, AlertTriangle } from 'lucide-react'
 
 interface ScanProgressModalProps {
   isOpen: boolean
@@ -26,10 +27,44 @@ interface ScanStatusResponse {
   message: string
 }
 
+const MODULE_LABELS = {
+  shopping: 'Shopping Visibility',
+  brand: 'Brand Visibility',
+  conversations: 'Conversation Volumes',
+  website: 'Website Analytics'
+}
+
+const MODULE_MESSAGES = {
+  shopping: {
+    running: 'Analyzing product mentions',
+    done: 'Products analyzed',
+    failed: 'Analysis failed',
+    pending: 'Queued'
+  },
+  brand: {
+    running: 'Gathering brand perception',
+    done: 'Perception mapped',
+    failed: 'Analysis failed',
+    pending: 'Queued'
+  },
+  conversations: {
+    running: 'Analyzing conversation topics',
+    done: 'Topics identified',
+    failed: 'Analysis failed',
+    pending: 'Queued'
+  },
+  website: {
+    running: 'Validating website structure',
+    done: 'Structure validated',
+    failed: 'Validation failed',
+    pending: 'Queued'
+  }
+}
+
 export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgressModalProps) {
   const [progress, setProgress] = useState(0)
   const [targetProgress, setTargetProgress] = useState(0)
-  const [currentMessage, setCurrentMessage] = useState('Initializing scan...')
+  const [currentMessage, setCurrentMessage] = useState('Initializing scan')
   const [moduleStatus, setModuleStatus] = useState<ModuleStatus>({
     shopping: 'pending',
     brand: 'pending',
@@ -39,26 +74,25 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
   const [isComplete, setIsComplete] = useState(false)
   const [hasFailed, setHasFailed] = useState(false)
 
-  // Smooth progress interpolation
+  // Smooth progress animation
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev < targetProgress) {
-          // Gradually move toward target
           const diff = targetProgress - prev
-          return prev + Math.min(diff * 0.1, 1)
+          return prev + Math.min(diff * 0.15, 2)
         }
         return prev
       })
-    }, 100) // Update every 100ms for smooth animation
+    }, 50)
 
     return () => clearInterval(interval)
   }, [targetProgress])
 
+  // Poll scan status
   useEffect(() => {
     if (!isOpen || !scanId) return
 
-    // Fetch immediately on mount
     const fetchStatus = async () => {
       try {
         const response = await fetch(`/api/scan/status/${scanId}`)
@@ -68,13 +102,12 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
         setCurrentMessage(data.message)
         setModuleStatus(data.modules)
 
-        // FIXED: Only mark complete if progress is 100% AND status is done
         if (data.status === 'done' && data.progress === 100) {
           setIsComplete(true)
-          return true // Stop polling
+          return true
         } else if (data.status === 'failed') {
           setHasFailed(true)
-          return true // Stop polling
+          return true
         }
         return false
       } catch (error) {
@@ -83,10 +116,8 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
       }
     }
 
-    // Initial fetch
     fetchStatus()
 
-    // Then poll every 2 seconds
     const pollInterval = setInterval(async () => {
       const shouldStop = await fetchStatus()
       if (shouldStop) {
@@ -97,31 +128,8 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
     return () => clearInterval(pollInterval)
   }, [isOpen, scanId])
 
-  const getModuleIcon = (status: 'pending' | 'running' | 'done' | 'failed') => {
-    if (status === 'done') return <CheckCircle className="w-5 h-5 text-[var(--pageAccent)]" strokeWidth={2} />
-    if (status === 'failed') return <AlertCircle className="w-5 h-5 text-coral" strokeWidth={2} />
-    if (status === 'running') return <Loader2 className="w-5 h-5 text-[var(--pageAccent)] animate-spin" strokeWidth={2} />
-    return <div className="w-5 h-5 rounded-full border-2 border-white/10"></div>
-  }
-
-  const getModuleMessage = (module: string, status: 'pending' | 'running' | 'done' | 'failed') => {
-    if (status === 'done') return 'Complete'
-    if (status === 'failed') return 'Failed'
-    if (status === 'pending') return 'Queued'
-    
-    // Running messages
-    const messages: Record<string, string> = {
-      shopping: 'Analyzing products...',
-      brand: 'Gathering perception data...',
-      conversations: 'Analyzing questions...',
-      website: 'Validating schema...'
-    }
-    return messages[module] || 'Processing...'
-  }
-
   const handleClose = () => {
     if (isComplete) {
-      // Reload page to show new data
       window.location.reload()
     } else {
       onClose()
@@ -131,116 +139,205 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#0B1521] border border-white/10 rounded-lg max-w-lg w-full p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={!isComplete && !hasFailed ? handleClose : undefined}
+      />
+
+      {/* Modal */}
+      <div 
+        className="relative w-full max-w-md rounded-xl overflow-hidden shadow-2xl"
+        style={{ 
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-strong)'
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-heading font-bold text-white">
-            {isComplete ? 'Scan Complete!' : hasFailed ? 'Scan Failed' : 'Running Scan'}
-          </h2>
-          <button
-            onClick={handleClose}
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+        <div className="px-6 pt-6 pb-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 
+              className="text-xl font-heading font-semibold"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              {isComplete ? 'Scan Complete' : hasFailed ? 'Scan Failed' : 'Running Scan'}
+            </h2>
+            <button
+              onClick={handleClose}
+              className="p-1.5 rounded-lg transition-all hover:bg-white/5"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <p 
+            className="text-sm"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            <X className="w-5 h-5 text-softgray/60" strokeWidth={2} />
-          </button>
+            {isComplete 
+              ? 'Your AI visibility data is ready'
+              : hasFailed
+              ? 'An error occurred during the scan'
+              : 'Analyzing your brand across AI models'}
+          </p>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-body text-white">{currentMessage}</span>
-            <span className="text-sm font-body font-bold text-[var(--pageAccent)] tabular-nums">
-              {Math.round(progress)}%
-            </span>
+        {!isComplete && !hasFailed && (
+          <div className="px-6 pb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span 
+                className="text-sm font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {currentMessage}
+              </span>
+              <span 
+                className="text-sm font-bold tabular-nums"
+                style={{ color: 'var(--accent-teal)' }}
+              >
+                {Math.round(progress)}%
+              </span>
+            </div>
+            <div 
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ backgroundColor: 'var(--bg-muted)' }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-300 ease-out"
+                style={{ 
+                  width: `${progress}%`,
+                  backgroundColor: hasFailed ? '#EF4444' : 'var(--accent-teal)'
+                }}
+              />
+            </div>
           </div>
-          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+        )}
+
+        {/* Module List */}
+        <div className="px-6 pb-6 space-y-2">
+          {Object.entries(moduleStatus).map(([module, status]) => (
             <div
-              className={`h-full rounded-full transition-all duration-500 ease-out ${
-                hasFailed ? 'bg-coral' : 'bg-[var(--pageAccent)]'
-              }`}
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
+              key={module}
+              className="flex items-center gap-3 p-3 rounded-lg transition-colors"
+              style={{ 
+                backgroundColor: status === 'running' ? 'rgba(34, 211, 238, 0.05)' : 'var(--bg-muted)'
+              }}
+            >
+              {/* Status Icon */}
+              <div className="flex-shrink-0">
+                {status === 'done' && (
+                  <div 
+                    className="w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)' }}
+                  >
+                    <Check className="w-3.5 h-3.5" style={{ color: '#10B981' }} strokeWidth={2.5} />
+                  </div>
+                )}
+                {status === 'running' && (
+                  <Loader2 
+                    className="w-5 h-5 animate-spin" 
+                    style={{ color: 'var(--accent-teal)' }}
+                    strokeWidth={2}
+                  />
+                )}
+                {status === 'failed' && (
+                  <div 
+                    className="w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: 'rgba(239, 68, 68, 0.15)' }}
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5" style={{ color: '#EF4444' }} strokeWidth={2.5} />
+                  </div>
+                )}
+                {status === 'pending' && (
+                  <div 
+                    className="w-5 h-5 rounded-full"
+                    style={{ border: '2px solid var(--border)' }}
+                  />
+                )}
+              </div>
 
-        {/* Module Status */}
-        <div className="space-y-3 mb-6">
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]">
-            {getModuleIcon(moduleStatus.shopping)}
-            <div className="flex-1">
-              <div className="text-sm font-body font-medium text-white">Shopping Visibility</div>
-              <div className="text-xs text-softgray/60 font-body">
-                {getModuleMessage('shopping', moduleStatus.shopping)}
+              {/* Module Info */}
+              <div className="flex-1 min-w-0">
+                <div 
+                  className="text-sm font-medium mb-0.5"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  {MODULE_LABELS[module as keyof typeof MODULE_LABELS]}
+                </div>
+                <div 
+                  className="text-xs"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  {MODULE_MESSAGES[module as keyof typeof MODULE_MESSAGES][status]}
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]">
-            {getModuleIcon(moduleStatus.brand)}
-            <div className="flex-1">
-              <div className="text-sm font-body font-medium text-white">Brand Visibility</div>
-              <div className="text-xs text-softgray/60 font-body">
-                {getModuleMessage('brand', moduleStatus.brand)}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]">
-            {getModuleIcon(moduleStatus.conversations)}
-            <div className="flex-1">
-              <div className="text-sm font-body font-medium text-white">Conversation Volumes</div>
-              <div className="text-xs text-softgray/60 font-body">
-                {getModuleMessage('conversations', moduleStatus.conversations)}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]">
-            {getModuleIcon(moduleStatus.website)}
-            <div className="flex-1">
-              <div className="text-sm font-body font-medium text-white">Website Analytics</div>
-              <div className="text-xs text-softgray/60 font-body">
-                {getModuleMessage('website', moduleStatus.website)}
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Footer */}
-        {isComplete ? (
-          <div className="flex items-center justify-between p-4 rounded-lg bg-[var(--pageAccent)]/10">
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-[var(--pageAccent)]" strokeWidth={2} />
-              <div className="text-sm font-body text-white">
-                All modules scanned successfully
-              </div>
+        {isComplete && (
+          <div 
+            className="px-6 pb-6"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <div className="pt-4">
+              <button
+                onClick={handleClose}
+                className="w-full py-3 rounded-lg font-medium transition-all"
+                style={{
+                  backgroundColor: 'var(--accent-teal)',
+                  color: '#0F172A'
+                }}
+              >
+                View Results
+              </button>
             </div>
-            <button
-              onClick={handleClose}
-              className="px-4 py-2 bg-[var(--pageAccent)] hover:brightness-110 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
-            >
-              View Results
-            </button>
           </div>
-        ) : hasFailed ? (
-          <div className="flex items-center justify-between p-4 rounded-lg bg-coral/10">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-coral" strokeWidth={2} />
-              <div className="text-sm font-body text-white">
-                Scan encountered errors
-              </div>
+        )}
+
+        {hasFailed && (
+          <div 
+            className="px-6 pb-6"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <div className="pt-4 space-y-3">
+              <p 
+                className="text-sm text-center"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Please try again or contact support if the issue persists.
+              </p>
+              <button
+                onClick={onClose}
+                className="w-full py-3 rounded-lg font-medium transition-all"
+                style={{
+                  backgroundColor: 'var(--bg-muted)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border)'
+                }}
+              >
+                Close
+              </button>
             </div>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-body font-medium transition-all cursor-pointer"
-            >
-              Close
-            </button>
           </div>
-        ) : (
-          <div className="text-xs text-softgray/60 font-body text-center">
-            This may take 2-3 minutes. You can close this window and we'll notify you when complete.
+        )}
+
+        {!isComplete && !hasFailed && (
+          <div 
+            className="px-6 pb-6"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <div className="pt-4">
+              <p 
+                className="text-xs text-center"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                This typically takes 2-3 minutes. You can close this window safely.
+              </p>
+            </div>
           </div>
         )}
       </div>

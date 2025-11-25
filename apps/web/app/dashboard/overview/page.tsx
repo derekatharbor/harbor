@@ -1,8 +1,10 @@
 // apps/web/app/dashboard/overview/page.tsx
+// Redesigned with proper empty states and user flow
 
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { 
   Home,
   ShoppingBag, 
@@ -10,12 +12,14 @@ import {
   MessageSquare, 
   Globe,
   TrendingUp,
-  FileText,
-  Search
+  ArrowRight,
+  Sparkles,
+  Target
 } from 'lucide-react'
-import UniversalScanButton from '@/components/scan/UniversalScanButton'
 import { useBrand } from '@/contexts/BrandContext'
+import { calculateWebsiteReadiness } from '@/lib/scoring'
 import MobileHeader from '@/components/layout/MobileHeader'
+import UniversalScanButton from '@/components/scan/UniversalScanButton'
 
 interface OverviewData {
   shopping_visibility: number
@@ -24,12 +28,15 @@ interface OverviewData {
   site_readability: number
   brand_mentions: number
   last_scan: string | null
+  harbor_score?: number
+  visibility_score?: number
 }
 
 export default function OverviewPage() {
   const { currentDashboard } = useBrand()
   const [scanData, setScanData] = useState<OverviewData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [websiteReadiness, setWebsiteReadiness] = useState(0)
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -39,34 +46,30 @@ export default function OverviewPage() {
       }
 
       try {
+        // Calculate website readiness from profile
+        const profileData = {
+          description: currentDashboard.metadata?.description || '',
+          offerings: currentDashboard.metadata?.products || [],
+          faqs: currentDashboard.metadata?.target_keywords || [], // Using keywords as proxy
+          companyInfo: {
+            hq_location: currentDashboard.metadata?.headquarters,
+            founded_year: currentDashboard.metadata?.founding_year
+          }
+        }
+        
+        const readiness = calculateWebsiteReadiness(profileData)
+        setWebsiteReadiness(readiness)
+
+        // Try to fetch scan data
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch scan data')
+        if (response.ok) {
+          const data = await response.json()
+          setScanData(data)
         }
         
-        const data = await response.json()
-        
-        // Check if scan exists
-        if (!data.scan) {
-          setScanData(null)
-          setLoading(false)
-          return
-        }
-        
-        // Map API response to overview format
-        const overviewData: OverviewData = {
-          shopping_visibility: data.shopping?.score || 0,
-          brand_mentions: data.brand?.total_mentions || 0,
-          conversation_topics: data.conversations?.questions?.length || 0,
-          site_readability: data.website?.readability_score || 0,
-          brand_visibility: data.brand?.visibility_index || 0,
-          last_scan: data.scan?.finished_at || data.scan?.started_at || null
-        }
-        
-        setScanData(overviewData)
       } catch (error) {
-        console.error('Error fetching scan:', error)
+        console.error('Failed to fetch scan data:', error)
       } finally {
         setLoading(false)
       }
@@ -75,134 +78,68 @@ export default function OverviewPage() {
     fetchLatestScan()
   }, [currentDashboard])
 
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'No recent scan'
-    try {
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffMs = now.getTime() - date.getTime()
-      const diffHrs = Math.floor(diffMs / (1000 * 60 * 60))
-      
-      if (diffHrs < 1) return 'Just now'
-      if (diffHrs < 24) return `${diffHrs} hours ago`
-      const diffDays = Math.floor(diffHrs / 24)
-      return `${diffDays} days ago`
-    } catch {
-      return 'No recent scan'
-    }
+  // Calculate profile completeness
+  const calculateCompleteness = () => {
+    if (!currentDashboard) return 0
+    
+    let completed = 0
+    const total = 8
+
+    if (currentDashboard.brand_name) completed++
+    if (currentDashboard.domain) completed++
+    if (currentDashboard.logo_url) completed++
+    if (currentDashboard.metadata?.description && currentDashboard.metadata.description.length >= 50) completed++
+    if (currentDashboard.metadata?.category) completed++
+    if (currentDashboard.metadata?.products && currentDashboard.metadata.products.length >= 1) completed++
+    if (currentDashboard.metadata?.target_keywords && currentDashboard.metadata.target_keywords.length >= 3) completed++
+    if (currentDashboard.metadata?.headquarters || currentDashboard.metadata?.founding_year) completed++
+
+    return Math.round((completed / total) * 100)
   }
 
-  // Loading skeleton
+  const profileCompleteness = calculateCompleteness()
+  const isProfileReady = profileCompleteness >= 80
+  const hasScanData = scanData && scanData.last_scan
+
+  // Loading state
   if (loading) {
     return (
       <>
         <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-border rounded-lg"></div>
-              <div className="h-10 w-48 bg-border rounded"></div>
-            </div>
-            <div className="h-10 w-40 bg-border rounded-lg hidden lg:block"></div>
-          </div>
-
+        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 animate-pulse space-y-8">
+          <div className="h-10 w-64 rounded" style={{ backgroundColor: 'var(--bg-card)' }} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-card rounded-lg p-6 border border-border h-40"></div>
+              <div key={i} className="h-32 rounded-lg" style={{ backgroundColor: 'var(--bg-card)' }} />
             ))}
           </div>
-
-          <div className="bg-card rounded-lg p-8 border border-border h-96"></div>
         </div>
       </>
     )
   }
 
-  // Empty state - no scans yet
-  if (!scanData) {
+  // No dashboard selected
+  if (!currentDashboard) {
     return (
       <>
         <MobileHeader />
         <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-          <div className="mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
-              <div className="flex items-center gap-3">
-                <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
-                <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
-                  Overview
-                </h1>
-              </div>
-              <UniversalScanButton />
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
-            <Home className="w-12 h-12 lg:w-16 lg:h-16 text-[#2979FF] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-              No Scan Data Yet
+          <div 
+            className="rounded-xl p-12 text-center"
+            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+          >
+            <Home className="w-16 h-16 mx-auto mb-6 opacity-30" style={{ color: 'var(--text-secondary)' }} />
+            <h2 className="text-2xl font-heading font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+              No Brand Selected
             </h2>
-            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-              Run your first scan to see an overview of your brand's AI visibility across all modules.
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Select a brand from the sidebar to view its overview.
             </p>
-            <UniversalScanButton variant="large" />
           </div>
         </div>
       </>
     )
   }
-
-  const metrics = [
-    {
-      title: 'SHOPPING VISIBILITY',
-      subtitle: 'Product mentions',
-      value: scanData.shopping_visibility,
-      unit: '%',
-      icon: ShoppingBag,
-      isLead: true
-    },
-    {
-      title: 'BRAND MENTIONS',
-      subtitle: 'Total mentions',
-      value: scanData.brand_mentions,
-      unit: '',
-      icon: Star
-    },
-    {
-      title: 'CONVERSATION TOPICS',
-      subtitle: 'Tracked keywords',
-      value: scanData.conversation_topics,
-      unit: '',
-      icon: MessageSquare
-    },
-    {
-      title: 'SITE READABILITY',
-      subtitle: 'AI-optimized score',
-      value: scanData.site_readability,
-      unit: '%',
-      icon: Globe
-    }
-  ]
-
-  const actions = [
-    {
-      title: 'Improve Shopping Visibility',
-      description: 'Optimize product schema and descriptions to improve AI comprehension',
-      link: '/dashboard/shopping',
-      icon: TrendingUp
-    },
-    {
-      title: 'Analyze Brand Mentions',
-      description: 'Deep dive into how AI describes your brand and identify optimization opportunities',
-      link: '/dashboard/brand',
-      icon: Search
-    },
-    {
-      title: 'Review Readability Report',
-      description: 'See which pages need optimization for better AI comprehension',
-      link: '/dashboard/website',
-      icon: FileText
-    }
-  ]
 
   return (
     <>
@@ -210,164 +147,398 @@ export default function OverviewPage() {
       <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
         {/* Page Header */}
         <div className="mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
-            <div className="flex items-center gap-3">
-              <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#2979FF]" strokeWidth={1.5} />
-              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
-                Overview
-              </h1>
-            </div>
-            <UniversalScanButton />
+          <div className="flex items-center gap-3 mb-2">
+            <Home className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: 'var(--accent-teal)' }} strokeWidth={1.5} />
+            <h1 className="text-2xl lg:text-4xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+              Overview
+            </h1>
           </div>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-secondary/60">
-              <span>Last scan:</span>
-              <span className="text-primary">{formatDate(scanData.last_scan)}</span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
-                <span className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-                Live
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {metrics.map((metric) => {
-          const Icon = metric.icon
-          return (
-            <div 
-              key={metric.title} 
-              className="bg-card rounded-lg p-6 border border-border"
-            >
-              <div className="flex items-start gap-3 mb-4">
-                <div className="p-2 bg-white/5 rounded-lg">
-                  <Icon className="w-5 h-5 text-secondary/60" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-secondary/60 uppercase tracking-wider mb-1">
-                    {metric.title}
-                  </div>
-                  <div className="text-xs text-secondary/50">
-                    {metric.subtitle}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-baseline gap-2 mb-2">
-                <div 
-                  className="font-heading font-bold text-primary tabular-nums"
-                  style={{ fontSize: metric.isLead ? '2.5rem' : '2.25rem' }}
-                >
-                  {metric.value}
-                  {metric.unit && <span className="text-2xl text-secondary/40">{metric.unit}</span>}
-                </div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Brand Visibility Section */}
-      <div className="bg-card rounded-lg p-8 border border-border mb-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-heading font-bold text-primary mb-2">
-            Brand Visibility
-          </h2>
-          <p className="text-sm text-secondary/60">
-            Overall brand presence in AI responses
+          <p style={{ color: 'var(--text-secondary)' }}>
+            Your AI visibility at a glance
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Score Display */}
-          <div>
-            <div className="mb-4">
-              <div className="text-sm text-secondary/60 uppercase tracking-wider mb-2">
-                VISIBILITY INDEX
-              </div>
-              <div className="flex items-baseline gap-3">
-                <div className="text-5xl font-heading font-bold text-primary tabular-nums">
-                  {scanData.brand_visibility}
-                </div>
-              </div>
-            </div>
-            
-            {/* Chart placeholder */}
+        {/* Empty State - No Scan Yet, Profile Incomplete */}
+        {!hasScanData && !isProfileReady && (
+          <div className="space-y-6">
+            {/* Welcome Card */}
             <div 
-              className="h-48 rounded-lg border border-border flex items-center justify-center relative overflow-hidden"
-              style={{
-                background: `
-                  repeating-linear-gradient(
-                    45deg,
-                    rgba(var(--text-secondary), 0.03) 0,
-                    rgba(var(--text-secondary), 0.03) 2px,
-                    transparent 2px,
-                    transparent 4px
-                  ),
-                  var(--bg-card)
-                `
+              className="rounded-xl p-8 lg:p-10"
+              style={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--border)',
+                background: 'linear-gradient(135deg, var(--bg-card) 0%, rgba(34, 211, 238, 0.03) 100%)'
               }}
             >
-              <div className="text-secondary/40 text-sm">Chart visualization</div>
-            </div>
-          </div>
+              <div className="flex items-start gap-4 mb-6">
+                <div 
+                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(34, 211, 238, 0.1)' }}
+                >
+                  <Sparkles className="w-6 h-6" style={{ color: 'var(--accent-teal)' }} strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Welcome to Harbor
+                  </h2>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    Let's get your brand ready for AI visibility analysis. Follow these steps to unlock your full dashboard.
+                  </p>
+                </div>
+              </div>
 
-          {/* Quick Stats */}
-          <div>
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg border border-border">
-                <div className="text-sm text-secondary/60 mb-1">Total Mentions</div>
-                <div className="text-2xl font-heading font-bold text-primary">{scanData.brand_mentions}</div>
-              </div>
-              <div className="p-4 rounded-lg border border-border">
-                <div className="text-sm text-secondary/60 mb-1">Shopping Score</div>
-                <div className="text-2xl font-heading font-bold text-primary">{scanData.shopping_visibility}%</div>
-              </div>
-              <div className="p-4 rounded-lg border border-border">
-                <div className="text-sm text-secondary/60 mb-1">Site Readability</div>
-                <div className="text-2xl font-heading font-bold text-primary">{scanData.site_readability}%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Next Best Actions */}
-      <div>
-        <h2 className="text-2xl font-heading font-bold text-primary mb-6">
-          Next Best Actions
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {actions.map((action, index) => {
-            const Icon = action.icon
-            return (
-              <a
-                key={index}
-                href={action.link}
-                className="bg-card rounded-lg p-6 border border-border hover:border-[#2979FF]/30 transition-colors cursor-pointer"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="p-2 bg-[#2979FF]/10 rounded-lg">
-                    <Icon className="w-5 h-5 text-[#2979FF]" strokeWidth={1.5} />
+              <div className="space-y-4">
+                {/* Step 1 */}
+                <div className="flex items-start gap-4">
+                  <div 
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
+                    style={{ 
+                      backgroundColor: 'var(--accent-teal)',
+                      color: '#0F172A'
+                    }}
+                  >
+                    1
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                      Complete your brand profile
+                    </div>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Add your brand details, products, and keywords to calculate your Website Readiness Score
+                    </p>
                   </div>
                 </div>
-                
-                <h3 className="text-lg font-heading font-semibold text-primary mb-2">
-                  {action.title}
-                </h3>
-                
-                <p className="text-sm text-secondary/60 leading-relaxed">
-                  {action.description}
-                </p>
-              </a>
-            )
-          })}
-        </div>
-      </div>
+
+                {/* Step 2 */}
+                <div className="flex items-start gap-4 opacity-50">
+                  <div 
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
+                    style={{ 
+                      backgroundColor: 'var(--bg-muted)',
+                      color: 'var(--text-muted)',
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    2
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                      Run your first AI scan
+                    </div>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Analyze how ChatGPT, Claude, Gemini, and Perplexity see your brand
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-start gap-4 opacity-50">
+                  <div 
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-heading font-bold"
+                    style={{ 
+                      backgroundColor: 'var(--bg-muted)',
+                      color: 'var(--text-muted)',
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    3
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+                      Track and improve your scores
+                    </div>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Monitor your Harbor Score and optimize for better AI visibility
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <Link
+                  href="/dashboard/brand-settings"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all"
+                  style={{
+                    backgroundColor: 'var(--accent-teal)',
+                    color: '#0F172A'
+                  }}
+                >
+                  Complete Brand Profile
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Profile Completeness Card */}
+            <div 
+              className="rounded-xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-heading font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                    Profile Completeness
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    {profileCompleteness < 80 
+                      ? `${Math.ceil((80 - profileCompleteness) / 12)} more fields to unlock scanning`
+                      : 'Profile ready for scanning!'}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-heading font-bold" style={{ color: 'var(--accent-teal)' }}>
+                    {profileCompleteness}%
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-muted)' }}>
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${profileCompleteness}%`,
+                    backgroundColor: profileCompleteness >= 80 ? 'var(--accent-green)' : 'var(--accent-teal)'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State - Profile Ready, No Scan */}
+        {!hasScanData && isProfileReady && (
+          <div className="space-y-6">
+            {/* Metric Cards - Empty */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <MetricCardEmpty
+                icon={Target}
+                title="Harbor Score"
+                subtitle="Overall AI visibility"
+                value="--"
+              />
+              <MetricCardEmpty
+                icon={TrendingUp}
+                title="Website Readiness"
+                subtitle="Profile completion"
+                value={`${websiteReadiness}%`}
+                color="var(--accent-green)"
+              />
+              <MetricCardEmpty
+                icon={Star}
+                title="Visibility Score"
+                subtitle="AI mention frequency"
+                value="--"
+              />
+              <MetricCardEmpty
+                icon={MessageSquare}
+                title="AI Mentions"
+                subtitle="Across all models"
+                value="--"
+              />
+            </div>
+
+            {/* Ready to Scan Card */}
+            <div 
+              className="rounded-xl p-8 lg:p-10"
+              style={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--border-strong)',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, var(--bg-card) 100%)'
+              }}
+            >
+              <div className="flex items-start gap-4 mb-6">
+                <div 
+                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(16, 185, 129, 0.15)' }}
+                >
+                  <Target className="w-6 h-6" style={{ color: 'var(--accent-green)' }} strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-heading font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Profile Complete
+                  </h2>
+                  <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    Your brand profile is ready. Run your first AI visibility scan to see how ChatGPT, Claude, Gemini, and Perplexity perceive your brand.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-muted)' }}>
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--accent-teal)' }} />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
+                      Scan Duration
+                    </div>
+                    <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Typically takes 2-3 minutes to complete
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: 'var(--bg-muted)' }}>
+                  <div className="w-1 h-8 rounded-full" style={{ backgroundColor: 'var(--accent-teal)' }} />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm mb-1" style={{ color: 'var(--text-primary)' }}>
+                      What We Analyze
+                    </div>
+                    <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Product mentions, brand perception, conversation topics, and website structure
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <UniversalScanButton dashboardId={currentDashboard.id} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Has Scan Data - Show Full Dashboard */}
+        {hasScanData && (
+          <div className="space-y-6">
+            {/* Metric Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <MetricCard
+                icon={Target}
+                title="Harbor Score"
+                value={scanData.harbor_score || 0}
+                trend={+2.5}
+                color="var(--accent-teal)"
+              />
+              <MetricCard
+                icon={TrendingUp}
+                title="Website Readiness"
+                value={websiteReadiness}
+                trend={+5}
+                color="var(--accent-green)"
+              />
+              <MetricCard
+                icon={Star}
+                title="Visibility Score"
+                value={scanData.visibility_score || 0}
+                trend={-1.2}
+                color="var(--accent-blue)"
+              />
+              <MetricCard
+                icon={MessageSquare}
+                title="AI Mentions"
+                value={scanData.brand_mentions}
+                color="var(--accent-purple)"
+              />
+            </div>
+
+            {/* Quick Links */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <QuickLinkCard
+                href="/dashboard/shopping"
+                icon={ShoppingBag}
+                title="Shopping Visibility"
+                description="Product mentions"
+                color="var(--accent-teal)"
+              />
+              <QuickLinkCard
+                href="/dashboard/brand"
+                icon={Star}
+                title="Brand Visibility"
+                description="Brand perception"
+                color="var(--accent-blue)"
+              />
+              <QuickLinkCard
+                href="/dashboard/conversations"
+                icon={MessageSquare}
+                title="Conversations"
+                description="Topic analysis"
+                color="var(--accent-amber)"
+              />
+              <QuickLinkCard
+                href="/dashboard/website"
+                icon={Globe}
+                title="Website Analytics"
+                description="Technical audit"
+                color="var(--accent-purple)"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </>
+  )
+}
+
+// Helper Components
+
+function MetricCardEmpty({ icon: Icon, title, subtitle, value, color }: any) {
+  return (
+    <div 
+      className="rounded-lg p-6"
+      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <Icon className="w-5 h-5" style={{ color: color || 'var(--text-muted)' }} strokeWidth={1.5} />
+        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+          {title}
+        </span>
+      </div>
+      <div className="text-3xl font-heading font-bold mb-1" style={{ color: color || 'var(--text-primary)' }}>
+        {value}
+      </div>
+      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+        {subtitle}
+      </p>
+    </div>
+  )
+}
+
+function MetricCard({ icon: Icon, title, value, trend, color }: any) {
+  return (
+    <div 
+      className="rounded-lg p-6"
+      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <Icon className="w-5 h-5" style={{ color: color || 'var(--text-muted)' }} strokeWidth={1.5} />
+        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+          {title}
+        </span>
+      </div>
+      <div className="flex items-end gap-3 mb-1">
+        <div className="text-3xl font-heading font-bold" style={{ color: 'var(--text-primary)' }}>
+          {typeof value === 'number' ? Math.round(value) : value}
+          {title.includes('Score') || title.includes('Readiness') ? '%' : ''}
+        </div>
+        {trend !== undefined && (
+          <div 
+            className="text-sm font-medium pb-1"
+            style={{ color: trend >= 0 ? 'var(--accent-green)' : '#EF4444' }}
+          >
+            {trend >= 0 ? '+' : ''}{trend}%
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function QuickLinkCard({ href, icon: Icon, title, description, color }: any) {
+  return (
+    <Link
+      href={href}
+      className="group rounded-lg p-6 transition-all"
+      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" style={{ color }} strokeWidth={1.5} />
+        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--text-muted)' }} />
+      </div>
+      <h3 className="font-heading font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h3>
+      <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+        {description}
+      </p>
+    </Link>
   )
 }
