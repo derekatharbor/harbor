@@ -58,7 +58,7 @@ export async function GET(request: Request) {
     // 2. Find the user's ai_profile (linked via dashboard_id)
     const { data: userProfile, error: profileError } = await supabase
       .from('ai_profiles')
-      .select('id, brand_name, visibility_score, industry, rank_in_industry, rank_global')
+      .select('id, slug, brand_name, visibility_score, industry, rank_in_industry, rank_global, logo_url')
       .eq('dashboard_id', brandId)
       .single()
 
