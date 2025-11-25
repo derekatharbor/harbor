@@ -1,9 +1,10 @@
 // apps/web/components/scan/UniversalScanButton.tsx
+// Fixed: Persistent scan state, teal theme, better copy
 
 'use client'
 
-import { useState } from 'react'
-import { RotateCw, Activity } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Loader2, Sparkles } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import ScanProgressModal from './ScanProgressModal'
 
@@ -16,11 +17,42 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
   const [isScanning, setIsScanning] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
+  const [checkingStatus, setCheckingStatus] = useState(true)
   
   // Mock scan limits - replace with actual API call
   const scansUsed = 0
   const scansLimit = currentDashboard?.plan === 'solo' ? 1 : 8
   const scansRemaining = scansLimit - scansUsed
+
+  // Check if there's an active scan on mount
+  useEffect(() => {
+    async function checkActiveScan() {
+      if (!currentDashboard) {
+        setCheckingStatus(false)
+        return
+      }
+
+      try {
+        // Check for any running scans
+        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
+        if (response.ok) {
+          const data = await response.json()
+          
+          // If last scan is still running, set state
+          if (data.status === 'running' || data.status === 'queued') {
+            setIsScanning(true)
+            setCurrentScanId(data.scan_id)
+          }
+        }
+      } catch (error) {
+        console.error('Error checking scan status:', error)
+      } finally {
+        setCheckingStatus(false)
+      }
+    }
+
+    checkActiveScan()
+  }, [currentDashboard])
 
   const handleScan = async () => {
     if (!currentDashboard || isScanning) return
@@ -55,145 +87,175 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
 
   const handleModalClose = () => {
     setShowModal(false)
-    setCurrentScanId(null)
+    // Keep isScanning true and currentScanId - scan is still running in background
+  }
+
+  const handleScanComplete = () => {
+    setShowModal(false)
     setIsScanning(false)
+    setCurrentScanId(null)
+  }
+
+  if (checkingStatus) {
+    return (
+      <div 
+        className="px-6 py-3 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: 'var(--bg-muted)' }}
+      >
+        <Loader2 className="w-5 h-5 animate-spin" style={{ color: 'var(--text-muted)' }} />
+      </div>
+    )
   }
 
   if (variant === 'large') {
     return (
       <>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col gap-4">
           <button
-            onClick={handleScan}
-            disabled={isScanning || scansRemaining <= 0}
+            onClick={isScanning ? () => setShowModal(true) : handleScan}
+            disabled={!isScanning && scansRemaining <= 0}
             className="
               group relative
               px-8 py-4
-              bg-gradient-to-br from-[#FF6B4A] to-[#FF5533]
-              hover:from-[#FF7A59] hover:to-[#FF6644]
-              disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
-              text-white font-heading font-bold text-lg
               rounded-xl
-              shadow-lg shadow-coral/25
-              hover:shadow-xl hover:shadow-coral/35
-              disabled:shadow-none
+              font-heading font-semibold text-lg
               transition-all duration-300
-              cursor-pointer
-              flex items-center gap-3
-              border border-white/10
+              flex items-center justify-center gap-3
               overflow-hidden
             "
+            style={{
+              backgroundColor: isScanning ? 'rgba(34, 211, 238, 0.1)' : 'var(--accent-teal)',
+              color: isScanning ? 'var(--accent-teal)' : '#0F172A',
+              border: isScanning ? '2px solid var(--accent-teal)' : 'none',
+              cursor: (!isScanning && scansRemaining <= 0) ? 'not-allowed' : 'pointer',
+              opacity: (!isScanning && scansRemaining <= 0) ? 0.5 : 1
+            }}
           >
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-            
-            {/* Scan pulse animation when active */}
-            {isScanning && (
-              <div className="absolute inset-0 animate-pulse bg-white/10" />
-            )}
-            
-            <div className="relative z-10 flex items-center gap-3">
-              {isScanning ? (
-                <Activity className="w-6 h-6 animate-pulse" strokeWidth={2.5} />
-              ) : (
-                <RotateCw 
-                  className="w-6 h-6 group-hover:rotate-180 transition-transform duration-500" 
-                  strokeWidth={2.5}
-                />
-              )}
-              <span className="tracking-wide">
-                {isScanning ? 'Starting Scan...' : 'Refresh Brand Intelligence'}
-              </span>
-            </div>
-          </button>
-          
-          <div className="mt-3 flex items-center gap-2">
-            {scansRemaining > 0 ? (
+            {isScanning ? (
               <>
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <p className="text-sm text-secondary/80 font-medium">
-                  {scansRemaining} {scansRemaining === 1 ? 'scan' : 'scans'} available this {currentDashboard?.plan === 'solo' ? 'week' : 'month'}
-                </p>
+                <Loader2 className="w-6 h-6 animate-spin" strokeWidth={2} />
+                <span>Scan in Progress</span>
               </>
             ) : (
               <>
-                <div className="w-2 h-2 rounded-full bg-red-400" />
-                <p className="text-sm text-red-500 dark:text-red-400 font-medium">
-                  Scan limit reached
-                </p>
+                <Sparkles className="w-6 h-6" strokeWidth={2} />
+                <span>Run First Scan</span>
               </>
             )}
-          </div>
+          </button>
+          
+          {isScanning && (
+            <button
+              onClick={() => setShowModal(true)}
+              className="text-sm font-medium transition-colors"
+              style={{ color: 'var(--accent-teal)' }}
+            >
+              View Progress →
+            </button>
+          )}
+
+          {!isScanning && (
+            <div className="flex items-center justify-center gap-2">
+              {scansRemaining > 0 ? (
+                <>
+                  <div 
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: 'var(--accent-green)' }}
+                  />
+                  <p 
+                    className="text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {scansRemaining} {scansRemaining === 1 ? 'scan' : 'scans'} available this {currentDashboard?.plan === 'solo' ? 'week' : 'month'}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div 
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: '#EF4444' }}
+                  />
+                  <p 
+                    className="text-sm font-medium"
+                    style={{ color: '#EF4444' }}
+                  >
+                    Scan limit reached
+                  </p>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <ScanProgressModal
           isOpen={showModal}
           onClose={handleModalClose}
+          onComplete={handleScanComplete}
           scanId={currentScanId}
         />
       </>
     )
   }
 
+  // Default variant
   return (
     <>
       <div className="flex flex-col items-start lg:items-end gap-2">
         <button
-          onClick={handleScan}
-          disabled={isScanning || scansRemaining <= 0}
+          onClick={isScanning ? () => setShowModal(true) : handleScan}
+          disabled={!isScanning && scansRemaining <= 0}
           className="
-            group relative
             px-5 py-2.5
-            bg-gradient-to-br from-[#FF6B4A] to-[#FF5533]
-            hover:from-[#FF7A59] hover:to-[#FF6644]
-            disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
-            text-white font-heading font-semibold text-sm
             rounded-lg
-            shadow-md shadow-coral/20
-            hover:shadow-lg hover:shadow-coral/30
-            disabled:shadow-none
+            font-heading font-semibold text-sm
             transition-all duration-300
-            cursor-pointer
             flex items-center gap-2
-            border border-white/10
-            overflow-hidden
           "
+          style={{
+            backgroundColor: isScanning ? 'rgba(34, 211, 238, 0.1)' : 'var(--accent-teal)',
+            color: isScanning ? 'var(--accent-teal)' : '#0F172A',
+            border: isScanning ? '1px solid var(--accent-teal)' : 'none',
+            cursor: (!isScanning && scansRemaining <= 0) ? 'not-allowed' : 'pointer',
+            opacity: (!isScanning && scansRemaining <= 0) ? 0.5 : 1
+          }}
         >
-          {/* Shimmer effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
-          
-          {/* Scan pulse when active */}
-          {isScanning && (
-            <div className="absolute inset-0 animate-pulse bg-white/10" />
+          {isScanning ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" strokeWidth={2} />
+              <span>Scanning...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4" strokeWidth={2} />
+              <span>Run Scan</span>
+            </>
           )}
-          
-          <div className="relative z-10 flex items-center gap-2">
-            {isScanning ? (
-              <Activity className="w-4 h-4 animate-pulse" strokeWidth={2.5} />
-            ) : (
-              <RotateCw 
-                className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" 
-                strokeWidth={2.5}
-              />
-            )}
-            <span>
-              {isScanning ? 'Starting...' : 'Refresh Intelligence'}
-            </span>
-          </div>
         </button>
         
         <div className="flex items-center gap-1.5">
           {scansRemaining > 0 ? (
             <>
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <p className="text-xs text-secondary/70 font-medium">
+              <div 
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: 'var(--accent-green)' }}
+              />
+              <p 
+                className="text-xs font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
                 {scansRemaining} remaining
               </p>
             </>
           ) : (
             <>
-              <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
-              <p className="text-xs text-red-500 dark:text-red-400 font-medium">
+              <div 
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: '#EF4444' }}
+              />
+              <p 
+                className="text-xs font-medium"
+                style={{ color: '#EF4444' }}
+              >
                 Limit reached
               </p>
             </>
@@ -204,6 +266,7 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
       <ScanProgressModal
         isOpen={showModal}
         onClose={handleModalClose}
+        onComplete={handleScanComplete}
         scanId={currentScanId}
       />
     </>

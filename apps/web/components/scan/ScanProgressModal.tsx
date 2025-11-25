@@ -9,6 +9,7 @@ import { X, Check, Loader2, AlertTriangle } from 'lucide-react'
 interface ScanProgressModalProps {
   isOpen: boolean
   onClose: () => void
+  onComplete?: () => void
   scanId: string | null
 }
 
@@ -61,7 +62,7 @@ const MODULE_MESSAGES = {
   }
 }
 
-export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgressModalProps) {
+export default function ScanProgressModal({ isOpen, onClose, onComplete, scanId }: ScanProgressModalProps) {
   const [progress, setProgress] = useState(0)
   const [targetProgress, setTargetProgress] = useState(0)
   const [currentMessage, setCurrentMessage] = useState('Initializing scan')
@@ -130,6 +131,7 @@ export default function ScanProgressModal({ isOpen, onClose, scanId }: ScanProgr
 
   const handleClose = () => {
     if (isComplete) {
+      onComplete?.()
       window.location.reload()
     } else {
       onClose()
