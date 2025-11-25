@@ -1,3 +1,4 @@
+// apps/web/components/landing/FullscreenMenu.tsx
 'use client'
 
 import { useEffect } from 'react'
@@ -94,7 +95,7 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
                 How It Works
               </a>
               <a
-                href="/#pricing"
+                href="/pricing"
                 onClick={onClose}
                 className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
@@ -133,15 +134,9 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
               onClick={onClose}
               className="block group"
             >
-              {/* Harbor Index Preview Image */}
+              {/* Image placeholder - you can add Harbor Index graphic here */}
               <div className="w-full h-32 bg-white/5 rounded-lg mb-4 overflow-hidden">
-                <Image 
-                  src="/images/harbor-index-preview.png"
-                  alt="Harbor Index Preview"
-                  width={280}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-[#6B7CFF]/20 to-transparent" />
               </div>
               
               <h4 className="text-xl font-bold text-white mb-3 group-hover:text-white/70 transition-colors">
@@ -160,46 +155,38 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
             <nav className="space-y-4">
               <a
                 href="/about"
+                onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 About
               </a>
               <a
                 href="/contact"
+                onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
                 Contact
               </a>
-              <a
-                href="/careers"
-                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Careers
-              </a>
             </nav>
           </div>
 
-          {/* Column 4 - Resources */}
+          {/* Column 4 - Legal */}
           <div>
-            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Resources</h3>
+            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-6 font-mono">Legal</h3>
             <nav className="space-y-4">
               <a
-                href="/blog"
+                href="/privacy"
+                onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
-                Blog
+                Privacy Policy
               </a>
               <a
-                href="/docs"
+                href="/terms"
+                onClick={onClose}
                 className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
               >
-                Documentation
-              </a>
-              <a
-                href="/case-studies"
-                className="block text-xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-              >
-                Case Studies
+                Terms of Service
               </a>
             </nav>
           </div>
@@ -211,24 +198,24 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 pb-safe flex flex-col lg:flex-row items-center justify-between gap-4">
           {user ? (
             <a
-              href="/brands"
+              href="/dashboard"
               onClick={onClose}
               className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
             >
-              Browse Index
+              Go to Dashboard
             </a>
           ) : (
             <a
-              href="#early-access"
+              href="/auth/signup"
               onClick={onClose}
               className="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-black text-base font-medium hover:bg-white/90 transition-all duration-200"
             >
-              Get started
+              Get started free
             </a>
           )}
           
           <div className="text-sm text-white/50">
-            © 2024 Harbor
+            © {new Date().getFullYear()} Harbor
           </div>
         </div>
       </div>
