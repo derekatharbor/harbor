@@ -1,9 +1,10 @@
 // app/api/scan/process/route.ts
-// CRITICAL FIX: Properly update scan_jobs status from 'queued' -> 'running' -> 'done'
+// FIXED: Use service role client and proper query syntax
 
 export const runtime = 'nodejs'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+export const maxDuration = 300 // 5 minutes max
+
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { runPrompt } from '@/lib/ai-models'
 import {
@@ -14,6 +15,17 @@ import {
 } from '@/lib/prompts'
 import { crawlWebsite } from '@/lib/crawler/website-crawler'
 
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+  
+  return createClient(supabaseUrl, supabaseKey)
+}
+
 export async function POST(request: Request) {
   try {
     const { scanId } = await request.json()
@@ -22,28 +34,37 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Scan ID required' }, { status: 400 })
     }
 
-    const supabase = createRouteHandlerClient({ cookies })
+    console.log('[Process] Starting scan:', scanId)
+    const supabase = getSupabaseClient()
 
-    // Get scan and dashboard info
-    const { data: scan } = await supabase
+    // Get scan info
+    const { data: scan, error: scanError } = await supabase
       .from('scans')
-      .select(`
-        id,
-        dashboard_id,
-        dashboards (
-          brand_name,
-          domain,
-          metadata
-        )
-      `)
+      .select('*')
       .eq('id', scanId)
       .single()
 
-    if (!scan) {
+    if (scanError || !scan) {
+      console.error('[Process] Scan not found:', scanError)
       return NextResponse.json({ error: 'Scan not found' }, { status: 404 })
     }
 
-    const dashboard = scan.dashboards as any
+    console.log('[Process] Found scan:', scan.dashboard_id)
+
+    // Get dashboard separately
+    const { data: dashboard, error: dashError } = await supabase
+      .from('dashboards')
+      .select('*')
+      .eq('id', scan.dashboard_id)
+      .single()
+
+    if (dashError || !dashboard) {
+      console.error('[Process] Dashboard not found:', dashError)
+      return NextResponse.json({ error: 'Dashboard not found' }, { status: 404 })
+    }
+
+    console.log('[Process] Found dashboard:', dashboard.brand_name)
+
     const metadata = {
       brandName: dashboard.brand_name,
       domain: dashboard.domain,
@@ -52,11 +73,15 @@ export async function POST(request: Request) {
       competitors: dashboard.metadata?.competitors || [],
     }
 
+    console.log('[Process] Metadata:', metadata)
+
     // Update scan status to running
     await supabase
       .from('scans')
       .update({ status: 'running', started_at: new Date().toISOString() })
       .eq('id', scanId)
+
+    console.log('[Process] Scan marked as running, processing modules...')
 
     // Process all modules in parallel
     const results = await Promise.allSettled([
@@ -70,6 +95,8 @@ export async function POST(request: Request) {
     const succeeded = results.filter(r => r.status === 'fulfilled').length
     const failed = results.filter(r => r.status === 'rejected').length
 
+    console.log('[Process] Results:', { succeeded, failed })
+
     const finalStatus = failed === 0 ? 'done' : succeeded > 0 ? 'partial' : 'failed'
 
     // Update scan with final status
@@ -81,6 +108,8 @@ export async function POST(request: Request) {
       })
       .eq('id', scanId)
 
+    console.log('[Process] Scan complete:', finalStatus)
+
     return NextResponse.json({
       success: true,
       scanId,
@@ -91,7 +120,7 @@ export async function POST(request: Request) {
       },
     })
   } catch (error: any) {
-    console.error('Scan processing error:', error)
+    console.error('[Process] Fatal error:', error)
     return NextResponse.json(
       { error: error.message || 'Scan processing failed' },
       { status: 500 }
@@ -100,13 +129,12 @@ export async function POST(request: Request) {
 }
 
 // ============================================================================
-// MODULE PROCESSORS - WITH PROPER STATUS UPDATES
+// MODULE PROCESSORS
 // ============================================================================
 
 async function processShoppingModule(supabase: any, scanId: string, metadata: any) {
-  console.log('[Shopping] Starting module...')
+  console.log('[Shopping] Starting...')
 
-  // Find existing job or create new one
   let { data: job } = await supabase
     .from('scan_jobs')
     .select('*')
@@ -127,7 +155,6 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
     job = newJob
   }
 
-  // CRITICAL: Update to 'running' status
   await supabase
     .from('scan_jobs')
     .update({
@@ -141,12 +168,14 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
     const allResults: any[] = []
     let totalTokens = 0
 
-    const models: Array<'gpt' | 'claude' | 'gemini'> = ['gpt', 'claude', 'gemini']
+    const models: Array<'gpt'> = ['gpt'] // Only GPT for now
 
     for (const promptConfig of prompts) {
       for (const modelName of models) {
         try {
           const config = buildPromptConfig(promptConfig.prompt, 'shopping')
+
+          console.log(`[Shopping] Calling ${modelName} for ${promptConfig.category}...`)
 
           const response = await runPrompt({
             model: modelName,
@@ -181,10 +210,7 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
       }
     }
 
-// Replace the Shopping insert section (around line 188-201) with this:
-
     if (allResults.length > 0) {
-      // Deduplicate by primary key (scan_id, model, category, product)
       const uniqueResults = Array.from(
         new Map(
           allResults.map(r => [
@@ -194,23 +220,15 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
         ).values()
       )
 
-      console.log('[Shopping] Deduped:', allResults.length, '→', uniqueResults.length, 'unique results')
-      console.log('[Shopping] Sample result:', uniqueResults[0])
+      console.log('[Shopping] Inserting', uniqueResults.length, 'results')
       
       const { error: insertError } = await supabase.from('results_shopping').insert(uniqueResults)
       
       if (insertError) {
-        console.error('[Shopping] ❌ INSERT FAILED:', insertError)
-        console.error('[Shopping] Error code:', insertError.code)
-        console.error('[Shopping] Sample data that failed:', JSON.stringify(uniqueResults[0], null, 2))
-      } else {
-        console.log('[Shopping] ✅ Successfully inserted', uniqueResults.length, 'results')
+        console.error('[Shopping] Insert failed:', insertError)
       }
-    } else {
-      console.log('[Shopping] ⚠️ No results to insert')
     }
 
-    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -225,7 +243,6 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
   } catch (error: any) {
     console.error('[Shopping] Module error:', error)
 
-    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -240,7 +257,7 @@ async function processShoppingModule(supabase: any, scanId: string, metadata: an
 }
 
 async function processBrandModule(supabase: any, scanId: string, metadata: any) {
-  console.log('[Brand] Starting module...')
+  console.log('[Brand] Starting...')
 
   let { data: job } = await supabase
     .from('scan_jobs')
@@ -262,7 +279,6 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
     job = newJob
   }
 
-  // CRITICAL: Update to 'running' status
   await supabase
     .from('scan_jobs')
     .update({
@@ -276,12 +292,14 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
     const allDescriptors: any[] = []
     let totalTokens = 0
 
-    const models: Array<'gpt' | 'claude' | 'gemini'> = ['gpt', 'claude', 'gemini']
+    const models: Array<'gpt'> = ['gpt']
 
     for (const promptConfig of prompts) {
       for (const modelName of models) {
         try {
           const config = buildPromptConfig(promptConfig.prompt, 'brand')
+
+          console.log(`[Brand] Calling ${modelName}...`)
 
           const response = await runPrompt({
             model: modelName,
@@ -317,10 +335,10 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
     }
 
     if (allDescriptors.length > 0) {
+      console.log('[Brand] Inserting', allDescriptors.length, 'descriptors')
       await supabase.from('results_brand').insert(allDescriptors)
     }
 
-    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -335,7 +353,6 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
   } catch (error: any) {
     console.error('[Brand] Module error:', error)
 
-    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -350,7 +367,7 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
 }
 
 async function processConversationsModule(supabase: any, scanId: string, metadata: any) {
-  console.log('[Conversations] Starting module...')
+  console.log('[Conversations] Starting...')
 
   let { data: job } = await supabase
     .from('scan_jobs')
@@ -372,7 +389,6 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
     job = newJob
   }
 
-  // CRITICAL: Update to 'running' status
   await supabase
     .from('scan_jobs')
     .update({
@@ -386,12 +402,14 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
     const allQuestions: any[] = []
     let totalTokens = 0
 
-    const models: Array<'gpt' | 'claude' | 'gemini'> = ['gpt', 'claude', 'gemini']
+    const models: Array<'gpt'> = ['gpt']
 
     for (const promptConfig of prompts) {
       for (const modelName of models) {
         try {
           const config = buildPromptConfig(promptConfig.prompt, 'conversations')
+
+          console.log(`[Conversations] Calling ${modelName}...`)
 
           const response = await runPrompt({
             model: modelName,
@@ -429,10 +447,10 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
     )
 
     if (uniqueQuestions.length > 0) {
+      console.log('[Conversations] Inserting', uniqueQuestions.length, 'questions')
       await supabase.from('results_conversations').insert(uniqueQuestions)
     }
 
-    // CRITICAL: Update to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -447,7 +465,6 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
   } catch (error: any) {
     console.error('[Conversations] Module error:', error)
 
-    // CRITICAL: Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
@@ -462,7 +479,7 @@ async function processConversationsModule(supabase: any, scanId: string, metadat
 }
 
 async function processWebsiteModule(supabase: any, scanId: string, metadata: any) {
-  console.log('[Website] Starting module...')
+  console.log('[Website] Starting...')
 
   let { data: job } = await supabase
     .from('scan_jobs')
@@ -484,7 +501,6 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
     job = newJob
   }
 
-  // Update to 'running' status
   await supabase
     .from('scan_jobs')
     .update({
@@ -494,32 +510,29 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
     .eq('id', job.id)
 
   try {
-    // Get dashboard to determine plan
     const { data: scan } = await supabase
       .from('scans')
-      .select(`
-        dashboard_id,
-        dashboards (
-          plan
-        )
-      `)
+      .select('dashboard_id')
       .eq('id', scanId)
       .single()
 
-    const plan = (scan?.dashboards as any)?.plan || 'solo'
+    const { data: dashboard } = await supabase
+      .from('dashboards')
+      .select('plan')
+      .eq('id', scan.dashboard_id)
+      .single()
 
-    // Run the actual crawler
-    console.log(`[Website] Crawling ${metadata.domain} with plan: ${plan}`)
+    const plan = dashboard?.plan || 'solo'
+
+    console.log(`[Website] Crawling ${metadata.domain} (plan: ${plan})`)
     const crawlResult = await crawlWebsite(metadata.domain, plan)
 
     console.log(`[Website] Crawl complete:`, {
       pages: crawlResult.pages_analyzed,
       readability: crawlResult.readability_score,
-      coverage: crawlResult.schema_coverage,
       issues: crawlResult.issues.length,
     })
 
-    // Insert issues into database
     if (crawlResult.issues.length > 0) {
       const issueRecords = crawlResult.issues.map((issue) => ({
         scan_id: scanId,
@@ -530,50 +543,30 @@ async function processWebsiteModule(supabase: any, scanId: string, metadata: any
         details: { message: issue.message },
       }))
 
-      const { error: insertError } = await supabase
-        .from('results_site')
-        .insert(issueRecords)
-
-      if (insertError) {
-        console.error('[Website] Error inserting issues:', insertError)
-      } else {
-        console.log(`[Website] Inserted ${issueRecords.length} issues`)
-      }
+      console.log('[Website] Inserting', issueRecords.length, 'issues')
+      await supabase.from('results_site').insert(issueRecords)
     }
 
-    // Store schemas found in metadata (for future use)
-    if (crawlResult.schemas_found.length > 0) {
-      console.log(`[Website] Found ${crawlResult.schemas_found.length} schemas:`)
-      crawlResult.schemas_found.forEach((schema) => {
-        console.log(`  - ${schema.type} on ${schema.url} (${schema.complete ? 'complete' : 'incomplete'})`)
-      })
-    }
-
-    // Update job to 'done' status
     await supabase
       .from('scan_jobs')
       .update({
         status: 'done',
-        token_used: 0, // No LLM tokens used
+        token_used: 0,
         finished_at: new Date().toISOString(),
       })
       .eq('id', job.id)
 
-    console.log(
-      `[Website] Complete! Analyzed ${crawlResult.pages_analyzed} pages, found ${crawlResult.issues.length} issues`
-    )
+    console.log('[Website] Complete!')
     
     return { 
       success: true, 
       count: crawlResult.issues.length,
       pages: crawlResult.pages_analyzed,
       readability: crawlResult.readability_score,
-      coverage: crawlResult.schema_coverage,
     }
   } catch (error: any) {
     console.error('[Website] Module error:', error)
 
-    // Update to 'failed' status
     await supabase
       .from('scan_jobs')
       .update({
