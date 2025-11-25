@@ -19,7 +19,8 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  User
+  User,
+  Users
 } from 'lucide-react'
 import BrandSwitcher from './BrandSwitcher'
 
@@ -81,6 +82,7 @@ export default function Sidebar() {
     { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
     { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
     { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
+    { name: 'Competitors', href: '/dashboard/competitors', icon: Users },
   ]
 
   const brandSettings = [
@@ -95,6 +97,7 @@ export default function Sidebar() {
     if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
     if (pathname === '/dashboard/conversations') return '#FFB84D' // Amber/Gold
     if (pathname === '/dashboard/website') return '#E879F9' // Magenta/Pink
+    if (pathname === '/dashboard/competitors') return '#A855F7' // Purple
     return '#FF6B4A' // Coral fallback
   }
 
