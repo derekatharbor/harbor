@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/brand-settings/page.tsx
-// Brand Settings - "Fix what AI gets wrong about you"
+// Brand Settings - "Shape your AI visibility"
 
 'use client'
 
@@ -9,7 +9,7 @@ import {
   Plus, X, Save, ExternalLink, Sparkles, Shield, Clock,
   DollarSign, Puzzle, Users, MessageSquare, AlertCircle,
   Link as LinkIcon, FileText, Megaphone, Lock, Info,
-  Edit3, Eye, TrendingUp
+  Edit3, Eye, TrendingUp, Pencil, Zap, Target
 } from 'lucide-react'
 import Link from 'next/link'
 import { useBrand } from '@/contexts/BrandContext'
@@ -72,21 +72,21 @@ interface SectionProps {
 }
 
 // ============================================================================
-// SECTION COMPONENT
+// SECTION COMPONENT - With clear edit affordance
 // ============================================================================
 
 function Section({ id, title, icon, status, statusText, isExpanded, onToggle, children, impactText }: SectionProps) {
   const statusColors = {
-    complete: { bg: 'rgba(34, 197, 94, 0.1)', border: 'rgba(34, 197, 94, 0.2)', text: 'var(--accent-green)' },
-    incomplete: { bg: 'rgba(251, 191, 36, 0.1)', border: 'rgba(251, 191, 36, 0.2)', text: 'var(--accent-amber)' },
-    warning: { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.2)', text: 'var(--accent-coral)' }
+    complete: { bg: 'rgba(34, 197, 94, 0.1)', border: 'rgba(34, 197, 94, 0.3)', text: '#22c55e' },
+    incomplete: { bg: 'rgba(251, 191, 36, 0.1)', border: 'rgba(251, 191, 36, 0.3)', text: '#fbbf24' },
+    warning: { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.3)', text: '#ef4444' }
   }
   
   const colors = statusColors[status]
   
   return (
     <div 
-      className="rounded-xl overflow-hidden transition-all"
+      className="rounded-xl overflow-hidden transition-all group/section"
       style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
     >
       <button
@@ -101,7 +101,16 @@ function Section({ id, title, icon, status, statusText, isExpanded, onToggle, ch
             {icon}
           </div>
           <div className="text-left">
-            <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{title}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{title}</h3>
+              {!isExpanded && (
+                <span className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1 opacity-0 group-hover/section:opacity-100 transition-opacity"
+                  style={{ backgroundColor: 'rgba(34, 211, 238, 0.1)', color: 'var(--accent-teal)' }}>
+                  <Pencil className="w-3 h-3" />
+                  Edit
+                </span>
+              )}
+            </div>
             {impactText && (
               <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{impactText}</p>
             )}
@@ -110,7 +119,7 @@ function Section({ id, title, icon, status, statusText, isExpanded, onToggle, ch
         
         <div className="flex items-center gap-3">
           <span 
-            className="text-xs px-2 py-1 rounded-full font-medium"
+            className="text-xs px-3 py-1 rounded-full font-medium"
             style={{ backgroundColor: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
           >
             {statusText}
@@ -128,6 +137,54 @@ function Section({ id, title, icon, status, statusText, isExpanded, onToggle, ch
           {children}
         </div>
       )}
+    </div>
+  )
+}
+
+// ============================================================================
+// EMPTY STATE COMPONENT
+// ============================================================================
+
+function EmptyState({ 
+  icon, 
+  title, 
+  description, 
+  examples,
+  buttonText, 
+  onAdd 
+}: { 
+  icon: React.ReactNode
+  title: string
+  description: string
+  examples?: string[]
+  buttonText: string
+  onAdd: () => void 
+}) {
+  return (
+    <div 
+      className="rounded-lg p-6 text-center"
+      style={{ backgroundColor: 'var(--bg-muted)', border: '1px dashed var(--border)' }}
+    >
+      <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+        style={{ backgroundColor: 'var(--bg-card)' }}>
+        {icon}
+      </div>
+      <h4 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>{title}</h4>
+      <p className="text-sm mb-3" style={{ color: 'var(--text-muted)' }}>{description}</p>
+      {examples && examples.length > 0 && (
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          {examples.map((ex, i) => (
+            <span key={i} className="text-xs px-2 py-1 rounded" 
+              style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-secondary)' }}>
+              {ex}
+            </span>
+          ))}
+        </div>
+      )}
+      <button onClick={onAdd} className="btn-secondary text-sm px-4 py-2">
+        <Plus className="w-4 h-4 mr-2" />
+        {buttonText}
+      </button>
     </div>
   )
 }
@@ -443,16 +500,19 @@ export default function BrandSettingsPage() {
     const issues: Array<{ id: string; text: string; impact: string }> = []
     
     if (!data.pricing.model) {
-      issues.push({ id: 'pricing', text: 'Pricing info missing', impact: 'AI will guess or use outdated data' })
+      issues.push({ id: 'pricing', text: 'Add your pricing', impact: 'AI makes this up constantly' })
     }
     if (data.integrations.length === 0) {
-      issues.push({ id: 'integrations', text: 'No integrations listed', impact: 'AI invents integration claims' })
+      issues.push({ id: 'integrations', text: 'List your integrations', impact: 'AI invents fake ones' })
     }
-    if (data.corrections.length === 0) {
-      issues.push({ id: 'corrections', text: 'No corrections added', impact: 'AI may repeat misconceptions' })
+    if (data.corrections.length === 0 && data.competitor_context.length === 0) {
+      issues.push({ id: 'corrections', text: 'Set the record straight', impact: 'Define what you\'re NOT' })
     }
     if (data.recent_updates.length === 0) {
-      issues.push({ id: 'recent_updates', text: 'No recent updates', impact: 'AI uses stale training data' })
+      issues.push({ id: 'recent_updates', text: 'Share recent news', impact: 'AI training data is stale' })
+    }
+    if (data.use_cases.length === 0) {
+      issues.push({ id: 'use_cases', text: 'Define your customers', impact: 'AI recommends you randomly' })
     }
     
     return issues.slice(0, 3)
@@ -477,37 +537,54 @@ export default function BrandSettingsPage() {
                 AI Profile for {data.brand_name || 'Your Brand'}
               </h1>
               <p style={{ color: 'var(--text-secondary)' }}>
-                Control what AI models say about you
+                Shape how AI models describe and recommend you
               </p>
             </div>
             
-            {/* AI Readiness Score */}
+            {/* AI Readiness Score - Gradient */}
             <div 
-              className="text-center px-6 py-4 rounded-xl"
-              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
+              className="text-center px-6 py-4 rounded-xl relative overflow-hidden"
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%)',
+                border: '1px solid rgba(34, 211, 238, 0.3)'
+              }}
             >
-              <div className="text-3xl font-bold mb-1" style={{ color: 'var(--accent-teal)' }}>
+              <div 
+                className="text-3xl font-bold mb-1"
+                style={{ 
+                  background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
                 {readinessScore}
               </div>
-              <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              <div className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                 AI Readiness
               </div>
             </div>
           </div>
           
-          {/* Top Issues Alert */}
+          {/* Priority Alert - More authoritative framing */}
           {topIssues.length > 0 && (
             <div 
               className="rounded-xl p-4"
-              style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.2)' }}
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%)',
+                border: '1px solid rgba(251, 191, 36, 0.3)' 
+              }}
             >
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: 'var(--accent-amber)' }} />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(251, 191, 36, 0.2)' }}>
+                  <Target className="w-4 h-4" style={{ color: '#fbbf24' }} />
+                </div>
                 <div className="flex-1">
-                  <p className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>
-                    AI might get these wrong about {data.brand_name || 'you'}:
+                  <p className="font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+                    Lock these down — AI will fill in the blanks without you
                   </p>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {topIssues.map((issue, idx) => (
                       <button
                         key={idx}
@@ -515,12 +592,13 @@ export default function BrandSettingsPage() {
                           setExpandedSections(prev => ({ ...prev, [issue.id]: true }))
                           document.getElementById(`section-${issue.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
                         }}
-                        className="flex items-center gap-2 text-sm hover:underline"
+                        className="flex items-center gap-2 text-sm hover:underline w-full text-left group"
                         style={{ color: 'var(--text-secondary)' }}
                       >
-                        <span>•</span>
-                        <span>{issue.text}</span>
-                        <span style={{ color: 'var(--text-muted)' }}>— {issue.impact}</span>
+                        <Zap className="w-3 h-3 flex-shrink-0" style={{ color: '#fbbf24' }} />
+                        <span className="font-medium">{issue.text}</span>
+                        <span className="opacity-60">→ {issue.impact}</span>
+                        <span className="ml-auto text-xs opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--accent-teal)' }}>Fix now</span>
                       </button>
                     ))}
                   </div>
@@ -554,16 +632,26 @@ export default function BrandSettingsPage() {
                   impactText="How AI explains what you do"
                 >
                   <div className="space-y-3">
+                    <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>
+                      Edit your description — this is what AI will say when asked "What is {data.brand_name || 'your company'}?"
+                    </label>
                     <textarea
                       value={data.description}
                       onChange={(e) => updateData({ description: e.target.value })}
-                      className="input-field resize-none w-full"
+                      className="input-field resize-none w-full focus:ring-2 focus:ring-teal-500/50"
                       rows={4}
                       placeholder="Describe what your company does, who you serve, and what makes you different..."
+                      style={{ 
+                        backgroundColor: 'var(--bg-muted)', 
+                        border: '1px solid var(--border)',
+                        transition: 'border-color 0.2s, box-shadow 0.2s'
+                      }}
                     />
                     <div className="flex justify-between text-xs" style={{ color: 'var(--text-muted)' }}>
                       <span>{data.description.length} characters</span>
-                      <span>{data.description.length >= 50 ? '✓ Good length' : 'Aim for 50+ characters'}</span>
+                      <span style={{ color: data.description.length >= 50 ? '#22c55e' : 'var(--text-muted)' }}>
+                        {data.description.length >= 50 ? '✓ Good length' : 'Aim for 50+ characters'}
+                      </span>
                     </div>
                   </div>
                 </Section>
@@ -788,46 +876,91 @@ export default function BrandSettingsPage() {
                   impactText="AI invents these constantly"
                 >
                   <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      {data.integrations.map((integration, idx) => (
-                        <span 
-                          key={idx}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm"
-                          style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                        >
-                          <span style={{ color: 'var(--text-primary)' }}>{integration}</span>
-                          <button onClick={() => updateData({ integrations: data.integrations.filter((_, i) => i !== idx) })}>
-                            <X className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={newIntegration}
-                        onChange={(e) => setNewIntegration(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && newIntegration.trim()) {
-                            updateData({ integrations: [...data.integrations, newIntegration.trim()] })
-                            setNewIntegration('')
-                          }
-                        }}
-                        className="input-field flex-1"
-                        placeholder="e.g., Slack, Salesforce, Zapier..."
-                      />
-                      <button
-                        onClick={() => {
-                          if (newIntegration.trim()) {
-                            updateData({ integrations: [...data.integrations, newIntegration.trim()] })
-                            setNewIntegration('')
-                          }
-                        }}
-                        className="btn-secondary px-4"
+                    {data.integrations.length === 0 ? (
+                      <div 
+                        className="rounded-lg p-6 text-center"
+                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px dashed var(--border)' }}
                       >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
+                        <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+                          style={{ backgroundColor: 'var(--bg-card)' }}>
+                          <Puzzle className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />
+                        </div>
+                        <h4 className="font-medium mb-1" style={{ color: 'var(--text-primary)' }}>List what you integrate with</h4>
+                        <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>Without this, AI will make up integrations you don't have.</p>
+                        <div className="flex gap-2 justify-center">
+                          <input
+                            type="text"
+                            value={newIntegration}
+                            onChange={(e) => setNewIntegration(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && newIntegration.trim()) {
+                                updateData({ integrations: [...data.integrations, newIntegration.trim()] })
+                                setNewIntegration('')
+                              }
+                            }}
+                            className="input-field w-48"
+                            placeholder="e.g., Slack"
+                          />
+                          <button
+                            onClick={() => {
+                              if (newIntegration.trim()) {
+                                updateData({ integrations: [...data.integrations, newIntegration.trim()] })
+                                setNewIntegration('')
+                              }
+                            }}
+                            className="btn-secondary px-4"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-wrap gap-2">
+                          {data.integrations.map((integration, idx) => (
+                            <span 
+                              key={idx}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm group/tag"
+                              style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
+                            >
+                              <span style={{ color: 'var(--text-primary)' }}>{integration}</span>
+                              <button 
+                                onClick={() => updateData({ integrations: data.integrations.filter((_, i) => i !== idx) })}
+                                className="opacity-50 hover:opacity-100 transition-opacity"
+                              >
+                                <X className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={newIntegration}
+                            onChange={(e) => setNewIntegration(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && newIntegration.trim()) {
+                                updateData({ integrations: [...data.integrations, newIntegration.trim()] })
+                                setNewIntegration('')
+                              }
+                            }}
+                            className="input-field flex-1"
+                            placeholder="Add integration (e.g., Salesforce, Zapier)..."
+                          />
+                          <button
+                            onClick={() => {
+                              if (newIntegration.trim()) {
+                                updateData({ integrations: [...data.integrations, newIntegration.trim()] })
+                                setNewIntegration('')
+                              }
+                            }}
+                            className="btn-secondary px-4"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -845,50 +978,74 @@ export default function BrandSettingsPage() {
                   impactText="Who AI recommends you to"
                 >
                   <div className="space-y-3">
-                    {data.use_cases.map((useCase, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3 rounded-lg relative group flex gap-3"
-                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                      >
+                    {data.use_cases.length === 0 ? (
+                      <EmptyState
+                        icon={<Users className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
+                        title="Define your ideal customers"
+                        description="Help AI understand who uses your product and why"
+                        examples={['Startups → Team collaboration', 'Enterprise → Compliance reporting', 'Developers → API integrations']}
+                        buttonText="Add Use Case"
+                        onAdd={() => updateData({ use_cases: [...data.use_cases, { segment: '', use_case: '' }] })}
+                      />
+                    ) : (
+                      <>
+                        {data.use_cases.map((useCase, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-4 rounded-lg relative group"
+                            style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
+                          >
+                            <button
+                              onClick={() => updateData({ use_cases: data.use_cases.filter((_, i) => i !== idx) })}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                            >
+                              <X className="w-4 h-4" style={{ color: '#ef4444' }} />
+                            </button>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  Customer Segment
+                                </label>
+                                <input
+                                  type="text"
+                                  value={useCase.segment}
+                                  onChange={(e) => {
+                                    const newUseCases = [...data.use_cases]
+                                    newUseCases[idx] = { ...useCase, segment: e.target.value }
+                                    updateData({ use_cases: newUseCases })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder="e.g., Startups, Enterprise, SMBs"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  Primary Use Case
+                                </label>
+                                <input
+                                  type="text"
+                                  value={useCase.use_case}
+                                  onChange={(e) => {
+                                    const newUseCases = [...data.use_cases]
+                                    newUseCases[idx] = { ...useCase, use_case: e.target.value }
+                                    updateData({ use_cases: newUseCases })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder="e.g., Team collaboration, Data analytics"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                         <button
-                          onClick={() => updateData({ use_cases: data.use_cases.filter((_, i) => i !== idx) })}
-                          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                          onClick={() => updateData({ use_cases: [...data.use_cases, { segment: '', use_case: '' }] })}
+                          className="btn-secondary w-full py-2 text-sm"
                         >
-                          <X className="w-3 h-3" style={{ color: 'var(--accent-coral)' }} />
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Another Use Case
                         </button>
-                        <input
-                          type="text"
-                          value={useCase.segment}
-                          onChange={(e) => {
-                            const newUseCases = [...data.use_cases]
-                            newUseCases[idx] = { ...useCase, segment: e.target.value }
-                            updateData({ use_cases: newUseCases })
-                          }}
-                          className="input-field flex-1"
-                          placeholder="Who (e.g., Startups, Enterprise)"
-                        />
-                        <input
-                          type="text"
-                          value={useCase.use_case}
-                          onChange={(e) => {
-                            const newUseCases = [...data.use_cases]
-                            newUseCases[idx] = { ...useCase, use_case: e.target.value }
-                            updateData({ use_cases: newUseCases })
-                          }}
-                          className="input-field flex-1"
-                          placeholder="For what (e.g., Team collaboration)"
-                        />
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => updateData({ use_cases: [...data.use_cases, { segment: '', use_case: '' }] })}
-                      className="btn-secondary w-full py-2 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Use Case
-                    </button>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -897,62 +1054,85 @@ export default function BrandSettingsPage() {
               <div id="section-corrections">
                 <Section
                   id="corrections"
-                  title="Corrections"
+                  title="Preemptive Corrections"
                   icon={<AlertCircle className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
                   status={getSectionStatus('corrections').status}
                   statusText={getSectionStatus('corrections').text}
                   isExpanded={expandedSections.corrections || false}
                   onToggle={() => toggleSection('corrections')}
-                  impactText="What AI gets wrong about you"
+                  impactText="Get ahead of AI misconceptions"
                 >
                   <div className="space-y-3">
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                      What do AI models commonly get wrong about your brand? Correct the record here.
-                    </p>
-                    {data.corrections.map((correction, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3 rounded-lg relative group"
-                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                      >
+                    {data.corrections.length === 0 ? (
+                      <EmptyState
+                        icon={<Shield className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
+                        title="Play defense on your brand"
+                        description="Set the record straight before AI gets it wrong. Common issues: outdated info, competitor confusion, wrong pricing."
+                        examples={['"We\'re a bank" → We\'re a payments platform', '"Only for enterprise" → We serve all sizes', '"Expensive" → Free tier available']}
+                        buttonText="Add Correction"
+                        onAdd={() => updateData({ corrections: [...data.corrections, { misconception: '', reality: '' }] })}
+                      />
+                    ) : (
+                      <>
+                        {data.corrections.map((correction, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-4 rounded-lg relative group"
+                            style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
+                          >
+                            <button
+                              onClick={() => updateData({ corrections: data.corrections.filter((_, i) => i !== idx) })}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                            >
+                              <X className="w-4 h-4" style={{ color: '#ef4444' }} />
+                            </button>
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{ color: '#ef4444' }}>
+                                  <X className="w-3 h-3" />
+                                  Don't say this
+                                </label>
+                                <input
+                                  type="text"
+                                  value={correction.misconception}
+                                  onChange={(e) => {
+                                    const newCorrections = [...data.corrections]
+                                    newCorrections[idx] = { ...correction, misconception: e.target.value }
+                                    updateData({ corrections: newCorrections })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder='e.g., "Stripe is a bank"'
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5 flex items-center gap-1.5" style={{ color: '#22c55e' }}>
+                                  <Check className="w-3 h-3" />
+                                  Say this instead
+                                </label>
+                                <input
+                                  type="text"
+                                  value={correction.reality}
+                                  onChange={(e) => {
+                                    const newCorrections = [...data.corrections]
+                                    newCorrections[idx] = { ...correction, reality: e.target.value }
+                                    updateData({ corrections: newCorrections })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder='e.g., "Stripe is a payments infrastructure platform"'
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                         <button
-                          onClick={() => updateData({ corrections: data.corrections.filter((_, i) => i !== idx) })}
-                          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                          onClick={() => updateData({ corrections: [...data.corrections, { misconception: '', reality: '' }] })}
+                          className="btn-secondary w-full py-2 text-sm"
                         >
-                          <X className="w-3 h-3" style={{ color: 'var(--accent-coral)' }} />
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Another Correction
                         </button>
-                        <input
-                          type="text"
-                          value={correction.misconception}
-                          onChange={(e) => {
-                            const newCorrections = [...data.corrections]
-                            newCorrections[idx] = { ...correction, misconception: e.target.value }
-                            updateData({ corrections: newCorrections })
-                          }}
-                          className="input-field w-full mb-2"
-                          placeholder="❌ AI says this (wrong)..."
-                        />
-                        <input
-                          type="text"
-                          value={correction.reality}
-                          onChange={(e) => {
-                            const newCorrections = [...data.corrections]
-                            newCorrections[idx] = { ...correction, reality: e.target.value }
-                            updateData({ corrections: newCorrections })
-                          }}
-                          className="input-field w-full"
-                          placeholder="✓ The reality is..."
-                        />
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => updateData({ corrections: [...data.corrections, { misconception: '', reality: '' }] })}
-                      className="btn-secondary w-full py-2 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Correction
-                    </button>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -961,62 +1141,90 @@ export default function BrandSettingsPage() {
               <div id="section-competitor_context">
                 <Section
                   id="competitor_context"
-                  title="Competitor Differentiation"
+                  title="Competitor Comparisons"
                   icon={<TrendingUp className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
                   status={getSectionStatus('competitor_context').status}
                   statusText={getSectionStatus('competitor_context').text}
                   isExpanded={expandedSections.competitor_context || false}
                   onToggle={() => toggleSection('competitor_context')}
-                  impactText="How AI compares you to others"
+                  impactText='Control "X vs Y" responses'
                 >
                   <div className="space-y-3">
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                      Help AI give accurate comparisons when users ask "X vs Y?"
-                    </p>
-                    {data.competitor_context.map((comp, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3 rounded-lg relative group"
-                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                      >
+                    {data.competitor_context.length === 0 ? (
+                      <EmptyState
+                        icon={<TrendingUp className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
+                        title='Own the "vs" conversation'
+                        description='When users ask "Stripe vs Square" — you decide what AI says.'
+                        examples={['vs Competitor A → We focus on X', 'vs Competitor B → Our pricing is Y', 'vs Legacy tools → We offer Z']}
+                        buttonText="Add Comparison"
+                        onAdd={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', difference: '' }] })}
+                      />
+                    ) : (
+                      <>
+                        {data.competitor_context.map((comp, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-4 rounded-lg relative group"
+                            style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
+                          >
+                            <button
+                              onClick={() => updateData({ competitor_context: data.competitor_context.filter((_, i) => i !== idx) })}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                            >
+                              <X className="w-4 h-4" style={{ color: '#ef4444' }} />
+                            </button>
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 pt-6">
+                                <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
+                                  {data.brand_name || 'You'} vs
+                                </span>
+                              </div>
+                              <div className="flex-1 space-y-3">
+                                <div>
+                                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                    Competitor
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={comp.competitor}
+                                    onChange={(e) => {
+                                      const newComps = [...data.competitor_context]
+                                      newComps[idx] = { ...comp, competitor: e.target.value }
+                                      updateData({ competitor_context: newComps })
+                                    }}
+                                    className="input-field w-full"
+                                    placeholder="e.g., Competitor name"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                    Your key difference
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={comp.difference}
+                                    onChange={(e) => {
+                                      const newComps = [...data.competitor_context]
+                                      newComps[idx] = { ...comp, difference: e.target.value }
+                                      updateData({ competitor_context: newComps })
+                                    }}
+                                    className="input-field w-full"
+                                    placeholder="e.g., We're focused on developers, they focus on enterprise"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                         <button
-                          onClick={() => updateData({ competitor_context: data.competitor_context.filter((_, i) => i !== idx) })}
-                          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                          onClick={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', difference: '' }] })}
+                          className="btn-secondary w-full py-2 text-sm"
                         >
-                          <X className="w-3 h-3" style={{ color: 'var(--accent-coral)' }} />
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Another Comparison
                         </button>
-                        <input
-                          type="text"
-                          value={comp.competitor}
-                          onChange={(e) => {
-                            const newComps = [...data.competitor_context]
-                            newComps[idx] = { ...comp, competitor: e.target.value }
-                            updateData({ competitor_context: newComps })
-                          }}
-                          className="input-field w-full mb-2"
-                          placeholder="Compared to [competitor]..."
-                        />
-                        <input
-                          type="text"
-                          value={comp.difference}
-                          onChange={(e) => {
-                            const newComps = [...data.competitor_context]
-                            newComps[idx] = { ...comp, difference: e.target.value }
-                            updateData({ competitor_context: newComps })
-                          }}
-                          className="input-field w-full"
-                          placeholder="We differ by..."
-                        />
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', difference: '' }] })}
-                      className="btn-secondary w-full py-2 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Comparison
-                    </button>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -1034,53 +1242,74 @@ export default function BrandSettingsPage() {
                   impactText="What AI should cite about you"
                 >
                   <div className="space-y-3">
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                      Tell AI which URLs are authoritative. Stop it from citing random blog posts.
-                    </p>
-                    {data.authoritative_sources.map((source, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3 rounded-lg relative group flex gap-3"
-                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                      >
+                    {data.authoritative_sources.length === 0 ? (
+                      <EmptyState
+                        icon={<LinkIcon className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
+                        title="Tell AI what to cite"
+                        description="Stop AI from citing random blog posts about you. Point it to your official sources."
+                        examples={['Documentation', 'Press Kit', 'About Page', 'Blog', 'API Reference']}
+                        buttonText="Add Source"
+                        onAdd={() => updateData({ authoritative_sources: [...data.authoritative_sources, { label: '', url: '' }] })}
+                      />
+                    ) : (
+                      <>
+                        {data.authoritative_sources.map((source, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-4 rounded-lg relative group"
+                            style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
+                          >
+                            <button
+                              onClick={() => updateData({ authoritative_sources: data.authoritative_sources.filter((_, i) => i !== idx) })}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                            >
+                              <X className="w-4 h-4" style={{ color: '#ef4444' }} />
+                            </button>
+                            <div className="grid grid-cols-3 gap-3">
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  Label
+                                </label>
+                                <input
+                                  type="text"
+                                  value={source.label}
+                                  onChange={(e) => {
+                                    const newSources = [...data.authoritative_sources]
+                                    newSources[idx] = { ...source, label: e.target.value }
+                                    updateData({ authoritative_sources: newSources })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder="e.g., Docs"
+                                />
+                              </div>
+                              <div className="col-span-2">
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  URL
+                                </label>
+                                <input
+                                  type="url"
+                                  value={source.url}
+                                  onChange={(e) => {
+                                    const newSources = [...data.authoritative_sources]
+                                    newSources[idx] = { ...source, url: e.target.value }
+                                    updateData({ authoritative_sources: newSources })
+                                  }}
+                                  className="input-field w-full"
+                                  placeholder="https://..."
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                         <button
-                          onClick={() => updateData({ authoritative_sources: data.authoritative_sources.filter((_, i) => i !== idx) })}
-                          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
+                          onClick={() => updateData({ authoritative_sources: [...data.authoritative_sources, { label: '', url: '' }] })}
+                          className="btn-secondary w-full py-2 text-sm"
                         >
-                          <X className="w-3 h-3" style={{ color: 'var(--accent-coral)' }} />
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Another Source
                         </button>
-                        <input
-                          type="text"
-                          value={source.label}
-                          onChange={(e) => {
-                            const newSources = [...data.authoritative_sources]
-                            newSources[idx] = { ...source, label: e.target.value }
-                            updateData({ authoritative_sources: newSources })
-                          }}
-                          className="input-field w-1/3"
-                          placeholder="Label (e.g., Docs)"
-                        />
-                        <input
-                          type="url"
-                          value={source.url}
-                          onChange={(e) => {
-                            const newSources = [...data.authoritative_sources]
-                            newSources[idx] = { ...source, url: e.target.value }
-                            updateData({ authoritative_sources: newSources })
-                          }}
-                          className="input-field flex-1"
-                          placeholder="https://..."
-                        />
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => updateData({ authoritative_sources: [...data.authoritative_sources, { label: '', url: '' }] })}
-                      className="btn-secondary w-full py-2 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Source
-                    </button>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -1108,81 +1337,110 @@ export default function BrandSettingsPage() {
                   impactText="AI training data is 6-18 months stale"
                 >
                   <div className="space-y-3">
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                      Share recent news: funding, product launches, partnerships, milestones.
-                    </p>
-                    {data.recent_updates.map((update, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3 rounded-lg relative group"
-                        style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
-                      >
-                        <button
-                          onClick={() => updateData({ recent_updates: data.recent_updates.filter((_, i) => i !== idx) })}
-                          className="absolute top-2 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                          style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                        >
-                          <X className="w-3 h-3" style={{ color: 'var(--accent-coral)' }} />
-                        </button>
-                        <div className="flex gap-3 mb-2">
-                          <input
-                            type="date"
-                            value={update.date}
-                            onChange={(e) => {
-                              const newUpdates = [...data.recent_updates]
-                              newUpdates[idx] = { ...update, date: e.target.value }
-                              updateData({ recent_updates: newUpdates })
-                            }}
-                            className="input-field w-40"
-                          />
-                          <select
-                            value={update.type}
-                            onChange={(e) => {
-                              const newUpdates = [...data.recent_updates]
-                              newUpdates[idx] = { ...update, type: e.target.value }
-                              updateData({ recent_updates: newUpdates })
-                            }}
-                            className="input-field w-40"
+                    {data.recent_updates.length === 0 ? (
+                      <EmptyState
+                        icon={<Megaphone className="w-5 h-5" style={{ color: 'var(--text-muted)' }} />}
+                        title="Keep AI up to date"
+                        description="AI models don't know what happened last month. Share your news here."
+                        examples={['Funding rounds', 'Product launches', 'Partnerships', 'Major milestones']}
+                        buttonText="Add Update"
+                        onAdd={() => updateData({ recent_updates: [...data.recent_updates, { date: '', title: '', description: '', type: '' }] })}
+                      />
+                    ) : (
+                      <>
+                        {data.recent_updates.map((update, idx) => (
+                          <div 
+                            key={idx} 
+                            className="p-4 rounded-lg relative group"
+                            style={{ backgroundColor: 'var(--bg-muted)', border: '1px solid var(--border)' }}
                           >
-                            <option value="">Type...</option>
-                            <option value="funding">Funding</option>
-                            <option value="product">Product Launch</option>
-                            <option value="partnership">Partnership</option>
-                            <option value="milestone">Milestone</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <input
-                          type="text"
-                          value={update.title}
-                          onChange={(e) => {
-                            const newUpdates = [...data.recent_updates]
-                            newUpdates[idx] = { ...update, title: e.target.value }
-                            updateData({ recent_updates: newUpdates })
-                          }}
-                          className="input-field w-full mb-2"
-                          placeholder="Headline"
-                        />
-                        <textarea
-                          value={update.description}
-                          onChange={(e) => {
-                            const newUpdates = [...data.recent_updates]
-                            newUpdates[idx] = { ...update, description: e.target.value }
-                            updateData({ recent_updates: newUpdates })
-                          }}
-                          className="input-field w-full resize-none"
-                          rows={2}
-                          placeholder="Brief description"
-                        />
-                      </div>
-                    ))}
-                    <button
-                      onClick={() => updateData({ recent_updates: [...data.recent_updates, { date: '', title: '', description: '', type: '' }] })}
-                      className="btn-secondary w-full py-2 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Update
-                    </button>
+                            <button
+                              onClick={() => updateData({ recent_updates: data.recent_updates.filter((_, i) => i !== idx) })}
+                              className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                            >
+                              <X className="w-4 h-4" style={{ color: '#ef4444' }} />
+                            </button>
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  Date
+                                </label>
+                                <input
+                                  type="date"
+                                  value={update.date}
+                                  onChange={(e) => {
+                                    const newUpdates = [...data.recent_updates]
+                                    newUpdates[idx] = { ...update, date: e.target.value }
+                                    updateData({ recent_updates: newUpdates })
+                                  }}
+                                  className="input-field w-full"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                  Type
+                                </label>
+                                <select
+                                  value={update.type}
+                                  onChange={(e) => {
+                                    const newUpdates = [...data.recent_updates]
+                                    newUpdates[idx] = { ...update, type: e.target.value }
+                                    updateData({ recent_updates: newUpdates })
+                                  }}
+                                  className="input-field w-full"
+                                >
+                                  <option value="">Select type...</option>
+                                  <option value="funding">Funding</option>
+                                  <option value="product">Product Launch</option>
+                                  <option value="partnership">Partnership</option>
+                                  <option value="milestone">Milestone</option>
+                                  <option value="other">Other</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="mb-3">
+                              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                Headline
+                              </label>
+                              <input
+                                type="text"
+                                value={update.title}
+                                onChange={(e) => {
+                                  const newUpdates = [...data.recent_updates]
+                                  newUpdates[idx] = { ...update, title: e.target.value }
+                                  updateData({ recent_updates: newUpdates })
+                                }}
+                                className="input-field w-full"
+                                placeholder="e.g., Raised $50M Series B"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                                Details (optional)
+                              </label>
+                              <textarea
+                                value={update.description}
+                                onChange={(e) => {
+                                  const newUpdates = [...data.recent_updates]
+                                  newUpdates[idx] = { ...update, description: e.target.value }
+                                  updateData({ recent_updates: newUpdates })
+                                }}
+                                className="input-field w-full resize-none"
+                                rows={2}
+                                placeholder="Brief description"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          onClick={() => updateData({ recent_updates: [...data.recent_updates, { date: '', title: '', description: '', type: '' }] })}
+                          className="btn-secondary w-full py-2 text-sm"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Another Update
+                        </button>
+                      </>
+                    )}
                   </div>
                 </Section>
               </div>
@@ -1344,16 +1602,17 @@ export default function BrandSettingsPage() {
           </div>
         </div>
 
-        {/* Floating Save Button */}
+        {/* Floating Save Button - Black with gradient glow */}
         {hasChanges && (
           <div className="fixed bottom-8 right-8 z-50">
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all shadow-lg hover:scale-105"
+              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all hover:scale-105"
               style={{ 
-                backgroundColor: 'var(--accent-teal)',
-                boxShadow: '0 8px 32px rgba(34, 211, 238, 0.3)'
+                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+                boxShadow: '0 0 30px rgba(34, 211, 238, 0.4), 0 0 60px rgba(168, 85, 247, 0.2), 0 4px 20px rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(34, 211, 238, 0.3)'
               }}
             >
               <Save className="w-5 h-5" />
