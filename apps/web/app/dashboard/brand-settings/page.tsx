@@ -424,15 +424,9 @@ export default function BrandSettingsPage() {
     <>
       <MobileHeader />
       <div 
-        className="min-h-screen w-full"
+        className="min-h-screen"
         style={{ 
-          backgroundColor: '#0f1624',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          overflow: 'auto'
+          backgroundColor: '#0f1624'
         }}
       >
         <div className="max-w-6xl mx-auto px-6 py-8 pb-32">
@@ -534,7 +528,7 @@ export default function BrandSettingsPage() {
                     >
                       <button
                         onClick={() => updateData({ offerings: data.offerings.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -566,7 +560,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ offerings: [...data.offerings, { name: '', description: '', type: 'product' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -608,7 +602,7 @@ export default function BrandSettingsPage() {
                     <select
                       value={data.pricing.model}
                       onChange={(e) => updateData({ pricing: { ...data.pricing, model: e.target.value } })}
-                      className="w-full rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                      className="w-full rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
                       style={{ 
                         backgroundColor: 'rgba(255,255,255,0.05)',
                         border: '1px solid rgba(255,255,255,0.1)'
@@ -662,7 +656,7 @@ export default function BrandSettingsPage() {
                     type="checkbox"
                     checked={data.pricing.has_free_tier}
                     onChange={(e) => updateData({ pricing: { ...data.pricing, has_free_tier: e.target.checked } })}
-                    className="w-4 h-4 rounded"
+                    className="w-4 h-4 rounded cursor-pointer"
                   />
                   <span className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                     We offer a free tier
@@ -700,7 +694,7 @@ export default function BrandSettingsPage() {
                       style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                     >
                       <span className="text-white">{integration}</span>
-                      <button onClick={() => updateData({ integrations: data.integrations.filter((_, i) => i !== idx) })}>
+                      <button onClick={() => updateData({ integrations: data.integrations.filter((_, i) => i !== idx) })} className="cursor-pointer">
                         <X className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.4)' }} />
                       </button>
                     </span>
@@ -731,7 +725,7 @@ export default function BrandSettingsPage() {
                         setNewIntegration('')
                       }
                     }}
-                    className="px-4 rounded-lg transition-all duration-200 hover:bg-white/[0.08] hover:border-cyan-500/30"
+                    className="px-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-white/[0.08] hover:border-cyan-500/30"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.1)'
@@ -769,7 +763,7 @@ export default function BrandSettingsPage() {
                     >
                       <button
                         onClick={() => updateData({ use_cases: data.use_cases.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -801,7 +795,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ use_cases: [...data.use_cases, { title: '', description: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -841,7 +835,7 @@ export default function BrandSettingsPage() {
                     >
                       <button
                         onClick={() => updateData({ competitor_context: data.competitor_context.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -886,7 +880,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', positioning: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -928,7 +922,7 @@ export default function BrandSettingsPage() {
                     >
                       <button
                         onClick={() => updateData({ faqs: data.faqs.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -960,7 +954,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ faqs: [...data.faqs, { question: '', answer: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1017,7 +1011,7 @@ export default function BrandSettingsPage() {
                       />
                       <button
                         onClick={() => updateData({ authoritative_sources: data.authoritative_sources.filter((_, i) => i !== idx) })}
-                        className="p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -1026,7 +1020,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ authoritative_sources: [...data.authoritative_sources, { url: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1066,7 +1060,7 @@ export default function BrandSettingsPage() {
                     >
                       <button
                         onClick={() => updateData({ recent_updates: data.recent_updates.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                         style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
                       >
                         <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
@@ -1083,7 +1077,7 @@ export default function BrandSettingsPage() {
                               newUpdates[idx] = { ...update, category: e.target.value }
                               updateData({ recent_updates: newUpdates })
                             }}
-                            className="w-full rounded-lg px-3 py-2 text-white focus:outline-none"
+                            className="w-full rounded-lg px-3 py-2 text-white focus:outline-none cursor-pointer"
                             style={{ 
                               backgroundColor: 'rgba(255,255,255,0.05)',
                               border: '1px solid rgba(255,255,255,0.1)'
@@ -1140,7 +1134,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ recent_updates: [...data.recent_updates, { category: '', description: '', date: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1229,7 +1223,7 @@ export default function BrandSettingsPage() {
                 
                 {/* CTA */}
                 <button
-                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 hover:opacity-90 hover:shadow-lg"
+                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer hover:opacity-90 hover:shadow-lg"
                   style={{ 
                     background: 'linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%)'
                   }}
@@ -1254,7 +1248,7 @@ export default function BrandSettingsPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200"
+              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer"
               style={{ 
                 background: '#111b2c',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.2)',
