@@ -142,10 +142,18 @@ function SectionCard({
 }) {
   return (
     <div 
-      className="rounded-xl p-8"
+      className="rounded-xl p-8 transition-all duration-200"
       style={{ 
         backgroundColor: '#111b2c',
         border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+        e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.2)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)'
+        e.currentTarget.style.boxShadow = 'none'
       }}
     >
       <div className="flex items-start gap-3 mb-6">
@@ -415,7 +423,18 @@ export default function BrandSettingsPage() {
   return (
     <>
       <MobileHeader />
-      <div className="min-h-screen" style={{ backgroundColor: '#0f1624' }}>
+      <div 
+        className="min-h-screen w-full"
+        style={{ 
+          backgroundColor: '#0f1624',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflow: 'auto'
+        }}
+      >
         <div className="max-w-6xl mx-auto px-6 py-8 pb-32">
           
           {/* ============================================================ */}
@@ -510,7 +529,7 @@ export default function BrandSettingsPage() {
                   {data.offerings.map((offering, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
                     >
                       <button
@@ -547,7 +566,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ offerings: [...data.offerings, { name: '', description: '', type: 'product' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -712,7 +731,7 @@ export default function BrandSettingsPage() {
                         setNewIntegration('')
                       }
                     }}
-                    className="px-4 rounded-lg transition-colors"
+                    className="px-4 rounded-lg transition-all duration-200 hover:bg-white/[0.08] hover:border-cyan-500/30"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.1)'
@@ -745,7 +764,7 @@ export default function BrandSettingsPage() {
                   {data.use_cases.map((uc, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
                     >
                       <button
@@ -782,7 +801,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ use_cases: [...data.use_cases, { title: '', description: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -817,7 +836,7 @@ export default function BrandSettingsPage() {
                   {data.competitor_context.map((comp, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
                     >
                       <button
@@ -867,7 +886,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', positioning: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -904,7 +923,7 @@ export default function BrandSettingsPage() {
                   {data.faqs.map((faq, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
                     >
                       <button
@@ -941,7 +960,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ faqs: [...data.faqs, { question: '', answer: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1007,7 +1026,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ authoritative_sources: [...data.authoritative_sources, { url: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1042,7 +1061,7 @@ export default function BrandSettingsPage() {
                   {data.recent_updates.map((update, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
                     >
                       <button
@@ -1121,7 +1140,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ recent_updates: [...data.recent_updates, { category: '', description: '', date: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                     style={{ 
                       backgroundColor: 'rgba(255,255,255,0.03)', 
                       border: '1px dashed rgba(255,255,255,0.1)',
@@ -1143,7 +1162,7 @@ export default function BrandSettingsPage() {
             </div>
 
             {/* ============================================================ */}
-            {/* Right Column - AI Visibility Score Card */}
+            {/* Right Column - AI Readiness Score Card */}
             {/* ============================================================ */}
             <div className="w-80 flex-shrink-0 hidden lg:block">
               <div 
@@ -1154,19 +1173,19 @@ export default function BrandSettingsPage() {
                 }}
               >
                 <h3 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                  AI Visibility Score
+                  AI Readiness Score
                 </h3>
                 
-                {/* Score Ring */}
+                {/* Score Ring - Gradient version */}
                 <div className="flex items-center justify-center mb-6">
                   <div 
-                    className="relative w-32 h-32 rounded-full flex items-center justify-center"
+                    className="relative w-32 h-32 rounded-full flex items-center justify-center p-1"
                     style={{ 
-                      background: `conic-gradient(from 0deg, #22d3ee ${visibilityScore}%, rgba(255,255,255,0.1) ${visibilityScore}%)`
+                      background: `conic-gradient(from 180deg, #22d3ee 0%, #a855f7 ${visibilityScore}%, rgba(255,255,255,0.08) ${visibilityScore}%)`
                     }}
                   >
                     <div 
-                      className="w-24 h-24 rounded-full flex items-center justify-center"
+                      className="w-full h-full rounded-full flex items-center justify-center"
                       style={{ backgroundColor: '#111b2c' }}
                     >
                       <span 
@@ -1210,7 +1229,7 @@ export default function BrandSettingsPage() {
                 
                 {/* CTA */}
                 <button
-                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 hover:opacity-90 hover:shadow-lg"
                   style={{ 
                     background: 'linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%)'
                   }}
@@ -1235,20 +1254,24 @@ export default function BrandSettingsPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-colors"
+              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200"
               style={{ 
-                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-                boxShadow: '0 0 30px rgba(34, 211, 238, 0.4), 0 0 60px rgba(168, 85, 247, 0.2), 0 4px 20px rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(34, 211, 238, 0.3)'
+                background: '#111b2c',
+                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.08)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #0f0f1e 0%, #0d1829 100%)'
+                e.currentTarget.style.background = '#0d1520'
+                e.currentTarget.style.boxShadow = '0 4px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(34, 211, 238, 0.4)'
+                e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.3)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                e.currentTarget.style.background = '#111b2c'
+                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.2)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
               }}
             >
-              <Save className="w-5 h-5" />
+              <Save className="w-5 h-5" style={{ color: '#22d3ee' }} />
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
