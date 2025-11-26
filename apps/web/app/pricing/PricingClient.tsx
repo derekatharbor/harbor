@@ -221,13 +221,7 @@ export default function PricingClient() {
           <div className="grid md:grid-cols-2 gap-8">
             
             {/* Free Card - Dark, Bold */}
-            <div className="relative rounded-2xl p-8 md:p-10 bg-[#101A31] text-white">
-              <div className="absolute top-6 right-6">
-                <span className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium border border-white/20">
-                  Most Popular
-                </span>
-              </div>
-
+            <div className="rounded-2xl p-8 md:p-10 bg-[#101A31] text-white">
               <div className="mb-8">
                 <h3 className="text-2xl font-heading font-bold mb-2">
                   Free — for every brand
