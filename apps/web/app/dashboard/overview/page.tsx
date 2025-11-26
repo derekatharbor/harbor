@@ -4,11 +4,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   ArrowRight,
-  AlertCircle,
-  Clock,
   ShoppingBag,
   Star,
   MessageSquare,
@@ -49,6 +48,8 @@ export default function OverviewPage() {
   const [allRecommendations, setAllRecommendations] = useState<any[]>([])
   const [scanStatus, setScanStatus] = useState<'none' | 'running' | 'done'>('none')
 
+  const router = useRouter()
+
   useEffect(() => {
     async function fetchLatestScan() {
       if (!currentDashboard) {
@@ -71,18 +72,32 @@ export default function OverviewPage() {
         const readiness = calculateWebsiteReadiness(profileData)
         setWebsiteReadiness(readiness)
 
-        // Fetch scan data
+        // Fetch completed scan data
         const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
         
         if (response.ok) {
           const data = await response.json()
           
-          // Check scan status
-          if (data.status === 'running' || data.status === 'queued') {
-            setScanStatus('running')
-          } else if (data.status === 'done') {
-            setScanStatus('done')
+          // If no completed scan, check if there's a running scan
+          if (!data.scan) {
+            // Check scan status API for running scans
+            const statusRes = await fetch('/api/scan/status')
+            if (statusRes.ok) {
+              const statusData = await statusRes.json()
+              if (statusData.currentScanId) {
+                // There's a running scan
+                setScanStatus('running')
+                setLoading(false)
+                return
+              }
+            }
+            // No scan at all - redirect to /dashboard
+            router.push('/dashboard')
+            return
           }
+          
+          // We have a completed scan
+          setScanStatus('done')
           
           // Transform API response
           const transformedData = {
@@ -168,29 +183,9 @@ export default function OverviewPage() {
     }
 
     fetchLatestScan()
-  }, [currentDashboard])
+  }, [currentDashboard, router])
 
-  const calculateCompleteness = () => {
-    if (!currentDashboard) return 0
-    
-    let completed = 0
-    const total = 8
-
-    if (currentDashboard.brand_name) completed++
-    if (currentDashboard.domain) completed++
-    if (currentDashboard.logo_url) completed++
-    if (currentDashboard.metadata?.description && currentDashboard.metadata.description.length >= 50) completed++
-    if (currentDashboard.metadata?.category) completed++
-    if (currentDashboard.metadata?.products && currentDashboard.metadata.products.length >= 1) completed++
-    if (currentDashboard.metadata?.target_keywords && currentDashboard.metadata.target_keywords.length >= 3) completed++
-    if (currentDashboard.metadata?.headquarters || currentDashboard.metadata?.founding_year) completed++
-
-    return Math.round((completed / total) * 100)
-  }
-
-  const profileCompleteness = calculateCompleteness()
   const hasScanData = scanData && scanData.last_scan
-  const isFirstVisit = !hasScanData && scanStatus === 'none'
 
   if (loading) {
     return (
@@ -224,62 +219,7 @@ export default function OverviewPage() {
           {hasScanData && <UniversalScanButton />}
         </div>
 
-        {/* STATE 1: First Visit - No Scan Yet */}
-        {isFirstVisit && (
-          <div className="max-w-3xl">
-            <div className="bg-card rounded-lg border border-border p-8 mb-6">
-              <div className="flex items-start gap-4 mb-6">
-                <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(0, 198, 183, 0.1)' }}
-                >
-                  <AlertCircle className="w-6 h-6 text-[#00C6B7]" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
-                    Welcome to Harbor
-                  </h2>
-                  <p className="text-secondary/60 mb-4">
-                    Run your first scan to see how AI models perceive your brand across ChatGPT, Claude, Gemini, and Perplexity.
-                  </p>
-                  <div className="flex items-center gap-2 text-sm text-secondary/60">
-                    <Clock className="w-4 h-4" strokeWidth={1.5} />
-                    <span>Takes 2-3 minutes</span>
-                  </div>
-                </div>
-              </div>
-
-              <UniversalScanButton variant="large" />
-            </div>
-
-            {/* Profile completeness hint */}
-            {profileCompleteness < 80 && (
-              <div className="bg-card/50 rounded-lg border border-border p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-secondary/60">Profile Completeness</span>
-                  <span className="text-sm font-semibold text-primary">{profileCompleteness}%</span>
-                </div>
-                <div className="h-2 bg-border rounded-full overflow-hidden mb-4">
-                  <div 
-                    className="h-full bg-[#00C6B7] transition-all duration-500"
-                    style={{ width: `${profileCompleteness}%` }}
-                  />
-                </div>
-                <p className="text-sm text-secondary/50 mb-3">
-                  Add more details to improve AI accuracy.
-                </p>
-                <Link
-                  href="/dashboard/brand-settings"
-                  className="text-sm text-[#00C6B7] hover:underline"
-                >
-                  Complete Brand Profile →
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* STATE 2: Scan Running */}
+        {/* STATE 1: Scan Running */}
         {scanStatus === 'running' && !hasScanData && (
           <div className="max-w-3xl">
             <div className="bg-card rounded-lg border border-border p-8 mb-6">

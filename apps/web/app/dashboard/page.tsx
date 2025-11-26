@@ -78,16 +78,16 @@ export default function DashboardPage() {
           return
         }
 
-        // Check if any completed scans exist
+        // Check if ANY scans exist (including running)
         const scansResult = await supabase
           .from('scans')
           .select('id, status')
           .eq('dashboard_id', dashboard.id)
-          .in('status', ['done', 'partial'])
           .limit(1)
         
         const scans = scansResult.data
 
+        // If any scan exists, go to overview
         if (scans && scans.length > 0) {
           router.push('/dashboard/overview')
           return
