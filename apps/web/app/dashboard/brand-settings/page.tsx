@@ -368,11 +368,9 @@ export default function BrandSettingsPage() {
     return (
       <>
         <MobileHeader />
-        <div className="min-h-screen bg-primary" data-page="brand-profile">
-          <div className="max-w-6xl mx-auto px-6 py-8 animate-pulse space-y-6">
-            <div className="h-32 rounded-xl bg-card" />
-            <div className="h-64 rounded-xl bg-card" />
-          </div>
+        <div className="max-w-6xl mx-auto px-6 py-8 pt-20 lg:pt-0 animate-pulse space-y-6">
+          <div className="h-32 rounded-xl bg-card" />
+          <div className="h-64 rounded-xl bg-card" />
         </div>
       </>
     )
@@ -382,7 +380,7 @@ export default function BrandSettingsPage() {
     return (
       <>
         <MobileHeader />
-        <div className="min-h-screen flex items-center justify-center bg-primary" data-page="brand-profile">
+        <div className="max-w-6xl mx-auto px-6 py-8 pt-20 lg:pt-0 flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <Building2 className="w-16 h-16 mx-auto mb-4 opacity-30 text-secondary" />
             <h2 className="text-xl font-semibold text-primary mb-2">No Brand Selected</h2>
@@ -400,8 +398,7 @@ export default function BrandSettingsPage() {
   return (
     <>
       <MobileHeader />
-      <div className="min-h-screen bg-primary" data-page="brand-profile">
-        <div className="max-w-6xl mx-auto px-6 py-8 pb-32">
+      <div className="max-w-6xl mx-auto px-6 py-8 pb-32 pt-20 lg:pt-0">
           
           {/* ============================================================ */}
           {/* HEADER - Brand Identity Summary */}
@@ -1110,7 +1107,6 @@ export default function BrandSettingsPage() {
               </div>
             </div>
           </div>
-        </div>
 
         {/* ============================================================ */}
         {/* Floating Save Button */}
