@@ -280,18 +280,24 @@ export default function WebsiteAnalyticsPage() {
             </div>
             
             <p className="text-sm text-secondary/60 mb-2">
-              How AI crawlers read and understand your website structure
+              How AI crawlers read and understand your website
             </p>
           </div>
 
-          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
-            <Globe className="w-12 h-12 lg:w-16 lg:h-16 text-[#E879F9] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-              No Scan Data Yet
-            </h2>
-            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-              Run your first scan to analyze schema markup, meta tags, content structure, and technical SEO for AI readability.
-            </p>
+          <div className="bg-card rounded-xl p-8 lg:p-12 border border-border">
+            <div className="max-w-lg mx-auto text-center">
+              <div className="w-16 h-16 rounded-full bg-[#E879F9]/10 flex items-center justify-center mx-auto mb-6">
+                <Globe className="w-8 h-8 text-[#E879F9]" strokeWidth={1.5} />
+              </div>
+              
+              <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+                Waiting for scan data
+              </h2>
+              
+              <p className="text-secondary/60 text-sm leading-relaxed">
+                Once your scan completes, you'll see your schema markup, meta tags, content structure, and technical signals that help AI models understand your site.
+              </p>
+            </div>
           </div>
 
           <ScanProgressModal

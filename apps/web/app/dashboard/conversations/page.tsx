@@ -3,7 +3,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { MessageSquare, TrendingUp, Users, Target, ArrowRight } from 'lucide-react'
+import { MessageSquare, TrendingUp, Users, Target } from 'lucide-react'
 import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import ActionCard from '@/components/optimization/ActionCard'
 import ActionModal from '@/components/optimization/ActionModal'
@@ -176,24 +176,20 @@ export default function ConversationVolumesPage() {
             </p>
           </div>
 
-          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
-            <MessageSquare className="w-12 h-12 lg:w-16 lg:h-16 text-[#FFB84D] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-              No Scan Data Yet
-            </h2>
-            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-              Run your first scan to discover what questions users are asking AI about your brand, products, and industry.
-            </p>
-            
-            {scanData?.scan && (
-              <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg text-left max-w-md mx-auto">
-                <p className="text-sm text-amber-400 font-medium mb-2">Debug Info:</p>
-                <p className="text-xs text-amber-300/70 font-mono">
-                  Scan exists but no conversation data found.
-                  Check Supabase results_conversations table.
-                </p>
+          <div className="bg-card rounded-xl p-8 lg:p-12 border border-border">
+            <div className="max-w-lg mx-auto text-center">
+              <div className="w-16 h-16 rounded-full bg-[#FFB84D]/10 flex items-center justify-center mx-auto mb-6">
+                <MessageSquare className="w-8 h-8 text-[#FFB84D]" strokeWidth={1.5} />
               </div>
-            )}
+              
+              <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+                Waiting for scan data
+              </h2>
+              
+              <p className="text-secondary/60 text-sm leading-relaxed">
+                Once your scan completes, you'll discover what questions users are asking AI about your brand, products, and industry.
+              </p>
+            </div>
           </div>
 
           <ScanProgressModal

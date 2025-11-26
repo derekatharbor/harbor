@@ -4,7 +4,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Users, TrendingUp, TrendingDown, ArrowRight, ExternalLink, Crown, Lock } from 'lucide-react'
+import { Users, TrendingUp, TrendingDown, ExternalLink, Crown, Lock } from 'lucide-react'
 import Link from 'next/link'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -100,8 +100,14 @@ export default function CompetitorsPage() {
     )
   }
 
-  // Empty state - no data
-  if (!data || !currentDashboard) {
+  // Determine if we have meaningful data
+  const hasCategory = data?.category && data.category !== 'Unknown'
+  const hasScore = userScore > 0
+  const hasCompetitors = data?.competitors && data.competitors.length > 0
+  const hasRealData = hasCategory && (hasScore || hasCompetitors)
+
+  // Empty state - no meaningful data
+  if (!data || !currentDashboard || !hasRealData) {
     return (
       <>
         <MobileHeader />
@@ -121,14 +127,23 @@ export default function CompetitorsPage() {
             </p>
           </div>
 
-          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
-            <Users className="w-12 h-12 lg:w-16 lg:h-16 text-[#A855F7] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-              No Competitor Data Yet
-            </h2>
-            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-              Run your first scan to discover competitors in your category and see how your AI visibility compares.
-            </p>
+          <div className="bg-card rounded-xl p-8 lg:p-12 border border-border">
+            <div className="max-w-lg mx-auto text-center">
+              <div className="w-16 h-16 rounded-full bg-[#A855F7]/10 flex items-center justify-center mx-auto mb-6">
+                <Users className="w-8 h-8 text-[#A855F7]" strokeWidth={1.5} />
+              </div>
+              
+              <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+                {!hasCategory ? 'Set your category to unlock competitor insights' : 'Waiting for scan data'}
+              </h2>
+              
+              <p className="text-secondary/60 text-sm leading-relaxed">
+                {!hasCategory 
+                  ? 'Add your industry category in settings to see how you compare to similar brands in AI visibility rankings.'
+                  : 'Once your scan completes, you\'ll see how your AI visibility compares to other brands in your category.'
+                }
+              </p>
+            </div>
           </div>
         </div>
       </>

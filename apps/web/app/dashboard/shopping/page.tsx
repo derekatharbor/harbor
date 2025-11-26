@@ -150,18 +150,24 @@ export default function ShoppingVisibilityPage() {
             </div>
             
             <p className="text-sm text-secondary/60 mb-2">
-              How your products surface in AI shopping recommendations across models
+              How your products surface in AI shopping recommendations
             </p>
           </div>
 
-          <div className="bg-card rounded-lg p-8 lg:p-12 border border-border text-center">
-            <ShoppingBag className="w-12 h-12 lg:w-16 lg:h-16 text-[#00C6B7] mx-auto mb-6 opacity-40" strokeWidth={1.5} />
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-              No Scan Data Yet
-            </h2>
-            <p className="text-secondary/60 font-body text-sm mb-6 leading-relaxed max-w-md mx-auto">
-              Run your first scan to see how your products appear in AI shopping recommendations across ChatGPT, Claude, Gemini, and Perplexity.
-            </p>
+          <div className="bg-card rounded-xl p-8 lg:p-12 border border-border">
+            <div className="max-w-lg mx-auto text-center">
+              <div className="w-16 h-16 rounded-full bg-[#00C6B7]/10 flex items-center justify-center mx-auto mb-6">
+                <ShoppingBag className="w-8 h-8 text-[#00C6B7]" strokeWidth={1.5} />
+              </div>
+              
+              <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
+                Waiting for scan data
+              </h2>
+              
+              <p className="text-secondary/60 text-sm leading-relaxed">
+                Once your scan completes, you'll see how ChatGPT, Claude, Gemini, and Perplexity recommend your products in shopping-related queries.
+              </p>
+            </div>
           </div>
 
           <ScanProgressModal
