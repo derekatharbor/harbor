@@ -149,8 +149,8 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
               flex items-center justify-center gap-3
               overflow-hidden
               ${isScanning 
-                ? 'bg-[#009E92]/10 text-[#009E92] border-2 border-[#009E92]' 
-                : 'bg-[#009E92] text-white hover:bg-[#008578]'
+                ? 'bg-white/10 text-white border-2 border-white/30' 
+                : 'bg-white text-[#101A31] hover:bg-white/90'
               }
               ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             `}
@@ -171,7 +171,7 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
           {isScanning && (
             <button
               onClick={() => setShowModal(true)}
-              className="text-sm font-medium text-[#009E92] hover:text-[#008578] transition-colors"
+              className="text-sm font-medium text-white/70 hover:text-white transition-colors"
             >
               View Progress →
             </button>
@@ -222,8 +222,8 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
             transition-all duration-200
             flex items-center gap-2
             ${isScanning 
-              ? 'bg-[#009E92]/10 text-[#009E92] border border-[#009E92]' 
-              : 'bg-[#009E92] text-white hover:bg-[#008578]'
+              ? 'bg-white/10 text-white border border-white/30' 
+              : 'bg-white text-[#101A31] hover:bg-white/90'
             }
             ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}

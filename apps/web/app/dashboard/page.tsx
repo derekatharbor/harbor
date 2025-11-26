@@ -1,5 +1,5 @@
-// app/dashboard/page.tsx
-// Updated with theme tokens, UniversalScanButton, and mobile support
+// apps/web/app/dashboard/page.tsx
+// Empty state for new users before first scan
 
 'use client'
 
@@ -133,18 +133,18 @@ export default function DashboardPage() {
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-3xl lg:text-4xl font-heading font-bold text-primary mb-3">
-            Welcome to Harbor{brandName && `, ${brandName}`}
+            Welcome to Harbor
           </h1>
           <p className="text-base lg:text-lg text-secondary/70 font-body">
-            Let's see how AI search engines understand your brand
+            Let's see how AI understands {brandName || 'your brand'}
           </p>
         </div>
 
         {/* Main CTA Card */}
         <div className="bg-card rounded-lg border border-border p-8 lg:p-12 mb-8">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-[#FF6B4A]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Sparkles className="w-8 h-8 lg:w-10 lg:h-10 text-[#FF6B4A]" strokeWidth={1.5} />
+            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-[#101A31] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+              <Sparkles className="w-8 h-8 lg:w-10 lg:h-10 text-white" strokeWidth={1.5} />
             </div>
 
             <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-4">
@@ -152,7 +152,7 @@ export default function DashboardPage() {
             </h2>
             
             <p className="text-secondary/60 mb-8 leading-relaxed font-body text-sm lg:text-base">
-              We'll analyze how ChatGPT, Claude, and Gemini understand your brand. 
+              We'll analyze how ChatGPT, Claude, Gemini, and Perplexity understand your brand. 
               You'll get visibility scores, product mentions, conversation insights, and optimization recommendations.
             </p>
 
