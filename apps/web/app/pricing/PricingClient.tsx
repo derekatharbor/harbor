@@ -2,89 +2,48 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Plus, Minus, ArrowRight, Menu } from 'lucide-react'
+import { Check, Plus, Minus, ArrowRight, Menu, Zap, Shield, BarChart3, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
-const plans = [
-  {
-    id: 'free',
-    name: 'Free',
-    subtitle: 'For brands exploring AI visibility',
-    description: 'See how AI sees your brand. Explore your visibility profile and claim your public page.',
-    price: 0,
-    features: [
-      'View your brand profile',
-      'Basic visibility score',
-      'See how AI describes you',
-      'Public brand page',
-    ],
-    limitations: [
-      'No weekly scans',
-      'No optimization tools',
-      'No competitor tracking',
-    ],
-    cta: 'Get Started Free',
-    href: '/auth/signup?plan=free',
-    dark: false,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    subtitle: 'For brands serious about AI presence',
-    description: 'Full visibility intelligence with weekly scans and optimization tools to improve how AI represents you.',
-    price: 79,
-    popular: true,
-    features: [
-      'Everything in Free',
-      'Weekly fresh scans',
-      '10 verification re-scans/week',
-      '25 optimization actions/day',
-      'All 4 intelligence modules',
-      'Competitor tracking',
-      'Priority support',
-    ],
-    cta: 'Get Started',
-    href: '/auth/signup?plan=pro',
-    dark: true,
-  },
+const freeFeatures = [
+  'Unlimited brand monitoring',
+  'Weekly AI visibility scans',
+  'All 4 intelligence modules',
+  'Competitor tracking',
+  'Optimization recommendations',
+  'Public brand profile page',
+  'AI-ready JSON feed',
+  'Share cards for LinkedIn',
 ]
 
 const faqs = [
   {
-    question: 'Is the Free plan really free forever?',
-    answer: 'Yes. You can claim your brand profile, see your visibility score, and keep your public page live indefinitely. No credit card, no trial period, no catch.',
+    question: 'Is Harbor really free?',
+    answer: 'Yes. Harbor is free for all brands. We believe every brand should understand how AI sees them. No credit card required, no trial period, no hidden fees.',
   },
   {
-    question: 'What do I get with Pro that I don\'t get for free?',
-    answer: 'Pro gives you ongoing monitoring. You get weekly scans to track how your visibility changes, tools to improve your AI presence, and the ability to see what competitors are doing. Free is a snapshot; Pro is the full picture over time.',
+    question: 'Why is it free?',
+    answer: "We're building the definitive index of how AI understands brands. The more brands on Harbor, the more valuable this data becomes for everyone. Your participation helps shape the future of AI search.",
   },
   {
-    question: 'Can I cancel anytime?',
-    answer: 'Yes. Cancel from your dashboard whenever you want. You\'ll keep Pro access through the end of your billing period, then you\'ll drop back to Free.',
+    question: 'What do I get with a free account?',
+    answer: 'Everything. Weekly scans across ChatGPT, Claude, Gemini, and Perplexity. Full access to all four intelligence modules. Competitor tracking. Optimization tools. A public brand profile. No features are locked behind a paywall.',
   },
   {
-    question: 'How does annual billing work?',
-    answer: 'Pay upfront for a year and save 20%. That\'s $63/month instead of $79, billed as one payment of $759. You can switch between monthly and annual anytime from your dashboard.',
+    question: 'Will you add paid features later?',
+    answer: "We may offer premium add-ons for power users who want more frequent scans or advanced features. But the core product will always be free. We won't take away what you have today.",
   },
   {
-    question: 'What if I manage multiple brands?',
-    answer: 'We\'re building Agency plans for teams and consultants. Contact us at hello@useharbor.io to get early access.',
+    question: 'What about agencies managing multiple brands?',
+    answer: "We're building Enterprise plans for agencies and teams. If you manage 5+ brands, reach out and we'll set you up with early access.",
   },
 ]
 
 export default function PricingClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
-
-  const getPrice = (basePrice: number) => {
-    if (billingCycle === 'annual') {
-      return Math.round(basePrice * 0.8) // 20% off
-    }
-    return basePrice
-  }
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
@@ -111,7 +70,7 @@ export default function PricingClient() {
               <div className="flex items-center space-x-2 md:space-x-4">
                 <button
                   onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                   aria-label="Menu"
                 >
                   <Menu className="w-5 h-5 md:w-6 md:h-6 text-[#101A31]" />
@@ -129,8 +88,8 @@ export default function PricingClient() {
         </div>
       </nav>
 
-      {/* Hero Section with Wireframe */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-12 md:pt-40 md:pb-16 px-6 overflow-hidden">
         {/* Wireframe Background */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-[0.04]"
@@ -143,207 +102,177 @@ export default function PricingClient() {
         />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-medium mb-6">
+            <Zap className="w-4 h-4" />
+            Free forever. No credit card required.
+          </div>
+          
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#101A31] leading-tight mb-6">
-            Simple, transparent pricing
+            See how AI sees your brand.
+            <br />
+            <span className="text-emerald-600">For free.</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-            Start free and see how AI sees your brand. Upgrade to Pro for full visibility intelligence.
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10">
+            Full access to AI visibility intelligence. No paywalls, no trials, no catch.
+            Just sign up and start understanding how ChatGPT, Claude, and others talk about you.
           </p>
+          
+          <Link
+            href="/auth/signup"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#101A31] text-white text-lg font-semibold hover:bg-[#1a2a4a] transition-all duration-200 shadow-lg shadow-[#101A31]/20"
+          >
+            Get Started Free
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Pricing Cards */}
-      <section className="pb-20 md:pb-28 px-6">
-        <div className="max-w-5xl mx-auto">
-          
-          {/* Billing Toggle */}
-          <div className="flex justify-center mb-10">
-            <div className="inline-flex items-center p-1 rounded-full bg-gray-100 border border-gray-200">
-              <button
-                onClick={() => setBillingCycle('monthly')}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                  billingCycle === 'monthly'
-                    ? 'bg-white text-[#101A31] shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBillingCycle('annual')}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
-                  billingCycle === 'annual'
-                    ? 'bg-white text-[#101A31] shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Annual
-                <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
-                  Save 20%
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative rounded-2xl overflow-hidden transition-all duration-200 ${
-                  plan.dark
-                    ? 'bg-[#101A31] text-white shadow-2xl shadow-[#101A31]/20'
-                    : 'bg-white text-[#101A31] shadow-xl shadow-gray-200/50 border border-gray-100'
-                }`}
-              >
-                {/* Wireframe pattern for dark card */}
-                {plan.dark && (
-                  <div 
-                    className="absolute inset-0 pointer-events-none opacity-[0.06]"
-                    style={{
-                      backgroundImage: 'url(/wireframe-hero.png)',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                )}
-
-                {/* Popular Badge */}
-                {plan.popular && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium uppercase tracking-wider border border-white/20">
-                      Most Popular
+      {/* Main Feature Card */}
+      <section className="pb-16 md:pb-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl shadow-gray-200/50 border border-gray-100">
+            {/* Header */}
+            <div className="px-8 lg:px-10 pt-8 lg:pt-10 pb-6 border-b border-gray-100">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-2xl lg:text-3xl font-heading font-bold text-[#101A31]">
+                      Everything included
+                    </h2>
+                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
+                      FREE
                     </span>
                   </div>
-                )}
-
-                <div className="relative z-10 p-8 lg:p-10">
-                  {/* Plan Header */}
-                  <div className="mb-6">
-                    <h2 className={`text-2xl font-heading font-bold mb-1 ${
-                      plan.dark ? 'text-white' : 'text-[#101A31]'
-                    }`}>
-                      {plan.name}
-                    </h2>
-                    <p className={`text-sm font-medium ${
-                      plan.dark ? 'text-cyan-400' : 'text-emerald-600'
-                    }`}>
-                      {plan.subtitle}
-                    </p>
-                  </div>
-
-                  {/* Description */}
-                  <p className={`text-sm leading-relaxed mb-6 ${
-                    plan.dark ? 'text-white/70' : 'text-gray-600'
-                  }`}>
-                    {plan.description}
+                  <p className="text-gray-600">
+                    Full platform access for every brand. No limits on what matters.
                   </p>
-
-                  {/* Price */}
-                  <div className="mb-8">
-                    <div className="flex items-baseline gap-1">
-                      {plan.price === 0 ? (
-                        <span className={`text-5xl lg:text-6xl font-heading font-bold ${
-                          plan.dark ? 'text-white' : 'text-[#101A31]'
-                        }`}>
-                          $0
-                        </span>
-                      ) : (
-                        <>
-                          <span className={`text-5xl lg:text-6xl font-heading font-bold ${
-                            plan.dark ? 'text-white' : 'text-[#101A31]'
-                          }`}>
-                            ${getPrice(plan.price)}
-                          </span>
-                        </>
-                      )}
-                      <span className={`text-lg ${
-                        plan.dark ? 'text-white/60' : 'text-gray-500'
-                      }`}>
-                        /month
-                      </span>
-                    </div>
-                    {plan.price > 0 && billingCycle === 'annual' && (
-                      <p className={`text-sm mt-1 ${
-                        plan.dark ? 'text-emerald-400' : 'text-emerald-600'
-                      }`}>
-                        ${getPrice(plan.price) * 12}/year · Save ${(plan.price * 12) - (getPrice(plan.price) * 12)}/year
-                      </p>
-                    )}
+                </div>
+                <div className="text-right">
+                  <div className="text-5xl lg:text-6xl font-heading font-bold text-[#101A31]">
+                    $0
                   </div>
-
-                  {/* CTA Button */}
-                  <Link
-                    href={plan.href}
-                    className={`flex items-center justify-center gap-2 w-full py-4 rounded-xl font-semibold transition-all duration-200 mb-8 ${
-                      plan.dark
-                        ? 'bg-white text-[#101A31] hover:bg-gray-100'
-                        : 'bg-[#101A31] text-white hover:bg-[#1a2a4a]'
-                    }`}
-                  >
-                    {plan.cta}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-
-                  {/* Features */}
-                  <div>
-                    <p className={`text-xs uppercase tracking-wider font-medium mb-4 ${
-                      plan.dark ? 'text-white/50' : 'text-gray-400'
-                    }`}>
-                      Key Features
-                    </p>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start gap-3">
-                          <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                            plan.dark ? 'text-cyan-400' : 'text-emerald-500'
-                          }`} strokeWidth={2} />
-                          <span className={`text-sm ${
-                            plan.dark ? 'text-white/90' : 'text-gray-700'
-                          }`}>
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Limitations for Free plan */}
-                    {plan.limitations && (
-                      <div className="mt-6 pt-6 border-t border-gray-200">
-                        <ul className="space-y-3">
-                          {plan.limitations.map((limitation, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <span className="w-5 h-5 flex-shrink-0 mt-0.5 text-center text-gray-300">–</span>
-                              <span className="text-sm text-gray-400">
-                                {limitation}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                  <div className="text-gray-500 text-sm">forever</div>
                 </div>
               </div>
-            ))}
+            </div>
+            
+            {/* Features Grid */}
+            <div className="px-8 lg:px-10 py-8 lg:py-10">
+              <div className="grid md:grid-cols-2 gap-4">
+                {freeFeatures.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
+                    </div>
+                    <span className="text-gray-700">{feature}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-8 pt-8 border-t border-gray-100">
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200"
+                >
+                  Create Your Free Account
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <p className="text-center text-sm text-gray-500 mt-3">
+                  No credit card required · Set up in 2 minutes
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Enterprise Callout */}
-          <div className="mt-8 p-6 md:p-8 rounded-2xl bg-white border border-gray-100 shadow-lg shadow-gray-100/50 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-1">
-                Need more?
+      {/* Why Free Section */}
+      <section className="py-16 md:py-20 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] mb-4">
+              Why we're free
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We're building something bigger than a subscription product.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-cyan-100 flex items-center justify-center mx-auto mb-4">
+                <BarChart3 className="w-7 h-7 text-cyan-600" />
+              </div>
+              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
+                Build the index
               </h3>
-              <p className="text-gray-600 text-sm">
-                Agency and Enterprise plans coming soon. Unlimited brands, API access, and dedicated support.
+              <p className="text-gray-600 text-sm leading-relaxed">
+                We're creating the definitive database of how AI understands every brand. 
+                More brands = better data for everyone.
               </p>
             </div>
-            <Link
-              href="/contact?inquiry=enterprise"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-[#101A31] font-medium hover:bg-gray-50 transition-colors whitespace-nowrap"
-            >
-              Contact Sales
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-7 h-7 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
+                Help brands claim their truth
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                AI models are shaping how people discover brands. 
+                Everyone deserves to know—and influence—what AI says about them.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                <Users className="w-7 h-7 text-emerald-600" />
+              </div>
+              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
+                Enterprise comes later
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                We'll monetize through enterprise features for agencies and large teams. 
+                Individual brands stay free.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Enterprise Callout */}
+      <section className="py-16 md:py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden bg-[#101A31] p-8 md:p-12">
+            {/* Wireframe pattern */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-[0.06]"
+              style={{
+                backgroundImage: 'url(/wireframe-hero.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
+                  Managing multiple brands?
+                </h3>
+                <p className="text-white/70 max-w-md">
+                  Enterprise plans for agencies and teams coming soon. 
+                  Get early access with dedicated support and custom onboarding.
+                </p>
+              </div>
+              <Link
+                href="/contact?inquiry=enterprise"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-[#101A31] font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap flex-shrink-0"
+              >
+                Contact Us
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -358,7 +287,7 @@ export default function PricingClient() {
         }}
       />
 
-      {/* FAQ Section - Plaid-inspired two column layout */}
+      {/* FAQ Section */}
       <section className="py-20 md:py-28 px-6 bg-[#f1f5f9]">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
@@ -366,10 +295,10 @@ export default function PricingClient() {
             {/* Left Column - Header */}
             <div className="lg:col-span-2">
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] mb-4 leading-tight">
-                Get answers to your pricing questions
+                Questions about our pricing
               </h2>
               <p className="text-gray-600 mb-2">
-                Have a question we didn't answer?
+                Still have questions?
               </p>
               <Link
                 href="/contact"
@@ -417,7 +346,7 @@ export default function PricingClient() {
         </div>
       </section>
 
-      {/* Footer with Rounded Top */}
+      {/* Footer */}
       <footer className="relative border-t border-white/5 py-12 px-4 sm:px-6 lg:px-8 rounded-t-[2rem] md:rounded-t-[3rem]" style={{ backgroundColor: '#101A31' }}>
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
