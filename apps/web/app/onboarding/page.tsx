@@ -103,6 +103,29 @@ export default function OnboardingPage() {
         throw dashboardError
       }
 
+      // Auto-trigger first scan
+      try {
+        const scanStartRes = await fetch('/api/scan/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dashboardId: dashboard.id })
+        })
+        
+        if (scanStartRes.ok) {
+          const scanData = await scanStartRes.json()
+          
+          // Fire and forget - trigger the actual scan process
+          fetch('/api/scan/process', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scanId: scanData.scan.id })
+          }).catch(err => console.error('Scan process trigger failed:', err))
+        }
+      } catch (scanError) {
+        // Don't block onboarding if scan fails to start
+        console.error('Failed to start initial scan:', scanError)
+      }
+
       // Redirect to dashboard
       router.push('/dashboard')
       router.refresh()

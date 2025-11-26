@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { 
   ArrowRight,
   AlertCircle,
-  CheckCircle2,
   Clock,
   ShoppingBag,
   Star,
@@ -48,6 +47,7 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true)
   const [websiteReadiness, setWebsiteReadiness] = useState(0)
   const [allRecommendations, setAllRecommendations] = useState<any[]>([])
+  const [scanStatus, setScanStatus] = useState<'none' | 'running' | 'done'>('none')
 
   useEffect(() => {
     async function fetchLatestScan() {
@@ -76,6 +76,13 @@ export default function OverviewPage() {
         
         if (response.ok) {
           const data = await response.json()
+          
+          // Check scan status
+          if (data.status === 'running' || data.status === 'queued') {
+            setScanStatus('running')
+          } else if (data.status === 'done') {
+            setScanStatus('done')
+          }
           
           // Transform API response
           const transformedData = {
@@ -182,8 +189,8 @@ export default function OverviewPage() {
   }
 
   const profileCompleteness = calculateCompleteness()
-  const hasProfile = profileCompleteness >= 80
   const hasScanData = scanData && scanData.last_scan
+  const isFirstVisit = !hasScanData && scanStatus === 'none'
 
   if (loading) {
     return (
@@ -217,8 +224,8 @@ export default function OverviewPage() {
           {hasScanData && <UniversalScanButton />}
         </div>
 
-        {/* STATE 1: Profile Incomplete */}
-        {!hasProfile && (
+        {/* STATE 1: First Visit - No Scan Yet */}
+        {isFirstVisit && (
           <div className="max-w-3xl">
             <div className="bg-card rounded-lg border border-border p-8 mb-6">
               <div className="flex items-start gap-4 mb-6">
@@ -232,53 +239,8 @@ export default function OverviewPage() {
                   <h2 className="text-xl font-heading font-bold text-primary mb-2">
                     Welcome to Harbor
                   </h2>
-                  <p className="text-secondary/60">
-                    Complete your brand profile to unlock AI visibility insights and start tracking your Harbor Score.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-secondary/60">Profile Completeness</span>
-                  <span className="text-sm font-semibold text-primary">{profileCompleteness}%</span>
-                </div>
-                <div className="h-2 bg-border rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-[#00C6B7] transition-all duration-500"
-                    style={{ width: `${profileCompleteness}%` }}
-                  />
-                </div>
-              </div>
-
-              <Link
-                href="/dashboard/brand-settings"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#00C6B7] text-white rounded-lg font-medium transition-opacity hover:opacity-90"
-              >
-                Complete Brand Profile
-                <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* STATE 2: Profile Complete, No Scan */}
-        {hasProfile && !hasScanData && (
-          <div className="max-w-3xl">
-            <div className="bg-card rounded-lg border border-border p-8 mb-6">
-              <div className="flex items-start gap-4 mb-6">
-                <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)' }}
-                >
-                  <CheckCircle2 className="w-6 h-6 text-green-500" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
-                    Profile Complete
-                  </h2>
                   <p className="text-secondary/60 mb-4">
-                    Your website readiness score is <strong className="text-primary">{websiteReadiness}%</strong>. Run your first scan to see how AI models perceive your brand.
+                    Run your first scan to see how AI models perceive your brand across ChatGPT, Claude, Gemini, and Perplexity.
                   </p>
                   <div className="flex items-center gap-2 text-sm text-secondary/60">
                     <Clock className="w-4 h-4" strokeWidth={1.5} />
@@ -288,6 +250,58 @@ export default function OverviewPage() {
               </div>
 
               <UniversalScanButton variant="large" />
+            </div>
+
+            {/* Profile completeness hint */}
+            {profileCompleteness < 80 && (
+              <div className="bg-card/50 rounded-lg border border-border p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm text-secondary/60">Profile Completeness</span>
+                  <span className="text-sm font-semibold text-primary">{profileCompleteness}%</span>
+                </div>
+                <div className="h-2 bg-border rounded-full overflow-hidden mb-4">
+                  <div 
+                    className="h-full bg-[#00C6B7] transition-all duration-500"
+                    style={{ width: `${profileCompleteness}%` }}
+                  />
+                </div>
+                <p className="text-sm text-secondary/50 mb-3">
+                  Add more details to improve AI accuracy.
+                </p>
+                <Link
+                  href="/dashboard/brand-settings"
+                  className="text-sm text-[#00C6B7] hover:underline"
+                >
+                  Complete Brand Profile →
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* STATE 2: Scan Running */}
+        {scanStatus === 'running' && !hasScanData && (
+          <div className="max-w-3xl">
+            <div className="bg-card rounded-lg border border-border p-8 mb-6">
+              <div className="flex items-start gap-4">
+                <div 
+                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(0, 198, 183, 0.1)' }}
+                >
+                  <div className="w-6 h-6 border-2 border-[#00C6B7] border-t-transparent rounded-full animate-spin" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
+                    Your first scan is running
+                  </h2>
+                  <p className="text-secondary/60 mb-4">
+                    We're analyzing how ChatGPT, Claude, Gemini, and Perplexity see your brand. This usually takes 2-3 minutes.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <UniversalScanButton />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
