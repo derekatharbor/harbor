@@ -165,7 +165,7 @@ export default function OnboardingPage() {
               onChange={(e) => setBrandName(e.target.value)}
               required
               autoFocus
-              className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/30 font-mono"
+              className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-white/30 font-mono"
               placeholder="Acme Inc"
             />
           </div>
@@ -184,7 +184,7 @@ export default function OnboardingPage() {
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               required
-              className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-white placeholder-white/30 font-mono"
+              className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-white/30 font-mono"
               placeholder="acme.com"
             />
           </div>
@@ -193,7 +193,7 @@ export default function OnboardingPage() {
           <button
             type="submit"
             disabled={loading || !brandName.trim() || !domain.trim()}
-            className="w-full py-3.5 px-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#101A31] focus:ring-[#FF6B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-mono"
+            className="w-full py-3.5 px-4 bg-white text-[#101A31] rounded-lg font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#101A31] focus:ring-white disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2 font-mono"
           >
             {loading ? (
               'Setting up...'
