@@ -5,7 +5,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Check, Loader2, AlertTriangle, Sparkles } from 'lucide-react'
+import { Check, Loader2, AlertTriangle } from 'lucide-react'
 
 interface ScanProgressInlineProps {
   scanId: string
@@ -63,7 +63,6 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
       setDisplayProgress(prev => {
         const diff = targetProgress - prev
         if (Math.abs(diff) < 0.1) return targetProgress
-        // Ease out - faster when far, slower when close
         const step = diff * 0.08
         return prev + step
       })
@@ -121,36 +120,17 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
 
   return (
     <div className="w-full">
-      {/* Main Progress Card */}
-      <div 
-        className="relative overflow-hidden rounded-2xl border border-white/10"
-        style={{ 
-          background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-        }}
-      >
-        {/* Ambient glow effect */}
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: `radial-gradient(ellipse at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)`
-          }}
-        />
-
+      {/* Main Progress Card - respects light/dark mode */}
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
         {/* Content */}
         <div className="relative z-10 p-8 lg:p-10">
           {/* Header */}
           <div className="flex items-start justify-between mb-8">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <h2 className="text-2xl lg:text-3xl font-heading font-bold text-white">
-                  {isComplete ? 'Analysis Complete' : hasFailed ? 'Scan Failed' : 'Analyzing Your Brand'}
-                </h2>
-              </div>
-              <p className="text-white/60 text-base lg:text-lg">
+              <h2 className="text-2xl lg:text-3xl font-heading font-bold text-primary mb-2">
+                {isComplete ? 'Analysis Complete' : hasFailed ? 'Scan Failed' : 'Analyzing Your Brand'}
+              </h2>
+              <p className="text-secondary/60 text-base lg:text-lg">
                 {isComplete 
                   ? 'Your AI visibility report is ready. Loading results...'
                   : hasFailed
@@ -162,10 +142,10 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
             
             {/* Percentage */}
             <div className="text-right">
-              <div className="text-4xl lg:text-5xl font-heading font-bold text-white tabular-nums">
+              <div className="text-4xl lg:text-5xl font-heading font-bold text-primary tabular-nums">
                 {Math.round(displayProgress)}%
               </div>
-              <div className="text-white/40 text-sm mt-1">
+              <div className="text-secondary/40 text-sm mt-1">
                 {completedCount} of 4 complete
               </div>
             </div>
@@ -173,7 +153,7 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
 
           {/* Main Progress Bar */}
           <div className="mb-10">
-            <div className="h-4 rounded-full overflow-hidden bg-white/10 backdrop-blur">
+            <div className="h-4 rounded-full overflow-hidden bg-border/50">
               <div
                 className="h-full rounded-full relative overflow-hidden"
                 style={{ 
@@ -212,45 +192,45 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
                 <div
                   key={module}
                   className={`
-                    relative p-5 rounded-xl transition-all duration-500
-                    ${isActive ? 'bg-white/10 ring-1 ring-white/20' : 'bg-white/5'}
-                    ${isDone ? 'bg-emerald-500/10' : ''}
+                    relative p-5 rounded-xl transition-all duration-500 border
+                    ${isActive ? 'bg-blue-500/5 border-blue-500/20' : 'bg-muted/30 border-transparent'}
+                    ${isDone ? 'bg-emerald-500/5 border-emerald-500/20' : ''}
                   `}
                 >
                   <div className="flex items-center gap-4">
                     {/* Status Indicator */}
                     <div className="flex-shrink-0">
                       {isDone && (
-                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                          <Check className="w-5 h-5 text-emerald-400" strokeWidth={2.5} />
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/15 flex items-center justify-center">
+                          <Check className="w-5 h-5 text-emerald-500" strokeWidth={2.5} />
                         </div>
                       )}
                       {isActive && (
-                        <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                          <Loader2 className="w-5 h-5 text-blue-400 animate-spin" strokeWidth={2.5} />
+                        <div className="w-10 h-10 rounded-full bg-blue-500/15 flex items-center justify-center">
+                          <Loader2 className="w-5 h-5 text-blue-500 animate-spin" strokeWidth={2.5} />
                         </div>
                       )}
                       {isFailed && (
-                        <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
-                          <AlertTriangle className="w-5 h-5 text-red-400" strokeWidth={2.5} />
+                        <div className="w-10 h-10 rounded-full bg-red-500/15 flex items-center justify-center">
+                          <AlertTriangle className="w-5 h-5 text-red-500" strokeWidth={2.5} />
                         </div>
                       )}
                       {status === 'pending' && (
-                        <div className="w-10 h-10 rounded-full border-2 border-white/20" />
+                        <div className="w-10 h-10 rounded-full border-2 border-border" />
                       )}
                     </div>
 
                     {/* Module Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className={`font-semibold ${isDone ? 'text-emerald-400' : 'text-white'}`}>
+                        <span className={`font-semibold ${isDone ? 'text-emerald-600 dark:text-emerald-400' : 'text-primary'}`}>
                           {config.label}
                         </span>
                         {isDone && (
-                          <span className="text-xs text-emerald-400/80 font-medium">Done</span>
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Done</span>
                         )}
                       </div>
-                      <p className="text-sm text-white/50 truncate">
+                      <p className="text-sm text-secondary/50 truncate">
                         {isDone 
                           ? config.doneText 
                           : isActive 
@@ -265,7 +245,7 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
 
                   {/* Individual Progress Bar for Active Module */}
                   {isActive && (
-                    <div className="mt-4 h-2 rounded-full overflow-hidden bg-white/10">
+                    <div className="mt-4 h-2 rounded-full overflow-hidden bg-blue-500/10">
                       <div 
                         className="h-full rounded-full"
                         style={{ 
@@ -282,8 +262,8 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
           </div>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
-            <p className="text-white/40 text-sm">
+          <div className="mt-8 pt-6 border-t border-border flex items-center justify-between">
+            <p className="text-secondary/40 text-sm">
               {isComplete 
                 ? 'Preparing your dashboard...'
                 : currentModule
@@ -292,7 +272,7 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
               }
             </p>
             {!isComplete && !hasFailed && (
-              <p className="text-white/40 text-sm">
+              <p className="text-secondary/40 text-sm">
                 Usually takes 2-3 minutes
               </p>
             )}
@@ -301,7 +281,7 @@ export default function ScanProgressInline({ scanId }: ScanProgressInlineProps) 
 
         {/* Success Overlay */}
         {isComplete && (
-          <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent pointer-events-none" />
         )}
       </div>
 

@@ -13,7 +13,8 @@ import {
   MessageSquare,
   Globe,
   Trophy,
-  TrendingUp
+  TrendingUp,
+  Home
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import { calculateWebsiteReadiness } from '@/lib/scoring'
@@ -212,11 +213,14 @@ export default function OverviewPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-heading font-bold text-primary mb-2">
-              Overview
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <Home className="w-6 h-6 lg:w-8 lg:h-8 text-[#00C6B7]" strokeWidth={1.5} />
+              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
+                Overview
+              </h1>
+            </div>
             <p className="text-sm text-secondary/60">
-              Your AI visibility at a glance
+              Your brand's AI visibility across ChatGPT, Claude, Gemini, and Perplexity
             </p>
           </div>
           {hasScanData && <UniversalScanButton />}
