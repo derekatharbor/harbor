@@ -16,9 +16,9 @@ export default function OnboardingPage() {
   const router = useRouter()
   const supabase = createClientComponentClient()
 
-  // Check if user already has a dashboard
+  // Check if user is logged in
   useEffect(() => {
-    async function checkOnboarding() {
+    async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession()
       
       if (!session) {
@@ -26,21 +26,10 @@ export default function OnboardingPage() {
         return
       }
 
-      // Check if user already has dashboards
-      const { data: dashboards } = await supabase
-        .from('dashboards')
-        .select('id')
-        .limit(1)
-
-      if (dashboards && dashboards.length > 0) {
-        router.push('/dashboard')
-        return
-      }
-
       setChecking(false)
     }
 
-    checkOnboarding()
+    checkAuth()
   }, [supabase, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,81 +38,36 @@ export default function OnboardingPage() {
     setError(null)
 
     try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      
-      if (sessionError || !session?.user) {
-        throw new Error('No active session. Please log in again.')
+      // Use API route to create dashboard (bypasses RLS)
+      const response = await fetch('/api/onboarding/create-dashboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brandName: brandName.trim(),
+          domain: domain.trim()
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create dashboard')
       }
 
-      const user = session.user
-
-      // Get user's org
-      const { data: userRole, error: roleError } = await supabase
-        .from('user_roles')
-        .select('org_id')
-        .eq('user_id', user.id)
-        .single()
-
-      if (roleError || !userRole?.org_id) {
-        throw new Error('No organization found. Please contact support.')
-      }
-
-      // Check if user already has a dashboard (double-check)
-      const { data: existingDashboards } = await supabase
-        .from('dashboards')
-        .select('id')
-        .eq('org_id', userRole.org_id)
-        .limit(1)
-
-      if (existingDashboards && existingDashboards.length > 0) {
+      // If dashboard already existed, just redirect
+      if (data.existing) {
         router.push('/dashboard')
+        router.refresh()
         return
       }
 
-      // Clean domain
-      const cleanDomain = domain
-        .trim()
-        .toLowerCase()
-        .replace(/^(https?:\/\/)?(www\.)?/, '')
-        .replace(/\/.*$/, '')
-
-      // Create dashboard (minimal - no metadata yet)
-      const { data: dashboard, error: dashboardError } = await supabase
-        .from('dashboards')
-        .insert({
-          org_id: userRole.org_id,
-          brand_name: brandName.trim(),
-          domain: cleanDomain,
-          plan: 'solo',
-        })
-        .select()
-        .single()
-
-      if (dashboardError) {
-        throw dashboardError
-      }
-
-      // Auto-trigger first scan
-      try {
-        const scanStartRes = await fetch('/api/scan/start', {
+      // If scan was created, trigger the process
+      if (data.scanId) {
+        fetch('/api/scan/process', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ dashboardId: dashboard.id })
-        })
-        
-        if (scanStartRes.ok) {
-          const scanData = await scanStartRes.json()
-          
-          // Fire and forget - trigger the actual scan process
-          fetch('/api/scan/process', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ scanId: scanData.scan.id })
-          }).catch(err => console.error('Scan process trigger failed:', err))
-        }
-      } catch (scanError) {
-        // Don't block onboarding if scan fails to start
-        console.error('Failed to start initial scan:', scanError)
+          body: JSON.stringify({ scanId: data.scanId })
+        }).catch(err => console.error('Scan process trigger failed:', err))
       }
 
       // Redirect to dashboard
