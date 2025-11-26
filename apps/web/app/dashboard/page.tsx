@@ -1,24 +1,48 @@
 // apps/web/app/dashboard/page.tsx
-// Empty state for new users before first scan
+// First-time welcome page - shown only before first scan
 
 'use client'
 
 import React, { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { ShoppingBag, Star, MessageSquare, Globe, Sparkles } from 'lucide-react'
-import UniversalScanButton from '@/components/scan/UniversalScanButton'
+import { ShoppingBag, Star, MessageSquare, Globe, Loader2 } from 'lucide-react'
 import MobileHeader from '@/components/layout/MobileHeader'
+import { useBrand } from '@/contexts/BrandContext'
+
+const moduleCards = [
+  {
+    title: 'Shopping Visibility',
+    description: 'How your products appear in AI shopping and product-recommendation responses.',
+    icon: ShoppingBag,
+  },
+  {
+    title: 'Brand Visibility',
+    description: 'How often AI models reference your brand and how accurately they describe it.',
+    icon: Star,
+  },
+  {
+    title: 'Conversation Volumes',
+    description: 'The questions and topics where AI mentions your brand or your category.',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Website Analytics',
+    description: 'How AI crawlers understand your site structure and extract brand information.',
+    icon: Globe,
+  }
+]
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
-  const [brandName, setBrandName] = useState('')
+  const [scanning, setScanning] = useState(false)
+  const { currentDashboard } = useBrand()
   
   const router = useRouter()
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    async function loadDashboard() {
+    async function checkScanStatus() {
       try {
         const result = await supabase.auth.getSession()
         const session = result.data.session
@@ -43,7 +67,7 @@ export default function DashboardPage() {
 
         const dashboardResult = await supabase
           .from('dashboards')
-          .select('brand_name, id')
+          .select('id')
           .eq('org_id', userRole.org_id)
           .single()
         
@@ -54,9 +78,7 @@ export default function DashboardPage() {
           return
         }
 
-        setBrandName(dashboard.brand_name)
-
-        // Check if any scans exist
+        // Check if any completed scans exist
         const scansResult = await supabase
           .from('scans')
           .select('id, status')
@@ -66,7 +88,6 @@ export default function DashboardPage() {
         
         const scans = scansResult.data
 
-        // If scan exists, redirect to overview
         if (scans && scans.length > 0) {
           router.push('/dashboard/overview')
           return
@@ -79,126 +100,127 @@ export default function DashboardPage() {
       }
     }
 
-    loadDashboard()
-  }, [router, supabase])
+    checkScanStatus()
+  }, [supabase, router])
+
+  const handleRunScan = async () => {
+    if (!currentDashboard || scanning) return
+    
+    setScanning(true)
+    
+    try {
+      // Create the scan
+      const response = await fetch('/api/scan/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dashboardId: currentDashboard.id })
+      })
+      
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to start scan')
+      }
+      
+      const data = await response.json()
+      const scanId = data.scan.id
+      
+      // Trigger the process (fire and forget)
+      fetch('/api/scan/process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scanId })
+      }).catch(err => console.error('Process trigger failed:', err))
+      
+      // Redirect to overview
+      router.push('/dashboard/overview')
+      
+    } catch (error) {
+      console.error('Scan error:', error)
+      alert('Failed to start scan. Please try again.')
+      setScanning(false)
+    }
+  }
 
   if (loading) {
     return (
-      <>
-        <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0 px-4 lg:px-0">
-          <div className="h-10 w-64 bg-border rounded"></div>
-          <div className="bg-card rounded-lg p-12 border border-border h-96"></div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-card rounded-lg p-6 border border-border h-40"></div>
-            ))}
-          </div>
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary/30" />
+      </div>
     )
   }
-
-  const moduleCards = [
-    {
-      title: 'Shopping Visibility',
-      description: 'How your products appear in AI shopping recommendations',
-      icon: ShoppingBag,
-      color: '#00C6B7'
-    },
-    {
-      title: 'Brand Visibility',
-      description: 'Your brand\'s presence and tone in AI-generated answers',
-      icon: Star,
-      color: '#4EE4FF'
-    },
-    {
-      title: 'Conversation Volumes',
-      description: 'What users ask AI about your brand and category',
-      icon: MessageSquare,
-      color: '#FFB84D'
-    },
-    {
-      title: 'Website Analytics',
-      description: 'How AI crawlers read and understand your site structure',
-      icon: Globe,
-      color: '#E879F9'
-    }
-  ]
 
   return (
     <>
       <MobileHeader />
-      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-        {/* Welcome Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-heading font-bold text-primary mb-3">
-            Welcome to Harbor
+      <div className="max-w-4xl mx-auto pt-20 lg:pt-8 px-6 pb-16">
+        
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl lg:text-4xl font-heading font-bold text-primary mb-4">
+            Let's see how AI understands your brand
           </h1>
-          <p className="text-base lg:text-lg text-secondary/70 font-body">
-            Let's see how AI understands {brandName || 'your brand'}
+          <p className="text-secondary/70 text-lg max-w-2xl mx-auto leading-relaxed">
+            Harbor analyzes how major AI models — ChatGPT, Claude, Gemini, and Perplexity — describe, recommend, and reference your brand across multiple contexts.
           </p>
         </div>
 
-        {/* Main CTA Card */}
-        <div className="bg-card rounded-lg border border-border p-8 lg:p-12 mb-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 lg:w-20 lg:h-20 bg-[#101A31] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
-              <Sparkles className="w-8 h-8 lg:w-10 lg:h-10 text-white" strokeWidth={1.5} />
-            </div>
-
-            <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-4">
-              Run your first scan
-            </h2>
+        {/* Scan CTA Card */}
+        <div className="bg-card rounded-xl border border-border p-8 lg:p-10 mb-12">
+          <div className="max-w-md mx-auto text-center">
+            <button
+              onClick={handleRunScan}
+              disabled={scanning}
+              className="w-full py-4 px-8 bg-[#101A31] text-white font-heading font-semibold text-lg rounded-lg hover:bg-[#1a2a4a] active:bg-[#0a1220] transition-colors disabled:opacity-60 cursor-pointer"
+            >
+              {scanning ? (
+                <span className="flex items-center justify-center gap-3">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Starting scan...
+                </span>
+              ) : (
+                'Run your first scan'
+              )}
+            </button>
             
-            <p className="text-secondary/60 mb-8 leading-relaxed font-body text-sm lg:text-base">
-              We'll analyze how ChatGPT, Claude, Gemini, and Perplexity understand your brand. 
-              You'll get visibility scores, product mentions, conversation insights, and optimization recommendations.
-            </p>
-
-            <UniversalScanButton variant="large" />
-
-            <p className="text-xs lg:text-sm text-secondary/50 mt-4 font-body">
-              First scan takes 2-3 minutes
+            <p className="text-sm text-secondary/50 mt-4">
+              Takes 2–3 minutes · Updates weekly
             </p>
           </div>
         </div>
 
-        {/* What We'll Analyze Section */}
-        <div className="mb-6">
-          <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-6">
-            What We'll Analyze
+        {/* What This Scan Includes */}
+        <div className="mb-8">
+          <h2 className="text-xl font-heading font-bold text-primary mb-6">
+            What this scan includes
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {moduleCards.map((module, index) => {
             const Icon = module.icon
             return (
               <div 
                 key={index} 
-                className="bg-card rounded-lg border border-border p-6 hover:border-white/10 transition-colors"
+                className="bg-card rounded-lg border border-border p-6"
               >
-                <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-                  style={{ backgroundColor: `${module.color}15` }}
-                >
-                  <Icon 
-                    className="w-6 h-6" 
-                    style={{ color: module.color }}
-                    strokeWidth={1.5}
-                  />
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5 text-primary/70" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h3 className="text-primary font-heading font-semibold mb-1">
+                      {module.title}
+                    </h3>
+                    <p className="text-sm text-secondary/60 leading-relaxed">
+                      {module.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-primary font-heading font-semibold mb-2 text-base">
-                  {module.title}
-                </h3>
-                <p className="text-sm text-secondary/60 font-body leading-relaxed">
-                  {module.description}
-                </p>
               </div>
             )
           })}
         </div>
+
       </div>
     </>
   )

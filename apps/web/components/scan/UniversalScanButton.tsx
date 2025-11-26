@@ -143,16 +143,16 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
             className={`
               group relative
               px-8 py-4
-              rounded-xl
+              rounded-lg
               font-heading font-semibold text-lg
-              transition-all duration-200
+              transition-colors duration-200
               flex items-center justify-center gap-3
-              overflow-hidden
+              w-full max-w-md mx-auto
               ${isScanning 
-                ? 'bg-white/10 text-white border-2 border-white/30' 
-                : 'bg-white text-[#101A31] hover:bg-white/90'
+                ? 'bg-[#101A31]/10 text-[#101A31] border border-[#101A31]/20' 
+                : 'bg-[#101A31] text-white hover:bg-[#1a2a4a]'
               }
-              ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+              ${(!isScanning && scansRemaining <= 0) ? 'opacity-50' : 'cursor-pointer'}
             `}
           >
             {isScanning ? (
@@ -219,13 +219,13 @@ export default function UniversalScanButton({ variant = 'default' }: UniversalSc
             px-5 py-2.5
             rounded-lg
             font-heading font-semibold text-sm
-            transition-all duration-200
+            transition-colors duration-200
             flex items-center gap-2
             ${isScanning 
-              ? 'bg-white/10 text-white border border-white/30' 
-              : 'bg-white text-[#101A31] hover:bg-white/90'
+              ? 'bg-[#101A31]/10 text-[#101A31] border border-[#101A31]/20' 
+              : 'bg-[#101A31] text-white hover:bg-[#1a2a4a]'
             }
-            ${(!isScanning && scansRemaining <= 0) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+            ${(!isScanning && scansRemaining <= 0) ? 'opacity-50' : 'cursor-pointer'}
           `}
         >
           {isScanning ? (
