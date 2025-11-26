@@ -724,8 +724,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ use_cases: [...data.use_cases, { title: '', description: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add Use Case
@@ -953,13 +952,11 @@ export default function BrandSettingsPage() {
                   {data.recent_updates.map((update, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      className="bg-white/[0.03] border border-white/5"
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02] bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ recent_updates: data.recent_updates.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        className="bg-red-500/10"
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
                         <X className="w-4 h-4 text-red-400" />
                       </button>
@@ -1023,8 +1020,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ recent_updates: [...data.recent_updates, { category: '', description: '', date: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add Update
