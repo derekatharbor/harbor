@@ -1,3 +1,4 @@
+// apps/web/app/auth/login/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -126,7 +127,7 @@ export default function LoginPage() {
               <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 text-[#FF6B4A] border-gray-300 rounded focus:ring-[#FF6B4A]"
+                  className="w-4 h-4 text-[#101A31] border-gray-300 rounded focus:ring-[#101A31]"
                 />
                 <span className="ml-2 text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
                   Remember me
@@ -134,7 +135,7 @@ export default function LoginPage() {
               </label>
               <Link 
                 href="/auth/forgot-password"
-                className="text-sm text-[#FF6B4A] hover:text-[#E55A3A] transition-colors"
+                className="text-sm text-[#101A31] hover:text-[#1a2a4a] transition-colors underline underline-offset-2"
                 style={{ fontFamily: 'Source Code Pro, monospace' }}
               >
                 Forgot password?
@@ -144,7 +145,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full py-3 px-4 bg-[#101A31] text-white rounded-lg font-medium hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#101A31] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
             >
               {loading ? 'Signing in...' : 'Sign in'}
@@ -155,7 +156,7 @@ export default function LoginPage() {
             Don't have an account?{' '}
             <Link 
               href="/auth/signup"
-              className="text-[#FF6B4A] hover:text-[#E55A3A] font-medium transition-colors"
+              className="text-[#101A31] hover:text-[#1a2a4a] font-medium transition-colors underline underline-offset-2"
             >
               Sign up
             </Link>

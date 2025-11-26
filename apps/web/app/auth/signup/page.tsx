@@ -1,3 +1,4 @@
+// apps/web/app/auth/signup/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -51,26 +52,16 @@ export default function SignUpPage() {
         // Check if email confirmation is required
         if (authData.session) {
           // User is auto-logged in (email confirmation disabled)
-          // Create organization
-          const orgName = email.split('@')[0]
-          const { data: org, error: orgError } = await supabase
-            .from('orgs')
-            .insert({ name: orgName })
-            .select()
-            .single()
+          // Call API to create org and user role (uses service role to bypass RLS)
+          const setupResponse = await fetch('/api/auth/setup-account', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          })
 
-          if (orgError) throw orgError
-
-          // Create user role
-          const { error: roleError } = await supabase
-            .from('user_roles')
-            .insert({
-              user_id: authData.user.id,
-              org_id: org.id,
-              role: 'owner',
-            })
-
-          if (roleError) throw roleError
+          if (!setupResponse.ok) {
+            const errorData = await setupResponse.json()
+            throw new Error(errorData.error || 'Failed to set up account')
+          }
 
           // Redirect to onboarding
           router.push('/onboarding')
@@ -186,7 +177,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#FF6B4A] text-white rounded-lg font-medium hover:bg-[#E55A3A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6B4A] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full py-3 px-4 bg-[#101A31] text-white rounded-lg font-medium hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#101A31] disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
               style={{ fontFamily: 'Source Code Pro, monospace' }}
             >
               {loading ? 'Creating account...' : 'Create account'}
@@ -201,7 +192,7 @@ export default function SignUpPage() {
             Already have an account?{' '}
             <Link 
               href="/auth/login"
-              className="text-[#FF6B4A] hover:text-[#E55A3A] font-medium transition-colors"
+              className="text-[#101A31] hover:text-[#1a2a4a] font-medium transition-colors underline underline-offset-2"
             >
               Sign in
             </Link>
