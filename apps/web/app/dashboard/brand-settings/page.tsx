@@ -1038,7 +1038,7 @@ export default function BrandSettingsPage() {
             {/* ============================================================ */}
             <div className="w-80 flex-shrink-0 hidden lg:block">
               <div className="sticky top-8 rounded-xl p-6 bg-card border border-border">
-                <h3 className="text-sm font-semibold mb-4 text-secondary/70">
+                <h3 className="text-sm font-semibold mb-4 text-primary opacity-70">
                   AI Readiness Score
                 </h3>
                 
@@ -1069,8 +1069,8 @@ export default function BrandSettingsPage() {
                 {/* Stats */}
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-secondary/50">Trend</span>
-                    <span className={`flex items-center gap-1 text-sm ${scoreTrend === 'up' ? 'text-green-400' : scoreTrend === 'down' ? 'text-red-400' : 'text-secondary/50'}`}>
+                    <span className="text-sm text-primary opacity-50">Trend</span>
+                    <span className={`flex items-center gap-1 text-sm ${scoreTrend === 'up' ? 'text-green-500' : scoreTrend === 'down' ? 'text-red-500' : 'text-primary opacity-60'}`}>
                       {scoreTrend === 'up' && <TrendingUp className="w-4 h-4" />}
                       {scoreTrend === 'down' && <TrendingDown className="w-4 h-4" />}
                       {scoreTrend === 'up' ? 'Improving' : scoreTrend === 'down' ? 'Declining' : 'Stable'}
@@ -1078,13 +1078,13 @@ export default function BrandSettingsPage() {
                   </div>
                   {globalRank && (
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-secondary/50">Global Rank</span>
+                      <span className="text-sm text-primary opacity-50">Global Rank</span>
                       <span className="text-sm text-primary font-medium">#{globalRank}</span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-secondary/50">Last Scan</span>
-                    <span className="text-sm text-secondary/70">
+                    <span className="text-sm text-primary opacity-50">Last Scan</span>
+                    <span className="text-sm text-primary opacity-70">
                       {formatDate(lastScanDate)}
                     </span>
                   </div>
@@ -1101,7 +1101,7 @@ export default function BrandSettingsPage() {
                   Run Visibility Scan
                 </button>
                 
-                <p className="text-xs mt-4 text-center text-secondary/40">
+                <p className="text-xs mt-4 text-center text-primary opacity-40">
                   This score reflects how consistently AI models interpret and describe your brand. It updates after each new scan.
                 </p>
               </div>
