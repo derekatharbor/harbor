@@ -1,5 +1,6 @@
 // apps/web/app/api/brands/[slug]/update/route.ts
 // Updates brand feed_data for claimed profiles
+// Handles all visibility-shaping fields for harbor.json
 
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -9,7 +10,27 @@ export async function POST(
   { params }: { params: { slug: string } }
 ) {
   try {
-    const { description, offerings, faqs, companyInfo } = await request.json()
+    const body = await request.json()
+    
+    const {
+      // Core info
+      description,
+      offerings,
+      faqs,
+      companyInfo,
+      
+      // Hallucination zones (the moat)
+      pricing,
+      integrations,
+      use_cases,
+      corrections,
+      competitor_context,
+      authoritative_sources,
+      
+      // Freshness & trust
+      recent_updates,
+      security_compliance
+    } = body
 
     // Create Supabase client
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -48,16 +69,39 @@ export async function POST(
 
     // Build updated feed_data
     const currentFeedData = brand.feed_data || {}
+    const now = new Date().toISOString()
+    
     const updatedFeedData = {
       ...currentFeedData,
-      short_description: description || currentFeedData.short_description,
-      offerings: offerings || currentFeedData.offerings || [],
-      faqs: faqs || currentFeedData.faqs || [],
+      
+      // Version & timestamps
+      version: '2.0',
+      last_updated_at: now,
+      
+      // Core info
+      short_description: description ?? currentFeedData.short_description,
+      offerings: offerings ?? currentFeedData.offerings ?? [],
+      faqs: faqs ?? currentFeedData.faqs ?? [],
       company_info: {
         ...(currentFeedData.company_info || {}),
-        ...companyInfo
+        ...(companyInfo || {})
       },
-      last_updated_at: new Date().toISOString()
+      
+      // Hallucination zones (the moat - data AI gets wrong)
+      pricing: pricing ?? currentFeedData.pricing ?? null,
+      integrations: integrations ?? currentFeedData.integrations ?? [],
+      use_cases: use_cases ?? currentFeedData.use_cases ?? [],
+      corrections: corrections ?? currentFeedData.corrections ?? [],
+      competitor_context: competitor_context ?? currentFeedData.competitor_context ?? [],
+      authoritative_sources: authoritative_sources ?? currentFeedData.authoritative_sources ?? [],
+      
+      // Freshness & trust
+      recent_updates: recent_updates ?? currentFeedData.recent_updates ?? [],
+      security_compliance: security_compliance ?? currentFeedData.security_compliance ?? null,
+      
+      // Verification metadata
+      verified: true,
+      verified_at: brand.claimed ? (currentFeedData.verified_at || now) : null,
     }
 
     // Update the brand
@@ -65,7 +109,7 @@ export async function POST(
       .from('ai_profiles')
       .update({
         feed_data: updatedFeedData,
-        last_updated_at: new Date().toISOString()
+        last_updated_at: now
       })
       .eq('id', brand.id)
 
@@ -77,13 +121,18 @@ export async function POST(
       )
     }
 
-    console.log(`✅ Profile updated successfully:`)
-    console.log(`   Brand: ${params.slug}`)
-    console.log(`   Updated fields: ${Object.keys({ description, offerings, faqs, companyInfo }).filter(k => !!arguments[0][k]).join(', ')}`)
+    // Log what was updated
+    const updatedFields = Object.entries(body)
+      .filter(([_, v]) => v !== undefined && v !== null)
+      .map(([k]) => k)
+    
+    console.log(`✅ Profile updated: ${params.slug}`)
+    console.log(`   Fields: ${updatedFields.join(', ')}`)
 
     return NextResponse.json({
       success: true,
-      message: 'Profile updated successfully'
+      message: 'Profile updated successfully',
+      updated_fields: updatedFields
     })
 
   } catch (error: any) {
