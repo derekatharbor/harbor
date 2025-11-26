@@ -19,6 +19,7 @@ import { useBrand } from '@/contexts/BrandContext'
 import { calculateWebsiteReadiness } from '@/lib/scoring'
 import MobileHeader from '@/components/layout/MobileHeader'
 import UniversalScanButton from '@/components/scan/UniversalScanButton'
+import ScanProgressInline from '@/components/scan/ScanProgressInline'
 import ActionCard from '@/components/optimization/ActionCard'
 import { 
   analyzeShoppingData, 
@@ -47,6 +48,7 @@ export default function OverviewPage() {
   const [websiteReadiness, setWebsiteReadiness] = useState(0)
   const [allRecommendations, setAllRecommendations] = useState<any[]>([])
   const [scanStatus, setScanStatus] = useState<'none' | 'running' | 'done'>('none')
+  const [currentScanId, setCurrentScanId] = useState<string | null>(null)
 
   const router = useRouter()
 
@@ -87,6 +89,7 @@ export default function OverviewPage() {
               if (statusData.currentScanId) {
                 // There's a running scan
                 setScanStatus('running')
+                setCurrentScanId(statusData.currentScanId)
                 setLoading(false)
                 return
               }
@@ -220,30 +223,8 @@ export default function OverviewPage() {
         </div>
 
         {/* STATE 1: Scan Running */}
-        {scanStatus === 'running' && !hasScanData && (
-          <div className="max-w-3xl">
-            <div className="bg-card rounded-lg border border-border p-8 mb-6">
-              <div className="flex items-start gap-4">
-                <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(0, 198, 183, 0.1)' }}
-                >
-                  <div className="w-6 h-6 border-2 border-[#00C6B7] border-t-transparent rounded-full animate-spin" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-xl font-heading font-bold text-primary mb-2">
-                    Your first scan is running
-                  </h2>
-                  <p className="text-secondary/60 mb-4">
-                    We're analyzing how ChatGPT, Claude, Gemini, and Perplexity see your brand. This usually takes 2-3 minutes.
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <UniversalScanButton />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {scanStatus === 'running' && currentScanId && !hasScanData && (
+          <ScanProgressInline scanId={currentScanId} />
         )}
 
         {/* STATE 3: Has Scan Data */}
