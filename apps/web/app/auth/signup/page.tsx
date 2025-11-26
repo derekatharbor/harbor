@@ -55,7 +55,10 @@ export default function SignUpPage() {
           // Call API to create org and user role (uses service role to bypass RLS)
           const setupResponse = await fetch('/api/auth/setup-account', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authData.session.access_token}`
+            },
           })
 
           if (!setupResponse.ok) {

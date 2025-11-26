@@ -1,25 +1,19 @@
 // apps/web/app/api/auth/setup-account/route.ts
 import { createClient } from '@supabase/supabase-js'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    // Get the authenticated user from the session
-    const cookieStore = cookies()
-    const supabaseAuth = createRouteHandlerClient({ cookies: () => cookieStore })
-    
-    const { data: { session }, error: sessionError } = await supabaseAuth.auth.getSession()
-    
-    if (sessionError || !session?.user) {
+    // Get access token from Authorization header
+    const authHeader = request.headers.get('Authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
-        { error: 'Not authenticated' },
+        { error: 'Missing authorization token' },
         { status: 401 }
       )
     }
 
-    const user = session.user
+    const accessToken = authHeader.replace('Bearer ', '')
 
     // Use service role client to bypass RLS
     const supabaseAdmin = createClient(
@@ -27,6 +21,17 @@ export async function POST(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
       { auth: { persistSession: false } }
     )
+
+    // Verify the token and get user
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(accessToken)
+
+    if (userError || !user) {
+      console.error('Invalid token:', userError)
+      return NextResponse.json(
+        { error: 'Invalid authorization token' },
+        { status: 401 }
+      )
+    }
 
     // Check if user already has an org
     const { data: existingRole } = await supabaseAdmin
