@@ -134,14 +134,11 @@ export default function CompetitorsPage() {
               </div>
               
               <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-                {!hasCategory ? 'Set your category to unlock competitor insights' : 'Waiting for scan data'}
+                Waiting for scan data
               </h2>
               
               <p className="text-secondary/60 text-sm leading-relaxed">
-                {!hasCategory 
-                  ? 'Add your industry category in settings to see how you compare to similar brands in AI visibility rankings.'
-                  : 'Once your scan completes, you\'ll see how your AI visibility compares to other brands in your category.'
-                }
+                Once your scan completes, we'll identify your industry category and show how your AI visibility compares to competitors in your space.
               </p>
             </div>
           </div>
