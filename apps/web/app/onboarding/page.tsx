@@ -54,22 +54,6 @@ export default function OnboardingPage() {
         throw new Error(data.error || 'Failed to create dashboard')
       }
 
-      // If dashboard already existed, just redirect
-      if (data.existing) {
-        router.push('/dashboard')
-        router.refresh()
-        return
-      }
-
-      // If scan was created, trigger the process
-      if (data.scanId) {
-        fetch('/api/scan/process', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ scanId: data.scanId })
-        }).catch(err => console.error('Scan process trigger failed:', err))
-      }
-
       // Redirect to dashboard
       router.push('/dashboard')
       router.refresh()

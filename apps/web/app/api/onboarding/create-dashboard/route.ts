@@ -74,6 +74,32 @@ export async function POST(request: Request) {
       .replace(/^(https?:\/\/)?(www\.)?/, '')
       .replace(/\/.*$/, '')
 
+    // Check if domain is already claimed
+    const { data: existingDomainDashboard } = await supabaseAdmin
+      .from('dashboards')
+      .select('id, org_id, brand_name')
+      .eq('domain', cleanDomain)
+      .single()
+
+    if (existingDomainDashboard) {
+      // If it's this user's org, return it as existing
+      if (existingDomainDashboard.org_id === userRole.org_id) {
+        return NextResponse.json({
+          success: true,
+          dashboard: existingDomainDashboard,
+          existing: true
+        })
+      }
+      // Different org owns this domain
+      return NextResponse.json(
+        { 
+          error: `This domain is already claimed. If this is your brand, please contact support or sign in with the account that owns it.`,
+          code: 'DOMAIN_CLAIMED'
+        },
+        { status: 409 }
+      )
+    }
+
     // Create dashboard
     const { data: dashboard, error: dashboardError } = await supabaseAdmin
       .from('dashboards')
@@ -94,42 +120,9 @@ export async function POST(request: Request) {
       )
     }
 
-    // Auto-trigger first scan
-    let scanId = null
-    try {
-      const { data: scan, error: scanError } = await supabaseAdmin
-        .from('scans')
-        .insert({
-          dashboard_id: dashboard.id,
-          type: 'fresh',
-          status: 'queued',
-          started_at: new Date().toISOString(),
-        })
-        .select()
-        .single()
-
-      if (!scanError && scan) {
-        scanId = scan.id
-        
-        // Create scan jobs
-        const modules = ['shopping', 'brand', 'conversations', 'website']
-        await supabaseAdmin
-          .from('scan_jobs')
-          .insert(modules.map(module => ({
-            scan_id: scan.id,
-            module,
-            status: 'queued',
-          })))
-      }
-    } catch (scanError) {
-      console.error('Failed to create initial scan:', scanError)
-      // Don't fail onboarding if scan creation fails
-    }
-
     return NextResponse.json({
       success: true,
       dashboard,
-      scanId,
       existing: false
     })
 
