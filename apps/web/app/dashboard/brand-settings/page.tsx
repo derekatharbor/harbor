@@ -72,25 +72,19 @@ function AIBeliefPanel({
   isEmpty?: boolean
 }) {
   return (
-    <div 
-      className="mt-4 rounded-lg p-4"
-      style={{ 
-        backgroundColor: 'rgba(255, 255, 255, 0.03)',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
-      }}
-    >
+    <div className="mt-4 rounded-lg p-4 bg-white/[0.02] border border-border">
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#22d3ee' }} />
-        <span className="text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
+        <span className="text-sm font-medium text-secondary/70">
           {title}
         </span>
       </div>
       {isEmpty ? (
-        <p className="text-sm italic" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+        <p className="text-sm italic text-secondary/40">
           Run a visibility scan to see what AI models believe.
         </p>
       ) : (
-        <div className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+        <div className="text-sm text-secondary/60">
           {children}
         </div>
       )}
@@ -141,39 +135,22 @@ function SectionCard({
   children: React.ReactNode
 }) {
   return (
-    <div 
-      className="rounded-xl p-8 transition-all duration-200"
-      style={{ 
-        backgroundColor: '#111b2c',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
-        e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.2)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)'
-        e.currentTarget.style.boxShadow = 'none'
-      }}
-    >
+    <div className="rounded-xl p-8 transition-all duration-200 bg-card border border-border hover:border-white/10 hover:shadow-lg">
       <div className="flex items-start gap-3 mb-6">
-        <div 
-          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-        >
+        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/5">
           {icon}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-1" style={{ color: '#ffffff' }}>
+          <h3 className="text-lg font-semibold mb-1 text-primary">
             {title}
           </h3>
-          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
+          <p className="text-sm text-secondary/60">
             {subtitle}
           </p>
         </div>
       </div>
       {children}
-      <p className="text-xs mt-6 pt-4 border-t" style={{ color: 'rgba(255, 255, 255, 0.3)', borderColor: 'rgba(255, 255, 255, 0.05)' }}>
+      <p className="text-xs mt-6 pt-4 border-t border-border text-secondary/40">
         Harbor compares this information against AI model output to assess visibility, accuracy, and consistency.
       </p>
     </div>
@@ -391,10 +368,10 @@ export default function BrandSettingsPage() {
     return (
       <>
         <MobileHeader />
-        <div className="min-h-screen" style={{ backgroundColor: '#0f1624' }}>
+        <div className="min-h-screen bg-primary" data-page="brand-profile">
           <div className="max-w-6xl mx-auto px-6 py-8 animate-pulse space-y-6">
-            <div className="h-32 rounded-xl" style={{ backgroundColor: '#111b2c' }} />
-            <div className="h-64 rounded-xl" style={{ backgroundColor: '#111b2c' }} />
+            <div className="h-32 rounded-xl bg-card" />
+            <div className="h-64 rounded-xl bg-card" />
           </div>
         </div>
       </>
@@ -405,11 +382,11 @@ export default function BrandSettingsPage() {
     return (
       <>
         <MobileHeader />
-        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0f1624' }}>
+        <div className="min-h-screen flex items-center justify-center bg-primary" data-page="brand-profile">
           <div className="text-center">
-            <Building2 className="w-16 h-16 mx-auto mb-4 opacity-30" style={{ color: 'white' }} />
-            <h2 className="text-xl font-semibold text-white mb-2">No Brand Selected</h2>
-            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Select a brand from the sidebar.</p>
+            <Building2 className="w-16 h-16 mx-auto mb-4 opacity-30 text-secondary" />
+            <h2 className="text-xl font-semibold text-primary mb-2">No Brand Selected</h2>
+            <p className="text-secondary/50">Select a brand from the sidebar.</p>
           </div>
         </div>
       </>
@@ -423,44 +400,32 @@ export default function BrandSettingsPage() {
   return (
     <>
       <MobileHeader />
-      <div 
-        className="min-h-screen"
-        style={{ 
-          backgroundColor: '#0f1624'
-        }}
-      >
+      <div className="min-h-screen bg-primary" data-page="brand-profile">
         <div className="max-w-6xl mx-auto px-6 py-8 pb-32">
           
           {/* ============================================================ */}
           {/* HEADER - Brand Identity Summary */}
           {/* ============================================================ */}
-          <div 
-            className="rounded-xl p-6 mb-8"
-            style={{ 
-              background: 'linear-gradient(135deg, #111b2c 0%, #0f1624 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.05)'
-            }}
-          >
+          <div className="rounded-xl p-6 mb-8 bg-card border border-border">
             <div className="flex items-center gap-4">
               {data.logo_url ? (
                 <img src={data.logo_url} alt={data.brand_name} className="w-16 h-16 rounded-xl object-contain bg-white/10" />
               ) : (
-                <div className="w-16 h-16 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
-                  <Building2 className="w-8 h-8" style={{ color: 'rgba(255,255,255,0.5)' }} />
+                <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-white/10">
+                  <Building2 className="w-8 h-8 text-secondary/50" />
                 </div>
               )}
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
-                  <h1 className="text-2xl font-bold text-white">{data.brand_name}</h1>
+                  <h1 className="text-2xl font-bold text-primary">{data.brand_name}</h1>
                   {publicProfile?.claimed && (
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium"
-                      style={{ backgroundColor: 'rgba(63, 191, 117, 0.15)', color: '#3fbf75' }}>
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/15 text-green-400">
                       <Shield className="w-3 h-3" />
                       Verified
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <div className="flex items-center gap-4 text-sm text-secondary/50">
                   <span>{data.domain}</span>
                   {data.claimed_at && (
                     <>
@@ -471,7 +436,7 @@ export default function BrandSettingsPage() {
                 </div>
               </div>
             </div>
-            <p className="mt-4 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            <p className="mt-4 text-sm text-secondary/60">
               This is the official source-of-truth information for your brand. Harbor uses this to identify gaps between what you've provided and what AI models currently believe.
             </p>
           </div>
@@ -486,24 +451,20 @@ export default function BrandSettingsPage() {
               
               {/* Brand Description */}
               <SectionCard
-                icon={<FileText className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<FileText className="w-5 h-5 text-secondary/60" />}
                 title="Brand Description"
                 subtitle="AI pulls descriptions from your website and public data. Provide a single, clear description for Harbor to verify against AI model output."
               >
                 <textarea
                   value={data.description}
                   onChange={(e) => updateData({ description: e.target.value })}
-                  className="w-full rounded-lg p-4 resize-none text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                  style={{ 
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
+                  className="w-full rounded-lg p-4 resize-none text-primary placeholder-secondary/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white/5 border border-border"
                   rows={4}
                   maxLength={500}
                   placeholder="Describe what your company does, who you serve, and what makes you different..."
                 />
                 <div className="flex justify-end mt-2">
-                  <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <span className="text-xs text-secondary/30">
                     {data.description.length}/500
                   </span>
                 </div>
@@ -515,7 +476,7 @@ export default function BrandSettingsPage() {
 
               {/* Products & Services */}
               <SectionCard
-                icon={<Package className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<Package className="w-5 h-5 text-secondary/60" />}
                 title="Products & Services"
                 subtitle="List your core offerings. Harbor checks whether AI models recognize them correctly."
               >
@@ -523,15 +484,13 @@ export default function BrandSettingsPage() {
                   {data.offerings.map((offering, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02] bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ offerings: data.offerings.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                       <input
                         type="text"
@@ -541,7 +500,7 @@ export default function BrandSettingsPage() {
                           newOfferings[idx] = { ...offering, name: e.target.value }
                           updateData({ offerings: newOfferings })
                         }}
-                        className="w-full bg-transparent text-white font-medium mb-2 focus:outline-none"
+                        className="w-full bg-transparent text-primary font-medium mb-2 focus:outline-none"
                         placeholder="Product name"
                       />
                       <textarea
@@ -551,8 +510,7 @@ export default function BrandSettingsPage() {
                           newOfferings[idx] = { ...offering, description: e.target.value }
                           updateData({ offerings: newOfferings })
                         }}
-                        className="w-full bg-transparent text-sm resize-none focus:outline-none"
-                        style={{ color: 'rgba(255,255,255,0.6)' }}
+                        className="w-full bg-transparent text-sm resize-none focus:outline-none text-secondary/60"
                         rows={2}
                         placeholder="Short description"
                       />
@@ -560,12 +518,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ offerings: [...data.offerings, { name: '', description: '', type: 'product' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add Product or Service
@@ -590,23 +543,19 @@ export default function BrandSettingsPage() {
 
               {/* Pricing & Plans */}
               <SectionCard
-                icon={<DollarSign className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<DollarSign className="w-5 h-5 text-secondary/60" />}
                 title="Pricing & Plans"
                 subtitle="Pricing is one of the most common AI misunderstandings. Provide the verified details below — Harbor compares these to what AI models currently assume."
               >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <label className="block text-xs font-medium mb-2 text-secondary/50">
                       Pricing Model
                     </label>
                     <select
                       value={data.pricing.model}
                       onChange={(e) => updateData({ pricing: { ...data.pricing, model: e.target.value } })}
-                      className="w-full rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
-                      style={{ 
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)'
-                      }}
+                      className="w-full rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer bg-white/5 border border-white/10"
                     >
                       <option value="">Select...</option>
                       <option value="free">Free tier available</option>
@@ -617,36 +566,28 @@ export default function BrandSettingsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <label className="block text-xs font-medium mb-2 text-secondary/50">
                       Starting Price
                     </label>
                     <input
                       type="text"
                       value={data.pricing.starting_price}
                       onChange={(e) => updateData({ pricing: { ...data.pricing, starting_price: e.target.value } })}
-                      className="w-full rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                      style={{ 
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.1)'
-                      }}
+                      className="w-full rounded-lg px-4 py-3 text-primary placeholder-secondary/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white/5 border border-white/10"
                       placeholder="e.g., $29/mo, Free, Contact us"
                     />
                   </div>
                 </div>
                 
                 <div className="mt-4">
-                  <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <label className="block text-xs font-medium mb-2 text-secondary/50">
                     Pricing Page URL
                   </label>
                   <input
                     type="url"
                     value={data.pricing.pricing_url}
                     onChange={(e) => updateData({ pricing: { ...data.pricing, pricing_url: e.target.value } })}
-                    className="w-full rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}
+                    className="w-full rounded-lg px-4 py-3 text-primary placeholder-secondary/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white/5 border border-white/10"
                     placeholder="https://yoursite.com/pricing"
                   />
                 </div>
@@ -658,7 +599,7 @@ export default function BrandSettingsPage() {
                     onChange={(e) => updateData({ pricing: { ...data.pricing, has_free_tier: e.target.checked } })}
                     className="w-4 h-4 rounded cursor-pointer"
                   />
-                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  <span className="text-sm text-secondary/60">
                     We offer a free tier
                   </span>
                 </label>
@@ -673,7 +614,7 @@ export default function BrandSettingsPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="italic" style={{ color: '#f6c14b' }}>
+                    <p className="italic text-amber-400">
                       AI is unsure / inconsistent here. Run a scan to see current beliefs.
                     </p>
                   )}
@@ -682,7 +623,7 @@ export default function BrandSettingsPage() {
 
               {/* Integrations */}
               <SectionCard
-                icon={<Puzzle className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<Puzzle className="w-5 h-5 text-secondary/60" />}
                 title="Integrations"
                 subtitle="AI often assumes integrations based on competitors. List your real integrations here."
               >
@@ -690,12 +631,11 @@ export default function BrandSettingsPage() {
                   {data.integrations.map((integration, idx) => (
                     <span 
                       key={idx}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-white/5 border border-white/10"
                     >
-                      <span className="text-white">{integration}</span>
+                      <span className="text-primary">{integration}</span>
                       <button onClick={() => updateData({ integrations: data.integrations.filter((_, i) => i !== idx) })} className="cursor-pointer">
-                        <X className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.4)' }} />
+                        <X className="w-3 h-3 text-secondary/40" />
                       </button>
                     </span>
                   ))}
@@ -711,11 +651,7 @@ export default function BrandSettingsPage() {
                         setNewIntegration('')
                       }
                     }}
-                    className="flex-1 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}
+                    className="flex-1 rounded-lg px-4 py-3 text-primary placeholder-secondary/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white/5 border border-white/10"
                     placeholder="Add integration (e.g., Slack, Salesforce)..."
                   />
                   <button
@@ -725,13 +661,9 @@ export default function BrandSettingsPage() {
                         setNewIntegration('')
                       }
                     }}
-                    className="px-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-white/[0.08] hover:border-cyan-500/30"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)'
-                    }}
+                    className="px-4 rounded-lg transition-all duration-200 cursor-pointer hover:bg-white/[0.08] hover:border-cyan-500/30 bg-white/5 border border-white/10"
                   >
-                    <Plus className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />
+                    <Plus className="w-5 h-5 text-secondary/60" />
                   </button>
                 </div>
                 
@@ -750,7 +682,7 @@ export default function BrandSettingsPage() {
 
               {/* Use Cases */}
               <SectionCard
-                icon={<Users className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<Users className="w-5 h-5 text-secondary/60" />}
                 title="Use Cases"
                 subtitle="Tell Harbor the main use cases for your product. We compare these against how AI recommends your brand."
               >
@@ -758,15 +690,13 @@ export default function BrandSettingsPage() {
                   {data.use_cases.map((uc, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02] bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ use_cases: data.use_cases.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                       <input
                         type="text"
@@ -776,7 +706,7 @@ export default function BrandSettingsPage() {
                           newUCs[idx] = { ...uc, title: e.target.value }
                           updateData({ use_cases: newUCs })
                         }}
-                        className="w-full bg-transparent text-white font-medium mb-2 focus:outline-none"
+                        className="w-full bg-transparent text-primary font-medium mb-2 focus:outline-none"
                         placeholder="Use case title"
                       />
                       <input
@@ -787,8 +717,7 @@ export default function BrandSettingsPage() {
                           newUCs[idx] = { ...uc, description: e.target.value }
                           updateData({ use_cases: newUCs })
                         }}
-                        className="w-full bg-transparent text-sm focus:outline-none"
-                        style={{ color: 'rgba(255,255,255,0.6)' }}
+                        className="w-full bg-transparent text-sm focus:outline-none text-secondary/60"
                         placeholder="One sentence description"
                       />
                     </div>
@@ -796,11 +725,7 @@ export default function BrandSettingsPage() {
                   <button
                     onClick={() => updateData({ use_cases: [...data.use_cases, { title: '', description: '' }] })}
                     className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    
                   >
                     <Plus className="w-4 h-4" />
                     Add Use Case
@@ -822,7 +747,7 @@ export default function BrandSettingsPage() {
 
               {/* Competitor Comparisons */}
               <SectionCard
-                icon={<TrendingUp className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<TrendingUp className="w-5 h-5 text-secondary/60" />}
                 title="Competitor Comparisons"
                 subtitle='Control how your brand is positioned in "X vs Y" queries. Provide your official stance.'
               >
@@ -830,19 +755,17 @@ export default function BrandSettingsPage() {
                   {data.competitor_context.map((comp, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02] bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ competitor_context: data.competitor_context.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                       <div className="grid grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          <label className="block text-xs font-medium mb-2 text-secondary/40">
                             Competitor
                           </label>
                           <input
@@ -853,13 +776,12 @@ export default function BrandSettingsPage() {
                               newComps[idx] = { ...comp, competitor: e.target.value }
                               updateData({ competitor_context: newComps })
                             }}
-                            className="w-full rounded-lg px-3 py-2 text-white bg-transparent focus:outline-none"
-                            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                            className="w-full rounded-lg px-3 py-2 text-primary bg-transparent focus:outline-none border border-white/10"
                             placeholder="Name"
                           />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          <label className="block text-xs font-medium mb-2 text-secondary/40">
                             Your Positioning
                           </label>
                           <input
@@ -870,8 +792,7 @@ export default function BrandSettingsPage() {
                               newComps[idx] = { ...comp, positioning: e.target.value }
                               updateData({ competitor_context: newComps })
                             }}
-                            className="w-full rounded-lg px-3 py-2 text-white bg-transparent focus:outline-none"
-                            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                            className="w-full rounded-lg px-3 py-2 text-primary bg-transparent focus:outline-none border border-white/10"
                             placeholder="How you differ from them"
                           />
                         </div>
@@ -880,12 +801,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ competitor_context: [...data.competitor_context, { competitor: '', positioning: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add Competitor Comparison
@@ -909,7 +825,7 @@ export default function BrandSettingsPage() {
 
               {/* FAQs */}
               <SectionCard
-                icon={<MessageSquare className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<MessageSquare className="w-5 h-5 text-secondary/60" />}
                 title="FAQs"
                 subtitle="Add common questions users ask about your brand. Harbor checks AI's answers against your verified answers."
               >
@@ -917,15 +833,13 @@ export default function BrandSettingsPage() {
                   {data.faqs.map((faq, idx) => (
                     <div 
                       key={idx}
-                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                      className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02] bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ faqs: data.faqs.filter((_, i) => i !== idx) })}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                       <input
                         type="text"
@@ -935,7 +849,7 @@ export default function BrandSettingsPage() {
                           newFaqs[idx] = { ...faq, question: e.target.value }
                           updateData({ faqs: newFaqs })
                         }}
-                        className="w-full bg-transparent text-white font-medium mb-2 focus:outline-none"
+                        className="w-full bg-transparent text-primary font-medium mb-2 focus:outline-none"
                         placeholder="Question?"
                       />
                       <textarea
@@ -945,8 +859,7 @@ export default function BrandSettingsPage() {
                           newFaqs[idx] = { ...faq, answer: e.target.value }
                           updateData({ faqs: newFaqs })
                         }}
-                        className="w-full bg-transparent text-sm resize-none focus:outline-none"
-                        style={{ color: 'rgba(255,255,255,0.6)' }}
+                        className="w-full bg-transparent text-sm resize-none focus:outline-none text-secondary/60"
                         rows={2}
                         placeholder="Your verified answer"
                       />
@@ -954,12 +867,7 @@ export default function BrandSettingsPage() {
                   ))}
                   <button
                     onClick={() => updateData({ faqs: [...data.faqs, { question: '', answer: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add FAQ
@@ -984,7 +892,7 @@ export default function BrandSettingsPage() {
 
               {/* Authoritative Sources */}
               <SectionCard
-                icon={<LinkIcon className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<LinkIcon className="w-5 h-5 text-secondary/60" />}
                 title="Authoritative Sources"
                 subtitle="Add accurate sources you want Harbor to treat as authoritative when checking AI output."
               >
@@ -1002,30 +910,20 @@ export default function BrandSettingsPage() {
                           newSources[idx] = { url: e.target.value }
                           updateData({ authoritative_sources: newSources })
                         }}
-                        className="flex-1 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                        style={{ 
-                          backgroundColor: 'rgba(255,255,255,0.05)',
-                          border: '1px solid rgba(255,255,255,0.1)'
-                        }}
+                        className="flex-1 rounded-lg px-4 py-3 text-primary placeholder-secondary/30 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white/5 border border-white/10"
                         placeholder="https://..."
                       />
                       <button
                         onClick={() => updateData({ authoritative_sources: data.authoritative_sources.filter((_, i) => i !== idx) })}
-                        className="p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                     </div>
                   ))}
                   <button
                     onClick={() => updateData({ authoritative_sources: [...data.authoritative_sources, { url: '' }] })}
-                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-white/[0.03] border border-dashed border-white/10 text-secondary/50 hover:border-cyan-500/30 hover:bg-white/[0.02]"
                   >
                     <Plus className="w-4 h-4" />
                     Add Source
@@ -1047,7 +945,7 @@ export default function BrandSettingsPage() {
 
               {/* Recent Updates */}
               <SectionCard
-                icon={<Megaphone className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />}
+                icon={<Megaphone className="w-5 h-5 text-secondary/60" />}
                 title="Recent Updates"
                 subtitle="AI models lag 6–18 months behind real-world changes. Add updates so Harbor can detect outdated AI summaries."
               >
@@ -1056,18 +954,18 @@ export default function BrandSettingsPage() {
                     <div 
                       key={idx}
                       className="rounded-lg p-4 group relative transition-all duration-200 hover:bg-white/[0.02]"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                      className="bg-white/[0.03] border border-white/5"
                     >
                       <button
                         onClick={() => updateData({ recent_updates: data.recent_updates.filter((_, i) => i !== idx) })}
                         className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                        style={{ backgroundColor: 'rgba(255, 107, 107, 0.1)' }}
+                        className="bg-red-500/10"
                       >
-                        <X className="w-4 h-4" style={{ color: '#ff6b6b' }} />
+                        <X className="w-4 h-4 text-red-400" />
                       </button>
                       <div className="grid grid-cols-2 gap-4 mb-3">
                         <div>
-                          <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          <label className="block text-xs font-medium mb-2 text-secondary/40">
                             Category
                           </label>
                           <select
@@ -1077,11 +975,7 @@ export default function BrandSettingsPage() {
                               newUpdates[idx] = { ...update, category: e.target.value }
                               updateData({ recent_updates: newUpdates })
                             }}
-                            className="w-full rounded-lg px-3 py-2 text-white focus:outline-none cursor-pointer"
-                            style={{ 
-                              backgroundColor: 'rgba(255,255,255,0.05)',
-                              border: '1px solid rgba(255,255,255,0.1)'
-                            }}
+                            className="w-full rounded-lg px-3 py-2 text-primary focus:outline-none cursor-pointer bg-white/5 border border-white/10"
                           >
                             <option value="">Select...</option>
                             <option value="fundraising">Fundraising</option>
@@ -1094,7 +988,7 @@ export default function BrandSettingsPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          <label className="block text-xs font-medium mb-2 text-secondary/40">
                             Date
                           </label>
                           <input
@@ -1105,16 +999,12 @@ export default function BrandSettingsPage() {
                               newUpdates[idx] = { ...update, date: e.target.value }
                               updateData({ recent_updates: newUpdates })
                             }}
-                            className="w-full rounded-lg px-3 py-2 text-white focus:outline-none"
-                            style={{ 
-                              backgroundColor: 'rgba(255,255,255,0.05)',
-                              border: '1px solid rgba(255,255,255,0.1)'
-                            }}
+                            className="w-full rounded-lg px-3 py-2 text-primary focus:outline-none bg-white/5 border border-white/10"
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        <label className="block text-xs font-medium mb-2 text-secondary/40">
                           Description
                         </label>
                         <input
@@ -1125,8 +1015,7 @@ export default function BrandSettingsPage() {
                             newUpdates[idx] = { ...update, description: e.target.value }
                             updateData({ recent_updates: newUpdates })
                           }}
-                          className="w-full rounded-lg px-3 py-2 text-white bg-transparent focus:outline-none"
-                          style={{ border: '1px solid rgba(255,255,255,0.1)' }}
+                          className="w-full rounded-lg px-3 py-2 text-primary bg-transparent focus:outline-none border border-white/10"
                           placeholder="Brief description of the update"
                         />
                       </div>
@@ -1135,11 +1024,7 @@ export default function BrandSettingsPage() {
                   <button
                     onClick={() => updateData({ recent_updates: [...data.recent_updates, { category: '', description: '', date: '' }] })}
                     className="w-full py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:border-cyan-500/30 hover:bg-white/[0.02]"
-                    style={{ 
-                      backgroundColor: 'rgba(255,255,255,0.03)', 
-                      border: '1px dashed rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)'
-                    }}
+                    
                   >
                     <Plus className="w-4 h-4" />
                     Add Update
@@ -1147,7 +1032,7 @@ export default function BrandSettingsPage() {
                 </div>
                 
                 <AIBeliefPanel title="AI awareness status:" isEmpty={false}>
-                  <p className="italic" style={{ color: '#f6c14b' }}>
+                  <p className="italic text-amber-400">
                     AI is not aware of these updates yet.
                   </p>
                 </AIBeliefPanel>
@@ -1159,14 +1044,8 @@ export default function BrandSettingsPage() {
             {/* Right Column - AI Readiness Score Card */}
             {/* ============================================================ */}
             <div className="w-80 flex-shrink-0 hidden lg:block">
-              <div 
-                className="sticky top-8 rounded-xl p-6"
-                style={{ 
-                  backgroundColor: '#111b2c',
-                  border: '1px solid rgba(255, 255, 255, 0.05)'
-                }}
-              >
-                <h3 className="text-sm font-semibold mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              <div className="sticky top-8 rounded-xl p-6 bg-card border border-border">
+                <h3 className="text-sm font-semibold mb-4 text-secondary/70">
                   AI Readiness Score
                 </h3>
                 
@@ -1178,10 +1057,7 @@ export default function BrandSettingsPage() {
                       background: `conic-gradient(from 180deg, #22d3ee 0%, #a855f7 ${visibilityScore}%, rgba(255,255,255,0.08) ${visibilityScore}%)`
                     }}
                   >
-                    <div 
-                      className="w-full h-full rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: '#111b2c' }}
-                    >
+                    <div className="w-full h-full rounded-full flex items-center justify-center bg-card">
                       <span 
                         className="text-3xl font-bold"
                         style={{ 
@@ -1200,8 +1076,8 @@ export default function BrandSettingsPage() {
                 {/* Stats */}
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>Trend</span>
-                    <span className="flex items-center gap-1 text-sm" style={{ color: scoreTrend === 'up' ? '#3fbf75' : scoreTrend === 'down' ? '#ff6b6b' : 'rgba(255,255,255,0.5)' }}>
+                    <span className="text-sm text-secondary/50">Trend</span>
+                    <span className={`flex items-center gap-1 text-sm ${scoreTrend === 'up' ? 'text-green-400' : scoreTrend === 'down' ? 'text-red-400' : 'text-secondary/50'}`}>
                       {scoreTrend === 'up' && <TrendingUp className="w-4 h-4" />}
                       {scoreTrend === 'down' && <TrendingDown className="w-4 h-4" />}
                       {scoreTrend === 'up' ? 'Improving' : scoreTrend === 'down' ? 'Declining' : 'Stable'}
@@ -1209,13 +1085,13 @@ export default function BrandSettingsPage() {
                   </div>
                   {globalRank && (
                     <div className="flex items-center justify-between">
-                      <span className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>Global Rank</span>
-                      <span className="text-sm text-white font-medium">#{globalRank}</span>
+                      <span className="text-sm text-secondary/50">Global Rank</span>
+                      <span className="text-sm text-primary font-medium">#{globalRank}</span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>Last Scan</span>
-                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                    <span className="text-sm text-secondary/50">Last Scan</span>
+                    <span className="text-sm text-secondary/70">
                       {formatDate(lastScanDate)}
                     </span>
                   </div>
@@ -1232,7 +1108,7 @@ export default function BrandSettingsPage() {
                   Run Visibility Scan
                 </button>
                 
-                <p className="text-xs mt-4 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <p className="text-xs mt-4 text-center text-secondary/40">
                   This score reflects how consistently AI models interpret and describe your brand. It updates after each new scan.
                 </p>
               </div>
@@ -1248,24 +1124,9 @@ export default function BrandSettingsPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer"
-              style={{ 
-                background: '#111b2c',
-                boxShadow: '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.2)',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#0d1520'
-                e.currentTarget.style.boxShadow = '0 4px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(34, 211, 238, 0.4)'
-                e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.3)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#111b2c'
-                e.currentTarget.style.boxShadow = '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.2)'
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
-              }}
+              className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-primary transition-all duration-200 cursor-pointer bg-card border border-border shadow-xl hover:border-cyan-500/30"
             >
-              <Save className="w-5 h-5" style={{ color: '#22d3ee' }} />
+              <Save className="w-5 h-5 text-cyan-400" />
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
@@ -1273,15 +1134,9 @@ export default function BrandSettingsPage() {
 
         {/* Success Toast */}
         {saveSuccess && (
-          <div 
-            className="fixed top-24 right-6 rounded-xl shadow-2xl p-4 flex items-center gap-3 z-50"
-            style={{ 
-              backgroundColor: '#111b2c', 
-              border: '1px solid rgba(63, 191, 117, 0.3)'
-            }}
-          >
-            <Check className="w-5 h-5" style={{ color: '#3fbf75' }} />
-            <span className="text-sm font-medium text-white">
+          <div className="fixed top-24 right-6 rounded-xl shadow-2xl p-4 flex items-center gap-3 z-50 bg-card border border-green-500/30">
+            <Check className="w-5 h-5 text-green-400" />
+            <span className="text-sm font-medium text-primary">
               Your verified information has been updated.
             </span>
           </div>
