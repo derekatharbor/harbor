@@ -2,87 +2,100 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Plus, Minus, ArrowRight, Menu } from 'lucide-react'
+import { Check, Plus, Minus, ArrowRight, Menu, BarChart3, Users, Sparkles, Globe, Database, RefreshCw } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
-const plans = [
+const whyFreeReasons = [
   {
-    id: 'free',
-    name: 'Free',
-    description: 'Full platform access for individual brands. No limits on what matters.',
-    price: '$0',
-    priceDetail: 'forever',
-    cta: 'Get started',
-    href: '/auth/signup',
-    featured: true,
-    features: [
-      'Weekly AI visibility scans',
-      'All 4 intelligence modules',
-      'Competitor tracking',
-      'Optimization recommendations',
-      'Public brand profile',
-      'AI-ready JSON feed',
-      'Unlimited profile updates',
-    ],
+    title: 'Build the Index',
+    description: 'Harbor exists to map how AI understands the world\'s brands. The more brands that join, the better the data becomes.',
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
-    description: 'For agencies and teams managing multiple brands with advanced needs.',
-    price: 'Custom',
-    priceDetail: 'contact us',
-    cta: 'Talk to sales',
-    href: '/contact?inquiry=enterprise',
-    featured: false,
-    features: [
-      'Everything in Free',
-      'Multi-brand management',
-      'API access',
-      'Advanced analysis scans',
-      'Custom onboarding',
-      'Dedicated support',
-      'SSO & team controls',
-    ],
+    title: 'Help models stop hallucinating',
+    description: 'AI guesses about pricing, integrations, and features. Verified data makes responses accurate — for everyone.',
+  },
+  {
+    title: 'Enterprise comes later',
+    description: 'Teams managing dozens of brands pay for API access, deep scans, and analytics. Individual brands never pay.',
   },
 ]
 
-const comparisonFeatures = [
-  { name: 'AI visibility dashboard', free: true, enterprise: true },
-  { name: 'Weekly scans (4 models)', free: true, enterprise: true },
-  { name: 'Competitor insights', free: true, enterprise: true },
-  { name: 'Public brand profile', free: true, enterprise: true },
-  { name: 'Optimization recommendations', free: true, enterprise: true },
-  { name: 'AI-ready JSON feed', free: true, enterprise: true },
-  { name: 'Share cards for LinkedIn', free: true, enterprise: true },
-  { name: 'Multiple brands', free: false, enterprise: true },
-  { name: 'API access', free: false, enterprise: true },
-  { name: 'Deep analysis scans', free: false, enterprise: true },
-  { name: 'White-label reports', free: false, enterprise: true },
-  { name: 'Dedicated support', free: false, enterprise: true },
+const freeFeatures = [
+  'AI visibility dashboard',
+  'Weekly scans across ChatGPT, Claude, Gemini, Perplexity',
+  'Competitor visibility insights',
+  'Optimization recommendations',
+  'Verified AI-ready JSON feed',
+  'Public AI profile page',
+  'Unlimited updates',
+  'Share cards for LinkedIn',
+]
+
+const enterpriseFeatures = [
+  'Everything in Free',
+  'Multi-brand management',
+  'API access',
+  'Deep analysis scans',
+  'White-label reports',
+  'Dedicated support',
+  'SSO + team controls',
+]
+
+const insideFeatures = [
+  {
+    icon: BarChart3,
+    title: 'AI Visibility Dashboard',
+    description: 'See how your brand appears across 4 major AI models.',
+  },
+  {
+    icon: Users,
+    title: 'Competitor Insights',
+    description: 'Understand your category visibility vs similar brands.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Optimize Your AI Presence',
+    description: 'Get recommendations that make AI responses more accurate.',
+  },
+  {
+    icon: Globe,
+    title: 'Public AI Profile Page',
+    description: 'Your verified brand info for AI models to reference.',
+  },
+  {
+    icon: Database,
+    title: 'AI-Ready JSON Feed',
+    description: 'Machine-readable profile for future integrations.',
+  },
+  {
+    icon: RefreshCw,
+    title: 'Unlimited Updates',
+    description: 'Fix, refine, and evolve your AI-visible narrative anytime.',
+  },
 ]
 
 const faqs = [
   {
     question: 'Is Harbor really free?',
-    answer: 'Yes. Full platform access for individual brands—no credit card, no trial period, no surprise fees. We believe every brand should understand how AI sees them.',
+    answer: 'Yes — individual brands never pay.',
   },
   {
     question: 'Why is Harbor free?',
-    answer: 'Brands aren\'t our customers—they\'re our data partners. The more brands that verify their AI-visible data, the more accurate AI becomes for everyone. We monetize through enterprise features, not individual brands.',
+    answer: 'Because Harbor relies on verified brand data to build the global AI visibility index.',
   },
   {
     question: 'What about advanced scans?',
-    answer: 'Basic AI visibility scans are free and unlimited. Optional deep-analysis scans cost $0.75 per scan—only when you request them. Most brands never need them.',
+    answer: 'You can optionally run deeper AI analysis for $0.75 per scan. Basic scans are always free.',
   },
   {
     question: 'Will you add paid features later?',
-    answer: 'Only for enterprise. Multi-brand management, API access, and advanced analysis are paid features for agencies. Individual brands will always have free access to the core platform.',
+    answer: 'Only for enterprise teams. Never for individual brands.',
   },
   {
     question: 'What if I manage multiple brands?',
-    answer: 'Enterprise plans support unlimited brands with centralized management. Reach out and we\'ll set you up with early access.',
+    answer: 'Enterprise plans with API access and multi-brand tools are available.',
   },
 ]
 
@@ -91,7 +104,7 @@ export default function PricingClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen">
       
       {/* Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
@@ -133,133 +146,183 @@ export default function PricingClient() {
         </div>
       </nav>
 
-      {/* Header */}
-      <section className="pt-32 pb-8 md:pt-40 md:pb-12 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-sm font-mono uppercase tracking-wider text-[#101A31]/60 mb-4">
-            Pricing
-          </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#101A31] leading-tight mb-4">
-            Free for brands. Built for scale.
-          </h1>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            Full AI visibility for every brand. Enterprise features for teams that need more.
-          </p>
+      {/* Hero Section - Expansive, Premium */}
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 bg-gradient-to-br from-[#f0f9ff] via-[#f8fafc] to-[#f0fdfa] overflow-hidden">
+        {/* Wireframe illustration on right */}
+        <div 
+          className="absolute right-0 top-0 bottom-0 w-1/2 opacity-[0.15] pointer-events-none hidden lg:block"
+          style={{
+            backgroundImage: 'url(/wireframe-hero.png)',
+            backgroundSize: 'contain',
+            backgroundPosition: 'right center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-3xl">
+            <p className="text-sm font-mono uppercase tracking-widest text-[#101A31]/50 mb-6">
+              Pricing
+            </p>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#101A31] leading-[1.1] mb-8">
+              See how AI sees your brand. For free. Forever.
+            </h1>
+            
+            <p className="text-lg md:text-xl text-[#101A31]/70 leading-relaxed mb-10 max-w-2xl">
+              Full access to AI visibility intelligence. No paywalls. No trials. No limits. We're building the global index of how AI understands the world's brands — and every verified profile makes the index smarter.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <Link
+                href="/auth/signup"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#101A31] text-white font-medium hover:bg-[#1a2a4a] transition-all duration-200"
+              >
+                Create your free AI profile
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/brands"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg border border-[#101A31]/20 text-[#101A31] font-medium hover:bg-[#101A31]/5 transition-all duration-200"
+              >
+                Browse the Index
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Harbor is Free */}
+      <section className="py-20 md:py-28 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] text-center mb-16">
+            Why Harbor is free
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-12 md:gap-8">
+            {whyFreeReasons.map((reason, idx) => (
+              <div key={idx} className="text-center">
+                <h3 className="text-xl font-heading font-bold text-[#101A31] mb-4">
+                  {reason.title}
+                </h3>
+                <p className="text-[#101A31]/60 leading-relaxed">
+                  {reason.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Pricing Cards */}
-      <section className="pb-16 md:pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative rounded-2xl p-8 ${
-                  plan.featured
-                    ? 'bg-[#101A31] text-white'
-                    : 'bg-white text-[#101A31] border border-gray-200'
-                }`}
+      <section className="py-20 md:py-28 px-6 bg-[#f8fafc]">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8">
+            
+            {/* Free Card - Dark, Bold */}
+            <div className="relative rounded-2xl p-8 md:p-10 bg-[#101A31] text-white">
+              <div className="absolute top-6 right-6">
+                <span className="px-3 py-1 rounded-full bg-white/10 text-white/90 text-xs font-medium border border-white/20">
+                  Most Popular
+                </span>
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-2xl font-heading font-bold mb-2">
+                  Free — for every brand
+                </h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-heading font-bold">$0</span>
+                  <span className="text-white/50">forever</span>
+                </div>
+              </div>
+
+              <Link
+                href="/auth/signup"
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-white text-[#101A31] font-semibold hover:bg-white/90 transition-all duration-200 mb-8"
               >
-                {plan.featured && (
-                  <div className="absolute top-4 right-4">
-                    <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold border border-emerald-500/30">
-                      Most popular
-                    </span>
+                Get started
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <div className="space-y-4">
+                {freeFeatures.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-white/80">{feature}</span>
                   </div>
-                )}
+                ))}
+              </div>
+            </div>
 
-                <div className="mb-6">
-                  <h2 className="text-xl font-heading font-bold mb-2">{plan.name}</h2>
-                  <p className={`text-sm ${plan.featured ? 'text-white/60' : 'text-gray-500'}`}>
-                    {plan.description}
-                  </p>
+            {/* Enterprise Card - White, Minimal */}
+            <div className="rounded-2xl p-8 md:p-10 bg-white border border-gray-200">
+              <div className="mb-8">
+                <h3 className="text-2xl font-heading font-bold text-[#101A31] mb-2">
+                  Enterprise — for agencies & teams
+                </h3>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-heading font-bold text-[#101A31]">Custom</span>
                 </div>
+              </div>
 
-                <div className="mb-6">
-                  <span className="text-4xl font-heading font-bold">{plan.price}</span>
-                  <span className={`text-sm ml-2 ${plan.featured ? 'text-white/50' : 'text-gray-400'}`}>
-                    {plan.priceDetail}
-                  </span>
+              <Link
+                href="/contact?inquiry=enterprise"
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8"
+              >
+                Talk to Sales
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <div className="space-y-4">
+                {enterpriseFeatures.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-[#101A31]/70">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* What's Inside Your Free Account */}
+      <section className="py-20 md:py-28 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] text-center mb-16">
+            What's inside your free Harbor account
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {insideFeatures.map((feature, idx) => (
+              <div key={idx} className="text-center">
+                <div className="w-12 h-12 rounded-xl bg-[#101A31]/5 flex items-center justify-center mx-auto mb-5">
+                  <feature.icon className="w-6 h-6 text-[#101A31]" />
                 </div>
-
-                <Link
-                  href={plan.href}
-                  className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg font-medium transition-all duration-200 mb-8 ${
-                    plan.featured
-                      ? 'bg-white text-[#101A31] hover:bg-white/90'
-                      : 'bg-[#101A31] text-white hover:bg-[#1a2a4a]'
-                  }`}
-                >
-                  {plan.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <div className="space-y-3">
-                  <p className={`text-xs font-medium uppercase tracking-wider ${plan.featured ? 'text-white/40' : 'text-gray-400'}`}>
-                    Key features
-                  </p>
-                  {plan.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-3">
-                      <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.featured ? 'text-emerald-400' : 'text-emerald-500'}`} />
-                      <span className={`text-sm ${plan.featured ? 'text-white/80' : 'text-gray-600'}`}>
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-[#101A31]/60 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
-
-          {/* Subtext */}
-          <p className="text-center text-sm text-gray-500 mt-6">
-            No credit card required · Set up in 2 minutes
-          </p>
         </div>
       </section>
 
-      {/* Feature Comparison Table */}
-      <section className="py-16 md:py-20 px-6 bg-white border-y border-gray-100">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-heading font-bold text-[#101A31] text-center mb-12">
-            Compare plans
-          </h2>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-4 pr-4 font-medium text-gray-500 text-sm">Features</th>
-                  <th className="text-center py-4 px-4 font-heading font-bold text-[#101A31]">Free</th>
-                  <th className="text-center py-4 pl-4 font-heading font-bold text-[#101A31]">Enterprise</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonFeatures.map((feature, idx) => (
-                  <tr key={idx} className="border-b border-gray-100">
-                    <td className="py-4 pr-4 text-sm text-gray-700">{feature.name}</td>
-                    <td className="py-4 px-4 text-center">
-                      {feature.free ? (
-                        <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                      ) : (
-                        <span className="text-gray-300">—</span>
-                      )}
-                    </td>
-                    <td className="py-4 pl-4 text-center">
-                      {feature.enterprise ? (
-                        <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                      ) : (
-                        <span className="text-gray-300">—</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      {/* Color Noise Divider */}
+      <div 
+        className="w-full h-4 md:h-6"
+        style={{
+          backgroundImage: 'url(/color-noise-bar.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      />
 
       {/* FAQ Section */}
       <section className="py-20 md:py-28 px-6 bg-[#f8fafc]">
