@@ -2,42 +2,64 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Plus, Minus, ArrowRight, Menu, Zap, Shield, BarChart3, Users } from 'lucide-react'
+import { Check, Plus, Minus, ArrowRight, Menu, Database, Shield, Layers, Sparkles, BarChart3, Globe } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
-const freeFeatures = [
-  'Unlimited brand monitoring',
-  'Weekly AI visibility scans',
-  'All 4 intelligence modules',
-  'Competitor tracking',
-  'Optimization recommendations',
-  'Public brand profile page',
-  'AI-ready JSON feed',
-  'Share cards for LinkedIn',
+const platformFeatures = [
+  {
+    icon: BarChart3,
+    title: 'Full AI visibility dashboard',
+    description: 'See exactly how ChatGPT, Claude, Gemini, and Perplexity describe your brand.',
+  },
+  {
+    icon: Layers,
+    title: 'Ranked against 15,000+ companies',
+    description: 'Know where you stand in your category and who\'s ahead.',
+  },
+  {
+    icon: Database,
+    title: 'Your structured AI profile',
+    description: 'Verified brand data that AI systems can read and trust.',
+  },
+  {
+    icon: Globe,
+    title: 'AI-ready JSON feed',
+    description: 'Machine-readable profile for direct AI integrations.',
+  },
+  {
+    icon: Shield,
+    title: 'Weekly scans across 4 models',
+    description: 'Automatic monitoring so you never miss a shift.',
+  },
+  {
+    icon: Sparkles,
+    title: 'Optimization recommendations',
+    description: 'Actionable steps to improve how AI represents you.',
+  },
 ]
 
 const faqs = [
   {
     question: 'Is Harbor really free?',
-    answer: 'Yes. Harbor is free for all brands. We believe every brand should understand how AI sees them. No credit card required, no trial period, no hidden fees.',
+    answer: 'Yes. We believe brand visibility should be accessible to everyone, not hidden behind paywalls. No credit card, no trial period, no surprise fees.',
   },
   {
-    question: 'Why is it free?',
-    answer: "We're building the definitive index of how AI understands brands. The more brands on Harbor, the more valuable this data becomes for everyone. Your participation helps shape the future of AI search.",
-  },
-  {
-    question: 'What do I get with a free account?',
-    answer: 'Everything. Weekly scans across ChatGPT, Claude, Gemini, and Perplexity. Full access to all four intelligence modules. Competitor tracking. Optimization tools. A public brand profile. No features are locked behind a paywall.',
+    question: 'Why is Harbor free?',
+    answer: 'Because brands aren\'t our customers—they\'re our data partners. The more brands that verify their AI-visible data, the more accurate AI becomes for everyone. We win when you win.',
   },
   {
     question: 'Will you add paid features later?',
-    answer: "We may offer premium add-ons for power users who want more frequent scans or advanced features. But the core product will always be free. We won't take away what you have today.",
+    answer: 'Only for enterprise. Multi-brand management, API access, and advanced analysis will be paid features for agencies and large teams. Individual brands always get free access.',
+  },
+  {
+    question: 'What about advanced AI scans?',
+    answer: 'Basic AI visibility scans are free and unlimited. Optional deep-analysis scans cost $0.75 per scan—only when you request them. Most brands never need them.',
   },
   {
     question: 'What about agencies managing multiple brands?',
-    answer: "We're building Enterprise plans for agencies and teams. If you manage 5+ brands, reach out and we'll set you up with early access.",
+    answer: 'We\'re building Enterprise plans for agencies and teams. If you manage 5+ brands, reach out and we\'ll set you up with early access and dedicated support.',
   },
 ]
 
@@ -46,39 +68,39 @@ export default function PricingClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
+    <div className="min-h-screen bg-[#101A31]">
       
-      {/* Light Nav for Pricing Page */}
+      {/* Fixed Nav */}
       <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
         <div 
-          className="backdrop-blur-xl bg-white/80 rounded-2xl shadow-lg border border-gray-200/50"
+          className="backdrop-blur-xl bg-[#101A31]/80 rounded-2xl shadow-lg border border-white/10"
           style={{ backdropFilter: 'blur(12px)' }}
         >
           <div className="px-4 md:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 md:h-16">
               <Link href="/" className="flex items-center space-x-2 md:space-x-3">
                 <Image 
-                  src="/images/harbor-dark-solo.svg" 
+                  src="/logo-icon.png" 
                   alt="Harbor" 
-                  width={120} 
+                  width={32} 
                   height={32}
                   className="h-7 md:h-8 w-auto"
                 />
-                <span className="text-lg md:text-xl font-bold text-[#101A31]">Harbor</span>
+                <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
               </Link>
 
               <div className="flex items-center space-x-2 md:space-x-4">
                 <button
                   onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                   aria-label="Menu"
                 >
-                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-[#101A31]" />
+                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </button>
                 
                 <Link
                   href="/auth/signup"
-                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-[#101A31] text-white text-sm md:text-base font-medium hover:bg-[#1a2a4a] transition-all duration-200"
+                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-[#101A31] text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
                 >
                   Get Started
                 </Link>
@@ -88,11 +110,11 @@ export default function PricingClient() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-12 md:pt-40 md:pb-16 px-6 overflow-hidden">
+      {/* Hero Section - Bold, Movement Feel */}
+      <section className="relative pt-36 pb-20 md:pt-44 md:pb-28 px-6 overflow-hidden">
         {/* Wireframe Background */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          className="absolute inset-0 pointer-events-none opacity-[0.03]"
           style={{
             backgroundImage: 'url(/wireframe-hero.png)',
             backgroundSize: 'cover',
@@ -102,83 +124,120 @@ export default function PricingClient() {
         />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700 text-sm font-medium mb-6">
-            <Zap className="w-4 h-4" />
-            Free forever. No credit card required.
+          {/* Strategic Pill */}
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-8">
+            <p className="text-sm font-mono uppercase tracking-wider text-white/70">
+              Free forever — no credit card required
+            </p>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#101A31] leading-tight mb-6">
-            See how AI sees your brand.
+          {/* Main Headline */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold leading-tight mb-6">
+            <span className="bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent">
+              See how AI sees your brand.
+            </span>
             <br />
-            <span className="text-emerald-600">For free.</span>
+            <span className="text-white">For free — forever.</span>
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10">
-            Full access to AI visibility intelligence. No paywalls, no trials, no catch.
-            Just sign up and start understanding how ChatGPT, Claude, and others talk about you.
+          
+          {/* Subheadline */}
+          <p className="text-lg md:text-xl text-[#CBD4E1] leading-relaxed mb-6 max-w-2xl mx-auto">
+            Harbor helps brands understand their visibility across ChatGPT, Claude, Gemini, and Perplexity—and gives them the tools to improve it. No paywalls. No trials. No limits.
           </p>
           
+          {/* Strategic Positioning Line */}
+          <p className="text-sm md:text-base text-cyan-400/80 font-mono mb-10 max-w-xl mx-auto">
+            Harbor is free because brands aren't our customers—they're our data partners.
+          </p>
+          
+          {/* CTA */}
           <Link
             href="/auth/signup"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#101A31] text-white text-lg font-semibold hover:bg-[#1a2a4a] transition-all duration-200 shadow-lg shadow-[#101A31]/20"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-[#101A31] text-lg font-semibold hover:bg-white/90 transition-all duration-200 shadow-lg shadow-white/10"
           >
-            Get Started Free
+            Create your free profile
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
       </section>
 
-      {/* Main Feature Card */}
-      <section className="pb-16 md:pb-20 px-6">
+      {/* Credibility Bar */}
+      <section className="py-8 px-6 border-y border-white/5 bg-white/[0.02]">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+            <p className="text-white/60 text-sm font-mono uppercase tracking-wider">
+              Already tracking
+            </p>
+            <p className="text-3xl md:text-4xl font-heading font-bold text-white">
+              15,000+ brands
+            </p>
+            <p className="text-white/60 text-sm font-mono uppercase tracking-wider">
+              across every category
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Card - Single Free Tier */}
+      <section className="py-20 md:py-28 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden bg-white shadow-xl shadow-gray-200/50 border border-gray-100">
-            {/* Header */}
-            <div className="px-8 lg:px-10 pt-8 lg:pt-10 pb-6 border-b border-gray-100">
-              <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="relative rounded-2xl overflow-hidden bg-[#0D1424] border border-white/10">
+            
+            {/* Card Header */}
+            <div className="px-8 lg:px-12 pt-10 lg:pt-12 pb-8 border-b border-white/5">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-2xl lg:text-3xl font-heading font-bold text-[#101A31]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h2 className="text-2xl lg:text-3xl font-heading font-bold text-white">
                       Everything included
                     </h2>
-                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
+                    <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-semibold border border-emerald-500/30">
                       FREE
                     </span>
                   </div>
-                  <p className="text-gray-600">
-                    Full platform access for every brand. No limits on what matters.
+                  <p className="text-white/60 max-w-md">
+                    Full platform access. The same tools other platforms charge $99–$400/month for.
                   </p>
                 </div>
-                <div className="text-right">
-                  <div className="text-5xl lg:text-6xl font-heading font-bold text-[#101A31]">
+                <div className="text-left md:text-right">
+                  <div className="text-5xl lg:text-6xl font-heading font-bold text-white">
                     $0
                   </div>
-                  <div className="text-gray-500 text-sm">forever</div>
+                  <div className="text-white/40 text-sm mt-1">forever</div>
+                  <p className="text-xs text-white/30 mt-2 max-w-[180px] md:ml-auto">
+                    No usage caps. No credits.<br />No surprise bills.
+                  </p>
                 </div>
               </div>
             </div>
             
             {/* Features Grid */}
-            <div className="px-8 lg:px-10 py-8 lg:py-10">
-              <div className="grid md:grid-cols-2 gap-4">
-                {freeFeatures.map((feature, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-emerald-600" strokeWidth={3} />
+            <div className="px-8 lg:px-12 py-10 lg:py-12">
+              <div className="grid md:grid-cols-2 gap-6">
+                {platformFeatures.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0 border border-white/5">
+                      <feature.icon className="w-5 h-5 text-cyan-400" />
                     </div>
-                    <span className="text-gray-700">{feature}</span>
+                    <div>
+                      <h3 className="text-white font-medium mb-1">{feature.title}</h3>
+                      <p className="text-white/50 text-sm leading-relaxed">{feature.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>
               
-              <div className="mt-8 pt-8 border-t border-gray-100">
+              {/* CTA */}
+              <div className="mt-10 pt-8 border-t border-white/5">
                 <Link
                   href="/auth/signup"
-                  className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200"
+                  className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-white text-[#101A31] font-semibold hover:bg-white/90 transition-all duration-200"
                 >
                   Create Your Free Account
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-                <p className="text-center text-sm text-gray-500 mt-3">
-                  No credit card required · Set up in 2 minutes
+                <p className="text-center text-sm text-white/40 mt-4">
+                  Set up in 2 minutes · No credit card required
                 </p>
               </div>
             </div>
@@ -187,87 +246,86 @@ export default function PricingClient() {
       </section>
 
       {/* Why Free Section */}
-      <section className="py-16 md:py-20 px-6 bg-white">
+      <section className="py-20 md:py-28 px-6 bg-white" data-nav-theme="light">
         <div className="max-w-5xl mx-auto">
+          
+          {/* Eyebrow */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] mb-4">
-              Why we're free
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#101A31]/5 backdrop-blur-sm border border-[#101A31]/10 mb-6">
+              <p className="text-sm font-mono uppercase tracking-wider text-[#101A31]/70">
+                Our model
+              </p>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4">
+              <span className="bg-gradient-to-r from-[#101A31] via-[#0891b2] to-[#2979FF] bg-clip-text text-transparent">
+                Why Harbor is free
+              </span>
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              We're building something bigger than a subscription product.
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              We're not building a subscription product. We're building the AI visibility layer for the internet.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          {/* Three Pillars */}
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+            
             <div className="text-center">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-100 flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-7 h-7 text-cyan-600" />
+              <div className="w-16 h-16 rounded-2xl bg-cyan-100 flex items-center justify-center mx-auto mb-5">
+                <Database className="w-8 h-8 text-cyan-600" />
               </div>
-              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
-                Build the index
+              <h3 className="text-xl font-heading font-bold text-[#101A31] mb-3">
+                Build the Index
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                We're creating the definitive database of how AI understands every brand. 
-                More brands = better data for everyone.
+              <p className="text-gray-600 leading-relaxed">
+                We're creating the definitive dataset of how AI understands the world's brands. More verified profiles = better data for everyone.
               </p>
             </div>
             
             <div className="text-center">
-              <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-7 h-7 text-purple-600" />
+              <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-5">
+                <Shield className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
-                Help brands claim their truth
+              <h3 className="text-xl font-heading font-bold text-[#101A31] mb-3">
+                Accurate AI = Better AI
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                AI models are shaping how people discover brands. 
-                Everyone deserves to know—and influence—what AI says about them.
+              <p className="text-gray-600 leading-relaxed">
+                When brands verify their profile, AI stops hallucinating. Your verified data makes AI better for everyone who searches.
               </p>
             </div>
             
             <div className="text-center">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-                <Users className="w-7 h-7 text-emerald-600" />
+              <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-5">
+                <Layers className="w-8 h-8 text-emerald-600" />
               </div>
-              <h3 className="text-lg font-heading font-bold text-[#101A31] mb-2">
-                Enterprise comes later
+              <h3 className="text-xl font-heading font-bold text-[#101A31] mb-3">
+                Enterprise Comes Later
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                We'll monetize through enterprise features for agencies and large teams. 
-                Individual brands stay free.
+              <p className="text-gray-600 leading-relaxed">
+                Large companies will pay for advanced analysis, API access, and multi-brand management. Individual brands shouldn't pay—ever.
               </p>
             </div>
+            
           </div>
         </div>
       </section>
 
       {/* Enterprise Callout */}
-      <section className="py-16 md:py-20 px-6">
+      <section className="py-16 md:py-20 px-6 bg-[#0a0f1a]">
         <div className="max-w-4xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden bg-[#101A31] p-8 md:p-12">
-            {/* Wireframe pattern */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-[0.06]"
-              style={{
-                backgroundImage: 'url(/wireframe-hero.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
+          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#141E38] to-[#101A31] p-8 md:p-12 border border-white/5">
             
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-center md:text-left">
-                <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-2">
+                <h3 className="text-2xl md:text-3xl font-heading font-bold text-white mb-3">
                   Managing multiple brands?
                 </h3>
-                <p className="text-white/70 max-w-md">
-                  Enterprise plans for agencies and teams coming soon. 
-                  Get early access with dedicated support and custom onboarding.
+                <p className="text-white/60 max-w-md leading-relaxed">
+                  Enterprise plans for agencies and teams coming soon. Get early access with dedicated support, API access, and custom onboarding.
                 </p>
               </div>
               <Link
                 href="/contact?inquiry=enterprise"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-[#101A31] font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap flex-shrink-0"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white text-[#101A31] font-semibold hover:bg-white/90 transition-colors whitespace-nowrap flex-shrink-0"
               >
                 Contact Us
                 <ArrowRight className="w-4 h-4" />
