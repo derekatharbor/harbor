@@ -42,12 +42,12 @@ export default function DashboardLayout({
   return (
     <BrandProvider>
       {/* 
-        Dashboard container uses CSS variables for theming.
-        The bg-primary class pulls from --bg-primary which changes with data-theme.
+        Dashboard always uses dark navy theme regardless of system preference.
+        This matches the design spec where dashboard = dark, landing = light.
       */}
       <div 
         className="flex min-h-screen"
-        style={{ backgroundColor: 'var(--bg-primary)' }}
+        style={{ backgroundColor: '#101A31' }}
       >
         <Sidebar />
         
@@ -57,13 +57,13 @@ export default function DashboardLayout({
             transition-[margin] duration-300 
             ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-60'}
           `}
-          style={{ backgroundColor: 'var(--bg-primary)' }}
+          style={{ backgroundColor: '#101A31' }}
         >
           {/* Route transition overlay - uses same background */}
           {isTransitioning && (
             <div 
               className="absolute inset-0 z-50 flex items-start justify-start pt-8"
-              style={{ backgroundColor: 'var(--bg-primary)' }}
+              style={{ backgroundColor: '#101A31' }}
             >
               <div className="animate-pulse space-y-8 w-full">
                 {/* Header skeleton */}
@@ -71,16 +71,16 @@ export default function DashboardLayout({
                   <div className="flex items-center gap-3">
                     <div 
                       className="w-8 h-8 rounded-lg"
-                      style={{ backgroundColor: 'var(--bg-card)' }}
+                      style={{ backgroundColor: '#141E38' }}
                     />
                     <div 
                       className="h-10 w-64 rounded"
-                      style={{ backgroundColor: 'var(--bg-card)' }}
+                      style={{ backgroundColor: '#141E38' }}
                     />
                   </div>
                   <div 
                     className="h-10 w-40 rounded-lg hidden lg:block"
-                    style={{ backgroundColor: 'var(--bg-card)' }}
+                    style={{ backgroundColor: '#141E38' }}
                   />
                 </div>
 
@@ -91,8 +91,8 @@ export default function DashboardLayout({
                       key={i} 
                       className="rounded-lg p-6 h-32"
                       style={{ 
-                        backgroundColor: 'var(--bg-card)',
-                        border: '1px solid var(--border)'
+                        backgroundColor: '#141E38',
+                        border: '1px solid rgba(255, 255, 255, 0.06)'
                       }}
                     />
                   ))}
@@ -102,8 +102,8 @@ export default function DashboardLayout({
                 <div 
                   className="rounded-lg p-6 h-64"
                   style={{ 
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border)'
+                    backgroundColor: '#141E38',
+                    border: '1px solid rgba(255, 255, 255, 0.06)'
                   }}
                 />
               </div>
