@@ -180,7 +180,7 @@ export default function ShopifyHero() {
       <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#101A31] pt-20">
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-[#101A31] pt-16 sm:pt-20">
         
         {/* Wireframe Background - Spans full right side of section */}
         <div 
@@ -198,7 +198,7 @@ export default function ShopifyHero() {
           <div className="relative h-full animate-float">
             
             {/* Card 1 - Sale */}
-            <div className="absolute top-[15%] left-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-2 pointer-events-auto">
+            <div className="absolute top-[25%] left-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-2 pointer-events-auto">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
                   <Image
@@ -217,7 +217,7 @@ export default function ShopifyHero() {
             </div>
 
             {/* Card 2 - Sale */}
-            <div className="absolute top-[35%] right-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-1 pointer-events-auto">
+            <div className="absolute top-[42%] right-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-1 pointer-events-auto">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
                   <Image
@@ -236,7 +236,7 @@ export default function ShopifyHero() {
             </div>
 
             {/* Card 3 - Sale */}
-            <div className="absolute top-[50%] left-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-1 pointer-events-auto">
+            <div className="absolute top-[58%] left-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-1 pointer-events-auto">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
                   <Image
@@ -255,7 +255,7 @@ export default function ShopifyHero() {
             </div>
 
             {/* Card 4 - This week total */}
-            <div className="absolute top-[70%] right-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-2 pointer-events-auto">
+            <div className="absolute top-[75%] right-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-2 pointer-events-auto">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
                   <Image
@@ -277,79 +277,80 @@ export default function ShopifyHero() {
         </div>
         
         {/* Content Container */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
           <div className="max-w-xl">
               
               {/* Shopify plugin by Harbor badge */}
-              <div className="flex items-center gap-2 mb-8">
+              <div className="flex flex-wrap items-center gap-2 mb-6 sm:mb-8">
                 <Image
                   src="/logos/shopify-logo.png"
                   alt="Shopify"
                   width={100}
                   height={28}
-                  className="h-7 w-auto"
+                  className="h-5 sm:h-7 w-auto"
                 />
-                <span className="text-xl text-white/60 font-light">plugin by</span>
-                <span className="text-xl text-white font-bold">Harbor</span>
+                <span className="text-base sm:text-xl text-white/60 font-light">plugin by</span>
+                <span className="text-base sm:text-xl text-white font-bold">Harbor</span>
               </div>
 
               {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] mb-2">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] mb-2">
                 Get your products
               </h1>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] mb-6">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white leading-[1.1] mb-4 sm:mb-6">
                 recommended by
               </h1>
 
               {/* Rotating AI Logo - No box, just inline */}
-              <div className="h-16 md:h-20 mb-8">
+              <div className="h-14 sm:h-20 md:h-24 mb-6 sm:mb-8">
                 <div
-                  className={`flex items-center gap-3 transition-all duration-300 ${
+                  className={`flex items-center gap-3 sm:gap-4 transition-all duration-300 ${
                     !mounted || isAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
                   }`}
                 >
                   <Image
                     src={AI_PLATFORMS[currentIndex].logo}
                     alt={AI_PLATFORMS[currentIndex].name}
-                    width={48}
-                    height={48}
-                    className="w-10 h-10 md:w-12 md:h-12"
+                    width={56}
+                    height={56}
+                    className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14"
                   />
-                  <span className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white">
+                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white">
                     {AI_PLATFORMS[currentIndex].name}
                   </span>
                 </div>
               </div>
 
               {/* Coming Soon Badge */}
-              <div className="inline-block mb-6">
-                <span className="px-4 py-2 bg-white text-[#101A31] text-sm font-semibold tracking-wider uppercase">
+              <div className="inline-block mb-4 sm:mb-6">
+                <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white text-[#101A31] text-xs sm:text-sm font-semibold tracking-wider uppercase">
                   Coming Soon
                 </span>
               </div>
 
               {/* Share Icons */}
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6">
+                <span className="text-white/40 text-xs sm:text-sm uppercase tracking-wider">Share</span>
                 <button
                   onClick={shareToX}
-                  className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                   aria-label="Share on X"
                 >
-                  <XIcon className="w-5 h-5 text-white/70" />
+                  <XIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white/70" />
                 </button>
                 <button
                   onClick={shareToLinkedIn}
-                  className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                   aria-label="Share on LinkedIn"
                 >
-                  <LinkedInIcon className="w-5 h-5 text-white/70" />
+                  <LinkedInIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white/70" />
                 </button>
                 <button
                   onClick={shareToInstagram}
-                  className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="p-2 sm:p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                   aria-label="Share on Instagram"
                 >
-                  <InstagramIcon className="w-5 h-5 text-white/70" />
+                  <InstagramIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white/70" />
                 </button>
               </div>
 
@@ -362,12 +363,12 @@ export default function ShopifyHero() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="flex-1 px-5 py-4 bg-[#1a2744] text-white placeholder-white/40 text-base focus:outline-none focus:ring-2 focus:ring-[#95BF47]/50 rounded-lg"
+                    className="flex-1 px-4 sm:px-5 py-3 sm:py-4 bg-[#1a2744] text-white placeholder-white/40 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#95BF47]/50 rounded-lg"
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-4 bg-white text-[#101A31] font-semibold flex items-center justify-center gap-2 transition-all hover:bg-gray-100 disabled:opacity-50 rounded-lg"
+                    className="px-5 sm:px-6 py-3 sm:py-4 bg-white text-[#101A31] font-semibold text-sm sm:text-base flex items-center justify-center gap-2 transition-all hover:bg-gray-100 disabled:opacity-50 rounded-lg whitespace-nowrap"
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-[#101A31]/30 border-t-[#101A31] rounded-full animate-spin" />
@@ -378,28 +379,28 @@ export default function ShopifyHero() {
                 </form>
               ) : (
                 <div className="max-w-lg">
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+                  <div className="bg-white/5 border border-white/10 rounded-lg p-4 sm:p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-[#95BF47]/20 flex items-center justify-center flex-shrink-0">
                         <Check className="w-5 h-5 text-[#95BF47]" />
                       </div>
                       <div>
-                        <p className="text-white font-semibold">You're on the list</p>
-                        <p className="text-white/50 text-sm">Position #{position?.toLocaleString()}</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">You're on the list</p>
+                        <p className="text-white/50 text-xs sm:text-sm">Position #{position?.toLocaleString()}</p>
                       </div>
                     </div>
 
-                    <div className="bg-white/5 rounded-lg p-3 mb-4">
+                    <div className="bg-white/5 rounded-lg p-2 sm:p-3 mb-4">
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
                           value={referralLink}
                           readOnly
-                          className="flex-1 bg-transparent text-white/50 text-sm truncate outline-none"
+                          className="flex-1 bg-transparent text-white/50 text-xs sm:text-sm truncate outline-none min-w-0"
                         />
                         <button
                           onClick={copyReferralLink}
-                          className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                          className="p-2 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
                         >
                           {copied ? (
                             <Check className="w-4 h-4 text-[#95BF47]" />
@@ -411,7 +412,7 @@ export default function ShopifyHero() {
                     </div>
 
                     {referralCount > 0 && (
-                      <p className="text-sm text-[#95BF47]">
+                      <p className="text-xs sm:text-sm text-[#95BF47]">
                         {referralCount} {referralCount === 1 ? 'person' : 'people'} joined through your link
                       </p>
                     )}
