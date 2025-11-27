@@ -1,7 +1,7 @@
 // components/shopify/ShopifyHowItWorks.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 
 const steps = [
@@ -251,6 +251,9 @@ function RecommendedIcon({ active }: { active: boolean }) {
 
 export default function ShopifyHowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
+  const [isLocked, setIsLocked] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const lastScrollTime = useRef(0)
 
   const visuals = [
     <InstallVisual key="install" />,
@@ -260,8 +263,77 @@ export default function ShopifyHowItWorks() {
 
   const icons = [InstallIcon, OptimizeIcon, RecommendedIcon]
 
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const handleScroll = () => {
+      const rect = section.getBoundingClientRect()
+      const sectionTop = rect.top
+      const sectionBottom = rect.bottom
+      const viewportHeight = window.innerHeight
+
+      // Check if section is in view and should be locked
+      const shouldLock = sectionTop <= 100 && sectionBottom >= viewportHeight
+
+      if (shouldLock && !isLocked) {
+        setIsLocked(true)
+      } else if (!shouldLock && isLocked) {
+        setIsLocked(false)
+      }
+    }
+
+    const handleWheel = (e: WheelEvent) => {
+      const rect = section.getBoundingClientRect()
+      const sectionTop = rect.top
+      const sectionBottom = rect.bottom
+      const viewportHeight = window.innerHeight
+
+      // Only hijack if section is properly in view
+      const isInSection = sectionTop <= 100 && sectionBottom >= viewportHeight
+
+      if (!isInSection) return
+
+      // Throttle to prevent too-fast scrolling
+      const now = Date.now()
+      if (now - lastScrollTime.current < 400) {
+        e.preventDefault()
+        return
+      }
+
+      const direction = e.deltaY > 0 ? 1 : -1
+
+      // Scrolling down
+      if (direction > 0) {
+        if (activeStep < steps.length - 1) {
+          e.preventDefault()
+          lastScrollTime.current = now
+          setActiveStep(prev => prev + 1)
+        }
+        // If on last step, allow natural scroll to continue
+      }
+      // Scrolling up
+      else {
+        if (activeStep > 0) {
+          e.preventDefault()
+          lastScrollTime.current = now
+          setActiveStep(prev => prev - 1)
+        }
+        // If on first step, allow natural scroll to go back
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('wheel', handleWheel, { passive: false })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('wheel', handleWheel)
+    }
+  }, [activeStep, isLocked])
+
   return (
-    <section>
+    <section ref={sectionRef}>
       {/* Color Noise Gradient Bar */}
       <div 
         className="w-full h-4 md:h-6"
