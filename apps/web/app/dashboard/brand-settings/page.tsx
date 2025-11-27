@@ -1097,9 +1097,9 @@ export default function BrandSettingsPage() {
                 
                 {/* CTA */}
                 <button
-                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer hover:opacity-90 hover:shadow-lg"
+                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer hover:opacity-90"
                   style={{ 
-                    background: 'linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%)'
+                    backgroundColor: '#101A31'
                   }}
                 >
                   <RefreshCw className="w-4 h-4" />

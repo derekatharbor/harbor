@@ -244,7 +244,7 @@ export default function OverviewPage() {
                       cx="96"
                       cy="96"
                       r="88"
-                      stroke="rgba(255,255,255,0.06)"
+                      style={{ stroke: 'var(--border)' }}
                       strokeWidth="12"
                       fill="none"
                     />
