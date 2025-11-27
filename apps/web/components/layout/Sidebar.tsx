@@ -225,7 +225,7 @@ export default function Sidebar() {
                   <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                   
                   {/* Tooltip */}
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 </Link>
@@ -269,7 +269,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -307,7 +307,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -348,7 +348,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </div>
             )}
@@ -378,7 +378,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                 Control Center
               </div>
             )}
