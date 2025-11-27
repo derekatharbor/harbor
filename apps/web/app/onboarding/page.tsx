@@ -9,6 +9,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react'
 // Standardized industry list - keep in sync with ai_profiles
 const INDUSTRIES = [
   'Analytics & Business Intelligence',
+  'Consulting & Professional Services',
   'Customer Support',
   'Cybersecurity',
   'Developer Tools',
