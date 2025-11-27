@@ -139,6 +139,22 @@ export default function ShopifyHero() {
                 <span className="text-xl font-bold text-white">Harbor</span>
               </Link>
 
+              {/* Section Links - Desktop */}
+              <div className="hidden md:flex items-center space-x-8">
+                <button className="text-sm font-medium text-white">
+                  The Plugin
+                </button>
+                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                  How It Works
+                </button>
+                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                  Features
+                </button>
+                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                  Get Early Access
+                </button>
+              </div>
+
               {/* Right Side */}
               <div className="flex items-center space-x-3 md:space-x-4">
                 <button
@@ -166,12 +182,103 @@ export default function ShopifyHero() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-[#101A31] pt-20">
         
+        {/* Wireframe Background - Spans full right side of section */}
+        <div 
+          className="absolute top-0 right-0 bottom-0 w-1/2 hidden lg:block"
+          style={{
+            backgroundImage: 'url(/images/shopify-wireframe.svg)',
+            backgroundSize: 'contain',
+            backgroundPosition: 'center right',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
+
+        {/* Floating Sales Cards - Positioned over wireframe */}
+        <div className="absolute top-0 right-0 bottom-0 w-1/2 hidden lg:block pointer-events-none">
+          <div className="relative h-full animate-float">
+            
+            {/* Card 1 - Sale */}
+            <div className="absolute top-[15%] left-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-2 pointer-events-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                  <Image
+                    src="/logos/shopify-bag.png"
+                    alt="Shopify"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">New sale</p>
+                  <p className="text-lg font-bold text-[#95BF47]">+$159.00</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2 - Sale */}
+            <div className="absolute top-[35%] right-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-1 pointer-events-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                  <Image
+                    src="/logos/shopify-bag.png"
+                    alt="Shopify"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">New sale</p>
+                  <p className="text-lg font-bold text-[#95BF47]">+$1,050</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3 - Sale */}
+            <div className="absolute top-[50%] left-[5%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-1 pointer-events-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                  <Image
+                    src="/logos/shopify-bag.png"
+                    alt="Shopify"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">New sale</p>
+                  <p className="text-lg font-bold text-[#95BF47]">+$89.00</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 4 - This week total */}
+            <div className="absolute top-[70%] right-[10%] bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-2 pointer-events-auto">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                  <Image
+                    src="/logos/shopify-bag.png"
+                    alt="Shopify"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">This week</p>
+                  <p className="text-lg font-bold text-[#95BF47]">+$2,847</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
         {/* Content Container */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
-            {/* Left Column - Content */}
-            <div>
+          <div className="max-w-xl">
               
               {/* Shopify plugin by Harbor badge */}
               <div className="flex items-center gap-2 mb-8">
@@ -315,104 +422,6 @@ export default function ShopifyHero() {
               {error && (
                 <p className="mt-4 text-red-400 text-sm">{error}</p>
               )}
-
-            </div>
-
-            {/* Right Column - Wireframe with Floating Sales Cards */}
-            <div className="hidden lg:block relative h-[500px]">
-              
-              {/* Wireframe Background - Replace with your image */}
-              <div 
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: 'url(/images/shopify-wireframe.svg)',
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'center right',
-                  backgroundRepeat: 'no-repeat',
-                }}
-              />
-
-              {/* Floating Sales Cards */}
-              <div className="relative h-full animate-float">
-                
-                {/* Card 1 - Sale */}
-                <div className="absolute top-12 left-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
-                      <Image
-                        src="/logos/shopify-bag.png"
-                        alt="Shopify"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400">New sale</p>
-                      <p className="text-lg font-bold text-[#95BF47]">+$159.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 2 - Sale */}
-                <div className="absolute top-1/3 right-4 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-1">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
-                      <Image
-                        src="/logos/shopify-bag.png"
-                        alt="Shopify"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400">New sale</p>
-                      <p className="text-lg font-bold text-[#95BF47]">+$1,050</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 3 - Sale */}
-                <div className="absolute bottom-1/3 left-12 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-1">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
-                      <Image
-                        src="/logos/shopify-bag.png"
-                        alt="Shopify"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400">New sale</p>
-                      <p className="text-lg font-bold text-[#95BF47]">+$89.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 4 - This week total */}
-                <div className="absolute bottom-16 right-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
-                      <Image
-                        src="/logos/shopify-bag.png"
-                        alt="Shopify"
-                        width={24}
-                        height={24}
-                        className="w-6 h-6"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-400">This week</p>
-                      <p className="text-lg font-bold text-[#95BF47]">+$2,847</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
 
           </div>
         </div>
