@@ -145,7 +145,7 @@ export default function WebsiteAnalyticsPage() {
               }
               
               return true
-            })
+            });
           
           console.log('📊 [Website] Normalized issues sample:', normalizedIssues.slice(0, 3))
           
@@ -214,7 +214,6 @@ export default function WebsiteAnalyticsPage() {
           urls: [issue.url],
           message: issue.message || ''
         })
-      }
       }
     }
     
