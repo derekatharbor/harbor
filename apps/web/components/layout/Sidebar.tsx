@@ -212,10 +212,9 @@ export default function Sidebar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  title={item.name}
                   className={`
                     flex items-center rounded-lg mb-1 py-3 justify-center
-                    transition-colors cursor-pointer relative
+                    transition-colors cursor-pointer relative group
                     ${isActive 
                       ? 'text-white' 
                       : 'text-softgray/60 hover:text-white hover:bg-white/5'
@@ -223,6 +222,11 @@ export default function Sidebar() {
                   `}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                  
+                  {/* Tooltip */}
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                    {item.name}
+                  </div>
                 </Link>
               )
             })}
@@ -245,10 +249,9 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                title={isCollapsed ? item.name : undefined}
                 className={`
                   flex items-center rounded-lg mb-1
-                  transition-colors cursor-pointer relative
+                  transition-colors cursor-pointer relative group
                   ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                   ${isActive 
                     ? 'text-white' 
@@ -262,6 +265,13 @@ export default function Sidebar() {
               >
                 <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                 {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
+                
+                {/* Tooltip - only shows when collapsed */}
+                {isCollapsed && (
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                    {item.name}
+                  </div>
+                )}
               </Link>
             )
           })}
@@ -277,10 +287,9 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                title={isCollapsed ? item.name : undefined}
                 className={`
                   flex items-center rounded-lg mb-1
-                  transition-colors cursor-pointer relative
+                  transition-colors cursor-pointer relative group
                   ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                   ${isActive 
                     ? 'text-white' 
@@ -294,6 +303,13 @@ export default function Sidebar() {
               >
                 <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                 {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
+                
+                {/* Tooltip - only shows when collapsed */}
+                {isCollapsed && (
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                    {item.name}
+                  </div>
+                )}
               </Link>
             )
           })}
@@ -305,7 +321,6 @@ export default function Sidebar() {
             onClick={toggleTheme}
             role="button"
             tabIndex={0}
-            title={isCollapsed ? (theme === 'light' ? 'Dark Mode' : 'Light Mode') : undefined}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
@@ -314,7 +329,7 @@ export default function Sidebar() {
             }}
             className={`
               flex items-center rounded-lg
-              transition-colors cursor-pointer
+              transition-colors cursor-pointer relative group
               ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
               text-softgray/60 hover:text-white hover:bg-white/5
             `}
@@ -329,6 +344,13 @@ export default function Sidebar() {
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </span>
             )}
+            
+            {/* Tooltip - only shows when collapsed */}
+            {isCollapsed && (
+              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+              </div>
+            )}
           </div>
         </div>
 
@@ -336,10 +358,9 @@ export default function Sidebar() {
         <div className="px-4 py-3 border-t border-white/5">
           <Link
             href="/dashboard/settings"
-            title={isCollapsed ? 'Control Center' : undefined}
             className={`
               flex items-center rounded-lg
-              transition-colors cursor-pointer relative
+              transition-colors cursor-pointer relative group
               ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
               ${pathname === '/dashboard/settings'
                 ? 'text-white'
@@ -353,6 +374,13 @@ export default function Sidebar() {
           >
             <Settings className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
             {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
+            
+            {/* Tooltip - only shows when collapsed */}
+            {isCollapsed && (
+              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                Control Center
+              </div>
+            )}
           </Link>
         </div>
       </nav>
