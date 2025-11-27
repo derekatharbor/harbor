@@ -111,89 +111,20 @@ export async function GET(request: Request) {
     }
 
     // 4. Get ALL competitor profiles in the same industry
-    // Use smarter matching - try exact first, then fuzzy on key terms
-    let allProfiles: any[] = []
-    
-    // First try exact-ish match
-    const { data: exactMatches, error: exactError } = await supabase
+    // After consolidation, we can use exact matching
+    const { data: allProfiles, error: compError } = await supabase
       .from('ai_profiles')
       .select('id, slug, brand_name, industry, visibility_score, logo_url, dashboard_id')
-      .ilike('industry', `%${userCategory}%`)
+      .eq('industry', userCategory)
       .not('visibility_score', 'is', null)
       .order('visibility_score', { ascending: false })
       .limit(200)
 
-    if (!exactError && exactMatches && exactMatches.length > 0) {
-      allProfiles = exactMatches
-      console.log('[Competitors API] Found', allProfiles.length, 'profiles with exact category match')
-    } else {
-      // No exact match - try matching on key terms
-      // Extract meaningful words from category (skip common words)
-      const skipWords = ['software', 'platform', 'tool', 'tools', 'service', 'services', 'solution', 'solutions', 'the', 'and', 'for', 'of', 'a', 'an']
-      const categoryWords = userCategory
-        .toLowerCase()
-        .split(/[\s,]+/)
-        .filter(word => word.length > 2 && !skipWords.includes(word))
-      
-      console.log('[Competitors API] No exact match, trying key terms:', categoryWords)
-      
-      // Try each key term
-      for (const term of categoryWords) {
-        const { data: termMatches } = await supabase
-          .from('ai_profiles')
-          .select('id, slug, brand_name, industry, visibility_score, logo_url, dashboard_id')
-          .ilike('industry', `%${term}%`)
-          .not('visibility_score', 'is', null)
-          .order('visibility_score', { ascending: false })
-          .limit(200)
-        
-        if (termMatches && termMatches.length > 5) {
-          allProfiles = termMatches
-          console.log('[Competitors API] Found', allProfiles.length, 'profiles matching term:', term)
-          break
-        }
-      }
-      
-      // If still nothing, try broader category matches
-      if (allProfiles.length === 0) {
-        // Try common category mappings
-        const broadCategories = [
-          { terms: ['project', 'management', 'productivity', 'collaboration'], search: 'project' },
-          { terms: ['marketing', 'advertising', 'seo', 'content'], search: 'marketing' },
-          { terms: ['sales', 'crm', 'customer'], search: 'sales' },
-          { terms: ['finance', 'accounting', 'payment', 'fintech'], search: 'finance' },
-          { terms: ['ecommerce', 'retail', 'shopping', 'store'], search: 'commerce' },
-          { terms: ['health', 'medical', 'healthcare', 'wellness'], search: 'health' },
-          { terms: ['education', 'learning', 'training', 'course'], search: 'education' },
-          { terms: ['security', 'cyber', 'privacy'], search: 'security' },
-          { terms: ['analytics', 'data', 'business intelligence', 'bi'], search: 'analytics' },
-          { terms: ['hr', 'human resources', 'recruiting', 'hiring'], search: 'hr' },
-        ]
-        
-        const categoryLower = userCategory.toLowerCase()
-        for (const mapping of broadCategories) {
-          if (mapping.terms.some(t => categoryLower.includes(t))) {
-            const { data: broadMatches } = await supabase
-              .from('ai_profiles')
-              .select('id, slug, brand_name, industry, visibility_score, logo_url, dashboard_id')
-              .ilike('industry', `%${mapping.search}%`)
-              .not('visibility_score', 'is', null)
-              .order('visibility_score', { ascending: false })
-              .limit(200)
-            
-            if (broadMatches && broadMatches.length > 0) {
-              allProfiles = broadMatches
-              console.log('[Competitors API] Found', allProfiles.length, 'profiles with broad category:', mapping.search)
-              break
-            }
-          }
-        }
-      }
+    if (compError) {
+      console.error('[Competitors API] Error fetching competitors:', compError)
     }
 
-    if (allProfiles.length === 0) {
-      console.log('[Competitors API] No competitors found for category:', userCategory)
-    }
+    console.log('[Competitors API] Found', allProfiles?.length || 0, 'profiles in industry:', userCategory)
 
     // 5. Build leaderboard - EXCLUDING the user first
     const competitors = (allProfiles || [])
