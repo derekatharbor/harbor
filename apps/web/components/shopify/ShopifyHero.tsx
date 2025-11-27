@@ -61,50 +61,41 @@ export default function ShopifyHero() {
           <div>
             
             {/* Shopify plugin by Harbor badge */}
-            <div className="flex items-center gap-3 mb-8">
-              {/* Shopify Logo Placeholder - replace src with your logo */}
-              <div className="w-10 h-10 flex items-center justify-center">
-                <Image
-                  src="/logos/shopify-bag.png"
-                  alt="Shopify"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10"
-                />
-              </div>
-              <span className="text-xl md:text-2xl text-white">
-                <span className="text-[#95BF47] font-semibold">shopify</span>
-                {' '}
-                <span className="text-white/60 font-light">plugin by</span>
-                {' '}
-                <span className="text-white font-bold">Harbor</span>
-              </span>
+            <div className="flex items-center gap-2 mb-8">
+              <Image
+                src="/logos/shopify-logo.png"
+                alt="Shopify"
+                width={100}
+                height={28}
+                className="h-7 w-auto"
+              />
+              <span className="text-xl text-white/60 font-light">plugin by</span>
+              <span className="text-xl text-white font-bold">Harbor</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] mb-2">
               Get your products
-              <br />
+            </h1>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-white leading-[1.1] mb-6">
               recommended by
             </h1>
 
-            {/* Rotating AI Logo Box */}
-            <div className="border border-white/20 rounded-lg p-6 mb-6 h-[120px] flex items-center">
+            {/* Rotating AI Logo - No box, just inline */}
+            <div className="h-16 md:h-20 mb-8">
               <div
-                className={`flex items-center gap-4 transition-all duration-300 ${
-                  !mounted || isAnimating ? 'opacity-0 translate-y-3' : 'opacity-100 translate-y-0'
+                className={`flex items-center gap-3 transition-all duration-300 ${
+                  !mounted || isAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
                 }`}
               >
-                <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center flex-shrink-0">
-                  <Image
-                    src={AI_PLATFORMS[currentIndex].logo}
-                    alt={AI_PLATFORMS[currentIndex].name}
-                    width={56}
-                    height={56}
-                    className="w-12 h-12 md:w-14 md:h-14 object-contain"
-                  />
-                </div>
-                <span className="text-3xl md:text-4xl font-heading font-bold text-white">
+                <Image
+                  src={AI_PLATFORMS[currentIndex].logo}
+                  alt={AI_PLATFORMS[currentIndex].name}
+                  width={48}
+                  height={48}
+                  className="w-10 h-10 md:w-12 md:h-12"
+                />
+                <span className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white">
                   {AI_PLATFORMS[currentIndex].name}
                 </span>
               </div>
@@ -223,10 +214,10 @@ export default function ShopifyHero() {
               }}
             />
 
-            {/* Floating Cards Container */}
+            {/* Floating Sales Cards */}
             <div className="relative h-full animate-float">
               
-              {/* Card 1 - Shopify Sale */}
+              {/* Card 1 - Sale */}
               <div className="absolute top-12 left-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-2">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
@@ -245,47 +236,59 @@ export default function ShopifyHero() {
                 </div>
               </div>
 
-              {/* Card 2 - Revenue Total */}
+              {/* Card 2 - Sale */}
               <div className="absolute top-1/3 right-4 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-1">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#101A31]/5 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#101A31]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
+                  <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                    <Image
+                      src="/logos/shopify-bag.png"
+                      alt="Shopify"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400">AI-driven revenue</p>
-                    <p className="text-xl font-bold text-[#101A31]">$1,050</p>
+                    <p className="text-xs text-gray-400">New sale</p>
+                    <p className="text-lg font-bold text-[#95BF47]">+$1,050</p>
                   </div>
                 </div>
               </div>
 
-              {/* Card 3 - Product Recommended */}
+              {/* Card 3 - Sale */}
               <div className="absolute bottom-1/3 left-12 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform -rotate-1">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                  <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
+                    <Image
+                      src="/logos/shopify-bag.png"
+                      alt="Shopify"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400">ChatGPT cited</p>
-                    <p className="text-sm font-semibold text-gray-900">Your product</p>
+                    <p className="text-xs text-gray-400">New sale</p>
+                    <p className="text-lg font-bold text-[#95BF47]">+$89.00</p>
                   </div>
                 </div>
               </div>
 
-              {/* Card 4 - Conversion */}
+              {/* Card 4 - This week total */}
               <div className="absolute bottom-16 right-8 bg-white rounded-xl shadow-xl border border-gray-100 p-4 transform rotate-2">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[#95BF47]/10 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#95BF47]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <Image
+                      src="/logos/shopify-bag.png"
+                      alt="Shopify"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">This week</p>
-                    <p className="text-lg font-bold text-[#95BF47]">+$847</p>
+                    <p className="text-lg font-bold text-[#95BF47]">+$2,847</p>
                   </div>
                 </div>
               </div>
