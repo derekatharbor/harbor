@@ -4,11 +4,36 @@
 import { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
+
+// Standardized industry list - keep in sync with ai_profiles
+const INDUSTRIES = [
+  'Analytics & Business Intelligence',
+  'Customer Support',
+  'Cybersecurity',
+  'Developer Tools',
+  'E-commerce & Retail',
+  'Education & E-learning',
+  'Finance & Accounting',
+  'Food & Beverage',
+  'Healthcare & Medical',
+  'HR & Recruiting',
+  'Legal & Compliance',
+  'Manufacturing & Logistics',
+  'Marketing & Advertising',
+  'Media & Entertainment',
+  'Nonprofit & Government',
+  'Project Management',
+  'Real Estate',
+  'Sales & CRM',
+  'Technology & SaaS',
+  'Travel & Hospitality',
+]
 
 export default function OnboardingPage() {
   const [brandName, setBrandName] = useState('')
   const [domain, setDomain] = useState('')
+  const [industry, setIndustry] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [checking, setChecking] = useState(true)
@@ -44,7 +69,8 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           brandName: brandName.trim(),
-          domain: domain.trim()
+          domain: domain.trim(),
+          industry: industry
         })
       })
 
@@ -140,10 +166,37 @@ export default function OnboardingPage() {
             />
           </div>
 
+          {/* Industry */}
+          <div>
+            <label 
+              htmlFor="industry" 
+              className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wider font-mono"
+            >
+              Industry
+            </label>
+            <div className="relative">
+              <select
+                id="industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                required
+                className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white font-mono appearance-none cursor-pointer"
+              >
+                <option value="" className="bg-[#101A31] text-white/50">Select your industry</option>
+                {INDUSTRIES.map((ind) => (
+                  <option key={ind} value={ind} className="bg-[#101A31] text-white">
+                    {ind}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 pointer-events-none" />
+            </div>
+          </div>
+
           {/* Submit */}
           <button
             type="submit"
-            disabled={loading || !brandName.trim() || !domain.trim()}
+            disabled={loading || !brandName.trim() || !domain.trim() || !industry}
             className="w-full py-3.5 px-4 bg-white text-[#101A31] rounded-lg font-semibold hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#101A31] focus:ring-white disabled:opacity-50 transition-all cursor-pointer flex items-center justify-center gap-2 font-mono"
           >
             {loading ? (
@@ -158,7 +211,7 @@ export default function OnboardingPage() {
 
           {/* Helper text */}
           <p className="text-center text-xs text-white/40 font-mono">
-            You can add more details in Brand Settings later.
+            This helps us find your competitors in AI results.
           </p>
         </form>
 

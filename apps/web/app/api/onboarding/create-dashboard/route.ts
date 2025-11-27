@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { brandName, domain } = await request.json()
+    const { brandName, domain, industry } = await request.json()
 
     if (!brandName || !domain) {
       return NextResponse.json(
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create dashboard
+    // Create dashboard with industry in metadata
     const { data: dashboard, error: dashboardError } = await supabaseAdmin
       .from('dashboards')
       .insert({
@@ -108,6 +108,10 @@ export async function POST(request: Request) {
         brand_name: brandName.trim(),
         domain: cleanDomain,
         plan: 'solo',
+        metadata: {
+          category: industry || null,
+          categorySource: industry ? 'user' : null,
+        }
       })
       .select()
       .single()

@@ -346,82 +346,9 @@ async function processBrandModule(supabase: any, scanId: string, metadata: any) 
     .eq('id', job.id)
 
   try {
-    // Get scan to find dashboard_id
-    const { data: scan } = await supabase
-      .from('scans')
-      .select('dashboard_id')
-      .eq('id', scanId)
-      .single()
+    console.log('[Brand] Using category from dashboard:', metadata.category)
 
-    // =========================================================================
-    // STEP 1: INFER CATEGORY (if not already set)
-    // =========================================================================
-    if (!metadata.category || metadata.category === 'software' || metadata.category === 'Unknown') {
-      console.log('[Brand] Inferring category for:', metadata.brandName)
-      
-      try {
-        const categoryResponse = await runPrompt({
-          model: 'gpt',
-          system: 'You are a business analyst. Identify the primary industry category for companies. Return ONLY valid JSON.',
-          user: `What industry/category is "${metadata.brandName}" (${metadata.domain}) in?
-
-Return ONLY valid JSON with this exact structure:
-{
-  "category": "The primary industry category (e.g., 'Marketing Software', 'E-commerce', 'Financial Services', 'Healthcare Technology', 'Consumer Electronics')",
-  "subcategories": ["subcategory1", "subcategory2"],
-  "confidence": "high" | "medium" | "low"
-}
-
-Be specific but not overly narrow. Use common industry terms.`,
-          maxTokens: 200,
-        })
-
-        const cleanedCategory = categoryResponse
-          .replace(/```json\n?/g, '')
-          .replace(/```\n?/g, '')
-          .trim()
-
-        const categoryResult = JSON.parse(cleanedCategory)
-        
-        if (categoryResult.category) {
-          console.log('[Brand] Inferred category:', categoryResult.category)
-          
-          // Update dashboard metadata with inferred category
-          const { data: currentDashboard } = await supabase
-            .from('dashboards')
-            .select('metadata')
-            .eq('id', scan.dashboard_id)
-            .single()
-          
-          const updatedMetadata = {
-            ...(currentDashboard?.metadata || {}),
-            category: categoryResult.category,
-            subcategories: categoryResult.subcategories || [],
-            categoryConfidence: categoryResult.confidence || 'medium',
-            categoryInferredAt: new Date().toISOString(),
-          }
-
-          await supabase
-            .from('dashboards')
-            .update({ metadata: updatedMetadata })
-            .eq('id', scan.dashboard_id)
-
-          console.log('[Brand] ✅ Category saved to dashboard:', categoryResult.category)
-          
-          // Update local metadata for rest of scan
-          metadata.category = categoryResult.category
-        }
-      } catch (catError) {
-        console.error('[Brand] Category inference failed (non-fatal):', catError)
-        // Continue with scan even if category inference fails
-      }
-    } else {
-      console.log('[Brand] Category already set:', metadata.category)
-    }
-
-    // =========================================================================
-    // STEP 2: BRAND ANALYSIS (existing logic)
-    // =========================================================================
+    // Run brand analysis
     const prompts = getBrandPrompts(metadata)
     const allDescriptors: any[] = []
     let totalTokens = 0
