@@ -82,47 +82,70 @@ export default function WebsiteAnalyticsPage() {
         // Generate recommendations AND update data with normalized issues
         if (result.website && result.website.issues) {
           // Ensure issues have message field (API might send it as details)
-          const normalizedIssues = result.website.issues.map((issue: any) => {
-            let message = issue.message
-            
-            // If no message, try to extract from details
-            if (!message && issue.details) {
-              try {
-                message = typeof issue.details === 'string' 
-                  ? JSON.parse(issue.details).message 
-                  : issue.details.message
-              } catch (e) {
-                console.warn('Failed to parse details:', issue.details)
-                message = ''
+          const normalizedIssues = result.website.issues
+            .map((issue: any) => {
+              let message = issue.message
+              
+              // If no message, try to extract from details
+              if (!message && issue.details) {
+                try {
+                  message = typeof issue.details === 'string' 
+                    ? JSON.parse(issue.details).message 
+                    : issue.details.message
+                } catch (e) {
+                  console.warn('Failed to parse details:', issue.details)
+                  message = ''
+                }
               }
-            }
-            
-            // Infer issue_code from message if missing
-            let issueCode = issue.issue_code
-            if (!issueCode && message) {
-              if (message.includes('Missing Product schema')) {
-                issueCode = 'missing_product_schema'
-              } else if (message.includes('No structured data found')) {
-                issueCode = 'no_schema'
-              } else if (message.includes('Content is complex') || message.includes('simplify for AI parsing')) {
-                issueCode = 'low_readability'
-              } else if (message.includes('Multiple H1 tags')) {
-                issueCode = 'multiple_h1'
-              } else if (message.includes('Missing meta description')) {
-                issueCode = 'missing_meta_description'
-              } else if (message.includes('Missing FAQ schema')) {
-                issueCode = 'missing_faq_schema'
-              } else {
-                issueCode = 'unknown'
+              
+              // Infer issue_code from message if missing
+              let issueCode = issue.issue_code
+              if (!issueCode && message) {
+                if (message.includes('Missing Product schema')) {
+                  issueCode = 'missing_product_schema'
+                } else if (message.includes('No structured data found')) {
+                  issueCode = 'no_schema'
+                } else if (message.includes('Content is complex') || message.includes('simplify for AI parsing')) {
+                  issueCode = 'low_readability'
+                } else if (message.includes('Multiple H1 tags')) {
+                  issueCode = 'multiple_h1'
+                } else if (message.includes('Missing meta description')) {
+                  issueCode = 'missing_meta_description'
+                } else if (message.includes('Missing FAQ schema')) {
+                  issueCode = 'missing_faq_schema'
+                } else if (message.includes('Missing Organization schema') || message.includes('Organization schema')) {
+                  issueCode = 'missing_org_schema'
+                } else if (message.includes('Missing Breadcrumb schema')) {
+                  issueCode = 'missing_breadcrumb_schema'
+                } else if (message.includes('Missing canonical') || message.includes('canonical tag')) {
+                  issueCode = 'missing_canonical'
+                } else {
+                  issueCode = 'unknown'
+                }
               }
-            }
-            
-            return {
-              ...issue,
-              message: message || '',
-              issue_code: issueCode || 'unknown'
-            }
-          })
+              
+              return {
+                ...issue,
+                message: message || '',
+                issue_code: issueCode || 'unknown'
+              }
+            })
+            // Filter out readability issues for JSON/data files
+            .filter((issue: any) => {
+              const url = issue.url?.toLowerCase() || ''
+              const isDataFile = url.endsWith('.json') || 
+                                 url.endsWith('.xml') || 
+                                 url.endsWith('.txt') ||
+                                 url.includes('/api/') ||
+                                 url.includes('harbor.json')
+              
+              // Skip readability issues for data files - they're not meant to be readable
+              if (isDataFile && issue.issue_code === 'low_readability') {
+                return false
+              }
+              
+              return true
+            })
           
           console.log('📊 [Website] Normalized issues sample:', normalizedIssues.slice(0, 3))
           
@@ -169,9 +192,9 @@ export default function WebsiteAnalyticsPage() {
     const groups = new Map<string, GroupedIssues>()
     
     for (const issue of issues) {
-      // Skip issues without issue_code
-      if (!issue.issue_code) {
-        console.warn('Issue without code:', issue)
+      // Skip issues without issue_code or unknown issues
+      if (!issue.issue_code || issue.issue_code === 'unknown') {
+        console.log('Skipping unidentified issue:', issue.message?.slice(0, 50))
         continue
       }
       
@@ -182,9 +205,6 @@ export default function WebsiteAnalyticsPage() {
         existing.urls.push(issue.url)
       } else {
         const title = formatIssueTitle(issue.issue_code)
-        if (title === 'Unknown Issue' || issue.issue_code === 'unknown') {
-          console.log('Unknown issue code:', issue.issue_code, 'Message:', issue.message)
-        }
         
         groups.set(issue.issue_code, {
           code: issue.issue_code,
@@ -194,6 +214,7 @@ export default function WebsiteAnalyticsPage() {
           urls: [issue.url],
           message: issue.message || ''
         })
+      }
       }
     }
     
@@ -606,20 +627,18 @@ export default function WebsiteAnalyticsPage() {
           </div>
         </div>
 
-        {/* Optimize Section */}
-        <div className="bg-card rounded-lg border border-border">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-heading font-bold text-primary">
-              Optimize Website Structure
-            </h2>
-            <p className="text-sm text-secondary/60 mt-1">
-              {recommendations.length > 0 
-                ? `${recommendations.length} recommended action${recommendations.length === 1 ? '' : 's'} to improve AI readability`
-                : 'Actions to improve AI readability'}
-            </p>
-          </div>
-          <div className="p-6">
-            {recommendations.length > 0 ? (
+        {/* Optimize Section - Only show when there are recommendations */}
+        {recommendations.length > 0 && (
+          <div className="bg-card rounded-lg border border-border">
+            <div className="p-6 border-b border-border">
+              <h2 className="text-xl font-heading font-bold text-primary">
+                Optimize Website Structure
+              </h2>
+              <p className="text-sm text-secondary/60 mt-1">
+                {recommendations.length} recommended action{recommendations.length === 1 ? '' : 's'} to improve AI readability
+              </p>
+            </div>
+            <div className="p-6">
               <div className="space-y-4">
                 {recommendations.map((rec) => (
                   <ActionCard
@@ -633,14 +652,9 @@ export default function WebsiteAnalyticsPage() {
                   />
                 ))}
               </div>
-            ) : (
-              <div className="text-center py-8 text-secondary/60">
-                <p className="mb-2">No specific recommendations at this time.</p>
-                <p className="text-sm">Run another scan after implementing changes to see updated suggestions.</p>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action Modal */}
         {selectedTask && (
