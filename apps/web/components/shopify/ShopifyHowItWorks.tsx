@@ -251,9 +251,7 @@ function RecommendedIcon({ active }: { active: boolean }) {
 
 export default function ShopifyHowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
-  const [isLocked, setIsLocked] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const lastScrollTime = useRef(0)
+  const stepRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const visuals = [
     <InstallVisual key="install" />,
@@ -263,77 +261,40 @@ export default function ShopifyHowItWorks() {
 
   const icons = [InstallIcon, OptimizeIcon, RecommendedIcon]
 
+  // IntersectionObserver on each step card
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
+    const observers: IntersectionObserver[] = []
 
-    const handleScroll = () => {
-      const rect = section.getBoundingClientRect()
-      const sectionTop = rect.top
-      const sectionBottom = rect.bottom
-      const viewportHeight = window.innerHeight
+    stepRefs.current.forEach((ref, index) => {
+      if (!ref) return
 
-      // Check if section is in view and should be locked
-      const shouldLock = sectionTop <= 100 && sectionBottom >= viewportHeight
-
-      if (shouldLock && !isLocked) {
-        setIsLocked(true)
-      } else if (!shouldLock && isLocked) {
-        setIsLocked(false)
-      }
-    }
-
-    const handleWheel = (e: WheelEvent) => {
-      const rect = section.getBoundingClientRect()
-      const sectionTop = rect.top
-      const sectionBottom = rect.bottom
-      const viewportHeight = window.innerHeight
-
-      // Only hijack if section is properly in view
-      const isInSection = sectionTop <= 100 && sectionBottom >= viewportHeight
-
-      if (!isInSection) return
-
-      // Throttle to prevent too-fast scrolling
-      const now = Date.now()
-      if (now - lastScrollTime.current < 400) {
-        e.preventDefault()
-        return
-      }
-
-      const direction = e.deltaY > 0 ? 1 : -1
-
-      // Scrolling down
-      if (direction > 0) {
-        if (activeStep < steps.length - 1) {
-          e.preventDefault()
-          lastScrollTime.current = now
-          setActiveStep(prev => prev + 1)
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // When step enters the "active zone" (middle 40% of viewport)
+            if (entry.isIntersecting) {
+              setActiveStep(index)
+            }
+          })
+        },
+        {
+          // Trigger when step is in the middle portion of the viewport
+          rootMargin: '-30% 0px -30% 0px',
+          threshold: 0.5,
         }
-        // If on last step, allow natural scroll to continue
-      }
-      // Scrolling up
-      else {
-        if (activeStep > 0) {
-          e.preventDefault()
-          lastScrollTime.current = now
-          setActiveStep(prev => prev - 1)
-        }
-        // If on first step, allow natural scroll to go back
-      }
-    }
+      )
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('wheel', handleWheel, { passive: false })
+      observer.observe(ref)
+      observers.push(observer)
+    })
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('wheel', handleWheel)
+      observers.forEach((obs) => obs.disconnect())
     }
-  }, [activeStep, isLocked])
+  }, [])
 
   return (
-    <section ref={sectionRef}>
+    <section>
       {/* Color Noise Gradient Bar */}
       <div 
         className="w-full h-4 md:h-6"
@@ -388,11 +349,27 @@ export default function ShopifyHowItWorks() {
                     </div>
                   ))}
                 </div>
+                
+                {/* Step Indicator Dots */}
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  {steps.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveStep(index)}
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                        activeStep === index 
+                          ? 'bg-[#95BF47] w-8' 
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                      aria-label={`Go to step ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Right: Clickable Steps List */}
-            <div className="space-y-4">
+            <div className="space-y-6 lg:space-y-8">
               {steps.map((step, index) => {
                 const Icon = icons[index]
                 const isActive = activeStep === index
@@ -400,8 +377,18 @@ export default function ShopifyHowItWorks() {
                 return (
                   <button
                     key={step.number}
-                    onClick={() => setActiveStep(index)}
-                    className={`relative w-full text-left pl-6 sm:pl-8 pr-4 sm:pr-6 py-6 sm:py-8 rounded-2xl transition-all duration-300 cursor-pointer ${
+                    ref={(el) => { stepRefs.current[index] = el }}
+                    onClick={() => {
+                      setActiveStep(index)
+                      // Smooth scroll to center this step on mobile
+                      if (window.innerWidth < 1024) {
+                        stepRefs.current[index]?.scrollIntoView({ 
+                          behavior: 'smooth', 
+                          block: 'center' 
+                        })
+                      }
+                    }}
+                    className={`relative w-full text-left pl-6 sm:pl-8 pr-4 sm:pr-6 py-8 sm:py-10 lg:py-12 rounded-2xl transition-all duration-300 cursor-pointer ${
                       isActive 
                         ? 'bg-gray-50 shadow-sm' 
                         : 'bg-transparent hover:bg-gray-50/50'
@@ -409,7 +396,7 @@ export default function ShopifyHowItWorks() {
                   >
                     {/* Active Indicator Line */}
                     <div 
-                      className={`absolute left-0 top-6 sm:top-8 bottom-6 sm:bottom-8 w-1 rounded-full transition-all duration-300 ${
+                      className={`absolute left-0 top-8 sm:top-10 lg:top-12 bottom-8 sm:bottom-10 lg:bottom-12 w-1 rounded-full transition-all duration-300 ${
                         isActive ? 'bg-[#95BF47]' : 'bg-gray-200'
                       }`}
                     />
