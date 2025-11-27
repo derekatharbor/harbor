@@ -2,18 +2,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 // Generate short referral code
 function generateReferralCode(): string {
   return Math.random().toString(36).substring(2, 10).toUpperCase()
 }
 
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabase()
     const { email, referredBy } = await request.json()
 
     if (!email || !email.includes('@')) {
@@ -127,6 +130,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint to check position by referral code
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabase()
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
 
