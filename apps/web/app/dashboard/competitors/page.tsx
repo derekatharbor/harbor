@@ -260,17 +260,16 @@ export default function CompetitorsPage() {
                     #{data.userRank}
                   </div>
                   <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                    {currentDashboard.logo_url ? (
-                      <img 
-                        src={currentDashboard.logo_url} 
-                        alt={currentDashboard.brand_name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-primary font-bold">
-                        {currentDashboard.brand_name?.charAt(0)}
-                      </div>
-                    )}
+                    <img 
+                      src={`https://cdn.brandfetch.io/${currentDashboard.domain}`}
+                      alt={currentDashboard.brand_name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                        target.parentElement!.innerHTML = `<div class="w-full h-full flex items-center justify-center text-primary font-bold">${currentDashboard.brand_name?.charAt(0)}</div>`
+                      }}
+                    />
                   </div>
                   <div>
                     <div className="text-primary font-semibold flex items-center gap-2">

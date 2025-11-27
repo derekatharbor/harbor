@@ -3,7 +3,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Building2, Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import AddBrandModal from '@/components/modals/AddBrandModal'
 
@@ -38,6 +38,9 @@ export default function BrandSwitcher() {
     )
   }
 
+  // Derive logo URL from domain via Brandfetch CDN
+  const getBrandLogo = (domain: string) => `https://cdn.brandfetch.io/${domain}`
+
   return (
     <>
       {/* Inline Accordion */}
@@ -50,15 +53,16 @@ export default function BrandSwitcher() {
           <div className="flex items-center gap-3">
             {/* Brand Logo */}
             <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
-              {currentDashboard.logo_url ? (
-                <img 
-                  src={currentDashboard.logo_url} 
-                  alt={`${currentDashboard.brand_name} logo`}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Building2 className="w-5 h-5 text-softgray/50" strokeWidth={1.5} />
-              )}
+              <img 
+                src={getBrandLogo(currentDashboard.domain)} 
+                alt={`${currentDashboard.brand_name} logo`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                  target.parentElement!.innerHTML = `<span class="text-softgray/50 font-medium text-sm">${currentDashboard.brand_name.charAt(0)}</span>`
+                }}
+              />
             </div>
             
             {/* Brand Info */}
@@ -99,15 +103,16 @@ export default function BrandSwitcher() {
                     >
                       {/* Brand Logo */}
                       <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        {dashboard.logo_url ? (
-                          <img 
-                            src={dashboard.logo_url} 
-                            alt={`${dashboard.brand_name} logo`}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <Building2 className="w-4 h-4 text-softgray/40" strokeWidth={1.5} />
-                        )}
+                        <img 
+                          src={getBrandLogo(dashboard.domain)} 
+                          alt={`${dashboard.brand_name} logo`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.style.display = 'none'
+                            target.parentElement!.innerHTML = `<span class="text-softgray/40 font-medium text-xs">${dashboard.brand_name.charAt(0)}</span>`
+                          }}
+                        />
                       </div>
                       
                       {/* Brand Info */}
