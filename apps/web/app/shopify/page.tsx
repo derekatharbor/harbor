@@ -8,7 +8,6 @@ import {
   ArrowRight, 
   Check, 
   Copy,
-  CheckCircle,
   Linkedin,
   Twitter,
   Menu
@@ -89,12 +88,12 @@ export default function ShopifyWaitlistPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#101A31]">
+    <div className="min-h-screen bg-[#0a0f1a]">
       
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#101A31]/80 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3">
               <Image 
                 src="/logo-icon.png" 
@@ -117,7 +116,7 @@ export default function ShopifyWaitlistPage() {
               
               <Link
                 href="/auth/signup"
-                className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-[#101A31] text-sm font-medium hover:bg-gray-100 transition-all"
+                className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-lg bg-white text-[#0a0f1a] text-sm font-medium hover:bg-gray-100 transition-all"
               >
                 Get Started
               </Link>
@@ -126,67 +125,105 @@ export default function ShopifyWaitlistPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+      {/* Hero Section - Cinematic */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         
-        {/* Radial Wireframe Background */}
+        {/* Halo Arc Effect */}
         <div className="absolute inset-0 flex items-center justify-center">
+          {/* Main arc glow */}
           <div 
-            className="w-[200%] md:w-[150%] max-w-[1800px] aspect-square opacity-20"
+            className="absolute w-[140%] md:w-[100%] max-w-[1400px] aspect-square"
             style={{
               background: `
-                repeating-radial-gradient(
-                  circle at center,
-                  transparent 0px,
-                  transparent 59px,
-                  rgba(255,255,255,0.08) 60px
+                radial-gradient(
+                  ellipse 80% 50% at 50% 100%,
+                  rgba(139, 92, 246, 0.15) 0%,
+                  rgba(34, 211, 238, 0.08) 30%,
+                  rgba(149, 191, 71, 0.05) 50%,
+                  transparent 70%
                 )
               `,
+              transform: 'translateY(30%)',
+            }}
+          />
+          {/* Secondary inner glow */}
+          <div 
+            className="absolute w-[100%] md:w-[70%] max-w-[1000px] aspect-square"
+            style={{
+              background: `
+                radial-gradient(
+                  ellipse 70% 40% at 50% 100%,
+                  rgba(139, 92, 246, 0.2) 0%,
+                  rgba(236, 72, 153, 0.1) 40%,
+                  transparent 60%
+                )
+              `,
+              transform: 'translateY(40%)',
+            }}
+          />
+          {/* Subtle green accent at the edge */}
+          <div 
+            className="absolute w-[160%] md:w-[110%] max-w-[1600px] aspect-square opacity-40"
+            style={{
+              background: `
+                radial-gradient(
+                  ellipse 90% 50% at 50% 100%,
+                  transparent 60%,
+                  rgba(149, 191, 71, 0.1) 70%,
+                  transparent 80%
+                )
+              `,
+              transform: 'translateY(25%)',
             }}
           />
         </div>
 
-        {/* Gradient Overlay */}
+        {/* Wave line motif */}
         <div 
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 opacity-20"
           style={{
-            background: 'radial-gradient(ellipse at center, transparent 0%, #101A31 70%)'
+            backgroundImage: 'url(/images/wireframe-wave.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center bottom',
           }}
         />
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center pt-20">
           
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-6 md:mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#95BF47]" />
-            <span className="text-sm text-white/50 tracking-wide">Coming Q1 2026</span>
+          {/* Early Access Badge */}
+          <div className="inline-flex items-center gap-2.5 mb-10 md:mb-12">
+            <span className="w-2 h-2 rounded-full bg-[#95BF47] animate-pulse" />
+            <span className="text-sm text-white/50 tracking-widest uppercase">Coming Q1 2026</span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 md:mb-8 leading-[1] md:leading-[0.95]">
-            <span 
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 25%, #a5b4fc 50%, #22d3ee 75%, #ffffff 100%)'
-              }}
-            >
-              AI Visibility
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold mb-8 leading-[1.1]">
+            <span className="text-white">
+              Get your products recommended
             </span>
             <br />
             <span className="text-white">
-              for Shopify
+              by AI.{' '}
+            </span>
+            <span 
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage: 'linear-gradient(135deg, #a5b4fc 0%, #22d3ee 50%, #a5b4fc 100%)'
+              }}
+            >
+              Automatically.
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed px-2 mb-10 md:mb-12">
-            Get your products cited and recommended by ChatGPT, Claude, Gemini, and Perplexity. 
-            One-click optimization. No technical skills needed.
+          <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed mb-12 md:mb-14">
+            Harbor generates and injects product schema, FAQs, and AI-ready descriptions 
+            so ChatGPT, Claude, Gemini, and Perplexity actually understand your products.
           </p>
 
           {/* Signup Form or Success State */}
           {!isSubmitted ? (
-            <div className="max-w-md mx-auto">
+            <div className="max-w-lg mx-auto">
               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
@@ -194,49 +231,48 @@ export default function ShopifyWaitlistPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-5 py-4 rounded-lg bg-white text-[#101A31] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                  className="flex-1 px-6 py-4 rounded-xl bg-white text-[#0a0f1a] placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-white/30 transition-all"
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 rounded-lg font-semibold bg-[#101A31] text-white border-2 border-white/20 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/50 hover:bg-[#101A31] disabled:opacity-50"
+                  className="px-8 py-4 rounded-xl font-semibold bg-[#101A31] text-white border border-white/10 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/40 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
-                      Join Waitlist
+                      Get early access
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
               </form>
               {error && (
-                <p className="mt-3 text-red-400 text-sm">{error}</p>
+                <p className="mt-4 text-red-400 text-sm">{error}</p>
               )}
-              <p className="mt-6 text-sm text-white/40">
-                {totalSignups.toLocaleString()}+ store owners already on the list
+              <p className="mt-6 text-sm text-white/30">
+                {totalSignups.toLocaleString()}+ store owners on the waitlist
               </p>
             </div>
           ) : (
             <div className="max-w-md mx-auto">
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-                <div className="w-12 h-12 rounded-full bg-[#95BF47]/20 flex items-center justify-center mx-auto mb-4">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+                <div className="w-12 h-12 rounded-full bg-[#95BF47]/20 flex items-center justify-center mx-auto mb-5">
                   <Check className="w-6 h-6 text-[#95BF47]" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">You're on the list</h3>
-                <p className="text-white/50 text-sm mb-6">
+                <p className="text-white/40 text-sm mb-6">
                   Position #{position?.toLocaleString()}. Share to move up.
                 </p>
 
-                {/* Referral Link */}
-                <div className="bg-white/5 rounded-lg p-3 mb-4">
+                <div className="bg-white/5 rounded-lg p-3 mb-5">
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
                       value={referralLink}
                       readOnly
-                      className="flex-1 bg-transparent text-white/60 text-sm truncate outline-none"
+                      className="flex-1 bg-transparent text-white/50 text-sm truncate outline-none"
                     />
                     <button
                       onClick={copyReferralLink}
@@ -245,24 +281,23 @@ export default function ShopifyWaitlistPage() {
                       {copied ? (
                         <Check className="w-4 h-4 text-[#95BF47]" />
                       ) : (
-                        <Copy className="w-4 h-4 text-white/50" />
+                        <Copy className="w-4 h-4 text-white/40" />
                       )}
                     </button>
                   </div>
                 </div>
 
-                {/* Share Buttons */}
                 <div className="flex items-center justify-center gap-3">
                   <button
                     onClick={shareToLinkedIn}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors"
                   >
                     <Linkedin className="w-4 h-4" />
                     LinkedIn
                   </button>
                   <button
                     onClick={shareToTwitter}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-white/70 text-sm font-medium hover:bg-white/10 transition-colors"
                   >
                     <Twitter className="w-4 h-4" />
                     Twitter
@@ -270,7 +305,7 @@ export default function ShopifyWaitlistPage() {
                 </div>
 
                 {referralCount > 0 && (
-                  <p className="mt-4 text-sm text-[#95BF47]">
+                  <p className="mt-5 text-sm text-[#95BF47]">
                     {referralCount} {referralCount === 1 ? 'person' : 'people'} joined through your link
                   </p>
                 )}
@@ -279,18 +314,11 @@ export default function ShopifyWaitlistPage() {
           )}
 
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 hidden md:block">
-          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
-            <div className="w-1 h-2 bg-white/40 rounded-full animate-bounce" />
-          </div>
-        </div>
       </section>
 
       {/* Color Noise Transition Bar */}
       <div 
-        className="w-full h-4 md:h-6"
+        className="w-full h-4 md:h-5"
         style={{
           backgroundImage: 'url(/shopify-noise-bar.png)',
           backgroundSize: 'cover',
@@ -298,12 +326,11 @@ export default function ShopifyWaitlistPage() {
         }}
       />
 
-      {/* The Shift Section - Light */}
-      <section className="relative py-24 md:py-32 bg-[#f8fafc] overflow-hidden">
+      {/* The Shift Section */}
+      <section className="relative py-28 md:py-36 bg-[#fafbfc] overflow-hidden">
         
-        {/* Subtle wave background */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-40"
+          className="absolute inset-0 pointer-events-none opacity-30"
           style={{
             backgroundImage: 'url(/images/wireframe-wave.png)',
             backgroundSize: 'cover',
@@ -313,54 +340,54 @@ export default function ShopifyWaitlistPage() {
 
         <div className="relative z-10 max-w-5xl mx-auto px-6">
           
-          {/* Section Header */}
-          <div className="text-center mb-16 md:mb-20">
-            <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">The Shift</p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#101A31] leading-tight">
-              Discovery moved from search results
+          {/* Header */}
+          <div className="text-center mb-20 md:mb-24">
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em] mb-5">The Shift</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#0a0f1a] leading-tight">
+              Discovery moved from search results to AI answers.
               <br />
-              <span className="text-gray-400">to AI answers.</span>
+              <span className="text-gray-400">Your products need to show up there.</span>
             </h2>
           </div>
 
-          {/* Stats */}
-          <div className="grid md:grid-cols-2 gap-12 md:gap-20 max-w-3xl mx-auto mb-20">
-            <div className="text-center">
-              <div className="text-6xl md:text-7xl font-heading font-light text-[#101A31] mb-2">
+          {/* Stats - Cinematic Cards */}
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-3xl mx-auto mb-24">
+            <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100">
+              <div className="text-7xl md:text-8xl font-heading font-light text-[#0a0f1a] mb-3">
                 76%
               </div>
-              <p className="text-gray-500">
-                of buyers use AI to research products or services
+              <p className="text-gray-500 text-lg">
+                of buyers use AI to research products
               </p>
             </div>
-            <div className="text-center">
-              <div className="text-6xl md:text-7xl font-heading font-light text-[#101A31] mb-2">
+            <div className="bg-white rounded-2xl p-10 shadow-sm border border-gray-100">
+              <div className="text-7xl md:text-8xl font-heading font-light text-[#0a0f1a] mb-3">
                 1
               </div>
-              <p className="text-gray-500">
-                answer is all users see. AI models recommend what they understand.
+              <p className="text-gray-500 text-lg">
+                answer is all users see. AI models recommend what they parse.
               </p>
             </div>
           </div>
 
           {/* Three Columns */}
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
+          <div className="grid md:grid-cols-3 gap-12 md:gap-16 text-center max-w-4xl mx-auto">
             <div>
-              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Install</h3>
+              <h3 className="text-lg font-semibold text-[#0a0f1a] mb-3">Install</h3>
               <p className="text-gray-500 leading-relaxed">
-                Connect your Shopify store in under 60 seconds using our App Store listing.
+                Connect your Shopify store in under 60 seconds from the App Store.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Optimize</h3>
+              <h3 className="text-lg font-semibold text-[#0a0f1a] mb-3">Optimize</h3>
               <p className="text-gray-500 leading-relaxed">
-                Harbor auto-generates product schema, FAQs, and AI-ready descriptions designed for generative models.
+                Auto-generate product schema, FAQs, and AI-ready descriptions designed for generative models.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Track</h3>
+              <h3 className="text-lg font-semibold text-[#0a0f1a] mb-3">Track</h3>
               <p className="text-gray-500 leading-relaxed">
-                See which products appear in AI answers and monitor your visibility over time.
+                Monitor which products appear in AI answers and measure visibility over time.
               </p>
             </div>
           </div>
@@ -368,14 +395,13 @@ export default function ShopifyWaitlistPage() {
         </div>
       </section>
 
-      {/* Why It Matters Section - Navy */}
-      <section className="relative py-24 md:py-32 bg-[#101A31] overflow-hidden">
+      {/* The Problem Section */}
+      <section className="relative py-28 md:py-36 bg-[#0a0f1a] overflow-hidden">
         
-        {/* Subtle gradient sheen */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-50"
+          className="absolute inset-0 pointer-events-none opacity-30"
           style={{
-            background: 'linear-gradient(180deg, rgba(34, 211, 238, 0.03) 0%, transparent 50%, rgba(168, 85, 247, 0.03) 100%)'
+            background: 'linear-gradient(180deg, rgba(139, 92, 246, 0.03) 0%, transparent 50%, rgba(34, 211, 238, 0.02) 100%)'
           }}
         />
 
@@ -383,53 +409,55 @@ export default function ShopifyWaitlistPage() {
           
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             
-            {/* Left - Dark Card */}
+            {/* Left - Problem Card */}
             <div className="relative">
               <div 
-                className="rounded-2xl p-8 md:p-10"
+                className="rounded-2xl p-10 md:p-12"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
-                  border: '1px solid rgba(255,255,255,0.08)'
+                  background: 'linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)'
                 }}
               >
-                <p className="text-sm text-white/40 uppercase tracking-wider mb-6">The Problem</p>
-                <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-6">
-                  When someone asks ChatGPT for the "best running shoes" or "top inventory apps" — where does your product appear?
-                </p>
-                <p className="text-white/50 leading-relaxed">
-                  AI models recommend what they understand. Structured data is their language. 
-                  Without proper schema and optimization, your products are invisible to generative search.
+                <p className="text-xs text-white/30 uppercase tracking-[0.2em] mb-8">The Problem</p>
+                <p className="text-2xl md:text-3xl text-white leading-snug">
+                  AI answers are the new product shelf.
+                  <br /><br />
+                  <span className="text-white/50">
+                    If AI models don't understand your products, they'll never recommend them.
+                  </span>
                 </p>
               </div>
               
-              {/* Subtle green accent line */}
+              {/* Subtle green accent glow at bottom */}
               <div 
-                className="absolute -bottom-px left-8 right-8 h-px"
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-2/3 h-1 rounded-full blur-sm"
                 style={{
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(149,191,71,0.5) 50%, transparent 100%)'
+                  background: 'rgba(149, 191, 71, 0.4)'
                 }}
               />
             </div>
 
-            {/* Right - Content */}
+            {/* Right - Solution */}
             <div>
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6 leading-tight">
-                Structured data is the new SEO.
+                Products need structure to be seen by AI.
+                <br />
+                <span className="text-white/40">Most stores don't have it.</span>
               </h2>
-              <p className="text-white/60 text-lg leading-relaxed mb-8">
-                Harbor for Shopify automatically optimizes your store for AI discovery. 
-                Product schema, FAQ markup, and AI-ready descriptions — all generated and injected without touching your theme code.
+              <p className="text-white/50 text-lg leading-relaxed mb-10">
+                AI models recommend what they can parse. Without proper schema, FAQs, and structured 
+                product descriptions, your products are invisible to generative search.
               </p>
               
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {[
-                  'Products with proper schema are cited more frequently',
-                  'AI search queries are growing 40% quarter over quarter',
-                  'Early adopters establish presence before competitors',
+                  'Products with correct schema are cited more often in AI answers',
+                  'AI-driven product discovery is growing every quarter',
+                  'Early optimizers win category position',
                 ].map((point, i) => (
-                  <div key={i} className="flex items-start gap-3">
+                  <div key={i} className="flex items-start gap-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#95BF47] mt-2.5 flex-shrink-0" />
-                    <span className="text-white/70">{point}</span>
+                    <span className="text-white/60">{point}</span>
                   </div>
                 ))}
               </div>
@@ -439,14 +467,14 @@ export default function ShopifyWaitlistPage() {
         </div>
       </section>
 
-      {/* Features Section - Soft Gradient */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-white overflow-hidden">
+      {/* Capabilities Section */}
+      <section className="relative py-28 md:py-36 overflow-hidden" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #fafbfc 100%)' }}>
         
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           
-          <div className="text-center mb-16">
-            <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">Capabilities</p>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31]">
+          <div className="text-center mb-16 md:mb-20">
+            <p className="text-xs text-gray-400 uppercase tracking-[0.2em] mb-5">Capabilities</p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#0a0f1a]">
               What Harbor for Shopify includes
             </h2>
           </div>
@@ -455,11 +483,11 @@ export default function ShopifyWaitlistPage() {
             {[
               {
                 title: 'Automatic Schema Injection',
-                description: 'Product, Organization, FAQ, and Review schema added to your theme without code changes.'
+                description: 'Product, Organization, FAQ, and Review schema added to your theme automatically.'
               },
               {
                 title: 'AI-Ready Descriptions',
-                description: 'Generate clear, factual product copy that AI models can parse and cite accurately.'
+                description: 'Factual product copy that AI models can parse and cite.'
               },
               {
                 title: 'Visibility Dashboard',
@@ -467,55 +495,55 @@ export default function ShopifyWaitlistPage() {
               },
               {
                 title: 'Competitor Monitoring',
-                description: 'See when competitors appear for queries in your category. Understand the landscape.'
+                description: 'See which stores appear alongside yours in generative answers.'
               },
               {
                 title: 'FAQ Generation',
-                description: 'Auto-create FAQ pages from real questions users ask AI about products like yours.'
+                description: 'Turn real AI-user questions into structured FAQ pages.'
               },
               {
                 title: 'One-Click Fixes',
-                description: 'When issues are detected, resolve them instantly. No developer required.'
+                description: 'Resolve schema and citation issues instantly — no developer needed.'
               },
             ].map((feature, i) => (
               <div 
                 key={i} 
-                className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all"
+                className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#95BF47] mt-2.5 flex-shrink-0" />
-                  <h3 className="text-lg font-semibold text-[#101A31]">{feature.title}</h3>
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#95BF47] mt-2 flex-shrink-0" />
+                  <h3 className="text-lg font-semibold text-[#0a0f1a]">{feature.title}</h3>
                 </div>
-                <p className="text-gray-500 text-sm leading-relaxed pl-[18px]">{feature.description}</p>
+                <p className="text-gray-500 leading-relaxed pl-[18px]">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section - Navy */}
-      <section className="relative py-24 md:py-32 bg-[#101A31] overflow-hidden">
+      {/* Final CTA Section */}
+      <section className="relative py-28 md:py-36 bg-[#0a0f1a] overflow-hidden">
         
-        {/* Top gradient border */}
+        {/* Gradient top border */}
         <div 
           className="absolute top-0 left-0 right-0 h-px"
           style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.3) 25%, rgba(34,211,238,0.3) 50%, rgba(236,72,153,0.3) 75%, transparent 100%)'
+            background: 'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.4) 25%, rgba(34, 211, 238, 0.4) 50%, rgba(236, 72, 153, 0.4) 75%, transparent 100%)'
           }}
         />
 
         <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-white mb-6">
             Be first to AI search.
           </h2>
-          <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">
+          <p className="text-lg text-white/40 mb-12 max-w-xl mx-auto leading-relaxed">
             The stores that optimize for AI now establish the positions that matter. 
             Join the waitlist for early access.
           </p>
 
           {!isSubmitted ? (
-            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+            <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
               <div className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
@@ -523,29 +551,29 @@ export default function ShopifyWaitlistPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-5 py-4 rounded-lg bg-white text-[#101A31] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                  className="flex-1 px-6 py-4 rounded-xl bg-white text-[#0a0f1a] placeholder-gray-400 text-base focus:outline-none focus:ring-2 focus:ring-white/30 transition-all"
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 rounded-lg font-semibold bg-[#101A31] text-white border-2 border-white/20 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/50 disabled:opacity-50"
+                  className="px-8 py-4 rounded-xl font-semibold bg-[#101A31] text-white border border-white/10 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/40 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
-                      Join Waitlist
+                      Get early access
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
               </div>
               {error && (
-                <p className="mt-3 text-red-400 text-sm">{error}</p>
+                <p className="mt-4 text-red-400 text-sm">{error}</p>
               )}
             </form>
           ) : (
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white/5 border border-white/10">
+            <div className="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white/5 border border-white/10">
               <Check className="w-5 h-5 text-[#95BF47]" />
               <span className="text-white">You're #{position?.toLocaleString()} on the waitlist</span>
             </div>
@@ -555,21 +583,21 @@ export default function ShopifyWaitlistPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#101A31] border-t border-white/5 py-8">
+      <footer className="bg-[#0a0f1a] border-t border-white/5 py-10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-white/40 text-sm">
+          <div className="flex items-center gap-3 text-white/30 text-sm">
             <Image 
               src="/logo-icon.png" 
               alt="Harbor" 
               width={20}
               height={20}
-              className="opacity-40"
+              className="opacity-30"
             />
             <span>© 2025 Harbor. All rights reserved.</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-white/40">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <div className="flex items-center gap-8 text-sm text-white/30">
+            <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white/60 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
