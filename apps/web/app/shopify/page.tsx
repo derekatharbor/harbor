@@ -9,9 +9,6 @@ import {
   Check, 
   Copy,
   CheckCircle,
-  ShoppingBag,
-  Zap,
-  Eye,
   Linkedin,
   Twitter,
   Menu
@@ -86,7 +83,7 @@ export default function ShopifyWaitlistPage() {
   }
 
   const shareToTwitter = () => {
-    const text = encodeURIComponent("Just joined the waitlist for @useharbor's Shopify plugin - get your store seen by AI search engines 🚀")
+    const text = encodeURIComponent("Just joined the waitlist for Harbor's Shopify plugin — AI visibility for e-commerce")
     const url = encodeURIComponent(referralLink)
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank')
   }
@@ -100,7 +97,7 @@ export default function ShopifyWaitlistPage() {
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-3">
               <Image 
-                src="/images/Harbor_White_Logo.png" 
+                src="/logo-icon.png" 
                 alt="Harbor" 
                 width={32} 
                 height={32}
@@ -129,20 +126,20 @@ export default function ShopifyWaitlistPage() {
         </div>
       </nav>
 
-      {/* Hero Section - Dark */}
-      <section className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center pt-20 pb-12 md:pb-0 overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
         
         {/* Radial Wireframe Background */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div 
-            className="w-[200%] md:w-[150%] max-w-[1800px] aspect-square opacity-15"
+            className="w-[200%] md:w-[150%] max-w-[1800px] aspect-square opacity-20"
             style={{
               background: `
                 repeating-radial-gradient(
                   circle at center,
                   transparent 0px,
                   transparent 59px,
-                  rgba(149,191,71,0.15) 60px
+                  rgba(255,255,255,0.08) 60px
                 )
               `,
             }}
@@ -160,31 +157,31 @@ export default function ShopifyWaitlistPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#95BF47]/10 border border-[#95BF47]/20 mb-6 md:mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#95BF47] animate-pulse" />
-            <span className="text-sm font-medium text-[#95BF47]">Coming Q1 2026</span>
+          <div className="inline-flex items-center gap-2 mb-6 md:mb-8">
+            <span className="w-2 h-2 rounded-full bg-[#95BF47]" />
+            <span className="text-sm text-white/50 tracking-wide">Coming Q1 2026</span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 md:mb-8 leading-[1] md:leading-[0.95]">
-            <span className="text-white">
-              AI Visibility
-            </span>
-            <br />
             <span 
               className="bg-clip-text text-transparent"
               style={{
-                backgroundImage: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 50%, #95BF47 100%)'
+                backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #e0e7ff 25%, #a5b4fc 50%, #22d3ee 75%, #ffffff 100%)'
               }}
             >
+              AI Visibility
+            </span>
+            <br />
+            <span className="text-white">
               for Shopify
             </span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed px-2 mb-10 md:mb-12">
-            Get your products recommended by ChatGPT, Claude, Gemini & Perplexity. 
-            One-click optimization. Zero technical skills. The first AI visibility plugin for e-commerce.
+            Get your products cited and recommended by ChatGPT, Claude, Gemini, and Perplexity. 
+            One-click optimization. No technical skills needed.
           </p>
 
           {/* Signup Form or Success State */}
@@ -197,13 +194,12 @@ export default function ShopifyWaitlistPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-5 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-[#95BF47]/50 focus:bg-white/15 transition-all"
+                  className="flex-1 px-5 py-4 rounded-lg bg-white text-[#101A31] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 rounded-lg font-semibold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 100%)' }}
+                  className="px-8 py-4 rounded-lg font-semibold bg-[#101A31] text-white border-2 border-white/20 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/50 hover:bg-[#101A31] disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -218,90 +214,96 @@ export default function ShopifyWaitlistPage() {
               {error && (
                 <p className="mt-3 text-red-400 text-sm">{error}</p>
               )}
-              <p className="mt-4 text-sm text-white/40">
-                Join {totalSignups.toLocaleString()}+ store owners on the waitlist
+              <p className="mt-6 text-sm text-white/40">
+                {totalSignups.toLocaleString()}+ store owners already on the list
               </p>
             </div>
           ) : (
-            <div className="max-w-md mx-auto bg-white/5 border border-[#95BF47]/30 rounded-2xl p-6 md:p-8">
-              <div className="w-14 h-14 rounded-full bg-[#95BF47]/20 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-7 h-7 text-[#95BF47]" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">You're on the list!</h3>
-              <p className="text-white/60 text-sm mb-6">
-                Position #{position?.toLocaleString()}. Share to move up.
-              </p>
+            <div className="max-w-md mx-auto">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+                <div className="w-12 h-12 rounded-full bg-[#95BF47]/20 flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-6 h-6 text-[#95BF47]" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">You're on the list</h3>
+                <p className="text-white/50 text-sm mb-6">
+                  Position #{position?.toLocaleString()}. Share to move up.
+                </p>
 
-              {/* Referral Link */}
-              <div className="bg-white/5 rounded-lg p-3 mb-4">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={referralLink}
-                    readOnly
-                    className="flex-1 bg-transparent text-white/70 text-sm truncate outline-none"
-                  />
+                {/* Referral Link */}
+                <div className="bg-white/5 rounded-lg p-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={referralLink}
+                      readOnly
+                      className="flex-1 bg-transparent text-white/60 text-sm truncate outline-none"
+                    />
+                    <button
+                      onClick={copyReferralLink}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    >
+                      {copied ? (
+                        <Check className="w-4 h-4 text-[#95BF47]" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-white/50" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Share Buttons */}
+                <div className="flex items-center justify-center gap-3">
                   <button
-                    onClick={copyReferralLink}
-                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                    onClick={shareToLinkedIn}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
                   >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-[#95BF47]" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-white/60" />
-                    )}
+                    <Linkedin className="w-4 h-4" />
+                    LinkedIn
+                  </button>
+                  <button
+                    onClick={shareToTwitter}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
+                  >
+                    <Twitter className="w-4 h-4" />
+                    Twitter
                   </button>
                 </div>
-              </div>
 
-              {/* Share Buttons */}
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={shareToLinkedIn}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0A66C2] text-white text-sm font-medium hover:opacity-90 transition-opacity"
-                >
-                  <Linkedin className="w-4 h-4" />
-                  Share
-                </button>
-                <button
-                  onClick={shareToTwitter}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors"
-                >
-                  <Twitter className="w-4 h-4" />
-                  Tweet
-                </button>
+                {referralCount > 0 && (
+                  <p className="mt-4 text-sm text-[#95BF47]">
+                    {referralCount} {referralCount === 1 ? 'person' : 'people'} joined through your link
+                  </p>
+                )}
               </div>
-
-              {referralCount > 0 && (
-                <p className="mt-4 text-sm text-[#95BF47]">
-                  🎉 {referralCount} people joined through your link!
-                </p>
-              )}
             </div>
           )}
 
         </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 hidden md:block">
+          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
+            <div className="w-1 h-2 bg-white/40 rounded-full animate-bounce" />
+          </div>
+        </div>
       </section>
 
-      {/* Color Noise Transition Bar - Green version */}
-      {/* Replace with your green noise texture: /public/shopify-noise-bar.png */}
+      {/* Color Noise Transition Bar */}
       <div 
         className="w-full h-4 md:h-6"
         style={{
           backgroundImage: 'url(/shopify-noise-bar.png)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          // Fallback gradient if image not loaded
-          background: 'linear-gradient(90deg, #5E8E3E 0%, #95BF47 25%, #B4D455 50%, #95BF47 75%, #5E8E3E 100%)'
+          backgroundPosition: 'center'
         }}
       />
 
-      {/* How It Works Section - Light */}
+      {/* The Shift Section - Light */}
       <section className="relative py-24 md:py-32 bg-[#f8fafc] overflow-hidden">
         
-        {/* Subtle Wireframe Background */}
+        {/* Subtle wave background */}
         <div 
-          className="absolute inset-0 pointer-events-none opacity-30"
+          className="absolute inset-0 pointer-events-none opacity-40"
           style={{
             backgroundImage: 'url(/images/wireframe-wave.png)',
             backgroundSize: 'cover',
@@ -309,189 +311,196 @@ export default function ShopifyWaitlistPage() {
           }}
         />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
+        <div className="relative z-10 max-w-5xl mx-auto px-6">
           
           {/* Section Header */}
           <div className="text-center mb-16 md:mb-20">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#101A31] leading-tight mb-4">
-              Three steps to AI visibility.
+            <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">The Shift</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#101A31] leading-tight">
+              Discovery moved from search results
+              <br />
+              <span className="text-gray-400">to AI answers.</span>
             </h2>
-            <p className="text-lg text-gray-500 max-w-xl mx-auto">
-              No code. No consultants. Just results.
-            </p>
           </div>
 
-          {/* Steps */}
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-            
-            {/* Step 1 */}
+          {/* Stats */}
+          <div className="grid md:grid-cols-2 gap-12 md:gap-20 max-w-3xl mx-auto mb-20">
             <div className="text-center">
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                style={{ background: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 100%)' }}
-              >
-                <ShoppingBag className="w-8 h-8 text-white" />
+              <div className="text-6xl md:text-7xl font-heading font-light text-[#101A31] mb-2">
+                76%
               </div>
-              <div className="text-sm font-medium text-[#95BF47] uppercase tracking-wider mb-2">Step 1</div>
-              <h3 className="text-xl font-bold text-[#101A31] mb-3">Install</h3>
               <p className="text-gray-500">
-                One-click install from the Shopify App Store. Connect your store in under 60 seconds.
+                of buyers use AI to research products or services
               </p>
             </div>
-
-            {/* Step 2 */}
             <div className="text-center">
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                style={{ background: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 100%)' }}
-              >
-                <Zap className="w-8 h-8 text-white" />
+              <div className="text-6xl md:text-7xl font-heading font-light text-[#101A31] mb-2">
+                1
               </div>
-              <div className="text-sm font-medium text-[#95BF47] uppercase tracking-wider mb-2">Step 2</div>
-              <h3 className="text-xl font-bold text-[#101A31] mb-3">Optimize</h3>
               <p className="text-gray-500">
-                Auto-generate Product, FAQ, and Organization schema. AI-ready descriptions with one click.
+                answer is all users see. AI models recommend what they understand.
               </p>
             </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                style={{ background: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 100%)' }}
-              >
-                <Eye className="w-8 h-8 text-white" />
-              </div>
-              <div className="text-sm font-medium text-[#95BF47] uppercase tracking-wider mb-2">Step 3</div>
-              <h3 className="text-xl font-bold text-[#101A31] mb-3">Get Seen</h3>
-              <p className="text-gray-500">
-                Track your AI visibility. Watch your products appear in ChatGPT, Claude & Perplexity answers.
-              </p>
-            </div>
-
           </div>
+
+          {/* Three Columns */}
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12 text-center">
+            <div>
+              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Install</h3>
+              <p className="text-gray-500 leading-relaxed">
+                Connect your Shopify store in under 60 seconds using our App Store listing.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Optimize</h3>
+              <p className="text-gray-500 leading-relaxed">
+                Harbor auto-generates product schema, FAQs, and AI-ready descriptions designed for generative models.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[#101A31] mb-3">Track</h3>
+              <p className="text-gray-500 leading-relaxed">
+                See which products appear in AI answers and monitor your visibility over time.
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Why It Matters Section - Gradient */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#e8f5e9] via-[#f1f8e9] to-white overflow-hidden">
+      {/* Why It Matters Section - Navy */}
+      <section className="relative py-24 md:py-32 bg-[#101A31] overflow-hidden">
         
+        {/* Subtle gradient sheen */}
+        <div 
+          className="absolute inset-0 pointer-events-none opacity-50"
+          style={{
+            background: 'linear-gradient(180deg, rgba(34, 211, 238, 0.03) 0%, transparent 50%, rgba(168, 85, 247, 0.03) 100%)'
+          }}
+        />
+
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             
-            {/* Left - Content */}
+            {/* Left - Dark Card */}
+            <div className="relative">
+              <div 
+                className="rounded-2xl p-8 md:p-10"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.08)'
+                }}
+              >
+                <p className="text-sm text-white/40 uppercase tracking-wider mb-6">The Problem</p>
+                <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-6">
+                  When someone asks ChatGPT for the "best running shoes" or "top inventory apps" — where does your product appear?
+                </p>
+                <p className="text-white/50 leading-relaxed">
+                  AI models recommend what they understand. Structured data is their language. 
+                  Without proper schema and optimization, your products are invisible to generative search.
+                </p>
+              </div>
+              
+              {/* Subtle green accent line */}
+              <div 
+                className="absolute -bottom-px left-8 right-8 h-px"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(149,191,71,0.5) 50%, transparent 100%)'
+                }}
+              />
+            </div>
+
+            {/* Right - Content */}
             <div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-[#101A31] leading-tight mb-6">
-                AI is the new search.
-                <br />
-                <span className="text-gray-400">Don't get left behind.</span>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-6 leading-tight">
+                Structured data is the new SEO.
               </h2>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                When someone asks ChatGPT "best running shoes" or "top Shopify apps for inventory" — 
-                where does your product show up? AI models recommend what they understand. 
-                Structured data is their language.
+              <p className="text-white/60 text-lg leading-relaxed mb-8">
+                Harbor for Shopify automatically optimizes your store for AI discovery. 
+                Product schema, FAQ markup, and AI-ready descriptions — all generated and injected without touching your theme code.
               </p>
+              
               <div className="space-y-4">
                 {[
-                  'Products with schema are 3x more likely to be cited',
-                  'AI search is growing 40% quarter over quarter',
-                  'First-mover advantage matters — early optimizers win',
+                  'Products with proper schema are cited more frequently',
+                  'AI search queries are growing 40% quarter over quarter',
+                  'Early adopters establish presence before competitors',
                 ].map((point, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#95BF47]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-[#95BF47]" />
-                    </div>
-                    <span className="text-gray-700">{point}</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#95BF47] mt-2.5 flex-shrink-0" />
+                    <span className="text-white/70">{point}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Right - Mockup Placeholder */}
-            <div className="relative">
-              <div 
-                className="aspect-[4/3] rounded-2xl border border-gray-200 shadow-xl flex items-center justify-center bg-white"
-              >
-                <div className="text-center p-8">
-                  <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                    <ShoppingBag className="w-8 h-8 text-gray-300" />
-                  </div>
-                  <p className="text-gray-400 text-lg font-medium">Plugin Dashboard Preview</p>
-                  <p className="text-gray-300 text-sm mt-1">Coming Soon</p>
-                </div>
-              </div>
-              
-              {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-[#95BF47]/10 rounded-full blur-2xl" />
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-[#95BF47]/10 rounded-full blur-2xl" />
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* Features Section - White */}
-      <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+      {/* Features Section - Soft Gradient */}
+      <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-white overflow-hidden">
         
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31] mb-4">
-              Everything you need
+            <p className="text-sm text-gray-400 uppercase tracking-wider mb-4">Capabilities</p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#101A31]">
+              What Harbor for Shopify includes
             </h2>
-            <p className="text-lg text-gray-500">
-              Built for Shopify merchants who want to dominate AI search.
-            </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
               {
-                title: 'Auto Schema Injection',
-                description: 'Product, Organization, FAQ, and Review schema added to your theme automatically.'
+                title: 'Automatic Schema Injection',
+                description: 'Product, Organization, FAQ, and Review schema added to your theme without code changes.'
               },
               {
                 title: 'AI-Ready Descriptions',
-                description: 'Generate clear, factual product descriptions that AI models understand and cite.'
+                description: 'Generate clear, factual product copy that AI models can parse and cite accurately.'
               },
               {
-                title: 'Visibility Tracking',
-                description: 'See which products appear in AI answers and track improvements over time.'
+                title: 'Visibility Dashboard',
+                description: 'Track which products appear in AI answers across ChatGPT, Claude, Gemini, and Perplexity.'
               },
               {
                 title: 'Competitor Monitoring',
-                description: 'Know when competitors show up for your categories. Stay ahead.'
+                description: 'See when competitors appear for queries in your category. Understand the landscape.'
               },
               {
                 title: 'FAQ Generation',
-                description: 'Auto-create FAQ pages from real questions users ask AI about your products.'
+                description: 'Auto-create FAQ pages from real questions users ask AI about products like yours.'
               },
               {
                 title: 'One-Click Fixes',
-                description: 'Issues detected? Fix them with a single click. No developer needed.'
+                description: 'When issues are detected, resolve them instantly. No developer required.'
               },
             ].map((feature, i) => (
-              <div key={i} className="p-6 rounded-xl border border-gray-100 hover:border-[#95BF47]/30 hover:shadow-lg transition-all">
-                <div className="w-10 h-10 rounded-xl bg-[#95BF47]/10 flex items-center justify-center mb-4">
-                  <Check className="w-5 h-5 text-[#95BF47]" />
+              <div 
+                key={i} 
+                className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#95BF47] mt-2.5 flex-shrink-0" />
+                  <h3 className="text-lg font-semibold text-[#101A31]">{feature.title}</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-[#101A31] mb-2">{feature.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{feature.description}</p>
+                <p className="text-gray-500 text-sm leading-relaxed pl-[18px]">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section - Dark */}
+      {/* Final CTA Section - Navy */}
       <section className="relative py-24 md:py-32 bg-[#101A31] overflow-hidden">
         
-        {/* Subtle radial gradient */}
+        {/* Top gradient border */}
         <div 
-          className="absolute inset-0 pointer-events-none"
+          className="absolute top-0 left-0 right-0 h-px"
           style={{
-            background: 'radial-gradient(ellipse at center top, rgba(149,191,71,0.1) 0%, transparent 50%)'
+            background: 'linear-gradient(90deg, transparent 0%, rgba(168,85,247,0.3) 25%, rgba(34,211,238,0.3) 50%, rgba(236,72,153,0.3) 75%, transparent 100%)'
           }}
         />
 
@@ -500,9 +509,9 @@ export default function ShopifyWaitlistPage() {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-white mb-6">
             Be first to AI search.
           </h2>
-          <p className="text-lg text-white/60 mb-10 max-w-xl mx-auto">
-            The stores that optimize for AI now will dominate tomorrow. 
-            Join the waitlist and get early access.
+          <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">
+            The stores that optimize for AI now establish the positions that matter. 
+            Join the waitlist for early access.
           </p>
 
           {!isSubmitted ? (
@@ -514,13 +523,12 @@ export default function ShopifyWaitlistPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 px-5 py-4 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-[#95BF47]/50 focus:bg-white/15 transition-all"
+                  className="flex-1 px-5 py-4 rounded-lg bg-white text-[#101A31] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-4 rounded-lg font-semibold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #95BF47 0%, #5E8E3E 100%)' }}
+                  className="px-8 py-4 rounded-lg font-semibold bg-[#101A31] text-white border-2 border-white/20 flex items-center justify-center gap-2 transition-all hover:border-[#95BF47]/50 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -537,9 +545,9 @@ export default function ShopifyWaitlistPage() {
               )}
             </form>
           ) : (
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#95BF47]/20 text-[#95BF47]">
-              <CheckCircle className="w-5 h-5" />
-              <span>You're #{position?.toLocaleString()} on the waitlist!</span>
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white/5 border border-white/10">
+              <Check className="w-5 h-5 text-[#95BF47]" />
+              <span className="text-white">You're #{position?.toLocaleString()} on the waitlist</span>
             </div>
           )}
 
@@ -549,20 +557,19 @@ export default function ShopifyWaitlistPage() {
       {/* Footer */}
       <footer className="bg-[#101A31] border-t border-white/5 py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-white/40 text-sm">
+          <div className="flex items-center gap-3 text-white/40 text-sm">
             <Image 
-              src="/images/Harbor_White_Logo.png" 
+              src="/logo-icon.png" 
               alt="Harbor" 
               width={20}
               height={20}
               className="opacity-40"
             />
-            <span>© 2025 Harbor</span>
+            <span>© 2025 Harbor. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-white/40">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <a href="mailto:hello@useharbor.io" className="hover:text-white transition-colors">Contact</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
