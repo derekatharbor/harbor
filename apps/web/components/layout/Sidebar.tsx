@@ -109,7 +109,7 @@ export default function Sidebar() {
         sidebar-dark
         hidden lg:flex fixed left-0 top-0 h-screen 
         border-r flex-col transition-all duration-300 z-[100] 
-        ${isCollapsed ? 'w-20 overflow-visible' : 'w-60'}
+        ${isCollapsed ? 'w-20' : 'w-60 overflow-hidden'}
       `}
       style={{
         backgroundColor: '#0B1521',
@@ -165,7 +165,8 @@ export default function Sidebar() {
       )}
 
       {/* Scrollable Navigation - Everything in one scroll area */}
-      <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'overflow-x-visible' : 'overflow-x-hidden'}`}>
+      {/* When collapsed, no overflow needed (allows tooltips to show) */}
+      <nav className={`flex-1 ${isCollapsed ? '' : 'overflow-y-auto overflow-x-hidden'}`}>
         {/* Favorites Section */}
         {!isCollapsed && (
           <div className="px-4 pt-6 pb-3">
