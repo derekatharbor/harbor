@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { 
   Home,
   ShoppingBag, 
@@ -20,12 +20,17 @@ import {
   Moon,
   Sun,
   User,
-  Users
+  Users,
+  LogOut
 } from 'lucide-react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import BrandSwitcher from './BrandSwitcher'
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+  
   const [isCollapsed, setIsCollapsed] = useState(() => {
     // Check localStorage on mount
     if (typeof window !== 'undefined') {
@@ -35,6 +40,11 @@ export default function Sidebar() {
   })
 
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
 
   useEffect(() => {
     // Check localStorage or default to dark
@@ -383,6 +393,29 @@ export default function Sidebar() {
               </div>
             )}
           </Link>
+        </div>
+
+        {/* Sign Out */}
+        <div className="px-4 py-3 border-t border-white/5">
+          <button
+            onClick={handleSignOut}
+            className={`
+              w-full flex items-center rounded-lg
+              transition-colors cursor-pointer relative group
+              ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+              text-softgray/60 hover:text-red-400 hover:bg-red-500/5
+            `}
+          >
+            <LogOut className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+            {!isCollapsed && <span className="text-sm font-body">Sign Out</span>}
+            
+            {/* Tooltip - only shows when collapsed */}
+            {isCollapsed && (
+              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                Sign Out
+              </div>
+            )}
+          </button>
         </div>
       </nav>
     </aside>
