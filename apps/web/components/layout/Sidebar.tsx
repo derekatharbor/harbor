@@ -13,8 +13,6 @@ import {
   Globe,
   Settings,
   FileText,
-  Video,
-  BookOpen,
   ChevronLeft,
   ChevronRight,
   Moon,
@@ -82,8 +80,6 @@ export default function Sidebar() {
 
   const favorites = [
     { name: 'Quick Start Guide', href: '/dashboard/guide', icon: FileText },
-    { name: 'Video Tutorials', href: '/dashboard/tutorials', icon: Video },
-    { name: 'Documentation', href: '/dashboard/docs', icon: BookOpen },
   ]
 
   const intelligence = [

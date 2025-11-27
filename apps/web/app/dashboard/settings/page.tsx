@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Settings, Building2, CreditCard, ChevronDown, Check, Loader2, ExternalLink } from 'lucide-react'
+import { Settings, Building2, CreditCard, ChevronDown, Check, Loader2, ExternalLink, LifeBuoy } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -305,6 +305,30 @@ export default function ControlCenterPage() {
                   </a>
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Support Card */}
+          <div className="bg-card rounded-xl border border-border">
+            <div className="p-6 border-b border-border">
+              <div className="flex items-center gap-3">
+                <LifeBuoy className="w-5 h-5 text-primary" strokeWidth={1.5} />
+                <h2 className="text-lg font-heading font-semibold text-primary">
+                  Support
+                </h2>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <p className="text-sm text-secondary/60 mb-4">
+                Questions, feedback, or need help? We're here for you.
+              </p>
+              <a
+                href="mailto:hello@useharbor.io"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#101A31] text-white hover:bg-[#1a2740] transition-colors text-sm font-medium"
+              >
+                Contact Support
+              </a>
             </div>
           </div>
         </div>
