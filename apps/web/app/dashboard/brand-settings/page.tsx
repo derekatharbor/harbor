@@ -405,13 +405,18 @@ export default function BrandSettingsPage() {
           {/* ============================================================ */}
           <div className="rounded-xl p-6 mb-8 bg-card border border-border">
             <div className="flex items-center gap-4">
-              {data.logo_url ? (
-                <img src={data.logo_url} alt={data.brand_name} className="w-16 h-16 rounded-xl object-contain bg-white/10" />
-              ) : (
-                <div className="w-16 h-16 rounded-xl flex items-center justify-center bg-white/10">
-                  <Building2 className="w-8 h-8 text-secondary/50" />
-                </div>
-              )}
+              <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/10 flex items-center justify-center">
+                <img 
+                  src={`https://cdn.brandfetch.io/${data.domain}`} 
+                  alt={data.brand_name} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    target.parentElement!.innerHTML = `<span class="text-2xl font-bold text-secondary/50">${data.brand_name.charAt(0)}</span>`
+                  }}
+                />
+              </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-1">
                   <h1 className="text-2xl font-bold text-primary">{data.brand_name}</h1>
