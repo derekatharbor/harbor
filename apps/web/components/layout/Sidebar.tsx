@@ -109,7 +109,7 @@ export default function Sidebar() {
         sidebar-dark
         hidden lg:flex fixed left-0 top-0 h-screen 
         border-r flex-col transition-all duration-300 z-[100] 
-        ${isCollapsed ? 'w-20' : 'w-60'}
+        ${isCollapsed ? 'w-20 overflow-visible' : 'w-60'}
       `}
       style={{
         backgroundColor: '#0B1521',
@@ -165,7 +165,7 @@ export default function Sidebar() {
       )}
 
       {/* Scrollable Navigation - Everything in one scroll area */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden">
+      <nav className={`flex-1 overflow-y-auto ${isCollapsed ? 'overflow-x-visible' : 'overflow-x-hidden'}`}>
         {/* Favorites Section */}
         {!isCollapsed && (
           <div className="px-4 pt-6 pb-3">
@@ -224,7 +224,7 @@ export default function Sidebar() {
                   <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
                   
                   {/* Tooltip */}
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 </Link>
@@ -268,7 +268,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -306,7 +306,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -347,7 +347,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </div>
             )}
@@ -377,7 +377,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-2 py-1 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
                 Control Center
               </div>
             )}
