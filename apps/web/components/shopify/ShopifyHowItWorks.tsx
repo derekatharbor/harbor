@@ -1,7 +1,7 @@
 // components/shopify/ShopifyHowItWorks.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 
 const steps = [
@@ -25,25 +25,25 @@ const steps = [
 // Step 1 Visual: App Store Install Mockup
 function InstallVisual() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-8">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 max-w-sm w-full">
+    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 sm:p-6 max-w-sm w-full">
         {/* App Store Header */}
         <div className="flex items-start gap-4 mb-6">
-          <div className="w-16 h-16 rounded-xl bg-[#101A31] flex items-center justify-center flex-shrink-0">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#101A31] flex items-center justify-center flex-shrink-0">
             <Image
               src="/logo-icon.png"
               alt="Harbor"
               width={40}
               height={40}
-              className="w-10 h-10"
+              className="w-8 h-8 sm:w-10 sm:h-10"
             />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-gray-900 text-lg">Harbor</h3>
-            <p className="text-sm text-gray-500">AI Visibility for Shopify</p>
+            <h3 className="font-bold text-gray-900 text-base sm:text-lg">Harbor</h3>
+            <p className="text-xs sm:text-sm text-gray-500">AI Visibility for Shopify</p>
             <div className="flex items-center gap-1 mt-1">
               {[1,2,3,4,5].map((star) => (
-                <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                <svg key={star} className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               ))}
@@ -53,7 +53,7 @@ function InstallVisual() {
         </div>
 
         {/* Install Button */}
-        <button className="w-full py-3 px-6 bg-[#95BF47] text-white font-semibold rounded-lg flex items-center justify-center gap-2 animate-pulse">
+        <button className="w-full py-3 px-6 bg-[#95BF47] text-white font-semibold rounded-lg flex items-center justify-center gap-2">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
@@ -79,13 +79,13 @@ function InstallVisual() {
 // Step 2 Visual: Schema Injection Mockup
 function OptimizeVisual() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-8">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 max-w-sm w-full">
+    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 sm:p-6 max-w-sm w-full">
         {/* Product Page Wireframe */}
         <div className="space-y-4">
           {/* Product Header */}
           <div className="flex gap-4">
-            <div className="w-20 h-20 bg-gray-100 rounded-lg" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-lg" />
             <div className="flex-1 space-y-2">
               <div className="h-4 bg-gray-100 rounded w-3/4" />
               <div className="h-3 bg-gray-100 rounded w-1/2" />
@@ -94,7 +94,7 @@ function OptimizeVisual() {
           </div>
 
           {/* Schema Injection Highlights */}
-          <div className="relative p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
+          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
             <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
               Product Schema
             </div>
@@ -106,7 +106,7 @@ function OptimizeVisual() {
             <div className="absolute -right-1 -top-1 w-3 h-3 bg-[#95BF47] rounded-full animate-ping" />
           </div>
 
-          <div className="relative p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
+          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
             <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
               FAQ Added
             </div>
@@ -117,7 +117,7 @@ function OptimizeVisual() {
             <div className="absolute -right-1 -top-1 w-3 h-3 bg-[#95BF47] rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
           </div>
 
-          <div className="relative p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
+          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
             <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
               AI-Ready Description
             </div>
@@ -134,57 +134,72 @@ function OptimizeVisual() {
   )
 }
 
-// Step 3 Visual: AI Answer Mockup
+// Step 3 Visual: ChatGPT Answer Mockup
 function RecommendedVisual() {
   return (
-    <div className="relative w-full h-full flex items-center justify-center p-8">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 max-w-sm w-full">
-        {/* Fake AI Chat Interface */}
-        <div className="flex items-center gap-2 mb-4 pb-4 border-b border-gray-100">
-          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-            <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-            </svg>
-          </div>
-          <span className="text-sm font-medium text-gray-700">AI Assistant</span>
+    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
+      <div className="bg-[#343541] rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full">
+        {/* ChatGPT Header - Dark with white logo */}
+        <div className="flex items-center gap-2 px-4 py-3 bg-[#202123] border-b border-white/10">
+          <Image
+            src="/logos/chatgpt.svg"
+            alt="ChatGPT"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+          <span className="text-sm font-medium text-white">ChatGPT</span>
         </div>
 
-        {/* Question */}
-        <div className="mb-4">
-          <p className="text-sm text-gray-500 mb-2">What's the best wireless headphone for running?</p>
-        </div>
-
-        {/* Answer */}
-        <div className="space-y-3">
-          <p className="text-sm text-gray-700">Based on my research, I'd recommend:</p>
-          
-          {/* Product Card */}
-          <div className="relative p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <div className="absolute -top-2 -right-2">
-              <span className="px-2 py-1 bg-[#95BF47] text-white text-xs font-medium rounded-full flex items-center gap-1">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Recommended
-              </span>
+        {/* Chat Content */}
+        <div className="p-4 sm:p-5 space-y-4">
+          {/* Question */}
+          <div className="flex gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#5436DA] flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xs font-medium">U</span>
             </div>
-            <div className="flex gap-3">
-              <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-900 text-sm">Your Product Name</p>
-                <p className="text-xs text-gray-500">$149.00</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {[1,2,3,4,5].map((star) => (
-                    <svg key={star} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            <p className="text-sm text-gray-300 pt-1">What's the best wireless headphone for running?</p>
+          </div>
+
+          {/* Answer */}
+          <div className="flex gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#19C37D] flex items-center justify-center flex-shrink-0">
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.0993 3.8558L12.6 8.3829l2.02-1.1638a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
+              </svg>
+            </div>
+            <div className="flex-1 space-y-3 pt-1">
+              <p className="text-sm text-gray-300">Based on my research, I'd recommend:</p>
+              
+              {/* Product Card */}
+              <div className="relative p-3 sm:p-4 bg-[#444654] rounded-xl">
+                <div className="absolute -top-2 -right-2">
+                  <span className="px-2 py-1 bg-[#95BF47] text-white text-xs font-medium rounded-full flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                  ))}
+                    Recommended
+                  </span>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-12 h-12 bg-[#565869] rounded-lg flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="font-medium text-white text-sm">Your Product Name</p>
+                    <p className="text-xs text-gray-400">$149.00</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      {[1,2,3,4,5].map((star) => (
+                        <svg key={star} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <p className="text-sm text-gray-300">This product stands out for its comfort, battery life, and sweat resistance...</p>
             </div>
           </div>
-
-          <p className="text-sm text-gray-700">This product stands out for its comfort, battery life, and sweat resistance...</p>
         </div>
       </div>
     </div>
@@ -236,33 +251,6 @@ function RecommendedIcon({ active }: { active: boolean }) {
 
 export default function ShopifyHowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = stepRefs.current.findIndex((ref) => ref === entry.target)
-            if (index !== -1) {
-              setActiveStep(index)
-            }
-          }
-        })
-      },
-      {
-        rootMargin: '-40% 0px -40% 0px',
-        threshold: 0,
-      }
-    )
-
-    stepRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref)
-    })
-
-    return () => observer.disconnect()
-  }, [])
 
   const visuals = [
     <InstallVisual key="install" />,
@@ -273,7 +261,7 @@ export default function ShopifyHowItWorks() {
   const icons = [InstallIcon, OptimizeIcon, RecommendedIcon]
 
   return (
-    <section ref={sectionRef}>
+    <section>
       {/* Color Noise Gradient Bar */}
       <div 
         className="w-full h-4 md:h-6"
@@ -309,19 +297,19 @@ export default function ShopifyHowItWorks() {
           </div>
 
           {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
             
             {/* Left: Sticky Visual Panel */}
             <div className="hidden lg:block">
-              <div className="sticky top-32">
+              <div className="sticky top-24">
                 <div className="relative h-[500px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl overflow-hidden">
                   {visuals.map((Visual, index) => (
                     <div
                       key={index}
                       className={`absolute inset-0 transition-all duration-500 ${
                         activeStep === index 
-                          ? 'opacity-100 translate-y-0' 
-                          : 'opacity-0 translate-y-8 pointer-events-none'
+                          ? 'opacity-100 scale-100' 
+                          : 'opacity-0 scale-95 pointer-events-none'
                       }`}
                     >
                       {Visual}
@@ -331,62 +319,70 @@ export default function ShopifyHowItWorks() {
               </div>
             </div>
 
-            {/* Right: Steps List */}
-            <div className="space-y-8 sm:space-y-12 lg:space-y-16">
+            {/* Right: Clickable Steps List */}
+            <div className="space-y-4">
               {steps.map((step, index) => {
                 const Icon = icons[index]
                 const isActive = activeStep === index
 
                 return (
-                  <div
+                  <button
                     key={step.number}
-                    ref={(el) => { stepRefs.current[index] = el }}
-                    className={`relative pl-8 transition-all duration-300 ${
-                      isActive ? 'opacity-100' : 'opacity-50'
+                    onClick={() => setActiveStep(index)}
+                    className={`relative w-full text-left pl-6 sm:pl-8 pr-4 sm:pr-6 py-6 sm:py-8 rounded-2xl transition-all duration-300 cursor-pointer ${
+                      isActive 
+                        ? 'bg-gray-50 shadow-sm' 
+                        : 'bg-transparent hover:bg-gray-50/50'
                     }`}
                   >
                     {/* Active Indicator Line */}
                     <div 
-                      className={`absolute left-0 top-0 bottom-0 w-1 rounded-full transition-all duration-300 ${
+                      className={`absolute left-0 top-6 sm:top-8 bottom-6 sm:bottom-8 w-1 rounded-full transition-all duration-300 ${
                         isActive ? 'bg-[#95BF47]' : 'bg-gray-200'
                       }`}
                     />
 
-                    {/* Icon */}
-                    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 transition-colors ${
-                      isActive ? 'bg-[#95BF47]/10' : 'bg-gray-100'
-                    }`}>
-                      <Icon active={isActive} />
-                    </div>
+                    <div className="flex items-start gap-4">
+                      {/* Icon */}
+                      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0 ${
+                        isActive ? 'bg-[#95BF47]/10' : 'bg-gray-100'
+                      }`}>
+                        <Icon active={isActive} />
+                      </div>
 
-                    {/* Step Number */}
-                    <p className={`text-sm font-medium mb-2 transition-colors ${
-                      isActive ? 'text-[#95BF47]' : 'text-gray-400'
-                    }`}>
-                      Step {step.number}
-                    </p>
+                      <div className="flex-1 min-w-0">
+                        {/* Step Number */}
+                        <p className={`text-sm font-medium mb-1 transition-colors ${
+                          isActive ? 'text-[#95BF47]' : 'text-gray-400'
+                        }`}>
+                          Step {step.number}
+                        </p>
 
-                    {/* Title */}
-                    <h3 className={`text-xl sm:text-2xl font-heading font-bold mb-3 transition-colors ${
-                      isActive ? 'text-[#101A31]' : 'text-gray-400'
-                    }`}>
-                      {step.title}
-                    </h3>
+                        {/* Title */}
+                        <h3 className={`text-xl sm:text-2xl font-heading font-bold mb-2 transition-colors ${
+                          isActive ? 'text-[#101A31]' : 'text-gray-400'
+                        }`}>
+                          {step.title}
+                        </h3>
 
-                    {/* Description */}
-                    <p className={`text-base sm:text-lg leading-relaxed transition-colors ${
-                      isActive ? 'text-gray-600' : 'text-gray-400'
-                    }`}>
-                      {step.description}
-                    </p>
-
-                    {/* Mobile Visual (shown inline on mobile) */}
-                    <div className="lg:hidden mt-6">
-                      <div className="relative h-[350px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden">
-                        {visuals[index]}
+                        {/* Description */}
+                        <p className={`text-sm sm:text-base leading-relaxed transition-colors ${
+                          isActive ? 'text-gray-600' : 'text-gray-400'
+                        }`}>
+                          {step.description}
+                        </p>
                       </div>
                     </div>
-                  </div>
+
+                    {/* Mobile Visual (shown inline on mobile when active) */}
+                    {isActive && (
+                      <div className="lg:hidden mt-6">
+                        <div className="relative h-[350px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden">
+                          {visuals[index]}
+                        </div>
+                      </div>
+                    )}
+                  </button>
                 )
               })}
             </div>
