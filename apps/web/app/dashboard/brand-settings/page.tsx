@@ -8,7 +8,7 @@ import {
   Building2, Check, Plus, X, Save, Shield, Clock,
   DollarSign, Puzzle, Users, MessageSquare, 
   Link as LinkIcon, FileText, Megaphone, Lock,
-  TrendingUp, TrendingDown, RefreshCw, ExternalLink,
+  TrendingUp, ExternalLink,
   AlertCircle, CheckCircle, HelpCircle, Package
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
@@ -200,9 +200,6 @@ export default function BrandSettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [publicProfile, setPublicProfile] = useState<any>(null)
   const [lastScanDate, setLastScanDate] = useState<string | null>(null)
-  const [visibilityScore, setVisibilityScore] = useState<number>(0)
-  const [globalRank, setGlobalRank] = useState<number | null>(null)
-  const [scoreTrend, setScoreTrend] = useState<'up' | 'down' | 'stable'>('stable')
   
   // Temp input states
   const [newIntegration, setNewIntegration] = useState('')
@@ -234,8 +231,6 @@ export default function BrandSettingsPage() {
             const result = await res.json()
             if (result.profile) {
               setPublicProfile(result.profile)
-              setVisibilityScore(result.profile.visibility_score || 0)
-              setGlobalRank(result.profile.rank_global || null)
               
               const fd = result.profile.feed_data || {}
               dashboardData.description = fd.short_description || dashboardData.description
@@ -1036,80 +1031,6 @@ export default function BrandSettingsPage() {
                 </AIBeliefPanel>
               </SectionCard>
 
-            </div>
-
-            {/* ============================================================ */}
-            {/* Right Column - AI Readiness Score Card */}
-            {/* ============================================================ */}
-            <div className="w-80 flex-shrink-0 hidden lg:block">
-              <div className="sticky top-8 rounded-xl p-6 bg-card border border-border">
-                <h3 className="text-sm font-semibold mb-4 text-primary opacity-70">
-                  AI Readiness Score
-                </h3>
-                
-                {/* Score Ring - Gradient version */}
-                <div className="flex items-center justify-center mb-6">
-                  <div 
-                    className="relative w-32 h-32 rounded-full flex items-center justify-center p-1"
-                    style={{ 
-                      background: `conic-gradient(from 180deg, #22d3ee 0%, #a855f7 ${visibilityScore}%, rgba(255,255,255,0.08) ${visibilityScore}%)`
-                    }}
-                  >
-                    <div className="w-full h-full rounded-full flex items-center justify-center bg-card">
-                      <span 
-                        className="text-3xl font-bold"
-                        style={{ 
-                          background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 100%)',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text'
-                        }}
-                      >
-                        {visibilityScore}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Stats */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-primary opacity-50">Trend</span>
-                    <span className={`flex items-center gap-1 text-sm ${scoreTrend === 'up' ? 'text-green-500' : scoreTrend === 'down' ? 'text-red-500' : 'text-primary opacity-60'}`}>
-                      {scoreTrend === 'up' && <TrendingUp className="w-4 h-4" />}
-                      {scoreTrend === 'down' && <TrendingDown className="w-4 h-4" />}
-                      {scoreTrend === 'up' ? 'Improving' : scoreTrend === 'down' ? 'Declining' : 'Stable'}
-                    </span>
-                  </div>
-                  {globalRank && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-primary opacity-50">Global Rank</span>
-                      <span className="text-sm text-primary font-medium">#{globalRank}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-primary opacity-50">Last Scan</span>
-                    <span className="text-sm text-primary opacity-70">
-                      {formatDate(lastScanDate)}
-                    </span>
-                  </div>
-                </div>
-                
-                {/* CTA */}
-                <button
-                  className="w-full py-3 rounded-lg font-medium text-white flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer hover:opacity-90"
-                  style={{ 
-                    backgroundColor: '#101A31'
-                  }}
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  Run Visibility Scan
-                </button>
-                
-                <p className="text-xs mt-4 text-center text-primary opacity-40">
-                  This score reflects how consistently AI models interpret and describe your brand. It updates after each new scan.
-                </p>
-              </div>
             </div>
           </div>
 

@@ -368,6 +368,47 @@ export default function WebsiteAnalyticsPage() {
           </div>
         </div>
 
+        {/* AI Readiness Score - Hero Card */}
+        <div className="bg-card rounded-lg border border-border p-6 mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+            {/* Score Ring */}
+            <div className="flex items-center justify-center lg:justify-start">
+              <div 
+                className="relative w-28 h-28 rounded-full flex items-center justify-center"
+                style={{ 
+                  background: `conic-gradient(from 180deg, #E879F9 0%, #22d3ee ${Math.round((data.readability_score + data.schema_coverage) / 2)}%, var(--border) ${Math.round((data.readability_score + data.schema_coverage) / 2)}%)`
+                }}
+              >
+                <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center bg-card">
+                  <span className="text-3xl font-bold text-primary">
+                    {Math.round((data.readability_score + data.schema_coverage) / 2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Description */}
+            <div className="flex-1 text-center lg:text-left">
+              <h2 className="text-lg font-heading font-semibold text-primary mb-1">
+                AI Readiness Score
+              </h2>
+              <p className="text-sm text-secondary/60 mb-4 max-w-md">
+                How prepared your website is for AI crawlers. Based on content readability ({data.readability_score}%) and schema markup coverage ({data.schema_coverage}%).
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#E879F9]"></div>
+                  <span className="text-xs text-secondary/60">Readability: {data.readability_score}%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#22d3ee]"></div>
+                  <span className="text-xs text-secondary/60">Schema: {data.schema_coverage}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-card rounded-lg p-6 border border-border">
