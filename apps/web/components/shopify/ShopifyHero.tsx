@@ -141,16 +141,28 @@ export default function ShopifyHero() {
 
               {/* Section Links - Desktop */}
               <div className="hidden md:flex items-center space-x-8">
-                <button className="text-sm font-medium text-white">
+                <button 
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="text-sm font-medium text-white"
+                >
                   The Plugin
                 </button>
-                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                <button 
+                  onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors"
+                >
                   How It Works
                 </button>
-                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                <button 
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors"
+                >
                   Features
                 </button>
-                <button className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors">
+                <button 
+                  onClick={() => document.getElementById('get-early-access')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-medium text-white/50 hover:text-white/80 transition-colors"
+                >
                   Get Early Access
                 </button>
               </div>
