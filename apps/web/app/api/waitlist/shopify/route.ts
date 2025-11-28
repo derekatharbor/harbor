@@ -41,15 +41,10 @@ export async function POST(request: NextRequest) {
         .from('shopify_waitlist')
         .select('*', { count: 'exact', head: true })
 
-      const { count: referralCount } = await supabase
-        .from('shopify_waitlist')
-        .select('*', { count: 'exact', head: true })
-        .eq('referred_by', existing.referral_code)
-
       return NextResponse.json({
         position: existing.position,
         referralCode: existing.referral_code,
-        referralCount: referralCount || 0,
+        referralCount: existing.referral_count || 0,
         totalSignups: totalSignups || 0,
         message: 'Already on waitlist'
       })
@@ -89,19 +84,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // If referred, bump the referrer up in the queue
+    // If referred, bump the referrer up in the queue and increment their count
     if (referredBy) {
       const { data: referrer } = await supabase
         .from('shopify_waitlist')
-        .select('position')
+        .select('position, referral_count')
         .eq('referral_code', referredBy)
         .single()
 
-      if (referrer && referrer.position > 1) {
-        // Move referrer up by 1 position (simple approach)
+      if (referrer) {
         await supabase
           .from('shopify_waitlist')
-          .update({ position: referrer.position - 1 })
+          .update({ 
+            position: Math.max(1, referrer.position - 1),
+            referral_count: (referrer.referral_count || 0) + 1,
+            updated_at: new Date().toISOString()
+          })
           .eq('referral_code', referredBy)
       }
     }
@@ -154,11 +152,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { count: referralCount } = await supabase
-      .from('shopify_waitlist')
-      .select('*', { count: 'exact', head: true })
-      .eq('referred_by', code)
-
     const { count: totalSignups } = await supabase
       .from('shopify_waitlist')
       .select('*', { count: 'exact', head: true })
@@ -166,7 +159,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       position: signup.position,
       referralCode: signup.referral_code,
-      referralCount: referralCount || 0,
+      referralCount: signup.referral_count || 0,
       totalSignups: totalSignups || 0
     })
 
