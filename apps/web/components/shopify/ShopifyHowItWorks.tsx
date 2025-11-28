@@ -295,20 +295,13 @@ export default function ShopifyHowItWorks() {
 
   return (
     <section>
-      {/* Color Noise Gradient Bar */}
+      {/* Color Noise Transition - Shopify themed */}
       <div 
         className="w-full h-4 md:h-6"
         style={{
-          backgroundImage: 'url(/images/shopify-noise-bar.png)',
+          backgroundImage: 'url(/shopify-noise-bar.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center'
-        }}
-      />
-      {/* Fallback gradient if image doesn't exist */}
-      <div 
-        className="w-full h-1 md:h-1.5"
-        style={{
-          background: 'linear-gradient(90deg, #101A31 0%, #1a3a2a 20%, #95BF47 35%, #7da83d 50%, #2d5a4a 65%, #1e3a5f 80%, #101A31 100%)'
         }}
       />
 
