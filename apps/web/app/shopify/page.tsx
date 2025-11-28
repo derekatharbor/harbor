@@ -3,6 +3,7 @@
 
 import ShopifyHero from '@/components/shopify/ShopifyHero'
 import ShopifyHowItWorks from '@/components/shopify/ShopifyHowItWorks'
+import ShopifyFeatures from '@/components/shopify/ShopifyFeatures'
 import { ShopifyWaitlistProvider } from '@/components/shopify/useShopifyWaitlist'
 
 export default function ShopifyWaitlistPage() {
@@ -12,6 +13,7 @@ export default function ShopifyWaitlistPage() {
         <main>
           <ShopifyHero />
           <ShopifyHowItWorks />
+          <ShopifyFeatures />
         </main>
       </div>
     </ShopifyWaitlistProvider>
