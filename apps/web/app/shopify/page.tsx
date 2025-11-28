@@ -4,6 +4,7 @@
 import ShopifyHero from '@/components/shopify/ShopifyHero'
 import ShopifyHowItWorks from '@/components/shopify/ShopifyHowItWorks'
 import ShopifyFeatures from '@/components/shopify/ShopifyFeatures'
+import ShopifyCTA from '@/components/shopify/ShopifyCTA'
 import { ShopifyWaitlistProvider } from '@/components/shopify/useShopifyWaitlist'
 
 export default function ShopifyWaitlistPage() {
@@ -14,6 +15,7 @@ export default function ShopifyWaitlistPage() {
           <ShopifyHero />
           <ShopifyHowItWorks />
           <ShopifyFeatures />
+          <ShopifyCTA />
         </main>
       </div>
     </ShopifyWaitlistProvider>
