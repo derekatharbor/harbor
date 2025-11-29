@@ -1,7 +1,7 @@
 // app/api/stripe/deep-scan/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { stripe, PRICES } from '@/lib/stripe'
+import { getStripe, PRICES } from '@/lib/stripe'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     let customerId = org?.stripe_customer_id
 
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: userData.user.email,
         name: org?.name || userData.user.email,
         metadata: { orgId, userId },
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create checkout session for one-time purchase
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
       payment_method_types: ['card'],
