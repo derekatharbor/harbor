@@ -3,10 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getStripe, PRICES } from '@/lib/stripe'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user email
-    const { data: userData } = await supabase.auth.admin.getUserById(userId)
+    const { data: userData } = await getSupabase().auth.admin.getUserById(userId)
     if (!userData?.user?.email) {
       return NextResponse.json(
         { error: 'User not found' },

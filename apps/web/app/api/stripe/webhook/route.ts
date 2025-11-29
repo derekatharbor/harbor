@@ -4,16 +4,17 @@ import { createClient } from '@supabase/supabase-js'
 import { getStripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')!
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
   let event: Stripe.Event
 
@@ -97,7 +98,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     .eq('org_id', orgId)
 
   // Log the event
-  await supabase.from('audit_log').insert({
+  await getSupabase().from('audit_log').insert({
     org_id: orgId,
     user_id: session.metadata?.userId,
     event: 'subscription_created',
@@ -181,7 +182,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     .update({ plan: 'solo' })
     .eq('org_id', org.id)
 
-  await supabase.from('audit_log').insert({
+  await getSupabase().from('audit_log').insert({
     org_id: org.id,
     event: 'subscription_canceled',
     meta: { subscription_id: subscription.id },
@@ -207,7 +208,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     })
     .eq('id', org.id)
 
-  await supabase.from('audit_log').insert({
+  await getSupabase().from('audit_log').insert({
     org_id: org.id,
     event: 'payment_failed',
     meta: { invoice_id: invoice.id },
@@ -224,7 +225,7 @@ async function handleDeepScanPurchase(session: Stripe.Checkout.Session) {
   if (!orgId) return
 
   // Add credits using the database function
-  await supabase.rpc('add_deep_scan_credits', {
+  await getSupabase().rpc('add_deep_scan_credits', {
     p_org_id: orgId,
     p_dashboard_id: dashboardId || null,
     p_quantity: quantity,
@@ -232,7 +233,7 @@ async function handleDeepScanPurchase(session: Stripe.Checkout.Session) {
   })
 
   // Log the purchase
-  await supabase.from('audit_log').insert({
+  await getSupabase().from('audit_log').insert({
     org_id: orgId,
     dashboard_id: dashboardId,
     event: 'deep_scan_purchased',
