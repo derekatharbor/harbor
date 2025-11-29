@@ -17,8 +17,8 @@ const whyFreeReasons = [
     description: 'AI guesses about pricing, integrations, and features. Verified data makes responses accurate — for everyone.',
   },
   {
-    title: 'Enterprise comes later',
-    description: 'Teams managing dozens of brands pay for API access, deep scans, and analytics. Individual brands never pay.',
+    title: 'Pay only when you scale',
+    description: 'Individual brands use Harbor free forever. Agency and Enterprise plans exist for teams managing multiple brands.',
   },
 ]
 
@@ -33,14 +33,22 @@ const freeFeatures = [
   'Share cards for LinkedIn',
 ]
 
-const enterpriseFeatures = [
+const agencyFeatures = [
   'Everything in Free',
-  'Multi-brand management',
-  'API access',
+  'Up to 5 brands',
   'Deep analysis scans',
-  'White-label reports',
-  'Dedicated support',
+  'Priority support',
+  'API access (coming soon)',
+  'White-label reports (coming soon)',
+]
+
+const enterpriseFeatures = [
+  'Everything in Agency',
+  'Unlimited brands',
   'SSO + team controls',
+  'Custom integrations',
+  'Dedicated account manager',
+  'SLA',
 ]
 
 const insideFeatures = [
@@ -79,29 +87,30 @@ const insideFeatures = [
 const faqs = [
   {
     question: 'Is Harbor really free?',
-    answer: 'Yes — individual brands never pay.',
+    answer: 'Yes — individual brands can use Harbor completely free, forever. You get full access to the AI visibility dashboard, weekly scans, and optimization recommendations.',
   },
   {
-    question: 'Why is Harbor free?',
-    answer: 'Because Harbor relies on verified brand data to build the global AI visibility index.',
+    question: 'What\'s the difference between Free and Agency?',
+    answer: 'Free is for individual brands (1 dashboard). Agency is for teams managing up to 5 brands, with deep analysis scans and priority support.',
   },
   {
-    question: 'What about advanced scans?',
-    answer: 'You can optionally run deeper AI analysis for $0.75 per scan. Basic scans are always free.',
+    question: 'What are Deep Analysis Scans?',
+    answer: 'Deep scans run extended AI queries across more models and prompts for comprehensive visibility insights. Available on Agency plans or as one-time purchases ($7.99 each).',
   },
   {
-    question: 'Will you add paid features later?',
-    answer: 'Only for enterprise teams. Never for individual brands.',
+    question: 'Can I upgrade or downgrade anytime?',
+    answer: 'Yes. Upgrade instantly, downgrade at the end of your billing cycle. No lock-in.',
   },
   {
-    question: 'What if I manage multiple brands?',
-    answer: 'Enterprise plans with API access and multi-brand tools are available.',
+    question: 'What if I manage more than 5 brands?',
+    answer: 'Enterprise plans offer unlimited brands, SSO, custom integrations, and dedicated support. Contact us for pricing.',
   },
 ]
 
 export default function PricingClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly')
 
   return (
     <div className="min-h-screen">
@@ -250,27 +259,59 @@ export default function PricingClient() {
               </div>
             </div>
 
-            {/* Enterprise Card - White, Minimal */}
+            {/* Agency Card - White with Toggle */}
             <div className="rounded-2xl p-8 md:p-10 bg-white border border-gray-200">
-              <div className="mb-8">
-                <h3 className="text-2xl font-heading font-bold text-[#101A31] mb-2">
-                  Enterprise — for agencies & teams
+              <div className="mb-6">
+                <h3 className="text-2xl font-heading font-bold text-[#101A31] mb-4">
+                  Agency — for growing teams
                 </h3>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-heading font-bold text-[#101A31]">Custom</span>
+                
+                {/* Billing Toggle */}
+                <div className="flex items-center gap-3 mb-4">
+                  <button
+                    onClick={() => setBillingPeriod('monthly')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      billingPeriod === 'monthly'
+                        ? 'bg-[#101A31] text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    Monthly
+                  </button>
+                  <button
+                    onClick={() => setBillingPeriod('yearly')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      billingPeriod === 'yearly'
+                        ? 'bg-[#101A31] text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    Yearly
+                    <span className="ml-1.5 text-emerald-500 text-xs font-semibold">Save 17%</span>
+                  </button>
                 </div>
+
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-heading font-bold text-[#101A31]">
+                    ${billingPeriod === 'monthly' ? '199' : '166'}
+                  </span>
+                  <span className="text-gray-500">/month</span>
+                </div>
+                {billingPeriod === 'yearly' && (
+                  <p className="text-sm text-gray-500 mt-1">Billed annually ($1,990/year)</p>
+                )}
               </div>
 
               <Link
-                href="/contact?inquiry=enterprise"
+                href="/auth/signup?plan=agency"
                 className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8"
               >
-                Talk to Sales
+                Get started
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               <div className="space-y-4">
-                {enterpriseFeatures.map((feature, idx) => (
+                {agencyFeatures.map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
                     <span className="text-[#101A31]/70">{feature}</span>
@@ -279,6 +320,25 @@ export default function PricingClient() {
               </div>
             </div>
 
+          </div>
+
+          {/* Enterprise Banner */}
+          <div className="mt-12 rounded-2xl p-8 md:p-10 bg-gradient-to-r from-[#dbeafe] via-[#e0e7ff] to-[#ede9fe] flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl font-heading font-bold text-[#101A31] mb-2">
+                Need more? Let's talk Enterprise.
+              </h3>
+              <p className="text-[#101A31]/60">
+                Unlimited brands, SSO, custom integrations, SLA, and dedicated support.
+              </p>
+            </div>
+            <Link
+              href="/contact?inquiry=enterprise"
+              className="flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all whitespace-nowrap"
+            >
+              Talk to Sales
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
