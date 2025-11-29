@@ -6,7 +6,7 @@ import { Check, Plus, Minus, ArrowRight, Menu, BarChart3, Users, Sparkles, Globe
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
 const whyFreeReasons = [
@@ -117,7 +117,7 @@ export default function PricingClient() {
   const [user, setUser] = useState<any>(null)
   const [orgId, setOrgId] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const getUser = async () => {
