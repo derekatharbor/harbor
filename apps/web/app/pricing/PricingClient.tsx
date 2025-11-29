@@ -372,9 +372,11 @@ export default function PricingClient() {
               </div>
 
               <button
+                type="button"
                 onClick={handleAgencyCheckout}
                 disabled={isLoading}
-                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8 disabled:opacity-50 cursor-pointer"
+                style={{ cursor: 'pointer' }}
               >
                 {isLoading ? (
                   <>
