@@ -88,13 +88,6 @@ export default function FullscreenMenu({ isOpen = false, onClose, user, onLogout
                 Home
               </a>
               <a
-                href="/#how-it-works"
-                onClick={onClose}
-                className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
-              >
-                How It Works
-              </a>
-              <a
                 href="/pricing"
                 onClick={onClose}
                 className="block text-2xl font-bold text-white hover:text-white/70 transition-colors duration-200"
