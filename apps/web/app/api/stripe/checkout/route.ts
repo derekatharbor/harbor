@@ -63,6 +63,12 @@ export async function POST(request: NextRequest) {
       ? PRICES.AGENCY_YEARLY 
       : PRICES.AGENCY_MONTHLY
 
+    // Get app URL with fallback
+    let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.useharbor.io'
+    if (!appUrl.startsWith('http')) {
+      appUrl = `https://${appUrl}`
+    }
+
     // Create checkout session
     const session = await getStripe().checkout.sessions.create({
       customer: customerId,
@@ -74,8 +80,8 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+      success_url: `${appUrl}/dashboard?upgraded=true`,
+      cancel_url: `${appUrl}/pricing?canceled=true`,
       metadata: {
         orgId,
         userId,
