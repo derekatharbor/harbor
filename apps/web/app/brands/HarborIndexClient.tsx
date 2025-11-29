@@ -113,39 +113,26 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
       {/* Hero Container - Starts below navbar */}
       <div className="relative pt-12 md:pt-16">
-        {/* Hero Section with Wireframe */}
+        {/* Hero Section */}
         <section className="relative min-h-[400px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1]">
-          {/* Wireframe Background - Centered, behind everything */}
-          <div 
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
-            style={{ 
-              width: '95vw',
-              maxWidth: '1600px',
-              opacity: 0.2
-            }}
-          >
-            <div className="relative w-full aspect-[3/1] md:aspect-[2/1]">
-              <Image
-                src="/images/wireframe-wave.png"
-                alt=""
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          </div>
 
           {/* Hero Content */}
           <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px]">
-            {/* Frosted Glass Pill */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4">
+            {/* Animated Frosted Glass Pill */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4 animate-glow-pulse">
               <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
                 HARBOR INDEX
               </span>
             </div>
 
-                {/* Gradient Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+            {/* Animated Gradient Title */}
+            <h1 
+              className="text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 bg-clip-text text-transparent animate-gradient-shift"
+              style={{
+                backgroundImage: 'linear-gradient(90deg, #fff, #a5f3fc, #60a5fa, #a5f3fc, #fff)',
+                backgroundSize: '200% 100%',
+              }}
+            >
               The AI Visibility Index
             </h1>
 
