@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get org's Stripe customer ID
-    const { data: org } = await supabase
+    const { data: org } = await getSupabase()
       .from('orgs')
       .select('stripe_customer_id')
       .eq('id', orgId)

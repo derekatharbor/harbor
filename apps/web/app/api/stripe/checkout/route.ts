@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get or create Stripe customer
-    const { data: org } = await supabase
+    const { data: org } = await getSupabase()
       .from('orgs')
       .select('stripe_customer_id, name')
       .eq('id', orgId)
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       customerId = customer.id
 
       // Save customer ID to org
-      await supabase
+      await getSupabase()
         .from('orgs')
         .update({ stripe_customer_id: customerId })
         .eq('id', orgId)

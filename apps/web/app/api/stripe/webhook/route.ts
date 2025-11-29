@@ -81,7 +81,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   if (!orgId) return
 
   // Update org with subscription info
-  await supabase
+  await getSupabase()
     .from('orgs')
     .update({
       stripe_subscription_id: session.subscription as string,
@@ -92,7 +92,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     .eq('id', orgId)
 
   // Update all dashboards for this org to agency plan
-  await supabase
+  await getSupabase()
     .from('dashboards')
     .update({ plan: 'agency' })
     .eq('org_id', orgId)
@@ -116,7 +116,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const orgId = subscription.metadata?.orgId
   if (!orgId) {
     // Try to find org by customer ID
-    const { data: org } = await supabase
+    const { data: org } = await getSupabase()
       .from('orgs')
       .select('id')
       .eq('stripe_customer_id', subscription.customer as string)
@@ -138,7 +138,7 @@ async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscri
     ? new Date((subscription as any).current_period_end * 1000).toISOString()
     : null
 
-  await supabase
+  await getSupabase()
     .from('orgs')
     .update({
       stripe_subscription_id: subscription.id,
@@ -150,7 +150,7 @@ async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscri
     .eq('id', orgId)
 
   // Update dashboards plan
-  await supabase
+  await getSupabase()
     .from('dashboards')
     .update({ plan })
     .eq('org_id', orgId)
@@ -159,7 +159,7 @@ async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscri
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
-  const { data: org } = await supabase
+  const { data: org } = await getSupabase()
     .from('orgs')
     .select('id')
     .eq('stripe_subscription_id', subscription.id)
@@ -168,7 +168,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   if (!org) return
 
   // Downgrade to free
-  await supabase
+  await getSupabase()
     .from('orgs')
     .update({
       plan: 'solo',
@@ -177,7 +177,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     })
     .eq('id', org.id)
 
-  await supabase
+  await getSupabase()
     .from('dashboards')
     .update({ plan: 'solo' })
     .eq('org_id', org.id)
@@ -192,7 +192,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
 }
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  const { data: org } = await supabase
+  const { data: org } = await getSupabase()
     .from('orgs')
     .select('id')
     .eq('stripe_customer_id', invoice.customer as string)
@@ -200,7 +200,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   if (!org) return
 
-  await supabase
+  await getSupabase()
     .from('orgs')
     .update({
       plan_status: 'past_due',
