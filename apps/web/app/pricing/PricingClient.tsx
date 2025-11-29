@@ -1,10 +1,12 @@
 // apps/web/app/pricing/PricingClient.tsx
 'use client'
 
-import { useState } from 'react'
-import { Check, Plus, Minus, ArrowRight, Menu, BarChart3, Users, Sparkles, Globe, Database, RefreshCw } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Check, Plus, Minus, ArrowRight, Menu, BarChart3, Users, Sparkles, Globe, Database, RefreshCw, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
 
 const whyFreeReasons = [
@@ -111,6 +113,73 @@ export default function PricingClient() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly')
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [orgId, setOrgId] = useState<string | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      
+      if (user) {
+        // Get org ID
+        const { data: role } = await supabase
+          .from('user_roles')
+          .select('org_id')
+          .eq('user_id', user.id)
+          .single()
+        
+        if (role?.org_id) {
+          setOrgId(role.org_id)
+        }
+      }
+    }
+    getUser()
+  }, [])
+
+  const handleAgencyCheckout = async () => {
+    if (!user) {
+      // Not logged in - redirect to signup
+      router.push('/auth/signup?plan=agency')
+      return
+    }
+
+    if (!orgId) {
+      // Logged in but no org - send to onboarding
+      router.push('/onboarding?plan=agency')
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          orgId: orgId,
+          billingPeriod: billingPeriod,
+        }),
+      })
+
+      const data = await response.json()
+      
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        console.error('Checkout error:', data.error)
+        alert('Failed to start checkout. Please try again.')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Failed to start checkout. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen">
@@ -302,13 +371,23 @@ export default function PricingClient() {
                 )}
               </div>
 
-              <Link
-                href="/auth/signup?plan=agency"
-                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8"
+              <button
+                onClick={handleAgencyCheckout}
+                disabled={isLoading}
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-lg bg-[#101A31] text-white font-semibold hover:bg-[#1a2a4a] transition-all duration-200 mb-8 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Get started
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    Get started
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
 
               <div className="space-y-4">
                 {agencyFeatures.map((feature, idx) => (
