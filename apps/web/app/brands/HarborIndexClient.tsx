@@ -3,7 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, Search, ArrowRight, X } from 'lucide-react'
+import { Menu, Search, ArrowRight, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import FullscreenMenu from '@/components/landing/FullscreenMenu'
@@ -271,7 +271,16 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {filteredBrands.map((brand, index) => {
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-20 text-center">
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+                        <span className="text-white/60 text-sm">Loading brands...</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : filteredBrands.map((brand, index) => {
                   const delta = brand.rank_global <= 10 ? 5.8 : -1.2
                   const isPositive = delta > 0
 
@@ -323,13 +332,13 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </div>
 
           {/* View All Button */}
-          {displayedBrands < totalBrands && (
+          {!loading && displayedBrands < totalBrands && (
             <div className="border-t border-white/10 p-6 text-center">
               <Link
                 href="/brands/all"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-medium hover:bg-cyan-500/30 transition-all"
               >
-                View all {totalBrands} brands
+                View all {totalBrands.toLocaleString()} brands
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -339,7 +348,14 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         {/* Stats Footer */}
         <div className="mt-8 text-center">
           <p className="text-white/40 text-sm">
-            Showing {displayedBrands} of {totalBrands} brands • Updated daily
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Loading index...
+              </span>
+            ) : (
+              `Showing ${displayedBrands.toLocaleString()} of ${totalBrands.toLocaleString()} brands • Updated daily`
+            )}
           </p>
         </div>
       </section>
