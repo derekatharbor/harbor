@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       : PRICES.AGENCY_MONTHLY
 
     // Get app URL with fallback
-    let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.useharbor.io'
+    let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://useharbor.io'
     if (!appUrl.startsWith('http')) {
       appUrl = `https://${appUrl}`
     }
