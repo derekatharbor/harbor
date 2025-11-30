@@ -6,13 +6,6 @@ export default function NewHeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#101A31]">
       
       {/* Wireframe Background Image */}
-      {/* 
-        Recommended image specs:
-        - Width: 1920px (or wider for large screens)
-        - Height: 600-800px
-        - Format: PNG with transparency OR SVG
-        - Place at: /public/wireframe-hero.png
-      */}
       <div 
         className="absolute top-0 left-0 right-0 h-[600px] pointer-events-none"
         style={{
@@ -20,16 +13,16 @@ export default function NewHeroSection() {
           backgroundSize: 'cover',
           backgroundPosition: 'center top',
           backgroundRepeat: 'no-repeat',
-          opacity: 0.3
+          opacity: 0.15
         }}
       />
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 pt-32 md:pt-48 pb-16 md:pb-24 text-center">
         
-        {/* Headline */}
+        {/* Headline with animated gradient */}
         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-4 md:mb-6 leading-tight">
-          <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+          <span className="animated-gradient-text">
             AI is the new search.
           </span>
           <br />
@@ -73,6 +66,38 @@ export default function NewHeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Animated gradient text style */}
+      <style jsx>{`
+        .animated-gradient-text {
+          background: linear-gradient(
+            90deg,
+            #ffffff,
+            #22d3ee,
+            #3b82f6,
+            #22d3ee,
+            #ffffff,
+            #22d3ee,
+            #3b82f6,
+            #22d3ee,
+            #ffffff
+          );
+          background-size: 300% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: gradient-shift 6s linear infinite;
+        }
+        
+        @keyframes gradient-shift {
+          0% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   )
 }
