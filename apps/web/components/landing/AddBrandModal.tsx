@@ -20,6 +20,15 @@ export default function AddBrandModal({ isOpen, onClose, initialBrandName }: Add
   const [error, setError] = useState('')
   const [status, setStatus] = useState<'idle' | 'creating' | 'success'>('idle')
 
+  // Helper to clean domain for display
+  const cleanDomainForDisplay = (input: string) => {
+    return input
+      .toLowerCase()
+      .replace(/^(https?:\/\/)?(www\.)?/, '')
+      .split('/')[0]
+      .trim()
+  }
+
   if (!isOpen) return null
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -146,16 +155,21 @@ export default function AddBrandModal({ isOpen, onClose, initialBrandName }: Add
                 {/* Email */}
                 <div>
                   <label className="block text-sm text-white/70 mb-2">
-                    Your email
+                    Your work email
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
+                    placeholder="you@yourcompany.com"
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
                     disabled={loading}
                   />
+                  {domain && (
+                    <p className="mt-2 text-xs text-white/40">
+                      Use your @{cleanDomainForDisplay(domain)} email to verify ownership
+                    </p>
+                  )}
                 </div>
 
                 {/* Honeypot - hidden from humans */}

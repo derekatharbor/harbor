@@ -56,6 +56,26 @@ function cleanDomain(input: string): string {
     .trim()
 }
 
+function getRootDomain(domain: string): string {
+  // Extract root domain (e.g., "shop.nike.com" -> "nike.com")
+  const parts = domain.split('.')
+  if (parts.length >= 2) {
+    return parts.slice(-2).join('.')
+  }
+  return domain
+}
+
+function validateEmailMatchesDomain(email: string, domain: string): { valid: boolean; expectedDomain: string } {
+  const emailDomain = email.split('@')[1]?.toLowerCase()
+  const rootDomain = getRootDomain(domain)
+  const emailRootDomain = emailDomain ? getRootDomain(emailDomain) : ''
+  
+  // Check if email domain matches website domain (or root domains match)
+  const valid = emailDomain === domain || emailRootDomain === rootDomain
+  
+  return { valid, expectedDomain: rootDomain }
+}
+
 function generateSlug(brandName: string): string {
   return brandName
     .toLowerCase()
@@ -148,6 +168,15 @@ export async function POST(request: NextRequest) {
 
     if (!domain || domain.length < 3) {
       return NextResponse.json({ error: 'Invalid domain' }, { status: 400 })
+    }
+
+    // Validate email matches domain
+    const { valid, expectedDomain } = validateEmailMatchesDomain(email, domain)
+    if (!valid) {
+      return NextResponse.json(
+        { error: `Please use a @${expectedDomain} email address to add this brand` },
+        { status: 400 }
+      )
     }
 
     // Initialize Supabase
