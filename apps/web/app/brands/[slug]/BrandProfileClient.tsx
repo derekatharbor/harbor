@@ -140,27 +140,48 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
   const feedData = brand.feed_data || {}
   const scoring = feedData.visibility_scoring || {}
   
-  // Calculate visibility gaps
-  const gaps = [
+  // Check if we have real scoring data (at least one subscore > 0)
+  const hasRealScoring = scoring.brand_clarity_0_25 > 0 || 
+                         scoring.offerings_clarity_0_25 > 0 || 
+                         scoring.trust_and_basics_0_20 > 0 ||
+                         scoring.structure_for_ai_0_20 > 0 ||
+                         scoring.breadth_of_coverage_0_10 > 0
+  
+  // Calculate visibility gaps with priority levels (only if we have real data)
+  const gaps = hasRealScoring ? [
     { 
       issue: 'Brand clarity',
       current: scoring.brand_clarity_0_25 || 0,
       max: 25,
-      impact: '+' + (25 - (scoring.brand_clarity_0_25 || 0)) + '%'
+      priority: (25 - (scoring.brand_clarity_0_25 || 0)) >= 15 ? 'high' : 'medium'
     },
     {
       issue: 'Offerings clarity', 
       current: scoring.offerings_clarity_0_25 || 0,
       max: 25,
-      impact: '+' + (25 - (scoring.offerings_clarity_0_25 || 0)) + '%'
+      priority: (25 - (scoring.offerings_clarity_0_25 || 0)) >= 15 ? 'high' : 'medium'
     },
     {
       issue: 'Trust & basics',
       current: scoring.trust_and_basics_0_20 || 0,
       max: 20,
-      impact: '+' + (20 - (scoring.trust_and_basics_0_20 || 0)) + '%'
+      priority: (20 - (scoring.trust_and_basics_0_20 || 0)) >= 12 ? 'high' : 'medium'
+    },
+    {
+      issue: 'Structure for AI',
+      current: scoring.structure_for_ai_0_20 || 0,
+      max: 20,
+      priority: (20 - (scoring.structure_for_ai_0_20 || 0)) >= 12 ? 'high' : 'medium'
+    },
+    {
+      issue: 'Breadth of coverage',
+      current: scoring.breadth_of_coverage_0_10 || 0,
+      max: 10,
+      priority: (10 - (scoring.breadth_of_coverage_0_10 || 0)) >= 6 ? 'high' : 'medium'
     }
-  ].filter(gap => gap.current < gap.max).sort((a, b) => (b.max - b.current) - (a.max - a.current)).slice(0, 3)
+  ].filter(gap => gap.current < gap.max * 0.8) // Show gaps where score is below 80% of max
+   .sort((a, b) => (b.max - b.current) - (a.max - a.current))
+   .slice(0, 3) : []
 
   // Mock delta calculation
   const delta = brand.rank_global <= 10 ? 5.8 : -1.2
@@ -311,7 +332,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                     Visibility Opportunities
                   </h3>
                   <p className="text-white/50 text-sm">
-                    Based on your visibility score, AI models are missing critical information
+                    Areas where AI models may be missing critical information about {brand.brand_name}
                   </p>
                 </div>
                 {!brand.claimed && (
@@ -329,10 +350,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                       <div className="w-2 h-2 rounded-full bg-[#FF6B4A]" />
                       <span className="text-white font-medium">{gap.issue}</span>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <span className="text-white/50 text-sm">{gap.current}/{gap.max} points</span>
-                      <span className="text-green-400 font-medium text-sm">{gap.impact}</span>
-                    </div>
+                    <span className={`text-xs font-medium px-2 py-1 rounded ${
+                      gap.priority === 'high' 
+                        ? 'bg-[#FF6B4A]/20 text-[#FF6B4A]' 
+                        : 'bg-cyan-500/20 text-cyan-400'
+                    }`}>
+                      {gap.priority === 'high' ? 'High impact' : 'Medium impact'}
+                    </span>
                   </div>
                 ))}
               </div>
