@@ -9,11 +9,13 @@ import { createClient } from '@supabase/supabase-js'
 // Revalidate every 24 hours
 export const revalidate = 86400
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Get Supabase client (created at runtime, not build time)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Profile type
 interface Profile {
@@ -48,7 +50,7 @@ async function fetchBrands(slug1: string, slug2: string): Promise<{
   brand1: Profile | null
   brand2: Profile | null
 }> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('ai_profiles')
     .select('slug, brand_name, domain, category, visibility_score, feed_data')
     .in('slug', [slug1, slug2])

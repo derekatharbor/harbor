@@ -8,11 +8,13 @@ import { createClient } from '@supabase/supabase-js'
 // Revalidate every 24 hours
 export const revalidate = 86400
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Get Supabase client (created at runtime, not build time)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Profile type
 interface Profile {
@@ -41,7 +43,7 @@ async function fetchBrandAndAlternatives(slug: string): Promise<{
   alternatives: Profile[]
 }> {
   // First, get the brand
-  const { data: brand, error: brandError } = await supabase
+  const { data: brand, error: brandError } = await getSupabase()
     .from('ai_profiles')
     .select('slug, brand_name, domain, category, visibility_score, feed_data')
     .eq('slug', slug)
@@ -52,7 +54,7 @@ async function fetchBrandAndAlternatives(slug: string): Promise<{
   }
 
   // Then get alternatives (same category, excluding this brand)
-  const { data: alternatives, error: altError } = await supabase
+  const { data: alternatives, error: altError } = await getSupabase()
     .from('ai_profiles')
     .select('slug, brand_name, domain, category, visibility_score, feed_data')
     .ilike('category', `%${brand.category}%`)
