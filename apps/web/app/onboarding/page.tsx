@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 
 // Standardized industry list - keep in sync with ai_profiles
@@ -32,7 +32,10 @@ const INDUSTRIES = [
 ]
 
 export default function OnboardingPage() {
-  const [brandName, setBrandName] = useState('')
+  const searchParams = useSearchParams()
+  const brandFromUrl = searchParams.get('brand') || ''
+  
+  const [brandName, setBrandName] = useState(brandFromUrl)
   const [domain, setDomain] = useState('')
   const [industry, setIndustry] = useState('')
   const [loading, setLoading] = useState(false)

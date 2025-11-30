@@ -3,11 +3,14 @@
 
 import { useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SignUpPage() {
+  const searchParams = useSearchParams()
+  const brandFromUrl = searchParams.get('brand') || ''
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -66,8 +69,11 @@ export default function SignUpPage() {
             throw new Error(errorData.error || 'Failed to set up account')
           }
 
-          // Redirect to onboarding
-          router.push('/onboarding')
+          // Redirect to onboarding with brand if provided
+          const onboardingUrl = brandFromUrl 
+            ? `/onboarding?brand=${encodeURIComponent(brandFromUrl)}`
+            : '/onboarding'
+          router.push(onboardingUrl)
         } else {
           // Email confirmation required - show message
           setError('Please check your email to confirm your account, then log in.')
@@ -98,10 +104,13 @@ export default function SignUpPage() {
 
           <div className="mb-6 lg:mb-8">
             <h1 className="text-3xl font-bold text-[#101A31] mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              Get started with Harbor
+              {brandFromUrl ? `Add ${brandFromUrl} to Harbor` : 'Get started with Harbor'}
             </h1>
             <p className="text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              Create your account to optimize your brand's AI visibility
+              {brandFromUrl 
+                ? 'Create an account to claim your brand and manage your AI visibility'
+                : 'Create your account to optimize your brand\'s AI visibility'
+              }
             </p>
           </div>
 
