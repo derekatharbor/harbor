@@ -297,7 +297,7 @@ export default function FinalCTASection() {
                       No brands found for "{query}"
                     </p>
                     <Link
-                      href="/auth/signup"
+                      href={`/auth/signup?brand=${encodeURIComponent(query)}`}
                       className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-400 font-medium hover:bg-cyan-500/30 transition-all"
                     >
                       <Plus className="w-4 h-4" />
@@ -313,7 +313,7 @@ export default function FinalCTASection() {
 
           {/* Helper text */}
           <p className="mt-6 text-sm text-white/40">
-            Over 15,000 brands indexed and growing
+            Over 20,000 brands indexed and growing
           </p>
 
         </div>

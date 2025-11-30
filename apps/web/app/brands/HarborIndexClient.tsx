@@ -3,6 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Menu, Search, ArrowRight, X, Loader2, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -25,11 +26,14 @@ interface Props {
 }
 
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
+  const searchParams = useSearchParams()
+  const initialQuery = searchParams.get('q') || ''
+  
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
   const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands.slice(0, 50))
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [searchResults, setSearchResults] = useState<Brand[]>([])
 

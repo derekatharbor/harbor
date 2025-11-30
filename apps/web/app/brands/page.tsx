@@ -9,7 +9,7 @@ export const revalidate = 0
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: 'AI Visibility Index - How AI Sees 500+ Brands | Harbor',
+  title: 'AI Visibility Index - How AI Sees 20,000+ Brands | Harbor',
   description: 'The definitive leaderboard showing how ChatGPT, Claude, Gemini, and Perplexity understand and represent brands. Search, compare, and claim your brand profile.',
   keywords: [
     'AI visibility',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'AI Visibility Index - How AI Sees Brands',
-    description: 'See how 500+ brands rank across ChatGPT, Claude, Gemini, and Perplexity. The definitive AI visibility leaderboard.',
+    description: 'See how 20,000+ brands rank across ChatGPT, Claude, Gemini, and Perplexity. The definitive AI visibility leaderboard.',
     url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'}/brands`,
     siteName: 'Harbor',
     type: 'website',
@@ -58,7 +58,7 @@ export default function BrandsPage() {
       '@type': 'ItemList',
       'name': 'Brand AI Visibility Rankings',
       'description': 'Rankings of brands by their AI visibility scores across ChatGPT, Claude, Gemini, and Perplexity',
-      'numberOfItems': '500+'
+      'numberOfItems': '20000+'
     }
   }
 

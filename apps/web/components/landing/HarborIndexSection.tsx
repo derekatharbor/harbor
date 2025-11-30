@@ -57,7 +57,7 @@ export default function HarborIndexSection() {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
-                  15,000+ brands.
+                  20,000+ brands.
                 </span>
               </h2>
 
