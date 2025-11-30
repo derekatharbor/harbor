@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.313Z
+// Generated: 2025-11-30T20:05:19.991Z
 // Alternative to: Dragonchain
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Dragonchain Alternatives',
     description: 'Top alternatives to Dragonchain for Blockchain.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.313Z',
-    modifiedTime: '2025-11-30T19:44:53.313Z',
+    publishedTime: '2025-11-30T20:05:19.991Z',
+    modifiedTime: '2025-11-30T20:05:19.991Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/dragonchain#article",
       "headline": "Best Dragonchain Alternatives",
       "description": "Top alternatives to Dragonchain for Blockchain. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.313Z",
-      "dateModified": "2025-11-30T19:44:53.313Z",
+      "datePublished": "2025-11-30T20:05:19.991Z",
+      "dateModified": "2025-11-30T20:05:19.991Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/dragonchain#list",
       "name": "Dragonchain Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Digital Asset",
+            "url": "https://useharbor.io/brands/digital-asset",
+            "description": "A leading blockchain innovator providing institutional-grade solutions on the Canton Network.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Offchain Labs",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Hedera",
@@ -68,12 +79,34 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Manta Ray Labs",
             "url": "https://useharbor.io/brands/manta-ray-labs",
             "description": "A modular blockchain platform designed for zero-knowledge applications.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ZetaChain",
+            "url": "https://useharbor.io/brands/zetachain",
+            "description": "The first Universal Blockchain that connects all chains natively.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Solana Labs",
+            "url": "https://useharbor.io/brands/solana-labs",
+            "description": "Solana Labs develops products and companies to enhance the Solana ecosystem.",
             "applicationCategory": "Blockchain"
           }
         }
@@ -83,6 +116,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "digital-asset",
+    "brand_name": "Digital Asset",
+    "domain": "digitalasset.com",
+    "summary": "A leading blockchain innovator providing institutional-grade solutions on the Canton Network.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Connect to apps and assets on Canton",
+      "Accelerate tokenization with pre-built modules",
+      "Unlock 24/7 markets with cloud apps",
+      "Create custom apps and interoperable subnets",
+      "Deliver privacy-preserving blockchain solutions"
+    ],
+    "integrations": []
+  },
   {
     "slug": "offchain-labs",
     "brand_name": "Offchain Labs",
@@ -141,6 +194,44 @@ const alternatives = [
       "MetaMask",
       "Pyth"
     ]
+  },
+  {
+    "slug": "zetachain",
+    "brand_name": "ZetaChain",
+    "domain": "zetachain.com",
+    "summary": "The first Universal Blockchain that connects all chains natively.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cross-chain transfers",
+      "Unified multi-chain liquidity",
+      "Build once, launch everywhere",
+      "Programmability for Bitcoin",
+      "Mint, trade, and manage digital assets"
+    ],
+    "integrations": [
+      "Bitcoin",
+      "Ethereum",
+      "Solana"
+    ]
+  },
+  {
+    "slug": "solana-labs",
+    "brand_name": "Solana Labs",
+    "domain": "solanalabs.com",
+    "summary": "Solana Labs develops products and companies to enhance the Solana ecosystem.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -156,7 +247,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.313Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.991Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Dragonchain Alternatives
@@ -228,7 +319,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.313Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.991Z">2025-11-30</time>
             </p>
           </footer>
         </div>

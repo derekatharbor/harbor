@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.224Z
+// Generated: 2025-11-30T20:05:19.871Z
 // Alternative to: Island Tech Services
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Island Tech Services Alternatives',
     description: 'Top alternatives to Island Tech Services for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.224Z',
-    modifiedTime: '2025-11-30T19:44:53.224Z',
+    publishedTime: '2025-11-30T20:05:19.871Z',
+    modifiedTime: '2025-11-30T20:05:19.871Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/island-tech-services#article",
       "headline": "Best Island Tech Services Alternatives",
       "description": "Top alternatives to Island Tech Services for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.224Z",
-      "dateModified": "2025-11-30T19:44:53.224Z",
+      "datePublished": "2025-11-30T20:05:19.871Z",
+      "dateModified": "2025-11-30T20:05:19.871Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,26 +60,15 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Trinity Technology Partners, Inc.",
-            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
-            "description": "A technology services provider specializing in solutions for government and industry.",
+            "name": "Tribalco",
+            "url": "https://useharbor.io/brands/tribalco",
+            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
             "applicationCategory": "Technology Services"
           }
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "3T-Innovations",
-            "url": "https://useharbor.io/brands/3t-innovations",
-            "description": "A veteran-owned small business providing innovative technology solutions.",
-            "applicationCategory": "Technology Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Adept Consulting Services, Inc.",
@@ -90,12 +79,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "InDev",
+            "url": "https://useharbor.io/brands/indev",
+            "description": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Tribalco",
-            "url": "https://useharbor.io/brands/tribalco",
-            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
+            "name": "Trinity Technology Partners, Inc.",
+            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
+            "description": "A technology services provider specializing in solutions for government and industry.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "InDev",
-            "url": "https://useharbor.io/brands/indev",
-            "description": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
+            "name": "3T-Innovations",
+            "url": "https://useharbor.io/brands/3t-innovations",
+            "description": "A veteran-owned small business providing innovative technology solutions.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -170,6 +170,69 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "tribalco",
+    "brand_name": "Tribalco",
+    "domain": "tribalco.com",
+    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Information Technology Services",
+      "Critical Communications Solutions",
+      "Rescue & Safety Solutions",
+      "Advanced Engineering Projects"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "adept-consulting-services-inc",
+    "brand_name": "Adept Consulting Services, Inc.",
+    "domain": "adeptusa.com",
+    "summary": "Adept Consulting Services provides comprehensive technology solutions for various sectors.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not specified on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "ITIL consulting",
+      "eGovernment strategies",
+      "quality assurance",
+      "business intelligence consulting",
+      "ERP/CRM/SCM consulting"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "indev",
+    "brand_name": "InDev",
+    "domain": "indev.com",
+    "summary": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven automation",
+      "Mission analytics",
+      "Cloud-native technologies",
+      "DevSecOps",
+      "Digital transformation"
+    ],
+    "integrations": [
+      "Tableau",
+      "Qlik",
+      "PowerBi"
+    ]
+  },
+  {
     "slug": "trinity-technology-partners-inc",
     "brand_name": "Trinity Technology Partners, Inc.",
     "domain": "trinitytp.com",
@@ -204,69 +267,6 @@ const alternatives = [
     "integrations": [
       "Cisco Meraki",
       "Crestron"
-    ]
-  },
-  {
-    "slug": "adept-consulting-services-inc",
-    "brand_name": "Adept Consulting Services, Inc.",
-    "domain": "adeptusa.com",
-    "summary": "Adept Consulting Services provides comprehensive technology solutions for various sectors.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not specified on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "ITIL consulting",
-      "eGovernment strategies",
-      "quality assurance",
-      "business intelligence consulting",
-      "ERP/CRM/SCM consulting"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "tribalco",
-    "brand_name": "Tribalco",
-    "domain": "tribalco.com",
-    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Information Technology Services",
-      "Critical Communications Solutions",
-      "Rescue & Safety Solutions",
-      "Advanced Engineering Projects"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "indev",
-    "brand_name": "InDev",
-    "domain": "indev.com",
-    "summary": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven automation",
-      "Mission analytics",
-      "Cloud-native technologies",
-      "DevSecOps",
-      "Digital transformation"
-    ],
-    "integrations": [
-      "Tableau",
-      "Qlik",
-      "PowerBi"
     ]
   },
   {
@@ -339,7 +339,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.224Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.871Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Island Tech Services Alternatives
@@ -411,7 +411,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.224Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.871Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.336Z
+// Generated: 2025-11-30T20:05:20.043Z
 // Alternative to: Manta Ray Labs
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Manta Ray Labs Alternatives',
     description: 'Top alternatives to Manta Ray Labs for Blockchain.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.336Z',
-    modifiedTime: '2025-11-30T19:44:53.336Z',
+    publishedTime: '2025-11-30T20:05:20.043Z',
+    modifiedTime: '2025-11-30T20:05:20.043Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/manta-ray-labs#article",
       "headline": "Best Manta Ray Labs Alternatives",
       "description": "Top alternatives to Manta Ray Labs for Blockchain. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.336Z",
-      "dateModified": "2025-11-30T19:44:53.336Z",
+      "datePublished": "2025-11-30T20:05:20.043Z",
+      "dateModified": "2025-11-30T20:05:20.043Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/manta-ray-labs#list",
       "name": "Manta Ray Labs Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Offchain Labs",
-            "url": "https://useharbor.io/brands/offchain-labs",
-            "description": "A leading provider of Ethereum scaling solutions and development tools.",
+            "name": "Digital Asset",
+            "url": "https://useharbor.io/brands/digital-asset",
+            "description": "A leading blockchain innovator providing institutional-grade solutions on the Canton Network.",
             "applicationCategory": "Blockchain"
           }
         },
@@ -71,9 +71,42 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Offchain Labs",
+            "url": "https://useharbor.io/brands/offchain-labs",
+            "description": "A leading provider of Ethereum scaling solutions and development tools.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Hedera",
             "url": "https://useharbor.io/brands/hedera",
             "description": "Hedera is a public network for building scalable decentralized applications.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ZetaChain",
+            "url": "https://useharbor.io/brands/zetachain",
+            "description": "The first Universal Blockchain that connects all chains natively.",
+            "applicationCategory": "Blockchain"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Solana Labs",
+            "url": "https://useharbor.io/brands/solana-labs",
+            "description": "Solana Labs develops products and companies to enhance the Solana ecosystem.",
             "applicationCategory": "Blockchain"
           }
         }
@@ -100,6 +133,26 @@ const alternatives = [
       "Instant processing of all transactions",
       "Smart Contracts in any language",
       "Flexible, hybrid blockchain platform"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "digital-asset",
+    "brand_name": "Digital Asset",
+    "domain": "digitalasset.com",
+    "summary": "A leading blockchain innovator providing institutional-grade solutions on the Canton Network.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Connect to apps and assets on Canton",
+      "Accelerate tokenization with pre-built modules",
+      "Unlock 24/7 markets with cloud apps",
+      "Create custom apps and interoperable subnets",
+      "Deliver privacy-preserving blockchain solutions"
     ],
     "integrations": []
   },
@@ -138,6 +191,44 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "zetachain",
+    "brand_name": "ZetaChain",
+    "domain": "zetachain.com",
+    "summary": "The first Universal Blockchain that connects all chains natively.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cross-chain transfers",
+      "Unified multi-chain liquidity",
+      "Build once, launch everywhere",
+      "Programmability for Bitcoin",
+      "Mint, trade, and manage digital assets"
+    ],
+    "integrations": [
+      "Bitcoin",
+      "Ethereum",
+      "Solana"
+    ]
+  },
+  {
+    "slug": "solana-labs",
+    "brand_name": "Solana Labs",
+    "domain": "solanalabs.com",
+    "summary": "Solana Labs develops products and companies to enhance the Solana ecosystem.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -153,7 +244,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.043Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Manta Ray Labs Alternatives
@@ -225,7 +316,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.043Z">2025-11-30</time>
             </p>
           </footer>
         </div>

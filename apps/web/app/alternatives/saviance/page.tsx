@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.242Z
+// Generated: 2025-11-30T20:05:19.800Z
 // Alternative to: Saviance
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Saviance Alternatives',
     description: 'Top alternatives to Saviance for Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.242Z',
-    modifiedTime: '2025-11-30T19:44:53.242Z',
+    publishedTime: '2025-11-30T20:05:19.800Z',
+    modifiedTime: '2025-11-30T20:05:19.800Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/saviance#article",
       "headline": "Best Saviance Alternatives",
       "description": "Top alternatives to Saviance for Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.242Z",
-      "dateModified": "2025-11-30T19:44:53.242Z",
+      "datePublished": "2025-11-30T20:05:19.800Z",
+      "dateModified": "2025-11-30T20:05:19.800Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Kiefer Consulting, Inc.",
-            "url": "https://useharbor.io/brands/kiefer-consulting-inc",
-            "description": "Kiefer Consulting is a leading provider of Microsoft-based solutions focused on business transformation.",
+            "name": "Cascades Technologies, Inc.",
+            "url": "https://useharbor.io/brands/cascades-technologies-inc",
+            "description": "Cascades Technologies provides IT services and solutions primarily for federal government clients.",
             "applicationCategory": "Consulting"
           }
         },
@@ -126,6 +126,17 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Zenatta Consulting",
+            "url": "https://useharbor.io/brands/zenatta-consulting",
+            "description": "A leading Zoho partner specializing in consulting and implementation services.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Palladin Technologies",
             "url": "https://useharbor.io/brands/palladin-technologies",
             "description": "Your Trusted Salesforce PAL.",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tential Solutions",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "AlixPartners",
@@ -156,7 +167,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Kiefer Consulting, Inc.",
+            "url": "https://useharbor.io/brands/kiefer-consulting-inc",
+            "description": "Kiefer Consulting is a leading provider of Microsoft-based solutions focused on business transformation.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "WorldLink US",
@@ -167,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Bennett Adelson Consulting",
@@ -178,34 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "eBiz Solutions, LLC",
-            "url": "https://useharbor.io/brands/ebiz-solutions-llc",
-            "description": "Transforming businesses through digital innovation and AI solutions.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Technology Ventures",
-            "url": "https://useharbor.io/brands/technology-ventures",
-            "description": "Award-winning consulting firm specializing in technology and staffing solutions.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Sky Systems, Inc. (SkySys)",
-            "url": "https://useharbor.io/brands/sky-systems-inc-skysys",
-            "description": "SkySys is a global service provider specializing in consulting and managed services.",
+            "name": "Green Powered Technology (GPTech)",
+            "url": "https://useharbor.io/brands/green-powered-technology-gptech",
+            "description": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
             "applicationCategory": "Consulting"
           }
         }
@@ -250,30 +250,24 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "kiefer-consulting-inc",
-    "brand_name": "Kiefer Consulting, Inc.",
-    "domain": "kieferconsulting.com",
-    "summary": "Kiefer Consulting is a leading provider of Microsoft-based solutions focused on business transformation.",
+    "slug": "cascades-technologies-inc",
+    "brand_name": "Cascades Technologies, Inc.",
+    "domain": "cascadestech.com",
+    "summary": "Cascades Technologies provides IT services and solutions primarily for federal government clients.",
     "pricing": {
-      "price_model": "custom",
+      "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "SharePoint expertise",
-      "Power BI consulting",
-      "AI solutions",
-      "Power Platform consulting",
-      "Data analytics and visualization"
+      "Web Services",
+      "Cyber Security",
+      "Data Analytics",
+      "Project Management",
+      "IT Staff Augmentation"
     ],
-    "integrations": [
-      "Microsoft Office 365",
-      "SharePoint",
-      "Nintex",
-      "Prodigy Consulting",
-      "Sharegate"
-    ]
+    "integrations": []
   },
   {
     "slug": "hpc-solutions",
@@ -358,6 +352,28 @@ const alternatives = [
     ]
   },
   {
+    "slug": "zenatta-consulting",
+    "brand_name": "Zenatta Consulting",
+    "domain": "zenatta.com",
+    "summary": "A leading Zoho partner specializing in consulting and implementation services.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Zoho Consulting & Implementation",
+      "Back office accounting services",
+      "Custom Zoho Creator applications",
+      "Team training programs",
+      "Marketplace apps"
+    ],
+    "integrations": [
+      "Zoho"
+    ]
+  },
+  {
     "slug": "palladin-technologies",
     "brand_name": "Palladin Technologies",
     "domain": "palladintech.com",
@@ -415,6 +431,32 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "kiefer-consulting-inc",
+    "brand_name": "Kiefer Consulting, Inc.",
+    "domain": "kieferconsulting.com",
+    "summary": "Kiefer Consulting is a leading provider of Microsoft-based solutions focused on business transformation.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "SharePoint expertise",
+      "Power BI consulting",
+      "AI solutions",
+      "Power Platform consulting",
+      "Data analytics and visualization"
+    ],
+    "integrations": [
+      "Microsoft Office 365",
+      "SharePoint",
+      "Nintex",
+      "Prodigy Consulting",
+      "Sharegate"
+    ]
+  },
+  {
     "slug": "worldlink-us",
     "brand_name": "WorldLink US",
     "domain": "worldlink-us.com",
@@ -463,10 +505,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "ebiz-solutions-llc",
-    "brand_name": "eBiz Solutions, LLC",
-    "domain": "thinkebiz.net",
-    "summary": "Transforming businesses through digital innovation and AI solutions.",
+    "slug": "green-powered-technology-gptech",
+    "brand_name": "Green Powered Technology (GPTech)",
+    "domain": "greenpwrd.com",
+    "summary": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -474,50 +516,12 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "AI Product Recommendation",
-      "Packaging Suggestions",
-      "Smart Alternatives",
-      "Consulting and Support",
-      "Implementation Services"
+      "Energy consulting",
+      "Infrastructure development",
+      "Sustainable development strategies",
+      "Technical support services",
+      "Project management"
     ],
-    "integrations": [
-      "Microsoft 365",
-      "SharePoint",
-      "Microsoft Dynamics 365"
-    ]
-  },
-  {
-    "slug": "technology-ventures",
-    "brand_name": "Technology Ventures",
-    "domain": "tventures.net",
-    "summary": "Award-winning consulting firm specializing in technology and staffing solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Natural Language Processing (NLP)",
-      "ML Models Development",
-      "Chatbots and Conversational AI",
-      "Recommendation Systems",
-      "Deep Learning"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "sky-systems-inc-skysys",
-    "brand_name": "Sky Systems, Inc. (SkySys)",
-    "domain": "myskysys.com",
-    "summary": "SkySys is a global service provider specializing in consulting and managed services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
     "integrations": []
   }
 ]
@@ -534,7 +538,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.242Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.800Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Saviance Alternatives
@@ -606,7 +610,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.242Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.800Z">2025-11-30</time>
             </p>
           </footer>
         </div>

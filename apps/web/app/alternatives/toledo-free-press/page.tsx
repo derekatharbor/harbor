@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.270Z
+// Generated: 2025-11-30T20:05:19.982Z
 // Alternative to: Toledo Free Press
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Toledo Free Press Alternatives',
     description: 'Top alternatives to Toledo Free Press for Media.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.270Z',
-    modifiedTime: '2025-11-30T19:44:53.270Z',
+    publishedTime: '2025-11-30T20:05:19.982Z',
+    modifiedTime: '2025-11-30T20:05:19.982Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/toledo-free-press#article",
       "headline": "Best Toledo Free Press Alternatives",
       "description": "Top alternatives to Toledo Free Press for Media. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.270Z",
-      "dateModified": "2025-11-30T19:44:53.270Z",
+      "datePublished": "2025-11-30T20:05:19.982Z",
+      "dateModified": "2025-11-30T20:05:19.982Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/toledo-free-press#list",
       "name": "Toledo Free Press Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 7,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CR Fashion Book",
-            "url": "https://useharbor.io/brands/cr-fashion-book",
-            "description": "A leading fashion publication that combines the essence of a collectible book with a contemporary magazine format.",
+            "name": "Teen Vogue",
+            "url": "https://useharbor.io/brands/teen-vogue",
+            "description": "A leading publication for teen fashion, beauty, and entertainment.",
             "applicationCategory": "Media"
           }
         },
@@ -107,6 +107,17 @@ const schemaOrg = {
             "name": "R&D World",
             "url": "https://useharbor.io/brands/r-d-world",
             "description": "A leading source for research and development news and analysis.",
+            "applicationCategory": "Media"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CR Fashion Book",
+            "url": "https://useharbor.io/brands/cr-fashion-book",
+            "description": "A leading fashion publication that combines the essence of a collectible book with a contemporary magazine format.",
             "applicationCategory": "Media"
           }
         }
@@ -185,10 +196,10 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "cr-fashion-book",
-    "brand_name": "CR Fashion Book",
-    "domain": "crfashionbook.com",
-    "summary": "A leading fashion publication that combines the essence of a collectible book with a contemporary magazine format.",
+    "slug": "teen-vogue",
+    "brand_name": "Teen Vogue",
+    "domain": "teenvogue.com",
+    "summary": "A leading publication for teen fashion, beauty, and entertainment.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -217,6 +228,20 @@ const alternatives = [
       "R&D 100 Awards recognition"
     ],
     "integrations": []
+  },
+  {
+    "slug": "cr-fashion-book",
+    "brand_name": "CR Fashion Book",
+    "domain": "crfashionbook.com",
+    "summary": "A leading fashion publication that combines the essence of a collectible book with a contemporary magazine format.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -232,7 +257,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.270Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.982Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Toledo Free Press Alternatives
@@ -304,7 +329,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.270Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.982Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.264Z
+// Generated: 2025-11-30T20:05:19.999Z
 // Alternative to: TeleSwitch
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best TeleSwitch Alternatives',
     description: 'Top alternatives to TeleSwitch for Unified Communications.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.264Z',
-    modifiedTime: '2025-11-30T19:44:53.264Z',
+    publishedTime: '2025-11-30T20:05:19.999Z',
+    modifiedTime: '2025-11-30T20:05:19.999Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/teleswitch#article",
       "headline": "Best TeleSwitch Alternatives",
       "description": "Top alternatives to TeleSwitch for Unified Communications. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.264Z",
-      "dateModified": "2025-11-30T19:44:53.264Z",
+      "datePublished": "2025-11-30T20:05:19.999Z",
+      "dateModified": "2025-11-30T20:05:19.999Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/teleswitch#list",
       "name": "TeleSwitch Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "UnifiedCommunications",
+            "url": "https://useharbor.io/brands/unifiedcommunications",
+            "description": "A leader in collaboration technology providing innovative solutions for modern workplaces.",
+            "applicationCategory": "Unified Communications"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Utelogy Corporation",
             "url": "https://useharbor.io/brands/utelogy-corporation",
             "description": "Utelogy Corporation provides a cloud-centric managed services platform that unifies AV and UC ecosystems.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Akkadian Labs",
@@ -110,6 +121,22 @@ const alternatives = [
       "Crexendo",
       "Dialpad",
       "Five9"
+    ]
+  },
+  {
+    "slug": "unifiedcommunications",
+    "brand_name": "UnifiedCommunications",
+    "domain": "unifiedcommunications.com",
+    "summary": "A leader in collaboration technology providing innovative solutions for modern workplaces.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Pricing for Appspace Cloud Subscription for 25 devices.",
+      "has_free_tier": false,
+      "starting_price": "$11,700/year"
+    },
+    "features": [],
+    "integrations": [
+      "Appspace"
     ]
   },
   {
@@ -172,7 +199,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.264Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.999Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best TeleSwitch Alternatives
@@ -244,7 +271,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.264Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.999Z">2025-11-30</time>
             </p>
           </footer>
         </div>

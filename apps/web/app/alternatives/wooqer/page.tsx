@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.247Z
+// Generated: 2025-11-30T20:05:19.815Z
 // Alternative to: Wooqer
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Wooqer Alternatives',
     description: 'Top alternatives to Wooqer for Business Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.247Z',
-    modifiedTime: '2025-11-30T19:44:53.247Z',
+    publishedTime: '2025-11-30T20:05:19.815Z',
+    modifiedTime: '2025-11-30T20:05:19.815Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/wooqer#article",
       "headline": "Best Wooqer Alternatives",
       "description": "Top alternatives to Wooqer for Business Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.247Z",
-      "dateModified": "2025-11-30T19:44:53.247Z",
+      "datePublished": "2025-11-30T20:05:19.815Z",
+      "dateModified": "2025-11-30T20:05:19.815Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/wooqer#list",
       "name": "Wooqer Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,17 @@ const schemaOrg = {
             "name": "Bitrix24",
             "url": "https://useharbor.io/brands/bitrix24",
             "description": "A free online workspace for businesses offering CRM, project management, and collaboration tools.",
+            "applicationCategory": "Business Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Sunmerge Systems",
+            "url": "https://useharbor.io/brands/sunmerge-systems",
+            "description": "A global Information Technology firm providing innovative end-to-end solutions.",
             "applicationCategory": "Business Solutions"
           }
         }
@@ -147,6 +158,26 @@ const alternatives = [
       "telephony",
       "email"
     ]
+  },
+  {
+    "slug": "sunmerge-systems",
+    "brand_name": "Sunmerge Systems",
+    "domain": "sunmergesystems.com",
+    "summary": "A global Information Technology firm providing innovative end-to-end solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Reduce billing cycle",
+      "Track real-time utilization",
+      "Prompt and accurate client billing",
+      "Increased timesheet compliance",
+      "Simple and intuitive interface"
+    ],
+    "integrations": []
   }
 ]
 
@@ -162,7 +193,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.247Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.815Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Wooqer Alternatives
@@ -234,7 +265,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.247Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.815Z">2025-11-30</time>
             </p>
           </footer>
         </div>

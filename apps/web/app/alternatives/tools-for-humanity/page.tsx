@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.278Z
+// Generated: 2025-11-30T20:05:19.982Z
 // Alternative to: Tools for Humanity
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Tools for Humanity Alternatives',
     description: 'Top alternatives to Tools for Humanity for Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.278Z',
-    modifiedTime: '2025-11-30T19:44:53.278Z',
+    publishedTime: '2025-11-30T20:05:19.982Z',
+    modifiedTime: '2025-11-30T20:05:19.982Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/tools-for-humanity#article",
       "headline": "Best Tools for Humanity Alternatives",
       "description": "Top alternatives to Tools for Humanity for Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.278Z",
-      "dateModified": "2025-11-30T19:44:53.278Z",
+      "datePublished": "2025-11-30T20:05:19.982Z",
+      "dateModified": "2025-11-30T20:05:19.982Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/tools-for-humanity#list",
       "name": "Tools for Humanity Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,17 +71,6 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Consensus",
-            "url": "https://useharbor.io/brands/consensus",
-            "description": "AI-powered search engine for scientific research papers.",
-            "applicationCategory": "Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Infobahn Softworld Inc",
             "url": "https://useharbor.io/brands/infobahn-softworld-inc",
             "description": "A leading technology and professional services company specializing in IT solutions.",
@@ -90,7 +79,40 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Software Design Partners",
+            "url": "https://useharbor.io/brands/software-design-partners",
+            "description": "A technology partner providing comprehensive software and business solutions.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Consensus",
+            "url": "https://useharbor.io/brands/consensus",
+            "description": "AI-powered search engine for scientific research papers.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Techment Technology",
+            "url": "https://useharbor.io/brands/techment-technology",
+            "description": "Empowering enterprises with AI and data engineering solutions.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HackerEarth",
@@ -101,12 +123,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Racemi",
             "url": "https://useharbor.io/brands/racemi",
             "description": "Racemi is a technology-focused blog providing insights and analysis on various tech topics.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Radiant Systems Inc",
+            "url": "https://useharbor.io/brands/radiant-systems-inc",
+            "description": "A technology company specializing in AI, Blockchain, and IoT solutions.",
             "applicationCategory": "Technology"
           }
         }
@@ -145,6 +178,34 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "infobahn-softworld-inc",
+    "brand_name": "Infobahn Softworld Inc",
+    "domain": "infobahnsw.com",
+    "summary": "A leading technology and professional services company specializing in IT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "software-design-partners",
+    "brand_name": "Software Design Partners",
+    "domain": "softwaredesignpartners.com",
+    "summary": "A technology partner providing comprehensive software and business solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "consensus",
     "brand_name": "Consensus",
     "domain": "consensus.app",
@@ -159,10 +220,10 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "infobahn-softworld-inc",
-    "brand_name": "Infobahn Softworld Inc",
-    "domain": "infobahnsw.com",
-    "summary": "A leading technology and professional services company specializing in IT solutions.",
+    "slug": "techment-technology",
+    "brand_name": "Techment Technology",
+    "domain": "techment.com",
+    "summary": "Empowering enterprises with AI and data engineering solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -199,6 +260,20 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "radiant-systems-inc",
+    "brand_name": "Radiant Systems Inc",
+    "domain": "radiants.com",
+    "summary": "A technology company specializing in AI, Blockchain, and IoT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -214,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.278Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.982Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Tools for Humanity Alternatives
@@ -286,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.278Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.982Z">2025-11-30</time>
             </p>
           </footer>
         </div>

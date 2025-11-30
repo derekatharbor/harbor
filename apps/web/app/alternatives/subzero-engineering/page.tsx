@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.288Z
+// Generated: 2025-11-30T20:05:20.004Z
 // Alternative to: Subzero Engineering
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Subzero Engineering Alternatives',
     description: 'Top alternatives to Subzero Engineering for Data Center Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.288Z',
-    modifiedTime: '2025-11-30T19:44:53.288Z',
+    publishedTime: '2025-11-30T20:05:20.004Z',
+    modifiedTime: '2025-11-30T20:05:20.004Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/subzero-engineering#article",
       "headline": "Best Subzero Engineering Alternatives",
       "description": "Top alternatives to Subzero Engineering for Data Center Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.288Z",
-      "dateModified": "2025-11-30T19:44:53.288Z",
+      "datePublished": "2025-11-30T20:05:20.004Z",
+      "dateModified": "2025-11-30T20:05:20.004Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/subzero-engineering#list",
       "name": "Subzero Engineering Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "PTS Data Center Solutions, Inc.",
-            "url": "https://useharbor.io/brands/pts-data-center-solutions-inc",
-            "description": "Leading provider of data center and IT solutions.",
+            "name": "Racksquared Data Centers, LLC",
+            "url": "https://useharbor.io/brands/racksquared-data-centers-llc",
+            "description": "A trusted data center partner providing cloud and IT solutions for businesses.",
             "applicationCategory": "Data Center Solutions"
           }
         },
@@ -71,9 +71,20 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Racksquared Data Centers, LLC",
-            "url": "https://useharbor.io/brands/racksquared-data-centers-llc",
-            "description": "A trusted data center partner providing cloud and IT solutions for businesses.",
+            "name": "PTS Data Center Solutions, Inc.",
+            "url": "https://useharbor.io/brands/pts-data-center-solutions-inc",
+            "description": "Leading provider of data center and IT solutions.",
+            "applicationCategory": "Data Center Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Nautilus Data Technologies",
+            "url": "https://useharbor.io/brands/nautilus-data-technologies",
+            "description": "Nautilus provides sustainable and scalable liquid cooling solutions for high-density data centers.",
             "applicationCategory": "Data Center Solutions"
           }
         }
@@ -104,20 +115,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "pts-data-center-solutions-inc",
-    "brand_name": "PTS Data Center Solutions, Inc.",
-    "domain": "ptsdcs.com",
-    "summary": "Leading provider of data center and IT solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
     "slug": "racksquared-data-centers-llc",
     "brand_name": "Racksquared Data Centers, LLC",
     "domain": "racksquared.com",
@@ -140,6 +137,40 @@ const alternatives = [
       "Cybernetics",
       "Rocket Software"
     ]
+  },
+  {
+    "slug": "pts-data-center-solutions-inc",
+    "brand_name": "PTS Data Center Solutions, Inc.",
+    "domain": "ptsdcs.com",
+    "summary": "Leading provider of data center and IT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "nautilus-data-technologies",
+    "brand_name": "Nautilus Data Technologies",
+    "domain": "nautilusdt.com",
+    "summary": "Nautilus provides sustainable and scalable liquid cooling solutions for high-density data centers.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is not explicitly stated; quotes are available upon request.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Scalable liquid cooling solutions",
+      "Prefabricated for rapid deployment",
+      "Leak-proof design",
+      "Supports multiple cooling methods (hot aisle, rear-door, immersion, direct-to-chip)",
+      "Adaptable to various water sources"
+    ],
+    "integrations": []
   }
 ]
 
@@ -155,7 +186,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.288Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.004Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Subzero Engineering Alternatives
@@ -227,7 +258,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.288Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.004Z">2025-11-30</time>
             </p>
           </footer>
         </div>

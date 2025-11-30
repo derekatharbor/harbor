@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.231Z
+// Generated: 2025-11-30T20:05:19.905Z
 // Alternative to: Weedmaps
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Weedmaps Alternatives',
     description: 'Top alternatives to Weedmaps for E-commerce.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.231Z',
-    modifiedTime: '2025-11-30T19:44:53.231Z',
+    publishedTime: '2025-11-30T20:05:19.905Z',
+    modifiedTime: '2025-11-30T20:05:19.905Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/weedmaps#article",
       "headline": "Best Weedmaps Alternatives",
       "description": "Top alternatives to Weedmaps for E-commerce. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.231Z",
-      "dateModified": "2025-11-30T19:44:53.231Z",
+      "datePublished": "2025-11-30T20:05:19.905Z",
+      "dateModified": "2025-11-30T20:05:19.905Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,33 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/weedmaps#list",
       "name": "Weedmaps Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "NewStore",
+            "url": "https://useharbor.io/brands/newstore",
+            "description": "A unified commerce platform designed for global brands to enhance retail experiences.",
+            "applicationCategory": "E-commerce"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "PlanetArt",
+            "url": "https://useharbor.io/brands/planetart",
+            "description": "A global leader in personalized products and services.",
+            "applicationCategory": "E-commerce"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Popshoplive",
@@ -57,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "OrderMyGear (OMG)",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Carbon38",
@@ -83,6 +105,46 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "newstore",
+    "brand_name": "NewStore",
+    "domain": "newstore.com",
+    "summary": "A unified commerce platform designed for global brands to enhance retail experiences.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Omnichannel Order Management",
+      "Mobile Point of Sale",
+      "Clienteling",
+      "Inventory Management",
+      "Real-Time Analytics and Reporting"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "planetart",
+    "brand_name": "PlanetArt",
+    "domain": "planetart.com",
+    "summary": "A global leader in personalized products and services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Offers free products such as 4x6 photo prints and photo books.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Free 4x6 photo prints",
+      "Make photo books in just minutes",
+      "Transform photos into custom wall décor",
+      "Create one-of-a-kind gifts",
+      "Customised cards"
+    ],
+    "integrations": []
+  },
   {
     "slug": "popshoplive",
     "brand_name": "Popshoplive",
@@ -169,7 +231,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.231Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.905Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Weedmaps Alternatives
@@ -241,7 +303,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.231Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.905Z">2025-11-30</time>
             </p>
           </footer>
         </div>

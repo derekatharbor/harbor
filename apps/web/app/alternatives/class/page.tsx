@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.285Z
+// Generated: 2025-11-30T20:05:19.960Z
 // Alternative to: Class
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Class Alternatives',
     description: 'Top alternatives to Class for Education Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.285Z',
-    modifiedTime: '2025-11-30T19:44:53.285Z',
+    publishedTime: '2025-11-30T20:05:19.960Z',
+    modifiedTime: '2025-11-30T20:05:19.960Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/class#article",
       "headline": "Best Class Alternatives",
       "description": "Top alternatives to Class for Education Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.285Z",
-      "dateModified": "2025-11-30T19:44:53.285Z",
+      "datePublished": "2025-11-30T20:05:19.960Z",
+      "dateModified": "2025-11-30T20:05:19.960Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/class#list",
       "name": "Class Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ClassLink",
-            "url": "https://useharbor.io/brands/classlink",
-            "description": "ClassLink provides identity and access management solutions tailored for the education sector.",
+            "name": "DeepLearning.AI",
+            "url": "https://useharbor.io/brands/deeplearningai",
+            "description": "An education technology company focused on AI training and community building.",
             "applicationCategory": "Education Technology"
           }
         },
@@ -71,6 +71,17 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "ClassLink",
+            "url": "https://useharbor.io/brands/classlink",
+            "description": "ClassLink provides identity and access management solutions tailored for the education sector.",
+            "applicationCategory": "Education Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Clever Inc.",
             "url": "https://useharbor.io/brands/clever-inc",
             "description": "Clever provides a secure identity platform designed specifically for the education sector.",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Graphy Inc.",
@@ -94,6 +105,48 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "deeplearningai",
+    "brand_name": "DeepLearning.AI",
+    "domain": "deeplearning.ai",
+    "summary": "An education technology company focused on AI training and community building.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "AI courses and specializations",
+      "Practical roadmap to building a career in AI",
+      "Access to AI news and insights",
+      "Resources for learning machine learning",
+      "Guides on natural language processing"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "advantage-design-group",
+    "brand_name": "Advantage Design Group",
+    "domain": "advantagedesigngroup.com",
+    "summary": "Personalized online orientation and recruiting solutions for educational institutions and organizations.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Personalized online orientation",
+      "Interactive recruiting solutions",
+      "Video-rich content",
+      "Multilingual support",
+      "Powerful admin control and analytics"
+    ],
+    "integrations": [
+      "SSO"
+    ]
+  },
   {
     "slug": "classlink",
     "brand_name": "ClassLink",
@@ -121,28 +174,6 @@ const alternatives = [
       "Khan Academy",
       "Wakelet",
       "SmartPass"
-    ]
-  },
-  {
-    "slug": "advantage-design-group",
-    "brand_name": "Advantage Design Group",
-    "domain": "advantagedesigngroup.com",
-    "summary": "Personalized online orientation and recruiting solutions for educational institutions and organizations.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Personalized online orientation",
-      "Interactive recruiting solutions",
-      "Video-rich content",
-      "Multilingual support",
-      "Powerful admin control and analytics"
-    ],
-    "integrations": [
-      "SSO"
     ]
   },
   {
@@ -210,7 +241,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.285Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.960Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Class Alternatives
@@ -282,7 +313,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.285Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.960Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.378Z
+// Generated: 2025-11-30T20:05:20.080Z
 // Alternative to: Access Global Group
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Access Global Group Alternatives',
     description: 'Top alternatives to Access Global Group for Salesforce Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.378Z',
-    modifiedTime: '2025-11-30T19:44:53.378Z',
+    publishedTime: '2025-11-30T20:05:20.080Z',
+    modifiedTime: '2025-11-30T20:05:20.080Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/access-global-group#article",
       "headline": "Best Access Global Group Alternatives",
       "description": "Top alternatives to Access Global Group for Salesforce Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.378Z",
-      "dateModified": "2025-11-30T19:44:53.378Z",
+      "datePublished": "2025-11-30T20:05:20.080Z",
+      "dateModified": "2025-11-30T20:05:20.080Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -194,7 +194,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.378Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.080Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Access Global Group Alternatives
@@ -266,7 +266,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.378Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.080Z">2025-11-30</time>
             </p>
           </footer>
         </div>

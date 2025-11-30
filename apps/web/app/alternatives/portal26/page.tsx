@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.364Z
+// Generated: 2025-11-30T20:05:20.104Z
 // Alternative to: Portal26
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Portal26 Alternatives',
     description: 'Top alternatives to Portal26 for Data Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.364Z',
-    modifiedTime: '2025-11-30T19:44:53.364Z',
+    publishedTime: '2025-11-30T20:05:20.104Z',
+    modifiedTime: '2025-11-30T20:05:20.104Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/portal26#article",
       "headline": "Best Portal26 Alternatives",
       "description": "Top alternatives to Portal26 for Data Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.364Z",
-      "dateModified": "2025-11-30T19:44:53.364Z",
+      "datePublished": "2025-11-30T20:05:20.104Z",
+      "dateModified": "2025-11-30T20:05:20.104Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/portal26#list",
       "name": "Portal26 Alternatives",
-      "numberOfItems": 13,
+      "numberOfItems": 14,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Secuvy",
-            "url": "https://useharbor.io/brands/secuvy",
-            "description": "Secuvy is a data security platform focused on protecting complex unstructured data.",
+            "name": "SecuPi",
+            "url": "https://useharbor.io/brands/secupi",
+            "description": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
             "applicationCategory": "Data Security"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TechR2",
-            "url": "https://useharbor.io/brands/techr2",
-            "description": "TechR2 specializes in data security and compliance solutions for enterprises.",
+            "name": "Secuvy",
+            "url": "https://useharbor.io/brands/secuvy",
+            "description": "Secuvy is a data security platform focused on protecting complex unstructured data.",
             "applicationCategory": "Data Security"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SecuPi",
-            "url": "https://useharbor.io/brands/secupi",
-            "description": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
+            "name": "TechR2",
+            "url": "https://useharbor.io/brands/techr2",
+            "description": "TechR2 specializes in data security and compliance solutions for enterprises.",
             "applicationCategory": "Data Security"
           }
         },
@@ -159,9 +159,9 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Relyance AI",
-            "url": "https://useharbor.io/brands/relyance-ai",
-            "description": "An AI-native platform for privacy, data security, and AI governance.",
+            "name": "Appsian (a Pathlock company)",
+            "url": "https://useharbor.io/brands/appsian-a-pathlock-company",
+            "description": "Appsian provides ERP data security and compliance solutions for various platforms.",
             "applicationCategory": "Data Security"
           }
         },
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Securiti",
-            "url": "https://useharbor.io/brands/securiti",
-            "description": "Securiti provides advanced data security and privacy solutions for enterprises.",
+            "name": "Fasoo",
+            "url": "https://useharbor.io/brands/fasoo",
+            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
             "applicationCategory": "Data Security"
           }
         },
@@ -181,9 +181,20 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Fasoo",
-            "url": "https://useharbor.io/brands/fasoo",
-            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
+            "name": "Relyance AI",
+            "url": "https://useharbor.io/brands/relyance-ai",
+            "description": "An AI-native platform for privacy, data security, and AI governance.",
+            "applicationCategory": "Data Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Securiti",
+            "url": "https://useharbor.io/brands/securiti",
+            "description": "Securiti provides advanced data security and privacy solutions for enterprises.",
             "applicationCategory": "Data Security"
           }
         }
@@ -298,6 +309,31 @@ const alternatives = [
     ]
   },
   {
+    "slug": "secupi",
+    "brand_name": "SecuPi",
+    "domain": "secupi.com",
+    "summary": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Discovery & Classification",
+      "Real-time Monitoring",
+      "Data Access Enforcement",
+      "Dynamic Access Control",
+      "Privileged Account Brokering"
+    ],
+    "integrations": [
+      "Starburst",
+      "Trino",
+      "Snowflake",
+      "Google Cloud"
+    ]
+  },
+  {
     "slug": "secuvy",
     "brand_name": "Secuvy",
     "domain": "secuvy.ai",
@@ -345,31 +381,6 @@ const alternatives = [
       "IT Asset Retirement"
     ],
     "integrations": []
-  },
-  {
-    "slug": "secupi",
-    "brand_name": "SecuPi",
-    "domain": "secupi.com",
-    "summary": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Discovery & Classification",
-      "Real-time Monitoring",
-      "Data Access Enforcement",
-      "Dynamic Access Control",
-      "Privileged Account Brokering"
-    ],
-    "integrations": [
-      "Starburst",
-      "Trino",
-      "Snowflake",
-      "Google Cloud"
-    ]
   },
   {
     "slug": "borneo-acquired-by-atlassian",
@@ -446,6 +457,56 @@ const alternatives = [
     ]
   },
   {
+    "slug": "appsian-a-pathlock-company",
+    "brand_name": "Appsian (a Pathlock company)",
+    "domain": "appsiansecurity.com",
+    "summary": "Appsian provides ERP data security and compliance solutions for various platforms.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Attribute-Based Access Controls",
+      "Automated Provisioning",
+      "Dynamic Data Masking",
+      "Multi-Factor Authentication",
+      "Real-Time Analytics"
+    ],
+    "integrations": [
+      "Active Directory",
+      "ADFS",
+      "OKTA",
+      "SAML 2.0"
+    ]
+  },
+  {
+    "slug": "fasoo",
+    "brand_name": "Fasoo",
+    "domain": "fasoo.com",
+    "summary": "Fasoo is a data and security company specializing in AI-driven solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Security",
+      "AI-Powered Security",
+      "Data Management",
+      "Data Center Collaboration",
+      "Information Security Consulting"
+    ],
+    "integrations": [
+      "Fasoo DSP",
+      "Fasoo DSPM",
+      "Cloud Wrapsody",
+      "DigitalPage"
+    ]
+  },
+  {
     "slug": "relyance-ai",
     "brand_name": "Relyance AI",
     "domain": "relyance.ai",
@@ -495,31 +556,6 @@ const alternatives = [
     "integrations": [
       "Veeam"
     ]
-  },
-  {
-    "slug": "fasoo",
-    "brand_name": "Fasoo",
-    "domain": "fasoo.com",
-    "summary": "Fasoo is a data and security company specializing in AI-driven solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Data Security",
-      "AI-Powered Security",
-      "Data Management",
-      "Data Center Collaboration",
-      "Information Security Consulting"
-    ],
-    "integrations": [
-      "Fasoo DSP",
-      "Fasoo DSPM",
-      "Cloud Wrapsody",
-      "DigitalPage"
-    ]
   }
 ]
 
@@ -535,7 +571,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.104Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Portal26 Alternatives
@@ -607,7 +643,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.104Z">2025-11-30</time>
             </p>
           </footer>
         </div>

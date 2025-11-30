@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.248Z
+// Generated: 2025-11-30T20:05:19.927Z
 // Alternative to: Mercury Fiber
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Mercury Fiber Alternatives',
     description: 'Top alternatives to Mercury Fiber for Internet Service Provider.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.248Z',
-    modifiedTime: '2025-11-30T19:44:53.248Z',
+    publishedTime: '2025-11-30T20:05:19.927Z',
+    modifiedTime: '2025-11-30T20:05:19.927Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mercury-fiber#article",
       "headline": "Best Mercury Fiber Alternatives",
       "description": "Top alternatives to Mercury Fiber for Internet Service Provider. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.248Z",
-      "dateModified": "2025-11-30T19:44:53.248Z",
+      "datePublished": "2025-11-30T20:05:19.927Z",
+      "dateModified": "2025-11-30T20:05:19.927Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/mercury-fiber#list",
       "name": "Mercury Fiber Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "US Internet",
+            "url": "https://useharbor.io/brands/us-internet",
+            "description": "US Internet provides fast and reliable fiber internet and related services in Minneapolis.",
+            "applicationCategory": "Internet Service Provider"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Ripple Fiber",
             "url": "https://useharbor.io/brands/ripple-fiber",
             "description": "America's fastest fiber internet company providing high-speed internet services.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Pavlov Media",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Socket Fiber",
@@ -111,6 +122,26 @@ const alternatives = [
       "Unlimited data",
       "Local and personalized support",
       "Whole home Wi-Fi coverage"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "us-internet",
+    "brand_name": "US Internet",
+    "domain": "usinternet.com",
+    "summary": "US Internet provides fast and reliable fiber internet and related services in Minneapolis.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Fast internet",
+      "Reliable service",
+      "Email services",
+      "Phone services",
+      "Cloud hosting"
     ],
     "integrations": []
   },
@@ -182,7 +213,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.248Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.927Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Mercury Fiber Alternatives
@@ -254,7 +285,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.248Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.927Z">2025-11-30</time>
             </p>
           </footer>
         </div>

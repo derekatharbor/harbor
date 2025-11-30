@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.289Z
+// Generated: 2025-11-30T20:05:19.975Z
 // Alternative to: Accrete
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Accrete Alternatives',
     description: 'Top alternatives to Accrete for AI.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.289Z',
-    modifiedTime: '2025-11-30T19:44:53.289Z',
+    publishedTime: '2025-11-30T20:05:19.975Z',
+    modifiedTime: '2025-11-30T20:05:19.975Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/accrete#article",
       "headline": "Best Accrete Alternatives",
       "description": "Top alternatives to Accrete for AI. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.289Z",
-      "dateModified": "2025-11-30T19:44:53.289Z",
+      "datePublished": "2025-11-30T20:05:19.975Z",
+      "dateModified": "2025-11-30T20:05:19.975Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/accrete#list",
       "name": "Accrete Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -80,6 +80,28 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Woflow",
+            "url": "https://useharbor.io/brands/woflow",
+            "description": "Woflow is an AI Agent Platform designed for enterprise operations.",
+            "applicationCategory": "AI"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Polimorphic",
+            "url": "https://useharbor.io/brands/polimorphic",
+            "description": "Polimorphic provides AI solutions to enhance resident services for government agencies.",
+            "applicationCategory": "AI"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "e2f, inc.",
@@ -137,6 +159,34 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "woflow",
+    "brand_name": "Woflow",
+    "domain": "woflow.com",
+    "summary": "Woflow is an AI Agent Platform designed for enterprise operations.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "polimorphic",
+    "brand_name": "Polimorphic",
+    "domain": "polimorphic.com",
+    "summary": "Polimorphic provides AI solutions to enhance resident services for government agencies.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "e2f-inc",
     "brand_name": "e2f, inc.",
     "domain": "e2f.com",
@@ -164,7 +214,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.289Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.975Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Accrete Alternatives
@@ -236,7 +286,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.289Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.975Z">2025-11-30</time>
             </p>
           </footer>
         </div>

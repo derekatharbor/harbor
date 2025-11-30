@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.972Z
+// Generated: 2025-11-30T20:05:20.276Z
 // Comparing: OneLogin vs Tools4ever
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'OneLogin vs Tools4ever',
     description: 'Detailed comparison of OneLogin and Tools4ever.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.972Z',
-    modifiedTime: '2025-11-30T19:44:53.972Z',
+    publishedTime: '2025-11-30T20:05:20.276Z',
+    modifiedTime: '2025-11-30T20:05:20.276Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/onelogin-vs-tools4ever#article",
   "headline": "OneLogin vs Tools4ever: Comparison",
   "description": "Detailed comparison of OneLogin and Tools4ever. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.972Z",
-  "dateModified": "2025-11-30T19:44:53.972Z",
+  "datePublished": "2025-11-30T20:05:20.276Z",
+  "dateModified": "2025-11-30T20:05:20.276Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -131,7 +131,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.972Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.276Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -286,7 +286,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.972Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.276Z">2025-11-30</time>
             </p>
           </footer>
         </div>

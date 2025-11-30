@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.218Z
+// Generated: 2025-11-30T20:05:19.859Z
 // Alternative to: Emagine IT, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Emagine IT, Inc. Alternatives',
     description: 'Top alternatives to Emagine IT, Inc. for Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.218Z',
-    modifiedTime: '2025-11-30T19:44:53.218Z',
+    publishedTime: '2025-11-30T20:05:19.859Z',
+    modifiedTime: '2025-11-30T20:05:19.859Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/emagine-it-inc#article",
       "headline": "Best Emagine IT, Inc. Alternatives",
       "description": "Top alternatives to Emagine IT, Inc. for Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.218Z",
-      "dateModified": "2025-11-30T19:44:53.218Z",
+      "datePublished": "2025-11-30T20:05:19.859Z",
+      "dateModified": "2025-11-30T20:05:19.859Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/emagine-it-inc#list",
       "name": "Emagine IT, Inc. Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,28 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Infobahn Softworld Inc",
+            "url": "https://useharbor.io/brands/infobahn-softworld-inc",
+            "description": "A leading technology and professional services company specializing in IT solutions.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Software Design Partners",
+            "url": "https://useharbor.io/brands/software-design-partners",
+            "description": "A technology partner providing comprehensive software and business solutions.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Consensus",
             "url": "https://useharbor.io/brands/consensus",
             "description": "AI-powered search engine for scientific research papers.",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tools for Humanity",
@@ -79,18 +101,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Infobahn Softworld Inc",
-            "url": "https://useharbor.io/brands/infobahn-softworld-inc",
-            "description": "A leading technology and professional services company specializing in IT solutions.",
+            "name": "Techment Technology",
+            "url": "https://useharbor.io/brands/techment-technology",
+            "description": "Empowering enterprises with AI and data engineering solutions.",
             "applicationCategory": "Technology"
           }
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HackerEarth",
@@ -101,12 +123,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Racemi",
             "url": "https://useharbor.io/brands/racemi",
             "description": "Racemi is a technology-focused blog providing insights and analysis on various tech topics.",
+            "applicationCategory": "Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Radiant Systems Inc",
+            "url": "https://useharbor.io/brands/radiant-systems-inc",
+            "description": "A technology company specializing in AI, Blockchain, and IoT solutions.",
             "applicationCategory": "Technology"
           }
         }
@@ -121,6 +154,34 @@ const alternatives = [
     "brand_name": "Very Good Ventures",
     "domain": "verygood.ventures",
     "summary": "Leading Flutter development agency specializing in multi-platform app solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "infobahn-softworld-inc",
+    "brand_name": "Infobahn Softworld Inc",
+    "domain": "infobahnsw.com",
+    "summary": "A leading technology and professional services company specializing in IT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "software-design-partners",
+    "brand_name": "Software Design Partners",
+    "domain": "softwaredesignpartners.com",
+    "summary": "A technology partner providing comprehensive software and business solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -159,10 +220,10 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "infobahn-softworld-inc",
-    "brand_name": "Infobahn Softworld Inc",
-    "domain": "infobahnsw.com",
-    "summary": "A leading technology and professional services company specializing in IT solutions.",
+    "slug": "techment-technology",
+    "brand_name": "Techment Technology",
+    "domain": "techment.com",
+    "summary": "Empowering enterprises with AI and data engineering solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -199,6 +260,20 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "radiant-systems-inc",
+    "brand_name": "Radiant Systems Inc",
+    "domain": "radiants.com",
+    "summary": "A technology company specializing in AI, Blockchain, and IoT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -214,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.218Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.859Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Emagine IT, Inc. Alternatives
@@ -286,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.218Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.859Z">2025-11-30</time>
             </p>
           </footer>
         </div>

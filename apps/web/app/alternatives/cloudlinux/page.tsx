@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.157Z
+// Generated: 2025-11-30T20:05:19.870Z
 // Alternative to: CloudLinux
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best CloudLinux Alternatives',
     description: 'Top alternatives to CloudLinux for Web Hosting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.157Z',
-    modifiedTime: '2025-11-30T19:44:53.157Z',
+    publishedTime: '2025-11-30T20:05:19.870Z',
+    modifiedTime: '2025-11-30T20:05:19.870Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/cloudlinux#article",
       "headline": "Best CloudLinux Alternatives",
       "description": "Top alternatives to CloudLinux for Web Hosting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.157Z",
-      "dateModified": "2025-11-30T19:44:53.157Z",
+      "datePublished": "2025-11-30T20:05:19.870Z",
+      "dateModified": "2025-11-30T20:05:19.870Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/cloudlinux#list",
       "name": "CloudLinux Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "GreenGeeks",
-            "url": "https://useharbor.io/brands/greengeeks",
-            "description": "Eco-friendly web hosting services for small businesses.",
+            "name": "BigScoots®",
+            "url": "https://useharbor.io/brands/bigscoots",
+            "description": "Premium fully managed WordPress hosting services.",
             "applicationCategory": "Web Hosting"
           }
         },
@@ -71,9 +71,42 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "BigScoots®",
-            "url": "https://useharbor.io/brands/bigscoots",
-            "description": "Premium fully managed WordPress hosting services.",
+            "name": "GreenGeeks",
+            "url": "https://useharbor.io/brands/greengeeks",
+            "description": "Eco-friendly web hosting services for small businesses.",
+            "applicationCategory": "Web Hosting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Global Virtual Opportunities",
+            "url": "https://useharbor.io/brands/global-virtual-opportunities",
+            "description": "Affordable web hosting and marketing tools provider.",
+            "applicationCategory": "Web Hosting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "WestHost",
+            "url": "https://useharbor.io/brands/westhost",
+            "description": "A comprehensive provider of web hosting, domain registration, and email services.",
+            "applicationCategory": "Web Hosting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Verio",
+            "url": "https://useharbor.io/brands/verio",
+            "description": "Verio offers powerful web hosting and domain name services for both home and business.",
             "applicationCategory": "Web Hosting"
           }
         }
@@ -98,6 +131,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "bigscoots",
+    "brand_name": "BigScoots®",
+    "domain": "bigscoots.com",
+    "summary": "Premium fully managed WordPress hosting services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Pricing information not explicitly stated.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Fully managed WordPress hosting",
+      "24/7/365 customer support",
+      "Site-specific management and monitoring",
+      "Free unlimited migrations",
+      "45-day money-back guarantee"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "greengeeks",
     "brand_name": "GreenGeeks",
     "domain": "greengeeks.com",
@@ -118,24 +171,66 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "bigscoots",
-    "brand_name": "BigScoots®",
-    "domain": "bigscoots.com",
-    "summary": "Premium fully managed WordPress hosting services.",
+    "slug": "global-virtual-opportunities",
+    "brand_name": "Global Virtual Opportunities",
+    "domain": "gogvo.com",
+    "summary": "Affordable web hosting and marketing tools provider.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Various hosting plans available starting at different price points.",
+      "has_free_tier": false,
+      "starting_price": "$7.16/mo"
+    },
+    "features": [
+      "Web Hosting Services",
+      "Email Marketing Tools",
+      "Video Marketing Tools",
+      "Reseller Hosting",
+      "Cloud Dedicated Servers"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "westhost",
+    "brand_name": "WestHost",
+    "domain": "westhost.com",
+    "summary": "A comprehensive provider of web hosting, domain registration, and email services.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Renews at $5/month after the first month",
+      "has_free_tier": false,
+      "starting_price": "$1/mo"
+    },
+    "features": [
+      "Web hosting with unmetered bandwidth",
+      "Free domain name with 1-year+ terms",
+      "10GB of email storage",
+      "Professional email addresses matching domain",
+      "Spam and virus protection"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "verio",
+    "brand_name": "Verio",
+    "domain": "verio.com",
+    "summary": "Verio offers powerful web hosting and domain name services for both home and business.",
     "pricing": {
       "price_model": "unknown",
-      "price_notes": "Pricing information not explicitly stated.",
+      "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Fully managed WordPress hosting",
-      "24/7/365 customer support",
-      "Site-specific management and monitoring",
-      "Free unlimited migrations",
-      "45-day money-back guarantee"
+      "Web Hosting",
+      "Domain Registration",
+      "Email Services",
+      "E-Commerce Services",
+      "Marketing Services"
     ],
-    "integrations": []
+    "integrations": [
+      "Microsoft Exchange"
+    ]
   }
 ]
 
@@ -151,7 +246,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.157Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.870Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best CloudLinux Alternatives
@@ -223,7 +318,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.157Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.870Z">2025-11-30</time>
             </p>
           </footer>
         </div>

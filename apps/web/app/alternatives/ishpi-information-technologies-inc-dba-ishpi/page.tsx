@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.352Z
+// Generated: 2025-11-30T20:05:20.055Z
 // Alternative to: Ishpi Information Technologies, Inc. (DBA ISHPI)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Ishpi Information Technologies, Inc. (DBA ISHPI) Alternatives',
     description: 'Top alternatives to Ishpi Information Technologies, Inc. (DBA ISHPI) for Cybersecurity.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.352Z',
-    modifiedTime: '2025-11-30T19:44:53.352Z',
+    publishedTime: '2025-11-30T20:05:20.055Z',
+    modifiedTime: '2025-11-30T20:05:20.055Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/ishpi-information-technologies-inc-dba-ishpi#article",
       "headline": "Best Ishpi Information Technologies, Inc. (DBA ISHPI) Alternatives",
       "description": "Top alternatives to Ishpi Information Technologies, Inc. (DBA ISHPI) for Cybersecurity. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.352Z",
-      "dateModified": "2025-11-30T19:44:53.352Z",
+      "datePublished": "2025-11-30T20:05:20.055Z",
+      "dateModified": "2025-11-30T20:05:20.055Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Lares, a Damovo Company",
-            "url": "https://useharbor.io/brands/lares-a-damovo-company",
-            "description": "Lares provides advanced security solutions to help organizations enhance their cybersecurity posture.",
+            "name": "NetCentrics",
+            "url": "https://useharbor.io/brands/netcentrics",
+            "description": "A trusted partner in technology and cybersecurity.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "InfusionPoints, LLC",
-            "url": "https://useharbor.io/brands/infusionpoints-llc",
-            "description": "A cybersecurity consulting firm specializing in cloud security and compliance solutions for government agencies.",
+            "name": "Proven Data",
+            "url": "https://useharbor.io/brands/proven-data",
+            "description": "Experts in data restoration, incident response, and digital forensics.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Proven Data",
-            "url": "https://useharbor.io/brands/proven-data",
-            "description": "Experts in data restoration, incident response, and digital forensics.",
+            "name": "InfusionPoints, LLC",
+            "url": "https://useharbor.io/brands/infusionpoints-llc",
+            "description": "A cybersecurity consulting firm specializing in cloud security and compliance solutions for government agencies.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "NetCentrics",
-            "url": "https://useharbor.io/brands/netcentrics",
-            "description": "A trusted partner in technology and cybersecurity.",
+            "name": "Lares, a Damovo Company",
+            "url": "https://useharbor.io/brands/lares-a-damovo-company",
+            "description": "Lares provides advanced security solutions to help organizations enhance their cybersecurity posture.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Secnap Cybersecurity",
-            "url": "https://useharbor.io/brands/secnap-cybersecurity",
-            "description": "Expert-driven cybersecurity solutions for businesses.",
+            "name": "Picus Security",
+            "url": "https://useharbor.io/brands/picus-security",
+            "description": "Picus Security is a leader in Breach and Attack Simulation technology, focused on reducing cyber risk through security validation.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -126,9 +126,9 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "NetWitness",
-            "url": "https://useharbor.io/brands/netwitness",
-            "description": "NetWitness is a leading cybersecurity company specializing in threat detection and response solutions.",
+            "name": "RedSeal, Inc.",
+            "url": "https://useharbor.io/brands/redseal-inc",
+            "description": "RedSeal provides advanced network security solutions for comprehensive visibility and risk management.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -137,9 +137,9 @@ const schemaOrg = {
           "position": 9,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "DNSFilter",
-            "url": "https://useharbor.io/brands/dnsfilter",
-            "description": "DNSFilter provides advanced DNS security and content filtering solutions.",
+            "name": "RunSafe Security Inc.",
+            "url": "https://useharbor.io/brands/runsafe-security-inc",
+            "description": "Automated cybersecurity solutions for embedded systems.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -148,9 +148,9 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "HelpSystems",
-            "url": "https://useharbor.io/brands/helpsystems",
-            "description": "Fortra provides advanced cybersecurity solutions to break the cyber attack chain.",
+            "name": "Fenix24",
+            "url": "https://useharbor.io/brands/fenix24",
+            "description": "Fenix24 is a leading breach recovery company specializing in cyber resilience.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -159,9 +159,9 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "1Password",
-            "url": "https://useharbor.io/brands/1password",
-            "description": "1Password is a leading password manager and access management solution designed for individuals and businesses.",
+            "name": "SecurityPal AI",
+            "url": "https://useharbor.io/brands/securitypal-ai",
+            "description": "SecurityPal provides AI-powered security review solutions for businesses.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CrowdStrike",
-            "url": "https://useharbor.io/brands/crowdstrike",
-            "description": "CrowdStrike provides AI-native cybersecurity solutions to prevent breaches.",
+            "name": "CyberTek MSSP",
+            "url": "https://useharbor.io/brands/cybertek-mssp",
+            "description": "A Managed Security Service Provider offering comprehensive network security solutions.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -181,9 +181,9 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Keeper",
-            "url": "https://useharbor.io/brands/keeper",
-            "description": "Keeper Security provides advanced cybersecurity solutions focused on password management and privileged access management.",
+            "name": "wolfSSL",
+            "url": "https://useharbor.io/brands/wolfssl",
+            "description": "wolfSSL provides lightweight and portable security solutions focused on embedded SSL/TLS libraries.",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -192,9 +192,9 @@ const schemaOrg = {
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Palo Alto Networks",
-            "url": "https://useharbor.io/brands/palo-alto",
-            "description": "A leader in cybersecurity protection and software for modern enterprises.",
+            "name": "Pulse Secure",
+            "url": "https://useharbor.io/brands/pulse-secure",
+            "description": "Secure Access Solutions for Enterprises",
             "applicationCategory": "Cybersecurity"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Sectigo",
-            "url": "https://useharbor.io/brands/sectigo",
-            "description": "Sectigo is a leading provider of digital certificate and certificate lifecycle management solutions.",
+            "name": "Arkose Labs",
+            "url": "https://useharbor.io/brands/arkose-labs",
+            "description": "Arkose Labs provides advanced cybersecurity solutions to protect businesses from online fraud and bot attacks.",
             "applicationCategory": "Cybersecurity"
           }
         }
@@ -241,46 +241,25 @@ const alternatives = [
     ]
   },
   {
-    "slug": "lares-a-damovo-company",
-    "brand_name": "Lares, a Damovo Company",
-    "domain": "lares.com",
-    "summary": "Lares provides advanced security solutions to help organizations enhance their cybersecurity posture.",
+    "slug": "netcentrics",
+    "brand_name": "NetCentrics",
+    "domain": "netcentrics.com",
+    "summary": "A trusted partner in technology and cybersecurity.",
     "pricing": {
-      "price_model": "custom",
+      "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Penetration Testing",
-      "Red Team Testing",
-      "Application Security",
-      "Advisory Services (vCISO)",
-      "Collaborative Security Engagements"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "infusionpoints-llc",
-    "brand_name": "InfusionPoints, LLC",
-    "domain": "infusionpoints.com",
-    "summary": "A cybersecurity consulting firm specializing in cloud security and compliance solutions for government agencies.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Cloud Security",
-      "Vulnerability Management",
-      "Incident Response",
-      "Penetration Testing",
-      "Managed Detection and Response"
+      "Cybersecurity solutions",
+      "Cloud security",
+      "Digital transformation",
+      "Mission support",
+      "Program management"
     ],
     "integrations": [
-      "AWS",
-      "Microsoft"
+      "Wraith"
     ]
   },
   {
@@ -306,6 +285,29 @@ const alternatives = [
       "KnowBe4",
       "Field Effects",
       "EnCase"
+    ]
+  },
+  {
+    "slug": "infusionpoints-llc",
+    "brand_name": "InfusionPoints, LLC",
+    "domain": "infusionpoints.com",
+    "summary": "A cybersecurity consulting firm specializing in cloud security and compliance solutions for government agencies.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud Security",
+      "Vulnerability Management",
+      "Incident Response",
+      "Penetration Testing",
+      "Managed Detection and Response"
+    ],
+    "integrations": [
+      "AWS",
+      "Microsoft"
     ]
   },
   {
@@ -335,188 +337,187 @@ const alternatives = [
     ]
   },
   {
-    "slug": "netcentrics",
-    "brand_name": "NetCentrics",
-    "domain": "netcentrics.com",
-    "summary": "A trusted partner in technology and cybersecurity.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Cybersecurity solutions",
-      "Cloud security",
-      "Digital transformation",
-      "Mission support",
-      "Program management"
-    ],
-    "integrations": [
-      "Wraith"
-    ]
-  },
-  {
-    "slug": "secnap-cybersecurity",
-    "brand_name": "Secnap Cybersecurity",
-    "domain": "secnap.com",
-    "summary": "Expert-driven cybersecurity solutions for businesses.",
+    "slug": "lares-a-damovo-company",
+    "brand_name": "Lares, a Damovo Company",
+    "domain": "lares.com",
+    "summary": "Lares provides advanced security solutions to help organizations enhance their cybersecurity posture.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Pricing is tailored based on the number of monitored endpoints and service tier selected.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "XDR",
-      "MDR",
-      "CloudJacket Platform",
-      "Client-Accessible Web Portal",
-      "Malware Detection"
-    ],
-    "integrations": [
-      "Microsoft 365",
-      "Microsoft Entra ID",
-      "Microsoft Defender",
-      "Azure Logs",
-      "Azure Event Hub",
-      "Windows Event Log",
-      "Google Workspace",
-      "Google Cloud Storage"
-    ]
-  },
-  {
-    "slug": "netwitness",
-    "brand_name": "NetWitness",
-    "domain": "netwitness.com",
-    "summary": "NetWitness is a leading cybersecurity company specializing in threat detection and response solutions.",
-    "pricing": {
-      "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Network Detection and Response (NDR)",
-      "Security Information and Event Management (SIEM)",
-      "Endpoint Detection and Response (EDR)",
-      "Security Orchestration and Automation (SOAR)",
-      "Full-packet capture"
+      "Penetration Testing",
+      "Red Team Testing",
+      "Application Security",
+      "Advisory Services (vCISO)",
+      "Collaborative Security Engagements"
     ],
     "integrations": []
   },
   {
-    "slug": "dnsfilter",
-    "brand_name": "DNSFilter",
-    "domain": "dnsfilter.com",
-    "summary": "DNSFilter provides advanced DNS security and content filtering solutions.",
+    "slug": "picus-security",
+    "brand_name": "Picus Security",
+    "domain": "picussecurity.com",
+    "summary": "Picus Security is a leader in Breach and Attack Simulation technology, focused on reducing cyber risk through security validation.",
     "pricing": {
-      "price_model": "per_user",
-      "price_notes": "Minimum spend for Basic plan is $23/month.",
+      "price_model": "unknown",
+      "price_notes": null,
       "has_free_tier": true,
-      "starting_price": "$1.00/month"
+      "starting_price": null
     },
     "features": [
-      "Real-time threat detection",
-      "Content filtering",
-      "Malicious domain protection",
-      "Scheduled reporting",
-      "AppAware"
+      "Automated Security Validation",
+      "Exposure Assessment",
+      "Security Control Validation",
+      "Breach and Attack Simulation",
+      "Automated Penetration Testing"
     ],
     "integrations": [
-      "Active Directory",
-      "Zapier",
-      "Slack",
-      "Office 365",
-      "Gmail",
-      "Jira",
-      "ConnectWise",
-      "Zendesk"
+      "Microsoft Sentinel",
+      "AWS Marketplace",
+      "ServiceNow"
     ]
   },
   {
-    "slug": "helpsystems",
-    "brand_name": "HelpSystems",
-    "domain": "helpsystems.com",
-    "summary": "Fortra provides advanced cybersecurity solutions to break the cyber attack chain.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "1password",
-    "brand_name": "1Password",
-    "domain": "1password.com",
-    "summary": "1Password is a leading password manager and access management solution designed for individuals and businesses.",
+    "slug": "redseal-inc",
+    "brand_name": "RedSeal, Inc.",
+    "domain": "redseal.net",
+    "summary": "RedSeal provides advanced network security solutions for comprehensive visibility and risk management.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Multiple plans available for individuals, families, teams, and enterprises.",
+      "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "SSO unlock",
-      "Access management",
-      "Watchtower for password health monitoring",
-      "Custom policies for security governance",
-      "Secure storage for passwords and sensitive information"
+      "Proactive exposure management",
+      "Hybrid environment modeling",
+      "Attack path analysis",
+      "Risk prioritization",
+      "Continuous compliance"
     ],
     "integrations": []
   },
   {
-    "slug": "crowdstrike",
-    "brand_name": "CrowdStrike",
-    "domain": "crowdstrike.com",
-    "summary": "CrowdStrike provides AI-native cybersecurity solutions to prevent breaches.",
+    "slug": "runsafe-security-inc",
+    "brand_name": "RunSafe Security Inc.",
+    "domain": "runsafesecurity.com",
+    "summary": "Automated cybersecurity solutions for embedded systems.",
     "pricing": {
-      "price_model": "per_user",
-      "price_notes": "50% off for a limited time on Falcon Go, Pro, and Enterprise",
-      "has_free_tier": true,
-      "starting_price": "$29.99/year"
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
     },
     "features": [
-      "Next-gen antivirus",
-      "Device control",
-      "Mobile device protection",
+      "Automated code protection",
+      "Build-time SBOM generation",
+      "Vulnerability identification",
+      "Risk reduction calculation",
+      "Runtime protection against memory-based vulnerabilities"
+    ],
+    "integrations": [
+      "Linux",
+      "VxWorks",
+      "Yocto",
+      "QNX",
+      "Bare Metal",
+      "FreeRTOS",
+      "Green Hills",
+      "Windows"
+    ]
+  },
+  {
+    "slug": "fenix24",
+    "brand_name": "Fenix24",
+    "domain": "fenix24.com",
+    "summary": "Fenix24 is a leading breach recovery company specializing in cyber resilience.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Automated infrastructure mapping",
+      "Ransomware rapid recovery and restoration",
+      "Assessments, strategy and remediation",
+      "Asset & resiliency software",
+      "Managed protection services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "securitypal-ai",
+    "brand_name": "SecurityPal AI",
+    "domain": "securitypalhq.com",
+    "summary": "SecurityPal provides AI-powered security review solutions for businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-Driven Assistance for targeted responses",
+      "12-Hour Turnaround with Concierge Prime",
+      "Customizable Trust Center",
+      "Advanced Tagging and Owner Assignments",
+      "Bulk Question Handling and Multilingual Capabilities"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "cybertek-mssp",
+    "brand_name": "CyberTek MSSP",
+    "domain": "cybertekmssp.com",
+    "summary": "A Managed Security Service Provider offering comprehensive network security solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Real-time endpoint detection and response",
+      "Security monitoring",
       "Firewall management",
-      "Endpoint detection and response"
+      "Antivirus operations",
+      "Identity and access management"
     ],
     "integrations": []
   },
   {
-    "slug": "keeper",
-    "brand_name": "Keeper",
-    "domain": "keepersecurity.com",
-    "summary": "Keeper Security provides advanced cybersecurity solutions focused on password management and privileged access management.",
+    "slug": "wolfssl",
+    "brand_name": "wolfSSL",
+    "domain": "wolfssl.com",
+    "summary": "wolfSSL provides lightweight and portable security solutions focused on embedded SSL/TLS libraries.",
     "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Free trial available",
+      "price_model": "custom",
+      "price_notes": "wolfSSL offers both open source GPLv2 version and commercial licensing options.",
       "has_free_tier": true,
       "starting_price": null
     },
     "features": [
-      "Zero-knowledge encryption",
-      "Two-Factor Authentication",
-      "Single Sign-On (SSO)",
-      "Role-Based Access Control (RBAC)",
-      "Secure sharing of credentials"
+      "Lightweight C-language-based SSL/TLS library",
+      "Supports TLS 1.3 and DTLS 1.3",
+      "OpenSSL compatibility layer",
+      "OCSP and CRL support",
+      "FIPS 140-2/140-3 compliance"
     ],
     "integrations": [
-      "Microsoft Entra ID",
-      "Active Directory",
-      "LDAP"
+      "OpenSSL",
+      "curl",
+      "tinycurl"
     ]
   },
   {
-    "slug": "palo-alto",
-    "brand_name": "Palo Alto Networks",
-    "domain": "paloaltonetworks.com",
-    "summary": "A leader in cybersecurity protection and software for modern enterprises.",
+    "slug": "pulse-secure",
+    "brand_name": "Pulse Secure",
+    "domain": "pulsesecure.net",
+    "summary": "Secure Access Solutions for Enterprises",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -524,41 +525,33 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Next-Generation Firewalls",
-      "AI-Powered Network Security",
-      "Advanced Threat Prevention",
-      "Cloud Security",
-      "Enterprise Data Loss Prevention"
+      "Zero Trust Access",
+      "Central policy management",
+      "Secure access for all endpoints",
+      "Mobile device security",
+      "Access to corporate applications on-premises and in the cloud"
     ],
-    "integrations": [
-      "AWS",
-      "Cortex",
-      "Prisma",
-      "Unit 42"
-    ]
+    "integrations": []
   },
   {
-    "slug": "sectigo",
-    "brand_name": "Sectigo",
-    "domain": "sectigo.com",
-    "summary": "Sectigo is a leading provider of digital certificate and certificate lifecycle management solutions.",
+    "slug": "arkose-labs",
+    "brand_name": "Arkose Labs",
+    "domain": "arkoselabs.com",
+    "summary": "Arkose Labs provides advanced cybersecurity solutions to protect businesses from online fraud and bot attacks.",
     "pricing": {
-      "price_model": "flat",
-      "price_notes": "Various products have different starting prices, e.g., SSL certificates start at $88/year.",
-      "has_free_tier": true,
-      "starting_price": "$24.50/year"
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
     },
     "features": [
-      "SSL/TLS Certificates",
-      "Signing Certificates",
-      "eIDAS Compliant Solutions",
-      "Web Security & Backup",
-      "Certificate Lifecycle Management"
+      "Account Registration, Login Abuse Detection & Mitigation",
+      "Account Takeover Prevention",
+      "New Account Fraud Detection",
+      "SMS Toll Fraud Defense",
+      "Loyalty Fraud Protection"
     ],
-    "integrations": [
-      "Microsoft AD CS",
-      "ACME"
-    ]
+    "integrations": []
   }
 ]
 
@@ -574,7 +567,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.055Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Ishpi Information Technologies, Inc. (DBA ISHPI) Alternatives
@@ -646,7 +639,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.055Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.224Z
+// Generated: 2025-11-30T20:05:19.872Z
 // Alternative to: Aderas, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Aderas, Inc Alternatives',
     description: 'Top alternatives to Aderas, Inc for Custom Software Development.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.224Z',
-    modifiedTime: '2025-11-30T19:44:53.224Z',
+    publishedTime: '2025-11-30T20:05:19.872Z',
+    modifiedTime: '2025-11-30T20:05:19.872Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/aderas-inc#article",
       "headline": "Best Aderas, Inc Alternatives",
       "description": "Top alternatives to Aderas, Inc for Custom Software Development. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.224Z",
-      "dateModified": "2025-11-30T19:44:53.224Z",
+      "datePublished": "2025-11-30T20:05:19.872Z",
+      "dateModified": "2025-11-30T20:05:19.872Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,17 +60,6 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Network Handlers",
-            "url": "https://useharbor.io/brands/network-handlers",
-            "description": "A technology solutions provider specializing in custom software development and digital transformation.",
-            "applicationCategory": "Custom Software Development"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "COAX",
             "url": "https://useharbor.io/brands/coax",
             "description": "Custom software development company specializing in travel, transport, and logistics.",
@@ -79,12 +68,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Network Handlers",
+            "url": "https://useharbor.io/brands/network-handlers",
+            "description": "A technology solutions provider specializing in custom software development and digital transformation.",
+            "applicationCategory": "Custom Software Development"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Softxpert",
-            "url": "https://useharbor.io/brands/softxpert",
-            "description": "Custom software development company based in California.",
+            "name": "Active Logic",
+            "url": "https://useharbor.io/brands/active-logic",
+            "description": "A Kansas City-based software development company specializing in custom software solutions.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Active Logic",
-            "url": "https://useharbor.io/brands/active-logic",
-            "description": "A Kansas City-based software development company specializing in custom software solutions.",
+            "name": "Softxpert",
+            "url": "https://useharbor.io/brands/softxpert",
+            "description": "Custom software development company based in California.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -137,6 +137,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "coax",
+    "brand_name": "COAX",
+    "domain": "coaxsoft.com",
+    "summary": "Custom software development company specializing in travel, transport, and logistics.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is based on project estimation and varies according to the project scope.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Custom software development",
+      "Consulting & strategy",
+      "Mobile app development",
+      "Full stack development",
+      "Cloud development"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "network-handlers",
     "brand_name": "Network Handlers",
     "domain": "networkhandlers.com",
@@ -162,46 +182,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "coax",
-    "brand_name": "COAX",
-    "domain": "coaxsoft.com",
-    "summary": "Custom software development company specializing in travel, transport, and logistics.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is based on project estimation and varies according to the project scope.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Custom software development",
-      "Consulting & strategy",
-      "Mobile app development",
-      "Full stack development",
-      "Cloud development"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "softxpert",
-    "brand_name": "Softxpert",
-    "domain": "softxpert.com",
-    "summary": "Custom software development company based in California.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is tailored based on business needs and project requirements.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Digital Image Processing",
-      "E-commerce Solutions",
-      "Time and Attendance Software",
-      "Video Surveillance",
-      "Mailroom Automation"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "active-logic",
     "brand_name": "Active Logic",
     "domain": "activelogic.com",
@@ -222,6 +202,26 @@ const alternatives = [
     "integrations": [
       "API & Integrations"
     ]
+  },
+  {
+    "slug": "softxpert",
+    "brand_name": "Softxpert",
+    "domain": "softxpert.com",
+    "summary": "Custom software development company based in California.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is tailored based on business needs and project requirements.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Image Processing",
+      "E-commerce Solutions",
+      "Time and Attendance Software",
+      "Video Surveillance",
+      "Mailroom Automation"
+    ],
+    "integrations": []
   },
   {
     "slug": "jetruby-agency",
@@ -262,7 +262,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.224Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.872Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Aderas, Inc Alternatives
@@ -334,7 +334,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.224Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.872Z">2025-11-30</time>
             </p>
           </footer>
         </div>

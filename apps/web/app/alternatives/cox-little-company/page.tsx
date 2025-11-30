@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.312Z
+// Generated: 2025-11-30T20:05:19.972Z
 // Alternative to: COX-LITTLE & COMPANY
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best COX-LITTLE & COMPANY Alternatives',
     description: 'Top alternatives to COX-LITTLE & COMPANY for Information Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.312Z',
-    modifiedTime: '2025-11-30T19:44:53.312Z',
+    publishedTime: '2025-11-30T20:05:19.972Z',
+    modifiedTime: '2025-11-30T20:05:19.972Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/cox-little-company#article",
       "headline": "Best COX-LITTLE & COMPANY Alternatives",
       "description": "Top alternatives to COX-LITTLE & COMPANY for Information Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.312Z",
-      "dateModified": "2025-11-30T19:44:53.312Z",
+      "datePublished": "2025-11-30T20:05:19.972Z",
+      "dateModified": "2025-11-30T20:05:19.972Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/cox-little-company#list",
       "name": "COX-LITTLE & COMPANY Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "OPTiMO Information Technology",
-            "url": "https://useharbor.io/brands/optimo-information-technology",
-            "description": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
+            "name": "Innovative Management Concepts, Inc.",
+            "url": "https://useharbor.io/brands/innovative-management-concepts-inc",
+            "description": "IMC provides advanced IT solutions and services for Federal and commercial clients.",
             "applicationCategory": "Information Technology Services"
           }
         },
@@ -71,9 +71,31 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Innovative Management Concepts, Inc.",
-            "url": "https://useharbor.io/brands/innovative-management-concepts-inc",
-            "description": "IMC provides advanced IT solutions and services for Federal and commercial clients.",
+            "name": "RDR, Inc.",
+            "url": "https://useharbor.io/brands/rdr-inc",
+            "description": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "OPTiMO Information Technology",
+            "url": "https://useharbor.io/brands/optimo-information-technology",
+            "description": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "IT Trailblazers LLC",
+            "url": "https://useharbor.io/brands/it-trailblazers-llc",
+            "description": "Your Innovating Global Reliable Technology Partner.",
             "applicationCategory": "Information Technology Services"
           }
         }
@@ -104,6 +126,46 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "innovative-management-concepts-inc",
+    "brand_name": "Innovative Management Concepts, Inc.",
+    "domain": "imcva.com",
+    "summary": "IMC provides advanced IT solutions and services for Federal and commercial clients.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT support",
+      "Cybersecurity solutions",
+      "Cloud hosting services",
+      "Network services",
+      "Process improvement focus"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "rdr-inc",
+    "brand_name": "RDR, Inc.",
+    "domain": "rdr.com",
+    "summary": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Interagency IT solutions",
+      "Security services",
+      "Systems service solutions",
+      "Knowledge management",
+      "Process improvement"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "optimo-information-technology",
     "brand_name": "OPTiMO Information Technology",
     "domain": "optimo-it.com",
@@ -128,22 +190,22 @@ const alternatives = [
     ]
   },
   {
-    "slug": "innovative-management-concepts-inc",
-    "brand_name": "Innovative Management Concepts, Inc.",
-    "domain": "imcva.com",
-    "summary": "IMC provides advanced IT solutions and services for Federal and commercial clients.",
+    "slug": "it-trailblazers-llc",
+    "brand_name": "IT Trailblazers LLC",
+    "domain": "ittblazers.com",
+    "summary": "Your Innovating Global Reliable Technology Partner.",
     "pricing": {
-      "price_model": "unknown",
+      "price_model": "custom",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Managed IT support",
-      "Cybersecurity solutions",
-      "Cloud hosting services",
-      "Network services",
-      "Process improvement focus"
+      "Application Development",
+      "Enterprise Resource Management",
+      "Cloud Solutions",
+      "Contract Staffing Services",
+      "Cybersecurity Solutions"
     ],
     "integrations": []
   }
@@ -161,7 +223,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.312Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.972Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best COX-LITTLE & COMPANY Alternatives
@@ -233,7 +295,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.312Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.972Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.251Z
+// Generated: 2025-11-30T20:05:19.937Z
 // Alternative to: Zilliz
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Zilliz Alternatives',
     description: 'Top alternatives to Zilliz for Database.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.251Z',
-    modifiedTime: '2025-11-30T19:44:53.251Z',
+    publishedTime: '2025-11-30T20:05:19.937Z',
+    modifiedTime: '2025-11-30T20:05:19.937Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/zilliz#article",
       "headline": "Best Zilliz Alternatives",
       "description": "Top alternatives to Zilliz for Database. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.251Z",
-      "dateModified": "2025-11-30T19:44:53.251Z",
+      "datePublished": "2025-11-30T20:05:19.937Z",
+      "dateModified": "2025-11-30T20:05:19.937Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,17 +49,6 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TiDB, powered by PingCAP",
-            "url": "https://useharbor.io/brands/tidb-powered-by-pingcap",
-            "description": "An open-source distributed SQL database designed for modern applications.",
-            "applicationCategory": "Database"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Cockroach Labs",
             "url": "https://useharbor.io/brands/cockroach-labs",
             "description": "CockroachDB is a distributed SQL database designed for high availability and scalability.",
@@ -68,12 +57,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tiger Data (creators of TimescaleDB)",
             "url": "https://useharbor.io/brands/tiger-data-creators-of-timescaledb",
             "description": "A robust data platform for time-series, analytics, and AI built on PostgreSQL.",
+            "applicationCategory": "Database"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "TiDB, powered by PingCAP",
+            "url": "https://useharbor.io/brands/tidb-powered-by-pingcap",
+            "description": "An open-source distributed SQL database designed for modern applications.",
             "applicationCategory": "Database"
           }
         },
@@ -105,35 +105,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "tidb-powered-by-pingcap",
-    "brand_name": "TiDB, powered by PingCAP",
-    "domain": "pingcap.com",
-    "summary": "An open-source distributed SQL database designed for modern applications.",
-    "pricing": {
-      "price_model": "usage",
-      "price_notes": "Free tier includes 25 GiB of row storage, 25 GiB of column storage, and 250M Request Units per month.",
-      "has_free_tier": true,
-      "starting_price": "$0/month"
-    },
-    "features": [
-      "Seamless scalability",
-      "Built-in resilience",
-      "Operational agility",
-      "Unified SQL for transactional and analytical workloads",
-      "Autoscaling based on real-time workload signals"
-    ],
-    "integrations": [
-      "Kubernetes",
-      "Apache Spark",
-      "Apache Kafka",
-      "Apache Flink",
-      "HashiCorp Terraform",
-      "Vercel",
-      "Bytebase",
-      "Netlify"
-    ]
-  },
   {
     "slug": "cockroach-labs",
     "brand_name": "Cockroach Labs",
@@ -181,6 +152,35 @@ const alternatives = [
       "AWS Transit Gateway",
       "SAML",
       "Postgres"
+    ]
+  },
+  {
+    "slug": "tidb-powered-by-pingcap",
+    "brand_name": "TiDB, powered by PingCAP",
+    "domain": "pingcap.com",
+    "summary": "An open-source distributed SQL database designed for modern applications.",
+    "pricing": {
+      "price_model": "usage",
+      "price_notes": "Free tier includes 25 GiB of row storage, 25 GiB of column storage, and 250M Request Units per month.",
+      "has_free_tier": true,
+      "starting_price": "$0/month"
+    },
+    "features": [
+      "Seamless scalability",
+      "Built-in resilience",
+      "Operational agility",
+      "Unified SQL for transactional and analytical workloads",
+      "Autoscaling based on real-time workload signals"
+    ],
+    "integrations": [
+      "Kubernetes",
+      "Apache Spark",
+      "Apache Kafka",
+      "Apache Flink",
+      "HashiCorp Terraform",
+      "Vercel",
+      "Bytebase",
+      "Netlify"
     ]
   },
   {
@@ -246,7 +246,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.251Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.937Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Zilliz Alternatives
@@ -318,7 +318,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.251Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.937Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.903Z
+// Generated: 2025-11-30T20:05:20.287Z
 // Comparing: Data Works vs NomadGo
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Data Works vs NomadGo',
     description: 'Detailed comparison of Data Works and NomadGo.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.903Z',
-    modifiedTime: '2025-11-30T19:44:53.903Z',
+    publishedTime: '2025-11-30T20:05:20.287Z',
+    modifiedTime: '2025-11-30T20:05:20.287Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/data-works-vs-nomadgo#article",
   "headline": "Data Works vs NomadGo: Comparison",
   "description": "Detailed comparison of Data Works and NomadGo. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.903Z",
-  "dateModified": "2025-11-30T19:44:53.903Z",
+  "datePublished": "2025-11-30T20:05:20.287Z",
+  "dateModified": "2025-11-30T20:05:20.287Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -138,7 +138,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.903Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.287Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -293,7 +293,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.903Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.287Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.385Z
+// Generated: 2025-11-30T20:05:20.111Z
 // Alternative to: Declara
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Declara Alternatives',
     description: 'Top alternatives to Declara for unknown.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.385Z',
-    modifiedTime: '2025-11-30T19:44:53.385Z',
+    publishedTime: '2025-11-30T20:05:20.111Z',
+    modifiedTime: '2025-11-30T20:05:20.111Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/declara#article",
       "headline": "Best Declara Alternatives",
       "description": "Top alternatives to Declara for unknown. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.385Z",
-      "dateModified": "2025-11-30T19:44:53.385Z",
+      "datePublished": "2025-11-30T20:05:20.111Z",
+      "dateModified": "2025-11-30T20:05:20.111Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/declara#list",
       "name": "Declara Alternatives",
-      "numberOfItems": 11,
+      "numberOfItems": 13,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,6 +71,17 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SumTotal Systems, LLC",
+            "url": "https://useharbor.io/brands/sumtotal-systems-llc",
+            "description": "Pong is a brand focused on delivering innovative solutions.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "HAMMOQ Inc.",
             "url": "https://useharbor.io/brands/hammoq-inc",
             "description": "Infinity AI is a technology company focused on artificial intelligence solutions.",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "RiverPoint Group",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "iRise",
@@ -101,22 +112,11 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "mobi",
-            "url": "https://useharbor.io/brands/mobi",
-            "description": "Mobi is a brand that requires JavaScript to function.",
-            "applicationCategory": "unknown"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Altibase",
-            "url": "https://useharbor.io/brands/altibase",
+            "name": "artnet",
+            "url": "https://useharbor.io/brands/artnet",
             "description": "unknown",
             "applicationCategory": "unknown"
           }
@@ -126,26 +126,15 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Varrow",
-            "url": "https://useharbor.io/brands/varrow",
-            "description": "Test page for Guerrilla RF services.",
+            "name": "Packet Design",
+            "url": "https://useharbor.io/brands/packet-design",
+            "description": "Website under construction.",
             "applicationCategory": "unknown"
           }
         },
         {
           "@type": "ListItem",
           "position": 9,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "AMSYS Innovative Solutions",
-            "url": "https://useharbor.io/brands/amsys-innovative-solutions",
-            "description": "unknown",
-            "applicationCategory": "unknown"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Yummy",
@@ -156,12 +145,45 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Altibase",
+            "url": "https://useharbor.io/brands/altibase",
+            "description": "unknown",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Packet Design",
-            "url": "https://useharbor.io/brands/packet-design",
-            "description": "Website under construction.",
+            "name": "Varrow",
+            "url": "https://useharbor.io/brands/varrow",
+            "description": "Test page for Guerrilla RF services.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "mobi",
+            "url": "https://useharbor.io/brands/mobi",
+            "description": "Mobi is a brand that requires JavaScript to function.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "AMSYS Innovative Solutions",
+            "url": "https://useharbor.io/brands/amsys-innovative-solutions",
+            "description": "unknown",
             "applicationCategory": "unknown"
           }
         }
@@ -190,6 +212,20 @@ const alternatives = [
     "brand_name": "Infomatics, Inc",
     "domain": "infomatinc.com",
     "summary": "Infomatics is part of MSR Technology Group.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "sumtotal-systems-llc",
+    "brand_name": "SumTotal Systems, LLC",
+    "domain": "sumtotalsystems.com",
+    "summary": "Pong is a brand focused on delivering innovative solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -242,10 +278,38 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "mobi",
-    "brand_name": "mobi",
-    "domain": "mobi.com",
-    "summary": "Mobi is a brand that requires JavaScript to function.",
+    "slug": "artnet",
+    "brand_name": "artnet",
+    "domain": "artnet.com",
+    "summary": "unknown",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "packet-design",
+    "brand_name": "Packet Design",
+    "domain": "packetdesign.com",
+    "summary": "Website under construction.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "yummy",
+    "brand_name": "Yummy",
+    "domain": "yummy.com",
+    "summary": "Yummy is an online platform.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -284,38 +348,24 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "mobi",
+    "brand_name": "mobi",
+    "domain": "mobi.com",
+    "summary": "Mobi is a brand that requires JavaScript to function.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "amsys-innovative-solutions",
     "brand_name": "AMSYS Innovative Solutions",
     "domain": "amsysis.com",
     "summary": "unknown",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "yummy",
-    "brand_name": "Yummy",
-    "domain": "yummy.com",
-    "summary": "Yummy is an online platform.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "packet-design",
-    "brand_name": "Packet Design",
-    "domain": "packetdesign.com",
-    "summary": "Website under construction.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -339,7 +389,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.385Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.111Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Declara Alternatives
@@ -411,7 +461,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.385Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.111Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.313Z
+// Generated: 2025-11-30T20:05:19.976Z
 // Alternative to: MANDEX INC
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best MANDEX INC Alternatives',
     description: 'Top alternatives to MANDEX INC for Engineering Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.313Z',
-    modifiedTime: '2025-11-30T19:44:53.313Z',
+    publishedTime: '2025-11-30T20:05:19.976Z',
+    modifiedTime: '2025-11-30T20:05:19.976Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mandex-inc#article",
       "headline": "Best MANDEX INC Alternatives",
       "description": "Top alternatives to MANDEX INC for Engineering Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.313Z",
-      "dateModified": "2025-11-30T19:44:53.313Z",
+      "datePublished": "2025-11-30T20:05:19.976Z",
+      "dateModified": "2025-11-30T20:05:19.976Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "EEEngineering, LLC",
-            "url": "https://useharbor.io/brands/eeengineering-llc",
-            "description": "A specialized engineering firm focused on electrical power studies and analysis.",
+            "name": "APT (A-P-T Research, Inc.)",
+            "url": "https://useharbor.io/brands/apt-a-p-t-research-inc",
+            "description": "APT provides specialized engineering services focused on safety and mission assurance.",
             "applicationCategory": "Engineering Services"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SEnergy",
-            "url": "https://useharbor.io/brands/senergy",
-            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
+            "name": "EEEngineering, LLC",
+            "url": "https://useharbor.io/brands/eeengineering-llc",
+            "description": "A specialized engineering firm focused on electrical power studies and analysis.",
             "applicationCategory": "Engineering Services"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "APT (A-P-T Research, Inc.)",
-            "url": "https://useharbor.io/brands/apt-a-p-t-research-inc",
-            "description": "APT provides specialized engineering services focused on safety and mission assurance.",
+            "name": "SEnergy",
+            "url": "https://useharbor.io/brands/senergy",
+            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
             "applicationCategory": "Engineering Services"
           }
         }
@@ -83,6 +83,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "apt-a-p-t-research-inc",
+    "brand_name": "APT (A-P-T Research, Inc.)",
+    "domain": "apt-research.com",
+    "summary": "APT provides specialized engineering services focused on safety and mission assurance.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Prices for training courses vary, with the lowest starting at $2,025.00.",
+      "has_free_tier": false,
+      "starting_price": "$2,025.00"
+    },
+    "features": [
+      "System Safety Engineering",
+      "Reliability & Maintainability",
+      "Quality Engineering",
+      "Software System Safety & Assurance",
+      "Software Development & Modeling"
+    ],
+    "integrations": []
+  },
   {
     "slug": "eeengineering-llc",
     "brand_name": "EEEngineering, LLC",
@@ -122,26 +142,6 @@ const alternatives = [
       "Energy Consulting"
     ],
     "integrations": []
-  },
-  {
-    "slug": "apt-a-p-t-research-inc",
-    "brand_name": "APT (A-P-T Research, Inc.)",
-    "domain": "apt-research.com",
-    "summary": "APT provides specialized engineering services focused on safety and mission assurance.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "Prices for training courses vary, with the lowest starting at $2,025.00.",
-      "has_free_tier": false,
-      "starting_price": "$2,025.00"
-    },
-    "features": [
-      "System Safety Engineering",
-      "Reliability & Maintainability",
-      "Quality Engineering",
-      "Software System Safety & Assurance",
-      "Software Development & Modeling"
-    ],
-    "integrations": []
   }
 ]
 
@@ -157,7 +157,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.313Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.976Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best MANDEX INC Alternatives
@@ -229,7 +229,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.313Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.976Z">2025-11-30</time>
             </p>
           </footer>
         </div>

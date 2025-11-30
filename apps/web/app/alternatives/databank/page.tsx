@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.220Z
+// Generated: 2025-11-30T20:05:19.862Z
 // Alternative to: DataBank
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best DataBank Alternatives',
     description: 'Top alternatives to DataBank for Data Center Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.220Z',
-    modifiedTime: '2025-11-30T19:44:53.220Z',
+    publishedTime: '2025-11-30T20:05:19.862Z',
+    modifiedTime: '2025-11-30T20:05:19.862Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/databank#article",
       "headline": "Best DataBank Alternatives",
       "description": "Top alternatives to DataBank for Data Center Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.220Z",
-      "dateModified": "2025-11-30T19:44:53.220Z",
+      "datePublished": "2025-11-30T20:05:19.862Z",
+      "dateModified": "2025-11-30T20:05:19.862Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/databank#list",
       "name": "DataBank Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Racksquared Data Centers, LLC",
+            "url": "https://useharbor.io/brands/racksquared-data-centers-llc",
+            "description": "A trusted data center partner providing cloud and IT solutions for businesses.",
+            "applicationCategory": "Data Center Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Subzero Engineering",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "PTS Data Center Solutions, Inc.",
@@ -68,12 +79,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Racksquared Data Centers, LLC",
-            "url": "https://useharbor.io/brands/racksquared-data-centers-llc",
-            "description": "A trusted data center partner providing cloud and IT solutions for businesses.",
+            "name": "Nautilus Data Technologies",
+            "url": "https://useharbor.io/brands/nautilus-data-technologies",
+            "description": "Nautilus provides sustainable and scalable liquid cooling solutions for high-density data centers.",
             "applicationCategory": "Data Center Solutions"
           }
         }
@@ -83,6 +94,30 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "racksquared-data-centers-llc",
+    "brand_name": "Racksquared Data Centers, LLC",
+    "domain": "racksquared.com",
+    "summary": "A trusted data center partner providing cloud and IT solutions for businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud Hosting",
+      "Colocation",
+      "Backup Solutions",
+      "Disaster Recovery",
+      "IBM Power in the Cloud"
+    ],
+    "integrations": [
+      "Veeam",
+      "Cybernetics",
+      "Rocket Software"
+    ]
+  },
   {
     "slug": "subzero-engineering",
     "brand_name": "Subzero Engineering",
@@ -118,28 +153,24 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "racksquared-data-centers-llc",
-    "brand_name": "Racksquared Data Centers, LLC",
-    "domain": "racksquared.com",
-    "summary": "A trusted data center partner providing cloud and IT solutions for businesses.",
+    "slug": "nautilus-data-technologies",
+    "brand_name": "Nautilus Data Technologies",
+    "domain": "nautilusdt.com",
+    "summary": "Nautilus provides sustainable and scalable liquid cooling solutions for high-density data centers.",
     "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
+      "price_model": "custom",
+      "price_notes": "Pricing is not explicitly stated; quotes are available upon request.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Cloud Hosting",
-      "Colocation",
-      "Backup Solutions",
-      "Disaster Recovery",
-      "IBM Power in the Cloud"
+      "Scalable liquid cooling solutions",
+      "Prefabricated for rapid deployment",
+      "Leak-proof design",
+      "Supports multiple cooling methods (hot aisle, rear-door, immersion, direct-to-chip)",
+      "Adaptable to various water sources"
     ],
-    "integrations": [
-      "Veeam",
-      "Cybernetics",
-      "Rocket Software"
-    ]
+    "integrations": []
   }
 ]
 
@@ -155,7 +186,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.220Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.862Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best DataBank Alternatives
@@ -227,7 +258,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.220Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.862Z">2025-11-30</time>
             </p>
           </footer>
         </div>

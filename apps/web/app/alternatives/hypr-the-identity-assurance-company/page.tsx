@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.326Z
+// Generated: 2025-11-30T20:05:20.032Z
 // Alternative to: HYPR | The Identity Assurance Company
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best HYPR | The Identity Assurance Company Alternatives',
     description: 'Top alternatives to HYPR | The Identity Assurance Company for Identity Verification.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.326Z',
-    modifiedTime: '2025-11-30T19:44:53.326Z',
+    publishedTime: '2025-11-30T20:05:20.032Z',
+    modifiedTime: '2025-11-30T20:05:20.032Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/hypr-the-identity-assurance-company#article",
       "headline": "Best HYPR | The Identity Assurance Company Alternatives",
       "description": "Top alternatives to HYPR | The Identity Assurance Company for Identity Verification. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.326Z",
-      "dateModified": "2025-11-30T19:44:53.326Z",
+      "datePublished": "2025-11-30T20:05:20.032Z",
+      "dateModified": "2025-11-30T20:05:20.032Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/hypr-the-identity-assurance-company#list",
       "name": "HYPR | The Identity Assurance Company Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -69,6 +69,17 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Incode",
+            "url": "https://useharbor.io/brands/incode",
+            "description": "A leader in identity verification solutions powered by AI technology.",
+            "applicationCategory": "Identity Verification"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Prove",
@@ -124,6 +135,26 @@ const alternatives = [
     ]
   },
   {
+    "slug": "incode",
+    "brand_name": "Incode",
+    "domain": "incode.com",
+    "summary": "A leader in identity verification solutions powered by AI technology.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven identity verification",
+      "Fraud prevention",
+      "KYC/AML compliance",
+      "Customer authentication",
+      "Employee verification"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "prove",
     "brand_name": "Prove",
     "domain": "prove.com",
@@ -151,7 +182,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.326Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.032Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best HYPR | The Identity Assurance Company Alternatives
@@ -223,7 +254,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.326Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.032Z">2025-11-30</time>
             </p>
           </footer>
         </div>

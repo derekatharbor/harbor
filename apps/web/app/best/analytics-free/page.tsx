@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:29.178Z
+// Generated: 2025-11-30T20:04:51.898Z
 // Query: {"category":"Analytics","has_free_tier":true,"max_results":15}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Free Analytics Software',
     description: 'Discover the top free analytics tools with generous free tiers. Perfect for startups and small teams.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:29.178Z',
-    modifiedTime: '2025-11-30T19:44:29.178Z',
+    publishedTime: '2025-11-30T20:04:51.898Z',
+    modifiedTime: '2025-11-30T20:04:51.898Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:29.178Z',
+    'article:modified_time': '2025-11-30T20:04:51.898Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics-free#article",
       "headline": "Best Free Analytics Software",
       "description": "Discover the top free analytics tools with generous free tiers. Perfect for startups and small teams.",
-      "datePublished": "2025-11-30T19:44:29.178Z",
-      "dateModified": "2025-11-30T19:44:29.178Z",
+      "datePublished": "2025-11-30T20:04:51.898Z",
+      "dateModified": "2025-11-30T20:04:51.898Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics-free#list",
       "name": "Best Free Analytics Software",
       "description": "Discover the top free analytics tools with generous free tiers. Perfect for startups and small teams.",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -100,10 +100,28 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ActiveViam",
-            "url": "https://useharbor.io/brands/activeviam",
-            "description": "ActiveViam provides advanced financial data analytics software for financial institutions.",
-            "applicationCategory": "Financial Data Analytics",
+            "name": "PostHog",
+            "url": "https://useharbor.io/brands/posthog",
+            "description": "PostHog provides development tools for product engineers to build and analyze successful products.",
+            "applicationCategory": "Product Analytics",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Parrot Analytics",
+            "url": "https://useharbor.io/brands/parrot-analytics",
+            "description": "A leader in streaming economics and entertainment analytics.",
+            "applicationCategory": "Entertainment Analytics",
             "operatingSystem": "Web-based",
             "offers": {
               "@type": "Offer",
@@ -196,38 +214,60 @@ const profiles = [
     "visibility_score": 78
   },
   {
-    "slug": "activeviam",
-    "brand_name": "ActiveViam",
-    "domain": "activeviam.com",
-    "summary": "ActiveViam provides advanced financial data analytics software for financial institutions.",
+    "slug": "posthog",
+    "brand_name": "PostHog",
+    "domain": "posthog.com",
+    "summary": "PostHog provides development tools for product engineers to build and analyze successful products.",
+    "pricing": {
+      "price_model": "usage",
+      "price_notes": "Generous free tier with usage-based pricing after limits.",
+      "has_free_tier": true,
+      "starting_price": "$0/mo"
+    },
+    "features": [
+      "Product Analytics",
+      "Session Replay",
+      "Feature Flags",
+      "Error Tracking",
+      "Surveys"
+    ],
+    "integrations": [
+      "ABsmartly",
+      "Acoustic",
+      "ActiveCampaign",
+      "Adjust",
+      "Airtable",
+      "Algolia Insights",
+      "Amazon Event Bridge",
+      "Amplitude"
+    ],
+    "visibility_score": 78
+  },
+  {
+    "slug": "parrot-analytics",
+    "brand_name": "Parrot Analytics",
+    "domain": "parrotanalytics.com",
+    "summary": "A leader in streaming economics and entertainment analytics.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated; free trial available.",
+      "price_notes": "Offers a free report on entertainment analytics.",
       "has_free_tier": true,
       "starting_price": null
     },
     "features": [
-      "Real-time PnL explain",
-      "Market risk management",
-      "Climate risk analysis",
-      "Liquidity risk management",
-      "Value at risk calculations"
+      "Global audience demand measurement",
+      "Talent ranking in multiple markets",
+      "TV shows and movies ranking",
+      "End-to-end ROI blueprint",
+      "Streaming metrics including historical and forecasted data"
     ],
-    "integrations": [
-      "Accenture",
-      "AWS",
-      "Google Cloud",
-      "Microsoft Azure",
-      "MongoDB",
-      "Snowflake",
-      "SmartStream"
-    ],
-    "visibility_score": 73
+    "integrations": [],
+    "visibility_score": 75
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:29.178Z'
+// Generated at: 2025-11-30T20:04:51.898Z
 
 export default function ListiclePage() {
   return (
@@ -242,7 +282,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:29.178Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:51.898Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Free Analytics Software
@@ -358,7 +398,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:29.178Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:51.898Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

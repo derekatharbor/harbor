@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.312Z
+// Generated: 2025-11-30T20:05:19.974Z
 // Alternative to: Advantage Design Group
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Advantage Design Group Alternatives',
     description: 'Top alternatives to Advantage Design Group for Education Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.312Z',
-    modifiedTime: '2025-11-30T19:44:53.312Z',
+    publishedTime: '2025-11-30T20:05:19.974Z',
+    modifiedTime: '2025-11-30T20:05:19.974Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/advantage-design-group#article",
       "headline": "Best Advantage Design Group Alternatives",
       "description": "Top alternatives to Advantage Design Group for Education Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.312Z",
-      "dateModified": "2025-11-30T19:44:53.312Z",
+      "datePublished": "2025-11-30T20:05:19.974Z",
+      "dateModified": "2025-11-30T20:05:19.974Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/advantage-design-group#list",
       "name": "Advantage Design Group Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "DeepLearning.AI",
+            "url": "https://useharbor.io/brands/deeplearningai",
+            "description": "An education technology company focused on AI training and community building.",
+            "applicationCategory": "Education Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Class",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ClassLink",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Clever Inc.",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Graphy Inc.",
@@ -94,6 +105,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "deeplearningai",
+    "brand_name": "DeepLearning.AI",
+    "domain": "deeplearning.ai",
+    "summary": "An education technology company focused on AI training and community building.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "AI courses and specializations",
+      "Practical roadmap to building a career in AI",
+      "Access to AI news and insights",
+      "Resources for learning machine learning",
+      "Guides on natural language processing"
+    ],
+    "integrations": []
+  },
   {
     "slug": "class",
     "brand_name": "Class",
@@ -215,7 +246,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.312Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.974Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Advantage Design Group Alternatives
@@ -287,7 +318,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.312Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.974Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.246Z
+// Generated: 2025-11-30T20:05:19.815Z
 // Alternative to: Gsolutionz Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Gsolutionz Inc. Alternatives',
     description: 'Top alternatives to Gsolutionz Inc. for Unified Communications.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.246Z',
-    modifiedTime: '2025-11-30T19:44:53.246Z',
+    publishedTime: '2025-11-30T20:05:19.815Z',
+    modifiedTime: '2025-11-30T20:05:19.815Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/gsolutionz-inc#article",
       "headline": "Best Gsolutionz Inc. Alternatives",
       "description": "Top alternatives to Gsolutionz Inc. for Unified Communications. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.246Z",
-      "dateModified": "2025-11-30T19:44:53.246Z",
+      "datePublished": "2025-11-30T20:05:19.815Z",
+      "dateModified": "2025-11-30T20:05:19.815Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/gsolutionz-inc#list",
       "name": "Gsolutionz Inc. Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "UnifiedCommunications",
+            "url": "https://useharbor.io/brands/unifiedcommunications",
+            "description": "A leader in collaboration technology providing innovative solutions for modern workplaces.",
+            "applicationCategory": "Unified Communications"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TeleSwitch",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Utelogy Corporation",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Akkadian Labs",
@@ -83,6 +94,22 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "unifiedcommunications",
+    "brand_name": "UnifiedCommunications",
+    "domain": "unifiedcommunications.com",
+    "summary": "A leader in collaboration technology providing innovative solutions for modern workplaces.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Pricing for Appspace Cloud Subscription for 25 devices.",
+      "has_free_tier": false,
+      "starting_price": "$11,700/year"
+    },
+    "features": [],
+    "integrations": [
+      "Appspace"
+    ]
+  },
   {
     "slug": "teleswitch",
     "brand_name": "TeleSwitch",
@@ -165,7 +192,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.246Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.815Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Gsolutionz Inc. Alternatives
@@ -237,7 +264,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.246Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.815Z">2025-11-30</time>
             </p>
           </footer>
         </div>

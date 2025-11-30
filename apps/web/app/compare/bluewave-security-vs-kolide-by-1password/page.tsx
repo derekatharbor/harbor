@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.731Z
+// Generated: 2025-11-30T20:05:20.258Z
 // Comparing: BlueWave Security vs Kolide by 1Password
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'BlueWave Security vs Kolide by 1Password',
     description: 'Detailed comparison of BlueWave Security and Kolide by 1Password.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.731Z',
-    modifiedTime: '2025-11-30T19:44:53.731Z',
+    publishedTime: '2025-11-30T20:05:20.258Z',
+    modifiedTime: '2025-11-30T20:05:20.258Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/bluewave-security-vs-kolide-by-1password#article",
   "headline": "BlueWave Security vs Kolide by 1Password: Comparison",
   "description": "Detailed comparison of BlueWave Security and Kolide by 1Password. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.731Z",
-  "dateModified": "2025-11-30T19:44:53.731Z",
+  "datePublished": "2025-11-30T20:05:20.258Z",
+  "dateModified": "2025-11-30T20:05:20.258Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -117,7 +117,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.731Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.258Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -272,7 +272,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.731Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.258Z">2025-11-30</time>
             </p>
           </footer>
         </div>

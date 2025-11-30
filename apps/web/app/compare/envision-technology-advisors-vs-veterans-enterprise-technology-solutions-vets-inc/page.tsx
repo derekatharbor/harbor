@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.418Z
+// Generated: 2025-11-30T20:05:20.162Z
 // Comparing: Envision Technology Advisors vs Veterans Enterprise Technology Solutions (VETS) Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Envision Technology Advisors vs Veterans Enterprise Technology Solutions (VETS) Inc.',
     description: 'Detailed comparison of Envision Technology Advisors and Veterans Enterprise Technology Solutions (VETS) Inc..',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.418Z',
-    modifiedTime: '2025-11-30T19:44:53.418Z',
+    publishedTime: '2025-11-30T20:05:20.162Z',
+    modifiedTime: '2025-11-30T20:05:20.162Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/envision-technology-advisors-vs-veterans-enterprise-technology-solutions-vets-inc#article",
   "headline": "Envision Technology Advisors vs Veterans Enterprise Technology Solutions (VETS) Inc.: Comparison",
   "description": "Detailed comparison of Envision Technology Advisors and Veterans Enterprise Technology Solutions (VETS) Inc.. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.418Z",
-  "dateModified": "2025-11-30T19:44:53.418Z",
+  "datePublished": "2025-11-30T20:05:20.162Z",
+  "dateModified": "2025-11-30T20:05:20.162Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -109,7 +109,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.418Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.162Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -264,7 +264,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.418Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.162Z">2025-11-30</time>
             </p>
           </footer>
         </div>

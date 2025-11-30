@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.271Z
+// Generated: 2025-11-30T20:05:19.992Z
 // Alternative to: iTech AG
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best iTech AG Alternatives',
     description: 'Top alternatives to iTech AG for Technology Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.271Z',
-    modifiedTime: '2025-11-30T19:44:53.271Z',
+    publishedTime: '2025-11-30T20:05:19.992Z',
+    modifiedTime: '2025-11-30T20:05:19.992Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/itech-ag#article",
       "headline": "Best iTech AG Alternatives",
       "description": "Top alternatives to iTech AG for Technology Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.271Z",
-      "dateModified": "2025-11-30T19:44:53.271Z",
+      "datePublished": "2025-11-30T20:05:19.992Z",
+      "dateModified": "2025-11-30T20:05:19.992Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/itech-ag#list",
       "name": "iTech AG Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,17 +71,6 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Cystems Logic",
-            "url": "https://useharbor.io/brands/cystems-logic",
-            "description": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
-            "applicationCategory": "Technology Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "ESG",
             "url": "https://useharbor.io/brands/esg",
             "description": "Epiphany Solution Group provides technology consulting services to Fortune 1000 companies.",
@@ -90,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "VySystems",
@@ -101,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CorSource",
@@ -112,7 +101,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Hylaine",
+            "url": "https://useharbor.io/brands/hylaine",
+            "description": "Values-First Technology Consulting for Enterprises",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Cystems Logic",
+            "url": "https://useharbor.io/brands/cystems-logic",
+            "description": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ProSoft Technology Group Inc.dba Kellton Tech",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aarav Solutions",
@@ -181,26 +192,6 @@ const alternatives = [
       "AWS",
       "GCP"
     ]
-  },
-  {
-    "slug": "cystems-logic",
-    "brand_name": "Cystems Logic",
-    "domain": "cystemslogic.com",
-    "summary": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Advanced SAP Solutions",
-      "Oracle Cloud and Infrastructure solutions",
-      "IoT Solutions",
-      "Custom-built Solutions",
-      "IT Staffing Services"
-    ],
-    "integrations": []
   },
   {
     "slug": "esg",
@@ -272,6 +263,46 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "hylaine",
+    "brand_name": "Hylaine",
+    "domain": "hylaine.com",
+    "summary": "Values-First Technology Consulting for Enterprises",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Prepare AI-Ready Data",
+      "Modernize Legacy Systems",
+      "Navigate M&A Complexity",
+      "Deliver Projects Predictably",
+      "Provide Experienced Consulting Teams"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "cystems-logic",
+    "brand_name": "Cystems Logic",
+    "domain": "cystemslogic.com",
+    "summary": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Advanced SAP Solutions",
+      "Oracle Cloud and Infrastructure solutions",
+      "IoT Solutions",
+      "Custom-built Solutions",
+      "IT Staffing Services"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "prosoft-technology-group-inc-dba-kellton-tech",
     "brand_name": "ProSoft Technology Group Inc.dba Kellton Tech",
     "domain": "prosoftgroup.com",
@@ -331,7 +362,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.271Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.992Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best iTech AG Alternatives
@@ -403,7 +434,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.271Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.992Z">2025-11-30</time>
             </p>
           </footer>
         </div>

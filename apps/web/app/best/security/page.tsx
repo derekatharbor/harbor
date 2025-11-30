@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:27.097Z
+// Generated: 2025-11-30T20:04:49.638Z
 // Query: {"category":"Security","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Security Software',
     description: 'Compare the top security solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:27.097Z',
-    modifiedTime: '2025-11-30T19:44:27.097Z',
+    publishedTime: '2025-11-30T20:04:49.638Z',
+    modifiedTime: '2025-11-30T20:04:49.638Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:27.097Z',
+    'article:modified_time': '2025-11-30T20:04:49.638Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/security#article",
       "headline": "Best Security Software",
       "description": "Compare the top security solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:27.097Z",
-      "dateModified": "2025-11-30T19:44:27.097Z",
+      "datePublished": "2025-11-30T20:04:49.638Z",
+      "dateModified": "2025-11-30T20:04:49.638Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -828,7 +828,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:27.097Z'
+// Generated at: 2025-11-30T20:04:49.638Z
 
 export default function ListiclePage() {
   return (
@@ -843,7 +843,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:27.097Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:49.638Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Security Software
@@ -959,7 +959,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:27.097Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:49.638Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

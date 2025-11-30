@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.326Z
+// Generated: 2025-11-30T20:05:20.031Z
 // Alternative to: WeaveGrid
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best WeaveGrid Alternatives',
     description: 'Top alternatives to WeaveGrid for Energy Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.326Z',
-    modifiedTime: '2025-11-30T19:44:53.326Z',
+    publishedTime: '2025-11-30T20:05:20.031Z',
+    modifiedTime: '2025-11-30T20:05:20.031Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/weavegrid#article",
       "headline": "Best WeaveGrid Alternatives",
       "description": "Top alternatives to WeaveGrid for Energy Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.326Z",
-      "dateModified": "2025-11-30T19:44:53.326Z",
+      "datePublished": "2025-11-30T20:05:20.031Z",
+      "dateModified": "2025-11-30T20:05:20.031Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/weavegrid#list",
       "name": "WeaveGrid Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Powerhouse Dynamics",
-            "url": "https://useharbor.io/brands/powerhouse-dynamics",
-            "description": "Leading provider of IoT solutions for multi-site foodservice and retail operations.",
+            "name": "ENTOUCH",
+            "url": "https://useharbor.io/brands/entouch",
+            "description": "ENTOUCH provides energy management solutions and smart building technology for multisite operators.",
             "applicationCategory": "Energy Management"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ENTOUCH",
-            "url": "https://useharbor.io/brands/entouch",
-            "description": "ENTOUCH provides energy management solutions and smart building technology for multisite operators.",
+            "name": "Powerhouse Dynamics",
+            "url": "https://useharbor.io/brands/powerhouse-dynamics",
+            "description": "Leading provider of IoT solutions for multi-site foodservice and retail operations.",
             "applicationCategory": "Energy Management"
           }
         },
@@ -76,6 +76,17 @@ const schemaOrg = {
             "description": "Empowering energy providers with AI-driven solutions for equitable energy access.",
             "applicationCategory": "Energy Management"
           }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Logical Buildings",
+            "url": "https://useharbor.io/brands/logical-buildings",
+            "description": "A leader in smart building and energy technology solutions.",
+            "applicationCategory": "Energy Management"
+          }
         }
       ]
     }
@@ -83,26 +94,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "powerhouse-dynamics",
-    "brand_name": "Powerhouse Dynamics",
-    "domain": "powerhousedynamics.com",
-    "summary": "Leading provider of IoT solutions for multi-site foodservice and retail operations.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven energy optimization",
-      "Real-time data monitoring",
-      "Centralized management of equipment",
-      "Operational efficiency solutions",
-      "Proactive equipment monitoring"
-    ],
-    "integrations": []
-  },
   {
     "slug": "entouch",
     "brand_name": "ENTOUCH",
@@ -126,6 +117,26 @@ const alternatives = [
     ]
   },
   {
+    "slug": "powerhouse-dynamics",
+    "brand_name": "Powerhouse Dynamics",
+    "domain": "powerhousedynamics.com",
+    "summary": "Leading provider of IoT solutions for multi-site foodservice and retail operations.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven energy optimization",
+      "Real-time data monitoring",
+      "Centralized management of equipment",
+      "Operational efficiency solutions",
+      "Proactive equipment monitoring"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "zola-intelligence",
     "brand_name": "ZOLA iNTELLIGENCE",
     "domain": "zolaintelligence.com",
@@ -144,6 +155,29 @@ const alternatives = [
       "Asset allocation"
     ],
     "integrations": []
+  },
+  {
+    "slug": "logical-buildings",
+    "brand_name": "Logical Buildings",
+    "domain": "logicalbuildings.com",
+    "summary": "A leader in smart building and energy technology solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Energy usage monitoring",
+      "Carbon emission tracking",
+      "Demand response participation",
+      "Building performance optimization",
+      "Cost savings analysis"
+    ],
+    "integrations": [
+      "Con Edison",
+      "SmartThings Energy"
+    ]
   }
 ]
 
@@ -159,7 +193,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.326Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.031Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best WeaveGrid Alternatives
@@ -231,7 +265,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.326Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.031Z">2025-11-30</time>
             </p>
           </footer>
         </div>

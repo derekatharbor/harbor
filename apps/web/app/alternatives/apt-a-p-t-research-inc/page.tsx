@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.311Z
+// Generated: 2025-11-30T20:05:19.959Z
 // Alternative to: APT (A-P-T Research, Inc.)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best APT (A-P-T Research, Inc.) Alternatives',
     description: 'Top alternatives to APT (A-P-T Research, Inc.) for Engineering Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.311Z',
-    modifiedTime: '2025-11-30T19:44:53.311Z',
+    publishedTime: '2025-11-30T20:05:19.959Z',
+    modifiedTime: '2025-11-30T20:05:19.959Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/apt-a-p-t-research-inc#article",
       "headline": "Best APT (A-P-T Research, Inc.) Alternatives",
       "description": "Top alternatives to APT (A-P-T Research, Inc.) for Engineering Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.311Z",
-      "dateModified": "2025-11-30T19:44:53.311Z",
+      "datePublished": "2025-11-30T20:05:19.959Z",
+      "dateModified": "2025-11-30T20:05:19.959Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "EEEngineering, LLC",
-            "url": "https://useharbor.io/brands/eeengineering-llc",
-            "description": "A specialized engineering firm focused on electrical power studies and analysis.",
+            "name": "MANDEX INC",
+            "url": "https://useharbor.io/brands/mandex-inc",
+            "description": "A Service-Disabled Veteran-Owned Small Business specializing in information technology and engineering services.",
             "applicationCategory": "Engineering Services"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SEnergy",
-            "url": "https://useharbor.io/brands/senergy",
-            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
+            "name": "EEEngineering, LLC",
+            "url": "https://useharbor.io/brands/eeengineering-llc",
+            "description": "A specialized engineering firm focused on electrical power studies and analysis.",
             "applicationCategory": "Engineering Services"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "MANDEX INC",
-            "url": "https://useharbor.io/brands/mandex-inc",
-            "description": "A Service-Disabled Veteran-Owned Small Business specializing in information technology and engineering services.",
+            "name": "SEnergy",
+            "url": "https://useharbor.io/brands/senergy",
+            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
             "applicationCategory": "Engineering Services"
           }
         }
@@ -83,6 +83,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "mandex-inc",
+    "brand_name": "MANDEX INC",
+    "domain": "mandex.com",
+    "summary": "A Service-Disabled Veteran-Owned Small Business specializing in information technology and engineering services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Systems engineering",
+      "Systems testing",
+      "Network infrastructure design",
+      "Cybersecurity",
+      "Information assurance"
+    ],
+    "integrations": []
+  },
   {
     "slug": "eeengineering-llc",
     "brand_name": "EEEngineering, LLC",
@@ -122,26 +142,6 @@ const alternatives = [
       "Energy Consulting"
     ],
     "integrations": []
-  },
-  {
-    "slug": "mandex-inc",
-    "brand_name": "MANDEX INC",
-    "domain": "mandex.com",
-    "summary": "A Service-Disabled Veteran-Owned Small Business specializing in information technology and engineering services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Systems engineering",
-      "Systems testing",
-      "Network infrastructure design",
-      "Cybersecurity",
-      "Information assurance"
-    ],
-    "integrations": []
   }
 ]
 
@@ -157,7 +157,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.311Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.959Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best APT (A-P-T Research, Inc.) Alternatives
@@ -229,7 +229,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.311Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.959Z">2025-11-30</time>
             </p>
           </footer>
         </div>

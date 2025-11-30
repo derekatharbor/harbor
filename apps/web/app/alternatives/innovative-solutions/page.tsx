@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.234Z
+// Generated: 2025-11-30T20:05:19.914Z
 // Alternative to: Innovative Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Innovative Solutions Alternatives',
     description: 'Top alternatives to Innovative Solutions for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.234Z',
-    modifiedTime: '2025-11-30T19:44:53.234Z',
+    publishedTime: '2025-11-30T20:05:19.914Z',
+    modifiedTime: '2025-11-30T20:05:19.914Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/innovative-solutions#article",
       "headline": "Best Innovative Solutions Alternatives",
       "description": "Top alternatives to Innovative Solutions for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.234Z",
-      "dateModified": "2025-11-30T19:44:53.234Z",
+      "datePublished": "2025-11-30T20:05:19.914Z",
+      "dateModified": "2025-11-30T20:05:19.914Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,28 +49,6 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ScaleMatrix",
-            "url": "https://useharbor.io/brands/scalematrix",
-            "description": "High Density Colocation and Cloud Service Provider.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "CARI.net",
-            "url": "https://useharbor.io/brands/cari-net",
-            "description": "CARI.net is a managed cloud service provider offering a range of IT solutions.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "UBX Cloud",
             "url": "https://useharbor.io/brands/ubx-cloud",
             "description": "A global cloud service provider specializing in secure and scalable cloud solutions.",
@@ -79,12 +57,34 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Simple Technology Solutions",
             "url": "https://useharbor.io/brands/simple-technology-solutions",
             "description": "A federal small business specializing in enterprise cloud transformation and modernization.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ScaleMatrix",
+            "url": "https://useharbor.io/brands/scalematrix",
+            "description": "High Density Colocation and Cloud Service Provider.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CARI.net",
+            "url": "https://useharbor.io/brands/cari-net",
+            "description": "CARI.net is a managed cloud service provider offering a range of IT solutions.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CyberTech Systems and Software, Inc",
-            "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
-            "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
+            "name": "mLogica",
+            "url": "https://useharbor.io/brands/mlogica",
+            "description": "mLogica specializes in enterprise modernization through cloud migration and big data analytics.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -126,9 +126,9 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "mLogica",
-            "url": "https://useharbor.io/brands/mlogica",
-            "description": "mLogica specializes in enterprise modernization through cloud migration and big data analytics.",
+            "name": "CyberTech Systems and Software, Inc",
+            "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
+            "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -160,48 +160,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "scalematrix",
-    "brand_name": "ScaleMatrix",
-    "domain": "scalematrix.com",
-    "summary": "High Density Colocation and Cloud Service Provider.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "High-density colocation",
-      "High-performance cloud services",
-      "Backup and disaster recovery",
-      "VDI Desktop services",
-      "ScaleDesktop for virtual desktop environment"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "cari-net",
-    "brand_name": "CARI.net",
-    "domain": "cari.net",
-    "summary": "CARI.net is a managed cloud service provider offering a range of IT solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated and may vary based on individual needs.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Dedicated Servers",
-      "Cloud Servers",
-      "Colocation",
-      "Managed Services",
-      "Software Development"
-    ],
-    "integrations": [
-      "Microsoft Azure"
-    ]
-  },
   {
     "slug": "ubx-cloud",
     "brand_name": "UBX Cloud",
@@ -248,6 +206,48 @@ const alternatives = [
       "Google Cloud Platform",
       "Power Platform",
       "Box"
+    ]
+  },
+  {
+    "slug": "scalematrix",
+    "brand_name": "ScaleMatrix",
+    "domain": "scalematrix.com",
+    "summary": "High Density Colocation and Cloud Service Provider.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "High-density colocation",
+      "High-performance cloud services",
+      "Backup and disaster recovery",
+      "VDI Desktop services",
+      "ScaleDesktop for virtual desktop environment"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "cari-net",
+    "brand_name": "CARI.net",
+    "domain": "cari.net",
+    "summary": "CARI.net is a managed cloud service provider offering a range of IT solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated and may vary based on individual needs.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Dedicated Servers",
+      "Cloud Servers",
+      "Colocation",
+      "Managed Services",
+      "Software Development"
+    ],
+    "integrations": [
+      "Microsoft Azure"
     ]
   },
   {
@@ -300,33 +300,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "cybertech-systems-and-software-inc",
-    "brand_name": "CyberTech Systems and Software, Inc",
-    "domain": "cybertech.com",
-    "summary": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "No specific pricing information found.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Enterprise Cloud Transformation",
-      "SAP S/4HANA Migration and Support",
-      "ArcGIS Cloud Modernization",
-      "Real-Time Crime Management Solutions",
-      "Spatial Analytics Integration"
-    ],
-    "integrations": [
-      "SAP",
-      "Esri",
-      "Microsoft Azure",
-      "AWS",
-      "CISCO",
-      "Snowflake"
-    ]
-  },
-  {
     "slug": "mlogica",
     "brand_name": "mLogica",
     "domain": "mlogica.com",
@@ -351,6 +324,33 @@ const alternatives = [
       "IBM",
       "Oracle",
       "SAP"
+    ]
+  },
+  {
+    "slug": "cybertech-systems-and-software-inc",
+    "brand_name": "CyberTech Systems and Software, Inc",
+    "domain": "cybertech.com",
+    "summary": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "No specific pricing information found.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Enterprise Cloud Transformation",
+      "SAP S/4HANA Migration and Support",
+      "ArcGIS Cloud Modernization",
+      "Real-Time Crime Management Solutions",
+      "Spatial Analytics Integration"
+    ],
+    "integrations": [
+      "SAP",
+      "Esri",
+      "Microsoft Azure",
+      "AWS",
+      "CISCO",
+      "Snowflake"
     ]
   },
   {
@@ -414,7 +414,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.234Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.914Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Innovative Solutions Alternatives
@@ -486,7 +486,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.234Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.914Z">2025-11-30</time>
             </p>
           </footer>
         </div>

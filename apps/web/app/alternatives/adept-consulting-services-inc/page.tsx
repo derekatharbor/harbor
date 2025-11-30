@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.277Z
+// Generated: 2025-11-30T20:05:19.974Z
 // Alternative to: Adept Consulting Services, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Adept Consulting Services, Inc. Alternatives',
     description: 'Top alternatives to Adept Consulting Services, Inc. for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.277Z',
-    modifiedTime: '2025-11-30T19:44:53.277Z',
+    publishedTime: '2025-11-30T20:05:19.974Z',
+    modifiedTime: '2025-11-30T20:05:19.974Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/adept-consulting-services-inc#article",
       "headline": "Best Adept Consulting Services, Inc. Alternatives",
       "description": "Top alternatives to Adept Consulting Services, Inc. for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.277Z",
-      "dateModified": "2025-11-30T19:44:53.277Z",
+      "datePublished": "2025-11-30T20:05:19.974Z",
+      "dateModified": "2025-11-30T20:05:19.974Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -71,28 +71,6 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Trinity Technology Partners, Inc.",
-            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
-            "description": "A technology services provider specializing in solutions for government and industry.",
-            "applicationCategory": "Technology Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "3T-Innovations",
-            "url": "https://useharbor.io/brands/3t-innovations",
-            "description": "A veteran-owned small business providing innovative technology solutions.",
-            "applicationCategory": "Technology Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Tribalco",
             "url": "https://useharbor.io/brands/tribalco",
             "description": "Global systems integrator providing technology solutions for government and commercial clients.",
@@ -101,12 +79,34 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "InDev",
             "url": "https://useharbor.io/brands/indev",
             "description": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Trinity Technology Partners, Inc.",
+            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
+            "description": "A technology services provider specializing in solutions for government and industry.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "3T-Innovations",
+            "url": "https://useharbor.io/brands/3t-innovations",
+            "description": "A veteran-owned small business providing innovative technology solutions.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -199,43 +199,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "trinity-technology-partners-inc",
-    "brand_name": "Trinity Technology Partners, Inc.",
-    "domain": "trinitytp.com",
-    "summary": "A technology services provider specializing in solutions for government and industry.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "3t-innovations",
-    "brand_name": "3T-Innovations",
-    "domain": "3tinnovations.com",
-    "summary": "A veteran-owned small business providing innovative technology solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Security",
-      "Communication",
-      "Scalability",
-      "Installation Services",
-      "Managed Services"
-    ],
-    "integrations": [
-      "Cisco Meraki",
-      "Crestron"
-    ]
-  },
-  {
     "slug": "tribalco",
     "brand_name": "Tribalco",
     "domain": "tribalco.com",
@@ -276,6 +239,43 @@ const alternatives = [
       "Tableau",
       "Qlik",
       "PowerBi"
+    ]
+  },
+  {
+    "slug": "trinity-technology-partners-inc",
+    "brand_name": "Trinity Technology Partners, Inc.",
+    "domain": "trinitytp.com",
+    "summary": "A technology services provider specializing in solutions for government and industry.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "3t-innovations",
+    "brand_name": "3T-Innovations",
+    "domain": "3tinnovations.com",
+    "summary": "A veteran-owned small business providing innovative technology solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Security",
+      "Communication",
+      "Scalability",
+      "Installation Services",
+      "Managed Services"
+    ],
+    "integrations": [
+      "Cisco Meraki",
+      "Crestron"
     ]
   },
   {
@@ -348,7 +348,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.277Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.974Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Adept Consulting Services, Inc. Alternatives
@@ -420,7 +420,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.277Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.974Z">2025-11-30</time>
             </p>
           </footer>
         </div>

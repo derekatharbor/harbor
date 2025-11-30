@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.201Z
+// Generated: 2025-11-30T20:05:19.793Z
 // Alternative to: Enhanced Veterans Solutions, Inc. (EVS)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Enhanced Veterans Solutions, Inc. (EVS) Alternatives',
     description: 'Top alternatives to Enhanced Veterans Solutions, Inc. (EVS) for Information Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.201Z',
-    modifiedTime: '2025-11-30T19:44:53.201Z',
+    publishedTime: '2025-11-30T20:05:19.793Z',
+    modifiedTime: '2025-11-30T20:05:19.793Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/enhanced-veterans-solutions-inc-evs#article",
       "headline": "Best Enhanced Veterans Solutions, Inc. (EVS) Alternatives",
       "description": "Top alternatives to Enhanced Veterans Solutions, Inc. (EVS) for Information Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.201Z",
-      "dateModified": "2025-11-30T19:44:53.201Z",
+      "datePublished": "2025-11-30T20:05:19.793Z",
+      "dateModified": "2025-11-30T20:05:19.793Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,22 +42,11 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/enhanced-veterans-solutions-inc-evs#list",
       "name": "Enhanced Veterans Solutions, Inc. (EVS) Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "OPTiMO Information Technology",
-            "url": "https://useharbor.io/brands/optimo-information-technology",
-            "description": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
-            "applicationCategory": "Information Technology Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Innovative Management Concepts, Inc.",
@@ -68,12 +57,45 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "COX-LITTLE & COMPANY",
             "url": "https://useharbor.io/brands/cox-little-company",
             "description": "Providing IT Professionals to Businesses since 1985.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "RDR, Inc.",
+            "url": "https://useharbor.io/brands/rdr-inc",
+            "description": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "OPTiMO Information Technology",
+            "url": "https://useharbor.io/brands/optimo-information-technology",
+            "description": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "IT Trailblazers LLC",
+            "url": "https://useharbor.io/brands/it-trailblazers-llc",
+            "description": "Your Innovating Global Reliable Technology Partner.",
             "applicationCategory": "Information Technology Services"
           }
         }
@@ -83,30 +105,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "optimo-information-technology",
-    "brand_name": "OPTiMO Information Technology",
-    "domain": "optimo-it.com",
-    "summary": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "User Experience/User-Centered Design",
-      "Application Development/Sustainment",
-      "Data Management/Governance",
-      "Business Process Automation",
-      "AI Algorithms & Engineering"
-    ],
-    "integrations": [
-      "Salesforce",
-      "AWS",
-      "Azure"
-    ]
-  },
   {
     "slug": "innovative-management-concepts-inc",
     "brand_name": "Innovative Management Concepts, Inc.",
@@ -146,6 +144,70 @@ const alternatives = [
       "PC/Web-Based Development"
     ],
     "integrations": []
+  },
+  {
+    "slug": "rdr-inc",
+    "brand_name": "RDR, Inc.",
+    "domain": "rdr.com",
+    "summary": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Interagency IT solutions",
+      "Security services",
+      "Systems service solutions",
+      "Knowledge management",
+      "Process improvement"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "optimo-information-technology",
+    "brand_name": "OPTiMO Information Technology",
+    "domain": "optimo-it.com",
+    "summary": "A leading IT services provider specializing in digital design and app development for U.S. federal agencies.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "User Experience/User-Centered Design",
+      "Application Development/Sustainment",
+      "Data Management/Governance",
+      "Business Process Automation",
+      "AI Algorithms & Engineering"
+    ],
+    "integrations": [
+      "Salesforce",
+      "AWS",
+      "Azure"
+    ]
+  },
+  {
+    "slug": "it-trailblazers-llc",
+    "brand_name": "IT Trailblazers LLC",
+    "domain": "ittblazers.com",
+    "summary": "Your Innovating Global Reliable Technology Partner.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Application Development",
+      "Enterprise Resource Management",
+      "Cloud Solutions",
+      "Contract Staffing Services",
+      "Cybersecurity Solutions"
+    ],
+    "integrations": []
   }
 ]
 
@@ -161,7 +223,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.201Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.793Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Enhanced Veterans Solutions, Inc. (EVS) Alternatives
@@ -233,7 +295,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.201Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.793Z">2025-11-30</time>
             </p>
           </footer>
         </div>

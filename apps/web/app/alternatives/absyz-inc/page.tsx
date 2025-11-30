@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.364Z
+// Generated: 2025-11-30T20:05:20.088Z
 // Alternative to: ABSYZ Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best ABSYZ Inc Alternatives',
     description: 'Top alternatives to ABSYZ Inc for Salesforce Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.364Z',
-    modifiedTime: '2025-11-30T19:44:53.364Z',
+    publishedTime: '2025-11-30T20:05:20.088Z',
+    modifiedTime: '2025-11-30T20:05:20.088Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/absyz-inc#article",
       "headline": "Best ABSYZ Inc Alternatives",
       "description": "Top alternatives to ABSYZ Inc for Salesforce Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.364Z",
-      "dateModified": "2025-11-30T19:44:53.364Z",
+      "datePublished": "2025-11-30T20:05:20.088Z",
+      "dateModified": "2025-11-30T20:05:20.088Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -196,7 +196,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.088Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best ABSYZ Inc Alternatives
@@ -268,7 +268,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.088Z">2025-11-30</time>
             </p>
           </footer>
         </div>

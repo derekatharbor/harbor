@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.260Z
+// Generated: 2025-11-30T20:05:19.857Z
 // Alternative to: Metric5
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Metric5 Alternatives',
     description: 'Top alternatives to Metric5 for Government Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.260Z',
-    modifiedTime: '2025-11-30T19:44:53.260Z',
+    publishedTime: '2025-11-30T20:05:19.857Z',
+    modifiedTime: '2025-11-30T20:05:19.857Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/metric5#article",
       "headline": "Best Metric5 Alternatives",
       "description": "Top alternatives to Metric5 for Government Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.260Z",
-      "dateModified": "2025-11-30T19:44:53.260Z",
+      "datePublished": "2025-11-30T20:05:19.857Z",
+      "dateModified": "2025-11-30T20:05:19.857Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/metric5#list",
       "name": "Metric5 Alternatives",
-      "numberOfItems": 5,
+      "numberOfItems": 7,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "AnaVation LLC",
-            "url": "https://useharbor.io/brands/anavation-llc",
-            "description": "AnaVation is a leading provider of innovative solutions for the Federal Government.",
+            "name": "Rividium Inc",
+            "url": "https://useharbor.io/brands/rividium-inc",
+            "description": "Innovative solutions provider for federal government services.",
             "applicationCategory": "Government Services"
           }
         },
@@ -93,9 +93,31 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Rividium Inc",
-            "url": "https://useharbor.io/brands/rividium-inc",
-            "description": "Innovative solutions provider for federal government services.",
+            "name": "GAMA-1 Technologies",
+            "url": "https://useharbor.io/brands/gama-1-technologies",
+            "description": "A mission-driven technology provider specializing in government transformation through innovative solutions.",
+            "applicationCategory": "Government Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "AnaVation LLC",
+            "url": "https://useharbor.io/brands/anavation-llc",
+            "description": "AnaVation is a leading provider of innovative solutions for the Federal Government.",
+            "applicationCategory": "Government Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "540",
+            "url": "https://useharbor.io/brands/540",
+            "description": "A mission-driven technology partner for the Federal Government.",
             "applicationCategory": "Government Services"
           }
         }
@@ -166,6 +188,42 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "rividium-inc",
+    "brand_name": "Rividium Inc",
+    "domain": "rividium.com",
+    "summary": "Innovative solutions provider for federal government services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "gama-1-technologies",
+    "brand_name": "GAMA-1 Technologies",
+    "domain": "gama1tech.com",
+    "summary": "A mission-driven technology provider specializing in government transformation through innovative solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Scientific programming and computing for advanced simulation and modeling",
+      "Data processing and statistical analysis",
+      "High-performance computing",
+      "Cloud migration solutions",
+      "Cybersecurity solutions"
+    ],
+    "integrations": [
+      "AWS"
+    ]
+  },
+  {
     "slug": "anavation-llc",
     "brand_name": "AnaVation LLC",
     "domain": "anavationllc.com",
@@ -186,17 +244,23 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "rividium-inc",
-    "brand_name": "Rividium Inc",
-    "domain": "rividium.com",
-    "summary": "Innovative solutions provider for federal government services.",
+    "slug": "540",
+    "brand_name": "540",
+    "domain": "540.co",
+    "summary": "A mission-driven technology partner for the Federal Government.",
     "pricing": {
-      "price_model": "unknown",
+      "price_model": "custom",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
-    "features": [],
+    "features": [
+      "Cloud Solutions",
+      "DevSecOps",
+      "Agile Delivery",
+      "API Development & Design",
+      "Artificial Intelligence"
+    ],
     "integrations": []
   }
 ]
@@ -213,7 +277,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.260Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.857Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Metric5 Alternatives
@@ -285,7 +349,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.260Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.857Z">2025-11-30</time>
             </p>
           </footer>
         </div>

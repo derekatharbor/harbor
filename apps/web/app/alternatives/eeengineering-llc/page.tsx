@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.265Z
+// Generated: 2025-11-30T20:05:20.010Z
 // Alternative to: EEEngineering, LLC
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best EEEngineering, LLC Alternatives',
     description: 'Top alternatives to EEEngineering, LLC for Engineering Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.265Z',
-    modifiedTime: '2025-11-30T19:44:53.265Z',
+    publishedTime: '2025-11-30T20:05:20.010Z',
+    modifiedTime: '2025-11-30T20:05:20.010Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/eeengineering-llc#article",
       "headline": "Best EEEngineering, LLC Alternatives",
       "description": "Top alternatives to EEEngineering, LLC for Engineering Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.265Z",
-      "dateModified": "2025-11-30T19:44:53.265Z",
+      "datePublished": "2025-11-30T20:05:20.010Z",
+      "dateModified": "2025-11-30T20:05:20.010Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,17 +49,6 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SEnergy",
-            "url": "https://useharbor.io/brands/senergy",
-            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
-            "applicationCategory": "Engineering Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "APT (A-P-T Research, Inc.)",
             "url": "https://useharbor.io/brands/apt-a-p-t-research-inc",
             "description": "APT provides specialized engineering services focused on safety and mission assurance.",
@@ -68,12 +57,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MANDEX INC",
             "url": "https://useharbor.io/brands/mandex-inc",
             "description": "A Service-Disabled Veteran-Owned Small Business specializing in information technology and engineering services.",
+            "applicationCategory": "Engineering Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SEnergy",
+            "url": "https://useharbor.io/brands/senergy",
+            "description": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
             "applicationCategory": "Engineering Services"
           }
         }
@@ -83,26 +83,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "senergy",
-    "brand_name": "SEnergy",
-    "domain": "poweredbysenergy.com",
-    "summary": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Power Engineering",
-      "Field Services",
-      "Program Services",
-      "Project Management",
-      "Energy Consulting"
-    ],
-    "integrations": []
-  },
   {
     "slug": "apt-a-p-t-research-inc",
     "brand_name": "APT (A-P-T Research, Inc.)",
@@ -142,6 +122,26 @@ const alternatives = [
       "Information assurance"
     ],
     "integrations": []
+  },
+  {
+    "slug": "senergy",
+    "brand_name": "SEnergy",
+    "domain": "poweredbysenergy.com",
+    "summary": "SEnergy is an energy-focused consulting firm specializing in medium to high voltage electrical infrastructure.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Power Engineering",
+      "Field Services",
+      "Program Services",
+      "Project Management",
+      "Energy Consulting"
+    ],
+    "integrations": []
   }
 ]
 
@@ -157,7 +157,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.265Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best EEEngineering, LLC Alternatives
@@ -229,7 +229,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.265Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">2025-11-30</time>
             </p>
           </footer>
         </div>

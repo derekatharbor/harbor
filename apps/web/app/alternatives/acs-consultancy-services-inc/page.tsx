@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.388Z
+// Generated: 2025-11-30T20:05:20.113Z
 // Alternative to: ACS Consultancy Services, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best ACS Consultancy Services, Inc Alternatives',
     description: 'Top alternatives to ACS Consultancy Services, Inc for Primary software category (e.g., CRM, Project Management, Time Tracking).',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.388Z',
-    modifiedTime: '2025-11-30T19:44:53.388Z',
+    publishedTime: '2025-11-30T20:05:20.113Z',
+    modifiedTime: '2025-11-30T20:05:20.113Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/acs-consultancy-services-inc#article",
       "headline": "Best ACS Consultancy Services, Inc Alternatives",
       "description": "Top alternatives to ACS Consultancy Services, Inc for Primary software category (e.g., CRM, Project Management, Time Tracking). Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.388Z",
-      "dateModified": "2025-11-30T19:44:53.388Z",
+      "datePublished": "2025-11-30T20:05:20.113Z",
+      "dateModified": "2025-11-30T20:05:20.113Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/acs-consultancy-services-inc#list",
       "name": "ACS Consultancy Services, Inc Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "HUBX",
-            "url": "https://useharbor.io/brands/hubx",
-            "description": "HUBX is a digital platform.",
+            "name": "Arkhya Tech. Inc.",
+            "url": "https://useharbor.io/brands/arkhya-tech-inc",
+            "description": "Arkhya Tech is a technology company.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Arkhya Tech. Inc.",
-            "url": "https://useharbor.io/brands/arkhya-tech-inc",
-            "description": "Arkhya Tech is a technology company.",
+            "name": "HUBX",
+            "url": "https://useharbor.io/brands/hubx",
+            "description": "HUBX is a digital platform.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
           }
         },
@@ -104,6 +104,17 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Neo",
+            "url": "https://useharbor.io/brands/neo",
+            "description": "Neo is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ALQIMI",
             "url": "https://useharbor.io/brands/alqimi",
             "description": "ALQIMI is a brand with unclear offerings and purpose.",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Gala",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eluvio",
@@ -167,20 +178,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "hubx",
-    "brand_name": "HUBX",
-    "domain": "hubx.com",
-    "summary": "HUBX is a digital platform.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
     "slug": "arkhya-tech-inc",
     "brand_name": "Arkhya Tech. Inc.",
     "domain": "arkhyatech.com",
@@ -195,10 +192,38 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "hubx",
+    "brand_name": "HUBX",
+    "domain": "hubx.com",
+    "summary": "HUBX is a digital platform.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "alois-solutions",
     "brand_name": "ALOIS Solutions",
     "domain": "aloissolutions.com",
     "summary": "ALOIS Solutions is a technology-focused company.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "neo",
+    "brand_name": "Neo",
+    "domain": "neo.com",
+    "summary": "Neo is a brand with unclear offerings and purpose.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -264,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.388Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.113Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best ACS Consultancy Services, Inc Alternatives
@@ -336,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.388Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.113Z">2025-11-30</time>
             </p>
           </footer>
         </div>

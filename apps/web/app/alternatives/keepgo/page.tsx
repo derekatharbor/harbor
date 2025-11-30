@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.152Z
+// Generated: 2025-11-30T20:05:19.922Z
 // Alternative to: Keepgo
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Keepgo Alternatives',
     description: 'Top alternatives to Keepgo for Telecommunications.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.152Z',
-    modifiedTime: '2025-11-30T19:44:53.152Z',
+    publishedTime: '2025-11-30T20:05:19.922Z',
+    modifiedTime: '2025-11-30T20:05:19.922Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/keepgo#article",
       "headline": "Best Keepgo Alternatives",
       "description": "Top alternatives to Keepgo for Telecommunications. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.152Z",
-      "dateModified": "2025-11-30T19:44:53.152Z",
+      "datePublished": "2025-11-30T20:05:19.922Z",
+      "dateModified": "2025-11-30T20:05:19.922Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Infrastructure Networks",
-            "url": "https://useharbor.io/brands/infrastructure-networks",
-            "description": "A global provider of managed communication services supporting critical infrastructure.",
+            "name": "GeoLinks",
+            "url": "https://useharbor.io/brands/geolinks",
+            "description": "Innovative telecommunications solutions provider in California.",
             "applicationCategory": "Telecommunications"
           }
         },
@@ -93,26 +93,15 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Gold Data",
-            "url": "https://useharbor.io/brands/gold-data",
-            "description": "A leading telecommunications provider in the Americas and the Caribbean.",
+            "name": "GVTC Communications",
+            "url": "https://useharbor.io/brands/gvtc-communications",
+            "description": "GVTC provides high-speed internet, TV, phone, and security services in South Central Texas.",
             "applicationCategory": "Telecommunications"
           }
         },
         {
           "@type": "ListItem",
           "position": 6,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Clear Rate",
-            "url": "https://useharbor.io/brands/clear-rate",
-            "description": "Clear Rate provides comprehensive telecommunications solutions for both residential and business customers.",
-            "applicationCategory": "Telecommunications"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "LOGIX FIBER NETWORKS",
@@ -123,12 +112,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Infrastructure Networks",
+            "url": "https://useharbor.io/brands/infrastructure-networks",
+            "description": "A global provider of managed communication services supporting critical infrastructure.",
+            "applicationCategory": "Telecommunications"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "FirstLight Fiber",
-            "url": "https://useharbor.io/brands/firstlight-fiber",
-            "description": "FirstLight Fiber provides integrated network, cloud, and communication solutions.",
+            "name": "Gold Data",
+            "url": "https://useharbor.io/brands/gold-data",
+            "description": "A leading telecommunications provider in the Americas and the Caribbean.",
             "applicationCategory": "Telecommunications"
           }
         },
@@ -137,15 +137,26 @@ const schemaOrg = {
           "position": 9,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Versacom LP",
-            "url": "https://useharbor.io/brands/versacom-lp",
-            "description": "Versacom LP specializes in telecommunications and electric vehicle infrastructure services.",
+            "name": "Buckeye Broadband",
+            "url": "https://useharbor.io/brands/buckeye-broadband",
+            "description": "A local provider of high-speed internet and cable TV services.",
             "applicationCategory": "Telecommunications"
           }
         },
         {
           "@type": "ListItem",
           "position": 10,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Clear Rate",
+            "url": "https://useharbor.io/brands/clear-rate",
+            "description": "Clear Rate provides comprehensive telecommunications solutions for both residential and business customers.",
+            "applicationCategory": "Telecommunications"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Identidad",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MSI Americas",
@@ -167,29 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "IQSTEL - IQST",
-            "url": "https://useharbor.io/brands/iqstel-iqst",
-            "description": "A multinational corporation leading the future of connectivity and digital services.",
-            "applicationCategory": "Telecommunications"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 13,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Hidalgo & Co.",
-            "url": "https://useharbor.io/brands/hidalgo-co",
-            "description": "A strategic relationships agency specializing in telecommunications solutions.",
-            "applicationCategory": "Telecommunications"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MIND CTI",
@@ -200,12 +189,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Integer Telecom Services Inc",
+            "url": "https://useharbor.io/brands/integer-telecom-services-inc",
+            "description": "Innovative solutions for the telecom industry.",
+            "applicationCategory": "Telecommunications"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Broadband Dynamics",
-            "url": "https://useharbor.io/brands/broadband-dynamics",
-            "description": "A telecommunications company specializing in high-quality, cost-effective network solutions.",
+            "name": "Hidalgo & Co.",
+            "url": "https://useharbor.io/brands/hidalgo-co",
+            "description": "A strategic relationships agency specializing in telecommunications solutions.",
             "applicationCategory": "Telecommunications"
           }
         }
@@ -276,6 +276,72 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "geolinks",
+    "brand_name": "GeoLinks",
+    "domain": "geolinks.com",
+    "summary": "Innovative telecommunications solutions provider in California.",
+    "pricing": {
+      "price_model": "tiered",
+      "price_notes": "Pricing varies based on speed and service type.",
+      "has_free_tier": false,
+      "starting_price": "$90.98/mo"
+    },
+    "features": [
+      "Broadband services",
+      "Various speed options",
+      "Voice services",
+      "Rural service availability",
+      "FCC grant program participation"
+    ],
+    "integrations": [
+      "Connect America Fund",
+      "Rural Digital Opportunity Fund"
+    ]
+  },
+  {
+    "slug": "gvtc-communications",
+    "brand_name": "GVTC Communications",
+    "domain": "gvtc.com",
+    "summary": "GVTC provides high-speed internet, TV, phone, and security services in South Central Texas.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Starting price for GVTC connectHome® smart security service.",
+      "has_free_tier": false,
+      "starting_price": "$25.95/month"
+    },
+    "features": [
+      "Account Management",
+      "View Bills",
+      "Make a Payment",
+      "Manage Notifications",
+      "Streaming Live TV Channels"
+    ],
+    "integrations": [
+      "Arlo Secure",
+      "Alarm.com"
+    ]
+  },
+  {
+    "slug": "logix-fiber-networks",
+    "brand_name": "LOGIX FIBER NETWORKS",
+    "domain": "logix.com",
+    "summary": "A dedicated fiber internet provider for businesses in Texas.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Pricing details not specified on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Dedicated Internet Access",
+      "Voice & Data Solutions",
+      "Internet Speeds up to 10 Gbps",
+      "Best-in-Class Network Reliability",
+      "Fast Response Times and Flexible Options"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "infrastructure-networks",
     "brand_name": "Infrastructure Networks",
     "domain": "inetconnected.com",
@@ -320,6 +386,29 @@ const alternatives = [
     ]
   },
   {
+    "slug": "buckeye-broadband",
+    "brand_name": "Buckeye Broadband",
+    "domain": "buckeyebroadband.com",
+    "summary": "A local provider of high-speed internet and cable TV services.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "3-year price guarantee with no contracts",
+      "has_free_tier": true,
+      "starting_price": "$69.99/mo"
+    },
+    "features": [
+      "High-speed internet plans",
+      "Unlimited data",
+      "3-year price guarantee",
+      "No contracts",
+      "Free mobile line with 5G coverage"
+    ],
+    "integrations": [
+      "MaxxMobile",
+      "Bark Jr"
+    ]
+  },
+  {
     "slug": "clear-rate",
     "brand_name": "Clear Rate",
     "domain": "clearrate.com",
@@ -336,66 +425,6 @@ const alternatives = [
       "Managed IT",
       "Security Services",
       "24/7 Live Support"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "logix-fiber-networks",
-    "brand_name": "LOGIX FIBER NETWORKS",
-    "domain": "logix.com",
-    "summary": "A dedicated fiber internet provider for businesses in Texas.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Pricing details not specified on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Dedicated Internet Access",
-      "Voice & Data Solutions",
-      "Internet Speeds up to 10 Gbps",
-      "Best-in-Class Network Reliability",
-      "Fast Response Times and Flexible Options"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "firstlight-fiber",
-    "brand_name": "FirstLight Fiber",
-    "domain": "firstlight.net",
-    "summary": "FirstLight Fiber provides integrated network, cloud, and communication solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Low-latency, high-capacity connectivity",
-      "Secure, scalable infrastructure",
-      "Intelligent edge networking with built-in security",
-      "Cloud-based phone and collaboration",
-      "Protection from ransomware and DDoS attacks"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "versacom-lp",
-    "brand_name": "Versacom LP",
-    "domain": "vcomlp.com",
-    "summary": "Versacom LP specializes in telecommunications and electric vehicle infrastructure services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Turn-key services in Wireless Telecommunications",
-      "Custom-tailored EV Charging Solutions",
-      "Planning and design of Wireless Networks",
-      "Engineering specialization in Wireline Networks",
-      "Solar Carports for energy cost reduction"
     ],
     "integrations": []
   },
@@ -440,17 +469,46 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "iqstel-iqst",
-    "brand_name": "IQSTEL - IQST",
-    "domain": "iqstel.com",
-    "summary": "A multinational corporation leading the future of connectivity and digital services.",
+    "slug": "mind-cti",
+    "brand_name": "MIND CTI",
+    "domain": "mindcti.com",
+    "summary": "A global provider of convergent real-time BSS solutions for telecommunications and digital industries.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Unified Communication Analytics",
+      "Convergent Billing",
+      "Customer Care Solutions",
+      "Digital Mediation",
+      "Online Charging"
+    ],
+    "integrations": [
+      "Cisco UC Manager",
+      "Microsoft Teams"
+    ]
+  },
+  {
+    "slug": "integer-telecom-services-inc",
+    "brand_name": "Integer Telecom Services Inc",
+    "domain": "integertel.com",
+    "summary": "Innovative solutions for the telecom industry.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
-    "features": [],
+    "features": [
+      "Machine Learning",
+      "Artificial Intelligence",
+      "Cloud Computing",
+      "IOT",
+      "Virtualization"
+    ],
     "integrations": []
   },
   {
@@ -478,49 +536,6 @@ const alternatives = [
       "Long Distance",
       "Session Initiation Protocol (SIP) Trunking"
     ]
-  },
-  {
-    "slug": "mind-cti",
-    "brand_name": "MIND CTI",
-    "domain": "mindcti.com",
-    "summary": "A global provider of convergent real-time BSS solutions for telecommunications and digital industries.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Unified Communication Analytics",
-      "Convergent Billing",
-      "Customer Care Solutions",
-      "Digital Mediation",
-      "Online Charging"
-    ],
-    "integrations": [
-      "Cisco UC Manager",
-      "Microsoft Teams"
-    ]
-  },
-  {
-    "slug": "broadband-dynamics",
-    "brand_name": "Broadband Dynamics",
-    "domain": "broadbanddynamics.com",
-    "summary": "A telecommunications company specializing in high-quality, cost-effective network solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "High level of personalized customer support",
-      "Cost-effective call delivery",
-      "Network redundancy",
-      "99.999% Service Level Agreement (SLA)",
-      "Geographical redundancy"
-    ],
-    "integrations": []
   }
 ]
 
@@ -536,7 +551,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.152Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.922Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Keepgo Alternatives
@@ -608,7 +623,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.152Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.922Z">2025-11-30</time>
             </p>
           </footer>
         </div>

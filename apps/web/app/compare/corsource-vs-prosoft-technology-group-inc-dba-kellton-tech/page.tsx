@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:54.007Z
+// Generated: 2025-11-30T20:05:20.378Z
 // Comparing: CorSource vs ProSoft Technology Group Inc.dba Kellton Tech
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'CorSource vs ProSoft Technology Group Inc.dba Kellton Tech',
     description: 'Detailed comparison of CorSource and ProSoft Technology Group Inc.dba Kellton Tech.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:54.007Z',
-    modifiedTime: '2025-11-30T19:44:54.007Z',
+    publishedTime: '2025-11-30T20:05:20.378Z',
+    modifiedTime: '2025-11-30T20:05:20.378Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/corsource-vs-prosoft-technology-group-inc-dba-kellton-tech#article",
   "headline": "CorSource vs ProSoft Technology Group Inc.dba Kellton Tech: Comparison",
   "description": "Detailed comparison of CorSource and ProSoft Technology Group Inc.dba Kellton Tech. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:54.007Z",
-  "dateModified": "2025-11-30T19:44:54.007Z",
+  "datePublished": "2025-11-30T20:05:20.378Z",
+  "dateModified": "2025-11-30T20:05:20.378Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -116,7 +116,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:54.007Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.378Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -271,7 +271,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:54.007Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.378Z">2025-11-30</time>
             </p>
           </footer>
         </div>

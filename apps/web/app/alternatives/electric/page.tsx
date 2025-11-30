@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.199Z
+// Generated: 2025-11-30T20:05:19.909Z
 // Alternative to: Electric
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Electric Alternatives',
     description: 'Top alternatives to Electric for IT Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.199Z',
-    modifiedTime: '2025-11-30T19:44:53.199Z',
+    publishedTime: '2025-11-30T20:05:19.909Z',
+    modifiedTime: '2025-11-30T20:05:19.909Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/electric#article",
       "headline": "Best Electric Alternatives",
       "description": "Top alternatives to Electric for IT Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.199Z",
-      "dateModified": "2025-11-30T19:44:53.199Z",
+      "datePublished": "2025-11-30T20:05:19.909Z",
+      "dateModified": "2025-11-30T20:05:19.909Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/electric#list",
       "name": "Electric Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SuperOps",
+            "url": "https://useharbor.io/brands/superops",
+            "description": "AI-Powered IT Management for MSPs and IT Teams.",
+            "applicationCategory": "IT Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "C&W Technologies",
             "url": "https://useharbor.io/brands/c-w-technologies",
             "description": "A trusted managed IT partner providing comprehensive IT management and consulting services.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Continuum",
@@ -96,6 +107,33 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "superops",
+    "brand_name": "SuperOps",
+    "domain": "superops.com",
+    "summary": "AI-Powered IT Management for MSPs and IT Teams.",
+    "pricing": {
+      "price_model": "per_user",
+      "price_notes": "Offers different plans with varying features and pricing based on the number of endpoints.",
+      "has_free_tier": true,
+      "starting_price": "$89/mo"
+    },
+    "features": [
+      "Powerful ticketing system",
+      "Time tracking",
+      "Task templates",
+      "Kanban view",
+      "SLA management"
+    ],
+    "integrations": [
+      "Active Directory",
+      "Antivirus",
+      "Cybersecurity",
+      "Data Backup",
+      "Invoicing",
+      "Payment"
+    ]
   },
   {
     "slug": "c-w-technologies",
@@ -151,7 +189,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.199Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.909Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Electric Alternatives
@@ -223,7 +261,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.199Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.909Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.319Z
+// Generated: 2025-11-30T20:05:20.021Z
 // Alternative to: AODocs
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best AODocs Alternatives',
     description: 'Top alternatives to AODocs for Document Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.319Z',
-    modifiedTime: '2025-11-30T19:44:53.319Z',
+    publishedTime: '2025-11-30T20:05:20.021Z',
+    modifiedTime: '2025-11-30T20:05:20.021Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/aodocs#article",
       "headline": "Best AODocs Alternatives",
       "description": "Top alternatives to AODocs for Document Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.319Z",
-      "dateModified": "2025-11-30T19:44:53.319Z",
+      "datePublished": "2025-11-30T20:05:20.021Z",
+      "dateModified": "2025-11-30T20:05:20.021Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/aodocs#list",
       "name": "AODocs Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Quality Associates, Inc.",
-            "url": "https://useharbor.io/brands/quality-associates-inc",
-            "description": "Leading provider of document management and digital transformation solutions.",
+            "name": "M-Files",
+            "url": "https://useharbor.io/brands/m-files",
+            "description": "M-Files is a leading document management platform that automates the document lifecycle.",
             "applicationCategory": "Document Management"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "M-Files",
-            "url": "https://useharbor.io/brands/m-files",
-            "description": "M-Files is a leading document management platform that automates the document lifecycle.",
+            "name": "Quality Associates, Inc.",
+            "url": "https://useharbor.io/brands/quality-associates-inc",
+            "description": "Leading provider of document management and digital transformation solutions.",
             "applicationCategory": "Document Management"
           }
         },
@@ -76,6 +76,17 @@ const schemaOrg = {
             "description": "PairSoft provides automation solutions for financial processes.",
             "applicationCategory": "Document Management"
           }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "TrustFlow Digital Solutions (Acquired by Docufree)",
+            "url": "https://useharbor.io/brands/trustflow-digital-solutions-acquired-by-docufree",
+            "description": "A Document Scanning and Digital Transformation Company.",
+            "applicationCategory": "Document Management"
+          }
         }
       ]
     }
@@ -83,6 +94,33 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "m-files",
+    "brand_name": "M-Files",
+    "domain": "m-files.com",
+    "summary": "M-Files is a leading document management platform that automates the document lifecycle.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Custom pricing options are available based on unique requirements.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Automated document workflows",
+      "Metadata-driven document management",
+      "Enterprise search",
+      "Compliance and audit tracking",
+      "Secure collaboration"
+    ],
+    "integrations": [
+      "Microsoft 365",
+      "Salesforce",
+      "SAP",
+      "Google Workspace",
+      "Adobe Sign",
+      "DocuSign"
+    ]
+  },
   {
     "slug": "quality-associates-inc",
     "brand_name": "Quality Associates, Inc.",
@@ -113,33 +151,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "m-files",
-    "brand_name": "M-Files",
-    "domain": "m-files.com",
-    "summary": "M-Files is a leading document management platform that automates the document lifecycle.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Custom pricing options are available based on unique requirements.",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "Automated document workflows",
-      "Metadata-driven document management",
-      "Enterprise search",
-      "Compliance and audit tracking",
-      "Secure collaboration"
-    ],
-    "integrations": [
-      "Microsoft 365",
-      "Salesforce",
-      "SAP",
-      "Google Workspace",
-      "Adobe Sign",
-      "DocuSign"
-    ]
-  },
-  {
     "slug": "pairsoft",
     "brand_name": "PairSoft",
     "domain": "pairsoft.com",
@@ -165,6 +176,26 @@ const alternatives = [
       "Oracle Financials",
       "Sage Intacct"
     ]
+  },
+  {
+    "slug": "trustflow-digital-solutions-acquired-by-docufree",
+    "brand_name": "TrustFlow Digital Solutions (Acquired by Docufree)",
+    "domain": "trustflowds.com",
+    "summary": "A Document Scanning and Digital Transformation Company.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details require a quote.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Document Scanning Services",
+      "Digital Mailroom Automation",
+      "Online Forms & Electronic Signatures",
+      "Business Process Automation",
+      "Cloud Document Management Software"
+    ],
+    "integrations": []
   }
 ]
 
@@ -180,7 +211,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.021Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best AODocs Alternatives
@@ -252,7 +283,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.021Z">2025-11-30</time>
             </p>
           </footer>
         </div>

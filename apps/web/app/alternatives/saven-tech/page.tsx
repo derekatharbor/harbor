@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.252Z
+// Generated: 2025-11-30T20:05:19.940Z
 // Alternative to: Saven Tech
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Saven Tech Alternatives',
     description: 'Top alternatives to Saven Tech for Technology Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.252Z',
-    modifiedTime: '2025-11-30T19:44:53.252Z',
+    publishedTime: '2025-11-30T20:05:19.940Z',
+    modifiedTime: '2025-11-30T20:05:19.940Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/saven-tech#article",
       "headline": "Best Saven Tech Alternatives",
       "description": "Top alternatives to Saven Tech for Technology Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.252Z",
-      "dateModified": "2025-11-30T19:44:53.252Z",
+      "datePublished": "2025-11-30T20:05:19.940Z",
+      "dateModified": "2025-11-30T20:05:19.940Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/saven-tech#list",
       "name": "Saven Tech Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,28 +60,6 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "iTech AG",
-            "url": "https://useharbor.io/brands/itech-ag",
-            "description": "A technology consulting firm specializing in modernizing operations for federal, state, and private organizations.",
-            "applicationCategory": "Technology Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Cystems Logic",
-            "url": "https://useharbor.io/brands/cystems-logic",
-            "description": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
-            "applicationCategory": "Technology Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "ESG",
             "url": "https://useharbor.io/brands/esg",
             "description": "Epiphany Solution Group provides technology consulting services to Fortune 1000 companies.",
@@ -90,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "VySystems",
@@ -101,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CorSource",
@@ -112,7 +90,40 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Hylaine",
+            "url": "https://useharbor.io/brands/hylaine",
+            "description": "Values-First Technology Consulting for Enterprises",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Cystems Logic",
+            "url": "https://useharbor.io/brands/cystems-logic",
+            "description": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "iTech AG",
+            "url": "https://useharbor.io/brands/itech-ag",
+            "description": "A technology consulting firm specializing in modernizing operations for federal, state, and private organizations.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ProSoft Technology Group Inc.dba Kellton Tech",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aarav Solutions",
@@ -155,48 +166,6 @@ const alternatives = [
       "Customer Experience",
       "Cybersecurity & Compliance",
       "Data Center & Cloud"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "itech-ag",
-    "brand_name": "iTech AG",
-    "domain": "itechag.com",
-    "summary": "A technology consulting firm specializing in modernizing operations for federal, state, and private organizations.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Field Service, Facilities, and Asset Management",
-      "Grants & Case Management",
-      "Data Integration & Analytics",
-      "Enterprise Portfolio Management",
-      "Integrated IT Operations"
-    ],
-    "integrations": [
-      "ServiceNow"
-    ]
-  },
-  {
-    "slug": "cystems-logic",
-    "brand_name": "Cystems Logic",
-    "domain": "cystemslogic.com",
-    "summary": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Advanced SAP Solutions",
-      "Oracle Cloud and Infrastructure solutions",
-      "IoT Solutions",
-      "Custom-built Solutions",
-      "IT Staffing Services"
     ],
     "integrations": []
   },
@@ -270,6 +239,68 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "hylaine",
+    "brand_name": "Hylaine",
+    "domain": "hylaine.com",
+    "summary": "Values-First Technology Consulting for Enterprises",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Prepare AI-Ready Data",
+      "Modernize Legacy Systems",
+      "Navigate M&A Complexity",
+      "Deliver Projects Predictably",
+      "Provide Experienced Consulting Teams"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "cystems-logic",
+    "brand_name": "Cystems Logic",
+    "domain": "cystemslogic.com",
+    "summary": "Cystems Logic provides advanced technology solutions to enhance business efficiency and growth.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Advanced SAP Solutions",
+      "Oracle Cloud and Infrastructure solutions",
+      "IoT Solutions",
+      "Custom-built Solutions",
+      "IT Staffing Services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "itech-ag",
+    "brand_name": "iTech AG",
+    "domain": "itechag.com",
+    "summary": "A technology consulting firm specializing in modernizing operations for federal, state, and private organizations.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Field Service, Facilities, and Asset Management",
+      "Grants & Case Management",
+      "Data Integration & Analytics",
+      "Enterprise Portfolio Management",
+      "Integrated IT Operations"
+    ],
+    "integrations": [
+      "ServiceNow"
+    ]
+  },
+  {
     "slug": "prosoft-technology-group-inc-dba-kellton-tech",
     "brand_name": "ProSoft Technology Group Inc.dba Kellton Tech",
     "domain": "prosoftgroup.com",
@@ -329,7 +360,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.252Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.940Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Saven Tech Alternatives
@@ -401,7 +432,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.252Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.940Z">2025-11-30</time>
             </p>
           </footer>
         </div>

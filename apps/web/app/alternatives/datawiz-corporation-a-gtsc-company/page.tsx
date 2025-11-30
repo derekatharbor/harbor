@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.304Z
+// Generated: 2025-11-30T20:05:19.999Z
 // Alternative to: Datawiz Corporation (a GTSC Company)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Datawiz Corporation (a GTSC Company) Alternatives',
     description: 'Top alternatives to Datawiz Corporation (a GTSC Company) for Digital Transformation.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.304Z',
-    modifiedTime: '2025-11-30T19:44:53.304Z',
+    publishedTime: '2025-11-30T20:05:19.999Z',
+    modifiedTime: '2025-11-30T20:05:19.999Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/datawiz-corporation-a-gtsc-company#article",
       "headline": "Best Datawiz Corporation (a GTSC Company) Alternatives",
       "description": "Top alternatives to Datawiz Corporation (a GTSC Company) for Digital Transformation. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.304Z",
-      "dateModified": "2025-11-30T19:44:53.304Z",
+      "datePublished": "2025-11-30T20:05:19.999Z",
+      "dateModified": "2025-11-30T20:05:19.999Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/datawiz-corporation-a-gtsc-company#list",
       "name": "Datawiz Corporation (a GTSC Company) Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 12,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,6 +71,28 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Rang Technologies Inc",
+            "url": "https://useharbor.io/brands/rang-technologies-inc",
+            "description": "Rang Technologies specializes in digital transformation and staffing solutions.",
+            "applicationCategory": "Digital Transformation"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "EvonSys",
+            "url": "https://useharbor.io/brands/evonsys",
+            "description": "World leader in low-code digital transformation solutions.",
+            "applicationCategory": "Digital Transformation"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Acentura Inc",
             "url": "https://useharbor.io/brands/acentura-inc",
             "description": "Acentura is a leader in digital transformation solutions.",
@@ -79,7 +101,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ASSYST",
+            "url": "https://useharbor.io/brands/assyst",
+            "description": "ASSYST provides digital transformation solutions tailored for government agencies.",
+            "applicationCategory": "Digital Transformation"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ClearObject",
@@ -90,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Altudo",
@@ -101,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "dotSolved Systems Inc.",
@@ -112,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Info Services",
@@ -123,12 +156,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "QBrainX Inc",
             "url": "https://useharbor.io/brands/qbrainx-inc",
             "description": "Digital Transformation ServiceNow Implementation Specialist",
+            "applicationCategory": "Digital Transformation"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Abzooba",
+            "url": "https://useharbor.io/brands/abzooba",
+            "description": "Digital Transformation Solutions Company",
             "applicationCategory": "Digital Transformation"
           }
         }
@@ -181,6 +225,34 @@ const alternatives = [
     ]
   },
   {
+    "slug": "rang-technologies-inc",
+    "brand_name": "Rang Technologies Inc",
+    "domain": "rangtech.com",
+    "summary": "Rang Technologies specializes in digital transformation and staffing solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "evonsys",
+    "brand_name": "EvonSys",
+    "domain": "evonsys.com",
+    "summary": "World leader in low-code digital transformation solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "acentura-inc",
     "brand_name": "Acentura Inc",
     "domain": "acentura.com",
@@ -204,6 +276,35 @@ const alternatives = [
       "Lynq MES",
       "Acumatica",
       "Centric"
+    ]
+  },
+  {
+    "slug": "assyst",
+    "brand_name": "ASSYST",
+    "domain": "assyst.net",
+    "summary": "ASSYST provides digital transformation solutions tailored for government agencies.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Accelerated Application Development Platform",
+      "Grants Management",
+      "Fast Healthcare Interoperability Resources (FHIR)",
+      "Security and Governance Controls",
+      "AI Integration Services"
+    ],
+    "integrations": [
+      "AWS",
+      "Axway",
+      "Acquia",
+      "Broadcom",
+      "Databricks",
+      "Microsoft Azure",
+      "Oracle",
+      "Red Hat"
     ]
   },
   {
@@ -312,6 +413,20 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "abzooba",
+    "brand_name": "Abzooba",
+    "domain": "abzooba.com",
+    "summary": "Digital Transformation Solutions Company",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -327,7 +442,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.304Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.999Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Datawiz Corporation (a GTSC Company) Alternatives
@@ -399,7 +514,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.304Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.999Z">2025-11-30</time>
             </p>
           </footer>
         </div>

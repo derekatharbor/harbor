@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:25.838Z
+// Generated: 2025-11-30T20:04:48.437Z
 // Query: {"category":"E-commerce","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best E-commerce Software',
     description: 'Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:25.838Z',
-    modifiedTime: '2025-11-30T19:44:25.838Z',
+    publishedTime: '2025-11-30T20:04:48.437Z',
+    modifiedTime: '2025-11-30T20:04:48.437Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:25.838Z',
+    'article:modified_time': '2025-11-30T20:04:48.437Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/e-commerce#article",
       "headline": "Best E-commerce Software",
       "description": "Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:25.838Z",
-      "dateModified": "2025-11-30T19:44:25.838Z",
+      "datePublished": "2025-11-30T20:04:48.437Z",
+      "dateModified": "2025-11-30T20:04:48.437Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,11 +57,23 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/e-commerce#list",
       "name": "Best E-commerce Software",
       "description": "Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 5,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "NewStore",
+            "url": "https://useharbor.io/brands/newstore",
+            "description": "A unified commerce platform designed for global brands to enhance retail experiences.",
+            "applicationCategory": "E-commerce",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TrueCar, Inc.",
@@ -73,7 +85,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Weedmaps",
@@ -85,7 +97,49 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "PlanetArt",
+            "url": "https://useharbor.io/brands/planetart",
+            "description": "A global leader in personalized products and services.",
+            "applicationCategory": "E-commerce",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Webandcrafts",
+            "url": "https://useharbor.io/brands/webandcrafts",
+            "description": "A leading digital transformation services company based in Kerala, India.",
+            "applicationCategory": "E-commerce Solutions",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "DataWeave",
+            "url": "https://useharbor.io/brands/dataweave",
+            "description": "AI-powered analytics for digital commerce.",
+            "applicationCategory": "E-commerce Analytics",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Popshoplive",
@@ -103,7 +157,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "OrderMyGear (OMG)",
@@ -120,7 +174,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Carbon38",
@@ -158,6 +212,27 @@ const schemaOrg = {
 }
 
 const profiles = [
+  {
+    "slug": "newstore",
+    "brand_name": "NewStore",
+    "domain": "newstore.com",
+    "summary": "A unified commerce platform designed for global brands to enhance retail experiences.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Omnichannel Order Management",
+      "Mobile Point of Sale",
+      "Clienteling",
+      "Inventory Management",
+      "Real-Time Analytics and Reporting"
+    ],
+    "integrations": [],
+    "visibility_score": 78
+  },
   {
     "slug": "truecar-inc",
     "brand_name": "TrueCar, Inc.",
@@ -199,6 +274,69 @@ const profiles = [
     ],
     "integrations": [],
     "visibility_score": 78
+  },
+  {
+    "slug": "planetart",
+    "brand_name": "PlanetArt",
+    "domain": "planetart.com",
+    "summary": "A global leader in personalized products and services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Offers free products such as 4x6 photo prints and photo books.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Free 4x6 photo prints",
+      "Make photo books in just minutes",
+      "Transform photos into custom wall décor",
+      "Create one-of-a-kind gifts",
+      "Customised cards"
+    ],
+    "integrations": [],
+    "visibility_score": 78
+  },
+  {
+    "slug": "webandcrafts",
+    "brand_name": "Webandcrafts",
+    "domain": "webandcrafts.com",
+    "summary": "A leading digital transformation services company based in Kerala, India.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-powered e-commerce solutions",
+      "Enhanced shopping experience",
+      "Boundless marketing solutions",
+      "Tailored solutions for any platform",
+      "Digital transformation services"
+    ],
+    "integrations": [],
+    "visibility_score": 75
+  },
+  {
+    "slug": "dataweave",
+    "brand_name": "DataWeave",
+    "domain": "dataweave.com",
+    "summary": "AI-powered analytics for digital commerce.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Pricing Intelligence",
+      "Assortment Analytics",
+      "Digital Shelf Analytics",
+      "Content Optimization",
+      "AI-Powered Insights"
+    ],
+    "integrations": [],
+    "visibility_score": 75
   },
   {
     "slug": "popshoplive",
@@ -278,7 +416,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:25.838Z'
+// Generated at: 2025-11-30T20:04:48.437Z
 
 export default function ListiclePage() {
   return (
@@ -293,7 +431,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:25.838Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:48.437Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best E-commerce Software
@@ -409,7 +547,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:25.838Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:48.437Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

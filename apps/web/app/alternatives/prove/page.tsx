@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.373Z
+// Generated: 2025-11-30T20:05:20.094Z
 // Alternative to: Prove
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Prove Alternatives',
     description: 'Top alternatives to Prove for Identity Verification.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.373Z',
-    modifiedTime: '2025-11-30T19:44:53.373Z',
+    publishedTime: '2025-11-30T20:05:20.094Z',
+    modifiedTime: '2025-11-30T20:05:20.094Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/prove#article",
       "headline": "Best Prove Alternatives",
       "description": "Top alternatives to Prove for Identity Verification. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.373Z",
-      "dateModified": "2025-11-30T19:44:53.373Z",
+      "datePublished": "2025-11-30T20:05:20.094Z",
+      "dateModified": "2025-11-30T20:05:20.094Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/prove#list",
       "name": "Prove Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,17 @@ const schemaOrg = {
             "name": "Jumio Corporation",
             "url": "https://useharbor.io/brands/jumio-corporation",
             "description": "Leading AI-powered identity verification platform.",
+            "applicationCategory": "Identity Verification"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Incode",
+            "url": "https://useharbor.io/brands/incode",
+            "description": "A leader in identity verification solutions powered by AI technology.",
             "applicationCategory": "Identity Verification"
           }
         }
@@ -145,6 +156,26 @@ const alternatives = [
       "Oracle",
       "Sift Connect"
     ]
+  },
+  {
+    "slug": "incode",
+    "brand_name": "Incode",
+    "domain": "incode.com",
+    "summary": "A leader in identity verification solutions powered by AI technology.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven identity verification",
+      "Fraud prevention",
+      "KYC/AML compliance",
+      "Customer authentication",
+      "Employee verification"
+    ],
+    "integrations": []
   }
 ]
 
@@ -160,7 +191,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.373Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.094Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Prove Alternatives
@@ -232,7 +263,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.373Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.094Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.373Z
+// Generated: 2025-11-30T20:05:20.092Z
 // Alternative to: Paradox
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Paradox Alternatives',
     description: 'Top alternatives to Paradox for HR Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.373Z',
-    modifiedTime: '2025-11-30T19:44:53.373Z',
+    publishedTime: '2025-11-30T20:05:20.092Z',
+    modifiedTime: '2025-11-30T20:05:20.092Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/paradox#article",
       "headline": "Best Paradox Alternatives",
       "description": "Top alternatives to Paradox for HR Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.373Z",
-      "dateModified": "2025-11-30T19:44:53.373Z",
+      "datePublished": "2025-11-30T20:05:20.092Z",
+      "dateModified": "2025-11-30T20:05:20.092Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/paradox#list",
       "name": "Paradox Alternatives",
-      "numberOfItems": 7,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ResNav Solutions",
-            "url": "https://useharbor.io/brands/resnav-solutions",
-            "description": "A leading provider of HR data management solutions.",
+            "name": "Employer.com",
+            "url": "https://useharbor.io/brands/employer-com",
+            "description": "A comprehensive back-office solution for businesses.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "HiredScore",
-            "url": "https://useharbor.io/brands/hiredscore",
-            "description": "The Enterprise AI Platform for Managing HR & Finance.",
+            "name": "ResNav Solutions",
+            "url": "https://useharbor.io/brands/resnav-solutions",
+            "description": "A leading provider of HR data management solutions.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Traitify",
-            "url": "https://useharbor.io/brands/traitify",
-            "description": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
+            "name": "HiredScore",
+            "url": "https://useharbor.io/brands/hiredscore",
+            "description": "The Enterprise AI Platform for Managing HR & Finance.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -113,6 +113,28 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Traitify",
+            "url": "https://useharbor.io/brands/traitify",
+            "description": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
+            "applicationCategory": "HR Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Eightfold AI",
+            "url": "https://useharbor.io/brands/eightfold-ai",
+            "description": "AI-powered talent intelligence platform for recruitment and workforce management.",
+            "applicationCategory": "HR Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Seso Inc.",
@@ -154,6 +176,20 @@ const alternatives = [
       "ATS",
       "Tech"
     ]
+  },
+  {
+    "slug": "employer-com",
+    "brand_name": "Employer.com",
+    "domain": "employer.com",
+    "summary": "A comprehensive back-office solution for businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   },
   {
     "slug": "resnav-solutions",
@@ -201,28 +237,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "traitify",
-    "brand_name": "Traitify",
-    "domain": "traitify.com",
-    "summary": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Fast personality assessments",
-      "Cognitive assessments",
-      "Realistic job previews",
-      "In-depth hiring manager and candidate reports",
-      "Mobile-friendly assessments"
-    ],
-    "integrations": [
-      "ATS"
-    ]
-  },
-  {
     "slug": "opolis",
     "brand_name": "Opolis",
     "domain": "opolis.co",
@@ -253,6 +267,48 @@ const alternatives = [
       "Global Payroll Management",
       "Multi-country compliance",
       "Real-time analytics"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "traitify",
+    "brand_name": "Traitify",
+    "domain": "traitify.com",
+    "summary": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Fast personality assessments",
+      "Cognitive assessments",
+      "Realistic job previews",
+      "In-depth hiring manager and candidate reports",
+      "Mobile-friendly assessments"
+    ],
+    "integrations": [
+      "ATS"
+    ]
+  },
+  {
+    "slug": "eightfold-ai",
+    "brand_name": "Eightfold AI",
+    "domain": "eightfold.ai",
+    "summary": "AI-powered talent intelligence platform for recruitment and workforce management.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-powered talent recruiting solutions",
+      "Skills intelligence",
+      "Talent management",
+      "Workforce planning",
+      "Real-time skills insights"
     ],
     "integrations": []
   },
@@ -292,7 +348,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.373Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.092Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Paradox Alternatives
@@ -364,7 +420,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.373Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.092Z">2025-11-30</time>
             </p>
           </footer>
         </div>

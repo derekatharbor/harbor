@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.315Z
+// Generated: 2025-11-30T20:05:20.017Z
 // Alternative to: BadgePass, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best BadgePass, Inc Alternatives',
     description: 'Top alternatives to BadgePass, Inc for Identity Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.315Z',
-    modifiedTime: '2025-11-30T19:44:53.315Z',
+    publishedTime: '2025-11-30T20:05:20.017Z',
+    modifiedTime: '2025-11-30T20:05:20.017Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/badgepass-inc#article",
       "headline": "Best BadgePass, Inc Alternatives",
       "description": "Top alternatives to BadgePass, Inc for Identity Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.315Z",
-      "dateModified": "2025-11-30T19:44:53.315Z",
+      "datePublished": "2025-11-30T20:05:20.017Z",
+      "dateModified": "2025-11-30T20:05:20.017Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Avatier",
-            "url": "https://useharbor.io/brands/avatier",
-            "description": "Avatier provides AI-powered identity access management and security solutions.",
+            "name": "ZITADEL",
+            "url": "https://useharbor.io/brands/zitadel",
+            "description": "Open Source Identity Infrastructure Platform",
             "applicationCategory": "Identity Management"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Gluu",
-            "url": "https://useharbor.io/brands/gluu",
-            "description": "Gluu provides open source identity and access management solutions.",
+            "name": "Avatier",
+            "url": "https://useharbor.io/brands/avatier",
+            "description": "Avatier provides AI-powered identity access management and security solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ZITADEL",
-            "url": "https://useharbor.io/brands/zitadel",
-            "description": "Open Source Identity Infrastructure Platform",
+            "name": "Gluu",
+            "url": "https://useharbor.io/brands/gluu",
+            "description": "Gluu provides open source identity and access management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "OneLogin",
-            "url": "https://useharbor.io/brands/onelogin",
-            "description": "OneLogin provides market-leading identity and access management solutions.",
+            "name": "NextgenID",
+            "url": "https://useharbor.io/brands/nextgenid",
+            "description": "NextgenID provides advanced identity management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "NextgenID",
-            "url": "https://useharbor.io/brands/nextgenid",
-            "description": "NextgenID provides advanced identity management solutions.",
+            "name": "OneLogin",
+            "url": "https://useharbor.io/brands/onelogin",
+            "description": "OneLogin provides market-leading identity and access management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -159,9 +159,9 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Okta",
-            "url": "https://useharbor.io/brands/okta",
-            "description": "Okta is a leader in identity management solutions.",
+            "name": "Auth0",
+            "url": "https://useharbor.io/brands/auth0",
+            "description": "Auth0 is a secure authentication and authorization platform for various identities.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Auth0",
-            "url": "https://useharbor.io/brands/auth0",
-            "description": "Auth0 is a secure authentication and authorization platform for various identities.",
+            "name": "Okta",
+            "url": "https://useharbor.io/brands/okta",
+            "description": "Okta is a leader in identity management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -215,6 +215,30 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "zitadel",
+    "brand_name": "ZITADEL",
+    "domain": "zitadel.com",
+    "summary": "Open Source Identity Infrastructure Platform",
+    "pricing": {
+      "price_model": "tiered",
+      "price_notes": "Free tier available with limited features and a paid Pro plan starting at $100/month.",
+      "has_free_tier": true,
+      "starting_price": "$100/mo"
+    },
+    "features": [
+      "Multi-factor Authentication",
+      "Single Sign-On (SSO)",
+      "Delegated Access Management",
+      "Self-service User Management",
+      "Hosted Login"
+    ],
+    "integrations": [
+      "Google",
+      "Microsoft",
+      "GitHub"
+    ]
+  },
   {
     "slug": "avatier",
     "brand_name": "Avatier",
@@ -268,30 +292,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "zitadel",
-    "brand_name": "ZITADEL",
-    "domain": "zitadel.com",
-    "summary": "Open Source Identity Infrastructure Platform",
-    "pricing": {
-      "price_model": "tiered",
-      "price_notes": "Free tier available with limited features and a paid Pro plan starting at $100/month.",
-      "has_free_tier": true,
-      "starting_price": "$100/mo"
-    },
-    "features": [
-      "Multi-factor Authentication",
-      "Single Sign-On (SSO)",
-      "Delegated Access Management",
-      "Self-service User Management",
-      "Hosted Login"
-    ],
-    "integrations": [
-      "Google",
-      "Microsoft",
-      "GitHub"
-    ]
-  },
-  {
     "slug": "ilantus-services",
     "brand_name": "Ilantus Services",
     "domain": "ilantus.com",
@@ -336,6 +336,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "nextgenid",
+    "brand_name": "NextgenID",
+    "domain": "nextgenid.com",
+    "summary": "NextgenID provides advanced identity management solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "High-assurance identity proofing",
+      "Automated identity workflows",
+      "Supervised Remote-Identity Proofing (SRIP)",
+      "NIST SP800-63-3 compliance",
+      "Centralized control of Identity Stations"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "onelogin",
     "brand_name": "OneLogin",
     "domain": "onelogin.com",
@@ -363,26 +383,6 @@ const alternatives = [
       "Duo",
       "Symantec"
     ]
-  },
-  {
-    "slug": "nextgenid",
-    "brand_name": "NextgenID",
-    "domain": "nextgenid.com",
-    "summary": "NextgenID provides advanced identity management solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "High-assurance identity proofing",
-      "Automated identity workflows",
-      "Supervised Remote-Identity Proofing (SRIP)",
-      "NIST SP800-63-3 compliance",
-      "Centralized control of Identity Stations"
-    ],
-    "integrations": []
   },
   {
     "slug": "majorkey-technologies",
@@ -463,6 +463,30 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "auth0",
+    "brand_name": "Auth0",
+    "domain": "auth0.com",
+    "summary": "Auth0 is a secure authentication and authorization platform for various identities.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are available upon request.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "User Authentication",
+      "Multi-Factor Authentication",
+      "Single Sign On",
+      "Passwordless Login",
+      "Fine-Grained Authorization"
+    ],
+    "integrations": [
+      "Salesforce",
+      "Slack",
+      "Okta"
+    ]
+  },
+  {
     "slug": "okta",
     "brand_name": "Okta",
     "domain": "okta.com",
@@ -486,30 +510,6 @@ const alternatives = [
       "QuickBooks",
       "Microsoft Teams",
       "Zoom"
-    ]
-  },
-  {
-    "slug": "auth0",
-    "brand_name": "Auth0",
-    "domain": "auth0.com",
-    "summary": "Auth0 is a secure authentication and authorization platform for various identities.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are available upon request.",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "User Authentication",
-      "Multi-Factor Authentication",
-      "Single Sign On",
-      "Passwordless Login",
-      "Fine-Grained Authorization"
-    ],
-    "integrations": [
-      "Salesforce",
-      "Slack",
-      "Okta"
     ]
   },
   {
@@ -601,7 +601,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.315Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.017Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best BadgePass, Inc Alternatives
@@ -673,7 +673,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.315Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.017Z">2025-11-30</time>
             </p>
           </footer>
         </div>

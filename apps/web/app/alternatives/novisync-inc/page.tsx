@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.383Z
+// Generated: 2025-11-30T20:05:20.108Z
 // Alternative to: Novisync, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Novisync, Inc Alternatives',
     description: 'Top alternatives to Novisync, Inc for Primary software category (e.g., CRM, Project Management, Time Tracking).',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.383Z',
-    modifiedTime: '2025-11-30T19:44:53.383Z',
+    publishedTime: '2025-11-30T20:05:20.108Z',
+    modifiedTime: '2025-11-30T20:05:20.108Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/novisync-inc#article",
       "headline": "Best Novisync, Inc Alternatives",
       "description": "Top alternatives to Novisync, Inc for Primary software category (e.g., CRM, Project Management, Time Tracking). Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.383Z",
-      "dateModified": "2025-11-30T19:44:53.383Z",
+      "datePublished": "2025-11-30T20:05:20.108Z",
+      "dateModified": "2025-11-30T20:05:20.108Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/novisync-inc#list",
       "name": "Novisync, Inc Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "HUBX",
-            "url": "https://useharbor.io/brands/hubx",
-            "description": "HUBX is a digital platform.",
+            "name": "Arkhya Tech. Inc.",
+            "url": "https://useharbor.io/brands/arkhya-tech-inc",
+            "description": "Arkhya Tech is a technology company.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Arkhya Tech. Inc.",
-            "url": "https://useharbor.io/brands/arkhya-tech-inc",
-            "description": "Arkhya Tech is a technology company.",
+            "name": "HUBX",
+            "url": "https://useharbor.io/brands/hubx",
+            "description": "HUBX is a digital platform.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
           }
         },
@@ -93,6 +93,28 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "ACS Consultancy Services, Inc",
+            "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
+            "description": "Unknown",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Neo",
+            "url": "https://useharbor.io/brands/neo",
+            "description": "Neo is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ALQIMI",
             "url": "https://useharbor.io/brands/alqimi",
             "description": "ALQIMI is a brand with unclear offerings and purpose.",
@@ -101,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Gala",
@@ -112,23 +134,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eluvio",
             "url": "https://useharbor.io/brands/eluvio",
             "description": "Eluvio is a brand with unclear offerings and purpose.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 8,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "ACS Consultancy Services, Inc",
-            "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
-            "description": "Unknown",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)"
           }
         }
@@ -153,20 +164,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "hubx",
-    "brand_name": "HUBX",
-    "domain": "hubx.com",
-    "summary": "HUBX is a digital platform.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
     "slug": "arkhya-tech-inc",
     "brand_name": "Arkhya Tech. Inc.",
     "domain": "arkhyatech.com",
@@ -181,10 +178,52 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "hubx",
+    "brand_name": "HUBX",
+    "domain": "hubx.com",
+    "summary": "HUBX is a digital platform.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "alois-solutions",
     "brand_name": "ALOIS Solutions",
     "domain": "aloissolutions.com",
     "summary": "ALOIS Solutions is a technology-focused company.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "acs-consultancy-services-inc",
+    "brand_name": "ACS Consultancy Services, Inc",
+    "domain": "acsincny.com",
+    "summary": "Unknown",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "neo",
+    "brand_name": "Neo",
+    "domain": "neo.com",
+    "summary": "Neo is a brand with unclear offerings and purpose.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -235,20 +274,6 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
-  },
-  {
-    "slug": "acs-consultancy-services-inc",
-    "brand_name": "ACS Consultancy Services, Inc",
-    "domain": "acsincny.com",
-    "summary": "Unknown",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
   }
 ]
 
@@ -264,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.383Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.108Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Novisync, Inc Alternatives
@@ -336,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.383Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.108Z">2025-11-30</time>
             </p>
           </footer>
         </div>

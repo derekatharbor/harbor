@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.294Z
+// Generated: 2025-11-30T20:05:19.950Z
 // Alternative to: mLogica
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best mLogica Alternatives',
     description: 'Top alternatives to mLogica for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.294Z',
-    modifiedTime: '2025-11-30T19:44:53.294Z',
+    publishedTime: '2025-11-30T20:05:19.950Z',
+    modifiedTime: '2025-11-30T20:05:19.950Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mlogica#article",
       "headline": "Best mLogica Alternatives",
       "description": "Top alternatives to mLogica for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.294Z",
-      "dateModified": "2025-11-30T19:44:53.294Z",
+      "datePublished": "2025-11-30T20:05:19.950Z",
+      "dateModified": "2025-11-30T20:05:19.950Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,6 +49,28 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "UBX Cloud",
+            "url": "https://useharbor.io/brands/ubx-cloud",
+            "description": "A global cloud service provider specializing in secure and scalable cloud solutions.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Simple Technology Solutions",
+            "url": "https://useharbor.io/brands/simple-technology-solutions",
+            "description": "A federal small business specializing in enterprise cloud transformation and modernization.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ScaleMatrix",
             "url": "https://useharbor.io/brands/scalematrix",
             "description": "High Density Colocation and Cloud Service Provider.",
@@ -57,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CARI.net",
@@ -68,34 +90,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Innovative Solutions",
             "url": "https://useharbor.io/brands/innovative-solutions",
             "description": "Your AI-powered consulting platform to help you build winning proposals and close deals.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "UBX Cloud",
-            "url": "https://useharbor.io/brands/ubx-cloud",
-            "description": "A global cloud service provider specializing in secure and scalable cloud solutions.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Simple Technology Solutions",
-            "url": "https://useharbor.io/brands/simple-technology-solutions",
-            "description": "A federal small business specializing in enterprise cloud transformation and modernization.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -161,6 +161,54 @@ const schemaOrg = {
 
 const alternatives = [
   {
+    "slug": "ubx-cloud",
+    "brand_name": "UBX Cloud",
+    "domain": "ubxcloud.com",
+    "summary": "A global cloud service provider specializing in secure and scalable cloud solutions.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Fair flat rate that costs less as you scale up.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed Private Clouds",
+      "Secure Cloud Workspaces",
+      "Managed CDN Services",
+      "Breach Counsel",
+      "XDR + SIEM"
+    ],
+    "integrations": [
+      "Cisco"
+    ]
+  },
+  {
+    "slug": "simple-technology-solutions",
+    "brand_name": "Simple Technology Solutions",
+    "domain": "simpletechnology.io",
+    "summary": "A federal small business specializing in enterprise cloud transformation and modernization.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Special end-of-fiscal-year pricing on RCA proof of concept pilot programs available.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "One-click provisioning of compliant cloud environments",
+      "Event-driven scripts for compliance remediation",
+      "Automated deployment pipelines",
+      "Infrastructure-as-code cookbooks",
+      "Self-service provisioning for development teams"
+    ],
+    "integrations": [
+      "AWS",
+      "Microsoft Azure",
+      "Google Cloud Platform",
+      "Power Platform",
+      "Box"
+    ]
+  },
+  {
     "slug": "scalematrix",
     "brand_name": "ScaleMatrix",
     "domain": "scalematrix.com",
@@ -222,54 +270,6 @@ const alternatives = [
     ],
     "integrations": [
       "AWS Marketplace"
-    ]
-  },
-  {
-    "slug": "ubx-cloud",
-    "brand_name": "UBX Cloud",
-    "domain": "ubxcloud.com",
-    "summary": "A global cloud service provider specializing in secure and scalable cloud solutions.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "Fair flat rate that costs less as you scale up.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed Private Clouds",
-      "Secure Cloud Workspaces",
-      "Managed CDN Services",
-      "Breach Counsel",
-      "XDR + SIEM"
-    ],
-    "integrations": [
-      "Cisco"
-    ]
-  },
-  {
-    "slug": "simple-technology-solutions",
-    "brand_name": "Simple Technology Solutions",
-    "domain": "simpletechnology.io",
-    "summary": "A federal small business specializing in enterprise cloud transformation and modernization.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Special end-of-fiscal-year pricing on RCA proof of concept pilot programs available.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "One-click provisioning of compliant cloud environments",
-      "Event-driven scripts for compliance remediation",
-      "Automated deployment pipelines",
-      "Infrastructure-as-code cookbooks",
-      "Self-service provisioning for development teams"
-    ],
-    "integrations": [
-      "AWS",
-      "Microsoft Azure",
-      "Google Cloud Platform",
-      "Power Platform",
-      "Box"
     ]
   },
   {
@@ -409,7 +409,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.294Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.950Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best mLogica Alternatives
@@ -481,7 +481,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.294Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.950Z">2025-11-30</time>
             </p>
           </footer>
         </div>

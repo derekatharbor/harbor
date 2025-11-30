@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.409Z
+// Generated: 2025-11-30T20:05:20.142Z
 // Comparing: Astute Technology Management vs Palmetto Technology Group (PTG)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Astute Technology Management vs Palmetto Technology Group (PTG)',
     description: 'Detailed comparison of Astute Technology Management and Palmetto Technology Group (PTG).',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.409Z',
-    modifiedTime: '2025-11-30T19:44:53.409Z',
+    publishedTime: '2025-11-30T20:05:20.142Z',
+    modifiedTime: '2025-11-30T20:05:20.142Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/astute-technology-management-vs-palmetto-technology-group-ptg#article",
   "headline": "Astute Technology Management vs Palmetto Technology Group (PTG): Comparison",
   "description": "Detailed comparison of Astute Technology Management and Palmetto Technology Group (PTG). Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.409Z",
-  "dateModified": "2025-11-30T19:44:53.409Z",
+  "datePublished": "2025-11-30T20:05:20.142Z",
+  "dateModified": "2025-11-30T20:05:20.142Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -107,7 +107,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.409Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.142Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -262,7 +262,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.409Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.142Z">2025-11-30</time>
             </p>
           </footer>
         </div>

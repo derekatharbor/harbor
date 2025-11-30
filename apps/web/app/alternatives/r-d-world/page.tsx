@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.375Z
+// Generated: 2025-11-30T20:05:20.089Z
 // Alternative to: R&D World
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best R&D World Alternatives',
     description: 'Top alternatives to R&D World for Media.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.375Z',
-    modifiedTime: '2025-11-30T19:44:53.375Z',
+    publishedTime: '2025-11-30T20:05:20.089Z',
+    modifiedTime: '2025-11-30T20:05:20.089Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/r-d-world#article",
       "headline": "Best R&D World Alternatives",
       "description": "Top alternatives to R&D World for Media. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.375Z",
-      "dateModified": "2025-11-30T19:44:53.375Z",
+      "datePublished": "2025-11-30T20:05:20.089Z",
+      "dateModified": "2025-11-30T20:05:20.089Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/r-d-world#list",
       "name": "R&D World Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 7,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -102,6 +102,17 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Teen Vogue",
+            "url": "https://useharbor.io/brands/teen-vogue",
+            "description": "A leading publication for teen fashion, beauty, and entertainment.",
+            "applicationCategory": "Media"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CR Fashion Book",
@@ -204,6 +215,20 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "teen-vogue",
+    "brand_name": "Teen Vogue",
+    "domain": "teenvogue.com",
+    "summary": "A leading publication for teen fashion, beauty, and entertainment.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "cr-fashion-book",
     "brand_name": "CR Fashion Book",
     "domain": "crfashionbook.com",
@@ -231,7 +256,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.375Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.089Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best R&D World Alternatives
@@ -303,7 +328,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.375Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.089Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.903Z
+// Generated: 2025-11-30T20:05:20.288Z
 // Comparing: ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions vs NomadGo
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions vs NomadGo',
     description: 'Detailed comparison of ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions and NomadGo.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.903Z',
-    modifiedTime: '2025-11-30T19:44:53.903Z',
+    publishedTime: '2025-11-30T20:05:20.288Z',
+    modifiedTime: '2025-11-30T20:05:20.288Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/asap-systems-cloud-on-premises-inventory-system-asset-tracking-solutions-vs-nomadgo#article",
   "headline": "ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions vs NomadGo: Comparison",
   "description": "Detailed comparison of ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions and NomadGo. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.903Z",
-  "dateModified": "2025-11-30T19:44:53.903Z",
+  "datePublished": "2025-11-30T20:05:20.288Z",
+  "dateModified": "2025-11-30T20:05:20.288Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -109,7 +109,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.903Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.288Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -264,7 +264,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.903Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.288Z">2025-11-30</time>
             </p>
           </footer>
         </div>

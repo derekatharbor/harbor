@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.280Z
+// Generated: 2025-11-30T20:05:19.992Z
 // Alternative to: Edifecs
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Edifecs Alternatives',
     description: 'Top alternatives to Edifecs for Healthcare Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.280Z',
-    modifiedTime: '2025-11-30T19:44:53.280Z',
+    publishedTime: '2025-11-30T20:05:19.992Z',
+    modifiedTime: '2025-11-30T20:05:19.992Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/edifecs#article",
       "headline": "Best Edifecs Alternatives",
       "description": "Top alternatives to Edifecs for Healthcare Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.280Z",
-      "dateModified": "2025-11-30T19:44:53.280Z",
+      "datePublished": "2025-11-30T20:05:19.992Z",
+      "dateModified": "2025-11-30T20:05:19.992Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -157,7 +157,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.280Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.992Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Edifecs Alternatives
@@ -229,7 +229,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.280Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.992Z">2025-11-30</time>
             </p>
           </footer>
         </div>

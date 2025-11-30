@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.273Z
+// Generated: 2025-11-30T20:05:20.007Z
 // Alternative to: MartinFed
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best MartinFed Alternatives',
     description: 'Top alternatives to MartinFed for Cybersecurity and IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.273Z',
-    modifiedTime: '2025-11-30T19:44:53.273Z',
+    publishedTime: '2025-11-30T20:05:20.007Z',
+    modifiedTime: '2025-11-30T20:05:20.007Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/martinfed#article",
       "headline": "Best MartinFed Alternatives",
       "description": "Top alternatives to MartinFed for Cybersecurity and IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.273Z",
-      "dateModified": "2025-11-30T19:44:53.273Z",
+      "datePublished": "2025-11-30T20:05:20.007Z",
+      "dateModified": "2025-11-30T20:05:20.007Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "E&M Technologies, Inc.",
-            "url": "https://useharbor.io/brands/e-m-technologies-inc",
-            "description": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
+            "name": "Valiant Solutions",
+            "url": "https://useharbor.io/brands/valiant-solutions",
+            "description": "Valiant Solutions, LLC provides comprehensive cybersecurity and IT services to the Federal Government.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Valiant Solutions",
-            "url": "https://useharbor.io/brands/valiant-solutions",
-            "description": "Valiant Solutions, LLC provides comprehensive cybersecurity and IT services to the Federal Government.",
+            "name": "E&M Technologies, Inc.",
+            "url": "https://useharbor.io/brands/e-m-technologies-inc",
+            "description": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -106,26 +106,6 @@ const schemaOrg = {
 
 const alternatives = [
   {
-    "slug": "e-m-technologies-inc",
-    "brand_name": "E&M Technologies, Inc.",
-    "domain": "eandmtech.com",
-    "summary": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Mission-critical IT services",
-      "Intelligence solutions",
-      "Cybersecurity",
-      "Digital modernization",
-      "Enterprise IT services"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "valiant-solutions",
     "brand_name": "Valiant Solutions",
     "domain": "valiantsolutions.com",
@@ -142,6 +122,26 @@ const alternatives = [
       "Security Engineering",
       "Security Operations",
       "Strategic Risk Governance"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "e-m-technologies-inc",
+    "brand_name": "E&M Technologies, Inc.",
+    "domain": "eandmtech.com",
+    "summary": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Mission-critical IT services",
+      "Intelligence solutions",
+      "Cybersecurity",
+      "Digital modernization",
+      "Enterprise IT services"
     ],
     "integrations": []
   },
@@ -223,7 +223,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.273Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.007Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best MartinFed Alternatives
@@ -295,7 +295,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.273Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.007Z">2025-11-30</time>
             </p>
           </footer>
         </div>

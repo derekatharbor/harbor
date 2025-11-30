@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.336Z
+// Generated: 2025-11-30T20:05:20.026Z
 // Alternative to: MicroAge
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best MicroAge Alternatives',
     description: 'Top alternatives to MicroAge for Managed Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.336Z',
-    modifiedTime: '2025-11-30T19:44:53.336Z',
+    publishedTime: '2025-11-30T20:05:20.026Z',
+    modifiedTime: '2025-11-30T20:05:20.026Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/microage#article",
       "headline": "Best MicroAge Alternatives",
       "description": "Top alternatives to MicroAge for Managed Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.336Z",
-      "dateModified": "2025-11-30T19:44:53.336Z",
+      "datePublished": "2025-11-30T20:05:20.026Z",
+      "dateModified": "2025-11-30T20:05:20.026Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,22 +42,11 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/microage#list",
       "name": "MicroAge Alternatives",
-      "numberOfItems": 10,
+      "numberOfItems": 12,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Impact Networking, LLC",
-            "url": "https://useharbor.io/brands/impact-networking-llc",
-            "description": "A managed services provider focused on business growth through technology and expert solutions.",
-            "applicationCategory": "Managed Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Focus Technology",
@@ -68,40 +57,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Impact Networking, LLC",
+            "url": "https://useharbor.io/brands/impact-networking-llc",
+            "description": "A managed services provider focused on business growth through technology and expert solutions.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Acuative",
-            "url": "https://useharbor.io/brands/acuative",
-            "description": "Acuative provides end-to-end managed network services and IT infrastructure solutions.",
-            "applicationCategory": "Managed Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Ergonomic Group",
-            "url": "https://useharbor.io/brands/ergonomic-group",
-            "description": "A leader in technology solutions and services focused on enhancing efficiency and cybersecurity.",
-            "applicationCategory": "Managed Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Connext",
-            "url": "https://useharbor.io/brands/connext",
-            "description": "Connext provides technology design, deployment, and management services for large enterprises.",
-            "applicationCategory": "Managed Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Effortless Office",
@@ -112,7 +79,51 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Acuative",
+            "url": "https://useharbor.io/brands/acuative",
+            "description": "Acuative provides end-to-end managed network services and IT infrastructure solutions.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Ergonomic Group",
+            "url": "https://useharbor.io/brands/ergonomic-group",
+            "description": "A leader in technology solutions and services focused on enhancing efficiency and cybersecurity.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Connext",
+            "url": "https://useharbor.io/brands/connext",
+            "description": "Connext provides technology design, deployment, and management services for large enterprises.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "prototype:IT",
+            "url": "https://useharbor.io/brands/prototype-it",
+            "description": "A leading managed service provider offering comprehensive IT solutions.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Secur-Serv",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "EOX Vantage",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CPP Associates, Inc.",
@@ -145,7 +156,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SBT Partners",
+            "url": "https://useharbor.io/brands/sbt-partners",
+            "description": "A modern managed service provider specializing in IT solutions for small and medium businesses.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "3GC Group",
@@ -160,6 +182,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "focus-technology",
+    "brand_name": "Focus Technology",
+    "domain": "focustsi.com",
+    "summary": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT Services",
+      "Security & Compliance",
+      "AI & Data Solutions",
+      "Modern Data Center",
+      "Secure Networking"
+    ],
+    "integrations": []
+  },
   {
     "slug": "impact-networking-llc",
     "brand_name": "Impact Networking, LLC",
@@ -181,22 +223,22 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "focus-technology",
-    "brand_name": "Focus Technology",
-    "domain": "focustsi.com",
-    "summary": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
+    "slug": "effortless-office",
+    "brand_name": "Effortless Office",
+    "domain": "effortlessoffice.com",
+    "summary": "A Hybrid Managed Services Provider delivering secure cloud products and services.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": null,
+      "price_notes": "Flexible subscription models aligned to your team's size and growth plans.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Managed IT Services",
-      "Security & Compliance",
-      "AI & Data Solutions",
-      "Modern Data Center",
-      "Secure Networking"
+      "Integrated Collaboration",
+      "Proactive Security",
+      "Work from Anywhere",
+      "Future-Proofed Tools",
+      "Backup and Disaster Recovery"
     ],
     "integrations": []
   },
@@ -264,22 +306,22 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "effortless-office",
-    "brand_name": "Effortless Office",
-    "domain": "effortlessoffice.com",
-    "summary": "A Hybrid Managed Services Provider delivering secure cloud products and services.",
+    "slug": "prototype-it",
+    "brand_name": "prototype:IT",
+    "domain": "prototypeit.net",
+    "summary": "A leading managed service provider offering comprehensive IT solutions.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Flexible subscription models aligned to your team's size and growth plans.",
+      "price_notes": "No long-term contract requirements; flexible service plans.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Integrated Collaboration",
-      "Proactive Security",
-      "Work from Anywhere",
-      "Future-Proofed Tools",
-      "Backup and Disaster Recovery"
+      "24/7 IT support services",
+      "Business Continuity",
+      "Network Security Services",
+      "VoIP Services",
+      "Cloud Hosting Services"
     ],
     "integrations": []
   },
@@ -355,6 +397,29 @@ const alternatives = [
     ]
   },
   {
+    "slug": "sbt-partners",
+    "brand_name": "SBT Partners",
+    "domain": "sbtpartners.com",
+    "summary": "A modern managed service provider specializing in IT solutions for small and medium businesses.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Services are offered for a fixed, predictable monthly fee.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Total IT Management",
+      "vCIO services",
+      "Infrastructure management",
+      "Workstation management",
+      "Data backup services"
+    ],
+    "integrations": [
+      "Microsoft 365",
+      "Microsoft Teams"
+    ]
+  },
+  {
     "slug": "3gc-group",
     "brand_name": "3GC Group",
     "domain": "3gcgroup.com",
@@ -382,7 +447,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.026Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best MicroAge Alternatives
@@ -454,7 +519,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.026Z">2025-11-30</time>
             </p>
           </footer>
         </div>

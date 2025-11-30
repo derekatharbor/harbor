@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.361Z
+// Generated: 2025-11-30T20:05:20.063Z
 // Alternative to: Graphy Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Graphy Inc. Alternatives',
     description: 'Top alternatives to Graphy Inc. for Education Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.361Z',
-    modifiedTime: '2025-11-30T19:44:53.361Z',
+    publishedTime: '2025-11-30T20:05:20.063Z',
+    modifiedTime: '2025-11-30T20:05:20.063Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/graphy-inc#article",
       "headline": "Best Graphy Inc. Alternatives",
       "description": "Top alternatives to Graphy Inc. for Education Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.361Z",
-      "dateModified": "2025-11-30T19:44:53.361Z",
+      "datePublished": "2025-11-30T20:05:20.063Z",
+      "dateModified": "2025-11-30T20:05:20.063Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/graphy-inc#list",
       "name": "Graphy Inc. Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Class",
-            "url": "https://useharbor.io/brands/class",
-            "description": "Class is a virtual learning platform designed to enhance online education and training.",
+            "name": "DeepLearning.AI",
+            "url": "https://useharbor.io/brands/deeplearningai",
+            "description": "An education technology company focused on AI training and community building.",
             "applicationCategory": "Education Technology"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ClassLink",
-            "url": "https://useharbor.io/brands/classlink",
-            "description": "ClassLink provides identity and access management solutions tailored for the education sector.",
+            "name": "Class",
+            "url": "https://useharbor.io/brands/class",
+            "description": "Class is a virtual learning platform designed to enhance online education and training.",
             "applicationCategory": "Education Technology"
           }
         },
@@ -82,6 +82,17 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "ClassLink",
+            "url": "https://useharbor.io/brands/classlink",
+            "description": "ClassLink provides identity and access management solutions tailored for the education sector.",
+            "applicationCategory": "Education Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Clever Inc.",
             "url": "https://useharbor.io/brands/clever-inc",
             "description": "Clever provides a secure identity platform designed specifically for the education sector.",
@@ -94,6 +105,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "deeplearningai",
+    "brand_name": "DeepLearning.AI",
+    "domain": "deeplearning.ai",
+    "summary": "An education technology company focused on AI training and community building.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "AI courses and specializations",
+      "Practical roadmap to building a career in AI",
+      "Access to AI news and insights",
+      "Resources for learning machine learning",
+      "Guides on natural language processing"
+    ],
+    "integrations": []
+  },
   {
     "slug": "class",
     "brand_name": "Class",
@@ -119,6 +150,28 @@ const alternatives = [
       "D2L Brightspace",
       "Blackboard Learn",
       "Open LMS"
+    ]
+  },
+  {
+    "slug": "advantage-design-group",
+    "brand_name": "Advantage Design Group",
+    "domain": "advantagedesigngroup.com",
+    "summary": "Personalized online orientation and recruiting solutions for educational institutions and organizations.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Personalized online orientation",
+      "Interactive recruiting solutions",
+      "Video-rich content",
+      "Multilingual support",
+      "Powerful admin control and analytics"
+    ],
+    "integrations": [
+      "SSO"
     ]
   },
   {
@@ -148,28 +201,6 @@ const alternatives = [
       "Khan Academy",
       "Wakelet",
       "SmartPass"
-    ]
-  },
-  {
-    "slug": "advantage-design-group",
-    "brand_name": "Advantage Design Group",
-    "domain": "advantagedesigngroup.com",
-    "summary": "Personalized online orientation and recruiting solutions for educational institutions and organizations.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Personalized online orientation",
-      "Interactive recruiting solutions",
-      "Video-rich content",
-      "Multilingual support",
-      "Powerful admin control and analytics"
-    ],
-    "integrations": [
-      "SSO"
     ]
   },
   {
@@ -215,7 +246,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.361Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.063Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Graphy Inc. Alternatives
@@ -287,7 +318,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.361Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.063Z">2025-11-30</time>
             </p>
           </footer>
         </div>

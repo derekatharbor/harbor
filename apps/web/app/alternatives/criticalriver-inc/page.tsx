@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.372Z
+// Generated: 2025-11-30T20:05:20.095Z
 // Alternative to: CriticalRiver Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best CriticalRiver Inc. Alternatives',
     description: 'Top alternatives to CriticalRiver Inc. for AI Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.372Z',
-    modifiedTime: '2025-11-30T19:44:53.372Z',
+    publishedTime: '2025-11-30T20:05:20.095Z',
+    modifiedTime: '2025-11-30T20:05:20.095Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/criticalriver-inc#article",
       "headline": "Best CriticalRiver Inc. Alternatives",
       "description": "Top alternatives to CriticalRiver Inc. for AI Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.372Z",
-      "dateModified": "2025-11-30T19:44:53.372Z",
+      "datePublished": "2025-11-30T20:05:20.095Z",
+      "dateModified": "2025-11-30T20:05:20.095Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/criticalriver-inc#list",
       "name": "CriticalRiver Inc. Alternatives",
-      "numberOfItems": 9,
+      "numberOfItems": 15,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Relevance Lab",
-            "url": "https://useharbor.io/brands/relevance-lab",
-            "description": "A next-generation technology services company specializing in GenAI-powered solutions.",
+            "name": "Spyne",
+            "url": "https://useharbor.io/brands/spyne",
+            "description": "AI-Powered Automotive Solutions for Dealerships",
             "applicationCategory": "AI Solutions"
           }
         },
@@ -71,15 +71,26 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Sand Technologies",
-            "url": "https://useharbor.io/brands/sand-technologies",
-            "description": "An enterprise AI solutions company specializing in critical infrastructure.",
+            "name": "Innover Digital",
+            "url": "https://useharbor.io/brands/innover-digital",
+            "description": "Innover Digital is an AI services company focused on maximizing business value through advanced technology solutions.",
             "applicationCategory": "AI Solutions"
           }
         },
         {
           "@type": "ListItem",
           "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Relevance Lab",
+            "url": "https://useharbor.io/brands/relevance-lab",
+            "description": "A next-generation technology services company specializing in GenAI-powered solutions.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ServisBOT",
@@ -90,18 +101,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ShimentoX Technologies",
-            "url": "https://useharbor.io/brands/shimentox-technologies",
-            "description": "Transforming businesses with innovative AI solutions.",
+            "name": "ViitorCloud Technologies",
+            "url": "https://useharbor.io/brands/viitorcloud-technologies",
+            "description": "A leading software development company specializing in AI-first solutions.",
             "applicationCategory": "AI Solutions"
           }
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Posh",
@@ -112,7 +123,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ShimentoX Technologies",
+            "url": "https://useharbor.io/brands/shimentox-technologies",
+            "description": "Transforming businesses with innovative AI solutions.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Sand Technologies",
+            "url": "https://useharbor.io/brands/sand-technologies",
+            "description": "An enterprise AI solutions company specializing in critical infrastructure.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Anika Systems",
@@ -123,23 +156,56 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "BigBear.ai",
-            "url": "https://useharbor.io/brands/bigbearai",
-            "description": "AI-Powered Decision Intelligence Solutions for Critical Operations.",
+            "name": "Pacific Data Integrators",
+            "url": "https://useharbor.io/brands/pacific-data-integrators",
+            "description": "Transforming businesses with state-of-the-art AI solutions.",
             "applicationCategory": "AI Solutions"
           }
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Opalforce",
-            "url": "https://useharbor.io/brands/opalforce",
-            "description": "AI Solutions Company",
+            "name": "A.Team",
+            "url": "https://useharbor.io/brands/ateam",
+            "description": "Custom AI systems built by industry experts.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Qubika",
+            "url": "https://useharbor.io/brands/qubika",
+            "description": "Qubika is a technology solutions provider focused on integrating advanced data engineering and AI solutions.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Nuvento Inc",
+            "url": "https://useharbor.io/brands/nuvento-inc",
+            "description": "Agentic AI Solutions for Business Transformation",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "BigBear.ai",
+            "url": "https://useharbor.io/brands/bigbearai",
+            "description": "AI-Powered Decision Intelligence Solutions for Critical Operations.",
             "applicationCategory": "AI Solutions"
           }
         }
@@ -173,6 +239,55 @@ const alternatives = [
     ]
   },
   {
+    "slug": "spyne",
+    "brand_name": "Spyne",
+    "domain": "spyne.ai",
+    "summary": "AI-Powered Automotive Solutions for Dealerships",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "First 500 signups will get 25% off",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "AI-guided product photography",
+      "End-to-end image cataloging",
+      "Video walkaround assessments",
+      "Conversational AI for sales and service",
+      "Automated quality control for visuals"
+    ],
+    "integrations": [
+      "Amazon",
+      "Flipkart",
+      "Myntra"
+    ]
+  },
+  {
+    "slug": "innover-digital",
+    "brand_name": "Innover Digital",
+    "domain": "innoverdigital.com",
+    "summary": "Innover Digital is an AI services company focused on maximizing business value through advanced technology solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Engineering",
+      "Software Engineering",
+      "Data Engineering",
+      "Advanced Analytics",
+      "Intelligent Process Automation"
+    ],
+    "integrations": [
+      "Microsoft",
+      "Databricks",
+      "ServiceNow",
+      "Thomson Reuters"
+    ]
+  },
+  {
     "slug": "relevance-lab",
     "brand_name": "Relevance Lab",
     "domain": "relevancelab.com",
@@ -192,30 +307,6 @@ const alternatives = [
     ],
     "integrations": [
       "AWS"
-    ]
-  },
-  {
-    "slug": "sand-technologies",
-    "brand_name": "Sand Technologies",
-    "domain": "sandtech.com",
-    "summary": "An enterprise AI solutions company specializing in critical infrastructure.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Optimize telecom rollouts with precision analytics",
-      "Maximize asset lifespan and productivity",
-      "Ensure adherence to local and global regulations",
-      "Improve healthcare access in underserved communities",
-      "Unlock value with expert AI and data science teams"
-    ],
-    "integrations": [
-      "AWS",
-      "NVIDIA",
-      "Nomad Media"
     ]
   },
   {
@@ -239,24 +330,32 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "shimentox-technologies",
-    "brand_name": "ShimentoX Technologies",
-    "domain": "shimentox.ai",
-    "summary": "Transforming businesses with innovative AI solutions.",
+    "slug": "viitorcloud-technologies",
+    "brand_name": "ViitorCloud Technologies",
+    "domain": "viitorcloud.com",
+    "summary": "A leading software development company specializing in AI-first solutions.",
     "pricing": {
-      "price_model": "unknown",
+      "price_model": "custom",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Data Monetization Capabilities",
-      "Effortless Cloud Migration & Management",
-      "AI-driven analytics and ML solutions",
-      "Integrated Risk Management (IRM)",
-      "Regulatory Reporting & Compliance"
+      "Custom AI Solutions",
+      "SaaS Product Engineering",
+      "AI-Driven Automation",
+      "System Integration and Modernization",
+      "AI Consulting and Strategy"
     ],
-    "integrations": []
+    "integrations": [
+      "Microsoft",
+      "AWS",
+      "IBM",
+      "eMerchantPay",
+      "OpEzee",
+      "FotoWare",
+      "Tesla Suit"
+    ]
   },
   {
     "slug": "posh",
@@ -288,6 +387,50 @@ const alternatives = [
     ]
   },
   {
+    "slug": "shimentox-technologies",
+    "brand_name": "ShimentoX Technologies",
+    "domain": "shimentox.ai",
+    "summary": "Transforming businesses with innovative AI solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Monetization Capabilities",
+      "Effortless Cloud Migration & Management",
+      "AI-driven analytics and ML solutions",
+      "Integrated Risk Management (IRM)",
+      "Regulatory Reporting & Compliance"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "sand-technologies",
+    "brand_name": "Sand Technologies",
+    "domain": "sandtech.com",
+    "summary": "An enterprise AI solutions company specializing in critical infrastructure.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Optimize telecom rollouts with precision analytics",
+      "Maximize asset lifespan and productivity",
+      "Ensure adherence to local and global regulations",
+      "Improve healthcare access in underserved communities",
+      "Unlock value with expert AI and data science teams"
+    ],
+    "integrations": [
+      "AWS",
+      "NVIDIA",
+      "Nomad Media"
+    ]
+  },
+  {
     "slug": "anika-systems",
     "brand_name": "Anika Systems",
     "domain": "anikasystems.com",
@@ -308,6 +451,102 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "pacific-data-integrators",
+    "brand_name": "Pacific Data Integrators",
+    "domain": "pacificdataintegrators.com",
+    "summary": "Transforming businesses with state-of-the-art AI solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Personalized shopping assistants",
+      "Semantic search engines",
+      "Code converters",
+      "Retail-AI capabilities",
+      "Supply Chain Analytics"
+    ],
+    "integrations": [
+      "Informatica",
+      "AWS",
+      "Google Cloud",
+      "Azure",
+      "Databricks",
+      "Snowflake",
+      "Salesforce"
+    ]
+  },
+  {
+    "slug": "ateam",
+    "brand_name": "A.Team",
+    "domain": "a.team",
+    "summary": "Custom AI systems built by industry experts.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Custom AI systems built by industry experts",
+      "Prototypes to validate ROI",
+      "Pre-built AI components",
+      "Embedded engineers for knowledge transfer",
+      "AI systems tailored for specific industries"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "qubika",
+    "brand_name": "Qubika",
+    "domain": "qubika.com",
+    "summary": "Qubika is a technology solutions provider focused on integrating advanced data engineering and AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-Powered solutions tailored for industry-specific challenges",
+      "Data management from ingestion to governance",
+      "AI & GenAI Analytics & Insight",
+      "Data Storage",
+      "Data Governance"
+    ],
+    "integrations": [
+      "Azure",
+      "OpenAI",
+      "AWS",
+      "NVIDIA"
+    ]
+  },
+  {
+    "slug": "nuvento-inc",
+    "brand_name": "Nuvento Inc",
+    "domain": "nuvento.com",
+    "summary": "Agentic AI Solutions for Business Transformation",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-based Quality Checking",
+      "Robotic Process Automation (RPA)",
+      "Data Engineering",
+      "Cognitive workspace (Neurodesk)",
+      "Document extraction and verification (Extract IQ)"
+    ],
+    "integrations": [
+      "Sage",
+      "Gmail"
+    ]
+  },
+  {
     "slug": "bigbearai",
     "brand_name": "BigBear.ai",
     "domain": "bigbear.ai",
@@ -326,20 +565,6 @@ const alternatives = [
       "Predictive Intelligence"
     ],
     "integrations": []
-  },
-  {
-    "slug": "opalforce",
-    "brand_name": "Opalforce",
-    "domain": "opalforce.com",
-    "summary": "AI Solutions Company",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
   }
 ]
 
@@ -355,7 +580,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.372Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.095Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best CriticalRiver Inc. Alternatives
@@ -427,7 +652,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.372Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.095Z">2025-11-30</time>
             </p>
           </footer>
         </div>

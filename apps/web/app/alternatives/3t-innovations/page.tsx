@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.262Z
+// Generated: 2025-11-30T20:05:20.014Z
 // Alternative to: 3T-Innovations
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best 3T-Innovations Alternatives',
     description: 'Top alternatives to 3T-Innovations for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.262Z',
-    modifiedTime: '2025-11-30T19:44:53.262Z',
+    publishedTime: '2025-11-30T20:05:20.014Z',
+    modifiedTime: '2025-11-30T20:05:20.014Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/3t-innovations#article",
       "headline": "Best 3T-Innovations Alternatives",
       "description": "Top alternatives to 3T-Innovations for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.262Z",
-      "dateModified": "2025-11-30T19:44:53.262Z",
+      "datePublished": "2025-11-30T20:05:20.014Z",
+      "dateModified": "2025-11-30T20:05:20.014Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Trinity Technology Partners, Inc.",
-            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
-            "description": "A technology services provider specializing in solutions for government and industry.",
+            "name": "Tribalco",
+            "url": "https://useharbor.io/brands/tribalco",
+            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Tribalco",
-            "url": "https://useharbor.io/brands/tribalco",
-            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
+            "name": "InDev",
+            "url": "https://useharbor.io/brands/indev",
+            "description": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "InDev",
-            "url": "https://useharbor.io/brands/indev",
-            "description": "InDev is a mission-driven technology partner focused on transforming federal agencies through innovative solutions.",
+            "name": "Trinity Technology Partners, Inc.",
+            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
+            "description": "A technology services provider specializing in solutions for government and industry.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -199,17 +199,22 @@ const alternatives = [
     ]
   },
   {
-    "slug": "trinity-technology-partners-inc",
-    "brand_name": "Trinity Technology Partners, Inc.",
-    "domain": "trinitytp.com",
-    "summary": "A technology services provider specializing in solutions for government and industry.",
+    "slug": "tribalco",
+    "brand_name": "Tribalco",
+    "domain": "tribalco.com",
+    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
-    "features": [],
+    "features": [
+      "Information Technology Services",
+      "Critical Communications Solutions",
+      "Rescue & Safety Solutions",
+      "Advanced Engineering Projects"
+    ],
     "integrations": []
   },
   {
@@ -229,25 +234,6 @@ const alternatives = [
       "quality assurance",
       "business intelligence consulting",
       "ERP/CRM/SCM consulting"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "tribalco",
-    "brand_name": "Tribalco",
-    "domain": "tribalco.com",
-    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Information Technology Services",
-      "Critical Communications Solutions",
-      "Rescue & Safety Solutions",
-      "Advanced Engineering Projects"
     ],
     "integrations": []
   },
@@ -274,6 +260,20 @@ const alternatives = [
       "Qlik",
       "PowerBi"
     ]
+  },
+  {
+    "slug": "trinity-technology-partners-inc",
+    "brand_name": "Trinity Technology Partners, Inc.",
+    "domain": "trinitytp.com",
+    "summary": "A technology services provider specializing in solutions for government and industry.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   },
   {
     "slug": "inno4-llc",
@@ -345,7 +345,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.262Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.014Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best 3T-Innovations Alternatives
@@ -417,7 +417,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.262Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.014Z">2025-11-30</time>
             </p>
           </footer>
         </div>

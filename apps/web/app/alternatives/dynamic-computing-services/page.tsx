@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.254Z
+// Generated: 2025-11-30T20:05:19.947Z
 // Alternative to: Dynamic Computing Services
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Dynamic Computing Services Alternatives',
     description: 'Top alternatives to Dynamic Computing Services for IT Staffing.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.254Z',
-    modifiedTime: '2025-11-30T19:44:53.254Z',
+    publishedTime: '2025-11-30T20:05:19.947Z',
+    modifiedTime: '2025-11-30T20:05:19.947Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/dynamic-computing-services#article",
       "headline": "Best Dynamic Computing Services Alternatives",
       "description": "Top alternatives to Dynamic Computing Services for IT Staffing. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.254Z",
-      "dateModified": "2025-11-30T19:44:53.254Z",
+      "datePublished": "2025-11-30T20:05:19.947Z",
+      "dateModified": "2025-11-30T20:05:19.947Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Donnelly & Moore Corporation",
-            "url": "https://useharbor.io/brands/donnelly-moore-corporation",
-            "description": "IT Staffing and Cybersecurity Staffing Specialists.",
+            "name": "CGS Business Solutions",
+            "url": "https://useharbor.io/brands/cgs-business-solutions",
+            "description": "CGS Business Solutions specializes in IT staffing solutions, empowering businesses with top tech talent.",
             "applicationCategory": "IT Staffing"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CGS Business Solutions",
-            "url": "https://useharbor.io/brands/cgs-business-solutions",
-            "description": "CGS Business Solutions specializes in IT staffing solutions, empowering businesses with top tech talent.",
+            "name": "Donnelly & Moore Corporation",
+            "url": "https://useharbor.io/brands/donnelly-moore-corporation",
+            "description": "IT Staffing and Cybersecurity Staffing Specialists.",
             "applicationCategory": "IT Staffing"
           }
         },
@@ -95,26 +95,6 @@ const schemaOrg = {
 
 const alternatives = [
   {
-    "slug": "donnelly-moore-corporation",
-    "brand_name": "Donnelly & Moore Corporation",
-    "domain": "donmor.com",
-    "summary": "IT Staffing and Cybersecurity Staffing Specialists.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "IT staffing solutions",
-      "Cybersecurity staffing solutions",
-      "Customized IT talent planning",
-      "Technical consulting",
-      "High-performance teams"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "cgs-business-solutions",
     "brand_name": "CGS Business Solutions",
     "domain": "cgs-it.net",
@@ -131,6 +111,26 @@ const alternatives = [
       "Artificial Intelligence",
       "Business Transformation",
       "Cloud & Infrastructure Services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "donnelly-moore-corporation",
+    "brand_name": "Donnelly & Moore Corporation",
+    "domain": "donmor.com",
+    "summary": "IT Staffing and Cybersecurity Staffing Specialists.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "IT staffing solutions",
+      "Cybersecurity staffing solutions",
+      "Customized IT talent planning",
+      "Technical consulting",
+      "High-performance teams"
     ],
     "integrations": []
   },
@@ -188,7 +188,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.254Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.947Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Dynamic Computing Services Alternatives
@@ -260,7 +260,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.254Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.947Z">2025-11-30</time>
             </p>
           </footer>
         </div>

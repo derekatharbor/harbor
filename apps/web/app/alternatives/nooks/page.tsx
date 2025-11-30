@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.363Z
+// Generated: 2025-11-30T20:05:20.065Z
 // Alternative to: Nooks
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Nooks Alternatives',
     description: 'Top alternatives to Nooks for Sales Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.363Z',
-    modifiedTime: '2025-11-30T19:44:53.363Z',
+    publishedTime: '2025-11-30T20:05:20.065Z',
+    modifiedTime: '2025-11-30T20:05:20.065Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/nooks#article",
       "headline": "Best Nooks Alternatives",
       "description": "Top alternatives to Nooks for Sales Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.363Z",
-      "dateModified": "2025-11-30T19:44:53.363Z",
+      "datePublished": "2025-11-30T20:05:20.065Z",
+      "dateModified": "2025-11-30T20:05:20.065Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/nooks#list",
       "name": "Nooks Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 8,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -102,6 +102,28 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Humantic AI",
+            "url": "https://useharbor.io/brands/humantic-ai",
+            "description": "A comprehensive buyer intelligence platform designed to enhance sales effectiveness.",
+            "applicationCategory": "Sales Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Revenue.io",
+            "url": "https://useharbor.io/brands/revenueio",
+            "description": "Revenue.io is an AI-powered sales engagement and conversation intelligence platform designed for Salesforce teams.",
+            "applicationCategory": "Sales Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aligned",
@@ -233,6 +255,53 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "humantic-ai",
+    "brand_name": "Humantic AI",
+    "domain": "humantic.ai",
+    "summary": "A comprehensive buyer intelligence platform designed to enhance sales effectiveness.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; a free trial is available.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Personality Insights & Recommendations",
+      "Buyer Intelligence Dashboard",
+      "Omnichannel Enrichment",
+      "Custom Integrations via API",
+      "Chrome Extension for Buyer Intelligence"
+    ],
+    "integrations": [
+      "Salesforce",
+      "Outreach"
+    ]
+  },
+  {
+    "slug": "revenueio",
+    "brand_name": "Revenue.io",
+    "domain": "revenue.io",
+    "summary": "Revenue.io is an AI-powered sales engagement and conversation intelligence platform designed for Salesforce teams.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Real-time guidance",
+      "Conversation coaching",
+      "Pipeline management",
+      "Call logging",
+      "Lead and contact record editing"
+    ],
+    "integrations": [
+      "Dun & Bradstreet",
+      "Salesforce.com",
+      "Twilio"
+    ]
+  },
+  {
     "slug": "aligned",
     "brand_name": "Aligned",
     "domain": "alignedup.com",
@@ -275,7 +344,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.363Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.065Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Nooks Alternatives
@@ -347,7 +416,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.363Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.065Z">2025-11-30</time>
             </p>
           </footer>
         </div>

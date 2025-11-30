@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.241Z
+// Generated: 2025-11-30T20:05:19.797Z
 // Alternative to: Kolide by 1Password
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Kolide by 1Password Alternatives',
     description: 'Top alternatives to Kolide by 1Password for Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.241Z',
-    modifiedTime: '2025-11-30T19:44:53.241Z',
+    publishedTime: '2025-11-30T20:05:19.797Z',
+    modifiedTime: '2025-11-30T20:05:19.797Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/kolide-by-1password#article",
       "headline": "Best Kolide by 1Password Alternatives",
       "description": "Top alternatives to Kolide by 1Password for Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.241Z",
-      "dateModified": "2025-11-30T19:44:53.241Z",
+      "datePublished": "2025-11-30T20:05:19.797Z",
+      "dateModified": "2025-11-30T20:05:19.797Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/kolide-by-1password#list",
       "name": "Kolide by 1Password Alternatives",
-      "numberOfItems": 12,
+      "numberOfItems": 13,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TimeKeeping Systems, Inc.",
-            "url": "https://useharbor.io/brands/timekeeping-systems-inc",
-            "description": "Guard1 provides advanced security solutions for various sectors.",
+            "name": "Origin AI",
+            "url": "https://useharbor.io/brands/origin-ai",
+            "description": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
             "applicationCategory": "Security"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALLOut Security",
-            "url": "https://useharbor.io/brands/allout-security",
-            "description": "Market-leading security solutions for JD Edwards.",
+            "name": "TimeKeeping Systems, Inc.",
+            "url": "https://useharbor.io/brands/timekeeping-systems-inc",
+            "description": "Guard1 provides advanced security solutions for various sectors.",
             "applicationCategory": "Security"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Origin AI",
-            "url": "https://useharbor.io/brands/origin-ai",
-            "description": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
+            "name": "ALLOut Security",
+            "url": "https://useharbor.io/brands/allout-security",
+            "description": "Market-leading security solutions for JD Edwards.",
             "applicationCategory": "Security"
           }
         },
@@ -126,26 +126,15 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Reco",
-            "url": "https://useharbor.io/brands/reco",
-            "description": "A dynamic SaaS security platform focused on improving security posture and compliance.",
+            "name": "Brivo",
+            "url": "https://useharbor.io/brands/brivo",
+            "description": "Brivo provides cloud-based security solutions for various sectors.",
             "applicationCategory": "Security"
           }
         },
         {
           "@type": "ListItem",
           "position": 9,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "IPVideo Corporation",
-            "url": "https://useharbor.io/brands/ipvideo-corporation",
-            "description": "Pelco provides advanced CCTV solutions and security devices.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Kindo",
@@ -156,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Osavul",
@@ -167,7 +156,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Reco",
+            "url": "https://useharbor.io/brands/reco",
+            "description": "A dynamic SaaS security platform focused on improving security posture and compliance.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "IPVideo Corporation",
+            "url": "https://useharbor.io/brands/ipvideo-corporation",
+            "description": "Pelco provides advanced CCTV solutions and security devices.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Sym",
@@ -258,6 +269,29 @@ const alternatives = [
     ]
   },
   {
+    "slug": "origin-ai",
+    "brand_name": "Origin AI",
+    "domain": "originwirelessai.com",
+    "summary": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI SENSING technology",
+      "Human presence detection",
+      "Motion classification",
+      "Rapid deployment on a single WiFi device",
+      "Contextual understanding of WiFi disruptions"
+    ],
+    "integrations": [
+      "Verizon",
+      "Alarm.com"
+    ]
+  },
+  {
     "slug": "timekeeping-systems-inc",
     "brand_name": "TimeKeeping Systems, Inc.",
     "domain": "guard1.com",
@@ -269,6 +303,24 @@ const alternatives = [
       "starting_price": null
     },
     "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "trofholz-technologies-inc",
+    "brand_name": "Trofholz Technologies, Inc.",
+    "domain": "trofholz.com",
+    "summary": "A veteran-owned company specializing in security system integration services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Access Control",
+      "Cyber Security",
+      "Security System Integration Services"
+    ],
     "integrations": []
   },
   {
@@ -294,10 +346,32 @@ const alternatives = [
     ]
   },
   {
-    "slug": "trofholz-technologies-inc",
-    "brand_name": "Trofholz Technologies, Inc.",
-    "domain": "trofholz.com",
-    "summary": "A veteran-owned company specializing in security system integration services.",
+    "slug": "brivo",
+    "brand_name": "Brivo",
+    "domain": "brivo.com",
+    "summary": "Brivo provides cloud-based security solutions for various sectors.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Access control management",
+      "Video surveillance integration",
+      "Visitor management tools",
+      "Alarm management",
+      "24/7 monitoring"
+    ],
+    "integrations": [
+      "API"
+    ]
+  },
+  {
+    "slug": "kindo",
+    "brand_name": "Kindo",
+    "domain": "kindo.ai",
+    "summary": "Kindo is an AI-native terminal designed for technical operations across various IT domains.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -305,17 +379,19 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Access Control",
-      "Cyber Security",
-      "Security System Integration Services"
+      "AI-driven tools for automation",
+      "Enhanced security protection",
+      "Integration with enterprise-scale security workflows",
+      "Support for business growth",
+      "AI-powered agents and workflows"
     ],
     "integrations": []
   },
   {
-    "slug": "origin-ai",
-    "brand_name": "Origin AI",
-    "domain": "originwirelessai.com",
-    "summary": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
+    "slug": "osavul",
+    "brand_name": "Osavul",
+    "domain": "osavul.cloud",
+    "summary": "Osavul provides AI-powered solutions for pre-emptive situational awareness across multiple domains.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -323,15 +399,14 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "AI SENSING technology",
-      "Human presence detection",
-      "Motion classification",
-      "Rapid deployment on a single WiFi device",
-      "Contextual understanding of WiFi disruptions"
+      "AI-driven threat detection",
+      "Real-time sentiment analysis",
+      "Preemptive threat intelligence",
+      "Global access to hard-to-reach data",
+      "Automated early warning for information threats"
     ],
     "integrations": [
-      "Verizon",
-      "Alarm.com"
+      "AWS"
     ]
   },
   {
@@ -386,48 +461,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "kindo",
-    "brand_name": "Kindo",
-    "domain": "kindo.ai",
-    "summary": "Kindo is an AI-native terminal designed for technical operations across various IT domains.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven tools for automation",
-      "Enhanced security protection",
-      "Integration with enterprise-scale security workflows",
-      "Support for business growth",
-      "AI-powered agents and workflows"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "osavul",
-    "brand_name": "Osavul",
-    "domain": "osavul.cloud",
-    "summary": "Osavul provides AI-powered solutions for pre-emptive situational awareness across multiple domains.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven threat detection",
-      "Real-time sentiment analysis",
-      "Preemptive threat intelligence",
-      "Global access to hard-to-reach data",
-      "Automated early warning for information threats"
-    ],
-    "integrations": [
-      "AWS"
-    ]
-  },
-  {
     "slug": "sym",
     "brand_name": "Sym",
     "domain": "symops.com",
@@ -455,7 +488,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.797Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Kolide by 1Password Alternatives
@@ -527,7 +560,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.797Z">2025-11-30</time>
             </p>
           </footer>
         </div>

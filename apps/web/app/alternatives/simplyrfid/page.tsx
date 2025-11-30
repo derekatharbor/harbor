@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.208Z
+// Generated: 2025-11-30T20:05:19.832Z
 // Alternative to: SimplyRFID
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best SimplyRFID Alternatives',
     description: 'Top alternatives to SimplyRFID for Inventory Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.208Z',
-    modifiedTime: '2025-11-30T19:44:53.208Z',
+    publishedTime: '2025-11-30T20:05:19.832Z',
+    modifiedTime: '2025-11-30T20:05:19.832Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/simplyrfid#article",
       "headline": "Best SimplyRFID Alternatives",
       "description": "Top alternatives to SimplyRFID for Inventory Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.208Z",
-      "dateModified": "2025-11-30T19:44:53.208Z",
+      "datePublished": "2025-11-30T20:05:19.832Z",
+      "dateModified": "2025-11-30T20:05:19.832Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "RF-SMART",
-            "url": "https://useharbor.io/brands/rf-smart",
-            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
+            "name": "NomadGo",
+            "url": "https://useharbor.io/brands/nomadgo",
+            "description": "NomadGo provides on-device inventory intelligence powered by AI for various industries.",
             "applicationCategory": "Inventory Management"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "NomadGo",
-            "url": "https://useharbor.io/brands/nomadgo",
-            "description": "NomadGo provides on-device inventory intelligence powered by AI for various industries.",
+            "name": "RF-SMART",
+            "url": "https://useharbor.io/brands/rf-smart",
+            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
             "applicationCategory": "Inventory Management"
           }
         },
@@ -95,30 +95,6 @@ const schemaOrg = {
 
 const alternatives = [
   {
-    "slug": "rf-smart",
-    "brand_name": "RF-SMART",
-    "domain": "rfsmart.com",
-    "summary": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Real-time inventory visibility",
-      "Barcode scanning",
-      "Cycle counting",
-      "Advanced picking",
-      "Label printing"
-    ],
-    "integrations": [
-      "NetSuite",
-      "Oracle Cloud",
-      "Oracle JD Edwards"
-    ]
-  },
-  {
     "slug": "nomadgo",
     "brand_name": "NomadGo",
     "domain": "nomad-go.com",
@@ -140,6 +116,30 @@ const alternatives = [
       "ERP",
       "inventory management",
       "back-office software"
+    ]
+  },
+  {
+    "slug": "rf-smart",
+    "brand_name": "RF-SMART",
+    "domain": "rfsmart.com",
+    "summary": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Real-time inventory visibility",
+      "Barcode scanning",
+      "Cycle counting",
+      "Advanced picking",
+      "Label printing"
+    ],
+    "integrations": [
+      "NetSuite",
+      "Oracle Cloud",
+      "Oracle JD Edwards"
     ]
   },
   {
@@ -199,7 +199,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.208Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.832Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best SimplyRFID Alternatives
@@ -271,7 +271,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.208Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.832Z">2025-11-30</time>
             </p>
           </footer>
         </div>

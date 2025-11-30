@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.951Z
+// Generated: 2025-11-30T20:05:20.383Z
 // Comparing: IDS - Integrated Dealer Systems vs RIMSS Business Systems Technology
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'IDS - Integrated Dealer Systems vs RIMSS Business Systems Technology',
     description: 'Detailed comparison of IDS - Integrated Dealer Systems and RIMSS Business Systems Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.951Z',
-    modifiedTime: '2025-11-30T19:44:53.951Z',
+    publishedTime: '2025-11-30T20:05:20.383Z',
+    modifiedTime: '2025-11-30T20:05:20.383Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/ids-integrated-dealer-systems-vs-rimss-business-systems-technology#article",
   "headline": "IDS - Integrated Dealer Systems vs RIMSS Business Systems Technology: Comparison",
   "description": "Detailed comparison of IDS - Integrated Dealer Systems and RIMSS Business Systems Technology. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.951Z",
-  "dateModified": "2025-11-30T19:44:53.951Z",
+  "datePublished": "2025-11-30T20:05:20.383Z",
+  "dateModified": "2025-11-30T20:05:20.383Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -118,7 +118,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.951Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.383Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -273,7 +273,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.951Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.383Z">2025-11-30</time>
             </p>
           </footer>
         </div>

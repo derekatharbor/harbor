@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.320Z
+// Generated: 2025-11-30T20:05:20.022Z
 // Alternative to: Bitrix24
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Bitrix24 Alternatives',
     description: 'Top alternatives to Bitrix24 for Business Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.320Z',
-    modifiedTime: '2025-11-30T19:44:53.320Z',
+    publishedTime: '2025-11-30T20:05:20.022Z',
+    modifiedTime: '2025-11-30T20:05:20.022Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/bitrix24#article",
       "headline": "Best Bitrix24 Alternatives",
       "description": "Top alternatives to Bitrix24 for Business Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.320Z",
-      "dateModified": "2025-11-30T19:44:53.320Z",
+      "datePublished": "2025-11-30T20:05:20.022Z",
+      "dateModified": "2025-11-30T20:05:20.022Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/bitrix24#list",
       "name": "Bitrix24 Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SmarterTools",
-            "url": "https://useharbor.io/brands/smartertools",
-            "description": "SmarterTools provides powerful software solutions for email, help desk, and web analytics.",
+            "name": "Wooqer",
+            "url": "https://useharbor.io/brands/wooqer",
+            "description": "Wooqer is a platform designed to empower businesses by simplifying operations through DIY tools.",
             "applicationCategory": "Business Solutions"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Wooqer",
-            "url": "https://useharbor.io/brands/wooqer",
-            "description": "Wooqer is a platform designed to empower businesses by simplifying operations through DIY tools.",
+            "name": "SmarterTools",
+            "url": "https://useharbor.io/brands/smartertools",
+            "description": "SmarterTools provides powerful software solutions for email, help desk, and web analytics.",
             "applicationCategory": "Business Solutions"
           }
         },
@@ -76,6 +76,17 @@ const schemaOrg = {
             "description": "Aroha Technologies provides comprehensive technology-enabled business solutions.",
             "applicationCategory": "Business Solutions"
           }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Sunmerge Systems",
+            "url": "https://useharbor.io/brands/sunmerge-systems",
+            "description": "A global Information Technology firm providing innovative end-to-end solutions.",
+            "applicationCategory": "Business Solutions"
+          }
         }
       ]
     }
@@ -83,26 +94,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "smartertools",
-    "brand_name": "SmarterTools",
-    "domain": "smartertools.com",
-    "summary": "SmarterTools provides powerful software solutions for email, help desk, and web analytics.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Leasing options available for discounted monthly rates.",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "On-premises mail server",
-      "Help desk software",
-      "Website analytics",
-      "Live chat support",
-      "Ticketing system"
-    ],
-    "integrations": []
-  },
   {
     "slug": "wooqer",
     "brand_name": "Wooqer",
@@ -120,6 +111,26 @@ const alternatives = [
       "Smart assignments for task distribution",
       "Custom roles and team mapping",
       "AI-powered visual reviews"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "smartertools",
+    "brand_name": "SmarterTools",
+    "domain": "smartertools.com",
+    "summary": "SmarterTools provides powerful software solutions for email, help desk, and web analytics.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Leasing options available for discounted monthly rates.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "On-premises mail server",
+      "Help desk software",
+      "Website analytics",
+      "Live chat support",
+      "Ticketing system"
     ],
     "integrations": []
   },
@@ -142,6 +153,26 @@ const alternatives = [
       "Automatic Time Tracking"
     ],
     "integrations": []
+  },
+  {
+    "slug": "sunmerge-systems",
+    "brand_name": "Sunmerge Systems",
+    "domain": "sunmergesystems.com",
+    "summary": "A global Information Technology firm providing innovative end-to-end solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Reduce billing cycle",
+      "Track real-time utilization",
+      "Prompt and accurate client billing",
+      "Increased timesheet compliance",
+      "Simple and intuitive interface"
+    ],
+    "integrations": []
   }
 ]
 
@@ -157,7 +188,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.320Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.022Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Bitrix24 Alternatives
@@ -229,7 +260,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.320Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.022Z">2025-11-30</time>
             </p>
           </footer>
         </div>

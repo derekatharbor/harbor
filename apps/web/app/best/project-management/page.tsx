@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:24.680Z
+// Generated: 2025-11-30T20:04:47.543Z
 // Query: {"category":"Project Management","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Project Management Software',
     description: 'Compare the top project management solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:24.680Z',
-    modifiedTime: '2025-11-30T19:44:24.680Z',
+    publishedTime: '2025-11-30T20:04:47.543Z',
+    modifiedTime: '2025-11-30T20:04:47.543Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:24.680Z',
+    'article:modified_time': '2025-11-30T20:04:47.543Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/project-management#article",
       "headline": "Best Project Management Software",
       "description": "Compare the top project management solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:24.680Z",
-      "dateModified": "2025-11-30T19:44:24.680Z",
+      "datePublished": "2025-11-30T20:04:47.543Z",
+      "dateModified": "2025-11-30T20:04:47.543Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/project-management#list",
       "name": "Best Project Management Software",
       "description": "Compare the top project management solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 12,
+      "numberOfItems": 16,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -100,6 +100,24 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "CONFLUX SYSTEMS",
+            "url": "https://useharbor.io/brands/conflux-systems",
+            "description": "Innovative IT solutions provider specializing in AI, cloud services, and business consulting.",
+            "applicationCategory": "Project Management",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "InEight",
             "url": "https://useharbor.io/brands/ineight",
             "description": "InEight provides an integrated project controls platform designed for capital construction management.",
@@ -109,7 +127,36 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Cprime, Inc",
+            "url": "https://useharbor.io/brands/cprime-inc",
+            "description": "Cprime is a consulting firm focused on optimizing enterprise performance through intelligent systems.",
+            "applicationCategory": "Project Management",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "695",
+              "priceCurrency": "USD"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SenseHawk",
+            "url": "https://useharbor.io/brands/sensehawk",
+            "description": "A digitization platform for solar projects and renewable energy management.",
+            "applicationCategory": "Project Management",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Novisync, Inc",
@@ -121,7 +168,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Netstratum Technologies",
@@ -133,7 +180,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HUBX",
@@ -145,7 +192,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Arkhya Tech. Inc.",
@@ -157,48 +204,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ALOIS Solutions",
             "url": "https://useharbor.io/brands/alois-solutions",
             "description": "ALOIS Solutions is a technology-focused company.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 9,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Gala",
-            "url": "https://useharbor.io/brands/gala",
-            "description": "Gala is a brand with unclear offerings and purpose.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Eluvio",
-            "url": "https://useharbor.io/brands/eluvio",
-            "description": "Eluvio is a brand with unclear offerings and purpose.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 11,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "ACS Consultancy Services, Inc",
-            "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
-            "description": "Unknown",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -211,6 +222,54 @@ const schemaOrg = {
             "name": "ALQIMI",
             "url": "https://useharbor.io/brands/alqimi",
             "description": "ALQIMI is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Gala",
+            "url": "https://useharbor.io/brands/gala",
+            "description": "Gala is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Eluvio",
+            "url": "https://useharbor.io/brands/eluvio",
+            "description": "Eluvio is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ACS Consultancy Services, Inc",
+            "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
+            "description": "Unknown",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Neo",
+            "url": "https://useharbor.io/brands/neo",
+            "description": "Neo is a brand with unclear offerings and purpose.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -301,6 +360,27 @@ const profiles = [
     "visibility_score": 78
   },
   {
+    "slug": "conflux-systems",
+    "brand_name": "CONFLUX SYSTEMS",
+    "domain": "confluxsystems.com",
+    "summary": "Innovative IT solutions provider specializing in AI, cloud services, and business consulting.",
+    "pricing": {
+      "price_model": "tiered",
+      "price_notes": "Multiple pricing tiers available based on the number of users and storage.",
+      "has_free_tier": true,
+      "starting_price": "$29/mo"
+    },
+    "features": [
+      "Unlimited Projects",
+      "Download prototypes",
+      "1 Gb workspace (Basic plan)",
+      "100 Gb workspace (Premium plan)",
+      "Scalable digital solutions"
+    ],
+    "integrations": [],
+    "visibility_score": 75
+  },
+  {
     "slug": "ineight",
     "brand_name": "InEight",
     "domain": "ineight.com",
@@ -329,6 +409,52 @@ const profiles = [
       "BOQ"
     ],
     "visibility_score": 73
+  },
+  {
+    "slug": "cprime-inc",
+    "brand_name": "Cprime, Inc",
+    "domain": "cprime.com",
+    "summary": "Cprime is a consulting firm focused on optimizing enterprise performance through intelligent systems.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Private group training course pricing",
+      "has_free_tier": false,
+      "starting_price": "$695"
+    },
+    "features": [
+      "Single source of truth",
+      "Auto-scheduler",
+      "Dependency management",
+      "What-if scenario planning",
+      "Progress tracking"
+    ],
+    "integrations": [
+      "Atlassian",
+      "IBM",
+      "Service Now"
+    ],
+    "visibility_score": 70
+  },
+  {
+    "slug": "sensehawk",
+    "brand_name": "SenseHawk",
+    "domain": "sensehawk.com",
+    "summary": "A digitization platform for solar projects and renewable energy management.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; interested customers are encouraged to contact sales.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Process Management",
+      "Document Control",
+      "GIS",
+      "Project Management",
+      "Workflows"
+    ],
+    "integrations": [],
+    "visibility_score": 70
   },
   {
     "slug": "novisync-inc",
@@ -406,6 +532,21 @@ const profiles = [
     "visibility_score": 5
   },
   {
+    "slug": "alqimi",
+    "brand_name": "ALQIMI",
+    "domain": "alqimi.com",
+    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": [],
+    "visibility_score": 0
+  },
+  {
     "slug": "gala",
     "brand_name": "Gala",
     "domain": "gala.com",
@@ -451,10 +592,10 @@ const profiles = [
     "visibility_score": 0
   },
   {
-    "slug": "alqimi",
-    "brand_name": "ALQIMI",
-    "domain": "alqimi.com",
-    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
+    "slug": "neo",
+    "brand_name": "Neo",
+    "domain": "neo.com",
+    "summary": "Neo is a brand with unclear offerings and purpose.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -468,7 +609,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:24.680Z'
+// Generated at: 2025-11-30T20:04:47.543Z
 
 export default function ListiclePage() {
   return (
@@ -483,7 +624,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:24.680Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:47.543Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Project Management Software
@@ -599,7 +740,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:24.680Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:47.543Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

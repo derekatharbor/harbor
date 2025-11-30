@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:26.939Z
+// Generated: 2025-11-30T20:04:49.524Z
 // Query: {"category":"Analytics","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Analytics Software',
     description: 'Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:26.939Z',
-    modifiedTime: '2025-11-30T19:44:26.939Z',
+    publishedTime: '2025-11-30T20:04:49.524Z',
+    modifiedTime: '2025-11-30T20:04:49.524Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:26.939Z',
+    'article:modified_time': '2025-11-30T20:04:49.524Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics#article",
       "headline": "Best Analytics Software",
       "description": "Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:26.939Z",
-      "dateModified": "2025-11-30T19:44:26.939Z",
+      "datePublished": "2025-11-30T20:04:49.524Z",
+      "dateModified": "2025-11-30T20:04:49.524Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics#list",
       "name": "Best Analytics Software",
       "description": "Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 18,
+      "numberOfItems": 20,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -160,6 +160,36 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Headset",
+            "url": "https://useharbor.io/brands/headset",
+            "description": "Headset is a data-driven tech company specializing in cannabis market intelligence.",
+            "applicationCategory": "Data Analytics",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "PostHog",
+            "url": "https://useharbor.io/brands/posthog",
+            "description": "PostHog provides development tools for product engineers to build and analyze successful products.",
+            "applicationCategory": "Product Analytics",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "BriefCam (Now Milestone)",
             "url": "https://useharbor.io/brands/briefcam-now-milestone",
             "description": "BriefCam provides advanced video analytics solutions for various industries.",
@@ -169,7 +199,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "VoxCroft Analytics",
@@ -181,7 +211,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Gramener",
@@ -193,37 +223,13 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "SpectraMedix",
-            "url": "https://useharbor.io/brands/spectramedix",
-            "description": "A platform designed to enhance value-based payment processes for healthcare organizations.",
-            "applicationCategory": "Value-Based Care Analytics",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 12,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Ducen - an Orion Innovation Company",
-            "url": "https://useharbor.io/brands/ducen-an-orion-innovation-company",
-            "description": "Ducen provides innovative technology solutions across various industries.",
-            "applicationCategory": "Data Analytics Platform",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Wiser Solutions, Inc.",
-            "url": "https://useharbor.io/brands/wiser-solutions-inc",
-            "description": "Wiser Solutions provides software and insights for brands and retailers to optimize pricing and enhance retail execution.",
-            "applicationCategory": "Retail Analytics",
+            "name": "DataWeave",
+            "url": "https://useharbor.io/brands/dataweave",
+            "description": "AI-powered analytics for digital commerce.",
+            "applicationCategory": "E-commerce Analytics",
             "operatingSystem": "Web-based"
           }
         },
@@ -232,10 +238,10 @@ const schemaOrg = {
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ActiveViam",
-            "url": "https://useharbor.io/brands/activeviam",
-            "description": "ActiveViam provides advanced financial data analytics software for financial institutions.",
-            "applicationCategory": "Financial Data Analytics",
+            "name": "Parrot Analytics",
+            "url": "https://useharbor.io/brands/parrot-analytics",
+            "description": "A leader in streaming economics and entertainment analytics.",
+            "applicationCategory": "Entertainment Analytics",
             "operatingSystem": "Web-based",
             "offers": {
               "@type": "Offer",
@@ -250,10 +256,10 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Protagonist",
-            "url": "https://useharbor.io/brands/protagonist",
-            "description": "Protagonist specializes in Narrative Analytics to help organizations understand and influence public discourse.",
-            "applicationCategory": "Analytics",
+            "name": "Satelytics",
+            "url": "https://useharbor.io/brands/satelytics",
+            "description": "Satelytics provides geospatial analytics software for industrial risk management.",
+            "applicationCategory": "Geospatial Analytics",
             "operatingSystem": "Web-based"
           }
         },
@@ -262,11 +268,16 @@ const schemaOrg = {
           "position": 16,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Siteimprove",
-            "url": "https://useharbor.io/brands/siteimprove",
-            "description": "Siteimprove is a software company providing an AI-powered platform focused on digital accessibility and analytics.",
-            "applicationCategory": "Digital Accessibility and Analytics",
-            "operatingSystem": "Web-based"
+            "name": "Datacy",
+            "url": "https://useharbor.io/brands/datacy",
+            "description": "Datacy is a decision intelligence platform that transforms consumer behavior data into actionable insights for digital commerce.",
+            "applicationCategory": "Marketing Analytics",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "3600",
+              "priceCurrency": "USD"
+            }
           }
         },
         {
@@ -274,10 +285,10 @@ const schemaOrg = {
           "position": 17,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "eSolutionsFirst",
-            "url": "https://useharbor.io/brands/esolutionsfirst",
-            "description": "Innovative AI and digital transformation solutions provider.",
-            "applicationCategory": "AI and Data Analytics Solutions",
+            "name": "SpectraMedix",
+            "url": "https://useharbor.io/brands/spectramedix",
+            "description": "A platform designed to enhance value-based payment processes for healthcare organizations.",
+            "applicationCategory": "Value-Based Care Analytics",
             "operatingSystem": "Web-based"
           }
         },
@@ -286,11 +297,41 @@ const schemaOrg = {
           "position": 18,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Allwyn Corporation",
-            "url": "https://useharbor.io/brands/allwyn-corporation",
-            "description": "Innovative solutions provider specializing in data transformation and operational efficiency.",
-            "applicationCategory": "Data Analytics",
+            "name": "Ducen - an Orion Innovation Company",
+            "url": "https://useharbor.io/brands/ducen-an-orion-innovation-company",
+            "description": "Ducen provides innovative technology solutions across various industries.",
+            "applicationCategory": "Data Analytics Platform",
             "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Wiser Solutions, Inc.",
+            "url": "https://useharbor.io/brands/wiser-solutions-inc",
+            "description": "Wiser Solutions provides software and insights for brands and retailers to optimize pricing and enhance retail execution.",
+            "applicationCategory": "Retail Analytics",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ActiveViam",
+            "url": "https://useharbor.io/brands/activeviam",
+            "description": "ActiveViam provides advanced financial data analytics software for financial institutions.",
+            "applicationCategory": "Financial Data Analytics",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
           }
         }
       ]
@@ -490,6 +531,66 @@ const profiles = [
     "visibility_score": 78
   },
   {
+    "slug": "headset",
+    "brand_name": "Headset",
+    "domain": "headset.io",
+    "summary": "Headset is a data-driven tech company specializing in cannabis market intelligence.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Real-time data aggregation",
+      "Point-of-sale data collection",
+      "Data normalization and cleansing",
+      "Machine learning for data processing",
+      "Market intelligence insights"
+    ],
+    "integrations": [
+      "Alleaves",
+      "BarnetPOS",
+      "BioTrackTHC",
+      "Blaze",
+      "Cova",
+      "Flowhub",
+      "GlobalTill",
+      "Greenbits by Dutchie"
+    ],
+    "visibility_score": 78
+  },
+  {
+    "slug": "posthog",
+    "brand_name": "PostHog",
+    "domain": "posthog.com",
+    "summary": "PostHog provides development tools for product engineers to build and analyze successful products.",
+    "pricing": {
+      "price_model": "usage",
+      "price_notes": "Generous free tier with usage-based pricing after limits.",
+      "has_free_tier": true,
+      "starting_price": "$0/mo"
+    },
+    "features": [
+      "Product Analytics",
+      "Session Replay",
+      "Feature Flags",
+      "Error Tracking",
+      "Surveys"
+    ],
+    "integrations": [
+      "ABsmartly",
+      "Acoustic",
+      "ActiveCampaign",
+      "Adjust",
+      "Airtable",
+      "Algolia Insights",
+      "Amazon Event Bridge",
+      "Amplitude"
+    ],
+    "visibility_score": 78
+  },
+  {
     "slug": "briefcam-now-milestone",
     "brand_name": "BriefCam (Now Milestone)",
     "domain": "briefcam.com",
@@ -550,6 +651,95 @@ const profiles = [
       "Intelligent Document Processing",
       "Insight Tree",
       "Data Anonymization"
+    ],
+    "integrations": [],
+    "visibility_score": 75
+  },
+  {
+    "slug": "dataweave",
+    "brand_name": "DataWeave",
+    "domain": "dataweave.com",
+    "summary": "AI-powered analytics for digital commerce.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Pricing Intelligence",
+      "Assortment Analytics",
+      "Digital Shelf Analytics",
+      "Content Optimization",
+      "AI-Powered Insights"
+    ],
+    "integrations": [],
+    "visibility_score": 75
+  },
+  {
+    "slug": "parrot-analytics",
+    "brand_name": "Parrot Analytics",
+    "domain": "parrotanalytics.com",
+    "summary": "A leader in streaming economics and entertainment analytics.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Offers a free report on entertainment analytics.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Global audience demand measurement",
+      "Talent ranking in multiple markets",
+      "TV shows and movies ranking",
+      "End-to-end ROI blueprint",
+      "Streaming metrics including historical and forecasted data"
+    ],
+    "integrations": [],
+    "visibility_score": 75
+  },
+  {
+    "slug": "satelytics",
+    "brand_name": "Satelytics",
+    "domain": "satelytics.com",
+    "summary": "Satelytics provides geospatial analytics software for industrial risk management.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Encroachment Analysis",
+      "Land Use Identification",
+      "PFAS Detection",
+      "Produced Water Leak Detection",
+      "Theft Detection"
+    ],
+    "integrations": [
+      "AIMS",
+      "iSpatialTec",
+      "Southern Cross",
+      "TECNA Group"
+    ],
+    "visibility_score": 75
+  },
+  {
+    "slug": "datacy",
+    "brand_name": "Datacy",
+    "domain": "datacy.com",
+    "summary": "Datacy is a decision intelligence platform that transforms consumer behavior data into actionable insights for digital commerce.",
+    "pricing": {
+      "price_model": "usage",
+      "price_notes": "Pricing is based on the number of Monthly Tracked Consumers (MTCs) with additional fees for exceeding plan limits.",
+      "has_free_tier": false,
+      "starting_price": "$3,600/year"
+    },
+    "features": [
+      "Real-time insights and analytics",
+      "Consumer journey mapping from search to purchase",
+      "Channel insights for engagement and sales",
+      "Category intelligence for market trends",
+      "Competitor insights for benchmarking"
     ],
     "integrations": [],
     "visibility_score": 75
@@ -643,104 +833,11 @@ const profiles = [
       "SmartStream"
     ],
     "visibility_score": 73
-  },
-  {
-    "slug": "protagonist",
-    "brand_name": "Protagonist",
-    "domain": "protagonist.io",
-    "summary": "Protagonist specializes in Narrative Analytics to help organizations understand and influence public discourse.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Data-driven understanding of public discourse",
-      "Audience beliefs and motivations analysis",
-      "Narrative strategy development",
-      "Monitoring and optimization of communication efforts",
-      "Market intelligence for customer connection"
-    ],
-    "integrations": [],
-    "visibility_score": 70
-  },
-  {
-    "slug": "siteimprove",
-    "brand_name": "Siteimprove",
-    "domain": "siteimprove.com",
-    "summary": "Siteimprove is a software company providing an AI-powered platform focused on digital accessibility and analytics.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is customized based on business needs.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Automated accessibility checks",
-      "Quality assurance checks",
-      "70+ SEO checks",
-      "Keyword discovery and monitoring",
-      "Visitor profiles for performance measurement"
-    ],
-    "integrations": [
-      "WordPress",
-      "Drupal",
-      "Adobe",
-      "Episerver",
-      "Sitefinity",
-      "Optimizely",
-      "TYPO3",
-      "Sitecore"
-    ],
-    "visibility_score": 70
-  },
-  {
-    "slug": "esolutionsfirst",
-    "brand_name": "eSolutionsFirst",
-    "domain": "esolutionsfirst.com",
-    "summary": "Innovative AI and digital transformation solutions provider.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI services for big data",
-      "Cloud transition solutions",
-      "End-to-end cyber security services",
-      "Robotic Process Automation (RPA)",
-      "Data analytics for fraud detection"
-    ],
-    "integrations": [],
-    "visibility_score": 70
-  },
-  {
-    "slug": "allwyn-corporation",
-    "brand_name": "Allwyn Corporation",
-    "domain": "allwyncorp.com",
-    "summary": "Innovative solutions provider specializing in data transformation and operational efficiency.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI & Machine Learning",
-      "Agile Software Delivery",
-      "Data Analytics & Business Intelligence",
-      "Enterprise Applications",
-      "IT Modernization"
-    ],
-    "integrations": [],
-    "visibility_score": 70
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:26.939Z'
+// Generated at: 2025-11-30T20:04:49.524Z
 
 export default function ListiclePage() {
   return (
@@ -755,7 +852,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:26.939Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:49.524Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Analytics Software
@@ -871,7 +968,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:26.939Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:49.524Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

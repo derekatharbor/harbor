@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.287Z
+// Generated: 2025-11-30T20:05:19.978Z
 // Alternative to: Blackstraw
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Blackstraw Alternatives',
     description: 'Top alternatives to Blackstraw for Artificial Intelligence.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.287Z',
-    modifiedTime: '2025-11-30T19:44:53.287Z',
+    publishedTime: '2025-11-30T20:05:19.978Z',
+    modifiedTime: '2025-11-30T20:05:19.978Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/blackstraw#article",
       "headline": "Best Blackstraw Alternatives",
       "description": "Top alternatives to Blackstraw for Artificial Intelligence. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.287Z",
-      "dateModified": "2025-11-30T19:44:53.287Z",
+      "datePublished": "2025-11-30T20:05:19.978Z",
+      "dateModified": "2025-11-30T20:05:19.978Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,17 +60,6 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Empower AI",
-            "url": "https://useharbor.io/brands/empower-ai",
-            "description": "Empower AI provides innovative AI solutions to support federal missions and enhance agency productivity.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Quickchat AI",
             "url": "https://useharbor.io/brands/quickchat-ai",
             "description": "Quickchat AI provides customizable AI agents for businesses to enhance customer support and internal knowledge sharing.",
@@ -79,7 +68,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Empower AI",
+            "url": "https://useharbor.io/brands/empower-ai",
+            "description": "Empower AI provides innovative AI solutions to support federal missions and enhance agency productivity.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Uniphore",
+            "url": "https://useharbor.io/brands/uniphore",
+            "description": "Uniphore is a leading provider of Business AI solutions.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Moveworks",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "EDGE3 Technologies",
@@ -101,40 +112,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "DataRobot",
-            "url": "https://useharbor.io/brands/datarobot",
-            "description": "DataRobot is an AI platform that empowers businesses to build, operate, and govern AI solutions at scale.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Quantum Integrators",
-            "url": "https://useharbor.io/brands/quantum-integrators",
-            "description": "Empowering businesses through AI-driven innovation and solutions.",
+            "name": "Abacus.AI",
+            "url": "https://useharbor.io/brands/abacusai",
+            "description": "The world's first AI super assistant for professionals and enterprises.",
             "applicationCategory": "Artificial Intelligence"
           }
         },
         {
           "@type": "ListItem",
           "position": 8,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "SiMa.ai",
-            "url": "https://useharbor.io/brands/simaai",
-            "description": "SiMa.ai is a leader in Physical AI, providing a software-centric platform for various industries.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "OMNIQ Corp.",
@@ -145,18 +134,51 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SiMa.ai",
+            "url": "https://useharbor.io/brands/simaai",
+            "description": "SiMa.ai is a leader in Physical AI, providing a software-centric platform for various industries.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Contextual AI",
-            "url": "https://useharbor.io/brands/contextual-ai",
-            "description": "A leading platform for enterprises to build AI agents and applications that work securely on their data.",
+            "name": "Hyly.AI",
+            "url": "https://useharbor.io/brands/hylyai",
+            "description": "Hyly.AI provides an Intelligence Fabric that integrates AI, BI, and HI for the multifamily industry.",
             "applicationCategory": "Artificial Intelligence"
           }
         },
         {
           "@type": "ListItem",
           "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "DataRobot",
+            "url": "https://useharbor.io/brands/datarobot",
+            "description": "DataRobot is an AI platform that empowers businesses to build, operate, and govern AI solutions at scale.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Quantum Integrators",
+            "url": "https://useharbor.io/brands/quantum-integrators",
+            "description": "Empowering businesses through AI-driven innovation and solutions.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "poolside",
@@ -167,34 +189,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "interface.ai",
-            "url": "https://useharbor.io/brands/interfaceai",
-            "description": "AI solutions tailored for credit unions and community banks.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 13,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "ModelCat AI",
-            "url": "https://useharbor.io/brands/modelcat-ai",
-            "description": "AI-driven platform for building optimized models for embedded, edge, and IoT devices.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SparkAI",
-            "url": "https://useharbor.io/brands/sparkai",
-            "description": "A solution for resolving AI edge cases in real-time.",
+            "name": "Contextual AI",
+            "url": "https://useharbor.io/brands/contextual-ai",
+            "description": "A leading platform for enterprises to build AI agents and applications that work securely on their data.",
             "applicationCategory": "Artificial Intelligence"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Neural Magic (Acquired by Red Hat)",
-            "url": "https://useharbor.io/brands/neural-magic-acquired-by-red-hat",
-            "description": "Red Hat provides open-source software solutions for enterprise environments.",
+            "name": "interface.ai",
+            "url": "https://useharbor.io/brands/interfaceai",
+            "description": "AI solutions tailored for credit unions and community banks.",
             "applicationCategory": "Artificial Intelligence"
           }
         }
@@ -236,26 +236,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "empower-ai",
-    "brand_name": "Empower AI",
-    "domain": "empower.ai",
-    "summary": "Empower AI provides innovative AI solutions to support federal missions and enhance agency productivity.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is tailored to each specific agency's needs.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI technology for decision-making",
-      "Automation of routine tasks",
-      "Data analysis capabilities",
-      "Customizable solutions for federal agencies",
-      "IT service management solutions"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "quickchat-ai",
     "brand_name": "Quickchat AI",
     "domain": "quickchat.ai",
@@ -282,6 +262,51 @@ const alternatives = [
       "Telegram",
       "Intercom",
       "HubSpot"
+    ]
+  },
+  {
+    "slug": "empower-ai",
+    "brand_name": "Empower AI",
+    "domain": "empower.ai",
+    "summary": "Empower AI provides innovative AI solutions to support federal missions and enhance agency productivity.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is tailored to each specific agency's needs.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI technology for decision-making",
+      "Automation of routine tasks",
+      "Data analysis capabilities",
+      "Customizable solutions for federal agencies",
+      "IT service management solutions"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "uniphore",
+    "brand_name": "Uniphore",
+    "domain": "uniphore.com",
+    "summary": "Uniphore is a leading provider of Business AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Connect fragmented data sources",
+      "Automate data discovery and preparation for AI",
+      "Build and deploy multi-agentic workflows",
+      "Model orchestration across open and closed models",
+      "Data automation agents for structured and unstructured data"
+    ],
+    "integrations": [
+      "NVIDIA",
+      "AMD",
+      "Snowflake",
+      "Databricks"
     ]
   },
   {
@@ -331,6 +356,102 @@ const alternatives = [
       "Gesture Recognition platform for in-cabin interaction"
     ],
     "integrations": []
+  },
+  {
+    "slug": "abacusai",
+    "brand_name": "Abacus.AI",
+    "domain": "abacus.ai",
+    "summary": "The world's first AI super assistant for professionals and enterprises.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Free trial available",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Real-Time ML Feature Store",
+      "Human-AI Champion-Challenger",
+      "Explainable AI AND DeBiasing",
+      "Custom Fine-Tunes",
+      "Plug and play code snippets"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "omniq-corp",
+    "brand_name": "OMNIQ Corp.",
+    "domain": "omniq.com",
+    "summary": "Innovative provider of AI-powered solutions for supply chain, security, and parking management.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Artificial intelligence solutions",
+      "Supply chain management",
+      "Parking security kiosks",
+      "RFID technology",
+      "Client support services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "simaai",
+    "brand_name": "SiMa.ai",
+    "domain": "sima.ai",
+    "summary": "SiMa.ai is a leader in Physical AI, providing a software-centric platform for various industries.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Physical AI solutions",
+      "MLSoC platform",
+      "Modalix",
+      "Edge AI systems",
+      "AI processing efficiency"
+    ],
+    "integrations": [
+      "Cisco",
+      "Synopsys",
+      "Wind River",
+      "Supermicro",
+      "Arm",
+      "TSMC"
+    ]
+  },
+  {
+    "slug": "hylyai",
+    "brand_name": "Hyly.AI",
+    "domain": "hyly.ai",
+    "summary": "Hyly.AI provides an Intelligence Fabric that integrates AI, BI, and HI for the multifamily industry.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Fabric",
+      "Experience Fabric",
+      "AMP (Automation Metric)",
+      "CrSTAL Attribution",
+      "Journey Stitching"
+    ],
+    "integrations": [
+      "Anyone Home",
+      "Apartment List",
+      "Apartments.com",
+      "Azure",
+      "BetterBot",
+      "College Student Apartments",
+      "Elise AI",
+      "Engrain"
+    ]
   },
   {
     "slug": "datarobot",
@@ -386,51 +507,28 @@ const alternatives = [
     ]
   },
   {
-    "slug": "simaai",
-    "brand_name": "SiMa.ai",
-    "domain": "sima.ai",
-    "summary": "SiMa.ai is a leader in Physical AI, providing a software-centric platform for various industries.",
+    "slug": "poolside",
+    "brand_name": "poolside",
+    "domain": "poolside.ai",
+    "summary": "AGI for the enterprise—starting with software agents.",
     "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated and may vary based on enterprise needs.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Physical AI solutions",
-      "MLSoC platform",
-      "Modalix",
-      "Edge AI systems",
-      "AI processing efficiency"
+      "Single and multi-agent systems",
+      "Multi-Agent Orchestration",
+      "IDE extensions",
+      "Data connectors",
+      "Foundation Models deployment"
     ],
     "integrations": [
-      "Cisco",
-      "Synopsys",
-      "Wind River",
-      "Supermicro",
-      "Arm",
-      "TSMC"
+      "repositories",
+      "databases",
+      "data warehouses"
     ]
-  },
-  {
-    "slug": "omniq-corp",
-    "brand_name": "OMNIQ Corp.",
-    "domain": "omniq.com",
-    "summary": "Innovative provider of AI-powered solutions for supply chain, security, and parking management.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Artificial intelligence solutions",
-      "Supply chain management",
-      "Parking security kiosks",
-      "RFID technology",
-      "Client support services"
-    ],
-    "integrations": []
   },
   {
     "slug": "contextual-ai",
@@ -462,30 +560,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "poolside",
-    "brand_name": "poolside",
-    "domain": "poolside.ai",
-    "summary": "AGI for the enterprise—starting with software agents.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated and may vary based on enterprise needs.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Single and multi-agent systems",
-      "Multi-Agent Orchestration",
-      "IDE extensions",
-      "Data connectors",
-      "Foundation Models deployment"
-    ],
-    "integrations": [
-      "repositories",
-      "databases",
-      "data warehouses"
-    ]
-  },
-  {
     "slug": "interfaceai",
     "brand_name": "interface.ai",
     "domain": "interface.ai",
@@ -511,69 +585,6 @@ const alternatives = [
       "Core Processor",
       "Plaid"
     ]
-  },
-  {
-    "slug": "modelcat-ai",
-    "brand_name": "ModelCat AI",
-    "domain": "modelcat.ai",
-    "summary": "AI-driven platform for building optimized models for embedded, edge, and IoT devices.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Check Data Quality",
-      "Control Model Attributes",
-      "Models Built to Order",
-      "Anchored to the Real World",
-      "Continually Learning"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "sparkai",
-    "brand_name": "SparkAI",
-    "domain": "spark.ai",
-    "summary": "A solution for resolving AI edge cases in real-time.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Real-time resolution of AI edge cases",
-      "Augmented human cognition in AI workflows",
-      "Real-time QA systems",
-      "ML-powered rapid decision tools",
-      "API deployment via REST or Python SDK"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "neural-magic-acquired-by-red-hat",
-    "brand_name": "Neural Magic (Acquired by Red Hat)",
-    "domain": "neuralmagic.com",
-    "summary": "Red Hat provides open-source software solutions for enterprise environments.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Red Hat offers a trial with no cost for certain services.",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "Build, deploy, and monitor AI models and apps",
-      "Simplify application development",
-      "Scale automation across environments",
-      "Support hybrid cloud innovation",
-      "Modernize operations for virtualized workloads"
-    ],
-    "integrations": [
-      "Microsoft Azure",
-      "AWS"
-    ]
   }
 ]
 
@@ -589,7 +600,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.287Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.978Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Blackstraw Alternatives
@@ -661,7 +672,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.287Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.978Z">2025-11-30</time>
             </p>
           </footer>
         </div>

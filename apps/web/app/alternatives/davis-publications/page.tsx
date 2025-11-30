@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.161Z
+// Generated: 2025-11-30T20:05:19.912Z
 // Alternative to: Davis Publications
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Davis Publications Alternatives',
     description: 'Top alternatives to Davis Publications for Publishing.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.161Z',
-    modifiedTime: '2025-11-30T19:44:53.161Z',
+    publishedTime: '2025-11-30T20:05:19.912Z',
+    modifiedTime: '2025-11-30T20:05:19.912Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/davis-publications#article",
       "headline": "Best Davis Publications Alternatives",
       "description": "Top alternatives to Davis Publications for Publishing. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.161Z",
-      "dateModified": "2025-11-30T19:44:53.161Z",
+      "datePublished": "2025-11-30T20:05:19.912Z",
+      "dateModified": "2025-11-30T20:05:19.912Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/davis-publications#list",
       "name": "Davis Publications Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Blurb",
-            "url": "https://useharbor.io/brands/blurb",
-            "description": "Blurb is a platform for creating, printing, and publishing custom books.",
+            "name": "IDW Publishing",
+            "url": "https://useharbor.io/brands/idw-publishing",
+            "description": "IDW Publishing is an award-winning publisher of comics, graphic novels, and books.",
             "applicationCategory": "Publishing"
           }
         },
@@ -71,9 +71,31 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Blurb",
+            "url": "https://useharbor.io/brands/blurb",
+            "description": "Blurb is a platform for creating, printing, and publishing custom books.",
+            "applicationCategory": "Publishing"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Genetic Engineering & Biotechnology News",
             "url": "https://useharbor.io/brands/genetic-engineering-biotechnology-news",
             "description": "A leading source of news and insights in the fields of genetic engineering and biotechnology.",
+            "applicationCategory": "Publishing"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Scribe Media",
+            "url": "https://useharbor.io/brands/scribe-media",
+            "description": "Professional publishing services for authors.",
             "applicationCategory": "Publishing"
           }
         }
@@ -100,6 +122,26 @@ const alternatives = [
       "Special offers",
       "Email subscriptions",
       "Free downloadable tools"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "idw-publishing",
+    "brand_name": "IDW Publishing",
+    "domain": "idwpublishing.com",
+    "summary": "IDW Publishing is an award-winning publisher of comics, graphic novels, and books.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Exclusive Artist Editions",
+      "TMNT library",
+      "Sonic the Hedgehog series",
+      "Godzilla graphic novels",
+      "Original comic stories"
     ],
     "integrations": []
   },
@@ -144,6 +186,26 @@ const alternatives = [
       "Webinars and podcasts on industry trends"
     ],
     "integrations": []
+  },
+  {
+    "slug": "scribe-media",
+    "brand_name": "Scribe Media",
+    "domain": "scribemedia.com",
+    "summary": "Professional publishing services for authors.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Professional book publishing services",
+      "Book writing assistance without typing",
+      "Expert book coaching",
+      "Book marketing services",
+      "Guided author support"
+    ],
+    "integrations": []
   }
 ]
 
@@ -159,7 +221,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.161Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.912Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Davis Publications Alternatives
@@ -231,7 +293,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.161Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.912Z">2025-11-30</time>
             </p>
           </footer>
         </div>

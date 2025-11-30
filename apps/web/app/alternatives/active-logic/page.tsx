@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.294Z
+// Generated: 2025-11-30T20:05:19.977Z
 // Alternative to: Active Logic
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Active Logic Alternatives',
     description: 'Top alternatives to Active Logic for Custom Software Development.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.294Z',
-    modifiedTime: '2025-11-30T19:44:53.294Z',
+    publishedTime: '2025-11-30T20:05:19.977Z',
+    modifiedTime: '2025-11-30T20:05:19.977Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/active-logic#article",
       "headline": "Best Active Logic Alternatives",
       "description": "Top alternatives to Active Logic for Custom Software Development. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.294Z",
-      "dateModified": "2025-11-30T19:44:53.294Z",
+      "datePublished": "2025-11-30T20:05:19.977Z",
+      "dateModified": "2025-11-30T20:05:19.977Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Aderas, Inc",
-            "url": "https://useharbor.io/brands/aderas-inc",
-            "description": "Aderas, Inc is a technology integrator providing IT solutions and services to federal and defense sectors.",
+            "name": "COAX",
+            "url": "https://useharbor.io/brands/coax",
+            "description": "Custom software development company specializing in travel, transport, and logistics.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Network Handlers",
-            "url": "https://useharbor.io/brands/network-handlers",
-            "description": "A technology solutions provider specializing in custom software development and digital transformation.",
+            "name": "Aderas, Inc",
+            "url": "https://useharbor.io/brands/aderas-inc",
+            "description": "Aderas, Inc is a technology integrator providing IT solutions and services to federal and defense sectors.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "COAX",
-            "url": "https://useharbor.io/brands/coax",
-            "description": "Custom software development company specializing in travel, transport, and logistics.",
+            "name": "Network Handlers",
+            "url": "https://useharbor.io/brands/network-handlers",
+            "description": "A technology solutions provider specializing in custom software development and digital transformation.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -137,6 +137,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "coax",
+    "brand_name": "COAX",
+    "domain": "coaxsoft.com",
+    "summary": "Custom software development company specializing in travel, transport, and logistics.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is based on project estimation and varies according to the project scope.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Custom software development",
+      "Consulting & strategy",
+      "Mobile app development",
+      "Full stack development",
+      "Cloud development"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "aderas-inc",
     "brand_name": "Aderas, Inc",
     "domain": "aderas.com",
@@ -185,26 +205,6 @@ const alternatives = [
       "LMS",
       "HR systems"
     ]
-  },
-  {
-    "slug": "coax",
-    "brand_name": "COAX",
-    "domain": "coaxsoft.com",
-    "summary": "Custom software development company specializing in travel, transport, and logistics.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is based on project estimation and varies according to the project scope.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Custom software development",
-      "Consulting & strategy",
-      "Mobile app development",
-      "Full stack development",
-      "Cloud development"
-    ],
-    "integrations": []
   },
   {
     "slug": "softxpert",
@@ -265,7 +265,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.294Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.977Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Active Logic Alternatives
@@ -337,7 +337,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.294Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.977Z">2025-11-30</time>
             </p>
           </footer>
         </div>

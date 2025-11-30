@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.926Z
+// Generated: 2025-11-30T20:05:20.249Z
 // Comparing: COX-LITTLE & COMPANY vs Enhanced Veterans Solutions, Inc. (EVS)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'COX-LITTLE & COMPANY vs Enhanced Veterans Solutions, Inc. (EVS)',
     description: 'Detailed comparison of COX-LITTLE & COMPANY and Enhanced Veterans Solutions, Inc. (EVS).',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.926Z',
-    modifiedTime: '2025-11-30T19:44:53.926Z',
+    publishedTime: '2025-11-30T20:05:20.249Z',
+    modifiedTime: '2025-11-30T20:05:20.249Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/cox-little-company-vs-enhanced-veterans-solutions-inc-evs#article",
   "headline": "COX-LITTLE & COMPANY vs Enhanced Veterans Solutions, Inc. (EVS): Comparison",
   "description": "Detailed comparison of COX-LITTLE & COMPANY and Enhanced Veterans Solutions, Inc. (EVS). Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.926Z",
-  "dateModified": "2025-11-30T19:44:53.926Z",
+  "datePublished": "2025-11-30T20:05:20.249Z",
+  "dateModified": "2025-11-30T20:05:20.249Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -112,7 +112,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.926Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.249Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -267,7 +267,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.926Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.249Z">2025-11-30</time>
             </p>
           </footer>
         </div>

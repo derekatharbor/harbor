@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:25.962Z
+// Generated: 2025-11-30T20:04:48.565Z
 // Query: {"category":"Inventory Management","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Inventory Management Software',
     description: 'Compare the top inventory management solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:25.962Z',
-    modifiedTime: '2025-11-30T19:44:25.962Z',
+    publishedTime: '2025-11-30T20:04:48.565Z',
+    modifiedTime: '2025-11-30T20:04:48.565Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:25.962Z',
+    'article:modified_time': '2025-11-30T20:04:48.565Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/inventory-management#article",
       "headline": "Best Inventory Management Software",
       "description": "Compare the top inventory management solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:25.962Z",
-      "dateModified": "2025-11-30T19:44:25.962Z",
+      "datePublished": "2025-11-30T20:04:48.565Z",
+      "dateModified": "2025-11-30T20:04:48.565Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/inventory-management#list",
       "name": "Best Inventory Management Software",
       "description": "Compare the top inventory management solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 5,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -100,6 +100,24 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Lotlinx",
+            "url": "https://useharbor.io/brands/lotlinx",
+            "description": "AI-powered inventory management solutions for automotive dealers.",
+            "applicationCategory": "Inventory Management Software",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Data Works",
             "url": "https://useharbor.io/brands/data-works",
             "description": "DataWorks provides comprehensive inventory and procurement management solutions for various industries.",
@@ -109,7 +127,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions",
@@ -221,6 +239,27 @@ const profiles = [
     "visibility_score": 78
   },
   {
+    "slug": "lotlinx",
+    "brand_name": "Lotlinx",
+    "domain": "lotlinx.com",
+    "summary": "AI-powered inventory management solutions for automotive dealers.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; demo request is encouraged.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "VIN performance management",
+      "AI-powered inventory insights",
+      "Smart VIN targeting",
+      "Merchandising tools for vehicle presentation",
+      "Chat-based inventory assistant"
+    ],
+    "integrations": [],
+    "visibility_score": 78
+  },
+  {
     "slug": "data-works",
     "brand_name": "Data Works",
     "domain": "dataworksinc.com",
@@ -268,7 +307,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:25.962Z'
+// Generated at: 2025-11-30T20:04:48.565Z
 
 export default function ListiclePage() {
   return (
@@ -283,7 +322,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:25.962Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:48.565Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Inventory Management Software
@@ -399,7 +438,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:25.962Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:48.565Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

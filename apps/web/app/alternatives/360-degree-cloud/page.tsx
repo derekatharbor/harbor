@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.277Z
+// Generated: 2025-11-30T20:05:19.973Z
 // Alternative to: 360 Degree Cloud
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best 360 Degree Cloud Alternatives',
     description: 'Top alternatives to 360 Degree Cloud for Salesforce Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.277Z',
-    modifiedTime: '2025-11-30T19:44:53.277Z',
+    publishedTime: '2025-11-30T20:05:19.973Z',
+    modifiedTime: '2025-11-30T20:05:19.973Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/360-degree-cloud#article",
       "headline": "Best 360 Degree Cloud Alternatives",
       "description": "Top alternatives to 360 Degree Cloud for Salesforce Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.277Z",
-      "dateModified": "2025-11-30T19:44:53.277Z",
+      "datePublished": "2025-11-30T20:05:19.973Z",
+      "dateModified": "2025-11-30T20:05:19.973Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ABSYZ Inc",
-            "url": "https://useharbor.io/brands/absyz-inc",
-            "description": "A dedicated Salesforce partner focused on AI-driven solutions.",
+            "name": "Access Global Group",
+            "url": "https://useharbor.io/brands/access-global-group",
+            "description": "Salesforce consulting services tailored for business growth.",
             "applicationCategory": "Salesforce Consulting"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Access Global Group",
-            "url": "https://useharbor.io/brands/access-global-group",
-            "description": "Salesforce consulting services tailored for business growth.",
+            "name": "ABSYZ Inc",
+            "url": "https://useharbor.io/brands/absyz-inc",
+            "description": "A dedicated Salesforce partner focused on AI-driven solutions.",
             "applicationCategory": "Salesforce Consulting"
           }
         }
@@ -139,28 +139,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "absyz-inc",
-    "brand_name": "ABSYZ Inc",
-    "domain": "absyz.com",
-    "summary": "A dedicated Salesforce partner focused on AI-driven solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Salesforce Consulting",
-      "Salesforce Implementation",
-      "Salesforce Staffing Services",
-      "Salesforce Managed Support",
-      "Quality Assurance"
-    ],
-    "integrations": [
-      "Salesforce"
-    ]
-  },
-  {
     "slug": "access-global-group",
     "brand_name": "Access Global Group",
     "domain": "acsgbl.com",
@@ -183,6 +161,28 @@ const alternatives = [
       "QuickBooks",
       "Guidewire"
     ]
+  },
+  {
+    "slug": "absyz-inc",
+    "brand_name": "ABSYZ Inc",
+    "domain": "absyz.com",
+    "summary": "A dedicated Salesforce partner focused on AI-driven solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Salesforce Consulting",
+      "Salesforce Implementation",
+      "Salesforce Staffing Services",
+      "Salesforce Managed Support",
+      "Quality Assurance"
+    ],
+    "integrations": [
+      "Salesforce"
+    ]
   }
 ]
 
@@ -198,7 +198,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.277Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.973Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best 360 Degree Cloud Alternatives
@@ -270,7 +270,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.277Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.973Z">2025-11-30</time>
             </p>
           </footer>
         </div>

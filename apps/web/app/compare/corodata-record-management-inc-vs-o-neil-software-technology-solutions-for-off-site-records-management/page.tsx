@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.932Z
+// Generated: 2025-11-30T20:05:20.278Z
 // Comparing: Corodata Record Management Inc. vs O\'Neil Software | Technology Solutions for Off-Site Records Management
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Corodata Record Management Inc. vs O\'Neil Software | Technology Solutions for Off-Site Records Management',
     description: 'Detailed comparison of Corodata Record Management Inc. and O\'Neil Software | Technology Solutions for Off-Site Records Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.932Z',
-    modifiedTime: '2025-11-30T19:44:53.932Z',
+    publishedTime: '2025-11-30T20:05:20.278Z',
+    modifiedTime: '2025-11-30T20:05:20.278Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/corodata-record-management-inc-vs-o-neil-software-technology-solutions-for-off-site-records-management#article",
   "headline": "Corodata Record Management Inc. vs O'Neil Software | Technology Solutions for Off-Site Records Management: Comparison",
   "description": "Detailed comparison of Corodata Record Management Inc. and O'Neil Software | Technology Solutions for Off-Site Records Management. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.932Z",
-  "dateModified": "2025-11-30T19:44:53.932Z",
+  "datePublished": "2025-11-30T20:05:20.278Z",
+  "dateModified": "2025-11-30T20:05:20.278Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -117,7 +117,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.932Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.278Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -272,7 +272,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.932Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.278Z">2025-11-30</time>
             </p>
           </footer>
         </div>

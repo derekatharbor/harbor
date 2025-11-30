@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.230Z
+// Generated: 2025-11-30T20:05:19.901Z
 // Alternative to: Tiger Data (creators of TimescaleDB)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Tiger Data (creators of TimescaleDB) Alternatives',
     description: 'Top alternatives to Tiger Data (creators of TimescaleDB) for Database.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.230Z',
-    modifiedTime: '2025-11-30T19:44:53.230Z',
+    publishedTime: '2025-11-30T20:05:19.901Z',
+    modifiedTime: '2025-11-30T20:05:19.901Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/tiger-data-creators-of-timescaledb#article",
       "headline": "Best Tiger Data (creators of TimescaleDB) Alternatives",
       "description": "Top alternatives to Tiger Data (creators of TimescaleDB) for Database. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.230Z",
-      "dateModified": "2025-11-30T19:44:53.230Z",
+      "datePublished": "2025-11-30T20:05:19.901Z",
+      "dateModified": "2025-11-30T20:05:19.901Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TiDB, powered by PingCAP",
-            "url": "https://useharbor.io/brands/tidb-powered-by-pingcap",
-            "description": "An open-source distributed SQL database designed for modern applications.",
+            "name": "Cockroach Labs",
+            "url": "https://useharbor.io/brands/cockroach-labs",
+            "description": "CockroachDB is a distributed SQL database designed for high availability and scalability.",
             "applicationCategory": "Database"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Cockroach Labs",
-            "url": "https://useharbor.io/brands/cockroach-labs",
-            "description": "CockroachDB is a distributed SQL database designed for high availability and scalability.",
+            "name": "TiDB, powered by PingCAP",
+            "url": "https://useharbor.io/brands/tidb-powered-by-pingcap",
+            "description": "An open-source distributed SQL database designed for modern applications.",
             "applicationCategory": "Database"
           }
         },
@@ -106,6 +106,31 @@ const schemaOrg = {
 
 const alternatives = [
   {
+    "slug": "cockroach-labs",
+    "brand_name": "Cockroach Labs",
+    "domain": "cockroachlabs.com",
+    "summary": "CockroachDB is a distributed SQL database designed for high availability and scalability.",
+    "pricing": {
+      "price_model": "usage",
+      "price_notes": "Free tier available for smaller workloads with 50 million RUs and 10 GiB storage free per month.",
+      "has_free_tier": true,
+      "starting_price": "$0/mo"
+    },
+    "features": [
+      "Multi-region support",
+      "No-downtime version upgrades",
+      "Provisioned compute with instant scaling",
+      "Role-based access control",
+      "Encrypted data in motion"
+    ],
+    "integrations": [
+      "DataDog",
+      "Splunk",
+      "Dynatrace",
+      "New Relic"
+    ]
+  },
+  {
     "slug": "tidb-powered-by-pingcap",
     "brand_name": "TiDB, powered by PingCAP",
     "domain": "pingcap.com",
@@ -132,31 +157,6 @@ const alternatives = [
       "Vercel",
       "Bytebase",
       "Netlify"
-    ]
-  },
-  {
-    "slug": "cockroach-labs",
-    "brand_name": "Cockroach Labs",
-    "domain": "cockroachlabs.com",
-    "summary": "CockroachDB is a distributed SQL database designed for high availability and scalability.",
-    "pricing": {
-      "price_model": "usage",
-      "price_notes": "Free tier available for smaller workloads with 50 million RUs and 10 GiB storage free per month.",
-      "has_free_tier": true,
-      "starting_price": "$0/mo"
-    },
-    "features": [
-      "Multi-region support",
-      "No-downtime version upgrades",
-      "Provisioned compute with instant scaling",
-      "Role-based access control",
-      "Encrypted data in motion"
-    ],
-    "integrations": [
-      "DataDog",
-      "Splunk",
-      "Dynatrace",
-      "New Relic"
     ]
   },
   {
@@ -251,7 +251,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.230Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.901Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Tiger Data (creators of TimescaleDB) Alternatives
@@ -323,7 +323,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.230Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.901Z">2025-11-30</time>
             </p>
           </footer>
         </div>

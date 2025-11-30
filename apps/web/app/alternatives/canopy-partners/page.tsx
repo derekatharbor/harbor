@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.260Z
+// Generated: 2025-11-30T20:05:19.870Z
 // Alternative to: Canopy Partners
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Canopy Partners Alternatives',
     description: 'Top alternatives to Canopy Partners for Healthcare Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.260Z',
-    modifiedTime: '2025-11-30T19:44:53.260Z',
+    publishedTime: '2025-11-30T20:05:19.870Z',
+    modifiedTime: '2025-11-30T20:05:19.870Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/canopy-partners#article",
       "headline": "Best Canopy Partners Alternatives",
       "description": "Top alternatives to Canopy Partners for Healthcare Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.260Z",
-      "dateModified": "2025-11-30T19:44:53.260Z",
+      "datePublished": "2025-11-30T20:05:19.870Z",
+      "dateModified": "2025-11-30T20:05:19.870Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -151,7 +151,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.260Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.870Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Canopy Partners Alternatives
@@ -223,7 +223,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.260Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.870Z">2025-11-30</time>
             </p>
           </footer>
         </div>

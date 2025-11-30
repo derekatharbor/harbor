@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:24.826Z
+// Generated: 2025-11-30T20:04:47.638Z
 // Query: {"category":"Time Tracking","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Time Tracking Software',
     description: 'Compare the top time tracking solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:24.826Z',
-    modifiedTime: '2025-11-30T19:44:24.826Z',
+    publishedTime: '2025-11-30T20:04:47.638Z',
+    modifiedTime: '2025-11-30T20:04:47.638Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:24.826Z',
+    'article:modified_time': '2025-11-30T20:04:47.638Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/time-tracking#article",
       "headline": "Best Time Tracking Software",
       "description": "Compare the top time tracking solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:24.826Z",
-      "dateModified": "2025-11-30T19:44:24.826Z",
+      "datePublished": "2025-11-30T20:04:47.638Z",
+      "dateModified": "2025-11-30T20:04:47.638Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,11 +57,29 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/time-tracking#list",
       "name": "Best Time Tracking Software",
       "description": "Compare the top time tracking solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 9,
+      "numberOfItems": 11,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "TimeSolv Corporation",
+            "url": "https://useharbor.io/brands/timesolv-corporation",
+            "description": "TimeSolv provides time tracking and billing software tailored for professionals, especially in the legal sector.",
+            "applicationCategory": "Time Tracking",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Novisync, Inc",
@@ -73,24 +91,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Netstratum Technologies",
             "url": "https://useharbor.io/brands/netstratum-technologies",
             "description": "Innovative software product development.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "HUBX",
-            "url": "https://useharbor.io/brands/hubx",
-            "description": "HUBX is a digital platform.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -112,9 +118,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALOIS Solutions",
-            "url": "https://useharbor.io/brands/alois-solutions",
-            "description": "ALOIS Solutions is a technology-focused company.",
+            "name": "HUBX",
+            "url": "https://useharbor.io/brands/hubx",
+            "description": "HUBX is a digital platform.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -124,9 +130,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALQIMI",
-            "url": "https://useharbor.io/brands/alqimi",
-            "description": "ALQIMI is a brand with unclear offerings and purpose.",
+            "name": "ALOIS Solutions",
+            "url": "https://useharbor.io/brands/alois-solutions",
+            "description": "ALOIS Solutions is a technology-focused company.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -134,6 +140,18 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Neo",
+            "url": "https://useharbor.io/brands/neo",
+            "description": "Neo is a brand with unclear offerings and purpose.",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Gala",
@@ -145,7 +163,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eluvio",
@@ -157,12 +175,24 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ACS Consultancy Services, Inc",
             "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
             "description": "Unknown",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ALQIMI",
+            "url": "https://useharbor.io/brands/alqimi",
+            "description": "ALQIMI is a brand with unclear offerings and purpose.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -196,6 +226,33 @@ const schemaOrg = {
 
 const profiles = [
   {
+    "slug": "timesolv-corporation",
+    "brand_name": "TimeSolv Corporation",
+    "domain": "timesolv.com",
+    "summary": "TimeSolv provides time tracking and billing software tailored for professionals, especially in the legal sector.",
+    "pricing": {
+      "price_model": "per_user",
+      "price_notes": "Volume pricing available for additional users.",
+      "has_free_tier": true,
+      "starting_price": "$147/month"
+    },
+    "features": [
+      "Legal Project Management",
+      "Time & Expense Tracking",
+      "Document Management",
+      "Secure Document Sharing",
+      "Client Portal"
+    ],
+    "integrations": [
+      "Outlook",
+      "O365",
+      "LawPay",
+      "Xero",
+      "QuickBooks"
+    ],
+    "visibility_score": 78
+  },
+  {
     "slug": "novisync-inc",
     "brand_name": "Novisync, Inc",
     "domain": "novisync.com",
@@ -226,10 +283,10 @@ const profiles = [
     "visibility_score": 45
   },
   {
-    "slug": "hubx",
-    "brand_name": "HUBX",
-    "domain": "hubx.com",
-    "summary": "HUBX is a digital platform.",
+    "slug": "arkhya-tech-inc",
+    "brand_name": "Arkhya Tech. Inc.",
+    "domain": "arkhyatech.com",
+    "summary": "Arkhya Tech is a technology company.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -241,10 +298,10 @@ const profiles = [
     "visibility_score": 30
   },
   {
-    "slug": "arkhya-tech-inc",
-    "brand_name": "Arkhya Tech. Inc.",
-    "domain": "arkhyatech.com",
-    "summary": "Arkhya Tech is a technology company.",
+    "slug": "hubx",
+    "brand_name": "HUBX",
+    "domain": "hubx.com",
+    "summary": "HUBX is a digital platform.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -271,10 +328,10 @@ const profiles = [
     "visibility_score": 5
   },
   {
-    "slug": "alqimi",
-    "brand_name": "ALQIMI",
-    "domain": "alqimi.com",
-    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
+    "slug": "neo",
+    "brand_name": "Neo",
+    "domain": "neo.com",
+    "summary": "Neo is a brand with unclear offerings and purpose.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -329,11 +386,26 @@ const profiles = [
     "features": [],
     "integrations": [],
     "visibility_score": 0
+  },
+  {
+    "slug": "alqimi",
+    "brand_name": "ALQIMI",
+    "domain": "alqimi.com",
+    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": [],
+    "visibility_score": 0
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:24.826Z'
+// Generated at: 2025-11-30T20:04:47.638Z
 
 export default function ListiclePage() {
   return (
@@ -348,7 +420,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:24.826Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:47.638Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Time Tracking Software
@@ -464,7 +536,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:24.826Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:47.638Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

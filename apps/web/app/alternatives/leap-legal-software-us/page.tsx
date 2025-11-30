@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.319Z
+// Generated: 2025-11-30T20:05:20.021Z
 // Alternative to: LEAP Legal Software US
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best LEAP Legal Software US Alternatives',
     description: 'Top alternatives to LEAP Legal Software US for Legal Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.319Z',
-    modifiedTime: '2025-11-30T19:44:53.319Z',
+    publishedTime: '2025-11-30T20:05:20.021Z',
+    modifiedTime: '2025-11-30T20:05:20.021Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/leap-legal-software-us#article",
       "headline": "Best LEAP Legal Software US Alternatives",
       "description": "Top alternatives to LEAP Legal Software US for Legal Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.319Z",
-      "dateModified": "2025-11-30T19:44:53.319Z",
+      "datePublished": "2025-11-30T20:05:20.021Z",
+      "dateModified": "2025-11-30T20:05:20.021Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/leap-legal-software-us#list",
       "name": "LEAP Legal Software US Alternatives",
-      "numberOfItems": 7,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,6 +71,17 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "EvenUp",
+            "url": "https://useharbor.io/brands/evenup",
+            "description": "AI-driven solutions for personal injury law firms.",
+            "applicationCategory": "Legal Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "For The Record (FTR)",
             "url": "https://useharbor.io/brands/for-the-record-ftr",
             "description": "Modernizing justice with advanced court technology.",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Legora",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Harvey",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "DISCO",
@@ -112,7 +123,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Lawmatics",
+            "url": "https://useharbor.io/brands/lawmatics",
+            "description": "Lawmatics is a leading legal software platform designed for law firms and attorneys.",
+            "applicationCategory": "Legal Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "eBrevia",
@@ -176,6 +198,28 @@ const alternatives = [
       "DocuSign",
       "MS Teams",
       "Slack"
+    ]
+  },
+  {
+    "slug": "evenup",
+    "brand_name": "EvenUp",
+    "domain": "evenuplaw.com",
+    "summary": "AI-driven solutions for personal injury law firms.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven demand letter generation",
+      "Comprehensive medical summaries",
+      "Data-driven damage calculations",
+      "Real-time case monitoring",
+      "Automated document preparation for litigation"
+    ],
+    "integrations": [
+      "case management solution"
     ]
   },
   {
@@ -268,6 +312,35 @@ const alternatives = [
     ]
   },
   {
+    "slug": "lawmatics",
+    "brand_name": "Lawmatics",
+    "domain": "lawmatics.com",
+    "summary": "Lawmatics is a leading legal software platform designed for law firms and attorneys.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "First month free; tailor-made pricing plans for law firms of all sizes.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Client intake",
+      "Lead management",
+      "Calendaring",
+      "Custom forms",
+      "E-signature"
+    ],
+    "integrations": [
+      "Clio",
+      "Smokeball",
+      "Gmail",
+      "CallRail",
+      "QuickBooks",
+      "8am™ MyCase",
+      "Rocket Matter",
+      "Microsoft Outlook"
+    ]
+  },
+  {
     "slug": "ebrevia",
     "brand_name": "eBrevia",
     "domain": "ebrevia.com",
@@ -307,7 +380,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.021Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best LEAP Legal Software US Alternatives
@@ -379,7 +452,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.021Z">2025-11-30</time>
             </p>
           </footer>
         </div>

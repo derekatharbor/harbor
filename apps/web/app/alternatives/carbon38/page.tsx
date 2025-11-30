@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.381Z
+// Generated: 2025-11-30T20:05:20.105Z
 // Alternative to: Carbon38
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Carbon38 Alternatives',
     description: 'Top alternatives to Carbon38 for E-commerce.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.381Z',
-    modifiedTime: '2025-11-30T19:44:53.381Z',
+    publishedTime: '2025-11-30T20:05:20.105Z',
+    modifiedTime: '2025-11-30T20:05:20.105Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/carbon38#article",
       "headline": "Best Carbon38 Alternatives",
       "description": "Top alternatives to Carbon38 for E-commerce. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.381Z",
-      "dateModified": "2025-11-30T19:44:53.381Z",
+      "datePublished": "2025-11-30T20:05:20.105Z",
+      "dateModified": "2025-11-30T20:05:20.105Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/carbon38#list",
       "name": "Carbon38 Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,28 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "NewStore",
+            "url": "https://useharbor.io/brands/newstore",
+            "description": "A unified commerce platform designed for global brands to enhance retail experiences.",
+            "applicationCategory": "E-commerce"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "PlanetArt",
+            "url": "https://useharbor.io/brands/planetart",
+            "description": "A global leader in personalized products and services.",
+            "applicationCategory": "E-commerce"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Popshoplive",
             "url": "https://useharbor.io/brands/popshoplive",
             "description": "A creator commerce platform enabling individuals to launch online businesses without upfront costs.",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "OrderMyGear (OMG)",
@@ -100,6 +122,46 @@ const alternatives = [
       "Find local dispensaries and deliveries",
       "Access deals and promotions",
       "Learn about cannabis strains and products"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "newstore",
+    "brand_name": "NewStore",
+    "domain": "newstore.com",
+    "summary": "A unified commerce platform designed for global brands to enhance retail experiences.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Omnichannel Order Management",
+      "Mobile Point of Sale",
+      "Clienteling",
+      "Inventory Management",
+      "Real-Time Analytics and Reporting"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "planetart",
+    "brand_name": "PlanetArt",
+    "domain": "planetart.com",
+    "summary": "A global leader in personalized products and services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Offers free products such as 4x6 photo prints and photo books.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Free 4x6 photo prints",
+      "Make photo books in just minutes",
+      "Transform photos into custom wall décor",
+      "Create one-of-a-kind gifts",
+      "Customised cards"
     ],
     "integrations": []
   },
@@ -169,7 +231,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.381Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.105Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Carbon38 Alternatives
@@ -241,7 +303,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.381Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.105Z">2025-11-30</time>
             </p>
           </footer>
         </div>

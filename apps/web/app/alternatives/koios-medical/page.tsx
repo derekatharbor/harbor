@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.240Z
+// Generated: 2025-11-30T20:05:19.791Z
 // Alternative to: Koios Medical
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Koios Medical Alternatives',
     description: 'Top alternatives to Koios Medical for Healthcare.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.240Z',
-    modifiedTime: '2025-11-30T19:44:53.240Z',
+    publishedTime: '2025-11-30T20:05:19.791Z',
+    modifiedTime: '2025-11-30T20:05:19.791Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/koios-medical#article",
       "headline": "Best Koios Medical Alternatives",
       "description": "Top alternatives to Koios Medical for Healthcare. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.240Z",
-      "dateModified": "2025-11-30T19:44:53.240Z",
+      "datePublished": "2025-11-30T20:05:19.791Z",
+      "dateModified": "2025-11-30T20:05:19.791Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,37 +60,15 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Cornerstone Healthcare Group",
-            "url": "https://useharbor.io/brands/cornerstone-healthcare-group",
-            "description": "Specialized long-term acute care and rehabilitation for medically complex patients.",
+            "name": "CleanSlate Centers",
+            "url": "https://useharbor.io/brands/cleanslate-centers",
+            "description": "Outpatient addiction treatment centers providing personalized care for substance use disorders.",
             "applicationCategory": "Healthcare"
           }
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Tarzana Treatment Centers",
-            "url": "https://useharbor.io/brands/tarzana-treatment-centers",
-            "description": "A non-profit organization providing integrated healthcare services for substance use disorders and mental health.",
-            "applicationCategory": "Healthcare"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Sam Rodgers Health",
-            "url": "https://useharbor.io/brands/sam-rodgers-health",
-            "description": "A community health center providing comprehensive and affordable healthcare services.",
-            "applicationCategory": "Healthcare"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Kitsap Physical Therapy",
@@ -101,12 +79,34 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "AIDS Healthcare Foundation",
             "url": "https://useharbor.io/brands/aids-healthcare-foundation",
             "description": "A global nonprofit organization providing cutting-edge medicine and advocacy for HIV care.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Al Seef Hospital",
+            "url": "https://useharbor.io/brands/al-seef-hospital",
+            "description": "A leading healthcare provider in Kuwait focused on specialized medical services.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Premise Health",
+            "url": "https://useharbor.io/brands/premise-health",
+            "description": "Premise Health is the largest direct healthcare provider in the U.S.",
             "applicationCategory": "Healthcare"
           }
         },
@@ -148,6 +148,39 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Tarzana Treatment Centers",
+            "url": "https://useharbor.io/brands/tarzana-treatment-centers",
+            "description": "A non-profit organization providing integrated healthcare services for substance use disorders and mental health.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Sam Rodgers Health",
+            "url": "https://useharbor.io/brands/sam-rodgers-health",
+            "description": "A community health center providing comprehensive and affordable healthcare services.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Cornerstone Healthcare Group",
+            "url": "https://useharbor.io/brands/cornerstone-healthcare-group",
+            "description": "Specialized long-term acute care and rehabilitation for medically complex patients.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Freeman Health System",
             "url": "https://useharbor.io/brands/freeman-health-system",
             "description": "A locally owned, not-for-profit health system providing comprehensive healthcare services.",
@@ -156,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MidState Medical Center",
@@ -167,45 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Holy Family Hospital",
             "url": "https://useharbor.io/brands/holy-family-hospital",
             "description": "A mission-driven, not-for-profit healthcare community in the Merrimack Valley.",
-            "applicationCategory": "Healthcare"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 13,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "NEJM Group",
-            "url": "https://useharbor.io/brands/nejm-group",
-            "description": "A leading source of medical knowledge and clinical best practices.",
-            "applicationCategory": "Healthcare"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Medicom Technologies Inc.",
-            "url": "https://useharbor.io/brands/medicom-technologies-inc",
-            "description": "Leading Healthcare Interoperability and Information Exchange.",
-            "applicationCategory": "Healthcare"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "BlueCloudX® Home",
-            "url": "https://useharbor.io/brands/bluecloudx-home",
-            "description": "Healthcare and Clinical Research Holdings",
             "applicationCategory": "Healthcare"
           }
         }
@@ -238,10 +238,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "cornerstone-healthcare-group",
-    "brand_name": "Cornerstone Healthcare Group",
-    "domain": "cornerstonehospitals.com",
-    "summary": "Specialized long-term acute care and rehabilitation for medically complex patients.",
+    "slug": "cleanslate-centers",
+    "brand_name": "CleanSlate Centers",
+    "domain": "cleanslatecenters.com",
+    "summary": "Outpatient addiction treatment centers providing personalized care for substance use disorders.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -249,47 +249,19 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Long-term acute care",
-      "Rehabilitation services",
-      "Physician-led care teams",
-      "Specialized care for critically ill patients",
-      "Accredited by The Joint Commission"
+      "Collaborative treatment approach",
+      "Access to community resources",
+      "Coordination with healthcare providers",
+      "Support for substance use disorder",
+      "Public policy advocacy for treatment access"
     ],
-    "integrations": []
-  },
-  {
-    "slug": "tarzana-treatment-centers",
-    "brand_name": "Tarzana Treatment Centers",
-    "domain": "tarzanatc.org",
-    "summary": "A non-profit organization providing integrated healthcare services for substance use disorders and mental health.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Cost for some services is free",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "Substance Use Disorder Treatment",
-      "Medications for Addiction Treatment (MAT)",
-      "Outpatient Treatment",
-      "Recovery Support Services",
-      "Residential Treatment"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "sam-rodgers-health",
-    "brand_name": "Sam Rodgers Health",
-    "domain": "samrodgers.org",
-    "summary": "A community health center providing comprehensive and affordable healthcare services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
+    "integrations": [
+      "Social Services",
+      "Law Enforcement",
+      "Behavioral/SUD Health Providers",
+      "Medical Providers",
+      "Government"
+    ]
   },
   {
     "slug": "kitsap-physical-therapy",
@@ -328,6 +300,40 @@ const alternatives = [
       "Affordable housing options",
       "Food services program",
       "Advocacy for housing justice"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "al-seef-hospital",
+    "brand_name": "Al Seef Hospital",
+    "domain": "alseef-hospital.com",
+    "summary": "A leading healthcare provider in Kuwait focused on specialized medical services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "premise-health",
+    "brand_name": "Premise Health",
+    "domain": "premisehealth.com",
+    "summary": "Premise Health is the largest direct healthcare provider in the U.S.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Advanced primary care",
+      "Care management",
+      "Virtual primary care",
+      "Behavioral health services",
+      "Occupational health"
     ],
     "integrations": []
   },
@@ -398,6 +404,60 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "tarzana-treatment-centers",
+    "brand_name": "Tarzana Treatment Centers",
+    "domain": "tarzanatc.org",
+    "summary": "A non-profit organization providing integrated healthcare services for substance use disorders and mental health.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Cost for some services is free",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Substance Use Disorder Treatment",
+      "Medications for Addiction Treatment (MAT)",
+      "Outpatient Treatment",
+      "Recovery Support Services",
+      "Residential Treatment"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "sam-rodgers-health",
+    "brand_name": "Sam Rodgers Health",
+    "domain": "samrodgers.org",
+    "summary": "A community health center providing comprehensive and affordable healthcare services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "cornerstone-healthcare-group",
+    "brand_name": "Cornerstone Healthcare Group",
+    "domain": "cornerstonehospitals.com",
+    "summary": "Specialized long-term acute care and rehabilitation for medically complex patients.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Long-term acute care",
+      "Rehabilitation services",
+      "Physician-led care teams",
+      "Specialized care for critically ill patients",
+      "Accredited by The Joint Commission"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "freeman-health-system",
     "brand_name": "Freeman Health System",
     "domain": "freemanhealth.com",
@@ -450,48 +510,6 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
-  },
-  {
-    "slug": "nejm-group",
-    "brand_name": "NEJM Group",
-    "domain": "nejmgroup.org",
-    "summary": "A leading source of medical knowledge and clinical best practices.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "medicom-technologies-inc",
-    "brand_name": "Medicom Technologies Inc.",
-    "domain": "medicom.us",
-    "summary": "Leading Healthcare Interoperability and Information Exchange.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "bluecloudx-home",
-    "brand_name": "BlueCloudX® Home",
-    "domain": "healthcarepoint.com",
-    "summary": "Healthcare and Clinical Research Holdings",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
   }
 ]
 
@@ -507,7 +525,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.240Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.791Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Koios Medical Alternatives
@@ -579,7 +597,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.240Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.791Z">2025-11-30</time>
             </p>
           </footer>
         </div>

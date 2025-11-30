@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.214Z
+// Generated: 2025-11-30T20:05:19.853Z
 // Alternative to: NomadGo
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best NomadGo Alternatives',
     description: 'Top alternatives to NomadGo for Inventory Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.214Z',
-    modifiedTime: '2025-11-30T19:44:53.214Z',
+    publishedTime: '2025-11-30T20:05:19.853Z',
+    modifiedTime: '2025-11-30T20:05:19.853Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/nomadgo#article",
       "headline": "Best NomadGo Alternatives",
       "description": "Top alternatives to NomadGo for Inventory Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.214Z",
-      "dateModified": "2025-11-30T19:44:53.214Z",
+      "datePublished": "2025-11-30T20:05:19.853Z",
+      "dateModified": "2025-11-30T20:05:19.853Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "RF-SMART",
-            "url": "https://useharbor.io/brands/rf-smart",
-            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
+            "name": "SimplyRFID",
+            "url": "https://useharbor.io/brands/simplyrfid",
+            "description": "SimplyRFID provides advanced RFID inventory management systems for various industries.",
             "applicationCategory": "Inventory Management"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SimplyRFID",
-            "url": "https://useharbor.io/brands/simplyrfid",
-            "description": "SimplyRFID provides advanced RFID inventory management systems for various industries.",
+            "name": "RF-SMART",
+            "url": "https://useharbor.io/brands/rf-smart",
+            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
             "applicationCategory": "Inventory Management"
           }
         },
@@ -95,6 +95,28 @@ const schemaOrg = {
 
 const alternatives = [
   {
+    "slug": "simplyrfid",
+    "brand_name": "SimplyRFID",
+    "domain": "simplyrfid.com",
+    "summary": "SimplyRFID provides advanced RFID inventory management systems for various industries.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; a quote can be requested.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Fast and accurate inventory management",
+      "RFID tagging for inventory control",
+      "Decentralized inventory management",
+      "Daily inventory reporting",
+      "Automatic synchronization across stores and e-commerce platforms"
+    ],
+    "integrations": [
+      "Shopify"
+    ]
+  },
+  {
     "slug": "rf-smart",
     "brand_name": "RF-SMART",
     "domain": "rfsmart.com",
@@ -116,28 +138,6 @@ const alternatives = [
       "NetSuite",
       "Oracle Cloud",
       "Oracle JD Edwards"
-    ]
-  },
-  {
-    "slug": "simplyrfid",
-    "brand_name": "SimplyRFID",
-    "domain": "simplyrfid.com",
-    "summary": "SimplyRFID provides advanced RFID inventory management systems for various industries.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated; a quote can be requested.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Fast and accurate inventory management",
-      "RFID tagging for inventory control",
-      "Decentralized inventory management",
-      "Daily inventory reporting",
-      "Automatic synchronization across stores and e-commerce platforms"
-    ],
-    "integrations": [
-      "Shopify"
     ]
   },
   {
@@ -197,7 +197,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.214Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.853Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best NomadGo Alternatives
@@ -269,7 +269,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.214Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.853Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:26.064Z
+// Generated: 2025-11-30T20:04:48.679Z
 // Query: {"category":"Field Service","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Field Service Software',
     description: 'Compare the top field service solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:26.064Z',
-    modifiedTime: '2025-11-30T19:44:26.064Z',
+    publishedTime: '2025-11-30T20:04:48.679Z',
+    modifiedTime: '2025-11-30T20:04:48.679Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:26.064Z',
+    'article:modified_time': '2025-11-30T20:04:48.679Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/field-service#article",
       "headline": "Best Field Service Software",
       "description": "Compare the top field service solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:26.064Z",
-      "dateModified": "2025-11-30T19:44:26.064Z",
+      "datePublished": "2025-11-30T20:04:48.679Z",
+      "dateModified": "2025-11-30T20:04:48.679Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/field-service#list",
       "name": "Best Field Service Software",
       "description": "Compare the top field service solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -98,6 +98,24 @@ const schemaOrg = {
             "description": "Cloud-based field service management software for commercial contractors.",
             "applicationCategory": "Field Service Management",
             "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Synchroteam",
+            "url": "https://useharbor.io/brands/synchroteam",
+            "description": "Cloud-based Field Service Management software solution.",
+            "applicationCategory": "Field Service Management",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
           }
         }
       ]
@@ -193,11 +211,34 @@ const profiles = [
       "Stripe"
     ],
     "visibility_score": 73
+  },
+  {
+    "slug": "synchroteam",
+    "brand_name": "Synchroteam",
+    "domain": "synchroteam.com",
+    "summary": "Cloud-based Field Service Management software solution.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Free 14-day trial available",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Route Optimization",
+      "Field Service CRM",
+      "Schedule & Dispatch",
+      "Map & GPS Tracking",
+      "Online booking"
+    ],
+    "integrations": [
+      "Zapier"
+    ],
+    "visibility_score": 73
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:26.064Z'
+// Generated at: 2025-11-30T20:04:48.679Z
 
 export default function ListiclePage() {
   return (
@@ -212,7 +253,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:26.064Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:48.679Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Field Service Software
@@ -328,7 +369,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:26.064Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:48.679Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

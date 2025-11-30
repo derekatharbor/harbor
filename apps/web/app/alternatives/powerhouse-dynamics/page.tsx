@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.250Z
+// Generated: 2025-11-30T20:05:19.936Z
 // Alternative to: Powerhouse Dynamics
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Powerhouse Dynamics Alternatives',
     description: 'Top alternatives to Powerhouse Dynamics for Energy Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.250Z',
-    modifiedTime: '2025-11-30T19:44:53.250Z',
+    publishedTime: '2025-11-30T20:05:19.936Z',
+    modifiedTime: '2025-11-30T20:05:19.936Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/powerhouse-dynamics#article",
       "headline": "Best Powerhouse Dynamics Alternatives",
       "description": "Top alternatives to Powerhouse Dynamics for Energy Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.250Z",
-      "dateModified": "2025-11-30T19:44:53.250Z",
+      "datePublished": "2025-11-30T20:05:19.936Z",
+      "dateModified": "2025-11-30T20:05:19.936Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/powerhouse-dynamics#list",
       "name": "Powerhouse Dynamics Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,17 @@ const schemaOrg = {
             "name": "WeaveGrid",
             "url": "https://useharbor.io/brands/weavegrid",
             "description": "WeaveGrid is a platform that optimizes electric vehicle (EV) charging to support utilities and enhance the EV driver experience.",
+            "applicationCategory": "Energy Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Logical Buildings",
+            "url": "https://useharbor.io/brands/logical-buildings",
+            "description": "A leader in smart building and energy technology solutions.",
             "applicationCategory": "Energy Management"
           }
         }
@@ -150,6 +161,29 @@ const alternatives = [
       "Toyota",
       "Wallbox"
     ]
+  },
+  {
+    "slug": "logical-buildings",
+    "brand_name": "Logical Buildings",
+    "domain": "logicalbuildings.com",
+    "summary": "A leader in smart building and energy technology solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Energy usage monitoring",
+      "Carbon emission tracking",
+      "Demand response participation",
+      "Building performance optimization",
+      "Cost savings analysis"
+    ],
+    "integrations": [
+      "Con Edison",
+      "SmartThings Energy"
+    ]
   }
 ]
 
@@ -165,7 +199,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.250Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.936Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Powerhouse Dynamics Alternatives
@@ -237,7 +271,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.250Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.936Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.275Z
+// Generated: 2025-11-30T20:05:20.015Z
 // Alternative to: Dev Technology Group, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Dev Technology Group, Inc. Alternatives',
     description: 'Top alternatives to Dev Technology Group, Inc. for Information Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.275Z',
-    modifiedTime: '2025-11-30T19:44:53.275Z',
+    publishedTime: '2025-11-30T20:05:20.015Z',
+    modifiedTime: '2025-11-30T20:05:20.015Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/dev-technology-group-inc#article",
       "headline": "Best Dev Technology Group, Inc. Alternatives",
       "description": "Top alternatives to Dev Technology Group, Inc. for Information Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.275Z",
-      "dateModified": "2025-11-30T19:44:53.275Z",
+      "datePublished": "2025-11-30T20:05:20.015Z",
+      "dateModified": "2025-11-30T20:05:20.015Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/dev-technology-group-inc#list",
       "name": "Dev Technology Group, Inc. Alternatives",
-      "numberOfItems": 14,
+      "numberOfItems": 15,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,28 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Netser Group USA",
+            "url": "https://useharbor.io/brands/netser-group-usa",
+            "description": "A leading provider of IT services and solutions across Latin America and the Caribbean.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Strategic Communications",
+            "url": "https://useharbor.io/brands/strategic-communications",
+            "description": "A leading IT and Audio Visual consultant specializing in cloud, cybersecurity, and network solutions.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "DSD Laboratories",
             "url": "https://useharbor.io/brands/dsd-laboratories",
             "description": "Leading provider of IT solutions for government and commercial sectors.",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "BBH Solutions, Inc.",
@@ -79,18 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Netser Group USA",
-            "url": "https://useharbor.io/brands/netser-group-usa",
-            "description": "A leading provider of IT services and solutions across Latin America and the Caribbean.",
-            "applicationCategory": "Information Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "UNICOM Government Inc.",
@@ -101,51 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Fusion Technology LLC",
-            "url": "https://useharbor.io/brands/fusion-technology-llc",
-            "description": "A HUBZone Small Business providing IT services and solutions to government and private sectors.",
-            "applicationCategory": "Information Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 7,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Summit Technologies, Inc. (Hartford, CT)",
-            "url": "https://useharbor.io/brands/summit-technologies-inc-hartford-ct",
-            "description": "Summit Technologies provides IT services to government agencies.",
-            "applicationCategory": "Information Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 8,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Alpha Omega",
-            "url": "https://useharbor.io/brands/alpha-omega",
-            "description": "A fast-growing IT integrator focused on mission-driven solutions for federal agencies.",
-            "applicationCategory": "Information Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 9,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Abacus Technology Corporation",
-            "url": "https://useharbor.io/brands/abacus-technology-corporation",
-            "description": "A provider of advanced engineering and enterprise IT services.",
-            "applicationCategory": "Information Technology"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "IMTAS",
@@ -156,7 +123,51 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Abacus Technology Corporation",
+            "url": "https://useharbor.io/brands/abacus-technology-corporation",
+            "description": "A provider of advanced engineering and enterprise IT services.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Alpha Omega",
+            "url": "https://useharbor.io/brands/alpha-omega",
+            "description": "A fast-growing IT integrator focused on mission-driven solutions for federal agencies.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Fusion Technology LLC",
+            "url": "https://useharbor.io/brands/fusion-technology-llc",
+            "description": "A HUBZone Small Business providing IT services and solutions to government and private sectors.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Summit Technologies, Inc. (Hartford, CT)",
+            "url": "https://useharbor.io/brands/summit-technologies-inc-hartford-ct",
+            "description": "Summit Technologies provides IT services to government agencies.",
+            "applicationCategory": "Information Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Liona Enterprises",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Govplace",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Georgia IT, Inc.",
@@ -189,7 +200,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ExaTech Inc",
@@ -217,6 +228,49 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "netser-group-usa",
+    "brand_name": "Netser Group USA",
+    "domain": "netsergroup.com",
+    "summary": "A leading provider of IT services and solutions across Latin America and the Caribbean.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "strategic-communications",
+    "brand_name": "Strategic Communications",
+    "domain": "yourstrategic.com",
+    "summary": "A leading IT and Audio Visual consultant specializing in cloud, cybersecurity, and network solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud Solutions",
+      "Cyber Security",
+      "Digital Transformation",
+      "Collaboration Experiences",
+      "Digital Workplace"
+    ],
+    "integrations": [
+      "Cisco",
+      "AWS",
+      "Dell Technologies",
+      "Microsoft",
+      "Crestron",
+      "Biamp",
+      "Shure",
+      "Oracle"
+    ]
   },
   {
     "slug": "dsd-laboratories",
@@ -253,20 +307,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "netser-group-usa",
-    "brand_name": "Netser Group USA",
-    "domain": "netsergroup.com",
-    "summary": "A leading provider of IT services and solutions across Latin America and the Caribbean.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
     "slug": "unicom-government-inc",
     "brand_name": "UNICOM Government Inc.",
     "domain": "unicomgov.com",
@@ -284,6 +324,54 @@ const alternatives = [
       "Cloud computing",
       "Unified communications"
     ],
+    "integrations": []
+  },
+  {
+    "slug": "imtas",
+    "brand_name": "IMTAS",
+    "domain": "imtas.com",
+    "summary": "IMTAS provides innovative IT solutions tailored for the Federal Government.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-powered analytics",
+      "Zero-trust security frameworks",
+      "Modernizing legacy infrastructure",
+      "Intelligent process automation",
+      "Cybersecurity solutions"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "abacus-technology-corporation",
+    "brand_name": "Abacus Technology Corporation",
+    "domain": "abacustech.com",
+    "summary": "A provider of advanced engineering and enterprise IT services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "alpha-omega",
+    "brand_name": "Alpha Omega",
+    "domain": "alphaomega.com",
+    "summary": "A fast-growing IT integrator focused on mission-driven solutions for federal agencies.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
     "integrations": []
   },
   {
@@ -328,54 +416,6 @@ const alternatives = [
       "IT infrastructure services",
       "Customized software development",
       "Data analytics"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "alpha-omega",
-    "brand_name": "Alpha Omega",
-    "domain": "alphaomega.com",
-    "summary": "A fast-growing IT integrator focused on mission-driven solutions for federal agencies.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "abacus-technology-corporation",
-    "brand_name": "Abacus Technology Corporation",
-    "domain": "abacustech.com",
-    "summary": "A provider of advanced engineering and enterprise IT services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "imtas",
-    "brand_name": "IMTAS",
-    "domain": "imtas.com",
-    "summary": "IMTAS provides innovative IT solutions tailored for the Federal Government.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-powered analytics",
-      "Zero-trust security frameworks",
-      "Modernizing legacy infrastructure",
-      "Intelligent process automation",
-      "Cybersecurity solutions"
     ],
     "integrations": []
   },
@@ -463,7 +503,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.275Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.015Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Dev Technology Group, Inc. Alternatives
@@ -535,7 +575,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.275Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.015Z">2025-11-30</time>
             </p>
           </footer>
         </div>

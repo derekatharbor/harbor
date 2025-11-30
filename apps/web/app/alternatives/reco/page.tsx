@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.368Z
+// Generated: 2025-11-30T20:05:20.089Z
 // Alternative to: Reco
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Reco Alternatives',
     description: 'Top alternatives to Reco for Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.368Z',
-    modifiedTime: '2025-11-30T19:44:53.368Z',
+    publishedTime: '2025-11-30T20:05:20.089Z',
+    modifiedTime: '2025-11-30T20:05:20.089Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/reco#article",
       "headline": "Best Reco Alternatives",
       "description": "Top alternatives to Reco for Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.368Z",
-      "dateModified": "2025-11-30T19:44:53.368Z",
+      "datePublished": "2025-11-30T20:05:20.089Z",
+      "dateModified": "2025-11-30T20:05:20.089Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,44 +42,11 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/reco#list",
       "name": "Reco Alternatives",
-      "numberOfItems": 12,
+      "numberOfItems": 13,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "PLUGOUT",
-            "url": "https://useharbor.io/brands/plugout",
-            "description": "Cutting-edge security solutions provider specializing in advanced security applications and professional services.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "BlueWave Security",
-            "url": "https://useharbor.io/brands/bluewave-security",
-            "description": "BlueWave Security provides access control and video surveillance solutions.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "eConnect Global",
-            "url": "https://useharbor.io/brands/econnect-global",
-            "description": "AI-powered facial recognition solutions for security in casinos, stadiums, and hospitality.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Kolide by 1Password",
@@ -90,12 +57,45 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "PLUGOUT",
+            "url": "https://useharbor.io/brands/plugout",
+            "description": "Cutting-edge security solutions provider specializing in advanced security applications and professional services.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "BlueWave Security",
+            "url": "https://useharbor.io/brands/bluewave-security",
+            "description": "BlueWave Security provides access control and video surveillance solutions.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "eConnect Global",
+            "url": "https://useharbor.io/brands/econnect-global",
+            "description": "AI-powered facial recognition solutions for security in casinos, stadiums, and hospitality.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TimeKeeping Systems, Inc.",
-            "url": "https://useharbor.io/brands/timekeeping-systems-inc",
-            "description": "Guard1 provides advanced security solutions for various sectors.",
+            "name": "Origin AI",
+            "url": "https://useharbor.io/brands/origin-ai",
+            "description": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
             "applicationCategory": "Security"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALLOut Security",
-            "url": "https://useharbor.io/brands/allout-security",
-            "description": "Market-leading security solutions for JD Edwards.",
+            "name": "TimeKeeping Systems, Inc.",
+            "url": "https://useharbor.io/brands/timekeeping-systems-inc",
+            "description": "Guard1 provides advanced security solutions for various sectors.",
             "applicationCategory": "Security"
           }
         },
@@ -126,9 +126,9 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Origin AI",
-            "url": "https://useharbor.io/brands/origin-ai",
-            "description": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
+            "name": "ALLOut Security",
+            "url": "https://useharbor.io/brands/allout-security",
+            "description": "Market-leading security solutions for JD Edwards.",
             "applicationCategory": "Security"
           }
         },
@@ -137,9 +137,9 @@ const schemaOrg = {
           "position": 9,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "IPVideo Corporation",
-            "url": "https://useharbor.io/brands/ipvideo-corporation",
-            "description": "Pelco provides advanced CCTV solutions and security devices.",
+            "name": "Brivo",
+            "url": "https://useharbor.io/brands/brivo",
+            "description": "Brivo provides cloud-based security solutions for various sectors.",
             "applicationCategory": "Security"
           }
         },
@@ -170,6 +170,17 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "IPVideo Corporation",
+            "url": "https://useharbor.io/brands/ipvideo-corporation",
+            "description": "Pelco provides advanced CCTV solutions and security devices.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Sym",
             "url": "https://useharbor.io/brands/sym",
             "description": "Sym provides solutions for securing production infrastructure.",
@@ -182,6 +193,28 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "kolide-by-1password",
+    "brand_name": "Kolide by 1Password",
+    "domain": "kolide.com",
+    "summary": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Kolide is now part of 1Password® Extended Access Management and is no longer being sold as a standalone product.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Self-Remediation via Okta",
+      "Security & Compliance Checks",
+      "Device Inventory",
+      "Implement Zero Trust Access",
+      "Achieve 100% Device Compliance"
+    ],
+    "integrations": [
+      "Okta"
+    ]
+  },
   {
     "slug": "plugout",
     "brand_name": "PLUGOUT",
@@ -258,25 +291,26 @@ const alternatives = [
     ]
   },
   {
-    "slug": "kolide-by-1password",
-    "brand_name": "Kolide by 1Password",
-    "domain": "kolide.com",
-    "summary": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
+    "slug": "origin-ai",
+    "brand_name": "Origin AI",
+    "domain": "originwirelessai.com",
+    "summary": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
     "pricing": {
       "price_model": "unknown",
-      "price_notes": "Kolide is now part of 1Password® Extended Access Management and is no longer being sold as a standalone product.",
+      "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Self-Remediation via Okta",
-      "Security & Compliance Checks",
-      "Device Inventory",
-      "Implement Zero Trust Access",
-      "Achieve 100% Device Compliance"
+      "AI SENSING technology",
+      "Human presence detection",
+      "Motion classification",
+      "Rapid deployment on a single WiFi device",
+      "Contextual understanding of WiFi disruptions"
     ],
     "integrations": [
-      "Okta"
+      "Verizon",
+      "Alarm.com"
     ]
   },
   {
@@ -291,6 +325,24 @@ const alternatives = [
       "starting_price": null
     },
     "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "trofholz-technologies-inc",
+    "brand_name": "Trofholz Technologies, Inc.",
+    "domain": "trofholz.com",
+    "summary": "A veteran-owned company specializing in security system integration services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Access Control",
+      "Cyber Security",
+      "Security System Integration Services"
+    ],
     "integrations": []
   },
   {
@@ -316,66 +368,25 @@ const alternatives = [
     ]
   },
   {
-    "slug": "trofholz-technologies-inc",
-    "brand_name": "Trofholz Technologies, Inc.",
-    "domain": "trofholz.com",
-    "summary": "A veteran-owned company specializing in security system integration services.",
+    "slug": "brivo",
+    "brand_name": "Brivo",
+    "domain": "brivo.com",
+    "summary": "Brivo provides cloud-based security solutions for various sectors.",
     "pricing": {
-      "price_model": "unknown",
+      "price_model": "custom",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Access Control",
-      "Cyber Security",
-      "Security System Integration Services"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "origin-ai",
-    "brand_name": "Origin AI",
-    "domain": "originwirelessai.com",
-    "summary": "Origin AI specializes in transforming WiFi signals into advanced sensing technology for smart home security and automation.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI SENSING technology",
-      "Human presence detection",
-      "Motion classification",
-      "Rapid deployment on a single WiFi device",
-      "Contextual understanding of WiFi disruptions"
+      "Access control management",
+      "Video surveillance integration",
+      "Visitor management tools",
+      "Alarm management",
+      "24/7 monitoring"
     ],
     "integrations": [
-      "Verizon",
-      "Alarm.com"
-    ]
-  },
-  {
-    "slug": "ipvideo-corporation",
-    "brand_name": "IPVideo Corporation",
-    "domain": "ipvideocorp.com",
-    "summary": "Pelco provides advanced CCTV solutions and security devices.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Intelligent security cameras",
-      "Adaptable sensors",
-      "High-performance thermal views",
-      "Automated camera view checks",
-      "Seamless security management"
-    ],
-    "integrations": [
-      "ONVIF-conformant VMS"
+      "API"
     ]
   },
   {
@@ -421,6 +432,28 @@ const alternatives = [
     ]
   },
   {
+    "slug": "ipvideo-corporation",
+    "brand_name": "IPVideo Corporation",
+    "domain": "ipvideocorp.com",
+    "summary": "Pelco provides advanced CCTV solutions and security devices.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Intelligent security cameras",
+      "Adaptable sensors",
+      "High-performance thermal views",
+      "Automated camera view checks",
+      "Seamless security management"
+    ],
+    "integrations": [
+      "ONVIF-conformant VMS"
+    ]
+  },
+  {
     "slug": "sym",
     "brand_name": "Sym",
     "domain": "symops.com",
@@ -448,7 +481,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.368Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.089Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Reco Alternatives
@@ -520,7 +553,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.368Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.089Z">2025-11-30</time>
             </p>
           </footer>
         </div>

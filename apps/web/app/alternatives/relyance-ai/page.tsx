@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.367Z
+// Generated: 2025-11-30T20:05:20.096Z
 // Alternative to: Relyance AI
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Relyance AI Alternatives',
     description: 'Top alternatives to Relyance AI for Data Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.367Z',
-    modifiedTime: '2025-11-30T19:44:53.367Z',
+    publishedTime: '2025-11-30T20:05:20.096Z',
+    modifiedTime: '2025-11-30T20:05:20.096Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/relyance-ai#article",
       "headline": "Best Relyance AI Alternatives",
       "description": "Top alternatives to Relyance AI for Data Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.367Z",
-      "dateModified": "2025-11-30T19:44:53.367Z",
+      "datePublished": "2025-11-30T20:05:20.096Z",
+      "dateModified": "2025-11-30T20:05:20.096Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/relyance-ai#list",
       "name": "Relyance AI Alternatives",
-      "numberOfItems": 13,
+      "numberOfItems": 14,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Secuvy",
-            "url": "https://useharbor.io/brands/secuvy",
-            "description": "Secuvy is a data security platform focused on protecting complex unstructured data.",
+            "name": "SecuPi",
+            "url": "https://useharbor.io/brands/secupi",
+            "description": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
             "applicationCategory": "Data Security"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TechR2",
-            "url": "https://useharbor.io/brands/techr2",
-            "description": "TechR2 specializes in data security and compliance solutions for enterprises.",
+            "name": "Secuvy",
+            "url": "https://useharbor.io/brands/secuvy",
+            "description": "Secuvy is a data security platform focused on protecting complex unstructured data.",
             "applicationCategory": "Data Security"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "SecuPi",
-            "url": "https://useharbor.io/brands/secupi",
-            "description": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
+            "name": "TechR2",
+            "url": "https://useharbor.io/brands/techr2",
+            "description": "TechR2 specializes in data security and compliance solutions for enterprises.",
             "applicationCategory": "Data Security"
           }
         },
@@ -159,15 +159,26 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Portal26",
-            "url": "https://useharbor.io/brands/portal26",
-            "description": "A GenAI-first enterprise platform focused on risk management and data security.",
+            "name": "Appsian (a Pathlock company)",
+            "url": "https://useharbor.io/brands/appsian-a-pathlock-company",
+            "description": "Appsian provides ERP data security and compliance solutions for various platforms.",
             "applicationCategory": "Data Security"
           }
         },
         {
           "@type": "ListItem",
           "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Fasoo",
+            "url": "https://useharbor.io/brands/fasoo",
+            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
+            "applicationCategory": "Data Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Securiti",
@@ -178,12 +189,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Fasoo",
-            "url": "https://useharbor.io/brands/fasoo",
-            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
+            "name": "Portal26",
+            "url": "https://useharbor.io/brands/portal26",
+            "description": "A GenAI-first enterprise platform focused on risk management and data security.",
             "applicationCategory": "Data Security"
           }
         }
@@ -298,6 +309,31 @@ const alternatives = [
     ]
   },
   {
+    "slug": "secupi",
+    "brand_name": "SecuPi",
+    "domain": "secupi.com",
+    "summary": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Discovery & Classification",
+      "Real-time Monitoring",
+      "Data Access Enforcement",
+      "Dynamic Access Control",
+      "Privileged Account Brokering"
+    ],
+    "integrations": [
+      "Starburst",
+      "Trino",
+      "Snowflake",
+      "Google Cloud"
+    ]
+  },
+  {
     "slug": "secuvy",
     "brand_name": "Secuvy",
     "domain": "secuvy.ai",
@@ -345,31 +381,6 @@ const alternatives = [
       "IT Asset Retirement"
     ],
     "integrations": []
-  },
-  {
-    "slug": "secupi",
-    "brand_name": "SecuPi",
-    "domain": "secupi.com",
-    "summary": "SecuPi is a proactive data security platform that protects sensitive data in real-time.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Discovery & Classification",
-      "Real-time Monitoring",
-      "Data Access Enforcement",
-      "Dynamic Access Control",
-      "Privileged Account Brokering"
-    ],
-    "integrations": [
-      "Starburst",
-      "Trino",
-      "Snowflake",
-      "Google Cloud"
-    ]
   },
   {
     "slug": "borneo-acquired-by-atlassian",
@@ -446,10 +457,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "portal26",
-    "brand_name": "Portal26",
-    "domain": "portal26.ai",
-    "summary": "A GenAI-first enterprise platform focused on risk management and data security.",
+    "slug": "appsian-a-pathlock-company",
+    "brand_name": "Appsian (a Pathlock company)",
+    "domain": "appsiansecurity.com",
+    "summary": "Appsian provides ERP data security and compliance solutions for various platforms.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -457,42 +468,17 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Data Tokenization",
-      "Data Masking",
-      "Data Anonymization",
-      "Data Redaction",
-      "BYOK / HYOK"
+      "Attribute-Based Access Controls",
+      "Automated Provisioning",
+      "Dynamic Data Masking",
+      "Multi-Factor Authentication",
+      "Real-Time Analytics"
     ],
     "integrations": [
-      "AWS",
-      "Cloudflare",
-      "Hewlett Packard Enterprise",
-      "Slalom",
-      "Capgemini",
-      "PMsquare",
-      "Uniqus Consultech"
-    ]
-  },
-  {
-    "slug": "securiti",
-    "brand_name": "Securiti",
-    "domain": "securiti.ai",
-    "summary": "Securiti provides advanced data security and privacy solutions for enterprises.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Personalized pricing based on modules and use cases",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Data Security Posture Management",
-      "AI Security & Governance",
-      "Data Discovery & Classification",
-      "Compliance Management",
-      "Breach Impact Analysis"
-    ],
-    "integrations": [
-      "Veeam"
+      "Active Directory",
+      "ADFS",
+      "OKTA",
+      "SAML 2.0"
     ]
   },
   {
@@ -519,6 +505,56 @@ const alternatives = [
       "Cloud Wrapsody",
       "DigitalPage"
     ]
+  },
+  {
+    "slug": "securiti",
+    "brand_name": "Securiti",
+    "domain": "securiti.ai",
+    "summary": "Securiti provides advanced data security and privacy solutions for enterprises.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Personalized pricing based on modules and use cases",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Security Posture Management",
+      "AI Security & Governance",
+      "Data Discovery & Classification",
+      "Compliance Management",
+      "Breach Impact Analysis"
+    ],
+    "integrations": [
+      "Veeam"
+    ]
+  },
+  {
+    "slug": "portal26",
+    "brand_name": "Portal26",
+    "domain": "portal26.ai",
+    "summary": "A GenAI-first enterprise platform focused on risk management and data security.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Tokenization",
+      "Data Masking",
+      "Data Anonymization",
+      "Data Redaction",
+      "BYOK / HYOK"
+    ],
+    "integrations": [
+      "AWS",
+      "Cloudflare",
+      "Hewlett Packard Enterprise",
+      "Slalom",
+      "Capgemini",
+      "PMsquare",
+      "Uniqus Consultech"
+    ]
   }
 ]
 
@@ -534,7 +570,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.367Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.096Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Relyance AI Alternatives
@@ -606,7 +642,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.367Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.096Z">2025-11-30</time>
             </p>
           </footer>
         </div>

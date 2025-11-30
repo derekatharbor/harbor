@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.478Z
+// Generated: 2025-11-30T20:05:20.235Z
 // Comparing: Tribalco vs Trinity Technology Partners, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Tribalco vs Trinity Technology Partners, Inc.',
     description: 'Detailed comparison of Tribalco and Trinity Technology Partners, Inc..',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.478Z',
-    modifiedTime: '2025-11-30T19:44:53.478Z',
+    publishedTime: '2025-11-30T20:05:20.235Z',
+    modifiedTime: '2025-11-30T20:05:20.235Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/tribalco-vs-trinity-technology-partners-inc#article",
   "headline": "Tribalco vs Trinity Technology Partners, Inc.: Comparison",
   "description": "Detailed comparison of Tribalco and Trinity Technology Partners, Inc.. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.478Z",
-  "dateModified": "2025-11-30T19:44:53.478Z",
+  "datePublished": "2025-11-30T20:05:20.235Z",
+  "dateModified": "2025-11-30T20:05:20.235Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -104,7 +104,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.478Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.235Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -259,7 +259,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.478Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.235Z">2025-11-30</time>
             </p>
           </footer>
         </div>

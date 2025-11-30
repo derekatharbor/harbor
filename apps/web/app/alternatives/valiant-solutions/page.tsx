@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.138Z
+// Generated: 2025-11-30T20:05:19.782Z
 // Alternative to: Valiant Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Valiant Solutions Alternatives',
     description: 'Top alternatives to Valiant Solutions for Cybersecurity and IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.138Z',
-    modifiedTime: '2025-11-30T19:44:53.138Z',
+    publishedTime: '2025-11-30T20:05:19.782Z',
+    modifiedTime: '2025-11-30T20:05:19.782Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/valiant-solutions#article",
       "headline": "Best Valiant Solutions Alternatives",
       "description": "Top alternatives to Valiant Solutions for Cybersecurity and IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.138Z",
-      "dateModified": "2025-11-30T19:44:53.138Z",
+      "datePublished": "2025-11-30T20:05:19.782Z",
+      "dateModified": "2025-11-30T20:05:19.782Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Karthik Consulting",
-            "url": "https://useharbor.io/brands/karthik-consulting",
-            "description": "Karthik Consulting specializes in cybersecurity and agile software services.",
+            "name": "MartinFed",
+            "url": "https://useharbor.io/brands/martinfed",
+            "description": "MartinFed is a government contractor specializing in cybersecurity and IT solutions.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "MartinFed",
-            "url": "https://useharbor.io/brands/martinfed",
-            "description": "MartinFed is a government contractor specializing in cybersecurity and IT solutions.",
+            "name": "Karthik Consulting",
+            "url": "https://useharbor.io/brands/karthik-consulting",
+            "description": "Karthik Consulting specializes in cybersecurity and agile software services.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         }
@@ -170,26 +170,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "karthik-consulting",
-    "brand_name": "Karthik Consulting",
-    "domain": "karthikconsulting.com",
-    "summary": "Karthik Consulting specializes in cybersecurity and agile software services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Cybersecurity solutions",
-      "Risk assessments",
-      "Cloud security reviews and audits",
-      "Agile software development",
-      "Modernization of legacy applications"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "martinfed",
     "brand_name": "MartinFed",
     "domain": "martinfed.com",
@@ -208,6 +188,26 @@ const alternatives = [
       "Training development and instruction"
     ],
     "integrations": []
+  },
+  {
+    "slug": "karthik-consulting",
+    "brand_name": "Karthik Consulting",
+    "domain": "karthikconsulting.com",
+    "summary": "Karthik Consulting specializes in cybersecurity and agile software services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cybersecurity solutions",
+      "Risk assessments",
+      "Cloud security reviews and audits",
+      "Agile software development",
+      "Modernization of legacy applications"
+    ],
+    "integrations": []
   }
 ]
 
@@ -223,7 +223,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.138Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.782Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Valiant Solutions Alternatives
@@ -295,7 +295,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.138Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.782Z">2025-11-30</time>
             </p>
           </footer>
         </div>

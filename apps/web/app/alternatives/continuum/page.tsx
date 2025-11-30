@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.348Z
+// Generated: 2025-11-30T20:05:20.051Z
 // Alternative to: Continuum
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Continuum Alternatives',
     description: 'Top alternatives to Continuum for IT Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.348Z',
-    modifiedTime: '2025-11-30T19:44:53.348Z',
+    publishedTime: '2025-11-30T20:05:20.051Z',
+    modifiedTime: '2025-11-30T20:05:20.051Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/continuum#article",
       "headline": "Best Continuum Alternatives",
       "description": "Top alternatives to Continuum for IT Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.348Z",
-      "dateModified": "2025-11-30T19:44:53.348Z",
+      "datePublished": "2025-11-30T20:05:20.051Z",
+      "dateModified": "2025-11-30T20:05:20.051Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,22 +42,11 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/continuum#list",
       "name": "Continuum Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Electric",
-            "url": "https://useharbor.io/brands/electric",
-            "description": "A comprehensive IT and security management platform for small and medium-sized businesses.",
-            "applicationCategory": "IT Management"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Virima",
@@ -68,7 +57,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Electric",
+            "url": "https://useharbor.io/brands/electric",
+            "description": "A comprehensive IT and security management platform for small and medium-sized businesses.",
+            "applicationCategory": "IT Management"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SuperOps",
+            "url": "https://useharbor.io/brands/superops",
+            "description": "AI-Powered IT Management for MSPs and IT Teams.",
+            "applicationCategory": "IT Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "C&W Technologies",
@@ -83,6 +94,20 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "virima",
+    "brand_name": "Virima",
+    "domain": "virima.com",
+    "summary": "Virima enhances IT service management and asset management through innovative discovery and visualization tools.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
   {
     "slug": "electric",
     "brand_name": "Electric",
@@ -106,18 +131,31 @@ const alternatives = [
     ]
   },
   {
-    "slug": "virima",
-    "brand_name": "Virima",
-    "domain": "virima.com",
-    "summary": "Virima enhances IT service management and asset management through innovative discovery and visualization tools.",
+    "slug": "superops",
+    "brand_name": "SuperOps",
+    "domain": "superops.com",
+    "summary": "AI-Powered IT Management for MSPs and IT Teams.",
     "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
+      "price_model": "per_user",
+      "price_notes": "Offers different plans with varying features and pricing based on the number of endpoints.",
+      "has_free_tier": true,
+      "starting_price": "$89/mo"
     },
-    "features": [],
-    "integrations": []
+    "features": [
+      "Powerful ticketing system",
+      "Time tracking",
+      "Task templates",
+      "Kanban view",
+      "SLA management"
+    ],
+    "integrations": [
+      "Active Directory",
+      "Antivirus",
+      "Cybersecurity",
+      "Data Backup",
+      "Invoicing",
+      "Payment"
+    ]
   },
   {
     "slug": "c-w-technologies",
@@ -153,7 +191,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.348Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.051Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Continuum Alternatives
@@ -225,7 +263,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.348Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.051Z">2025-11-30</time>
             </p>
           </footer>
         </div>

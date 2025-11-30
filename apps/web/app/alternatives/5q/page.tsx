@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.245Z
+// Generated: 2025-11-30T20:05:19.811Z
 // Alternative to: 5Q
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best 5Q Alternatives',
     description: 'Top alternatives to 5Q for Cybersecurity and IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.245Z',
-    modifiedTime: '2025-11-30T19:44:53.245Z',
+    publishedTime: '2025-11-30T20:05:19.811Z',
+    modifiedTime: '2025-11-30T20:05:19.811Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/5q#article",
       "headline": "Best 5Q Alternatives",
       "description": "Top alternatives to 5Q for Cybersecurity and IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.245Z",
-      "dateModified": "2025-11-30T19:44:53.245Z",
+      "datePublished": "2025-11-30T20:05:19.811Z",
+      "dateModified": "2025-11-30T20:05:19.811Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "E&M Technologies, Inc.",
-            "url": "https://useharbor.io/brands/e-m-technologies-inc",
-            "description": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
+            "name": "Valiant Solutions",
+            "url": "https://useharbor.io/brands/valiant-solutions",
+            "description": "Valiant Solutions, LLC provides comprehensive cybersecurity and IT services to the Federal Government.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Valiant Solutions",
-            "url": "https://useharbor.io/brands/valiant-solutions",
-            "description": "Valiant Solutions, LLC provides comprehensive cybersecurity and IT services to the Federal Government.",
+            "name": "E&M Technologies, Inc.",
+            "url": "https://useharbor.io/brands/e-m-technologies-inc",
+            "description": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Karthik Consulting",
-            "url": "https://useharbor.io/brands/karthik-consulting",
-            "description": "Karthik Consulting specializes in cybersecurity and agile software services.",
+            "name": "MartinFed",
+            "url": "https://useharbor.io/brands/martinfed",
+            "description": "MartinFed is a government contractor specializing in cybersecurity and IT solutions.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "MartinFed",
-            "url": "https://useharbor.io/brands/martinfed",
-            "description": "MartinFed is a government contractor specializing in cybersecurity and IT solutions.",
+            "name": "Karthik Consulting",
+            "url": "https://useharbor.io/brands/karthik-consulting",
+            "description": "Karthik Consulting specializes in cybersecurity and agile software services.",
             "applicationCategory": "Cybersecurity and IT Services"
           }
         }
@@ -105,26 +105,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "e-m-technologies-inc",
-    "brand_name": "E&M Technologies, Inc.",
-    "domain": "eandmtech.com",
-    "summary": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Mission-critical IT services",
-      "Intelligence solutions",
-      "Cybersecurity",
-      "Digital modernization",
-      "Enterprise IT services"
-    ],
-    "integrations": []
-  },
   {
     "slug": "valiant-solutions",
     "brand_name": "Valiant Solutions",
@@ -142,6 +122,26 @@ const alternatives = [
       "Security Engineering",
       "Security Operations",
       "Strategic Risk Governance"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "e-m-technologies-inc",
+    "brand_name": "E&M Technologies, Inc.",
+    "domain": "eandmtech.com",
+    "summary": "A provider of mission-critical IT services and intelligence solutions for national security operations.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Mission-critical IT services",
+      "Intelligence solutions",
+      "Cybersecurity",
+      "Digital modernization",
+      "Enterprise IT services"
     ],
     "integrations": []
   },
@@ -170,26 +170,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "karthik-consulting",
-    "brand_name": "Karthik Consulting",
-    "domain": "karthikconsulting.com",
-    "summary": "Karthik Consulting specializes in cybersecurity and agile software services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Cybersecurity solutions",
-      "Risk assessments",
-      "Cloud security reviews and audits",
-      "Agile software development",
-      "Modernization of legacy applications"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "martinfed",
     "brand_name": "MartinFed",
     "domain": "martinfed.com",
@@ -208,6 +188,26 @@ const alternatives = [
       "Training development and instruction"
     ],
     "integrations": []
+  },
+  {
+    "slug": "karthik-consulting",
+    "brand_name": "Karthik Consulting",
+    "domain": "karthikconsulting.com",
+    "summary": "Karthik Consulting specializes in cybersecurity and agile software services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cybersecurity solutions",
+      "Risk assessments",
+      "Cloud security reviews and audits",
+      "Agile software development",
+      "Modernization of legacy applications"
+    ],
+    "integrations": []
   }
 ]
 
@@ -223,7 +223,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.245Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.811Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best 5Q Alternatives
@@ -295,7 +295,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.245Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.811Z">2025-11-30</time>
             </p>
           </footer>
         </div>

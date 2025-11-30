@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.230Z
+// Generated: 2025-11-30T20:05:19.899Z
 // Alternative to: Virima
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Virima Alternatives',
     description: 'Top alternatives to Virima for IT Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.230Z',
-    modifiedTime: '2025-11-30T19:44:53.230Z',
+    publishedTime: '2025-11-30T20:05:19.899Z',
+    modifiedTime: '2025-11-30T20:05:19.899Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/virima#article",
       "headline": "Best Virima Alternatives",
       "description": "Top alternatives to Virima for IT Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.230Z",
-      "dateModified": "2025-11-30T19:44:53.230Z",
+      "datePublished": "2025-11-30T20:05:19.899Z",
+      "dateModified": "2025-11-30T20:05:19.899Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/virima#list",
       "name": "Virima Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SuperOps",
+            "url": "https://useharbor.io/brands/superops",
+            "description": "AI-Powered IT Management for MSPs and IT Teams.",
+            "applicationCategory": "IT Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "C&W Technologies",
             "url": "https://useharbor.io/brands/c-w-technologies",
             "description": "A trusted managed IT partner providing comprehensive IT management and consulting services.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Continuum",
@@ -103,6 +114,33 @@ const alternatives = [
     ],
     "integrations": [
       "HR systems"
+    ]
+  },
+  {
+    "slug": "superops",
+    "brand_name": "SuperOps",
+    "domain": "superops.com",
+    "summary": "AI-Powered IT Management for MSPs and IT Teams.",
+    "pricing": {
+      "price_model": "per_user",
+      "price_notes": "Offers different plans with varying features and pricing based on the number of endpoints.",
+      "has_free_tier": true,
+      "starting_price": "$89/mo"
+    },
+    "features": [
+      "Powerful ticketing system",
+      "Time tracking",
+      "Task templates",
+      "Kanban view",
+      "SLA management"
+    ],
+    "integrations": [
+      "Active Directory",
+      "Antivirus",
+      "Cybersecurity",
+      "Data Backup",
+      "Invoicing",
+      "Payment"
     ]
   },
   {
@@ -159,7 +197,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.230Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.899Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Virima Alternatives
@@ -231,7 +269,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.230Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.899Z">2025-11-30</time>
             </p>
           </footer>
         </div>

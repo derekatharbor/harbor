@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.324Z
+// Generated: 2025-11-30T20:05:20.030Z
 // Alternative to: UniFi
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best UniFi Alternatives',
     description: 'Top alternatives to UniFi for Networking.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.324Z',
-    modifiedTime: '2025-11-30T19:44:53.324Z',
+    publishedTime: '2025-11-30T20:05:20.030Z',
+    modifiedTime: '2025-11-30T20:05:20.030Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/unifi#article",
       "headline": "Best UniFi Alternatives",
       "description": "Top alternatives to UniFi for Networking. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.324Z",
-      "dateModified": "2025-11-30T19:44:53.324Z",
+      "datePublished": "2025-11-30T20:05:20.030Z",
+      "dateModified": "2025-11-30T20:05:20.030Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/unifi#list",
       "name": "UniFi Alternatives",
-      "numberOfItems": 7,
+      "numberOfItems": 8,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -71,6 +71,17 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Rhino Networks",
+            "url": "https://useharbor.io/brands/rhino-networks",
+            "description": "Rhino Networks specializes in cloud-managed networking solutions and services.",
+            "applicationCategory": "Networking"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Ubiquiti",
             "url": "https://useharbor.io/brands/ubiquiti",
             "description": "Innovative technology solutions for networking and security.",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aryaka",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Network World",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Masergy",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Seersite",
@@ -164,6 +175,28 @@ const alternatives = [
       "AWS",
       "Salesforce",
       "SAP"
+    ]
+  },
+  {
+    "slug": "rhino-networks",
+    "brand_name": "Rhino Networks",
+    "domain": "rhinonetworks.com",
+    "summary": "Rhino Networks specializes in cloud-managed networking solutions and services.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Pricing for specific Cisco Meraki devices is listed.",
+      "has_free_tier": false,
+      "starting_price": "$1,964.03"
+    },
+    "features": [
+      "Cloud managed UTM with SD-WAN capability",
+      "Cloud managed access and aggregation",
+      "Cloud managed wireless LAN/APs",
+      "Cisco Meraki security cameras",
+      "Cloud based enterprise mobility management"
+    ],
+    "integrations": [
+      "Cisco Meraki"
     ]
   },
   {
@@ -256,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.324Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.030Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best UniFi Alternatives
@@ -328,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.324Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.030Z">2025-11-30</time>
             </p>
           </footer>
         </div>

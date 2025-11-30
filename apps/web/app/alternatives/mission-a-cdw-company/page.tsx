@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.334Z
+// Generated: 2025-11-30T20:05:20.041Z
 // Alternative to: Mission, a CDW Company
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Mission, a CDW Company Alternatives',
     description: 'Top alternatives to Mission, a CDW Company for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.334Z',
-    modifiedTime: '2025-11-30T19:44:53.334Z',
+    publishedTime: '2025-11-30T20:05:20.041Z',
+    modifiedTime: '2025-11-30T20:05:20.041Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mission-a-cdw-company#article",
       "headline": "Best Mission, a CDW Company Alternatives",
       "description": "Top alternatives to Mission, a CDW Company for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.334Z",
-      "dateModified": "2025-11-30T19:44:53.334Z",
+      "datePublished": "2025-11-30T20:05:20.041Z",
+      "dateModified": "2025-11-30T20:05:20.041Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,6 +49,28 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "UBX Cloud",
+            "url": "https://useharbor.io/brands/ubx-cloud",
+            "description": "A global cloud service provider specializing in secure and scalable cloud solutions.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Simple Technology Solutions",
+            "url": "https://useharbor.io/brands/simple-technology-solutions",
+            "description": "A federal small business specializing in enterprise cloud transformation and modernization.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ScaleMatrix",
             "url": "https://useharbor.io/brands/scalematrix",
             "description": "High Density Colocation and Cloud Service Provider.",
@@ -57,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CARI.net",
@@ -68,34 +90,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Innovative Solutions",
             "url": "https://useharbor.io/brands/innovative-solutions",
             "description": "Your AI-powered consulting platform to help you build winning proposals and close deals.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "UBX Cloud",
-            "url": "https://useharbor.io/brands/ubx-cloud",
-            "description": "A global cloud service provider specializing in secure and scalable cloud solutions.",
-            "applicationCategory": "Cloud Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Simple Technology Solutions",
-            "url": "https://useharbor.io/brands/simple-technology-solutions",
-            "description": "A federal small business specializing in enterprise cloud transformation and modernization.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -126,9 +126,9 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CyberTech Systems and Software, Inc",
-            "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
-            "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
+            "name": "mLogica",
+            "url": "https://useharbor.io/brands/mlogica",
+            "description": "mLogica specializes in enterprise modernization through cloud migration and big data analytics.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -137,9 +137,9 @@ const schemaOrg = {
           "position": 9,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "mLogica",
-            "url": "https://useharbor.io/brands/mlogica",
-            "description": "mLogica specializes in enterprise modernization through cloud migration and big data analytics.",
+            "name": "CyberTech Systems and Software, Inc",
+            "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
+            "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
             "applicationCategory": "Cloud Services"
           }
         },
@@ -160,6 +160,54 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "ubx-cloud",
+    "brand_name": "UBX Cloud",
+    "domain": "ubxcloud.com",
+    "summary": "A global cloud service provider specializing in secure and scalable cloud solutions.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Fair flat rate that costs less as you scale up.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed Private Clouds",
+      "Secure Cloud Workspaces",
+      "Managed CDN Services",
+      "Breach Counsel",
+      "XDR + SIEM"
+    ],
+    "integrations": [
+      "Cisco"
+    ]
+  },
+  {
+    "slug": "simple-technology-solutions",
+    "brand_name": "Simple Technology Solutions",
+    "domain": "simpletechnology.io",
+    "summary": "A federal small business specializing in enterprise cloud transformation and modernization.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Special end-of-fiscal-year pricing on RCA proof of concept pilot programs available.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "One-click provisioning of compliant cloud environments",
+      "Event-driven scripts for compliance remediation",
+      "Automated deployment pipelines",
+      "Infrastructure-as-code cookbooks",
+      "Self-service provisioning for development teams"
+    ],
+    "integrations": [
+      "AWS",
+      "Microsoft Azure",
+      "Google Cloud Platform",
+      "Power Platform",
+      "Box"
+    ]
+  },
   {
     "slug": "scalematrix",
     "brand_name": "ScaleMatrix",
@@ -225,54 +273,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "ubx-cloud",
-    "brand_name": "UBX Cloud",
-    "domain": "ubxcloud.com",
-    "summary": "A global cloud service provider specializing in secure and scalable cloud solutions.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "Fair flat rate that costs less as you scale up.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed Private Clouds",
-      "Secure Cloud Workspaces",
-      "Managed CDN Services",
-      "Breach Counsel",
-      "XDR + SIEM"
-    ],
-    "integrations": [
-      "Cisco"
-    ]
-  },
-  {
-    "slug": "simple-technology-solutions",
-    "brand_name": "Simple Technology Solutions",
-    "domain": "simpletechnology.io",
-    "summary": "A federal small business specializing in enterprise cloud transformation and modernization.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Special end-of-fiscal-year pricing on RCA proof of concept pilot programs available.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "One-click provisioning of compliant cloud environments",
-      "Event-driven scripts for compliance remediation",
-      "Automated deployment pipelines",
-      "Infrastructure-as-code cookbooks",
-      "Self-service provisioning for development teams"
-    ],
-    "integrations": [
-      "AWS",
-      "Microsoft Azure",
-      "Google Cloud Platform",
-      "Power Platform",
-      "Box"
-    ]
-  },
-  {
     "slug": "oxya-usa",
     "brand_name": "oXya - USA",
     "domain": "oxya.com",
@@ -322,33 +322,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "cybertech-systems-and-software-inc",
-    "brand_name": "CyberTech Systems and Software, Inc",
-    "domain": "cybertech.com",
-    "summary": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "No specific pricing information found.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Enterprise Cloud Transformation",
-      "SAP S/4HANA Migration and Support",
-      "ArcGIS Cloud Modernization",
-      "Real-Time Crime Management Solutions",
-      "Spatial Analytics Integration"
-    ],
-    "integrations": [
-      "SAP",
-      "Esri",
-      "Microsoft Azure",
-      "AWS",
-      "CISCO",
-      "Snowflake"
-    ]
-  },
-  {
     "slug": "mlogica",
     "brand_name": "mLogica",
     "domain": "mlogica.com",
@@ -373,6 +346,33 @@ const alternatives = [
       "IBM",
       "Oracle",
       "SAP"
+    ]
+  },
+  {
+    "slug": "cybertech-systems-and-software-inc",
+    "brand_name": "CyberTech Systems and Software, Inc",
+    "domain": "cybertech.com",
+    "summary": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "No specific pricing information found.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Enterprise Cloud Transformation",
+      "SAP S/4HANA Migration and Support",
+      "ArcGIS Cloud Modernization",
+      "Real-Time Crime Management Solutions",
+      "Spatial Analytics Integration"
+    ],
+    "integrations": [
+      "SAP",
+      "Esri",
+      "Microsoft Azure",
+      "AWS",
+      "CISCO",
+      "Snowflake"
     ]
   },
   {
@@ -413,7 +413,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.334Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.041Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Mission, a CDW Company Alternatives
@@ -485,7 +485,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.334Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.041Z">2025-11-30</time>
             </p>
           </footer>
         </div>

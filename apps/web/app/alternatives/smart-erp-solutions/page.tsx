@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.318Z
+// Generated: 2025-11-30T20:05:20.019Z
 // Alternative to: Smart ERP Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Smart ERP Solutions Alternatives',
     description: 'Top alternatives to Smart ERP Solutions for ERP.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.318Z',
-    modifiedTime: '2025-11-30T19:44:53.318Z',
+    publishedTime: '2025-11-30T20:05:20.019Z',
+    modifiedTime: '2025-11-30T20:05:20.019Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/smart-erp-solutions#article",
       "headline": "Best Smart ERP Solutions Alternatives",
       "description": "Top alternatives to Smart ERP Solutions for ERP. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.318Z",
-      "dateModified": "2025-11-30T19:44:53.318Z",
+      "datePublished": "2025-11-30T20:05:20.019Z",
+      "dateModified": "2025-11-30T20:05:20.019Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/smart-erp-solutions#list",
       "name": "Smart ERP Solutions Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,17 @@ const schemaOrg = {
             "name": "Business Solution Partners",
             "url": "https://useharbor.io/brands/business-solution-partners",
             "description": "Your NetSuite Partner for Growth.",
+            "applicationCategory": "ERP"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Softengine",
+            "url": "https://useharbor.io/brands/softengine",
+            "description": "Softengine is an award-winning ERP partner specializing in tailored solutions for various industries.",
             "applicationCategory": "ERP"
           }
         }
@@ -162,6 +173,29 @@ const alternatives = [
     "integrations": [
       "NetSuite"
     ]
+  },
+  {
+    "slug": "softengine",
+    "brand_name": "Softengine",
+    "domain": "softengine.com",
+    "summary": "Softengine is an award-winning ERP partner specializing in tailored solutions for various industries.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are provided through a guide and may vary based on licensing, implementation, and support.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Integrated Business Management Solutions",
+      "Sales Analysis capabilities",
+      "Customizable ERP solutions",
+      "Operational efficiency enhancements",
+      "Support for business processes and workflows"
+    ],
+    "integrations": [
+      "SAP Business One",
+      "Acumatica"
+    ]
   }
 ]
 
@@ -177,7 +211,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.318Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.019Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Smart ERP Solutions Alternatives
@@ -249,7 +283,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.318Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.019Z">2025-11-30</time>
             </p>
           </footer>
         </div>

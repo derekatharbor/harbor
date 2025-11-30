@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.244Z
+// Generated: 2025-11-30T20:05:19.808Z
 // Alternative to: Effortless Office
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Effortless Office Alternatives',
     description: 'Top alternatives to Effortless Office for Managed Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.244Z',
-    modifiedTime: '2025-11-30T19:44:53.244Z',
+    publishedTime: '2025-11-30T20:05:19.808Z',
+    modifiedTime: '2025-11-30T20:05:19.808Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/effortless-office#article",
       "headline": "Best Effortless Office Alternatives",
       "description": "Top alternatives to Effortless Office for Managed Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.244Z",
-      "dateModified": "2025-11-30T19:44:53.244Z",
+      "datePublished": "2025-11-30T20:05:19.808Z",
+      "dateModified": "2025-11-30T20:05:19.808Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,16 +42,16 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/effortless-office#list",
       "name": "Effortless Office Alternatives",
-      "numberOfItems": 10,
+      "numberOfItems": 12,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Impact Networking, LLC",
-            "url": "https://useharbor.io/brands/impact-networking-llc",
-            "description": "A managed services provider focused on business growth through technology and expert solutions.",
+            "name": "Focus Technology",
+            "url": "https://useharbor.io/brands/focus-technology",
+            "description": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
             "applicationCategory": "Managed Services"
           }
         },
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Focus Technology",
-            "url": "https://useharbor.io/brands/focus-technology",
-            "description": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
+            "name": "Impact Networking, LLC",
+            "url": "https://useharbor.io/brands/impact-networking-llc",
+            "description": "A managed services provider focused on business growth through technology and expert solutions.",
             "applicationCategory": "Managed Services"
           }
         },
@@ -104,6 +104,17 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "prototype:IT",
+            "url": "https://useharbor.io/brands/prototype-it",
+            "description": "A leading managed service provider offering comprehensive IT solutions.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Secur-Serv",
             "url": "https://useharbor.io/brands/secur-serv",
             "description": "A managed services provider focused on technology transformation and cybersecurity.",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "EOX Vantage",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CPP Associates, Inc.",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MicroAge",
@@ -145,7 +156,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "SBT Partners",
+            "url": "https://useharbor.io/brands/sbt-partners",
+            "description": "A modern managed service provider specializing in IT solutions for small and medium businesses.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "3GC Group",
@@ -160,26 +182,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "impact-networking-llc",
-    "brand_name": "Impact Networking, LLC",
-    "domain": "impactmybiz.com",
-    "summary": "A managed services provider focused on business growth through technology and expert solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed IT",
-      "AI Consulting",
-      "Marketing",
-      "Cybersecurity",
-      "Print Services"
-    ],
-    "integrations": []
-  },
   {
     "slug": "focus-technology",
     "brand_name": "Focus Technology",
@@ -197,6 +199,26 @@ const alternatives = [
       "AI & Data Solutions",
       "Modern Data Center",
       "Secure Networking"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "impact-networking-llc",
+    "brand_name": "Impact Networking, LLC",
+    "domain": "impactmybiz.com",
+    "summary": "A managed services provider focused on business growth through technology and expert solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT",
+      "AI Consulting",
+      "Marketing",
+      "Cybersecurity",
+      "Print Services"
     ],
     "integrations": []
   },
@@ -260,6 +282,26 @@ const alternatives = [
       "Onsite Installations",
       "Managed Services",
       "24x7x365 monitoring & management"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "prototype-it",
+    "brand_name": "prototype:IT",
+    "domain": "prototypeit.net",
+    "summary": "A leading managed service provider offering comprehensive IT solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "No long-term contract requirements; flexible service plans.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "24/7 IT support services",
+      "Business Continuity",
+      "Network Security Services",
+      "VoIP Services",
+      "Cloud Hosting Services"
     ],
     "integrations": []
   },
@@ -358,6 +400,29 @@ const alternatives = [
     ]
   },
   {
+    "slug": "sbt-partners",
+    "brand_name": "SBT Partners",
+    "domain": "sbtpartners.com",
+    "summary": "A modern managed service provider specializing in IT solutions for small and medium businesses.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Services are offered for a fixed, predictable monthly fee.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Total IT Management",
+      "vCIO services",
+      "Infrastructure management",
+      "Workstation management",
+      "Data backup services"
+    ],
+    "integrations": [
+      "Microsoft 365",
+      "Microsoft Teams"
+    ]
+  },
+  {
     "slug": "3gc-group",
     "brand_name": "3GC Group",
     "domain": "3gcgroup.com",
@@ -385,7 +450,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.244Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.808Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Effortless Office Alternatives
@@ -457,7 +522,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.244Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.808Z">2025-11-30</time>
             </p>
           </footer>
         </div>

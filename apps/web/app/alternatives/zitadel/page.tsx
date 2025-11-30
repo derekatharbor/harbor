@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.247Z
+// Generated: 2025-11-30T20:05:19.816Z
 // Alternative to: ZITADEL
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best ZITADEL Alternatives',
     description: 'Top alternatives to ZITADEL for Identity Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.247Z',
-    modifiedTime: '2025-11-30T19:44:53.247Z',
+    publishedTime: '2025-11-30T20:05:19.816Z',
+    modifiedTime: '2025-11-30T20:05:19.816Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/zitadel#article",
       "headline": "Best ZITADEL Alternatives",
       "description": "Top alternatives to ZITADEL for Identity Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.247Z",
-      "dateModified": "2025-11-30T19:44:53.247Z",
+      "datePublished": "2025-11-30T20:05:19.816Z",
+      "dateModified": "2025-11-30T20:05:19.816Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "OneLogin",
-            "url": "https://useharbor.io/brands/onelogin",
-            "description": "OneLogin provides market-leading identity and access management solutions.",
+            "name": "NextgenID",
+            "url": "https://useharbor.io/brands/nextgenid",
+            "description": "NextgenID provides advanced identity management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "NextgenID",
-            "url": "https://useharbor.io/brands/nextgenid",
-            "description": "NextgenID provides advanced identity management solutions.",
+            "name": "OneLogin",
+            "url": "https://useharbor.io/brands/onelogin",
+            "description": "OneLogin provides market-leading identity and access management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -159,9 +159,9 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Okta",
-            "url": "https://useharbor.io/brands/okta",
-            "description": "Okta is a leader in identity management solutions.",
+            "name": "Auth0",
+            "url": "https://useharbor.io/brands/auth0",
+            "description": "Auth0 is a secure authentication and authorization platform for various identities.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Auth0",
-            "url": "https://useharbor.io/brands/auth0",
-            "description": "Auth0 is a secure authentication and authorization platform for various identities.",
+            "name": "Okta",
+            "url": "https://useharbor.io/brands/okta",
+            "description": "Okta is a leader in identity management solutions.",
             "applicationCategory": "Identity Management"
           }
         },
@@ -312,6 +312,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "nextgenid",
+    "brand_name": "NextgenID",
+    "domain": "nextgenid.com",
+    "summary": "NextgenID provides advanced identity management solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "High-assurance identity proofing",
+      "Automated identity workflows",
+      "Supervised Remote-Identity Proofing (SRIP)",
+      "NIST SP800-63-3 compliance",
+      "Centralized control of Identity Stations"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "onelogin",
     "brand_name": "OneLogin",
     "domain": "onelogin.com",
@@ -339,26 +359,6 @@ const alternatives = [
       "Duo",
       "Symantec"
     ]
-  },
-  {
-    "slug": "nextgenid",
-    "brand_name": "NextgenID",
-    "domain": "nextgenid.com",
-    "summary": "NextgenID provides advanced identity management solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "High-assurance identity proofing",
-      "Automated identity workflows",
-      "Supervised Remote-Identity Proofing (SRIP)",
-      "NIST SP800-63-3 compliance",
-      "Centralized control of Identity Stations"
-    ],
-    "integrations": []
   },
   {
     "slug": "badgepass-inc",
@@ -461,6 +461,30 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "auth0",
+    "brand_name": "Auth0",
+    "domain": "auth0.com",
+    "summary": "Auth0 is a secure authentication and authorization platform for various identities.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are available upon request.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "User Authentication",
+      "Multi-Factor Authentication",
+      "Single Sign On",
+      "Passwordless Login",
+      "Fine-Grained Authorization"
+    ],
+    "integrations": [
+      "Salesforce",
+      "Slack",
+      "Okta"
+    ]
+  },
+  {
     "slug": "okta",
     "brand_name": "Okta",
     "domain": "okta.com",
@@ -484,30 +508,6 @@ const alternatives = [
       "QuickBooks",
       "Microsoft Teams",
       "Zoom"
-    ]
-  },
-  {
-    "slug": "auth0",
-    "brand_name": "Auth0",
-    "domain": "auth0.com",
-    "summary": "Auth0 is a secure authentication and authorization platform for various identities.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are available upon request.",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "User Authentication",
-      "Multi-Factor Authentication",
-      "Single Sign On",
-      "Passwordless Login",
-      "Fine-Grained Authorization"
-    ],
-    "integrations": [
-      "Salesforce",
-      "Slack",
-      "Okta"
     ]
   },
   {
@@ -599,7 +599,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.247Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.816Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best ZITADEL Alternatives
@@ -671,7 +671,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.247Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.816Z">2025-11-30</time>
             </p>
           </footer>
         </div>

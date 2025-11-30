@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.292Z
+// Generated: 2025-11-30T20:05:19.979Z
 // Alternative to: InDev
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best InDev Alternatives',
     description: 'Top alternatives to InDev for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.292Z',
-    modifiedTime: '2025-11-30T19:44:53.292Z',
+    publishedTime: '2025-11-30T20:05:19.979Z',
+    modifiedTime: '2025-11-30T20:05:19.979Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/indev#article",
       "headline": "Best InDev Alternatives",
       "description": "Top alternatives to InDev for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.292Z",
-      "dateModified": "2025-11-30T19:44:53.292Z",
+      "datePublished": "2025-11-30T20:05:19.979Z",
+      "dateModified": "2025-11-30T20:05:19.979Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -71,26 +71,15 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Trinity Technology Partners, Inc.",
-            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
-            "description": "A technology services provider specializing in solutions for government and industry.",
+            "name": "Tribalco",
+            "url": "https://useharbor.io/brands/tribalco",
+            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
             "applicationCategory": "Technology Services"
           }
         },
         {
           "@type": "ListItem",
           "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "3T-Innovations",
-            "url": "https://useharbor.io/brands/3t-innovations",
-            "description": "A veteran-owned small business providing innovative technology solutions.",
-            "applicationCategory": "Technology Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Adept Consulting Services, Inc.",
@@ -101,12 +90,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Trinity Technology Partners, Inc.",
+            "url": "https://useharbor.io/brands/trinity-technology-partners-inc",
+            "description": "A technology services provider specializing in solutions for government and industry.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Tribalco",
-            "url": "https://useharbor.io/brands/tribalco",
-            "description": "Global systems integrator providing technology solutions for government and commercial clients.",
+            "name": "3T-Innovations",
+            "url": "https://useharbor.io/brands/3t-innovations",
+            "description": "A veteran-owned small business providing innovative technology solutions.",
             "applicationCategory": "Technology Services"
           }
         },
@@ -199,6 +199,45 @@ const alternatives = [
     ]
   },
   {
+    "slug": "tribalco",
+    "brand_name": "Tribalco",
+    "domain": "tribalco.com",
+    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Information Technology Services",
+      "Critical Communications Solutions",
+      "Rescue & Safety Solutions",
+      "Advanced Engineering Projects"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "adept-consulting-services-inc",
+    "brand_name": "Adept Consulting Services, Inc.",
+    "domain": "adeptusa.com",
+    "summary": "Adept Consulting Services provides comprehensive technology solutions for various sectors.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not specified on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "ITIL consulting",
+      "eGovernment strategies",
+      "quality assurance",
+      "business intelligence consulting",
+      "ERP/CRM/SCM consulting"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "trinity-technology-partners-inc",
     "brand_name": "Trinity Technology Partners, Inc.",
     "domain": "trinitytp.com",
@@ -234,45 +273,6 @@ const alternatives = [
       "Cisco Meraki",
       "Crestron"
     ]
-  },
-  {
-    "slug": "adept-consulting-services-inc",
-    "brand_name": "Adept Consulting Services, Inc.",
-    "domain": "adeptusa.com",
-    "summary": "Adept Consulting Services provides comprehensive technology solutions for various sectors.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not specified on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "ITIL consulting",
-      "eGovernment strategies",
-      "quality assurance",
-      "business intelligence consulting",
-      "ERP/CRM/SCM consulting"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "tribalco",
-    "brand_name": "Tribalco",
-    "domain": "tribalco.com",
-    "summary": "Global systems integrator providing technology solutions for government and commercial clients.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Information Technology Services",
-      "Critical Communications Solutions",
-      "Rescue & Safety Solutions",
-      "Advanced Engineering Projects"
-    ],
-    "integrations": []
   },
   {
     "slug": "inno4-llc",
@@ -344,7 +344,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.292Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.979Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best InDev Alternatives
@@ -416,7 +416,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.292Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.979Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:26.804Z
+// Generated: 2025-11-30T20:04:49.396Z
 // Query: {"category":"Collaboration","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Collaboration Software',
     description: 'Compare the top collaboration solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:26.804Z',
-    modifiedTime: '2025-11-30T19:44:26.804Z',
+    publishedTime: '2025-11-30T20:04:49.396Z',
+    modifiedTime: '2025-11-30T20:04:49.396Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:26.804Z',
+    'article:modified_time': '2025-11-30T20:04:49.396Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/collaboration#article",
       "headline": "Best Collaboration Software",
       "description": "Compare the top collaboration solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:26.804Z",
-      "dateModified": "2025-11-30T19:44:26.804Z",
+      "datePublished": "2025-11-30T20:04:49.396Z",
+      "dateModified": "2025-11-30T20:04:49.396Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/collaboration#list",
       "name": "Best Collaboration Software",
       "description": "Compare the top collaboration solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -98,6 +98,18 @@ const schemaOrg = {
             "url": "https://useharbor.io/brands/multitaction-inc",
             "description": "MultiTaction develops advanced collaboration and visualization solutions.",
             "applicationCategory": "Collaboration",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Atlassian",
+            "url": "https://useharbor.io/brands/atlassian",
+            "description": "Collaboration software for software, IT, and business teams.",
+            "applicationCategory": "Collaboration Tools",
             "operatingSystem": "Web-based"
           }
         }
@@ -200,11 +212,41 @@ const profiles = [
     ],
     "integrations": [],
     "visibility_score": 78
+  },
+  {
+    "slug": "atlassian",
+    "brand_name": "Atlassian",
+    "domain": "atlassian.com",
+    "summary": "Collaboration software for software, IT, and business teams.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Plan, track, and deliver projects",
+      "Collaborate across teams",
+      "Incident alerting and on-call schedules",
+      "AI-powered search and chat agents",
+      "Continuous integration and deployment"
+    ],
+    "integrations": [
+      "Jira",
+      "Azure DevOps",
+      "ServiceNow",
+      "Salesforce",
+      "Asana",
+      "Monday",
+      "ClickUp",
+      "GitLab"
+    ],
+    "visibility_score": 73
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:26.804Z'
+// Generated at: 2025-11-30T20:04:49.396Z
 
 export default function ListiclePage() {
   return (
@@ -219,7 +261,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:26.804Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:49.396Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Collaboration Software
@@ -335,7 +377,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:26.804Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:49.396Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

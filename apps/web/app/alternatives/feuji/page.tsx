@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.201Z
+// Generated: 2025-11-30T20:05:19.920Z
 // Alternative to: Feuji
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Feuji Alternatives',
     description: 'Top alternatives to Feuji for IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.201Z',
-    modifiedTime: '2025-11-30T19:44:53.201Z',
+    publishedTime: '2025-11-30T20:05:19.920Z',
+    modifiedTime: '2025-11-30T20:05:19.920Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/feuji#article",
       "headline": "Best Feuji Alternatives",
       "description": "Top alternatives to Feuji for IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.201Z",
-      "dateModified": "2025-11-30T19:44:53.201Z",
+      "datePublished": "2025-11-30T20:05:19.920Z",
+      "dateModified": "2025-11-30T20:05:19.920Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,9 +49,9 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "MCSG Technologies",
-            "url": "https://useharbor.io/brands/mcsg-technologies",
-            "description": "Native American-owned federal contractor specializing in IT, cybersecurity, and engineering solutions.",
+            "name": "Lanspeed",
+            "url": "https://useharbor.io/brands/lanspeed",
+            "description": "Expert-level IT support and managed services provider.",
             "applicationCategory": "IT Services"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Amnet",
-            "url": "https://useharbor.io/brands/amnet",
-            "description": "Amnet is a managed IT service provider based in Colorado, specializing in IT support and cybersecurity.",
+            "name": "MCSG Technologies",
+            "url": "https://useharbor.io/brands/mcsg-technologies",
+            "description": "Native American-owned federal contractor specializing in IT, cybersecurity, and engineering solutions.",
             "applicationCategory": "IT Services"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Intrinsic Technologies",
-            "url": "https://useharbor.io/brands/intrinsic-technologies",
-            "description": "A woman and minority-owned Managed IT service and hardware provider.",
+            "name": "Amnet",
+            "url": "https://useharbor.io/brands/amnet",
+            "description": "Amnet is a managed IT service provider based in Colorado, specializing in IT support and cybersecurity.",
             "applicationCategory": "IT Services"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Palmetto Technology Group (PTG)",
-            "url": "https://useharbor.io/brands/palmetto-technology-group-ptg",
-            "description": "A leading IT solutions provider in Greenville, South Carolina.",
+            "name": "Astute Technology Management",
+            "url": "https://useharbor.io/brands/astute-technology-management",
+            "description": "Astute Technology Management provides comprehensive managed IT services and cybersecurity solutions for businesses in Ohio.",
             "applicationCategory": "IT Services"
           }
         },
@@ -115,9 +115,9 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ICE Consulting - Managed IT & Cybersecurity for Life Sciences",
-            "url": "https://useharbor.io/brands/ice-consulting-managed-it-cybersecurity-for-life-sciences",
-            "description": "ICE Consulting provides managed IT and cybersecurity services primarily for the life sciences sector.",
+            "name": "neteffect technologies LLC",
+            "url": "https://useharbor.io/brands/neteffect-technologies-llc",
+            "description": "Proactive IT support services for small and medium-sized businesses in North Carolina.",
             "applicationCategory": "IT Services"
           }
         },
@@ -126,9 +126,9 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "neteffect technologies LLC",
-            "url": "https://useharbor.io/brands/neteffect-technologies-llc",
-            "description": "Proactive IT support services for small and medium-sized businesses in North Carolina.",
+            "name": "River Run",
+            "url": "https://useharbor.io/brands/river-run",
+            "description": "Milwaukee-based IT services company providing reliable technology support.",
             "applicationCategory": "IT Services"
           }
         },
@@ -148,9 +148,9 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Astute Technology Management",
-            "url": "https://useharbor.io/brands/astute-technology-management",
-            "description": "Astute Technology Management provides comprehensive managed IT services and cybersecurity solutions for businesses in Ohio.",
+            "name": "Palmetto Technology Group (PTG)",
+            "url": "https://useharbor.io/brands/palmetto-technology-group-ptg",
+            "description": "A leading IT solutions provider in Greenville, South Carolina.",
             "applicationCategory": "IT Services"
           }
         },
@@ -159,9 +159,9 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "River Run",
-            "url": "https://useharbor.io/brands/river-run",
-            "description": "Milwaukee-based IT services company providing reliable technology support.",
+            "name": "SoftNice",
+            "url": "https://useharbor.io/brands/softnice",
+            "description": "SoftNice is an award-winning IT services and solutions company specializing in digital transformation.",
             "applicationCategory": "IT Services"
           }
         },
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "InSource, Inc",
-            "url": "https://useharbor.io/brands/insource-inc",
-            "description": "InSource, Inc is an elite ServiceNow partner providing technology solutions and staffing services.",
+            "name": "Data Doctors",
+            "url": "https://useharbor.io/brands/data-doctors",
+            "description": "A premier provider of computer solutions and technology services.",
             "applicationCategory": "IT Services"
           }
         },
@@ -181,9 +181,9 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Link Computer Corporation",
-            "url": "https://useharbor.io/brands/link-computer-corporation",
-            "description": "A leading provider of managed IT solutions and cybersecurity services.",
+            "name": "Intrinsic Technologies",
+            "url": "https://useharbor.io/brands/intrinsic-technologies",
+            "description": "A woman and minority-owned Managed IT service and hardware provider.",
             "applicationCategory": "IT Services"
           }
         },
@@ -192,9 +192,9 @@ const schemaOrg = {
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ABM Technology Group",
-            "url": "https://useharbor.io/brands/abm-technology-group",
-            "description": "Your trusted office technology partner specializing in IT and print solutions.",
+            "name": "ICE Consulting - Managed IT & Cybersecurity for Life Sciences",
+            "url": "https://useharbor.io/brands/ice-consulting-managed-it-cybersecurity-for-life-sciences",
+            "description": "ICE Consulting provides managed IT and cybersecurity services primarily for the life sciences sector.",
             "applicationCategory": "IT Services"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Eagle Technologies",
-            "url": "https://useharbor.io/brands/eagle-technologies",
-            "description": "Eagle Technologies specializes in IT solutions and services for optimizing data centers.",
+            "name": "Tek Leaders Inc",
+            "url": "https://useharbor.io/brands/tek-leaders-inc",
+            "description": "Innovative IT services firm specializing in AI-driven solutions and digital transformation.",
             "applicationCategory": "IT Services"
           }
         }
@@ -216,22 +216,22 @@ const schemaOrg = {
 
 const alternatives = [
   {
-    "slug": "mcsg-technologies",
-    "brand_name": "MCSG Technologies",
-    "domain": "mcsgtech.com",
-    "summary": "Native American-owned federal contractor specializing in IT, cybersecurity, and engineering solutions.",
+    "slug": "lanspeed",
+    "brand_name": "Lanspeed",
+    "domain": "lanspeed.com",
+    "summary": "Expert-level IT support and managed services provider.",
     "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Agile IT solutions",
-      "Cybersecurity services",
-      "Engineering support",
-      "Mission support solutions",
-      "Operations and sustainment"
+      "Pro-active managed services",
+      "IT consulting",
+      "Network solutions",
+      "Strategic IT consulting",
+      "IT project architecture and deployment"
     ],
     "integrations": []
   },
@@ -265,6 +265,26 @@ const alternatives = [
     ]
   },
   {
+    "slug": "mcsg-technologies",
+    "brand_name": "MCSG Technologies",
+    "domain": "mcsgtech.com",
+    "summary": "Native American-owned federal contractor specializing in IT, cybersecurity, and engineering solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Agile IT solutions",
+      "Cybersecurity services",
+      "Engineering support",
+      "Mission support solutions",
+      "Operations and sustainment"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "amnet",
     "brand_name": "Amnet",
     "domain": "amnet.net",
@@ -287,26 +307,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "intrinsic-technologies",
-    "brand_name": "Intrinsic Technologies",
-    "domain": "intrinsicamerica.com",
-    "summary": "A woman and minority-owned Managed IT service and hardware provider.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Help Desk Support",
-      "Cyber Security Solutions",
-      "Cloud Architecture Development",
-      "Infrastructure Management",
-      "Application & Cloud Support"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "cutting-edge-network-technologies-an-it-solutions-company",
     "brand_name": "Cutting Edge Network Technologies, An IT Solutions Company",
     "domain": "cuttingedgenet.com",
@@ -318,6 +318,80 @@ const alternatives = [
       "starting_price": null
     },
     "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "astute-technology-management",
+    "brand_name": "Astute Technology Management",
+    "domain": "astutetm.com",
+    "summary": "Astute Technology Management provides comprehensive managed IT services and cybersecurity solutions for businesses in Ohio.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "neteffect-technologies-llc",
+    "brand_name": "neteffect technologies LLC",
+    "domain": "ne-t.com",
+    "summary": "Proactive IT support services for small and medium-sized businesses in North Carolina.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "Pricing includes monthly and yearly plans.",
+      "has_free_tier": false,
+      "starting_price": "$90/month"
+    },
+    "features": [
+      "Powerful Admin Panel",
+      "Multi-Language Support",
+      "Support via E-mail and Phone",
+      "Digital Project Planning",
+      "Planning Solution"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "river-run",
+    "brand_name": "River Run",
+    "domain": "river-run.com",
+    "summary": "Milwaukee-based IT services company providing reliable technology support.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "They manage to remain budget-friendly while providing comprehensive IT solutions.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT",
+      "Maintenance Monitoring",
+      "Cloud Solutions",
+      "Security",
+      "Backup"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "ctsi-computer-transition-services",
+    "brand_name": "CTSI | Computer Transition Services",
+    "domain": "ctsinet.com",
+    "summary": "CTSI is a leading IT services provider in Lubbock, Texas, specializing in managed IT solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Offers a free IT assessment",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT Services",
+      "Cybersecurity Services",
+      "Data Backup and Disaster Recovery",
+      "HIPAA Compliance Solutions",
+      "Business Communication"
+    ],
     "integrations": []
   },
   {
@@ -343,6 +417,70 @@ const alternatives = [
     ]
   },
   {
+    "slug": "softnice",
+    "brand_name": "SoftNice",
+    "domain": "softnice.com",
+    "summary": "SoftNice is an award-winning IT services and solutions company specializing in digital transformation.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation Services",
+      "Application Development",
+      "Mobility Solutions",
+      "Analytics & BI",
+      "Quality Assurance"
+    ],
+    "integrations": [
+      "Salesforce",
+      "Microsoft SharePoint",
+      "Office 365"
+    ]
+  },
+  {
+    "slug": "data-doctors",
+    "brand_name": "Data Doctors",
+    "domain": "datadoctors.com",
+    "summary": "A premier provider of computer solutions and technology services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "365 Day Warranty",
+      "Satisfaction Guarantee",
+      "Customer Support",
+      "Free Help Articles & Advice",
+      "Personal IT Department Services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "intrinsic-technologies",
+    "brand_name": "Intrinsic Technologies",
+    "domain": "intrinsicamerica.com",
+    "summary": "A woman and minority-owned Managed IT service and hardware provider.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Help Desk Support",
+      "Cyber Security Solutions",
+      "Cloud Architecture Development",
+      "Infrastructure Management",
+      "Application & Cloud Support"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "ice-consulting-managed-it-cybersecurity-for-life-sciences",
     "brand_name": "ICE Consulting - Managed IT & Cybersecurity for Life Sciences",
     "domain": "iceconsulting.com",
@@ -363,163 +501,27 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "neteffect-technologies-llc",
-    "brand_name": "neteffect technologies LLC",
-    "domain": "ne-t.com",
-    "summary": "Proactive IT support services for small and medium-sized businesses in North Carolina.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "Pricing includes monthly and yearly plans.",
-      "has_free_tier": false,
-      "starting_price": "$90/month"
-    },
-    "features": [
-      "Powerful Admin Panel",
-      "Multi-Language Support",
-      "Support via E-mail and Phone",
-      "Digital Project Planning",
-      "Planning Solution"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "ctsi-computer-transition-services",
-    "brand_name": "CTSI | Computer Transition Services",
-    "domain": "ctsinet.com",
-    "summary": "CTSI is a leading IT services provider in Lubbock, Texas, specializing in managed IT solutions.",
+    "slug": "tek-leaders-inc",
+    "brand_name": "Tek Leaders Inc",
+    "domain": "tekleaders.com",
+    "summary": "Innovative IT services firm specializing in AI-driven solutions and digital transformation.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Offers a free IT assessment",
+      "price_notes": "Consultation is offered for free, but specific pricing details are not provided.",
       "has_free_tier": true,
       "starting_price": null
     },
     "features": [
-      "Managed IT Services",
-      "Cybersecurity Services",
-      "Data Backup and Disaster Recovery",
-      "HIPAA Compliance Solutions",
-      "Business Communication"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "astute-technology-management",
-    "brand_name": "Astute Technology Management",
-    "domain": "astutetm.com",
-    "summary": "Astute Technology Management provides comprehensive managed IT services and cybersecurity solutions for businesses in Ohio.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "river-run",
-    "brand_name": "River Run",
-    "domain": "river-run.com",
-    "summary": "Milwaukee-based IT services company providing reliable technology support.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "They manage to remain budget-friendly while providing comprehensive IT solutions.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed IT",
-      "Maintenance Monitoring",
-      "Cloud Solutions",
-      "Security",
-      "Backup"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "insource-inc",
-    "brand_name": "InSource, Inc",
-    "domain": "insourcenow.com",
-    "summary": "InSource, Inc is an elite ServiceNow partner providing technology solutions and staffing services.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Advisory Implementation",
-      "Staffing Services",
-      "CMDB Health Check",
-      "SPM Professional Services",
-      "Digital Workflow Automation"
+      "Product Lifecycle Management (PLM)",
+      "Agentic AI-driven quality engineering",
+      "Automated workflows for product updates",
+      "Real-time threat detection",
+      "Continuous AI-Driven Assurance"
     ],
     "integrations": [
-      "ServiceNow"
+      "Microsoft",
+      "Intel"
     ]
-  },
-  {
-    "slug": "link-computer-corporation",
-    "brand_name": "Link Computer Corporation",
-    "domain": "linkcorp.com",
-    "summary": "A leading provider of managed IT solutions and cybersecurity services.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Offers a free technology assessment",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "Remote monitoring and management (RMM)",
-      "Dedicated help desk support",
-      "On-site support",
-      "Backup and disaster recovery plans",
-      "Mobile device management (MDM)"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "abm-technology-group",
-    "brand_name": "ABM Technology Group",
-    "domain": "abmnow.com",
-    "summary": "Your trusted office technology partner specializing in IT and print solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Get a Free AI Assessment available",
-      "has_free_tier": true,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven productivity solutions",
-      "Managed IT services",
-      "Reliable printing solutions",
-      "High-speed scanners",
-      "Advanced document management"
-    ],
-    "integrations": [
-      "Microsoft Teams",
-      "Microsoft Copilot"
-    ]
-  },
-  {
-    "slug": "eagle-technologies",
-    "brand_name": "Eagle Technologies",
-    "domain": "eagleinc.com",
-    "summary": "Eagle Technologies specializes in IT solutions and services for optimizing data centers.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Storage Solutions",
-      "Data Protection",
-      "Virtualization",
-      "Cloud Solutions",
-      "Security"
-    ],
-    "integrations": []
   }
 ]
 
@@ -535,7 +537,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.201Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.920Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Feuji Alternatives
@@ -607,7 +609,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.201Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.920Z">2025-11-30</time>
             </p>
           </footer>
         </div>

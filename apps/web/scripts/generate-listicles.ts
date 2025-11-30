@@ -308,7 +308,7 @@ const profiles = ${JSON.stringify(profiles.map(p => ({
 })), null, 2)}
 
 // Export for freshness verification
-export const pageGeneratedAt = '${isoDate}'
+// Generated at: ${isoDate}
 
 export default function ListiclePage() {
   return (

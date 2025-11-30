@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:25.229Z
+// Generated: 2025-11-30T20:04:47.868Z
 // Query: {"category":"HR","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best HR Software',
     description: 'Compare the top hr solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:25.229Z',
-    modifiedTime: '2025-11-30T19:44:25.229Z',
+    publishedTime: '2025-11-30T20:04:47.868Z',
+    modifiedTime: '2025-11-30T20:04:47.868Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:25.229Z',
+    'article:modified_time': '2025-11-30T20:04:47.868Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/hr#article",
       "headline": "Best HR Software",
       "description": "Compare the top hr solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:25.229Z",
-      "dateModified": "2025-11-30T19:44:25.229Z",
+      "datePublished": "2025-11-30T20:04:47.868Z",
+      "dateModified": "2025-11-30T20:04:47.868Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/hr#list",
       "name": "Best HR Software",
       "description": "Compare the top hr solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 15,
+      "numberOfItems": 18,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -130,6 +130,23 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Leapsome",
+            "url": "https://useharbor.io/brands/leapsome",
+            "description": "AI-powered HR software and people platform.",
+            "applicationCategory": "HR Software",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "199",
+              "priceCurrency": "USD"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ResNav Solutions",
             "url": "https://useharbor.io/brands/resnav-solutions",
             "description": "A leading provider of HR data management solutions.",
@@ -139,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Streamline Healthcare Solutions",
@@ -151,7 +168,19 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Employer.com",
+            "url": "https://useharbor.io/brands/employer-com",
+            "description": "A comprehensive back-office solution for businesses.",
+            "applicationCategory": "HR Technology",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HiredScore",
@@ -163,7 +192,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Traitify",
@@ -175,7 +204,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Opolis",
@@ -187,7 +216,19 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Eightfold AI",
+            "url": "https://useharbor.io/brands/eightfold-ai",
+            "description": "AI-powered talent intelligence platform for recruitment and workforce management.",
+            "applicationCategory": "HR Technology",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Akrivia HCM",
@@ -199,7 +240,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Flashpoint",
@@ -211,7 +252,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 16,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Humand",
@@ -223,7 +264,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 17,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Seso Inc.",
@@ -235,7 +276,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 15,
+          "position": 18,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Paradox",
@@ -392,6 +433,32 @@ const profiles = [
     "visibility_score": 78
   },
   {
+    "slug": "leapsome",
+    "brand_name": "Leapsome",
+    "domain": "leapsome.com",
+    "summary": "AI-powered HR software and people platform.",
+    "pricing": {
+      "price_model": "per_user",
+      "price_notes": "Multi-module and volume discounts available.",
+      "has_free_tier": false,
+      "starting_price": "$199/month"
+    },
+    "features": [
+      "Centralized employee data",
+      "Advanced workflows & approvals",
+      "Performance reviews",
+      "Goal tracking with OKRs",
+      "Personalized learning"
+    ],
+    "integrations": [
+      "DATEV",
+      "Jira",
+      "Slack",
+      "Microsoft Teams"
+    ],
+    "visibility_score": 78
+  },
+  {
     "slug": "resnav-solutions",
     "brand_name": "ResNav Solutions",
     "domain": "resnav.com",
@@ -438,6 +505,21 @@ const profiles = [
     "integrations": [
       "Microsoft Azure"
     ],
+    "visibility_score": 75
+  },
+  {
+    "slug": "employer-com",
+    "brand_name": "Employer.com",
+    "domain": "employer.com",
+    "summary": "A comprehensive back-office solution for businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": [],
     "visibility_score": 75
   },
   {
@@ -496,6 +578,27 @@ const profiles = [
       "starting_price": null
     },
     "features": [],
+    "integrations": [],
+    "visibility_score": 73
+  },
+  {
+    "slug": "eightfold-ai",
+    "brand_name": "Eightfold AI",
+    "domain": "eightfold.ai",
+    "summary": "AI-powered talent intelligence platform for recruitment and workforce management.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-powered talent recruiting solutions",
+      "Skills intelligence",
+      "Talent management",
+      "Workforce planning",
+      "Real-time skills insights"
+    ],
     "integrations": [],
     "visibility_score": 73
   },
@@ -622,7 +725,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:25.229Z'
+// Generated at: 2025-11-30T20:04:47.868Z
 
 export default function ListiclePage() {
   return (
@@ -637,7 +740,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:25.229Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:47.868Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best HR Software
@@ -753,7 +856,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:25.229Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:47.868Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

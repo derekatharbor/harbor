@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.241Z
+// Generated: 2025-11-30T20:05:19.796Z
 // Alternative to: COAX
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best COAX Alternatives',
     description: 'Top alternatives to COAX for Custom Software Development.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.241Z',
-    modifiedTime: '2025-11-30T19:44:53.241Z',
+    publishedTime: '2025-11-30T20:05:19.796Z',
+    modifiedTime: '2025-11-30T20:05:19.796Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/coax#article",
       "headline": "Best COAX Alternatives",
       "description": "Top alternatives to COAX for Custom Software Development. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.241Z",
-      "dateModified": "2025-11-30T19:44:53.241Z",
+      "datePublished": "2025-11-30T20:05:19.796Z",
+      "dateModified": "2025-11-30T20:05:19.796Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Softxpert",
-            "url": "https://useharbor.io/brands/softxpert",
-            "description": "Custom software development company based in California.",
+            "name": "Active Logic",
+            "url": "https://useharbor.io/brands/active-logic",
+            "description": "A Kansas City-based software development company specializing in custom software solutions.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Active Logic",
-            "url": "https://useharbor.io/brands/active-logic",
-            "description": "A Kansas City-based software development company specializing in custom software solutions.",
+            "name": "Softxpert",
+            "url": "https://useharbor.io/brands/softxpert",
+            "description": "Custom software development company based in California.",
             "applicationCategory": "Custom Software Development"
           }
         },
@@ -187,26 +187,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "softxpert",
-    "brand_name": "Softxpert",
-    "domain": "softxpert.com",
-    "summary": "Custom software development company based in California.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing is tailored based on business needs and project requirements.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Digital Image Processing",
-      "E-commerce Solutions",
-      "Time and Attendance Software",
-      "Video Surveillance",
-      "Mailroom Automation"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "active-logic",
     "brand_name": "Active Logic",
     "domain": "activelogic.com",
@@ -227,6 +207,26 @@ const alternatives = [
     "integrations": [
       "API & Integrations"
     ]
+  },
+  {
+    "slug": "softxpert",
+    "brand_name": "Softxpert",
+    "domain": "softxpert.com",
+    "summary": "Custom software development company based in California.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is tailored based on business needs and project requirements.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Image Processing",
+      "E-commerce Solutions",
+      "Time and Attendance Software",
+      "Video Surveillance",
+      "Mailroom Automation"
+    ],
+    "integrations": []
   },
   {
     "slug": "jetruby-agency",
@@ -267,7 +267,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.796Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best COAX Alternatives
@@ -339,7 +339,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.796Z">2025-11-30</time>
             </p>
           </footer>
         </div>

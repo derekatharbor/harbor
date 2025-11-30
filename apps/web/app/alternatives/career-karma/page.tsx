@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.352Z
+// Generated: 2025-11-30T20:05:20.055Z
 // Alternative to: Career Karma
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Career Karma Alternatives',
     description: 'Top alternatives to Career Karma for Education.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.352Z',
-    modifiedTime: '2025-11-30T19:44:53.352Z',
+    publishedTime: '2025-11-30T20:05:20.055Z',
+    modifiedTime: '2025-11-30T20:05:20.055Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/career-karma#article",
       "headline": "Best Career Karma Alternatives",
       "description": "Top alternatives to Career Karma for Education. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.352Z",
-      "dateModified": "2025-11-30T19:44:53.352Z",
+      "datePublished": "2025-11-30T20:05:20.055Z",
+      "dateModified": "2025-11-30T20:05:20.055Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/career-karma#list",
       "name": "Career Karma Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Hopscotch Games",
+            "url": "https://useharbor.io/brands/hopscotch-games",
+            "description": "A kid-friendly programming platform that allows users to create games, animations, and stories without prior coding knowledge.",
+            "applicationCategory": "Education"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Black Girls Code",
             "url": "https://useharbor.io/brands/black-girls-code",
             "description": "Empowering young girls and gender-expansive youth to thrive in tech through coding education.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "OneScreen",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "GoPeer",
@@ -111,6 +122,26 @@ const alternatives = [
       "Continuing education",
       "In-person and online webinars",
       "Certified doula directory"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "hopscotch-games",
+    "brand_name": "Hopscotch Games",
+    "domain": "gethopscotch.com",
+    "summary": "A kid-friendly programming platform that allows users to create games, animations, and stories without prior coding knowledge.",
+    "pricing": {
+      "price_model": "tiered",
+      "price_notes": "Multiple pricing tiers available, including a free account.",
+      "has_free_tier": true,
+      "starting_price": "$1.99/month"
+    },
+    "features": [
+      "Unlimited gaming experience",
+      "Create Your Own Games",
+      "Basic Hopscotch Characters",
+      "Essential Coding Blocks",
+      "Uninterrupted Play Experience"
     ],
     "integrations": []
   },
@@ -176,7 +207,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.055Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Career Karma Alternatives
@@ -248,7 +279,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.055Z">2025-11-30</time>
             </p>
           </footer>
         </div>

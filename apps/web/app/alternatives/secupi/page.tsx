@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.306Z
+// Generated: 2025-11-30T20:05:19.976Z
 // Alternative to: SecuPi
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best SecuPi Alternatives',
     description: 'Top alternatives to SecuPi for Data Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.306Z',
-    modifiedTime: '2025-11-30T19:44:53.306Z',
+    publishedTime: '2025-11-30T20:05:19.976Z',
+    modifiedTime: '2025-11-30T20:05:19.976Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/secupi#article",
       "headline": "Best SecuPi Alternatives",
       "description": "Top alternatives to SecuPi for Data Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.306Z",
-      "dateModified": "2025-11-30T19:44:53.306Z",
+      "datePublished": "2025-11-30T20:05:19.976Z",
+      "dateModified": "2025-11-30T20:05:19.976Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/secupi#list",
       "name": "SecuPi Alternatives",
-      "numberOfItems": 13,
+      "numberOfItems": 14,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -148,15 +148,26 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Portal26",
-            "url": "https://useharbor.io/brands/portal26",
-            "description": "A GenAI-first enterprise platform focused on risk management and data security.",
+            "name": "Appsian (a Pathlock company)",
+            "url": "https://useharbor.io/brands/appsian-a-pathlock-company",
+            "description": "Appsian provides ERP data security and compliance solutions for various platforms.",
             "applicationCategory": "Data Security"
           }
         },
         {
           "@type": "ListItem",
           "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Fasoo",
+            "url": "https://useharbor.io/brands/fasoo",
+            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
+            "applicationCategory": "Data Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Relyance AI",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Securiti",
@@ -178,12 +189,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Fasoo",
-            "url": "https://useharbor.io/brands/fasoo",
-            "description": "Fasoo is a data and security company specializing in AI-driven solutions.",
+            "name": "Portal26",
+            "url": "https://useharbor.io/brands/portal26",
+            "description": "A GenAI-first enterprise platform focused on risk management and data security.",
             "applicationCategory": "Data Security"
           }
         }
@@ -421,10 +432,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "portal26",
-    "brand_name": "Portal26",
-    "domain": "portal26.ai",
-    "summary": "A GenAI-first enterprise platform focused on risk management and data security.",
+    "slug": "appsian-a-pathlock-company",
+    "brand_name": "Appsian (a Pathlock company)",
+    "domain": "appsiansecurity.com",
+    "summary": "Appsian provides ERP data security and compliance solutions for various platforms.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -432,20 +443,42 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Data Tokenization",
-      "Data Masking",
-      "Data Anonymization",
-      "Data Redaction",
-      "BYOK / HYOK"
+      "Attribute-Based Access Controls",
+      "Automated Provisioning",
+      "Dynamic Data Masking",
+      "Multi-Factor Authentication",
+      "Real-Time Analytics"
     ],
     "integrations": [
-      "AWS",
-      "Cloudflare",
-      "Hewlett Packard Enterprise",
-      "Slalom",
-      "Capgemini",
-      "PMsquare",
-      "Uniqus Consultech"
+      "Active Directory",
+      "ADFS",
+      "OKTA",
+      "SAML 2.0"
+    ]
+  },
+  {
+    "slug": "fasoo",
+    "brand_name": "Fasoo",
+    "domain": "fasoo.com",
+    "summary": "Fasoo is a data and security company specializing in AI-driven solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Security",
+      "AI-Powered Security",
+      "Data Management",
+      "Data Center Collaboration",
+      "Information Security Consulting"
+    ],
+    "integrations": [
+      "Fasoo DSP",
+      "Fasoo DSPM",
+      "Cloud Wrapsody",
+      "DigitalPage"
     ]
   },
   {
@@ -500,10 +533,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "fasoo",
-    "brand_name": "Fasoo",
-    "domain": "fasoo.com",
-    "summary": "Fasoo is a data and security company specializing in AI-driven solutions.",
+    "slug": "portal26",
+    "brand_name": "Portal26",
+    "domain": "portal26.ai",
+    "summary": "A GenAI-first enterprise platform focused on risk management and data security.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -511,17 +544,20 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Data Security",
-      "AI-Powered Security",
-      "Data Management",
-      "Data Center Collaboration",
-      "Information Security Consulting"
+      "Data Tokenization",
+      "Data Masking",
+      "Data Anonymization",
+      "Data Redaction",
+      "BYOK / HYOK"
     ],
     "integrations": [
-      "Fasoo DSP",
-      "Fasoo DSPM",
-      "Cloud Wrapsody",
-      "DigitalPage"
+      "AWS",
+      "Cloudflare",
+      "Hewlett Packard Enterprise",
+      "Slalom",
+      "Capgemini",
+      "PMsquare",
+      "Uniqus Consultech"
     ]
   }
 ]
@@ -538,7 +574,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.306Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.976Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best SecuPi Alternatives
@@ -610,7 +646,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.306Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.976Z">2025-11-30</time>
             </p>
           </footer>
         </div>

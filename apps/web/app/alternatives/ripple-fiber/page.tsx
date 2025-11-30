@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.261Z
+// Generated: 2025-11-30T20:05:19.945Z
 // Alternative to: Ripple Fiber
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Ripple Fiber Alternatives',
     description: 'Top alternatives to Ripple Fiber for Internet Service Provider.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.261Z',
-    modifiedTime: '2025-11-30T19:44:53.261Z',
+    publishedTime: '2025-11-30T20:05:19.945Z',
+    modifiedTime: '2025-11-30T20:05:19.945Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/ripple-fiber#article",
       "headline": "Best Ripple Fiber Alternatives",
       "description": "Top alternatives to Ripple Fiber for Internet Service Provider. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.261Z",
-      "dateModified": "2025-11-30T19:44:53.261Z",
+      "datePublished": "2025-11-30T20:05:19.945Z",
+      "dateModified": "2025-11-30T20:05:19.945Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/ripple-fiber#list",
       "name": "Ripple Fiber Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "US Internet",
+            "url": "https://useharbor.io/brands/us-internet",
+            "description": "US Internet provides fast and reliable fiber internet and related services in Minneapolis.",
+            "applicationCategory": "Internet Service Provider"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Mercury Fiber",
             "url": "https://useharbor.io/brands/mercury-fiber",
             "description": "High-speed internet provider focused on rural communities.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Pavlov Media",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Socket Fiber",
@@ -111,6 +122,26 @@ const alternatives = [
       "Unlimited data",
       "Local and personalized support",
       "Whole home Wi-Fi coverage"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "us-internet",
+    "brand_name": "US Internet",
+    "domain": "usinternet.com",
+    "summary": "US Internet provides fast and reliable fiber internet and related services in Minneapolis.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Fast internet",
+      "Reliable service",
+      "Email services",
+      "Phone services",
+      "Cloud hosting"
     ],
     "integrations": []
   },
@@ -182,7 +213,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.261Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.945Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Ripple Fiber Alternatives
@@ -254,7 +285,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.261Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.945Z">2025-11-30</time>
             </p>
           </footer>
         </div>

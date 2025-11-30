@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:44:26.703Z
+// Generated: 2025-11-30T20:04:49.281Z
 // Query: {"category":"Document Management","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Document Management Software',
     description: 'Compare the top document management solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:26.703Z',
-    modifiedTime: '2025-11-30T19:44:26.703Z',
+    publishedTime: '2025-11-30T20:04:49.281Z',
+    modifiedTime: '2025-11-30T20:04:49.281Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:44:26.703Z',
+    'article:modified_time': '2025-11-30T20:04:49.281Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/document-management#article",
       "headline": "Best Document Management Software",
       "description": "Compare the top document management solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:44:26.703Z",
-      "dateModified": "2025-11-30T19:44:26.703Z",
+      "datePublished": "2025-11-30T20:04:49.281Z",
+      "dateModified": "2025-11-30T20:04:49.281Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/document-management#list",
       "name": "Best Document Management Software",
       "description": "Compare the top document management solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -109,6 +109,18 @@ const schemaOrg = {
             "name": "PairSoft",
             "url": "https://useharbor.io/brands/pairsoft",
             "description": "PairSoft provides automation solutions for financial processes.",
+            "applicationCategory": "Document Management",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "TrustFlow Digital Solutions (Acquired by Docufree)",
+            "url": "https://useharbor.io/brands/trustflow-digital-solutions-acquired-by-docufree",
+            "description": "A Document Scanning and Digital Transformation Company.",
             "applicationCategory": "Document Management",
             "operatingSystem": "Web-based"
           }
@@ -252,11 +264,32 @@ const profiles = [
       "Sage Intacct"
     ],
     "visibility_score": 73
+  },
+  {
+    "slug": "trustflow-digital-solutions-acquired-by-docufree",
+    "brand_name": "TrustFlow Digital Solutions (Acquired by Docufree)",
+    "domain": "trustflowds.com",
+    "summary": "A Document Scanning and Digital Transformation Company.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details require a quote.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Document Scanning Services",
+      "Digital Mailroom Automation",
+      "Online Forms & Electronic Signatures",
+      "Business Process Automation",
+      "Cloud Document Management Software"
+    ],
+    "integrations": [],
+    "visibility_score": 73
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:44:26.703Z'
+// Generated at: 2025-11-30T20:04:49.281Z
 
 export default function ListiclePage() {
   return (
@@ -271,7 +304,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:26.703Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T20:04:49.281Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Document Management Software
@@ -387,7 +420,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:26.703Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:04:49.281Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

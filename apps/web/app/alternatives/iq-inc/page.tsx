@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.242Z
+// Generated: 2025-11-30T20:05:19.799Z
 // Alternative to: IQ Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best IQ Inc. Alternatives',
     description: 'Top alternatives to IQ Inc. for Software Development.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.242Z',
-    modifiedTime: '2025-11-30T19:44:53.242Z',
+    publishedTime: '2025-11-30T20:05:19.799Z',
+    modifiedTime: '2025-11-30T20:05:19.799Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/iq-inc#article",
       "headline": "Best IQ Inc. Alternatives",
       "description": "Top alternatives to IQ Inc. for Software Development. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.242Z",
-      "dateModified": "2025-11-30T19:44:53.242Z",
+      "datePublished": "2025-11-30T20:05:19.799Z",
+      "dateModified": "2025-11-30T20:05:19.799Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -170,9 +170,9 @@ const schemaOrg = {
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Netsmartz",
-            "url": "https://useharbor.io/brands/netsmartz",
-            "description": "AI-Powered SaaS Software Development Company in the USA.",
+            "name": "Dev.Pro",
+            "url": "https://useharbor.io/brands/devpro",
+            "description": "Dev.Pro is a software development partner that helps technology companies scale their growth through outsourced talent.",
             "applicationCategory": "Software Development"
           }
         },
@@ -181,9 +181,9 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "LTS",
-            "url": "https://useharbor.io/brands/lts",
-            "description": "LTS is a partner product development company specializing in IT solutions.",
+            "name": "WambaTech",
+            "url": "https://useharbor.io/brands/wambatech",
+            "description": "A versatile software development company offering custom solutions.",
             "applicationCategory": "Software Development"
           }
         },
@@ -192,9 +192,9 @@ const schemaOrg = {
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Big Kitty Labs",
-            "url": "https://useharbor.io/brands/big-kitty-labs",
-            "description": "A software design and development agency based in Columbus, Ohio.",
+            "name": "Cinergy Technology Inc",
+            "url": "https://useharbor.io/brands/cinergy-technology-inc",
+            "description": "A high-growth company specializing in digital transformation and IT solutions.",
             "applicationCategory": "Software Development"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "JBS Dev | Strategic Technology Experts",
-            "url": "https://useharbor.io/brands/jbs-dev-strategic-technology-experts",
-            "description": "Custom software application development and enterprise technology solutions.",
+            "name": "Big Kitty Labs",
+            "url": "https://useharbor.io/brands/big-kitty-labs",
+            "description": "A software design and development agency based in Columbus, Ohio.",
             "applicationCategory": "Software Development"
           }
         }
@@ -443,10 +443,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "netsmartz",
-    "brand_name": "Netsmartz",
-    "domain": "netsmartz.com",
-    "summary": "AI-Powered SaaS Software Development Company in the USA.",
+    "slug": "devpro",
+    "brand_name": "Dev.Pro",
+    "domain": "dev.pro",
+    "summary": "Dev.Pro is a software development partner that helps technology companies scale their growth through outsourced talent.",
     "pricing": {
       "price_model": "custom",
       "price_notes": null,
@@ -454,19 +454,23 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Embedding AI into SaaS platforms",
-      "Secure data fencing",
-      "QA and automation testing",
-      "AI-driven QA and testing",
-      "Proactive, AI-enhanced security protocols"
+      "Software Development",
+      "Cloud Development",
+      "DevOps Services",
+      "UI/UX Design",
+      "System Integration"
     ],
-    "integrations": []
+    "integrations": [
+      "POS",
+      "CRM",
+      "ERP"
+    ]
   },
   {
-    "slug": "lts",
-    "brand_name": "LTS",
-    "domain": "leotechnosoft.net",
-    "summary": "LTS is a partner product development company specializing in IT solutions.",
+    "slug": "wambatech",
+    "brand_name": "WambaTech",
+    "domain": "wambatech.com",
+    "summary": "A versatile software development company offering custom solutions.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -474,11 +478,31 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Product Engineering",
-      "Software Development",
-      "SaaS-Fication",
-      "Dev-Ops",
-      "Product Modernization"
+      "Data Management & Processing",
+      "Legacy System Modernization",
+      "iOS App Development",
+      "Android App Development",
+      "Technical Consultation & Strategy"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "cinergy-technology-inc",
+    "brand_name": "Cinergy Technology Inc",
+    "domain": "cinergytech.com",
+    "summary": "A high-growth company specializing in digital transformation and IT solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Custom software development",
+      "Mobile application development",
+      "Product engineering",
+      "User experience research & design",
+      "Web applications development"
     ],
     "integrations": []
   },
@@ -500,26 +524,6 @@ const alternatives = [
       "UI/UX Design"
     ],
     "integrations": []
-  },
-  {
-    "slug": "jbs-dev-strategic-technology-experts",
-    "brand_name": "JBS Dev | Strategic Technology Experts",
-    "domain": "jbs.dev",
-    "summary": "Custom software application development and enterprise technology solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Custom software solutions",
-      "Data analytics",
-      "Compliance with HIPAA",
-      "Automation",
-      "AI integration"
-    ],
-    "integrations": []
   }
 ]
 
@@ -535,7 +539,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.242Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.799Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best IQ Inc. Alternatives
@@ -607,7 +611,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.242Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.799Z">2025-11-30</time>
             </p>
           </footer>
         </div>

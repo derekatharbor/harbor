@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.267Z
+// Generated: 2025-11-30T20:05:20.010Z
 // Alternative to: OPTiMO Information Technology
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best OPTiMO Information Technology Alternatives',
     description: 'Top alternatives to OPTiMO Information Technology for Information Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.267Z',
-    modifiedTime: '2025-11-30T19:44:53.267Z',
+    publishedTime: '2025-11-30T20:05:20.010Z',
+    modifiedTime: '2025-11-30T20:05:20.010Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/optimo-information-technology#article",
       "headline": "Best OPTiMO Information Technology Alternatives",
       "description": "Top alternatives to OPTiMO Information Technology for Information Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.267Z",
-      "dateModified": "2025-11-30T19:44:53.267Z",
+      "datePublished": "2025-11-30T20:05:20.010Z",
+      "dateModified": "2025-11-30T20:05:20.010Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/optimo-information-technology#list",
       "name": "OPTiMO Information Technology Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,28 @@ const schemaOrg = {
             "name": "COX-LITTLE & COMPANY",
             "url": "https://useharbor.io/brands/cox-little-company",
             "description": "Providing IT Professionals to Businesses since 1985.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "RDR, Inc.",
+            "url": "https://useharbor.io/brands/rdr-inc",
+            "description": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+            "applicationCategory": "Information Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "IT Trailblazers LLC",
+            "url": "https://useharbor.io/brands/it-trailblazers-llc",
+            "description": "Your Innovating Global Reliable Technology Partner.",
             "applicationCategory": "Information Technology Services"
           }
         }
@@ -142,6 +164,46 @@ const alternatives = [
       "PC/Web-Based Development"
     ],
     "integrations": []
+  },
+  {
+    "slug": "rdr-inc",
+    "brand_name": "RDR, Inc.",
+    "domain": "rdr.com",
+    "summary": "RDR, Inc. is an Information Technology and Services Company specializing in consulting, training, and security services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Interagency IT solutions",
+      "Security services",
+      "Systems service solutions",
+      "Knowledge management",
+      "Process improvement"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "it-trailblazers-llc",
+    "brand_name": "IT Trailblazers LLC",
+    "domain": "ittblazers.com",
+    "summary": "Your Innovating Global Reliable Technology Partner.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Application Development",
+      "Enterprise Resource Management",
+      "Cloud Solutions",
+      "Contract Staffing Services",
+      "Cybersecurity Solutions"
+    ],
+    "integrations": []
   }
 ]
 
@@ -157,7 +219,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.267Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best OPTiMO Information Technology Alternatives
@@ -229,7 +291,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.267Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">2025-11-30</time>
             </p>
           </footer>
         </div>

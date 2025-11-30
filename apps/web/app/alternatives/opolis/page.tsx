@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.362Z
+// Generated: 2025-11-30T20:05:20.034Z
 // Alternative to: Opolis
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Opolis Alternatives',
     description: 'Top alternatives to Opolis for HR Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.362Z',
-    modifiedTime: '2025-11-30T19:44:53.362Z',
+    publishedTime: '2025-11-30T20:05:20.034Z',
+    modifiedTime: '2025-11-30T20:05:20.034Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/opolis#article",
       "headline": "Best Opolis Alternatives",
       "description": "Top alternatives to Opolis for HR Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.362Z",
-      "dateModified": "2025-11-30T19:44:53.362Z",
+      "datePublished": "2025-11-30T20:05:20.034Z",
+      "dateModified": "2025-11-30T20:05:20.034Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/opolis#list",
       "name": "Opolis Alternatives",
-      "numberOfItems": 7,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,9 +60,9 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ResNav Solutions",
-            "url": "https://useharbor.io/brands/resnav-solutions",
-            "description": "A leading provider of HR data management solutions.",
+            "name": "Employer.com",
+            "url": "https://useharbor.io/brands/employer-com",
+            "description": "A comprehensive back-office solution for businesses.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -71,9 +71,9 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "HiredScore",
-            "url": "https://useharbor.io/brands/hiredscore",
-            "description": "The Enterprise AI Platform for Managing HR & Finance.",
+            "name": "ResNav Solutions",
+            "url": "https://useharbor.io/brands/resnav-solutions",
+            "description": "A leading provider of HR data management solutions.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -82,9 +82,9 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Traitify",
-            "url": "https://useharbor.io/brands/traitify",
-            "description": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
+            "name": "HiredScore",
+            "url": "https://useharbor.io/brands/hiredscore",
+            "description": "The Enterprise AI Platform for Managing HR & Finance.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Seso Inc.",
-            "url": "https://useharbor.io/brands/seso-inc",
-            "description": "An all-in-one employee management platform for agricultural businesses.",
+            "name": "Traitify",
+            "url": "https://useharbor.io/brands/traitify",
+            "description": "Traitify offers fast, visual-based pre-employment assessments to enhance the hiring process.",
             "applicationCategory": "HR Technology"
           }
         },
@@ -115,9 +115,31 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Eightfold AI",
+            "url": "https://useharbor.io/brands/eightfold-ai",
+            "description": "AI-powered talent intelligence platform for recruitment and workforce management.",
+            "applicationCategory": "HR Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Paradox",
             "url": "https://useharbor.io/brands/paradox",
             "description": "Conversational hiring software that automates recruitment tasks.",
+            "applicationCategory": "HR Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Seso Inc.",
+            "url": "https://useharbor.io/brands/seso-inc",
+            "description": "An all-in-one employee management platform for agricultural businesses.",
             "applicationCategory": "HR Technology"
           }
         }
@@ -154,6 +176,20 @@ const alternatives = [
       "ATS",
       "Tech"
     ]
+  },
+  {
+    "slug": "employer-com",
+    "brand_name": "Employer.com",
+    "domain": "employer.com",
+    "summary": "A comprehensive back-office solution for businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   },
   {
     "slug": "resnav-solutions",
@@ -201,6 +237,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "akrivia-hcm",
+    "brand_name": "Akrivia HCM",
+    "domain": "akriviahcm.com",
+    "summary": "AI-powered global HR and payroll management software.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Unified HR Platform",
+      "Artificial Intelligence for HR",
+      "Global Payroll Management",
+      "Multi-country compliance",
+      "Real-time analytics"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "traitify",
     "brand_name": "Traitify",
     "domain": "traitify.com",
@@ -223,10 +279,10 @@ const alternatives = [
     ]
   },
   {
-    "slug": "akrivia-hcm",
-    "brand_name": "Akrivia HCM",
-    "domain": "akriviahcm.com",
-    "summary": "AI-powered global HR and payroll management software.",
+    "slug": "eightfold-ai",
+    "brand_name": "Eightfold AI",
+    "domain": "eightfold.ai",
+    "summary": "AI-powered talent intelligence platform for recruitment and workforce management.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -234,35 +290,13 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Unified HR Platform",
-      "Artificial Intelligence for HR",
-      "Global Payroll Management",
-      "Multi-country compliance",
-      "Real-time analytics"
+      "AI-powered talent recruiting solutions",
+      "Skills intelligence",
+      "Talent management",
+      "Workforce planning",
+      "Real-time skills insights"
     ],
     "integrations": []
-  },
-  {
-    "slug": "seso-inc",
-    "brand_name": "Seso Inc.",
-    "domain": "sesolabor.com",
-    "summary": "An all-in-one employee management platform for agricultural businesses.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "HR management",
-      "Onboarding",
-      "Payroll processing",
-      "H-2A filing",
-      "Compliance management"
-    ],
-    "integrations": [
-      "e-verify.gov"
-    ]
   },
   {
     "slug": "paradox",
@@ -287,6 +321,28 @@ const alternatives = [
       "Indeed",
       "Workday"
     ]
+  },
+  {
+    "slug": "seso-inc",
+    "brand_name": "Seso Inc.",
+    "domain": "sesolabor.com",
+    "summary": "An all-in-one employee management platform for agricultural businesses.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "HR management",
+      "Onboarding",
+      "Payroll processing",
+      "H-2A filing",
+      "Compliance management"
+    ],
+    "integrations": [
+      "e-verify.gov"
+    ]
   }
 ]
 
@@ -302,7 +358,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.362Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.034Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Opolis Alternatives
@@ -374,7 +430,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.362Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.034Z">2025-11-30</time>
             </p>
           </footer>
         </div>

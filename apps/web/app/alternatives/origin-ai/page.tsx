@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.308Z
+// Generated: 2025-11-30T20:05:19.952Z
 // Alternative to: Origin AI
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Origin AI Alternatives',
     description: 'Top alternatives to Origin AI for Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.308Z',
-    modifiedTime: '2025-11-30T19:44:53.308Z',
+    publishedTime: '2025-11-30T20:05:19.952Z',
+    modifiedTime: '2025-11-30T20:05:19.952Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/origin-ai#article",
       "headline": "Best Origin AI Alternatives",
       "description": "Top alternatives to Origin AI for Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.308Z",
-      "dateModified": "2025-11-30T19:44:53.308Z",
+      "datePublished": "2025-11-30T20:05:19.952Z",
+      "dateModified": "2025-11-30T20:05:19.952Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/origin-ai#list",
       "name": "Origin AI Alternatives",
-      "numberOfItems": 12,
+      "numberOfItems": 13,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Kolide by 1Password",
+            "url": "https://useharbor.io/brands/kolide-by-1password",
+            "description": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "PLUGOUT",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "BlueWave Security",
@@ -68,23 +79,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "eConnect Global",
             "url": "https://useharbor.io/brands/econnect-global",
             "description": "AI-powered facial recognition solutions for security in casinos, stadiums, and hospitality.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Kolide by 1Password",
-            "url": "https://useharbor.io/brands/kolide-by-1password",
-            "description": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
             "applicationCategory": "Security"
           }
         },
@@ -104,17 +104,6 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALLOut Security",
-            "url": "https://useharbor.io/brands/allout-security",
-            "description": "Market-leading security solutions for JD Edwards.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 7,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Trofholz Technologies, Inc.",
             "url": "https://useharbor.io/brands/trofholz-technologies-inc",
             "description": "A veteran-owned company specializing in security system integration services.",
@@ -123,29 +112,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ALLOut Security",
+            "url": "https://useharbor.io/brands/allout-security",
+            "description": "Market-leading security solutions for JD Edwards.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Reco",
-            "url": "https://useharbor.io/brands/reco",
-            "description": "A dynamic SaaS security platform focused on improving security posture and compliance.",
+            "name": "Brivo",
+            "url": "https://useharbor.io/brands/brivo",
+            "description": "Brivo provides cloud-based security solutions for various sectors.",
             "applicationCategory": "Security"
           }
         },
         {
           "@type": "ListItem",
           "position": 9,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "IPVideo Corporation",
-            "url": "https://useharbor.io/brands/ipvideo-corporation",
-            "description": "Pelco provides advanced CCTV solutions and security devices.",
-            "applicationCategory": "Security"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Kindo",
@@ -156,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Osavul",
@@ -167,7 +156,29 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Reco",
+            "url": "https://useharbor.io/brands/reco",
+            "description": "A dynamic SaaS security platform focused on improving security posture and compliance.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "IPVideo Corporation",
+            "url": "https://useharbor.io/brands/ipvideo-corporation",
+            "description": "Pelco provides advanced CCTV solutions and security devices.",
+            "applicationCategory": "Security"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Sym",
@@ -182,6 +193,28 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "kolide-by-1password",
+    "brand_name": "Kolide by 1Password",
+    "domain": "kolide.com",
+    "summary": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Kolide is now part of 1Password® Extended Access Management and is no longer being sold as a standalone product.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Self-Remediation via Okta",
+      "Security & Compliance Checks",
+      "Device Inventory",
+      "Implement Zero Trust Access",
+      "Achieve 100% Device Compliance"
+    ],
+    "integrations": [
+      "Okta"
+    ]
+  },
   {
     "slug": "plugout",
     "brand_name": "PLUGOUT",
@@ -258,28 +291,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "kolide-by-1password",
-    "brand_name": "Kolide by 1Password",
-    "domain": "kolide.com",
-    "summary": "Kolide provides user-first security solutions integrated with 1Password for device trust and compliance.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": "Kolide is now part of 1Password® Extended Access Management and is no longer being sold as a standalone product.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Self-Remediation via Okta",
-      "Security & Compliance Checks",
-      "Device Inventory",
-      "Implement Zero Trust Access",
-      "Achieve 100% Device Compliance"
-    ],
-    "integrations": [
-      "Okta"
-    ]
-  },
-  {
     "slug": "timekeeping-systems-inc",
     "brand_name": "TimeKeeping Systems, Inc.",
     "domain": "guard1.com",
@@ -291,6 +302,24 @@ const alternatives = [
       "starting_price": null
     },
     "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "trofholz-technologies-inc",
+    "brand_name": "Trofholz Technologies, Inc.",
+    "domain": "trofholz.com",
+    "summary": "A veteran-owned company specializing in security system integration services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Access Control",
+      "Cyber Security",
+      "Security System Integration Services"
+    ],
     "integrations": []
   },
   {
@@ -316,10 +345,32 @@ const alternatives = [
     ]
   },
   {
-    "slug": "trofholz-technologies-inc",
-    "brand_name": "Trofholz Technologies, Inc.",
-    "domain": "trofholz.com",
-    "summary": "A veteran-owned company specializing in security system integration services.",
+    "slug": "brivo",
+    "brand_name": "Brivo",
+    "domain": "brivo.com",
+    "summary": "Brivo provides cloud-based security solutions for various sectors.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Access control management",
+      "Video surveillance integration",
+      "Visitor management tools",
+      "Alarm management",
+      "24/7 monitoring"
+    ],
+    "integrations": [
+      "API"
+    ]
+  },
+  {
+    "slug": "kindo",
+    "brand_name": "Kindo",
+    "domain": "kindo.ai",
+    "summary": "Kindo is an AI-native terminal designed for technical operations across various IT domains.",
     "pricing": {
       "price_model": "unknown",
       "price_notes": null,
@@ -327,11 +378,35 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Access Control",
-      "Cyber Security",
-      "Security System Integration Services"
+      "AI-driven tools for automation",
+      "Enhanced security protection",
+      "Integration with enterprise-scale security workflows",
+      "Support for business growth",
+      "AI-powered agents and workflows"
     ],
     "integrations": []
+  },
+  {
+    "slug": "osavul",
+    "brand_name": "Osavul",
+    "domain": "osavul.cloud",
+    "summary": "Osavul provides AI-powered solutions for pre-emptive situational awareness across multiple domains.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-driven threat detection",
+      "Real-time sentiment analysis",
+      "Preemptive threat intelligence",
+      "Global access to hard-to-reach data",
+      "Automated early warning for information threats"
+    ],
+    "integrations": [
+      "AWS"
+    ]
   },
   {
     "slug": "reco",
@@ -385,48 +460,6 @@ const alternatives = [
     ]
   },
   {
-    "slug": "kindo",
-    "brand_name": "Kindo",
-    "domain": "kindo.ai",
-    "summary": "Kindo is an AI-native terminal designed for technical operations across various IT domains.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven tools for automation",
-      "Enhanced security protection",
-      "Integration with enterprise-scale security workflows",
-      "Support for business growth",
-      "AI-powered agents and workflows"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "osavul",
-    "brand_name": "Osavul",
-    "domain": "osavul.cloud",
-    "summary": "Osavul provides AI-powered solutions for pre-emptive situational awareness across multiple domains.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "AI-driven threat detection",
-      "Real-time sentiment analysis",
-      "Preemptive threat intelligence",
-      "Global access to hard-to-reach data",
-      "Automated early warning for information threats"
-    ],
-    "integrations": [
-      "AWS"
-    ]
-  },
-  {
     "slug": "sym",
     "brand_name": "Sym",
     "domain": "symops.com",
@@ -454,7 +487,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.308Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.952Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Origin AI Alternatives
@@ -526,7 +559,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.308Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.952Z">2025-11-30</time>
             </p>
           </footer>
         </div>

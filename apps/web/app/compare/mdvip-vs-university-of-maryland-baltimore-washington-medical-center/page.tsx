@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:53.405Z
+// Generated: 2025-11-30T20:05:20.177Z
 // Comparing: MDVIP vs University of Maryland Baltimore Washington Medical Center
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'MDVIP vs University of Maryland Baltimore Washington Medical Center',
     description: 'Detailed comparison of MDVIP and University of Maryland Baltimore Washington Medical Center.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.405Z',
-    modifiedTime: '2025-11-30T19:44:53.405Z',
+    publishedTime: '2025-11-30T20:05:20.177Z',
+    modifiedTime: '2025-11-30T20:05:20.177Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/mdvip-vs-university-of-maryland-baltimore-washington-medical-center#article",
   "headline": "MDVIP vs University of Maryland Baltimore Washington Medical Center: Comparison",
   "description": "Detailed comparison of MDVIP and University of Maryland Baltimore Washington Medical Center. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:53.405Z",
-  "dateModified": "2025-11-30T19:44:53.405Z",
+  "datePublished": "2025-11-30T20:05:20.177Z",
+  "dateModified": "2025-11-30T20:05:20.177Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -115,7 +115,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.405Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.177Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -270,7 +270,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.405Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.177Z">2025-11-30</time>
             </p>
           </footer>
         </div>

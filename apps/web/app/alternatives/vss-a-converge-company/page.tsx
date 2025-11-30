@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.154Z
+// Generated: 2025-11-30T20:05:19.856Z
 // Alternative to: VSS, A Converge Company
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best VSS, A Converge Company Alternatives',
     description: 'Top alternatives to VSS, A Converge Company for IT Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.154Z',
-    modifiedTime: '2025-11-30T19:44:53.154Z',
+    publishedTime: '2025-11-30T20:05:19.856Z',
+    modifiedTime: '2025-11-30T20:05:19.856Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/vss-a-converge-company#article",
       "headline": "Best VSS, A Converge Company Alternatives",
       "description": "Top alternatives to VSS, A Converge Company for IT Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.154Z",
-      "dateModified": "2025-11-30T19:44:53.154Z",
+      "datePublished": "2025-11-30T20:05:19.856Z",
+      "dateModified": "2025-11-30T20:05:19.856Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,17 +49,6 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CAS Severn, Inc",
-            "url": "https://useharbor.io/brands/cas-severn-inc",
-            "description": "Leading IT solutions provider specializing in cybersecurity and cloud transformation.",
-            "applicationCategory": "IT Solutions"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Covetus",
             "url": "https://useharbor.io/brands/covetus",
             "description": "Innovative IT solutions and digital transformation services.",
@@ -68,7 +57,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Axis Technical Group",
@@ -79,12 +68,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Intelliforce-IT Solutions Group, LLC.",
             "url": "https://useharbor.io/brands/intelliforce-it-solutions-group-llc",
             "description": "A Maryland-based woman-owned small business providing intelligent solutions for the federal government.",
+            "applicationCategory": "IT Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CAS Severn, Inc",
+            "url": "https://useharbor.io/brands/cas-severn-inc",
+            "description": "Leading IT solutions provider specializing in cybersecurity and cloud transformation.",
             "applicationCategory": "IT Solutions"
           }
         },
@@ -104,9 +104,9 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "TWO95 International, Inc",
-            "url": "https://useharbor.io/brands/two95-international-inc",
-            "description": "A leader in providing comprehensive IT solutions specializing in digital transformation and cybersecurity.",
+            "name": "Crossfire Consulting",
+            "url": "https://useharbor.io/brands/crossfire-consulting",
+            "description": "Women-owned IT solutions provider specializing in staffing and software development.",
             "applicationCategory": "IT Solutions"
           }
         },
@@ -126,6 +126,17 @@ const schemaOrg = {
           "position": 8,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Agile Global Solutions, Inc",
+            "url": "https://useharbor.io/brands/agile-global-solutions-inc",
+            "description": "A global provider of business and IT solutions specializing in emerging technologies.",
+            "applicationCategory": "IT Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Aventis Systems, Inc.",
             "url": "https://useharbor.io/brands/aventis-systems-inc",
             "description": "Aventis Systems provides tailored IT solutions and hardware for businesses.",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "JaincoTech - Jainco Consulting Group",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MainMicro",
@@ -156,23 +167,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Crossfire Consulting",
-            "url": "https://useharbor.io/brands/crossfire-consulting",
-            "description": "Women-owned IT solutions provider specializing in staffing and software development.",
-            "applicationCategory": "IT Solutions"
-          }
-        },
-        {
-          "@type": "ListItem",
           "position": 12,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "LYME Technology Solutions",
-            "url": "https://useharbor.io/brands/lyme-technology-solutions",
-            "description": "A full-service IT solutions provider specializing in customized technology services.",
+            "name": "TWO95 International, Inc",
+            "url": "https://useharbor.io/brands/two95-international-inc",
+            "description": "A leader in providing comprehensive IT solutions specializing in digital transformation and cybersecurity.",
             "applicationCategory": "IT Solutions"
           }
         },
@@ -181,9 +181,9 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "C5MI",
-            "url": "https://useharbor.io/brands/c5mi",
-            "description": "C5MI provides world-class IT solutions focused on supply chain and digital transformation.",
+            "name": "Spruce InfoTech Inc.",
+            "url": "https://useharbor.io/brands/spruce-infotech-inc",
+            "description": "A leading provider of IT solutions dedicated to empowering businesses through innovative technology.",
             "applicationCategory": "IT Solutions"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Red8",
-            "url": "https://useharbor.io/brands/red8",
-            "description": "Red8 is an IT solutions provider specializing in modern technology solutions for enterprise challenges.",
+            "name": "LA Networks",
+            "url": "https://useharbor.io/brands/la-networks",
+            "description": "Leading IT solutions provider and network integrator.",
             "applicationCategory": "IT Solutions"
           }
         }
@@ -215,26 +215,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "cas-severn-inc",
-    "brand_name": "CAS Severn, Inc",
-    "domain": "cassevern.com",
-    "summary": "Leading IT solutions provider specializing in cybersecurity and cloud transformation.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Cybersecurity expertise",
-      "Hybrid Cloud Transformation",
-      "Zero Trust implementation",
-      "Advanced Computing & Data Management",
-      "AI & ML Platforms development"
-    ],
-    "integrations": []
-  },
   {
     "slug": "covetus",
     "brand_name": "Covetus",
@@ -301,6 +281,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "cas-severn-inc",
+    "brand_name": "CAS Severn, Inc",
+    "domain": "cassevern.com",
+    "summary": "Leading IT solutions provider specializing in cybersecurity and cloud transformation.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cybersecurity expertise",
+      "Hybrid Cloud Transformation",
+      "Zero Trust implementation",
+      "Advanced Computing & Data Management",
+      "AI & ML Platforms development"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "zehntek",
     "brand_name": "ZehnTek",
     "domain": "zehntek.com",
@@ -324,27 +324,24 @@ const alternatives = [
     ]
   },
   {
-    "slug": "two95-international-inc",
-    "brand_name": "TWO95 International, Inc",
-    "domain": "two95intl.com",
-    "summary": "A leader in providing comprehensive IT solutions specializing in digital transformation and cybersecurity.",
+    "slug": "crossfire-consulting",
+    "brand_name": "Crossfire Consulting",
+    "domain": "crossfireconsulting.com",
+    "summary": "Women-owned IT solutions provider specializing in staffing and software development.",
     "pricing": {
-      "price_model": "custom",
+      "price_model": "unknown",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Managed Services",
-      "Cybersecurity",
-      "Digital Transformation",
-      "Edge Computing",
-      "Generative AI"
+      "Rapid Quality Staffing",
+      "Scrum Software Development",
+      "Precision Permanent Placements",
+      "Surge Staffing Capability",
+      "Expertise in Requirements Analysis"
     ],
-    "integrations": [
-      "SAP",
-      "Salesforce"
-    ]
+    "integrations": []
   },
   {
     "slug": "argent-software",
@@ -363,6 +360,26 @@ const alternatives = [
       "CJIS compliance monitoring",
       "Automated compliance checks",
       "Detailed audit trails"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "agile-global-solutions-inc",
+    "brand_name": "Agile Global Solutions, Inc",
+    "domain": "agileglobalsolutions.com",
+    "summary": "A global provider of business and IT solutions specializing in emerging technologies.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Virtual and Augmented Reality services",
+      "Big Data and Analytics solutions",
+      "Cloud services",
+      "Mobile application development",
+      "Talent acquisition and recruiting"
     ],
     "integrations": []
   },
@@ -434,30 +451,10 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "crossfire-consulting",
-    "brand_name": "Crossfire Consulting",
-    "domain": "crossfireconsulting.com",
-    "summary": "Women-owned IT solutions provider specializing in staffing and software development.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Rapid Quality Staffing",
-      "Scrum Software Development",
-      "Precision Permanent Placements",
-      "Surge Staffing Capability",
-      "Expertise in Requirements Analysis"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "lyme-technology-solutions",
-    "brand_name": "LYME Technology Solutions",
-    "domain": "lyme.com",
-    "summary": "A full-service IT solutions provider specializing in customized technology services.",
+    "slug": "two95-international-inc",
+    "brand_name": "TWO95 International, Inc",
+    "domain": "two95intl.com",
+    "summary": "A leader in providing comprehensive IT solutions specializing in digital transformation and cybersecurity.",
     "pricing": {
       "price_model": "custom",
       "price_notes": null,
@@ -465,45 +462,36 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Networking",
-      "Security Solutions",
-      "Cloud Services",
-      "Engineering Solutions",
-      "Enterprise Solutions"
+      "Managed Services",
+      "Cybersecurity",
+      "Digital Transformation",
+      "Edge Computing",
+      "Generative AI"
     ],
     "integrations": [
-      "NetApp",
-      "Apple",
-      "Dell",
-      "Cisco",
-      "Microsoft",
-      "Amazon",
-      "Google"
+      "SAP",
+      "Salesforce"
     ]
   },
   {
-    "slug": "c5mi",
-    "brand_name": "C5MI",
-    "domain": "c5mi.com",
-    "summary": "C5MI provides world-class IT solutions focused on supply chain and digital transformation.",
+    "slug": "spruce-infotech-inc",
+    "brand_name": "Spruce InfoTech Inc.",
+    "domain": "spruceinfotech.com",
+    "summary": "A leading provider of IT solutions dedicated to empowering businesses through innovative technology.",
     "pricing": {
-      "price_model": "unknown",
+      "price_model": "custom",
       "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Supply Chain IT services",
-      "Digital transformation solutions",
-      "Seamless integrations",
-      "End-to-end supply chain solutions",
-      "Program management strategies"
+      "Application Managed Services",
+      "Cloud Services",
+      "BI Analytics",
+      "Cyber Security",
+      "IT Staffing"
     ],
-    "integrations": [
-      "SAP S/4HANA",
-      "SAP Transportation Management",
-      "SAP Extended Warehouse Management"
-    ]
+    "integrations": []
   },
   {
     "slug": "secure-data-technologies-inc",
@@ -526,26 +514,31 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "red8",
-    "brand_name": "Red8",
-    "domain": "red8.com",
-    "summary": "Red8 is an IT solutions provider specializing in modern technology solutions for enterprise challenges.",
+    "slug": "la-networks",
+    "brand_name": "LA Networks",
+    "domain": "la-networks.com",
+    "summary": "Leading IT solutions provider and network integrator.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
+      "price_notes": "Offers free network and security assessments.",
+      "has_free_tier": true,
       "starting_price": null
     },
     "features": [
-      "Data Center Modernization",
-      "Network Modernization",
-      "Workforce Enablement",
-      "DevOps & Cloud",
-      "Cybersecurity & Compliance"
+      "Managed IT services",
+      "Cloud computing",
+      "Cybersecurity solutions",
+      "24/7 monitoring and support",
+      "Proactive maintenance"
     ],
     "integrations": [
-      "Adobe ImageReady",
-      "VMware vSphere"
+      "AWS",
+      "Aruba/HPE",
+      "Cisco",
+      "Dell Technologies",
+      "Fortinet",
+      "Microsoft",
+      "Palo Alto Networks"
     ]
   }
 ]
@@ -562,7 +555,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.154Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.856Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best VSS, A Converge Company Alternatives
@@ -634,7 +627,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.154Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.856Z">2025-11-30</time>
             </p>
           </footer>
         </div>

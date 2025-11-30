@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.139Z
+// Generated: 2025-11-30T20:05:19.785Z
 // Alternative to: enkompas Technology Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best enkompas Technology Solutions Alternatives',
     description: 'Top alternatives to enkompas Technology Solutions for Managed IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.139Z',
-    modifiedTime: '2025-11-30T19:44:53.139Z',
+    publishedTime: '2025-11-30T20:05:19.785Z',
+    modifiedTime: '2025-11-30T20:05:19.785Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/enkompas-technology-solutions#article",
       "headline": "Best enkompas Technology Solutions Alternatives",
       "description": "Top alternatives to enkompas Technology Solutions for Managed IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.139Z",
-      "dateModified": "2025-11-30T19:44:53.139Z",
+      "datePublished": "2025-11-30T20:05:19.785Z",
+      "dateModified": "2025-11-30T20:05:19.785Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,17 +60,6 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "WEBIT Services, Inc.",
-            "url": "https://useharbor.io/brands/webit-services-inc",
-            "description": "Employee-owned IT support company based in Naperville, specializing in managed IT services.",
-            "applicationCategory": "Managed IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Next Perimeter",
             "url": "https://useharbor.io/brands/next-perimeter",
             "description": "Next Perimeter provides managed IT and cybersecurity services for cloud-first businesses.",
@@ -79,12 +68,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "WEBIT Services, Inc.",
+            "url": "https://useharbor.io/brands/webit-services-inc",
+            "description": "Employee-owned IT support company based in Naperville, specializing in managed IT services.",
+            "applicationCategory": "Managed IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Endsight",
-            "url": "https://useharbor.io/brands/endsight",
-            "description": "A managed IT services provider focused on helping California businesses thrive through technology.",
+            "name": "Promenet Inc.",
+            "url": "https://useharbor.io/brands/promenet-inc",
+            "description": "A premier provider of IT consultation, network integration, and managed services.",
             "applicationCategory": "Managed IT Services"
           }
         },
@@ -93,9 +93,9 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Frontier Business Products",
-            "url": "https://useharbor.io/brands/frontier-business-products",
-            "description": "Comprehensive managed IT and business solutions provider in Colorado.",
+            "name": "I.T.WORKS! Managed IT Services",
+            "url": "https://useharbor.io/brands/i-t-works-managed-it-services",
+            "description": "Proactive IT managed services provider for small to medium-sized businesses.",
             "applicationCategory": "Managed IT Services"
           }
         },
@@ -104,37 +104,15 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Custom Information Services",
-            "url": "https://useharbor.io/brands/custom-information-services",
-            "description": "Managed IT provider specializing in cybersecurity and ERP solutions.",
+            "name": "CIO Solutions",
+            "url": "https://useharbor.io/brands/cio-solutions",
+            "description": "CIO Solutions provides managed IT services and technology consulting.",
             "applicationCategory": "Managed IT Services"
           }
         },
         {
           "@type": "ListItem",
           "position": 7,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Usherwood Office Technology",
-            "url": "https://useharbor.io/brands/usherwood-office-technology",
-            "description": "Usherwood Office Technology provides comprehensive managed IT services and office technology solutions.",
-            "applicationCategory": "Managed IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 8,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Novatech",
-            "url": "https://useharbor.io/brands/novatech",
-            "description": "Novatech provides integrated technology solutions for businesses, focusing on IT, print, cloud, and security services.",
-            "applicationCategory": "Managed IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tech-Keys",
@@ -145,12 +123,34 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "TAG Solutions",
+            "url": "https://useharbor.io/brands/tag-solutions",
+            "description": "A leading provider of managed IT services and cybersecurity solutions in Albany, NY.",
+            "applicationCategory": "Managed IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Dynamic Quest",
+            "url": "https://useharbor.io/brands/dynamic-quest",
+            "description": "Dynamic Quest provides comprehensive managed IT solutions and cybersecurity services.",
+            "applicationCategory": "Managed IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Epsilon, Inc.",
-            "url": "https://useharbor.io/brands/epsilon-inc",
-            "description": "A leading managed IT services provider focused on innovative technology solutions.",
+            "name": "Complete",
+            "url": "https://useharbor.io/brands/complete",
+            "description": "Complete provides managed IT services and technology solutions tailored for business growth.",
             "applicationCategory": "Managed IT Services"
           }
         },
@@ -181,9 +181,9 @@ const schemaOrg = {
           "position": 13,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "Electronic Strategies, Inc.",
-            "url": "https://useharbor.io/brands/electronic-strategies-inc",
-            "description": "Indiana's One Stop IT Solutions Company.",
+            "name": "Frontier Business Products",
+            "url": "https://useharbor.io/brands/frontier-business-products",
+            "description": "Comprehensive managed IT and business solutions provider in Colorado.",
             "applicationCategory": "Managed IT Services"
           }
         },
@@ -192,9 +192,9 @@ const schemaOrg = {
           "position": 14,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "PCI",
-            "url": "https://useharbor.io/brands/pci",
-            "description": "A managed IT services provider based in Buffalo, NY, offering comprehensive IT solutions.",
+            "name": "Electronic Strategies, Inc.",
+            "url": "https://useharbor.io/brands/electronic-strategies-inc",
+            "description": "Indiana's One Stop IT Solutions Company.",
             "applicationCategory": "Managed IT Services"
           }
         },
@@ -203,9 +203,9 @@ const schemaOrg = {
           "position": 15,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "CIO Landing",
-            "url": "https://useharbor.io/brands/cio-landing",
-            "description": "Managed IT services for Chicago-area businesses.",
+            "name": "PCI",
+            "url": "https://useharbor.io/brands/pci",
+            "description": "A managed IT services provider based in Buffalo, NY, offering comprehensive IT solutions.",
             "applicationCategory": "Managed IT Services"
           }
         }
@@ -236,26 +236,6 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "webit-services-inc",
-    "brand_name": "WEBIT Services, Inc.",
-    "domain": "webitservices.com",
-    "summary": "Employee-owned IT support company based in Naperville, specializing in managed IT services.",
-    "pricing": {
-      "price_model": "per_user",
-      "price_notes": "Pricing varies based on the number of users and devices.",
-      "has_free_tier": false,
-      "starting_price": "$150-$300/user"
-    },
-    "features": [
-      "Unlimited remote and onsite support",
-      "vCIO (Virtual Chief Information Officer)",
-      "Dedicated field engineer",
-      "Free NIST Cybersecurity Framework",
-      "Free AI Risk Management Framework"
-    ],
-    "integrations": []
-  },
-  {
     "slug": "next-perimeter",
     "brand_name": "Next Perimeter",
     "domain": "nextperimeter.com",
@@ -280,30 +260,30 @@ const alternatives = [
     ]
   },
   {
-    "slug": "endsight",
-    "brand_name": "Endsight",
-    "domain": "endsight.net",
-    "summary": "A managed IT services provider focused on helping California businesses thrive through technology.",
+    "slug": "webit-services-inc",
+    "brand_name": "WEBIT Services, Inc.",
+    "domain": "webitservices.com",
+    "summary": "Employee-owned IT support company based in Naperville, specializing in managed IT services.",
     "pricing": {
-      "price_model": "flat",
-      "price_notes": "Predictable IT costs with all-encompassing flat monthly fees.",
+      "price_model": "per_user",
+      "price_notes": "Pricing varies based on the number of users and devices.",
       "has_free_tier": false,
-      "starting_price": null
+      "starting_price": "$150-$300/user"
     },
     "features": [
-      "24/7 security monitoring",
-      "Compliance assistance (e.g., HIPAA, CMMC)",
-      "Flat monthly fees",
-      "IT growth guidance",
-      "Reduction in support tickets"
+      "Unlimited remote and onsite support",
+      "vCIO (Virtual Chief Information Officer)",
+      "Dedicated field engineer",
+      "Free NIST Cybersecurity Framework",
+      "Free AI Risk Management Framework"
     ],
     "integrations": []
   },
   {
-    "slug": "frontier-business-products",
-    "brand_name": "Frontier Business Products",
-    "domain": "fbponline.com",
-    "summary": "Comprehensive managed IT and business solutions provider in Colorado.",
+    "slug": "promenet-inc",
+    "brand_name": "Promenet Inc.",
+    "domain": "promenet.com",
+    "summary": "A premier provider of IT consultation, network integration, and managed services.",
     "pricing": {
       "price_model": "custom",
       "price_notes": null,
@@ -311,93 +291,56 @@ const alternatives = [
       "starting_price": null
     },
     "features": [
-      "Managed IT services",
-      "Document management solutions",
-      "Managed print services",
-      "Remote workforce solutions",
-      "24/7 monitoring of PCs, servers, and devices"
-    ],
-    "integrations": [
-      "Ricoh",
-      "Sharp",
-      "Brother",
-      "Riso",
-      "Lexmark",
-      "Dell",
-      "HP",
-      "MBM"
-    ]
-  },
-  {
-    "slug": "custom-information-services",
-    "brand_name": "Custom Information Services",
-    "domain": "customis.com",
-    "summary": "Managed IT provider specializing in cybersecurity and ERP solutions.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing can be calculated using their Managed IT calculator.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed IT Support",
-      "24/7 Tech Support",
-      "Network Monitoring",
+      "24/7/365 Monitoring & Emergency Response",
+      "Network Integration",
+      "IT Consulting",
       "Disaster Recovery",
-      "Managed Network Security Solutions"
+      "Cybersecurity Audit"
     ],
     "integrations": [
-      "Microsoft Dynamics GP",
-      "SalesPad",
-      "Binary Stream"
+      "IT Solutions",
+      "Cybersecurity"
     ]
   },
   {
-    "slug": "usherwood-office-technology",
-    "brand_name": "Usherwood Office Technology",
-    "domain": "usherwood.com",
-    "summary": "Usherwood Office Technology provides comprehensive managed IT services and office technology solutions.",
-    "pricing": {
-      "price_model": "flat",
-      "price_notes": "Flat-fee services for managed IT and other offerings.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Managed IT Services",
-      "Managed Print",
-      "Managed Communications",
-      "IT infrastructure assessment",
-      "Ongoing management"
-    ],
-    "integrations": [
-      "VoIP",
-      "digital signage",
-      "video conferencing"
-    ]
-  },
-  {
-    "slug": "novatech",
-    "brand_name": "Novatech",
-    "domain": "novatech.net",
-    "summary": "Novatech provides integrated technology solutions for businesses, focusing on IT, print, cloud, and security services.",
+    "slug": "i-t-works-managed-it-services",
+    "brand_name": "I.T.WORKS! Managed IT Services",
+    "domain": "itworks.us.com",
+    "summary": "Proactive IT managed services provider for small to medium-sized businesses.",
     "pricing": {
       "price_model": "custom",
-      "price_notes": "Pricing information is provided through an IT services estimator.",
+      "price_notes": "Agreements are month to month.",
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "24/7 Monitoring and Management",
-      "Proactive IT Services",
-      "Managed Print Services",
-      "Managed Cybersecurity",
-      "Cloud Infrastructure Management"
+      "Proactive IT management",
+      "Managed cybersecurity",
+      "Cloud solutions",
+      "IT consulting",
+      "Routine monthly check-ins"
     ],
-    "integrations": [
-      "Microsoft 365",
-      "Microsoft Azure"
-    ]
+    "integrations": []
+  },
+  {
+    "slug": "cio-solutions",
+    "brand_name": "CIO Solutions",
+    "domain": "ciosolutions.com",
+    "summary": "CIO Solutions provides managed IT services and technology consulting.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Proactive Monitoring",
+      "Backup & Disaster Recovery",
+      "Endpoint Security",
+      "Threat Monitoring",
+      "Network Security"
+    ],
+    "integrations": []
   },
   {
     "slug": "tech-keys",
@@ -420,22 +363,62 @@ const alternatives = [
     "integrations": []
   },
   {
-    "slug": "epsilon-inc",
-    "brand_name": "Epsilon, Inc.",
-    "domain": "epsilon-inc.com",
-    "summary": "A leading managed IT services provider focused on innovative technology solutions.",
+    "slug": "tag-solutions",
+    "brand_name": "TAG Solutions",
+    "domain": "tagsolutions.com",
+    "summary": "A leading provider of managed IT services and cybersecurity solutions in Albany, NY.",
     "pricing": {
-      "price_model": "flat",
-      "price_notes": "Flat-rate support model for continuous monitoring and maintenance.",
+      "price_model": "unknown",
+      "price_notes": "Offers a free network assessment",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT Services",
+      "Cybersecurity Programs",
+      "Unified Communications",
+      "Virtual Chief Information Officer (vCIO) services",
+      "Backup and Disaster Recovery"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "dynamic-quest",
+    "brand_name": "Dynamic Quest",
+    "domain": "dynamicquest.com",
+    "summary": "Dynamic Quest provides comprehensive managed IT solutions and cybersecurity services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Offers a free whitepaper but no specific pricing information is provided.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT Services",
+      "Cybersecurity",
+      "Cloud Services",
+      "Managed Help Desk Services",
+      "Next-Generation Endpoint Protection"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "complete",
+    "brand_name": "Complete",
+    "domain": "complete.net",
+    "summary": "Complete provides managed IT services and technology solutions tailored for business growth.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
       "has_free_tier": false,
       "starting_price": null
     },
     "features": [
-      "Proactive IT management",
-      "24/7 monitoring and maintenance",
-      "Advanced cybersecurity services",
-      "Private hybrid cloud solutions",
-      "Managed network services"
+      "Managed IT services",
+      "Cybersecurity services",
+      "Compliance guidance",
+      "Data analytics",
+      "Cloud IT solutions"
     ],
     "integrations": []
   },
@@ -476,6 +459,35 @@ const alternatives = [
       "Microsoft Outlook",
       "Power Automate",
       "Power BI"
+    ]
+  },
+  {
+    "slug": "frontier-business-products",
+    "brand_name": "Frontier Business Products",
+    "domain": "fbponline.com",
+    "summary": "Comprehensive managed IT and business solutions provider in Colorado.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT services",
+      "Document management solutions",
+      "Managed print services",
+      "Remote workforce solutions",
+      "24/7 monitoring of PCs, servers, and devices"
+    ],
+    "integrations": [
+      "Ricoh",
+      "Sharp",
+      "Brother",
+      "Riso",
+      "Lexmark",
+      "Dell",
+      "HP",
+      "MBM"
     ]
   },
   {
@@ -520,26 +532,6 @@ const alternatives = [
       "Microsoft 365",
       "RingCentral"
     ]
-  },
-  {
-    "slug": "cio-landing",
-    "brand_name": "CIO Landing",
-    "domain": "ciolanding.com",
-    "summary": "Managed IT services for Chicago-area businesses.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Proactive IT support",
-      "Dedicated vCIO guidance",
-      "24/7 network monitoring",
-      "Extended support hours (7am-7pm CST)",
-      "Clear communication without jargon"
-    ],
-    "integrations": []
   }
 ]
 
@@ -555,7 +547,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.139Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:19.785Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best enkompas Technology Solutions Alternatives
@@ -627,7 +619,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.139Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:19.785Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.333Z
+// Generated: 2025-11-30T20:05:20.040Z
 // Alternative to: Z2Data
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Z2Data Alternatives',
     description: 'Top alternatives to Z2Data for Supply Chain Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.333Z',
-    modifiedTime: '2025-11-30T19:44:53.333Z',
+    publishedTime: '2025-11-30T20:05:20.040Z',
+    modifiedTime: '2025-11-30T20:05:20.040Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/z2data#article",
       "headline": "Best Z2Data Alternatives",
       "description": "Top alternatives to Z2Data for Supply Chain Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.333Z",
-      "dateModified": "2025-11-30T19:44:53.333Z",
+      "datePublished": "2025-11-30T20:05:20.040Z",
+      "dateModified": "2025-11-30T20:05:20.040Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/z2data#list",
       "name": "Z2Data Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 7,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,28 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Tecsys Inc.",
+            "url": "https://useharbor.io/brands/tecsys-inc",
+            "description": "Tecsys provides supply chain solutions that enhance visibility and operational efficiency.",
+            "applicationCategory": "Supply Chain Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Softeon",
+            "url": "https://useharbor.io/brands/softeon",
+            "description": "Softeon is a leading global provider of innovative supply chain software solutions.",
+            "applicationCategory": "Supply Chain Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "A2Go - Agentic AI for Supply Chain Operations",
             "url": "https://useharbor.io/brands/a2go-agentic-ai-for-supply-chain-operations",
             "description": "A2Go provides AI-driven solutions to enhance supply chain operations.",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Inspectorio",
@@ -79,12 +101,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Elemica",
             "url": "https://useharbor.io/brands/elemica",
             "description": "Elemica provides digital supply chain management solutions to enhance collaboration and visibility.",
+            "applicationCategory": "Supply Chain Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Bamboo Rose",
+            "url": "https://useharbor.io/brands/bamboo-rose",
+            "description": "Bamboo Rose provides an innovative platform for retail supply chain management.",
             "applicationCategory": "Supply Chain Management"
           }
         }
@@ -115,6 +148,50 @@ const alternatives = [
     "integrations": [
       "Dell"
     ]
+  },
+  {
+    "slug": "tecsys-inc",
+    "brand_name": "Tecsys Inc.",
+    "domain": "tecsys.com",
+    "summary": "Tecsys provides supply chain solutions that enhance visibility and operational efficiency.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Warehouse Management System (WMS)",
+      "Supply Chain Visibility",
+      "Order Fulfillment",
+      "Inventory Management",
+      "Healthcare Supply Chain Solutions"
+    ],
+    "integrations": [
+      "Amazon Web Services",
+      "Axway",
+      "BarTender"
+    ]
+  },
+  {
+    "slug": "softeon",
+    "brand_name": "Softeon",
+    "domain": "softeon.com",
+    "summary": "Softeon is a leading global provider of innovative supply chain software solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Warehouse Management System (WMS)",
+      "Warehouse Execution System (WES)",
+      "Distributed Order Management (DOM)",
+      "WMS Enablement Tools",
+      "Order fulfillment capabilities"
+    ],
+    "integrations": []
   },
   {
     "slug": "a2go-agentic-ai-for-supply-chain-operations",
@@ -177,6 +254,26 @@ const alternatives = [
     "integrations": [
       "SAP"
     ]
+  },
+  {
+    "slug": "bamboo-rose",
+    "brand_name": "Bamboo Rose",
+    "domain": "bamboorose.com",
+    "summary": "Bamboo Rose provides an innovative platform for retail supply chain management.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Planning and Merchandising",
+      "Visual Collaboration",
+      "Product Development",
+      "Supplier Relationship Management",
+      "Sourcing"
+    ],
+    "integrations": []
   }
 ]
 
@@ -192,7 +289,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.333Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.040Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Z2Data Alternatives
@@ -264,7 +361,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.333Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.040Z">2025-11-30</time>
             </p>
           </footer>
         </div>

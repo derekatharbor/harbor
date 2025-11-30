@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:44:54.010Z
+// Generated: 2025-11-30T20:05:20.391Z
 // Comparing: Eezy vs Premise Entertainment
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Eezy vs Premise Entertainment',
     description: 'Detailed comparison of Eezy and Premise Entertainment.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:54.010Z',
-    modifiedTime: '2025-11-30T19:44:54.010Z',
+    publishedTime: '2025-11-30T20:05:20.391Z',
+    modifiedTime: '2025-11-30T20:05:20.391Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/eezy-vs-premise-entertainment#article",
   "headline": "Eezy vs Premise Entertainment: Comparison",
   "description": "Detailed comparison of Eezy and Premise Entertainment. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:44:54.010Z",
-  "dateModified": "2025-11-30T19:44:54.010Z",
+  "datePublished": "2025-11-30T20:05:20.391Z",
+  "dateModified": "2025-11-30T20:05:20.391Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -103,7 +103,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:54.010Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.391Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -258,7 +258,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:54.010Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.391Z">2025-11-30</time>
             </p>
           </footer>
         </div>

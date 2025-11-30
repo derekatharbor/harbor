@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.288Z
+// Generated: 2025-11-30T20:05:20.010Z
 // Alternative to: Data Works
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Data Works Alternatives',
     description: 'Top alternatives to Data Works for Inventory Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.288Z',
-    modifiedTime: '2025-11-30T19:44:53.288Z',
+    publishedTime: '2025-11-30T20:05:20.010Z',
+    modifiedTime: '2025-11-30T20:05:20.010Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/data-works#article",
       "headline": "Best Data Works Alternatives",
       "description": "Top alternatives to Data Works for Inventory Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.288Z",
-      "dateModified": "2025-11-30T19:44:53.288Z",
+      "datePublished": "2025-11-30T20:05:20.010Z",
+      "dateModified": "2025-11-30T20:05:20.010Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,17 +49,6 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "RF-SMART",
-            "url": "https://useharbor.io/brands/rf-smart",
-            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
-            "applicationCategory": "Inventory Management"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "SimplyRFID",
             "url": "https://useharbor.io/brands/simplyrfid",
             "description": "SimplyRFID provides advanced RFID inventory management systems for various industries.",
@@ -68,12 +57,23 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "NomadGo",
             "url": "https://useharbor.io/brands/nomadgo",
             "description": "NomadGo provides on-device inventory intelligence powered by AI for various industries.",
+            "applicationCategory": "Inventory Management"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "RF-SMART",
+            "url": "https://useharbor.io/brands/rf-smart",
+            "description": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
             "applicationCategory": "Inventory Management"
           }
         },
@@ -94,30 +94,6 @@ const schemaOrg = {
 }
 
 const alternatives = [
-  {
-    "slug": "rf-smart",
-    "brand_name": "RF-SMART",
-    "domain": "rfsmart.com",
-    "summary": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Pricing details are not explicitly stated on the website.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Real-time inventory visibility",
-      "Barcode scanning",
-      "Cycle counting",
-      "Advanced picking",
-      "Label printing"
-    ],
-    "integrations": [
-      "NetSuite",
-      "Oracle Cloud",
-      "Oracle JD Edwards"
-    ]
-  },
   {
     "slug": "simplyrfid",
     "brand_name": "SimplyRFID",
@@ -165,6 +141,30 @@ const alternatives = [
     ]
   },
   {
+    "slug": "rf-smart",
+    "brand_name": "RF-SMART",
+    "domain": "rfsmart.com",
+    "summary": "RF-SMART provides advanced inventory management and barcode solutions for supply chain optimization.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Real-time inventory visibility",
+      "Barcode scanning",
+      "Cycle counting",
+      "Advanced picking",
+      "Label printing"
+    ],
+    "integrations": [
+      "NetSuite",
+      "Oracle Cloud",
+      "Oracle JD Edwards"
+    ]
+  },
+  {
     "slug": "asap-systems-cloud-on-premises-inventory-system-asset-tracking-solutions",
     "brand_name": "ASAP Systems - Cloud/On-Premises Inventory System & Asset Tracking Solutions",
     "domain": "asapsystems.com",
@@ -192,7 +192,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.288Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Data Works Alternatives
@@ -264,7 +264,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.288Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.010Z">2025-11-30</time>
             </p>
           </footer>
         </div>

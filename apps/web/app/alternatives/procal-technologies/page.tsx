@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:44:53.371Z
+// Generated: 2025-11-30T20:05:20.104Z
 // Alternative to: PROCAL TECHNOLOGIES
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best PROCAL TECHNOLOGIES Alternatives',
     description: 'Top alternatives to PROCAL TECHNOLOGIES for Technology Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:44:53.371Z',
-    modifiedTime: '2025-11-30T19:44:53.371Z',
+    publishedTime: '2025-11-30T20:05:20.104Z',
+    modifiedTime: '2025-11-30T20:05:20.104Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/procal-technologies#article",
       "headline": "Best PROCAL TECHNOLOGIES Alternatives",
       "description": "Top alternatives to PROCAL TECHNOLOGIES for Technology Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:44:53.371Z",
-      "dateModified": "2025-11-30T19:44:53.371Z",
+      "datePublished": "2025-11-30T20:05:20.104Z",
+      "dateModified": "2025-11-30T20:05:20.104Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/procal-technologies#list",
       "name": "PROCAL TECHNOLOGIES Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 8,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -82,9 +82,53 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Canopy One Solutions Inc",
+            "url": "https://useharbor.io/brands/canopy-one-solutions-inc",
+            "description": "A minority-owned technology solutions company specializing in digital transformation.",
+            "applicationCategory": "Technology Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Omada Technologies",
+            "url": "https://useharbor.io/brands/omada-technologies",
+            "description": "New England’s premier value-added reseller of modern technology solutions.",
+            "applicationCategory": "Technology Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "NextGen Federal Systems",
+            "url": "https://useharbor.io/brands/nextgen-federal-systems",
+            "description": "A mission-focused technology solutions provider for defense and intelligence sectors.",
+            "applicationCategory": "Technology Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Howard Technology Solutions",
             "url": "https://useharbor.io/brands/howard-technology-solutions",
             "description": "Howard Technology Solutions provides a range of technology products and services.",
+            "applicationCategory": "Technology Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Fearless",
+            "url": "https://useharbor.io/brands/fearless",
+            "description": "A company based in Baltimore focused on providing solutions.",
             "applicationCategory": "Technology Solutions"
           }
         }
@@ -164,6 +208,75 @@ const alternatives = [
     ]
   },
   {
+    "slug": "canopy-one-solutions-inc",
+    "brand_name": "Canopy One Solutions Inc",
+    "domain": "canopyone.com",
+    "summary": "A minority-owned technology solutions company specializing in digital transformation.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data & AI Transformation",
+      "Cloud Modernization",
+      "Security Solutions",
+      "Digital Transformation",
+      "AI & Machine Learning Systems"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "omada-technologies",
+    "brand_name": "Omada Technologies",
+    "domain": "omadatechnologies.com",
+    "summary": "New England’s premier value-added reseller of modern technology solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Silo-Free Solution Deployment",
+      "Next-Generation Networking",
+      "Cybersecurity Solutions",
+      "Modern Storage Solutions",
+      "Cloud Access & Security"
+    ],
+    "integrations": [
+      "11:11",
+      "Abnormal",
+      "Akeyless",
+      "Anomali",
+      "AWN",
+      "Arista Networks",
+      "Aruba Networks",
+      "Automox"
+    ]
+  },
+  {
+    "slug": "nextgen-federal-systems",
+    "brand_name": "NextGen Federal Systems",
+    "domain": "nextgenfed.com",
+    "summary": "A mission-focused technology solutions provider for defense and intelligence sectors.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Modeling & Simulation integration",
+      "DevOps tools orchestration",
+      "Actionable weather impact information",
+      "Codified DevSecOps best practices",
+      "Rapid deployment and maintenance of software factory platforms"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "howard-technology-solutions",
     "brand_name": "Howard Technology Solutions",
     "domain": "howardcomputers.com",
@@ -182,6 +295,20 @@ const alternatives = [
       "Mobile device management"
     ],
     "integrations": []
+  },
+  {
+    "slug": "fearless",
+    "brand_name": "Fearless",
+    "domain": "fearless.tech",
+    "summary": "A company based in Baltimore focused on providing solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -197,7 +324,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:44:53.371Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T20:05:20.104Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best PROCAL TECHNOLOGIES Alternatives
@@ -269,7 +396,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:44:53.371Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T20:05:20.104Z">2025-11-30</time>
             </p>
           </footer>
         </div>
