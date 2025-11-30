@@ -4,149 +4,152 @@
 
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
-import { readdirSync, statSync } from 'fs'
-import { join } from 'path'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Regenerate every hour
 
-// Get all generated pages from a directory
-function getGeneratedPages(dir: string, urlPrefix: string): { url: string; lastModified: Date }[] {
-  try {
-    const fullPath = join(process.cwd(), dir)
-    const entries = readdirSync(fullPath, { withFileTypes: true })
-    
-    return entries
-      .filter(entry => entry.isDirectory())
-      .map(entry => {
-        const pagePath = join(fullPath, entry.name, 'page.tsx')
-        try {
-          const stats = statSync(pagePath)
-          return {
-            url: `${urlPrefix}/${entry.name}`,
-            lastModified: stats.mtime,
-          }
-        } catch {
-          return {
-            url: `${urlPrefix}/${entry.name}`,
-            lastModified: new Date(),
-          }
-        }
-      })
-  } catch {
-    return []
-  }
-}
+// Category mappings for /best pages
+const CATEGORIES = [
+  'crm', 'project-management', 'time-tracking', 'accounting', 'hr',
+  'marketing-automation', 'email-marketing', 'customer-support', 'e-commerce',
+  'inventory-management', 'analytics', 'cybersecurity', 'data-management',
+  'communication', 'collaboration', 'erp', 'supply-chain', 'healthcare',
+  'fintech', 'legal', 'real-estate', 'education', 'ai-ml', 'devops',
+  'cloud-infrastructure', 'business-intelligence', 'payments', 'recruiting'
+]
+
+// Common integrations for /best/{category}-{integration}-integration pages
+const COMMON_INTEGRATIONS = [
+  'salesforce', 'slack', 'quickbooks', 'hubspot', 'shopify', 'zapier',
+  'stripe', 'google', 'microsoft', 'aws', 'zoom', 'jira', 'github'
+]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
+  const now = new Date().toISOString()
 
   // Static pages
   const staticUrls: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date().toISOString(),
+      lastModified: now,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/brands`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/best`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/alternatives`,
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/compare`,
-      lastModified: new Date().toISOString(),
+      lastModified: now,
       changeFrequency: 'daily',
       priority: 0.9,
     },
   ]
-
-  // Generated listicle pages
-  const bestPages = getGeneratedPages('app/best', `${baseUrl}/best`)
-  const alternativesPages = getGeneratedPages('app/alternatives', `${baseUrl}/alternatives`)
-  const comparePages = getGeneratedPages('app/compare', `${baseUrl}/compare`)
-  
-  const generatedUrls: MetadataRoute.Sitemap = [
-    ...bestPages.map(page => ({
-      url: page.url,
-      lastModified: page.lastModified.toISOString(),
-      changeFrequency: 'daily' as const,
-      priority: 0.85,
-    })),
-    ...alternativesPages.map(page => ({
-      url: page.url,
-      lastModified: page.lastModified.toISOString(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    })),
-    ...comparePages.map(page => ({
-      url: page.url,
-      lastModified: page.lastModified.toISOString(),
-      changeFrequency: 'daily' as const,
-      priority: 0.75,
-    })),
-  ]
-  
-  console.log(`Sitemap: Found ${bestPages.length} /best, ${alternativesPages.length} /alternatives, ${comparePages.length} /compare pages`)
 
   // Check environment variables
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error('Sitemap: Missing Supabase environment variables')
-    return [...staticUrls, ...generatedUrls]
+    return staticUrls
   }
 
-  // Fetch all brands from ai_profiles
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 
-  const { data: brands, error } = await supabase
+  // Fetch enriched profiles for alternatives and comparisons
+  const { data: enrichedProfiles, error: enrichedError } = await supabase
+    .from('ai_profiles')
+    .select('slug, brand_name, category, updated_at')
+    .not('enriched_at', 'is', null)
+    .not('feed_data', 'is', null)
+    .order('visibility_score', { ascending: false })
+
+  if (enrichedError) {
+    console.error('Sitemap: Error fetching enriched profiles:', enrichedError)
+  }
+
+  const enriched = enrichedProfiles || []
+  console.log(`Sitemap: Found ${enriched.length} enriched profiles`)
+
+  // Fetch all brands for brand pages
+  const { data: allBrands, error: brandsError } = await supabase
     .from('ai_profiles')
     .select('slug, updated_at, created_at')
     .order('rank_global', { ascending: true })
 
-  if (error) {
-    console.error('Sitemap: Error fetching brands:', error)
-    return [...staticUrls, ...generatedUrls]
+  if (brandsError) {
+    console.error('Sitemap: Error fetching brands:', brandsError)
   }
 
-  if (!brands || brands.length === 0) {
-    console.warn('Sitemap: No brands found in ai_profiles table')
-    return [...staticUrls, ...generatedUrls]
+  const brands = allBrands || []
+  console.log(`Sitemap: Found ${brands.length} total brands`)
+
+  // Generate /best category pages
+  const bestUrls: MetadataRoute.Sitemap = CATEGORIES.map(category => ({
+    url: `${baseUrl}/best/${category}`,
+    lastModified: now,
+    changeFrequency: 'daily' as const,
+    priority: 0.85,
+  }))
+
+  // Generate /best integration pages (category + integration combos)
+  const integrationUrls: MetadataRoute.Sitemap = []
+  for (const category of CATEGORIES.slice(0, 10)) { // Top 10 categories
+    for (const integration of COMMON_INTEGRATIONS.slice(0, 5)) { // Top 5 integrations
+      integrationUrls.push({
+        url: `${baseUrl}/best/${category}-${integration}-integration`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.75,
+      })
+    }
   }
 
-  console.log(`Sitemap: Found ${brands.length} brands`)
+  // Generate /alternatives pages (one per enriched profile)
+  const alternativesUrls: MetadataRoute.Sitemap = enriched.map(profile => ({
+    url: `${baseUrl}/alternatives/${profile.slug}`,
+    lastModified: profile.updated_at || now,
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
 
-  // Dynamic brand + feed URLs
-  const dynamicUrls: MetadataRoute.Sitemap = brands.flatMap((brand) => {
-    // Use updated_at if available, otherwise created_at
-    const lastMod = brand.updated_at || brand.created_at || new Date().toISOString()
+  // Generate /compare pages (top products in same category)
+  // Limit to avoid explosion - only compare within top 20 of each category
+  const compareUrls: MetadataRoute.Sitemap = []
+  const categoryGroups: Record<string, typeof enriched> = {}
+  
+  for (const profile of enriched) {
+    const cat = profile.category?.toLowerCase() || 'other'
+    if (!categoryGroups[cat]) categoryGroups[cat] = []
+    if (categoryGroups[cat].length < 20) {
+      categoryGroups[cat].push(profile)
+    }
+  }
 
+  for (const profiles of Object.values(categoryGroups)) {
+    // Generate comparisons for first 5 products in each category
+    for (let i = 0; i < Math.min(5, profiles.length); i++) {
+      for (let j = i + 1; j < Math.min(10, profiles.length); j++) {
+        compareUrls.push({
+          url: `${baseUrl}/compare/${profiles[i].slug}-vs-${profiles[j].slug}`,
+          lastModified: now,
+          changeFrequency: 'weekly' as const,
+          priority: 0.7,
+        })
+      }
+    }
+  }
+
+  // Brand profile and feed URLs
+  const brandUrls: MetadataRoute.Sitemap = brands.flatMap((brand) => {
+    const lastMod = brand.updated_at || brand.created_at || now
     return [
-      // Brand profile page
       {
         url: `${baseUrl}/brands/${brand.slug}`,
         lastModified: lastMod,
         changeFrequency: 'weekly' as const,
         priority: 0.8,
       },
-      // Brand feed (harbor.json)
       {
         url: `${baseUrl}/brands/${brand.slug}/harbor.json`,
         lastModified: lastMod,
@@ -156,5 +159,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]
   })
 
-  return [...staticUrls, ...generatedUrls, ...dynamicUrls]
+  console.log(`Sitemap: ${bestUrls.length} /best, ${integrationUrls.length} integration, ${alternativesUrls.length} /alternatives, ${compareUrls.length} /compare, ${brandUrls.length / 2} brands`)
+
+  return [
+    ...staticUrls,
+    ...bestUrls,
+    ...integrationUrls,
+    ...alternativesUrls,
+    ...compareUrls,
+    ...brandUrls,
+  ]
 }
