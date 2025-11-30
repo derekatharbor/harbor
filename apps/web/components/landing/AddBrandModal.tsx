@@ -102,7 +102,7 @@ export default function AddBrandModal({ isOpen, onClose, initialBrandName }: Add
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -192,7 +192,7 @@ export default function AddBrandModal({ isOpen, onClose, initialBrandName }: Add
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 px-4 bg-white text-[#101A31] font-semibold rounded-lg hover:bg-white/90 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 px-4 bg-white text-[#101A31] font-semibold rounded-lg hover:bg-white/90 transition-colors flex items-center justify-center gap-2 !cursor-pointer disabled:opacity-50 disabled:!cursor-not-allowed"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
