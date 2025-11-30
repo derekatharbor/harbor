@@ -54,24 +54,44 @@ async function fetchBrandAndAlternatives(slug: string): Promise<{
   }
 
   // Then get alternatives (same category, excluding this brand)
-  const { data: alternatives, error: altError } = await getSupabase()
-    .from('ai_profiles')
-    .select('slug, brand_name, domain, category, visibility_score, feed_data')
-    .ilike('category', `%${brand.category}%`)
-    .neq('slug', slug)
-    .not('feed_data', 'is', null)
-    .not('enriched_at', 'is', null)
-    .order('visibility_score', { ascending: false })
-    .limit(15)
+  // Try exact category match first, then broader if needed
+  let alternatives: Profile[] = []
+  
+  if (brand.category) {
+    const { data, error } = await getSupabase()
+      .from('ai_profiles')
+      .select('slug, brand_name, domain, category, visibility_score, feed_data')
+      .ilike('category', `%${brand.category.split(' ')[0]}%`) // Match first word of category
+      .neq('slug', slug)
+      .not('feed_data', 'is', null)
+      .not('enriched_at', 'is', null)
+      .order('visibility_score', { ascending: false })
+      .limit(15)
 
-  if (altError) {
-    console.error('Failed to fetch alternatives:', altError.message)
-    return { brand: brand as Profile, alternatives: [] }
+    if (!error && data) {
+      alternatives = data as Profile[]
+    }
+  }
+
+  // If no category alternatives found, get top enriched profiles as fallback
+  if (alternatives.length === 0) {
+    const { data, error } = await getSupabase()
+      .from('ai_profiles')
+      .select('slug, brand_name, domain, category, visibility_score, feed_data')
+      .neq('slug', slug)
+      .not('feed_data', 'is', null)
+      .not('enriched_at', 'is', null)
+      .order('visibility_score', { ascending: false })
+      .limit(10)
+
+    if (!error && data) {
+      alternatives = data as Profile[]
+    }
   }
 
   return { 
     brand: brand as Profile, 
-    alternatives: (alternatives || []) as Profile[] 
+    alternatives 
   }
 }
 
@@ -116,7 +136,8 @@ export default async function AlternativesPage({
   const { slug } = await params
   const { brand, alternatives } = await fetchBrandAndAlternatives(slug)
   
-  if (!brand || alternatives.length === 0) {
+  // Only 404 if brand doesn't exist
+  if (!brand) {
     notFound()
   }
 
