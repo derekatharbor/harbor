@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.313Z
+// Generated: 2025-11-30T19:44:53.318Z
 // Alternative to: Smart ERP Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Smart ERP Solutions Alternatives',
     description: 'Top alternatives to Smart ERP Solutions for ERP.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.313Z',
-    modifiedTime: '2025-11-30T19:36:57.313Z',
+    publishedTime: '2025-11-30T19:44:53.318Z',
+    modifiedTime: '2025-11-30T19:44:53.318Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/smart-erp-solutions#article",
       "headline": "Best Smart ERP Solutions Alternatives",
       "description": "Top alternatives to Smart ERP Solutions for ERP. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.313Z",
-      "dateModified": "2025-11-30T19:36:57.313Z",
+      "datePublished": "2025-11-30T19:44:53.318Z",
+      "dateModified": "2025-11-30T19:44:53.318Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -177,7 +177,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.313Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.318Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Smart ERP Solutions Alternatives
@@ -249,7 +249,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.313Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.318Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:28.514Z
+// Generated: 2025-11-30T19:44:25.962Z
 // Query: {"category":"Inventory Management","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Inventory Management Software',
     description: 'Compare the top inventory management solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:28.514Z',
-    modifiedTime: '2025-11-30T19:36:28.514Z',
+    publishedTime: '2025-11-30T19:44:25.962Z',
+    modifiedTime: '2025-11-30T19:44:25.962Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:28.514Z',
+    'article:modified_time': '2025-11-30T19:44:25.962Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/inventory-management#article",
       "headline": "Best Inventory Management Software",
       "description": "Compare the top inventory management solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:28.514Z",
-      "dateModified": "2025-11-30T19:36:28.514Z",
+      "datePublished": "2025-11-30T19:44:25.962Z",
+      "dateModified": "2025-11-30T19:44:25.962Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -268,7 +268,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:28.514Z'
+export const pageGeneratedAt = '2025-11-30T19:44:25.962Z'
 
 export default function ListiclePage() {
   return (
@@ -283,7 +283,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:28.514Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:25.962Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Inventory Management Software
@@ -399,7 +399,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:28.514Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:25.962Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

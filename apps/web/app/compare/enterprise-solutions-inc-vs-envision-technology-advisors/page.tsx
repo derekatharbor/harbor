@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.422Z
+// Generated: 2025-11-30T19:44:53.418Z
 // Comparing: Enterprise Solutions Inc. vs Envision Technology Advisors
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Enterprise Solutions Inc. vs Envision Technology Advisors',
     description: 'Detailed comparison of Enterprise Solutions Inc. and Envision Technology Advisors.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.422Z',
-    modifiedTime: '2025-11-30T19:36:57.422Z',
+    publishedTime: '2025-11-30T19:44:53.418Z',
+    modifiedTime: '2025-11-30T19:44:53.418Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/enterprise-solutions-inc-vs-envision-technology-advisors#article",
   "headline": "Enterprise Solutions Inc. vs Envision Technology Advisors: Comparison",
   "description": "Detailed comparison of Enterprise Solutions Inc. and Envision Technology Advisors. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.422Z",
-  "dateModified": "2025-11-30T19:36:57.422Z",
+  "datePublished": "2025-11-30T19:44:53.418Z",
+  "dateModified": "2025-11-30T19:44:53.418Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -120,7 +120,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.422Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.418Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -275,7 +275,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.422Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.418Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.386Z
+// Generated: 2025-11-30T19:44:53.376Z
 // Alternative to: Osavul
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Osavul Alternatives',
     description: 'Top alternatives to Osavul for Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.386Z',
-    modifiedTime: '2025-11-30T19:36:57.386Z',
+    publishedTime: '2025-11-30T19:44:53.376Z',
+    modifiedTime: '2025-11-30T19:44:53.376Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/osavul#article",
       "headline": "Best Osavul Alternatives",
       "description": "Top alternatives to Osavul for Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.386Z",
-      "dateModified": "2025-11-30T19:36:57.386Z",
+      "datePublished": "2025-11-30T19:44:53.376Z",
+      "dateModified": "2025-11-30T19:44:53.376Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -455,7 +455,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.386Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.376Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Osavul Alternatives
@@ -527,7 +527,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.386Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.376Z">2025-11-30</time>
             </p>
           </footer>
         </div>

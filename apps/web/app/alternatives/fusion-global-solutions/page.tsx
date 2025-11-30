@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.374Z
+// Generated: 2025-11-30T19:44:53.366Z
 // Alternative to: Fusion Global Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Fusion Global Solutions Alternatives',
     description: 'Top alternatives to Fusion Global Solutions for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.374Z',
-    modifiedTime: '2025-11-30T19:36:57.374Z',
+    publishedTime: '2025-11-30T19:44:53.366Z',
+    modifiedTime: '2025-11-30T19:44:53.366Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/fusion-global-solutions#article",
       "headline": "Best Fusion Global Solutions Alternatives",
       "description": "Top alternatives to Fusion Global Solutions for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.374Z",
-      "dateModified": "2025-11-30T19:36:57.374Z",
+      "datePublished": "2025-11-30T19:44:53.366Z",
+      "dateModified": "2025-11-30T19:44:53.366Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/fusion-global-solutions#list",
       "name": "Fusion Global Solutions Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -129,6 +129,17 @@ const schemaOrg = {
             "name": "INNO4 LLC",
             "url": "https://useharbor.io/brands/inno4-llc",
             "description": "INNO4 is a leading technology services company specializing in data infrastructure, cybersecurity, audio visual solutions, and managed services.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "VSolvit",
+            "url": "https://useharbor.io/brands/vsolvit",
+            "description": "VSolvit is a technology services provider specializing in solutions for federal programs.",
             "applicationCategory": "Technology Services"
           }
         }
@@ -306,6 +317,28 @@ const alternatives = [
       "Managed services"
     ],
     "integrations": []
+  },
+  {
+    "slug": "vsolvit",
+    "brand_name": "VSolvit",
+    "domain": "vsolvit.com",
+    "summary": "VSolvit is a technology services provider specializing in solutions for federal programs.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Efficient Geospatial Solutions",
+      "Enterprise System Delivery",
+      "Mission-Aligned Application Development",
+      "Forecast-Driven Decision Support",
+      "Fixed-Price Project Execution"
+    ],
+    "integrations": [
+      "Cloud Integration"
+    ]
   }
 ]
 
@@ -321,7 +354,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.374Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.366Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Fusion Global Solutions Alternatives
@@ -393,7 +426,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.374Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.366Z">2025-11-30</time>
             </p>
           </footer>
         </div>

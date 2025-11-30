@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.309Z
+// Generated: 2025-11-30T19:44:53.314Z
 // Alternative to: Broadband Dynamics
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Broadband Dynamics Alternatives',
     description: 'Top alternatives to Broadband Dynamics for Telecommunications.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.309Z',
-    modifiedTime: '2025-11-30T19:36:57.309Z',
+    publishedTime: '2025-11-30T19:44:53.314Z',
+    modifiedTime: '2025-11-30T19:44:53.314Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/broadband-dynamics#article",
       "headline": "Best Broadband Dynamics Alternatives",
       "description": "Top alternatives to Broadband Dynamics for Telecommunications. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.309Z",
-      "dateModified": "2025-11-30T19:36:57.309Z",
+      "datePublished": "2025-11-30T19:44:53.314Z",
+      "dateModified": "2025-11-30T19:44:53.314Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -115,6 +115,17 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Clear Rate",
+            "url": "https://useharbor.io/brands/clear-rate",
+            "description": "Clear Rate provides comprehensive telecommunications solutions for both residential and business customers.",
+            "applicationCategory": "Telecommunications"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "LOGIX FIBER NETWORKS",
             "url": "https://useharbor.io/brands/logix-fiber-networks",
             "description": "A dedicated fiber internet provider for businesses in Texas.",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "FirstLight Fiber",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Versacom LP",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Identidad",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MSI Americas",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "IQSTEL - IQST",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Hidalgo & Co.",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MIND CTI",
             "url": "https://useharbor.io/brands/mind-cti",
             "description": "A global provider of convergent real-time BSS solutions for telecommunications and digital industries.",
-            "applicationCategory": "Telecommunications"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "VOIP OFFICE",
-            "url": "https://useharbor.io/brands/voip-office",
-            "description": "A leading provider of VoIP communication solutions for businesses.",
             "applicationCategory": "Telecommunications"
           }
         }
@@ -340,6 +340,26 @@ const alternatives = [
     "integrations": [
       "Arelion"
     ]
+  },
+  {
+    "slug": "clear-rate",
+    "brand_name": "Clear Rate",
+    "domain": "clearrate.com",
+    "summary": "Clear Rate provides comprehensive telecommunications solutions for both residential and business customers.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Offers custom solutions at competitive prices.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Internet Services",
+      "Phone Services",
+      "Managed IT",
+      "Security Services",
+      "24/7 Live Support"
+    ],
+    "integrations": []
   },
   {
     "slug": "logix-fiber-networks",
@@ -503,35 +523,6 @@ const alternatives = [
       "Cisco UC Manager",
       "Microsoft Teams"
     ]
-  },
-  {
-    "slug": "voip-office",
-    "brand_name": "VOIP OFFICE",
-    "domain": "voipoffice.com",
-    "summary": "A leading provider of VoIP communication solutions for businesses.",
-    "pricing": {
-      "price_model": "per_user",
-      "price_notes": "Volume discounts for 50+ users available.",
-      "has_free_tier": false,
-      "starting_price": "$19.99/mo"
-    },
-    "features": [
-      "Unlimited calls within the US/Canada",
-      "Auto attendant (IVR)",
-      "Business SMS and Texting",
-      "Conference Bridge",
-      "Caller ID Control"
-    ],
-    "integrations": [
-      "Salesforce",
-      "Microsoft Dynamics",
-      "SugarCRM",
-      "Vtiger",
-      "ZOHO",
-      "SuiteCRM",
-      "Zendesk",
-      "LeadSquared"
-    ]
   }
 ]
 
@@ -547,7 +538,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.309Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.314Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Broadband Dynamics Alternatives
@@ -619,7 +610,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.309Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.314Z">2025-11-30</time>
             </p>
           </footer>
         </div>

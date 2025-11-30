@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.283Z
+// Generated: 2025-11-30T19:44:53.286Z
 // Alternative to: EOX Vantage
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best EOX Vantage Alternatives',
     description: 'Top alternatives to EOX Vantage for Managed Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.283Z',
-    modifiedTime: '2025-11-30T19:36:57.283Z',
+    publishedTime: '2025-11-30T19:44:53.286Z',
+    modifiedTime: '2025-11-30T19:44:53.286Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/eox-vantage#article",
       "headline": "Best EOX Vantage Alternatives",
       "description": "Top alternatives to EOX Vantage for Managed Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.283Z",
-      "dateModified": "2025-11-30T19:36:57.283Z",
+      "datePublished": "2025-11-30T19:44:53.286Z",
+      "dateModified": "2025-11-30T19:44:53.286Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/eox-vantage#list",
       "name": "EOX Vantage Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 10,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Focus Technology",
+            "url": "https://useharbor.io/brands/focus-technology",
+            "description": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Acuative",
             "url": "https://useharbor.io/brands/acuative",
             "description": "Acuative provides end-to-end managed network services and IT infrastructure solutions.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Ergonomic Group",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Connext",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Effortless Office",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Secur-Serv",
@@ -112,7 +123,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CPP Associates, Inc.",
+            "url": "https://useharbor.io/brands/cpp-associates-inc",
+            "description": "A managed service provider specializing in IT solutions for businesses in the Northeast.",
+            "applicationCategory": "Managed Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "MicroAge",
@@ -123,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "3GC Group",
@@ -155,6 +177,26 @@ const alternatives = [
       "Marketing",
       "Cybersecurity",
       "Print Services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "focus-technology",
+    "brand_name": "Focus Technology",
+    "domain": "focustsi.com",
+    "summary": "Focus Technology provides innovative AI-driven IT solutions to help businesses automate and grow.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT Services",
+      "Security & Compliance",
+      "AI & Data Solutions",
+      "Modern Data Center",
+      "Secure Networking"
     ],
     "integrations": []
   },
@@ -262,6 +304,35 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "cpp-associates-inc",
+    "brand_name": "CPP Associates, Inc.",
+    "domain": "cppassociates.com",
+    "summary": "A managed service provider specializing in IT solutions for businesses in the Northeast.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud adoption strategies",
+      "Infrastructure management",
+      "Robotic Process Automation (RPA)",
+      "Cyber protection and disaster recovery",
+      "Managed services portfolio"
+    ],
+    "integrations": [
+      "11:11 Systems",
+      "Amazon/AWS",
+      "Arctic Wolf",
+      "Broadcom",
+      "Citrix",
+      "Cohesity",
+      "Fortinet",
+      "HP Enterprise"
+    ]
+  },
+  {
     "slug": "microage",
     "brand_name": "MicroAge",
     "domain": "microage.com",
@@ -312,7 +383,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.283Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.286Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best EOX Vantage Alternatives
@@ -384,7 +455,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.283Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.286Z">2025-11-30</time>
             </p>
           </footer>
         </div>

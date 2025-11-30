@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.373Z
+// Generated: 2025-11-30T19:44:53.364Z
 // Alternative to: ABSYZ Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best ABSYZ Inc Alternatives',
     description: 'Top alternatives to ABSYZ Inc for Salesforce Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.373Z',
-    modifiedTime: '2025-11-30T19:36:57.373Z',
+    publishedTime: '2025-11-30T19:44:53.364Z',
+    modifiedTime: '2025-11-30T19:44:53.364Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/absyz-inc#article",
       "headline": "Best ABSYZ Inc Alternatives",
       "description": "Top alternatives to ABSYZ Inc for Salesforce Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.373Z",
-      "dateModified": "2025-11-30T19:36:57.373Z",
+      "datePublished": "2025-11-30T19:44:53.364Z",
+      "dateModified": "2025-11-30T19:44:53.364Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/absyz-inc#list",
       "name": "ABSYZ Inc Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,17 @@ const schemaOrg = {
             "name": "360 Degree Cloud",
             "url": "https://useharbor.io/brands/360-degree-cloud",
             "description": "AI-Driven Salesforce Consulting Services for Growth",
+            "applicationCategory": "Salesforce Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Access Global Group",
+            "url": "https://useharbor.io/brands/access-global-group",
+            "description": "Salesforce consulting services tailored for business growth.",
             "applicationCategory": "Salesforce Consulting"
           }
         }
@@ -146,6 +157,30 @@ const alternatives = [
       "Proactive churn prevention"
     ],
     "integrations": []
+  },
+  {
+    "slug": "access-global-group",
+    "brand_name": "Access Global Group",
+    "domain": "acsgbl.com",
+    "summary": "Salesforce consulting services tailored for business growth.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing is not explicitly stated and may vary based on services.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Implementation Services",
+      "Integration Services",
+      "Optimization Services",
+      "Cloud Services",
+      "Managed Services"
+    ],
+    "integrations": [
+      "Salesforce",
+      "QuickBooks",
+      "Guidewire"
+    ]
   }
 ]
 
@@ -161,7 +196,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.373Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best ABSYZ Inc Alternatives
@@ -233,7 +268,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.373Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.364Z">2025-11-30</time>
             </p>
           </footer>
         </div>

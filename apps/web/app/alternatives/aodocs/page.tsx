@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.318Z
+// Generated: 2025-11-30T19:44:53.319Z
 // Alternative to: AODocs
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best AODocs Alternatives',
     description: 'Top alternatives to AODocs for Document Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.318Z',
-    modifiedTime: '2025-11-30T19:36:57.318Z',
+    publishedTime: '2025-11-30T19:44:53.319Z',
+    modifiedTime: '2025-11-30T19:44:53.319Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/aodocs#article",
       "headline": "Best AODocs Alternatives",
       "description": "Top alternatives to AODocs for Document Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.318Z",
-      "dateModified": "2025-11-30T19:36:57.318Z",
+      "datePublished": "2025-11-30T19:44:53.319Z",
+      "dateModified": "2025-11-30T19:44:53.319Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -180,7 +180,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.318Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best AODocs Alternatives
@@ -252,7 +252,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.318Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.319Z">2025-11-30</time>
             </p>
           </footer>
         </div>

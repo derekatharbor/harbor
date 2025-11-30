@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.343Z
+// Generated: 2025-11-30T19:44:53.336Z
 // Alternative to: For The Record (FTR)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best For The Record (FTR) Alternatives',
     description: 'Top alternatives to For The Record (FTR) for Legal Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.343Z',
-    modifiedTime: '2025-11-30T19:36:57.343Z',
+    publishedTime: '2025-11-30T19:44:53.336Z',
+    modifiedTime: '2025-11-30T19:44:53.336Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/for-the-record-ftr#article",
       "headline": "Best For The Record (FTR) Alternatives",
       "description": "Top alternatives to For The Record (FTR) for Legal Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.343Z",
-      "dateModified": "2025-11-30T19:36:57.343Z",
+      "datePublished": "2025-11-30T19:44:53.336Z",
+      "dateModified": "2025-11-30T19:44:53.336Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -315,7 +315,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.343Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best For The Record (FTR) Alternatives
@@ -387,7 +387,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.343Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.336Z">2025-11-30</time>
             </p>
           </footer>
         </div>

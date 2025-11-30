@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.148Z
+// Generated: 2025-11-30T19:44:53.131Z
 // Alternative to: Axis Technical Group
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Axis Technical Group Alternatives',
     description: 'Top alternatives to Axis Technical Group for IT Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.148Z',
-    modifiedTime: '2025-11-30T19:36:57.148Z',
+    publishedTime: '2025-11-30T19:44:53.131Z',
+    modifiedTime: '2025-11-30T19:44:53.131Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/axis-technical-group#article",
       "headline": "Best Axis Technical Group Alternatives",
       "description": "Top alternatives to Axis Technical Group for IT Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.148Z",
-      "dateModified": "2025-11-30T19:36:57.148Z",
+      "datePublished": "2025-11-30T19:44:53.131Z",
+      "dateModified": "2025-11-30T19:44:53.131Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -562,7 +562,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.148Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.131Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Axis Technical Group Alternatives
@@ -634,7 +634,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.148Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.131Z">2025-11-30</time>
             </p>
           </footer>
         </div>

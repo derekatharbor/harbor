@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.486Z
+// Generated: 2025-11-30T19:44:53.479Z
 // Comparing: Adept Consulting Services, Inc. vs Tribalco
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Adept Consulting Services, Inc. vs Tribalco',
     description: 'Detailed comparison of Adept Consulting Services, Inc. and Tribalco.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.486Z',
-    modifiedTime: '2025-11-30T19:36:57.486Z',
+    publishedTime: '2025-11-30T19:44:53.479Z',
+    modifiedTime: '2025-11-30T19:44:53.479Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/adept-consulting-services-inc-vs-tribalco#article",
   "headline": "Adept Consulting Services, Inc. vs Tribalco: Comparison",
   "description": "Detailed comparison of Adept Consulting Services, Inc. and Tribalco. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.486Z",
-  "dateModified": "2025-11-30T19:36:57.486Z",
+  "datePublished": "2025-11-30T19:44:53.479Z",
+  "dateModified": "2025-11-30T19:44:53.479Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -115,7 +115,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.486Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.479Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -270,7 +270,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.486Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.479Z">2025-11-30</time>
             </p>
           </footer>
         </div>

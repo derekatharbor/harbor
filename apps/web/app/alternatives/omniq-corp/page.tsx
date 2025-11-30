@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.302Z
+// Generated: 2025-11-30T19:44:53.303Z
 // Alternative to: OMNIQ Corp.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best OMNIQ Corp. Alternatives',
     description: 'Top alternatives to OMNIQ Corp. for Artificial Intelligence.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.302Z',
-    modifiedTime: '2025-11-30T19:36:57.302Z',
+    publishedTime: '2025-11-30T19:44:53.303Z',
+    modifiedTime: '2025-11-30T19:44:53.303Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/omniq-corp#article",
       "headline": "Best OMNIQ Corp. Alternatives",
       "description": "Top alternatives to OMNIQ Corp. for Artificial Intelligence. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.302Z",
-      "dateModified": "2025-11-30T19:36:57.302Z",
+      "datePublished": "2025-11-30T19:44:53.303Z",
+      "dateModified": "2025-11-30T19:44:53.303Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -93,6 +93,17 @@ const schemaOrg = {
           "position": 5,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "EDGE3 Technologies",
+            "url": "https://useharbor.io/brands/edge3-technologies",
+            "description": "A leader in AI-based occupant monitoring solutions for the automotive and transportation industries.",
+            "applicationCategory": "Artificial Intelligence"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "DataRobot",
             "url": "https://useharbor.io/brands/datarobot",
             "description": "DataRobot is an AI platform that empowers businesses to build, operate, and govern AI solutions at scale.",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Quantum Integrators",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Blackstraw",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "SiMa.ai",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Contextual AI",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "poolside",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "interface.ai",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ModelCat AI",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "SparkAI",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Neural Magic (Acquired by Red Hat)",
             "url": "https://useharbor.io/brands/neural-magic-acquired-by-red-hat",
             "description": "Red Hat provides open-source software solutions for enterprise environments.",
-            "applicationCategory": "Artificial Intelligence"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Raft",
-            "url": "https://useharbor.io/brands/raft",
-            "description": "Raft provides advanced AI and data solutions for national defense and public-sector challenges.",
             "applicationCategory": "Artificial Intelligence"
           }
         }
@@ -311,6 +311,26 @@ const alternatives = [
       "Sales",
       "Marketing"
     ]
+  },
+  {
+    "slug": "edge3-technologies",
+    "brand_name": "EDGE3 Technologies",
+    "domain": "edge3technologies.com",
+    "summary": "A leader in AI-based occupant monitoring solutions for the automotive and transportation industries.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "AI-based occupant monitoring solutions",
+      "Ambient Sensing Node for detecting children and pets left in vehicles",
+      "Level-8 / Level-9 Collision Avoidance",
+      "Cloud-based fleet analytics platform",
+      "Gesture Recognition platform for in-cabin interaction"
+    ],
+    "integrations": []
   },
   {
     "slug": "datarobot",
@@ -557,26 +577,6 @@ const alternatives = [
       "Microsoft Azure",
       "AWS"
     ]
-  },
-  {
-    "slug": "raft",
-    "brand_name": "Raft",
-    "domain": "teamraft.com",
-    "summary": "Raft provides advanced AI and data solutions for national defense and public-sector challenges.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Deploy, manage, and secure third-party apps in government networks",
-      "Maintain seamless operations against any threat",
-      "Elevate situational awareness and decision-making",
-      "Low-code automated workflows and chatbots",
-      "Automated battle management and predictive analytics"
-    ],
-    "integrations": []
   }
 ]
 
@@ -592,7 +592,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.302Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.303Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best OMNIQ Corp. Alternatives
@@ -664,7 +664,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.302Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.303Z">2025-11-30</time>
             </p>
           </footer>
         </div>

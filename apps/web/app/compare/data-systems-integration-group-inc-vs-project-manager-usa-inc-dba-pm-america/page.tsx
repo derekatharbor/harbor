@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.567Z
+// Generated: 2025-11-30T19:44:53.986Z
 // Comparing: Data Systems Integration Group, Inc. vs Project Manager USA, Inc.(DBA PM America)
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Data Systems Integration Group, Inc. vs Project Manager USA, Inc.(DBA PM America)',
     description: 'Detailed comparison of Data Systems Integration Group, Inc. and Project Manager USA, Inc.(DBA PM America).',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.567Z',
-    modifiedTime: '2025-11-30T19:36:57.567Z',
+    publishedTime: '2025-11-30T19:44:53.986Z',
+    modifiedTime: '2025-11-30T19:44:53.986Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/data-systems-integration-group-inc-vs-project-manager-usa-inc-dba-pm-america#article",
   "headline": "Data Systems Integration Group, Inc. vs Project Manager USA, Inc.(DBA PM America): Comparison",
   "description": "Detailed comparison of Data Systems Integration Group, Inc. and Project Manager USA, Inc.(DBA PM America). Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.567Z",
-  "dateModified": "2025-11-30T19:36:57.567Z",
+  "datePublished": "2025-11-30T19:44:53.986Z",
+  "dateModified": "2025-11-30T19:44:53.986Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -111,7 +111,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.567Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.986Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -266,7 +266,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.567Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.986Z">2025-11-30</time>
             </p>
           </footer>
         </div>

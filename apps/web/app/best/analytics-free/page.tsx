@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:31.860Z
+// Generated: 2025-11-30T19:44:29.178Z
 // Query: {"category":"Analytics","has_free_tier":true,"max_results":15}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Free Analytics Software',
     description: 'Discover the top free analytics tools with generous free tiers. Perfect for startups and small teams.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:31.860Z',
-    modifiedTime: '2025-11-30T19:36:31.860Z',
+    publishedTime: '2025-11-30T19:44:29.178Z',
+    modifiedTime: '2025-11-30T19:44:29.178Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:31.860Z',
+    'article:modified_time': '2025-11-30T19:44:29.178Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics-free#article",
       "headline": "Best Free Analytics Software",
       "description": "Discover the top free analytics tools with generous free tiers. Perfect for startups and small teams.",
-      "datePublished": "2025-11-30T19:36:31.860Z",
-      "dateModified": "2025-11-30T19:36:31.860Z",
+      "datePublished": "2025-11-30T19:44:29.178Z",
+      "dateModified": "2025-11-30T19:44:29.178Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -227,7 +227,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:31.860Z'
+export const pageGeneratedAt = '2025-11-30T19:44:29.178Z'
 
 export default function ListiclePage() {
   return (
@@ -242,7 +242,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:31.860Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:29.178Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Free Analytics Software
@@ -358,7 +358,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:31.860Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:29.178Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

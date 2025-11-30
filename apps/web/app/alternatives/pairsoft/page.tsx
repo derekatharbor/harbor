@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.360Z
+// Generated: 2025-11-30T19:44:53.352Z
 // Alternative to: PairSoft
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best PairSoft Alternatives',
     description: 'Top alternatives to PairSoft for Document Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.360Z',
-    modifiedTime: '2025-11-30T19:36:57.360Z',
+    publishedTime: '2025-11-30T19:44:53.352Z',
+    modifiedTime: '2025-11-30T19:44:53.352Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/pairsoft#article",
       "headline": "Best PairSoft Alternatives",
       "description": "Top alternatives to PairSoft for Document Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.360Z",
-      "dateModified": "2025-11-30T19:36:57.360Z",
+      "datePublished": "2025-11-30T19:44:53.352Z",
+      "dateModified": "2025-11-30T19:44:53.352Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -178,7 +178,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.360Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best PairSoft Alternatives
@@ -250,7 +250,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.360Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">2025-11-30</time>
             </p>
           </footer>
         </div>

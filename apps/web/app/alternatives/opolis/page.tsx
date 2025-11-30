@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.368Z
+// Generated: 2025-11-30T19:44:53.362Z
 // Alternative to: Opolis
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Opolis Alternatives',
     description: 'Top alternatives to Opolis for HR Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.368Z',
-    modifiedTime: '2025-11-30T19:36:57.368Z',
+    publishedTime: '2025-11-30T19:44:53.362Z',
+    modifiedTime: '2025-11-30T19:44:53.362Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/opolis#article",
       "headline": "Best Opolis Alternatives",
       "description": "Top alternatives to Opolis for HR Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.368Z",
-      "dateModified": "2025-11-30T19:36:57.368Z",
+      "datePublished": "2025-11-30T19:44:53.362Z",
+      "dateModified": "2025-11-30T19:44:53.362Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/opolis#list",
       "name": "Opolis Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 7,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "iMocha",
+            "url": "https://useharbor.io/brands/imocha",
+            "description": "AI-powered skills intelligence platform for workforce development.",
+            "applicationCategory": "HR Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ResNav Solutions",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HiredScore",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Traitify",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Akrivia HCM",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Seso Inc.",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Paradox",
@@ -116,6 +127,34 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "imocha",
+    "brand_name": "iMocha",
+    "domain": "imocha.io",
+    "summary": "AI-powered skills intelligence platform for workforce development.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Skill Gap Analysis",
+      "Upskilling & Reskilling",
+      "Internal Mobility",
+      "Strategic Workforce Planning",
+      "Skills-Based Hiring"
+    ],
+    "integrations": [
+      "HCM",
+      "LMS",
+      "LXP",
+      "eLearning",
+      "Consulting",
+      "ATS",
+      "Tech"
+    ]
+  },
   {
     "slug": "resnav-solutions",
     "brand_name": "ResNav Solutions",
@@ -263,7 +302,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.368Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.362Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Opolis Alternatives
@@ -335,7 +374,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.368Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.362Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.406Z
+// Generated: 2025-11-30T19:44:53.402Z
 // Comparing: Kitsap Physical Therapy vs Sam Rodgers Health
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Kitsap Physical Therapy vs Sam Rodgers Health',
     description: 'Detailed comparison of Kitsap Physical Therapy and Sam Rodgers Health.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.406Z',
-    modifiedTime: '2025-11-30T19:36:57.406Z',
+    publishedTime: '2025-11-30T19:44:53.402Z',
+    modifiedTime: '2025-11-30T19:44:53.402Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/kitsap-physical-therapy-vs-sam-rodgers-health#article",
   "headline": "Kitsap Physical Therapy vs Sam Rodgers Health: Comparison",
   "description": "Detailed comparison of Kitsap Physical Therapy and Sam Rodgers Health. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.406Z",
-  "dateModified": "2025-11-30T19:36:57.406Z",
+  "datePublished": "2025-11-30T19:44:53.402Z",
+  "dateModified": "2025-11-30T19:44:53.402Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -109,7 +109,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.406Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.402Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -264,7 +264,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.406Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.402Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.283Z
+// Generated: 2025-11-30T19:44:53.286Z
 // Alternative to: Rightpoint
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Rightpoint Alternatives',
     description: 'Top alternatives to Rightpoint for Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.283Z',
-    modifiedTime: '2025-11-30T19:36:57.283Z',
+    publishedTime: '2025-11-30T19:44:53.286Z',
+    modifiedTime: '2025-11-30T19:44:53.286Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/rightpoint#article",
       "headline": "Best Rightpoint Alternatives",
       "description": "Top alternatives to Rightpoint for Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.283Z",
-      "dateModified": "2025-11-30T19:36:57.283Z",
+      "datePublished": "2025-11-30T19:44:53.286Z",
+      "dateModified": "2025-11-30T19:44:53.286Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -159,6 +159,28 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "AlixPartners",
+            "url": "https://useharbor.io/brands/alixpartners",
+            "description": "A results-driven global consulting firm specializing in supply chain resilience and operational efficiency.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "WorldLink US",
+            "url": "https://useharbor.io/brands/worldlink-us",
+            "description": "A global technology firm specializing in digital transformation and AI solutions.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Bennett Adelson Consulting",
             "url": "https://useharbor.io/brands/bennett-adelson-consulting",
             "description": "A user-centric solutions provider focused on technology-driven business impact.",
@@ -167,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "eBiz Solutions, LLC",
@@ -178,34 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Technology Ventures",
             "url": "https://useharbor.io/brands/technology-ventures",
             "description": "Award-winning consulting firm specializing in technology and staffing solutions.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Sky Systems, Inc. (SkySys)",
-            "url": "https://useharbor.io/brands/sky-systems-inc-skysys",
-            "description": "SkySys is a global service provider specializing in consulting and managed services.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Green Powered Technology (GPTech)",
-            "url": "https://useharbor.io/brands/green-powered-technology-gptech",
-            "description": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
             "applicationCategory": "Consulting"
           }
         }
@@ -421,6 +421,40 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "alixpartners",
+    "brand_name": "AlixPartners",
+    "domain": "alixpartners.com",
+    "summary": "A results-driven global consulting firm specializing in supply chain resilience and operational efficiency.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "worldlink-us",
+    "brand_name": "WorldLink US",
+    "domain": "worldlink-us.com",
+    "summary": "A global technology firm specializing in digital transformation and AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation Consulting",
+      "AI Solutions",
+      "Data Analytics",
+      "Custom GenAI Solutions",
+      "Predictive Analytics"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "bennett-adelson-consulting",
     "brand_name": "Bennett Adelson Consulting",
     "domain": "bennettadelson.com",
@@ -491,40 +525,6 @@ const alternatives = [
       "Deep Learning"
     ],
     "integrations": []
-  },
-  {
-    "slug": "sky-systems-inc-skysys",
-    "brand_name": "Sky Systems, Inc. (SkySys)",
-    "domain": "myskysys.com",
-    "summary": "SkySys is a global service provider specializing in consulting and managed services.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": []
-  },
-  {
-    "slug": "green-powered-technology-gptech",
-    "brand_name": "Green Powered Technology (GPTech)",
-    "domain": "greenpwrd.com",
-    "summary": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Energy consulting",
-      "Infrastructure development",
-      "Sustainable development strategies",
-      "Technical support services",
-      "Project management"
-    ],
-    "integrations": []
   }
 ]
 
@@ -540,7 +540,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.283Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.286Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Rightpoint Alternatives
@@ -612,7 +612,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.283Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.286Z">2025-11-30</time>
             </p>
           </footer>
         </div>

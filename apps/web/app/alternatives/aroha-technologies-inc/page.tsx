@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.284Z
+// Generated: 2025-11-30T19:44:53.287Z
 // Alternative to: Aroha Technologies, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Aroha Technologies, Inc Alternatives',
     description: 'Top alternatives to Aroha Technologies, Inc for Business Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.284Z',
-    modifiedTime: '2025-11-30T19:36:57.284Z',
+    publishedTime: '2025-11-30T19:44:53.287Z',
+    modifiedTime: '2025-11-30T19:44:53.287Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/aroha-technologies-inc#article",
       "headline": "Best Aroha Technologies, Inc Alternatives",
       "description": "Top alternatives to Aroha Technologies, Inc for Business Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.284Z",
-      "dateModified": "2025-11-30T19:36:57.284Z",
+      "datePublished": "2025-11-30T19:44:53.287Z",
+      "dateModified": "2025-11-30T19:44:53.287Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -162,7 +162,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.284Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.287Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Aroha Technologies, Inc Alternatives
@@ -234,7 +234,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.284Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.287Z">2025-11-30</time>
             </p>
           </footer>
         </div>

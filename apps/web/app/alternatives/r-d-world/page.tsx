@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.385Z
+// Generated: 2025-11-30T19:44:53.375Z
 // Alternative to: R&D World
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best R&D World Alternatives',
     description: 'Top alternatives to R&D World for Media.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.385Z',
-    modifiedTime: '2025-11-30T19:36:57.385Z',
+    publishedTime: '2025-11-30T19:44:53.375Z',
+    modifiedTime: '2025-11-30T19:44:53.375Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/r-d-world#article",
       "headline": "Best R&D World Alternatives",
       "description": "Top alternatives to R&D World for Media. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.385Z",
-      "dateModified": "2025-11-30T19:36:57.385Z",
+      "datePublished": "2025-11-30T19:44:53.375Z",
+      "dateModified": "2025-11-30T19:44:53.375Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/r-d-world#list",
       "name": "R&D World Alternatives",
-      "numberOfItems": 5,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "San Diego Business Journal",
+            "url": "https://useharbor.io/brands/san-diego-business-journal",
+            "description": "A leading source of business news and information in San Diego County.",
+            "applicationCategory": "Media"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "SJ Mag Media",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "The Cavalier Daily",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Toledo Free Press",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Security Magazine",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CR Fashion Book",
@@ -105,6 +116,20 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "san-diego-business-journal",
+    "brand_name": "San Diego Business Journal",
+    "domain": "sdbj.com",
+    "summary": "A leading source of business news and information in San Diego County.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
   {
     "slug": "sj-mag-media",
     "brand_name": "SJ Mag Media",
@@ -206,7 +231,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.385Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.375Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best R&D World Alternatives
@@ -278,7 +303,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.385Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.375Z">2025-11-30</time>
             </p>
           </footer>
         </div>

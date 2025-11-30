@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:28.630Z
+// Generated: 2025-11-30T19:44:26.064Z
 // Query: {"category":"Field Service","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Field Service Software',
     description: 'Compare the top field service solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:28.630Z',
-    modifiedTime: '2025-11-30T19:36:28.630Z',
+    publishedTime: '2025-11-30T19:44:26.064Z',
+    modifiedTime: '2025-11-30T19:44:26.064Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:28.630Z',
+    'article:modified_time': '2025-11-30T19:44:26.064Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/field-service#article",
       "headline": "Best Field Service Software",
       "description": "Compare the top field service solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:28.630Z",
-      "dateModified": "2025-11-30T19:36:28.630Z",
+      "datePublished": "2025-11-30T19:44:26.064Z",
+      "dateModified": "2025-11-30T19:44:26.064Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -197,7 +197,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:28.630Z'
+export const pageGeneratedAt = '2025-11-30T19:44:26.064Z'
 
 export default function ListiclePage() {
   return (
@@ -212,7 +212,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:28.630Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:26.064Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Field Service Software
@@ -328,7 +328,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:28.630Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:26.064Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

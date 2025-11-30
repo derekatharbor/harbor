@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.434Z
+// Generated: 2025-11-30T19:44:53.426Z
 // Comparing: Palladin Technologies vs Saviance
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Palladin Technologies vs Saviance',
     description: 'Detailed comparison of Palladin Technologies and Saviance.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.434Z',
-    modifiedTime: '2025-11-30T19:36:57.434Z',
+    publishedTime: '2025-11-30T19:44:53.426Z',
+    modifiedTime: '2025-11-30T19:44:53.426Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/palladin-technologies-vs-saviance#article",
   "headline": "Palladin Technologies vs Saviance: Comparison",
   "description": "Detailed comparison of Palladin Technologies and Saviance. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.434Z",
-  "dateModified": "2025-11-30T19:36:57.434Z",
+  "datePublished": "2025-11-30T19:44:53.426Z",
+  "dateModified": "2025-11-30T19:44:53.426Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -123,7 +123,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.434Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.426Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -278,7 +278,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.434Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.426Z">2025-11-30</time>
             </p>
           </footer>
         </div>

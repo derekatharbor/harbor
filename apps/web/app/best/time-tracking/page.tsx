@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:27.660Z
+// Generated: 2025-11-30T19:44:24.826Z
 // Query: {"category":"Time Tracking","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Time Tracking Software',
     description: 'Compare the top time tracking solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:27.660Z',
-    modifiedTime: '2025-11-30T19:36:27.660Z',
+    publishedTime: '2025-11-30T19:44:24.826Z',
+    modifiedTime: '2025-11-30T19:44:24.826Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:27.660Z',
+    'article:modified_time': '2025-11-30T19:44:24.826Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/time-tracking#article",
       "headline": "Best Time Tracking Software",
       "description": "Compare the top time tracking solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:27.660Z",
-      "dateModified": "2025-11-30T19:36:27.660Z",
+      "datePublished": "2025-11-30T19:44:24.826Z",
+      "dateModified": "2025-11-30T19:44:24.826Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -333,7 +333,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:27.660Z'
+export const pageGeneratedAt = '2025-11-30T19:44:24.826Z'
 
 export default function ListiclePage() {
   return (
@@ -348,7 +348,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:27.660Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:24.826Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Time Tracking Software
@@ -464,7 +464,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:27.660Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:24.826Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

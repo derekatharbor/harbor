@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.165Z
+// Generated: 2025-11-30T19:44:53.163Z
 // Alternative to: Olark Accessible AI Chatbots
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Olark Accessible AI Chatbots Alternatives',
     description: 'Top alternatives to Olark Accessible AI Chatbots for Customer Service.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.165Z',
-    modifiedTime: '2025-11-30T19:36:57.165Z',
+    publishedTime: '2025-11-30T19:44:53.163Z',
+    modifiedTime: '2025-11-30T19:44:53.163Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/olark-accessible-ai-chatbots#article",
       "headline": "Best Olark Accessible AI Chatbots Alternatives",
       "description": "Top alternatives to Olark Accessible AI Chatbots for Customer Service. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.165Z",
-      "dateModified": "2025-11-30T19:36:57.165Z",
+      "datePublished": "2025-11-30T19:44:53.163Z",
+      "dateModified": "2025-11-30T19:44:53.163Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -215,7 +215,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.165Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.163Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Olark Accessible AI Chatbots Alternatives
@@ -287,7 +287,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.165Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.163Z">2025-11-30</time>
             </p>
           </footer>
         </div>

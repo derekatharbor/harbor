@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.302Z
+// Generated: 2025-11-30T19:44:53.303Z
 // Alternative to: Onward Technologies, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Onward Technologies, Inc. Alternatives',
     description: 'Top alternatives to Onward Technologies, Inc. for Managed IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.302Z',
-    modifiedTime: '2025-11-30T19:36:57.302Z',
+    publishedTime: '2025-11-30T19:44:53.303Z',
+    modifiedTime: '2025-11-30T19:44:53.303Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/onward-technologies-inc#article",
       "headline": "Best Onward Technologies, Inc. Alternatives",
       "description": "Top alternatives to Onward Technologies, Inc. for Managed IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.302Z",
-      "dateModified": "2025-11-30T19:36:57.302Z",
+      "datePublished": "2025-11-30T19:44:53.303Z",
+      "dateModified": "2025-11-30T19:44:53.303Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,6 +49,17 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Mentis Group",
+            "url": "https://useharbor.io/brands/mentis-group",
+            "description": "A strategic managed IT and cybersecurity partner for businesses.",
+            "applicationCategory": "Managed IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "WEBIT Services, Inc.",
             "url": "https://useharbor.io/brands/webit-services-inc",
             "description": "Employee-owned IT support company based in Naperville, specializing in managed IT services.",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "enkompas Technology Solutions",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Next Perimeter",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Endsight",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Frontier Business Products",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Custom Information Services",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Usherwood Office Technology",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Novatech",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tech-Keys",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Epsilon, Inc.",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Awecomm",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Stasmayer, Inc.",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Electronic Strategies, Inc.",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "PCI",
             "url": "https://useharbor.io/brands/pci",
             "description": "A managed IT services provider based in Buffalo, NY, offering comprehensive IT solutions.",
-            "applicationCategory": "Managed IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "CIO Landing",
-            "url": "https://useharbor.io/brands/cio-landing",
-            "description": "Managed IT services for Chicago-area businesses.",
             "applicationCategory": "Managed IT Services"
           }
         }
@@ -215,6 +215,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "mentis-group",
+    "brand_name": "Mentis Group",
+    "domain": "mentis-group.com",
+    "summary": "A strategic managed IT and cybersecurity partner for businesses.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; services are customized based on client needs.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Proactive IT process",
+      "Managed cybersecurity",
+      "Dedicated IT support",
+      "Strategic IT alignment with business goals",
+      "Continuous IT service improvement"
+    ],
+    "integrations": []
+  },
   {
     "slug": "webit-services-inc",
     "brand_name": "WEBIT Services, Inc.",
@@ -520,26 +540,6 @@ const alternatives = [
       "Microsoft 365",
       "RingCentral"
     ]
-  },
-  {
-    "slug": "cio-landing",
-    "brand_name": "CIO Landing",
-    "domain": "ciolanding.com",
-    "summary": "Managed IT services for Chicago-area businesses.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Proactive IT support",
-      "Dedicated vCIO guidance",
-      "24/7 network monitoring",
-      "Extended support hours (7am-7pm CST)",
-      "Clear communication without jargon"
-    ],
-    "integrations": []
   }
 ]
 
@@ -555,7 +555,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.302Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.303Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Onward Technologies, Inc. Alternatives
@@ -627,7 +627,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.302Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.303Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.145Z
+// Generated: 2025-11-30T19:44:53.126Z
 // Alternative to: WEBIT Services, Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best WEBIT Services, Inc. Alternatives',
     description: 'Top alternatives to WEBIT Services, Inc. for Managed IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.145Z',
-    modifiedTime: '2025-11-30T19:36:57.145Z',
+    publishedTime: '2025-11-30T19:44:53.126Z',
+    modifiedTime: '2025-11-30T19:44:53.126Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/webit-services-inc#article",
       "headline": "Best WEBIT Services, Inc. Alternatives",
       "description": "Top alternatives to WEBIT Services, Inc. for Managed IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.145Z",
-      "dateModified": "2025-11-30T19:36:57.145Z",
+      "datePublished": "2025-11-30T19:44:53.126Z",
+      "dateModified": "2025-11-30T19:44:53.126Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -49,6 +49,17 @@ const schemaOrg = {
           "position": 1,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Mentis Group",
+            "url": "https://useharbor.io/brands/mentis-group",
+            "description": "A strategic managed IT and cybersecurity partner for businesses.",
+            "applicationCategory": "Managed IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "enkompas Technology Solutions",
             "url": "https://useharbor.io/brands/enkompas-technology-solutions",
             "description": "A strategic managed IT services partner providing comprehensive technology solutions.",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Next Perimeter",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Endsight",
@@ -79,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Frontier Business Products",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Custom Information Services",
@@ -101,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Usherwood Office Technology",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Novatech",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Tech-Keys",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Epsilon, Inc.",
@@ -145,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Awecomm",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Stasmayer, Inc.",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Electronic Strategies, Inc.",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "PCI",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CIO Landing",
             "url": "https://useharbor.io/brands/cio-landing",
             "description": "Managed IT services for Chicago-area businesses.",
-            "applicationCategory": "Managed IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Net-Tech",
-            "url": "https://useharbor.io/brands/net-tech",
-            "description": "Comprehensive IT support and subscription services for organizations.",
             "applicationCategory": "Managed IT Services"
           }
         }
@@ -215,6 +215,26 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "mentis-group",
+    "brand_name": "Mentis Group",
+    "domain": "mentis-group.com",
+    "summary": "A strategic managed IT and cybersecurity partner for businesses.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated; services are customized based on client needs.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Proactive IT process",
+      "Managed cybersecurity",
+      "Dedicated IT support",
+      "Strategic IT alignment with business goals",
+      "Continuous IT service improvement"
+    ],
+    "integrations": []
+  },
   {
     "slug": "enkompas-technology-solutions",
     "brand_name": "enkompas Technology Solutions",
@@ -520,26 +540,6 @@ const alternatives = [
       "Clear communication without jargon"
     ],
     "integrations": []
-  },
-  {
-    "slug": "net-tech",
-    "brand_name": "Net-Tech",
-    "domain": "net-tech.com",
-    "summary": "Comprehensive IT support and subscription services for organizations.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": "Offers IT Subscription Programs with predictable costs.",
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Proactive IT support",
-      "On-site support",
-      "Backup and disaster recovery",
-      "IT security including multifactor authentication",
-      "IT compliance management"
-    ],
-    "integrations": []
   }
 ]
 
@@ -555,7 +555,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.145Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.126Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best WEBIT Services, Inc. Alternatives
@@ -627,7 +627,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.145Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.126Z">2025-11-30</time>
             </p>
           </footer>
         </div>

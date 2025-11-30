@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.196Z
+// Generated: 2025-11-30T19:44:53.209Z
 // Alternative to: Wisper Internet
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Wisper Internet Alternatives',
     description: 'Top alternatives to Wisper Internet for Internet Service Provider.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.196Z',
-    modifiedTime: '2025-11-30T19:36:57.196Z',
+    publishedTime: '2025-11-30T19:44:53.209Z',
+    modifiedTime: '2025-11-30T19:44:53.209Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/wisper-internet#article",
       "headline": "Best Wisper Internet Alternatives",
       "description": "Top alternatives to Wisper Internet for Internet Service Provider. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.196Z",
-      "dateModified": "2025-11-30T19:36:57.196Z",
+      "datePublished": "2025-11-30T19:44:53.209Z",
+      "dateModified": "2025-11-30T19:44:53.209Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/wisper-internet#list",
       "name": "Wisper Internet Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Ripple Fiber",
+            "url": "https://useharbor.io/brands/ripple-fiber",
+            "description": "America's fastest fiber internet company providing high-speed internet services.",
+            "applicationCategory": "Internet Service Provider"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Pavlov Media",
             "url": "https://useharbor.io/brands/pavlov-media",
             "description": "A fiber internet provider focused on delivering reliable and customizable internet solutions.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Socket Fiber",
@@ -100,6 +111,26 @@ const alternatives = [
       "Free installation",
       "Full home network control with Mercury @ Home™ app",
       "High-performance connectivity powered by Wi-Fi 6 or Wi-Fi 7"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "ripple-fiber",
+    "brand_name": "Ripple Fiber",
+    "domain": "ripplefiber.com",
+    "summary": "America's fastest fiber internet company providing high-speed internet services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Transparent pricing without contracts or hidden fees.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Up to 500Mbps Upload & Download Speeds",
+      "Up to 1Gig Upload & Download Speeds",
+      "Up to 2Gig Upload & Download Speeds",
+      "Free WiFi modem/router",
+      "Free in-home White Glove Installation"
     ],
     "integrations": []
   },
@@ -151,7 +182,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.196Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.209Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Wisper Internet Alternatives
@@ -223,7 +254,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.196Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.209Z">2025-11-30</time>
             </p>
           </footer>
         </div>

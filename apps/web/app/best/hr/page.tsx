@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:27.860Z
+// Generated: 2025-11-30T19:44:25.229Z
 // Query: {"category":"HR","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best HR Software',
     description: 'Compare the top hr solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:27.860Z',
-    modifiedTime: '2025-11-30T19:36:27.860Z',
+    publishedTime: '2025-11-30T19:44:25.229Z',
+    modifiedTime: '2025-11-30T19:44:25.229Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:27.860Z',
+    'article:modified_time': '2025-11-30T19:44:25.229Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/hr#article",
       "headline": "Best HR Software",
       "description": "Compare the top hr solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:27.860Z",
-      "dateModified": "2025-11-30T19:36:27.860Z",
+      "datePublished": "2025-11-30T19:44:25.229Z",
+      "dateModified": "2025-11-30T19:44:25.229Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/hr#list",
       "name": "Best HR Software",
       "description": "Compare the top hr solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 13,
+      "numberOfItems": 15,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -94,6 +94,30 @@ const schemaOrg = {
           "position": 3,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "iMocha",
+            "url": "https://useharbor.io/brands/imocha",
+            "description": "AI-powered skills intelligence platform for workforce development.",
+            "applicationCategory": "HR Technology",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Marvel Technologies Inc",
+            "url": "https://useharbor.io/brands/marvel-technologies-inc",
+            "description": "A fast-growing IT company specializing in SAP software solutions.",
+            "applicationCategory": "HR Management Software",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "ThreatQuotient",
             "url": "https://useharbor.io/brands/threatquotient",
             "description": "A leading provider of threat intelligence solutions.",
@@ -103,7 +127,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ResNav Solutions",
@@ -115,7 +139,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Streamline Healthcare Solutions",
@@ -127,7 +151,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "HiredScore",
@@ -139,7 +163,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Traitify",
@@ -151,7 +175,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Opolis",
@@ -163,7 +187,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Akrivia HCM",
@@ -175,7 +199,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Flashpoint",
@@ -187,7 +211,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Humand",
@@ -199,7 +223,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Seso Inc.",
@@ -211,7 +235,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Paradox",
@@ -297,6 +321,58 @@ const profiles = [
       "Arch Crown",
       "ZEISS",
       "Topcon Healthcare"
+    ],
+    "visibility_score": 78
+  },
+  {
+    "slug": "imocha",
+    "brand_name": "iMocha",
+    "domain": "imocha.io",
+    "summary": "AI-powered skills intelligence platform for workforce development.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Skill Gap Analysis",
+      "Upskilling & Reskilling",
+      "Internal Mobility",
+      "Strategic Workforce Planning",
+      "Skills-Based Hiring"
+    ],
+    "integrations": [
+      "HCM",
+      "LMS",
+      "LXP",
+      "eLearning",
+      "Consulting",
+      "ATS",
+      "Tech"
+    ],
+    "visibility_score": 78
+  },
+  {
+    "slug": "marvel-technologies-inc",
+    "brand_name": "Marvel Technologies Inc",
+    "domain": "marveltechus.com",
+    "summary": "A fast-growing IT company specializing in SAP software solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud-based HR management solution",
+      "Electronic forms solution for SAP applications",
+      "Advanced optimization tool for SAP ERP HCM functionality",
+      "High-speed data extraction tool",
+      "Efficient data loading solution certified by SAP"
+    ],
+    "integrations": [
+      "Salesforce"
     ],
     "visibility_score": 78
   },
@@ -546,7 +622,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:27.860Z'
+export const pageGeneratedAt = '2025-11-30T19:44:25.229Z'
 
 export default function ListiclePage() {
   return (
@@ -561,7 +637,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:27.860Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:25.229Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best HR Software
@@ -677,7 +753,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:27.860Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:25.229Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

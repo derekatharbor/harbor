@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:27.752Z
+// Generated: 2025-11-30T19:44:25.039Z
 // Query: {"category":"Accounting","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Accounting Software',
     description: 'Compare the top accounting solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:27.752Z',
-    modifiedTime: '2025-11-30T19:36:27.752Z',
+    publishedTime: '2025-11-30T19:44:25.039Z',
+    modifiedTime: '2025-11-30T19:44:25.039Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:27.752Z',
+    'article:modified_time': '2025-11-30T19:44:25.039Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/accounting#article",
       "headline": "Best Accounting Software",
       "description": "Compare the top accounting solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:27.752Z",
-      "dateModified": "2025-11-30T19:36:27.752Z",
+      "datePublished": "2025-11-30T19:44:25.039Z",
+      "dateModified": "2025-11-30T19:44:25.039Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/accounting#list",
       "name": "Best Accounting Software",
       "description": "Compare the top accounting solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -99,6 +99,24 @@ const schemaOrg = {
             "description": "A digital platform for production payroll and accounting.",
             "applicationCategory": "Payroll and Production Accounting",
             "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Persefoni",
+            "url": "https://useharbor.io/brands/persefoni",
+            "description": "A leading platform for carbon accounting and sustainability management.",
+            "applicationCategory": "Carbon Accounting and Sustainability Management",
+            "operatingSystem": "Web-based",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free tier available"
+            }
           }
         }
       ]
@@ -203,11 +221,39 @@ const profiles = [
       "CashétPay"
     ],
     "visibility_score": 73
+  },
+  {
+    "slug": "persefoni",
+    "brand_name": "Persefoni",
+    "domain": "persefoni.com",
+    "summary": "A leading platform for carbon accounting and sustainability management.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Scope 1, 2, and 3 carbon footprints",
+      "Assurance-grade GHG emissions reporting",
+      "Net-zero target setting and reduction modeling",
+      "Financed emissions measurement and analytics",
+      "Anomaly detection for key data sets"
+    ],
+    "integrations": [
+      "AWS",
+      "Workiva",
+      "Patch",
+      "Bain & Company",
+      "Connor Group",
+      "A&M"
+    ],
+    "visibility_score": 73
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:27.752Z'
+export const pageGeneratedAt = '2025-11-30T19:44:25.039Z'
 
 export default function ListiclePage() {
   return (
@@ -222,7 +268,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:27.752Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:25.039Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Accounting Software
@@ -338,7 +384,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:27.752Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:25.039Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

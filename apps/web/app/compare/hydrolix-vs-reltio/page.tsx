@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.560Z
+// Generated: 2025-11-30T19:44:53.975Z
 // Comparing: Hydrolix vs Reltio
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Hydrolix vs Reltio',
     description: 'Detailed comparison of Hydrolix and Reltio.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.560Z',
-    modifiedTime: '2025-11-30T19:36:57.560Z',
+    publishedTime: '2025-11-30T19:44:53.975Z',
+    modifiedTime: '2025-11-30T19:44:53.975Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/hydrolix-vs-reltio#article",
   "headline": "Hydrolix vs Reltio: Comparison",
   "description": "Detailed comparison of Hydrolix and Reltio. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.560Z",
-  "dateModified": "2025-11-30T19:36:57.560Z",
+  "datePublished": "2025-11-30T19:44:53.975Z",
+  "dateModified": "2025-11-30T19:44:53.975Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -130,7 +130,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.560Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.975Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -285,7 +285,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.560Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.975Z">2025-11-30</time>
             </p>
           </footer>
         </div>

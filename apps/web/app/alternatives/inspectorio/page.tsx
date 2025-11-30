@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.349Z
+// Generated: 2025-11-30T19:44:53.338Z
 // Alternative to: Inspectorio
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Inspectorio Alternatives',
     description: 'Top alternatives to Inspectorio for Supply Chain Management.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.349Z',
-    modifiedTime: '2025-11-30T19:36:57.349Z',
+    publishedTime: '2025-11-30T19:44:53.338Z',
+    modifiedTime: '2025-11-30T19:44:53.338Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/inspectorio#article",
       "headline": "Best Inspectorio Alternatives",
       "description": "Top alternatives to Inspectorio for Supply Chain Management. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.349Z",
-      "dateModified": "2025-11-30T19:36:57.349Z",
+      "datePublished": "2025-11-30T19:44:53.338Z",
+      "dateModified": "2025-11-30T19:44:53.338Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -192,7 +192,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.349Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.338Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Inspectorio Alternatives
@@ -264,7 +264,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.349Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.338Z">2025-11-30</time>
             </p>
           </footer>
         </div>

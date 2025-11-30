@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.387Z
+// Generated: 2025-11-30T19:44:53.381Z
 // Alternative to: Socket Fiber
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Socket Fiber Alternatives',
     description: 'Top alternatives to Socket Fiber for Internet Service Provider.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.387Z',
-    modifiedTime: '2025-11-30T19:36:57.387Z',
+    publishedTime: '2025-11-30T19:44:53.381Z',
+    modifiedTime: '2025-11-30T19:44:53.381Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/socket-fiber#article",
       "headline": "Best Socket Fiber Alternatives",
       "description": "Top alternatives to Socket Fiber for Internet Service Provider. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.387Z",
-      "dateModified": "2025-11-30T19:36:57.387Z",
+      "datePublished": "2025-11-30T19:44:53.381Z",
+      "dateModified": "2025-11-30T19:44:53.381Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/socket-fiber#list",
       "name": "Socket Fiber Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -69,6 +69,17 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Ripple Fiber",
+            "url": "https://useharbor.io/brands/ripple-fiber",
+            "description": "America's fastest fiber internet company providing high-speed internet services.",
+            "applicationCategory": "Internet Service Provider"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Pavlov Media",
@@ -124,6 +135,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "ripple-fiber",
+    "brand_name": "Ripple Fiber",
+    "domain": "ripplefiber.com",
+    "summary": "America's fastest fiber internet company providing high-speed internet services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Transparent pricing without contracts or hidden fees.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Up to 500Mbps Upload & Download Speeds",
+      "Up to 1Gig Upload & Download Speeds",
+      "Up to 2Gig Upload & Download Speeds",
+      "Free WiFi modem/router",
+      "Free in-home White Glove Installation"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "pavlov-media",
     "brand_name": "Pavlov Media",
     "domain": "pavlovmedia.com",
@@ -157,7 +188,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.387Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.381Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Socket Fiber Alternatives
@@ -229,7 +260,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.387Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.381Z">2025-11-30</time>
             </p>
           </footer>
         </div>

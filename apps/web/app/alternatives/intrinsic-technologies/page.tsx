@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.145Z
+// Generated: 2025-11-30T19:44:53.125Z
 // Alternative to: Intrinsic Technologies
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Intrinsic Technologies Alternatives',
     description: 'Top alternatives to Intrinsic Technologies for IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.145Z',
-    modifiedTime: '2025-11-30T19:36:57.145Z',
+    publishedTime: '2025-11-30T19:44:53.125Z',
+    modifiedTime: '2025-11-30T19:44:53.125Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/intrinsic-technologies#article",
       "headline": "Best Intrinsic Technologies Alternatives",
       "description": "Top alternatives to Intrinsic Technologies for IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.145Z",
-      "dateModified": "2025-11-30T19:36:57.145Z",
+      "datePublished": "2025-11-30T19:44:53.125Z",
+      "dateModified": "2025-11-30T19:44:53.125Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -148,6 +148,17 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "River Run",
+            "url": "https://useharbor.io/brands/river-run",
+            "description": "Milwaukee-based IT services company providing reliable technology support.",
+            "applicationCategory": "IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "InSource, Inc",
             "url": "https://useharbor.io/brands/insource-inc",
             "description": "InSource, Inc is an elite ServiceNow partner providing technology solutions and staffing services.",
@@ -156,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Link Computer Corporation",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ABM Technology Group",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eagle Technologies",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Decypher Technologies, Inc",
             "url": "https://useharbor.io/brands/decypher-technologies-inc",
             "description": "Decypher Technologies provides managed IT services, cybersecurity, and cellular connectivity solutions.",
-            "applicationCategory": "IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "DPC Technology",
-            "url": "https://useharbor.io/brands/dpc-technology",
-            "description": "DPC Technology provides comprehensive IT services and support for small to medium-sized businesses.",
             "applicationCategory": "IT Services"
           }
         }
@@ -397,6 +397,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "river-run",
+    "brand_name": "River Run",
+    "domain": "river-run.com",
+    "summary": "Milwaukee-based IT services company providing reliable technology support.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "They manage to remain budget-friendly while providing comprehensive IT solutions.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT",
+      "Maintenance Monitoring",
+      "Cloud Solutions",
+      "Security",
+      "Backup"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "insource-inc",
     "brand_name": "InSource, Inc",
     "domain": "insourcenow.com",
@@ -494,22 +514,6 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
-  },
-  {
-    "slug": "dpc-technology",
-    "brand_name": "DPC Technology",
-    "domain": "dpctechnology.com",
-    "summary": "DPC Technology provides comprehensive IT services and support for small to medium-sized businesses.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": [
-      "ConnectWise"
-    ]
   }
 ]
 
@@ -525,7 +529,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.145Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.125Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Intrinsic Technologies Alternatives
@@ -597,7 +601,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.145Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.125Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.376Z
+// Generated: 2025-11-30T19:44:53.368Z
 // Alternative to: Lookout
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Lookout Alternatives',
     description: 'Top alternatives to Lookout for Cybersecurity.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.376Z',
-    modifiedTime: '2025-11-30T19:36:57.376Z',
+    publishedTime: '2025-11-30T19:44:53.368Z',
+    modifiedTime: '2025-11-30T19:44:53.368Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/lookout#article",
       "headline": "Best Lookout Alternatives",
       "description": "Top alternatives to Lookout for Cybersecurity. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.376Z",
-      "dateModified": "2025-11-30T19:36:57.376Z",
+      "datePublished": "2025-11-30T19:44:53.368Z",
+      "dateModified": "2025-11-30T19:44:53.368Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -574,7 +574,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.376Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.368Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Lookout Alternatives
@@ -646,7 +646,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.376Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.368Z">2025-11-30</time>
             </p>
           </footer>
         </div>

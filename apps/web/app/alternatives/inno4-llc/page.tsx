@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.363Z
+// Generated: 2025-11-30T19:44:53.352Z
 // Alternative to: INNO4 LLC
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best INNO4 LLC Alternatives',
     description: 'Top alternatives to INNO4 LLC for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.363Z',
-    modifiedTime: '2025-11-30T19:36:57.363Z',
+    publishedTime: '2025-11-30T19:44:53.352Z',
+    modifiedTime: '2025-11-30T19:44:53.352Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/inno4-llc#article",
       "headline": "Best INNO4 LLC Alternatives",
       "description": "Top alternatives to INNO4 LLC for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.363Z",
-      "dateModified": "2025-11-30T19:36:57.363Z",
+      "datePublished": "2025-11-30T19:44:53.352Z",
+      "dateModified": "2025-11-30T19:44:53.352Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/inno4-llc#list",
       "name": "INNO4 LLC Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -124,6 +124,17 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "VSolvit",
+            "url": "https://useharbor.io/brands/vsolvit",
+            "description": "VSolvit is a technology services provider specializing in solutions for federal programs.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Fusion Global Solutions",
@@ -288,6 +299,28 @@ const alternatives = [
     ]
   },
   {
+    "slug": "vsolvit",
+    "brand_name": "VSolvit",
+    "domain": "vsolvit.com",
+    "summary": "VSolvit is a technology services provider specializing in solutions for federal programs.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Efficient Geospatial Solutions",
+      "Enterprise System Delivery",
+      "Mission-Aligned Application Development",
+      "Forecast-Driven Decision Support",
+      "Fixed-Price Project Execution"
+    ],
+    "integrations": [
+      "Cloud Integration"
+    ]
+  },
+  {
     "slug": "fusion-global-solutions",
     "brand_name": "Fusion Global Solutions",
     "domain": "fusiongs.com",
@@ -315,7 +348,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.363Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best INNO4 LLC Alternatives
@@ -387,7 +420,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.363Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.352Z">2025-11-30</time>
             </p>
           </footer>
         </div>

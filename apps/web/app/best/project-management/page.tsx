@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:27.526Z
+// Generated: 2025-11-30T19:44:24.680Z
 // Query: {"category":"Project Management","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Project Management Software',
     description: 'Compare the top project management solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:27.526Z',
-    modifiedTime: '2025-11-30T19:36:27.526Z',
+    publishedTime: '2025-11-30T19:44:24.680Z',
+    modifiedTime: '2025-11-30T19:44:24.680Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:27.526Z',
+    'article:modified_time': '2025-11-30T19:44:24.680Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/project-management#article",
       "headline": "Best Project Management Software",
       "description": "Compare the top project management solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:27.526Z",
-      "dateModified": "2025-11-30T19:36:27.526Z",
+      "datePublished": "2025-11-30T19:44:24.680Z",
+      "dateModified": "2025-11-30T19:44:24.680Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -172,18 +172,6 @@ const schemaOrg = {
           "position": 9,
           "item": {
             "@type": "SoftwareApplication",
-            "name": "ALQIMI",
-            "url": "https://useharbor.io/brands/alqimi",
-            "description": "ALQIMI is a brand with unclear offerings and purpose.",
-            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
-            "operatingSystem": "Web-based"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 10,
-          "item": {
-            "@type": "SoftwareApplication",
             "name": "Gala",
             "url": "https://useharbor.io/brands/gala",
             "description": "Gala is a brand with unclear offerings and purpose.",
@@ -193,7 +181,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eluvio",
@@ -205,12 +193,24 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ACS Consultancy Services, Inc",
             "url": "https://useharbor.io/brands/acs-consultancy-services-inc",
             "description": "Unknown",
+            "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ALQIMI",
+            "url": "https://useharbor.io/brands/alqimi",
+            "description": "ALQIMI is a brand with unclear offerings and purpose.",
             "applicationCategory": "Primary software category (e.g., CRM, Project Management, Time Tracking)",
             "operatingSystem": "Web-based"
           }
@@ -406,21 +406,6 @@ const profiles = [
     "visibility_score": 5
   },
   {
-    "slug": "alqimi",
-    "brand_name": "ALQIMI",
-    "domain": "alqimi.com",
-    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": [],
-    "visibility_score": 0
-  },
-  {
     "slug": "gala",
     "brand_name": "Gala",
     "domain": "gala.com",
@@ -464,11 +449,26 @@ const profiles = [
     "features": [],
     "integrations": [],
     "visibility_score": 0
+  },
+  {
+    "slug": "alqimi",
+    "brand_name": "ALQIMI",
+    "domain": "alqimi.com",
+    "summary": "ALQIMI is a brand with unclear offerings and purpose.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": [],
+    "visibility_score": 0
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:27.526Z'
+export const pageGeneratedAt = '2025-11-30T19:44:24.680Z'
 
 export default function ListiclePage() {
   return (
@@ -483,7 +483,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:27.526Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:24.680Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Project Management Software
@@ -599,7 +599,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:27.526Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:24.680Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

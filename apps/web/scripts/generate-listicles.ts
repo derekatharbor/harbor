@@ -462,6 +462,16 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, '');
 }
 
+// Escape strings for use in template literals (single quotes)
+function escapeForTemplate(text: string): string {
+  return text
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r');
+}
+
 // ============================================================================
 // LISTICLE CONFIG GENERATORS
 // ============================================================================
@@ -529,6 +539,10 @@ function generateAlternativesPage(
     day: 'numeric' 
   });
   const shortDate = now.toISOString().split('T')[0];
+  
+  // Escape brand name for template strings
+  const brandNameEsc = escapeForTemplate(config.brandName);
+  const categoryEsc = escapeForTemplate(config.category);
 
   const schemaOrg = {
     '@context': 'https://schema.org',
@@ -573,17 +587,17 @@ function generateAlternativesPage(
 
   return `// AUTO-GENERATED ALTERNATIVES PAGE
 // Generated: ${isoDate}
-// Alternative to: ${config.brandName}
+// Alternative to: ${brandNameEsc}
 
 import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Best ${config.brandName} Alternatives (${displayDate}) | Harbor',
-  description: 'Top alternatives to ${config.brandName} for ${config.category}. Compare features, pricing, and integrations.',
+  title: 'Best ${brandNameEsc} Alternatives (${displayDate}) | Harbor',
+  description: 'Top alternatives to ${brandNameEsc} for ${categoryEsc}. Compare features, pricing, and integrations.',
   openGraph: {
-    title: 'Best ${config.brandName} Alternatives',
-    description: 'Top alternatives to ${config.brandName} for ${config.category}.',
+    title: 'Best ${brandNameEsc} Alternatives',
+    description: 'Top alternatives to ${brandNameEsc} for ${categoryEsc}.',
     type: 'article',
     publishedTime: '${isoDate}',
     modifiedTime: '${isoDate}',
@@ -617,14 +631,14 @@ export default function AlternativesPage() {
               Last verified: <time dateTime="${isoDate}">${displayDate}</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Best ${config.brandName} Alternatives
+              Best ${brandNameEsc} Alternatives
             </h1>
             <p className="text-lg text-gray-300">
-              Looking for an alternative to ${config.brandName}? Here are the top ${config.category} solutions that compete with ${config.brandName}, 
+              Looking for an alternative to ${brandNameEsc}? Here are the top ${categoryEsc} solutions that compete with ${brandNameEsc}, 
               ranked by visibility and feature coverage.
             </p>
             <p className="mt-4 text-sm text-gray-400">
-              Compare with: <Link href="/brands/${config.brandSlug}" className="text-[#FF6B4A] hover:underline">${config.brandName} profile &rarr;</Link>
+              Compare with: <Link href="/brands/${config.brandSlug}" className="text-[#FF6B4A] hover:underline">${brandNameEsc} profile &rarr;</Link>
             </p>
           </header>
 
@@ -712,6 +726,10 @@ function generateComparisonPage(config: ComparisonConfig): string {
   const shortDate = now.toISOString().split('T')[0];
 
   const { brand1, brand2 } = config;
+  
+  // Escape brand names for use in template strings
+  const b1Name = escapeForTemplate(brand1.brand_name);
+  const b2Name = escapeForTemplate(brand2.brand_name);
 
   const schemaOrg = {
     '@context': 'https://schema.org',
@@ -742,17 +760,17 @@ function generateComparisonPage(config: ComparisonConfig): string {
 
   return `// AUTO-GENERATED COMPARISON PAGE
 // Generated: ${isoDate}
-// Comparing: ${brand1.brand_name} vs ${brand2.brand_name}
+// Comparing: ${b1Name} vs ${b2Name}
 
 import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '${brand1.brand_name} vs ${brand2.brand_name} (${displayDate}) | Harbor',
-  description: 'Detailed comparison of ${brand1.brand_name} and ${brand2.brand_name}. Features, pricing, and integrations compared side-by-side.',
+  title: '${b1Name} vs ${b2Name} (${displayDate}) | Harbor',
+  description: 'Detailed comparison of ${b1Name} and ${b2Name}. Features, pricing, and integrations compared side-by-side.',
   openGraph: {
-    title: '${brand1.brand_name} vs ${brand2.brand_name}',
-    description: 'Detailed comparison of ${brand1.brand_name} and ${brand2.brand_name}.',
+    title: '${b1Name} vs ${b2Name}',
+    description: 'Detailed comparison of ${b1Name} and ${b2Name}.',
     type: 'article',
     publishedTime: '${isoDate}',
     modifiedTime: '${isoDate}',

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.225Z
+// Generated: 2025-11-30T19:44:53.232Z
 // Alternative to: Bridgepointe Technologies
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Bridgepointe Technologies Alternatives',
     description: 'Top alternatives to Bridgepointe Technologies for Technology Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.225Z',
-    modifiedTime: '2025-11-30T19:36:57.225Z',
+    publishedTime: '2025-11-30T19:44:53.232Z',
+    modifiedTime: '2025-11-30T19:44:53.232Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/bridgepointe-technologies#article",
       "headline": "Best Bridgepointe Technologies Alternatives",
       "description": "Top alternatives to Bridgepointe Technologies for Technology Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.225Z",
-      "dateModified": "2025-11-30T19:36:57.225Z",
+      "datePublished": "2025-11-30T19:44:53.232Z",
+      "dateModified": "2025-11-30T19:44:53.232Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/bridgepointe-technologies#list",
       "name": "Bridgepointe Technologies Alternatives",
-      "numberOfItems": 4,
+      "numberOfItems": 8,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Saven Tech",
+            "url": "https://useharbor.io/brands/saven-tech",
+            "description": "Global Technology Consulting Company specializing in IT solutions.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "iTech AG",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Cystems Logic",
@@ -68,7 +79,40 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ESG",
+            "url": "https://useharbor.io/brands/esg",
+            "description": "Epiphany Solution Group provides technology consulting services to Fortune 1000 companies.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "VySystems",
+            "url": "https://useharbor.io/brands/vysystems",
+            "description": "A global technology consulting and solutions company.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CorSource",
+            "url": "https://useharbor.io/brands/corsource",
+            "description": "CorSource provides technology consulting and staff augmentation services to help businesses leverage technology for competitive advantage.",
+            "applicationCategory": "Technology Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ProSoft Technology Group Inc.dba Kellton Tech",
@@ -79,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aarav Solutions",
@@ -94,6 +138,30 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "saven-tech",
+    "brand_name": "Saven Tech",
+    "domain": "saventech.com",
+    "summary": "Global Technology Consulting Company specializing in IT solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud Infrastructure Consulting",
+      "Cloud Migration",
+      "Cloud Security",
+      "Data Analytics",
+      "Data Science"
+    ],
+    "integrations": [
+      "Azure",
+      "AWS",
+      "GCP"
+    ]
+  },
   {
     "slug": "itech-ag",
     "brand_name": "iTech AG",
@@ -133,6 +201,75 @@ const alternatives = [
       "IoT Solutions",
       "Custom-built Solutions",
       "IT Staffing Services"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "esg",
+    "brand_name": "ESG",
+    "domain": "e-s-g.com",
+    "summary": "Epiphany Solution Group provides technology consulting services to Fortune 1000 companies.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cloud Transformation",
+      "IT Security",
+      "Cloud Security",
+      "Data Center Solutions",
+      "SD WAN Connectivity"
+    ],
+    "integrations": [
+      "AWS",
+      "Azure",
+      "Google",
+      "RackSpace",
+      "Palo Alto",
+      "Masergy",
+      "Cato",
+      "Viptela"
+    ]
+  },
+  {
+    "slug": "vysystems",
+    "brand_name": "VySystems",
+    "domain": "vysystems.com",
+    "summary": "A global technology consulting and solutions company.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation Services",
+      "Application Development and Modernization",
+      "Enterprise Application Development",
+      "Salesforce Managed Services",
+      "IT Infrastructure Management"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "corsource",
+    "brand_name": "CorSource",
+    "domain": "corsource.com",
+    "summary": "CorSource provides technology consulting and staff augmentation services to help businesses leverage technology for competitive advantage.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "App Modernization & Development",
+      "Cloud Migration & Optimization",
+      "Data Management & Analysis",
+      "IT Infrastructure Support",
+      "Project Leadership"
     ],
     "integrations": []
   },
@@ -196,7 +333,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.225Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.232Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Bridgepointe Technologies Alternatives
@@ -268,7 +405,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.225Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.232Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.245Z
+// Generated: 2025-11-30T19:44:53.248Z
 // Alternative to: Mercury Fiber
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Mercury Fiber Alternatives',
     description: 'Top alternatives to Mercury Fiber for Internet Service Provider.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.245Z',
-    modifiedTime: '2025-11-30T19:36:57.245Z',
+    publishedTime: '2025-11-30T19:44:53.248Z',
+    modifiedTime: '2025-11-30T19:44:53.248Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mercury-fiber#article",
       "headline": "Best Mercury Fiber Alternatives",
       "description": "Top alternatives to Mercury Fiber for Internet Service Provider. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.245Z",
-      "dateModified": "2025-11-30T19:36:57.245Z",
+      "datePublished": "2025-11-30T19:44:53.248Z",
+      "dateModified": "2025-11-30T19:44:53.248Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/mercury-fiber#list",
       "name": "Mercury Fiber Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Ripple Fiber",
+            "url": "https://useharbor.io/brands/ripple-fiber",
+            "description": "America's fastest fiber internet company providing high-speed internet services.",
+            "applicationCategory": "Internet Service Provider"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Pavlov Media",
             "url": "https://useharbor.io/brands/pavlov-media",
             "description": "A fiber internet provider focused on delivering reliable and customizable internet solutions.",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Socket Fiber",
@@ -100,6 +111,26 @@ const alternatives = [
       "Unlimited data",
       "Local and personalized support",
       "Whole home Wi-Fi coverage"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "ripple-fiber",
+    "brand_name": "Ripple Fiber",
+    "domain": "ripplefiber.com",
+    "summary": "America's fastest fiber internet company providing high-speed internet services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": "Transparent pricing without contracts or hidden fees.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Up to 500Mbps Upload & Download Speeds",
+      "Up to 1Gig Upload & Download Speeds",
+      "Up to 2Gig Upload & Download Speeds",
+      "Free WiFi modem/router",
+      "Free in-home White Glove Installation"
     ],
     "integrations": []
   },
@@ -151,7 +182,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.245Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.248Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Mercury Fiber Alternatives
@@ -223,7 +254,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.245Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.248Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.201Z
+// Generated: 2025-11-30T19:44:53.215Z
 // Alternative to: Cirrius Solutions Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Cirrius Solutions Inc. Alternatives',
     description: 'Top alternatives to Cirrius Solutions Inc. for Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.201Z',
-    modifiedTime: '2025-11-30T19:36:57.201Z',
+    publishedTime: '2025-11-30T19:44:53.215Z',
+    modifiedTime: '2025-11-30T19:44:53.215Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/cirrius-solutions-inc#article",
       "headline": "Best Cirrius Solutions Inc. Alternatives",
       "description": "Top alternatives to Cirrius Solutions Inc. for Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.201Z",
-      "dateModified": "2025-11-30T19:36:57.201Z",
+      "datePublished": "2025-11-30T19:44:53.215Z",
+      "dateModified": "2025-11-30T19:44:53.215Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -148,6 +148,28 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "AlixPartners",
+            "url": "https://useharbor.io/brands/alixpartners",
+            "description": "A results-driven global consulting firm specializing in supply chain resilience and operational efficiency.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "WorldLink US",
+            "url": "https://useharbor.io/brands/worldlink-us",
+            "description": "A global technology firm specializing in digital transformation and AI solutions.",
+            "applicationCategory": "Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Bennett Adelson Consulting",
             "url": "https://useharbor.io/brands/bennett-adelson-consulting",
             "description": "A user-centric solutions provider focused on technology-driven business impact.",
@@ -156,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "eBiz Solutions, LLC",
@@ -167,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Technology Ventures",
@@ -178,34 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Sky Systems, Inc. (SkySys)",
             "url": "https://useharbor.io/brands/sky-systems-inc-skysys",
             "description": "SkySys is a global service provider specializing in consulting and managed services.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Rightpoint",
-            "url": "https://useharbor.io/brands/rightpoint",
-            "description": "A global experience leader specializing in Total Experience consulting.",
-            "applicationCategory": "Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Green Powered Technology (GPTech)",
-            "url": "https://useharbor.io/brands/green-powered-technology-gptech",
-            "description": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
             "applicationCategory": "Consulting"
           }
         }
@@ -395,6 +395,40 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "alixpartners",
+    "brand_name": "AlixPartners",
+    "domain": "alixpartners.com",
+    "summary": "A results-driven global consulting firm specializing in supply chain resilience and operational efficiency.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "worldlink-us",
+    "brand_name": "WorldLink US",
+    "domain": "worldlink-us.com",
+    "summary": "A global technology firm specializing in digital transformation and AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation Consulting",
+      "AI Solutions",
+      "Data Analytics",
+      "Custom GenAI Solutions",
+      "Predictive Analytics"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "bennett-adelson-consulting",
     "brand_name": "Bennett Adelson Consulting",
     "domain": "bennettadelson.com",
@@ -479,51 +513,6 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
-  },
-  {
-    "slug": "rightpoint",
-    "brand_name": "Rightpoint",
-    "domain": "rightpoint.com",
-    "summary": "A global experience leader specializing in Total Experience consulting.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Customer Experience",
-      "Employee Experience",
-      "Analytics & Insights",
-      "AI Innovation",
-      "Digital Experience"
-    ],
-    "integrations": [
-      "Adobe",
-      "Microsoft",
-      "Optimizely",
-      "Sitecore"
-    ]
-  },
-  {
-    "slug": "green-powered-technology-gptech",
-    "brand_name": "Green Powered Technology (GPTech)",
-    "domain": "greenpwrd.com",
-    "summary": "GPTech is a global consulting firm specializing in energy and infrastructure solutions.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Energy consulting",
-      "Infrastructure development",
-      "Sustainable development strategies",
-      "Technical support services",
-      "Project management"
-    ],
-    "integrations": []
   }
 ]
 
@@ -539,7 +528,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.201Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.215Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Cirrius Solutions Inc. Alternatives
@@ -611,7 +600,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.201Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.215Z">2025-11-30</time>
             </p>
           </footer>
         </div>

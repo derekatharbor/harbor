@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:29.500Z
+// Generated: 2025-11-30T19:44:26.939Z
 // Query: {"category":"Analytics","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best Analytics Software',
     description: 'Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:29.500Z',
-    modifiedTime: '2025-11-30T19:36:29.500Z',
+    publishedTime: '2025-11-30T19:44:26.939Z',
+    modifiedTime: '2025-11-30T19:44:26.939Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:29.500Z',
+    'article:modified_time': '2025-11-30T19:44:26.939Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics#article",
       "headline": "Best Analytics Software",
       "description": "Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:29.500Z",
-      "dateModified": "2025-11-30T19:36:29.500Z",
+      "datePublished": "2025-11-30T19:44:26.939Z",
+      "dateModified": "2025-11-30T19:44:26.939Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/analytics#list",
       "name": "Best Analytics Software",
       "description": "Compare the top analytics solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 17,
+      "numberOfItems": 18,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -148,6 +148,18 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Aviana Global Technologies, Inc.",
+            "url": "https://useharbor.io/brands/aviana-global-technologies-inc",
+            "description": "Aviana Global Technologies specializes in predictive analytics consulting and AI solutions.",
+            "applicationCategory": "Predictive Analytics",
+            "operatingSystem": "Web-based"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "BriefCam (Now Milestone)",
             "url": "https://useharbor.io/brands/briefcam-now-milestone",
             "description": "BriefCam provides advanced video analytics solutions for various industries.",
@@ -157,7 +169,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "VoxCroft Analytics",
@@ -169,7 +181,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Gramener",
@@ -181,7 +193,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "SpectraMedix",
@@ -193,7 +205,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Ducen - an Orion Innovation Company",
@@ -205,7 +217,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Wiser Solutions, Inc.",
@@ -217,7 +229,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ActiveViam",
@@ -235,7 +247,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Protagonist",
@@ -247,7 +259,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 15,
+          "position": 16,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Siteimprove",
@@ -259,7 +271,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 16,
+          "position": 17,
           "item": {
             "@type": "SoftwareApplication",
             "name": "eSolutionsFirst",
@@ -271,7 +283,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 17,
+          "position": 18,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Allwyn Corporation",
@@ -452,6 +464,27 @@ const profiles = [
       "Connect business information to financial markets",
       "Identify patterns for investment decisions",
       "Modeling capabilities for data demonstration"
+    ],
+    "integrations": [],
+    "visibility_score": 78
+  },
+  {
+    "slug": "aviana-global-technologies-inc",
+    "brand_name": "Aviana Global Technologies, Inc.",
+    "domain": "avianaglobal.com",
+    "summary": "Aviana Global Technologies specializes in predictive analytics consulting and AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Data Sourcing & Preparation",
+      "Feature Engineering",
+      "Model Comparison & Selection",
+      "Dashboarding",
+      "Case Management"
     ],
     "integrations": [],
     "visibility_score": 78
@@ -707,7 +740,7 @@ const profiles = [
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:29.500Z'
+export const pageGeneratedAt = '2025-11-30T19:44:26.939Z'
 
 export default function ListiclePage() {
   return (
@@ -722,7 +755,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:29.500Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:26.939Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Analytics Software
@@ -838,7 +871,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:29.500Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:26.939Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

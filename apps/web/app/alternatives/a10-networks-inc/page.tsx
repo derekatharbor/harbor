@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.339Z
+// Generated: 2025-11-30T19:44:53.329Z
 // Alternative to: A10 Networks, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best A10 Networks, Inc Alternatives',
     description: 'Top alternatives to A10 Networks, Inc for Network Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.339Z',
-    modifiedTime: '2025-11-30T19:36:57.339Z',
+    publishedTime: '2025-11-30T19:44:53.329Z',
+    modifiedTime: '2025-11-30T19:44:53.329Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/a10-networks-inc#article",
       "headline": "Best A10 Networks, Inc Alternatives",
       "description": "Top alternatives to A10 Networks, Inc for Network Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.339Z",
-      "dateModified": "2025-11-30T19:36:57.339Z",
+      "datePublished": "2025-11-30T19:44:53.329Z",
+      "dateModified": "2025-11-30T19:44:53.329Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -207,7 +207,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.339Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.329Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best A10 Networks, Inc Alternatives
@@ -279,7 +279,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.339Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.329Z">2025-11-30</time>
             </p>
           </footer>
         </div>

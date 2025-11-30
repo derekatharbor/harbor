@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.234Z
+// Generated: 2025-11-30T19:44:53.240Z
 // Alternative to: Koios Medical
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Koios Medical Alternatives',
     description: 'Top alternatives to Koios Medical for Healthcare.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.234Z',
-    modifiedTime: '2025-11-30T19:36:57.234Z',
+    publishedTime: '2025-11-30T19:44:53.240Z',
+    modifiedTime: '2025-11-30T19:44:53.240Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/koios-medical#article",
       "headline": "Best Koios Medical Alternatives",
       "description": "Top alternatives to Koios Medical for Healthcare. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.234Z",
-      "dateModified": "2025-11-30T19:36:57.234Z",
+      "datePublished": "2025-11-30T19:44:53.240Z",
+      "dateModified": "2025-11-30T19:44:53.240Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/koios-medical#list",
       "name": "Koios Medical Alternatives",
-      "numberOfItems": 13,
+      "numberOfItems": 15,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -148,6 +148,28 @@ const schemaOrg = {
           "position": 10,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Freeman Health System",
+            "url": "https://useharbor.io/brands/freeman-health-system",
+            "description": "A locally owned, not-for-profit health system providing comprehensive healthcare services.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "MidState Medical Center",
+            "url": "https://useharbor.io/brands/midstate-medical-center",
+            "description": "A comprehensive healthcare facility in Connecticut offering a wide range of medical services.",
+            "applicationCategory": "Healthcare"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Holy Family Hospital",
             "url": "https://useharbor.io/brands/holy-family-hospital",
             "description": "A mission-driven, not-for-profit healthcare community in the Merrimack Valley.",
@@ -156,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "NEJM Group",
@@ -167,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Medicom Technologies Inc.",
@@ -178,7 +200,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "BlueCloudX® Home",
@@ -376,6 +398,46 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "freeman-health-system",
+    "brand_name": "Freeman Health System",
+    "domain": "freemanhealth.com",
+    "summary": "A locally owned, not-for-profit health system providing comprehensive healthcare services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Over 80 specialties offered",
+      "Two urgent care clinics",
+      "Dozens of physician clinics",
+      "Variety of specialty services",
+      "Maternity services including free classes"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "midstate-medical-center",
+    "brand_name": "MidState Medical Center",
+    "domain": "midstatemedical.org",
+    "summary": "A comprehensive healthcare facility in Connecticut offering a wide range of medical services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Comprehensive Emergency Medical Treatment",
+      "Same Day Care Options",
+      "Urgent Care Services",
+      "Surgical Weight Loss Programs",
+      "Behavioral Health Services"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "holy-family-hospital",
     "brand_name": "Holy Family Hospital",
     "domain": "merrimackhealth.org",
@@ -445,7 +507,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.234Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.240Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Koios Medical Alternatives
@@ -517,7 +579,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.234Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.240Z">2025-11-30</time>
             </p>
           </footer>
         </div>

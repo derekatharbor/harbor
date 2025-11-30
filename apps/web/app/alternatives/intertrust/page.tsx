@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.251Z
+// Generated: 2025-11-30T19:44:53.263Z
 // Alternative to: Intertrust
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Intertrust Alternatives',
     description: 'Top alternatives to Intertrust for Data Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.251Z',
-    modifiedTime: '2025-11-30T19:36:57.251Z',
+    publishedTime: '2025-11-30T19:44:53.263Z',
+    modifiedTime: '2025-11-30T19:44:53.263Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/intertrust#article",
       "headline": "Best Intertrust Alternatives",
       "description": "Top alternatives to Intertrust for Data Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.251Z",
-      "dateModified": "2025-11-30T19:36:57.251Z",
+      "datePublished": "2025-11-30T19:44:53.263Z",
+      "dateModified": "2025-11-30T19:44:53.263Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -540,7 +540,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.251Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.263Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Intertrust Alternatives
@@ -612,7 +612,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.251Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.263Z">2025-11-30</time>
             </p>
           </footer>
         </div>

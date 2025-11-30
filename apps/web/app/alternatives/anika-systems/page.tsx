@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.340Z
+// Generated: 2025-11-30T19:44:53.332Z
 // Alternative to: Anika Systems
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Anika Systems Alternatives',
     description: 'Top alternatives to Anika Systems for AI Solutions.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.340Z',
-    modifiedTime: '2025-11-30T19:36:57.340Z',
+    publishedTime: '2025-11-30T19:44:53.332Z',
+    modifiedTime: '2025-11-30T19:44:53.332Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/anika-systems#article",
       "headline": "Best Anika Systems Alternatives",
       "description": "Top alternatives to Anika Systems for AI Solutions. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.340Z",
-      "dateModified": "2025-11-30T19:36:57.340Z",
+      "datePublished": "2025-11-30T19:44:53.332Z",
+      "dateModified": "2025-11-30T19:44:53.332Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,33 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/anika-systems#list",
       "name": "Anika Systems Alternatives",
-      "numberOfItems": 7,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Lightning Minds",
+            "url": "https://useharbor.io/brands/lightning-minds",
+            "description": "Transforming business with tailored AI solutions.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Relevance Lab",
+            "url": "https://useharbor.io/brands/relevance-lab",
+            "description": "A next-generation technology services company specializing in GenAI-powered solutions.",
+            "applicationCategory": "AI Solutions"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Sand Technologies",
@@ -57,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ServisBOT",
@@ -68,7 +90,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ShimentoX Technologies",
@@ -79,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Posh",
@@ -90,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "BigBear.ai",
@@ -101,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "CriticalRiver Inc.",
@@ -112,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Opalforce",
@@ -127,6 +149,51 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "lightning-minds",
+    "brand_name": "Lightning Minds",
+    "domain": "lightningminds.ai",
+    "summary": "Transforming business with tailored AI solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Offers a free AI consultation to discuss specific challenges and opportunities.",
+      "has_free_tier": true,
+      "starting_price": null
+    },
+    "features": [
+      "Customized AI roadmaps",
+      "Intelligent autonomous AI agents",
+      "Advanced analytics solutions",
+      "Real-time APIs",
+      "Vector databases"
+    ],
+    "integrations": [
+      "AWS",
+      "Azure"
+    ]
+  },
+  {
+    "slug": "relevance-lab",
+    "brand_name": "Relevance Lab",
+    "domain": "relevancelab.com",
+    "summary": "A next-generation technology services company specializing in GenAI-powered solutions.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "GenAI Maturity Assessment Framework",
+      "AI Pods for productivity",
+      "AI-Driven Software Factory models",
+      "Cloud Automation",
+      "Service Management (ITSM)"
+    ],
+    "integrations": [
+      "AWS"
+    ]
+  },
   {
     "slug": "sand-technologies",
     "brand_name": "Sand Technologies",
@@ -292,7 +359,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.340Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.332Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Anika Systems Alternatives
@@ -364,7 +431,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.340Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.332Z">2025-11-30</time>
             </p>
           </footer>
         </div>

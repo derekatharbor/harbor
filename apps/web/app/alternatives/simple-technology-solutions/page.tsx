@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.242Z
+// Generated: 2025-11-30T19:44:53.246Z
 // Alternative to: Simple Technology Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Simple Technology Solutions Alternatives',
     description: 'Top alternatives to Simple Technology Solutions for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.242Z',
-    modifiedTime: '2025-11-30T19:36:57.242Z',
+    publishedTime: '2025-11-30T19:44:53.246Z',
+    modifiedTime: '2025-11-30T19:44:53.246Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/simple-technology-solutions#article",
       "headline": "Best Simple Technology Solutions Alternatives",
       "description": "Top alternatives to Simple Technology Solutions for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.242Z",
-      "dateModified": "2025-11-30T19:36:57.242Z",
+      "datePublished": "2025-11-30T19:44:53.246Z",
+      "dateModified": "2025-11-30T19:44:53.246Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/simple-technology-solutions#list",
       "name": "Simple Technology Solutions Alternatives",
-      "numberOfItems": 9,
+      "numberOfItems": 10,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -104,6 +104,17 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SourceFuse",
+            "url": "https://useharbor.io/brands/sourcefuse",
+            "description": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "CyberTech Systems and Software, Inc",
             "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
             "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "mLogica",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TekSynap",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Mission, a CDW Company",
@@ -260,6 +271,31 @@ const alternatives = [
     ]
   },
   {
+    "slug": "sourcefuse",
+    "brand_name": "SourceFuse",
+    "domain": "sourcefuse.com",
+    "summary": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation",
+      "Cloud Migration & Modernization",
+      "Application Development",
+      "Rapid Application Development",
+      "DevOps Automation"
+    ],
+    "integrations": [
+      "AWS",
+      "PubNub",
+      "Trend Micro",
+      "Vonage"
+    ]
+  },
+  {
     "slug": "cybertech-systems-and-software-inc",
     "brand_name": "CyberTech Systems and Software, Inc",
     "domain": "cybertech.com",
@@ -374,7 +410,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.242Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.246Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Simple Technology Solutions Alternatives
@@ -446,7 +482,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.242Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.246Z">2025-11-30</time>
             </p>
           </footer>
         </div>

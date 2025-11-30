@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.178Z
+// Generated: 2025-11-30T19:44:53.192Z
 // Alternative to: CrowdStrike
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best CrowdStrike Alternatives',
     description: 'Top alternatives to CrowdStrike for Cybersecurity.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.178Z',
-    modifiedTime: '2025-11-30T19:36:57.178Z',
+    publishedTime: '2025-11-30T19:44:53.192Z',
+    modifiedTime: '2025-11-30T19:44:53.192Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/crowdstrike#article",
       "headline": "Best CrowdStrike Alternatives",
       "description": "Top alternatives to CrowdStrike for Cybersecurity. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.178Z",
-      "dateModified": "2025-11-30T19:36:57.178Z",
+      "datePublished": "2025-11-30T19:44:53.192Z",
+      "dateModified": "2025-11-30T19:44:53.192Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -574,7 +574,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.178Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.192Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best CrowdStrike Alternatives
@@ -646,7 +646,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.178Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.192Z">2025-11-30</time>
             </p>
           </footer>
         </div>

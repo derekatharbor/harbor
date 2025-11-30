@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.612Z
+// Generated: 2025-11-30T19:44:53.400Z
 // Comparing: Pepperi - Unified B2B Commerce Platform vs UniformMarket by SellersCommerce
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Pepperi - Unified B2B Commerce Platform vs UniformMarket by SellersCommerce',
     description: 'Detailed comparison of Pepperi - Unified B2B Commerce Platform and UniformMarket by SellersCommerce.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.612Z',
-    modifiedTime: '2025-11-30T19:36:57.612Z',
+    publishedTime: '2025-11-30T19:44:53.400Z',
+    modifiedTime: '2025-11-30T19:44:53.400Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/pepperi-unified-b2b-commerce-platform-vs-uniformmarket-by-sellerscommerce#article",
   "headline": "Pepperi - Unified B2B Commerce Platform vs UniformMarket by SellersCommerce: Comparison",
   "description": "Detailed comparison of Pepperi - Unified B2B Commerce Platform and UniformMarket by SellersCommerce. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.612Z",
-  "dateModified": "2025-11-30T19:36:57.612Z",
+  "datePublished": "2025-11-30T19:44:53.400Z",
+  "dateModified": "2025-11-30T19:44:53.400Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -117,7 +117,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.612Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.400Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -272,7 +272,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.612Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.400Z">2025-11-30</time>
             </p>
           </footer>
         </div>

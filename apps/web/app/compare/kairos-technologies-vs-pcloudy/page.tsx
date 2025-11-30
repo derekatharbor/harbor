@@ -1,5 +1,5 @@
 // AUTO-GENERATED COMPARISON PAGE
-// Generated: 2025-11-30T19:36:57.582Z
+// Generated: 2025-11-30T19:44:54.014Z
 // Comparing: Kairos Technologies vs Pcloudy
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Kairos Technologies vs Pcloudy',
     description: 'Detailed comparison of Kairos Technologies and Pcloudy.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.582Z',
-    modifiedTime: '2025-11-30T19:36:57.582Z',
+    publishedTime: '2025-11-30T19:44:54.014Z',
+    modifiedTime: '2025-11-30T19:44:54.014Z',
   },
 }
 
@@ -23,8 +23,8 @@ const schemaOrg = {
   "@id": "https://useharbor.io/compare/kairos-technologies-vs-pcloudy#article",
   "headline": "Kairos Technologies vs Pcloudy: Comparison",
   "description": "Detailed comparison of Kairos Technologies and Pcloudy. Features, pricing, and integrations compared side-by-side.",
-  "datePublished": "2025-11-30T19:36:57.582Z",
-  "dateModified": "2025-11-30T19:36:57.582Z",
+  "datePublished": "2025-11-30T19:44:54.014Z",
+  "dateModified": "2025-11-30T19:44:54.014Z",
   "author": {
     "@type": "Organization",
     "name": "Harbor",
@@ -144,7 +144,7 @@ export default function ComparisonPage() {
         <div className="max-w-5xl mx-auto px-4 py-12">
           <header className="mb-12 text-center">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.582Z">November 30, 2025</time>
+              Last verified: <time dateTime="2025-11-30T19:44:54.014Z">November 30, 2025</time>
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               {brand1.brand_name} vs {brand2.brand_name}
@@ -299,7 +299,7 @@ export default function ComparisonPage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.582Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:54.014Z">2025-11-30</time>
             </p>
           </footer>
         </div>

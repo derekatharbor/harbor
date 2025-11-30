@@ -1,5 +1,5 @@
 // AUTO-GENERATED LISTICLE PAGE
-// Generated: 2025-11-30T19:36:28.395Z
+// Generated: 2025-11-30T19:44:25.838Z
 // Query: {"category":"E-commerce","max_results":20}
 // Re-run generate-listicles.ts to update dateModified
 
@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     title: 'Best E-commerce Software',
     description: 'Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:28.395Z',
-    modifiedTime: '2025-11-30T19:36:28.395Z',
+    publishedTime: '2025-11-30T19:44:25.838Z',
+    modifiedTime: '2025-11-30T19:44:25.838Z',
     authors: ['Harbor'],
   },
   other: {
-    'article:modified_time': '2025-11-30T19:36:28.395Z',
+    'article:modified_time': '2025-11-30T19:44:25.838Z',
   }
 }
 
@@ -31,8 +31,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/e-commerce#article",
       "headline": "Best E-commerce Software",
       "description": "Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.",
-      "datePublished": "2025-11-30T19:36:28.395Z",
-      "dateModified": "2025-11-30T19:36:28.395Z",
+      "datePublished": "2025-11-30T19:44:25.838Z",
+      "dateModified": "2025-11-30T19:44:25.838Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -57,7 +57,7 @@ const schemaOrg = {
       "@id": "https://useharbor.io/best/e-commerce#list",
       "name": "Best E-commerce Software",
       "description": "Compare the top e-commerce solutions for businesses. Features, pricing, and integrations compared.",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -116,6 +116,18 @@ const schemaOrg = {
               "price": "499",
               "priceCurrency": "USD"
             }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Carbon38",
+            "url": "https://useharbor.io/brands/carbon38",
+            "description": "Performance fashion designed for active lifestyles.",
+            "applicationCategory": "E-commerce",
+            "operatingSystem": "Web-based"
           }
         }
       ]
@@ -241,11 +253,32 @@ const profiles = [
       "Canada Post"
     ],
     "visibility_score": 73
+  },
+  {
+    "slug": "carbon38",
+    "brand_name": "Carbon38",
+    "domain": "carbon38.com",
+    "summary": "Performance fashion designed for active lifestyles.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Performance Fashion",
+      "Clothing Bundles",
+      "Activewear",
+      "Free Shipping on Orders Over $199",
+      "Free Returns"
+    ],
+    "integrations": [],
+    "visibility_score": 70
   }
 ]
 
 // Export for freshness verification
-export const pageGeneratedAt = '2025-11-30T19:36:28.395Z'
+export const pageGeneratedAt = '2025-11-30T19:44:25.838Z'
 
 export default function ListiclePage() {
   return (
@@ -260,7 +293,7 @@ export default function ListiclePage() {
           {/* Header with semantic time element for crawlers */}
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:28.395Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
+              Last verified: <time dateTime="2025-11-30T19:44:25.838Z">November 30, 2025</time> &bull; {profiles.length} solutions reviewed
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best E-commerce Software
@@ -376,7 +409,7 @@ export default function ListiclePage() {
             <p>
               This comparison is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:28.395Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:25.838Z">2025-11-30</time>
             </p>
             <p className="mt-4">
               <Link href="/" className="text-[#FF6B4A] hover:underline">

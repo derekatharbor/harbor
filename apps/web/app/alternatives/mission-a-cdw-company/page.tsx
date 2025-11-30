@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.341Z
+// Generated: 2025-11-30T19:44:53.334Z
 // Alternative to: Mission, a CDW Company
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Mission, a CDW Company Alternatives',
     description: 'Top alternatives to Mission, a CDW Company for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.341Z',
-    modifiedTime: '2025-11-30T19:36:57.341Z',
+    publishedTime: '2025-11-30T19:44:53.334Z',
+    modifiedTime: '2025-11-30T19:44:53.334Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/mission-a-cdw-company#article",
       "headline": "Best Mission, a CDW Company Alternatives",
       "description": "Top alternatives to Mission, a CDW Company for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.341Z",
-      "dateModified": "2025-11-30T19:36:57.341Z",
+      "datePublished": "2025-11-30T19:44:53.334Z",
+      "dateModified": "2025-11-30T19:44:53.334Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/mission-a-cdw-company#list",
       "name": "Mission, a CDW Company Alternatives",
-      "numberOfItems": 9,
+      "numberOfItems": 10,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -115,6 +115,17 @@ const schemaOrg = {
           "position": 7,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SourceFuse",
+            "url": "https://useharbor.io/brands/sourcefuse",
+            "description": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "CyberTech Systems and Software, Inc",
             "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
             "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "mLogica",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TekSynap",
@@ -286,6 +297,31 @@ const alternatives = [
     ]
   },
   {
+    "slug": "sourcefuse",
+    "brand_name": "SourceFuse",
+    "domain": "sourcefuse.com",
+    "summary": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation",
+      "Cloud Migration & Modernization",
+      "Application Development",
+      "Rapid Application Development",
+      "DevOps Automation"
+    ],
+    "integrations": [
+      "AWS",
+      "PubNub",
+      "Trend Micro",
+      "Vonage"
+    ]
+  },
+  {
     "slug": "cybertech-systems-and-software-inc",
     "brand_name": "CyberTech Systems and Software, Inc",
     "domain": "cybertech.com",
@@ -377,7 +413,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.341Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.334Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Mission, a CDW Company Alternatives
@@ -449,7 +485,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.341Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.334Z">2025-11-30</time>
             </p>
           </footer>
         </div>

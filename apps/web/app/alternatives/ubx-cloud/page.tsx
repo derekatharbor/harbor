@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.235Z
+// Generated: 2025-11-30T19:44:53.241Z
 // Alternative to: UBX Cloud
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best UBX Cloud Alternatives',
     description: 'Top alternatives to UBX Cloud for Cloud Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.235Z',
-    modifiedTime: '2025-11-30T19:36:57.235Z',
+    publishedTime: '2025-11-30T19:44:53.241Z',
+    modifiedTime: '2025-11-30T19:44:53.241Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/ubx-cloud#article",
       "headline": "Best UBX Cloud Alternatives",
       "description": "Top alternatives to UBX Cloud for Cloud Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.235Z",
-      "dateModified": "2025-11-30T19:36:57.235Z",
+      "datePublished": "2025-11-30T19:44:53.241Z",
+      "dateModified": "2025-11-30T19:44:53.241Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/ubx-cloud#list",
       "name": "UBX Cloud Alternatives",
-      "numberOfItems": 9,
+      "numberOfItems": 10,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -104,6 +104,17 @@ const schemaOrg = {
           "position": 6,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "SourceFuse",
+            "url": "https://useharbor.io/brands/sourcefuse",
+            "description": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+            "applicationCategory": "Cloud Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "CyberTech Systems and Software, Inc",
             "url": "https://useharbor.io/brands/cybertech-systems-and-software-inc",
             "description": "CyberTech specializes in enterprise cloud transformation and SAP solutions.",
@@ -112,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "mLogica",
@@ -123,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TekSynap",
@@ -134,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Mission, a CDW Company",
@@ -264,6 +275,31 @@ const alternatives = [
     ]
   },
   {
+    "slug": "sourcefuse",
+    "brand_name": "SourceFuse",
+    "domain": "sourcefuse.com",
+    "summary": "SourceFuse is a cloud-native solutions company specializing in digital transformation and modernization services.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated on the website.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Digital Transformation",
+      "Cloud Migration & Modernization",
+      "Application Development",
+      "Rapid Application Development",
+      "DevOps Automation"
+    ],
+    "integrations": [
+      "AWS",
+      "PubNub",
+      "Trend Micro",
+      "Vonage"
+    ]
+  },
+  {
     "slug": "cybertech-systems-and-software-inc",
     "brand_name": "CyberTech Systems and Software, Inc",
     "domain": "cybertech.com",
@@ -378,7 +414,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.235Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best UBX Cloud Alternatives
@@ -450,7 +486,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.235Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.241Z">2025-11-30</time>
             </p>
           </footer>
         </div>

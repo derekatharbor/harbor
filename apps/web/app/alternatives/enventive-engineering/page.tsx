@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.249Z
+// Generated: 2025-11-30T19:44:53.261Z
 // Alternative to: Enventive Engineering
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Enventive Engineering Alternatives',
     description: 'Top alternatives to Enventive Engineering for Software.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.249Z',
-    modifiedTime: '2025-11-30T19:36:57.249Z',
+    publishedTime: '2025-11-30T19:44:53.261Z',
+    modifiedTime: '2025-11-30T19:44:53.261Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/enventive-engineering#article",
       "headline": "Best Enventive Engineering Alternatives",
       "description": "Top alternatives to Enventive Engineering for Software. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.249Z",
-      "dateModified": "2025-11-30T19:36:57.249Z",
+      "datePublished": "2025-11-30T19:44:53.261Z",
+      "dateModified": "2025-11-30T19:44:53.261Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,11 +42,22 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/enventive-engineering#list",
       "name": "Enventive Engineering Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 4,
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Gamma",
+            "url": "https://useharbor.io/brands/gamma",
+            "description": "Gamma is an AI-powered platform for creating and sharing presentations and other digital content.",
+            "applicationCategory": "Software"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Aurea",
@@ -57,7 +68,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Wanderly",
@@ -68,7 +79,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Podium",
@@ -83,6 +94,20 @@ const schemaOrg = {
 }
 
 const alternatives = [
+  {
+    "slug": "gamma",
+    "brand_name": "Gamma",
+    "domain": "gamma.app",
+    "summary": "Gamma is an AI-powered platform for creating and sharing presentations and other digital content.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
   {
     "slug": "aurea",
     "brand_name": "Aurea",
@@ -154,7 +179,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.249Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.261Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Enventive Engineering Alternatives
@@ -226,7 +251,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.249Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.261Z">2025-11-30</time>
             </p>
           </footer>
         </div>

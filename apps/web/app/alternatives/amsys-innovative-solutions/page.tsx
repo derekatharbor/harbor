@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.393Z
+// Generated: 2025-11-30T19:44:53.388Z
 // Alternative to: AMSYS Innovative Solutions
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best AMSYS Innovative Solutions Alternatives',
     description: 'Top alternatives to AMSYS Innovative Solutions for unknown.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.393Z',
-    modifiedTime: '2025-11-30T19:36:57.393Z',
+    publishedTime: '2025-11-30T19:44:53.388Z',
+    modifiedTime: '2025-11-30T19:44:53.388Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/amsys-innovative-solutions#article",
       "headline": "Best AMSYS Innovative Solutions Alternatives",
       "description": "Top alternatives to AMSYS Innovative Solutions for unknown. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.393Z",
-      "dateModified": "2025-11-30T19:36:57.393Z",
+      "datePublished": "2025-11-30T19:44:53.388Z",
+      "dateModified": "2025-11-30T19:44:53.388Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/amsys-innovative-solutions#list",
       "name": "AMSYS Innovative Solutions Alternatives",
-      "numberOfItems": 6,
+      "numberOfItems": 11,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -82,6 +82,17 @@ const schemaOrg = {
           "position": 4,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "HAMMOQ Inc.",
+            "url": "https://useharbor.io/brands/hammoq-inc",
+            "description": "Infinity AI is a technology company focused on artificial intelligence solutions.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "RiverPoint Group",
             "url": "https://useharbor.io/brands/riverpoint-group",
             "description": "Riverpoint is part of MSR Technology Group.",
@@ -90,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "iRise",
@@ -101,12 +112,56 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "mobi",
             "url": "https://useharbor.io/brands/mobi",
             "description": "Mobi is a brand that requires JavaScript to function.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Altibase",
+            "url": "https://useharbor.io/brands/altibase",
+            "description": "unknown",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Varrow",
+            "url": "https://useharbor.io/brands/varrow",
+            "description": "Test page for Guerrilla RF services.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Yummy",
+            "url": "https://useharbor.io/brands/yummy",
+            "description": "Yummy is an online platform.",
+            "applicationCategory": "unknown"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Packet Design",
+            "url": "https://useharbor.io/brands/packet-design",
+            "description": "Website under construction.",
             "applicationCategory": "unknown"
           }
         }
@@ -159,6 +214,20 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "hammoq-inc",
+    "brand_name": "HAMMOQ Inc.",
+    "domain": "hammoq.com",
+    "summary": "Infinity AI is a technology company focused on artificial intelligence solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
     "slug": "riverpoint-group",
     "brand_name": "RiverPoint Group",
     "domain": "riverpoint.com",
@@ -199,6 +268,62 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
+  },
+  {
+    "slug": "altibase",
+    "brand_name": "Altibase",
+    "domain": "altibase.com",
+    "summary": "unknown",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "varrow",
+    "brand_name": "Varrow",
+    "domain": "varrow.com",
+    "summary": "Test page for Guerrilla RF services.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "yummy",
+    "brand_name": "Yummy",
+    "domain": "yummy.com",
+    "summary": "Yummy is an online platform.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
+  },
+  {
+    "slug": "packet-design",
+    "brand_name": "Packet Design",
+    "domain": "packetdesign.com",
+    "summary": "Website under construction.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [],
+    "integrations": []
   }
 ]
 
@@ -214,7 +339,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.393Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.388Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best AMSYS Innovative Solutions Alternatives
@@ -286,7 +411,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.393Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.388Z">2025-11-30</time>
             </p>
           </footer>
         </div>

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.151Z
+// Generated: 2025-11-30T19:44:53.137Z
 // Alternative to: Veterans Enterprise Technology Solutions (VETS) Inc.
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Veterans Enterprise Technology Solutions (VETS) Inc. Alternatives',
     description: 'Top alternatives to Veterans Enterprise Technology Solutions (VETS) Inc. for IT Consulting.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.151Z',
-    modifiedTime: '2025-11-30T19:36:57.151Z',
+    publishedTime: '2025-11-30T19:44:53.137Z',
+    modifiedTime: '2025-11-30T19:44:53.137Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/veterans-enterprise-technology-solutions-vets-inc#article",
       "headline": "Best Veterans Enterprise Technology Solutions (VETS) Inc. Alternatives",
       "description": "Top alternatives to Veterans Enterprise Technology Solutions (VETS) Inc. for IT Consulting. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.151Z",
-      "dateModified": "2025-11-30T19:36:57.151Z",
+      "datePublished": "2025-11-30T19:44:53.137Z",
+      "dateModified": "2025-11-30T19:44:53.137Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -60,6 +60,17 @@ const schemaOrg = {
           "position": 2,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "Ryan Consulting Group, Inc.",
+            "url": "https://useharbor.io/brands/ryan-consulting-group-inc",
+            "description": "Leading IT consulting firm based in Indianapolis, specializing in user-defined, Agile IT solutions.",
+            "applicationCategory": "IT Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Envision Technology Advisors",
             "url": "https://useharbor.io/brands/envision-technology-advisors",
             "description": "IT consulting firm specializing in modern workplace solutions.",
@@ -68,7 +79,18 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Consulting Solutions",
+            "url": "https://useharbor.io/brands/consulting-solutions",
+            "description": "A leading provider of IT workforce and consulting solutions in North America.",
+            "applicationCategory": "IT Consulting"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Enterprise Solutions Inc.",
@@ -79,7 +101,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 6,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Practical Solutions, Inc.",
@@ -90,7 +112,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 5,
+          "position": 7,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Smartbridge",
@@ -101,7 +123,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 6,
+          "position": 8,
           "item": {
             "@type": "SoftwareApplication",
             "name": "solutions4networks",
@@ -112,7 +134,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 7,
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "TG Federal",
@@ -123,7 +145,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 8,
+          "position": 10,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Sayers",
@@ -134,7 +156,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 9,
+          "position": 11,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Burwood Group",
@@ -145,7 +167,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 10,
+          "position": 12,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Benvia LLC",
@@ -156,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 11,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Alesig Consulting",
@@ -167,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ANR Consulting Group, Inc.",
@@ -178,34 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "FulcrumLogic",
             "url": "https://useharbor.io/brands/fulcrumlogic",
             "description": "Global IT and Business consulting organization.",
-            "applicationCategory": "IT Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 14,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "Wisdom Infotech",
-            "url": "https://useharbor.io/brands/wisdom-infotech",
-            "description": "Wisdom Infotech is a leading IT consulting firm specializing in technology solutions for businesses.",
-            "applicationCategory": "IT Consulting"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "LAM Technology",
-            "url": "https://useharbor.io/brands/lam-technology",
-            "description": "A technology consulting firm specializing in IT strategy and digital transformation.",
             "applicationCategory": "IT Consulting"
           }
         }
@@ -236,6 +236,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "ryan-consulting-group-inc",
+    "brand_name": "Ryan Consulting Group, Inc.",
+    "domain": "consultrcg.com",
+    "summary": "Leading IT consulting firm based in Indianapolis, specializing in user-defined, Agile IT solutions.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Cybersecurity assessments",
+      "Business intelligence tools",
+      "Help desk support",
+      "Cloud transformation",
+      "Data & analytics"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "envision-technology-advisors",
     "brand_name": "Envision Technology Advisors",
     "domain": "envisionsuccess.net",
@@ -252,6 +272,26 @@ const alternatives = [
       "Cloud adoption and leveraging",
       "User support enhancement",
       "Optimization of technology usage"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "consulting-solutions",
+    "brand_name": "Consulting Solutions",
+    "domain": "consultingsolutions.com",
+    "summary": "A leading provider of IT workforce and consulting solutions in North America.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "IT Workforce Solutions",
+      "Strategic Consulting and Advisory Services",
+      "Business Value Realization",
+      "Post-Merger Integration",
+      "Agile and Product Ways of Working"
     ],
     "integrations": []
   },
@@ -513,46 +553,6 @@ const alternatives = [
       "Increased business value"
     ],
     "integrations": []
-  },
-  {
-    "slug": "wisdom-infotech",
-    "brand_name": "Wisdom Infotech",
-    "domain": "wisdominfotech.com",
-    "summary": "Wisdom Infotech is a leading IT consulting firm specializing in technology solutions for businesses.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "IT Consulting",
-      "Mobility Solutions",
-      "Application Development",
-      "Support & Maintenance",
-      "Data & Migration"
-    ],
-    "integrations": []
-  },
-  {
-    "slug": "lam-technology",
-    "brand_name": "LAM Technology",
-    "domain": "lamtechnology.com",
-    "summary": "A technology consulting firm specializing in IT strategy and digital transformation.",
-    "pricing": {
-      "price_model": "custom",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [
-      "Technology Enablement",
-      "Digital Transformation",
-      "Digital Analytics",
-      "Customer Experience",
-      "Cybersecurity Infrastructure Modernization"
-    ],
-    "integrations": []
   }
 ]
 
@@ -568,7 +568,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.151Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.137Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Veterans Enterprise Technology Solutions (VETS) Inc. Alternatives
@@ -640,7 +640,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.151Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.137Z">2025-11-30</time>
             </p>
           </footer>
         </div>

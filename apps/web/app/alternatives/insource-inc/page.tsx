@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.154Z
+// Generated: 2025-11-30T19:44:53.148Z
 // Alternative to: InSource, Inc
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best InSource, Inc Alternatives',
     description: 'Top alternatives to InSource, Inc for IT Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.154Z',
-    modifiedTime: '2025-11-30T19:36:57.154Z',
+    publishedTime: '2025-11-30T19:44:53.148Z',
+    modifiedTime: '2025-11-30T19:44:53.148Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/insource-inc#article",
       "headline": "Best InSource, Inc Alternatives",
       "description": "Top alternatives to InSource, Inc for IT Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.154Z",
-      "dateModified": "2025-11-30T19:36:57.154Z",
+      "datePublished": "2025-11-30T19:44:53.148Z",
+      "dateModified": "2025-11-30T19:44:53.148Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -159,6 +159,17 @@ const schemaOrg = {
           "position": 11,
           "item": {
             "@type": "SoftwareApplication",
+            "name": "River Run",
+            "url": "https://useharbor.io/brands/river-run",
+            "description": "Milwaukee-based IT services company providing reliable technology support.",
+            "applicationCategory": "IT Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "SoftwareApplication",
             "name": "Link Computer Corporation",
             "url": "https://useharbor.io/brands/link-computer-corporation",
             "description": "A leading provider of managed IT solutions and cybersecurity services.",
@@ -167,7 +178,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 12,
+          "position": 13,
           "item": {
             "@type": "SoftwareApplication",
             "name": "ABM Technology Group",
@@ -178,7 +189,7 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 13,
+          "position": 14,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Eagle Technologies",
@@ -189,23 +200,12 @@ const schemaOrg = {
         },
         {
           "@type": "ListItem",
-          "position": 14,
+          "position": 15,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Decypher Technologies, Inc",
             "url": "https://useharbor.io/brands/decypher-technologies-inc",
             "description": "Decypher Technologies provides managed IT services, cybersecurity, and cellular connectivity solutions.",
-            "applicationCategory": "IT Services"
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 15,
-          "item": {
-            "@type": "SoftwareApplication",
-            "name": "DPC Technology",
-            "url": "https://useharbor.io/brands/dpc-technology",
-            "description": "DPC Technology provides comprehensive IT services and support for small to medium-sized businesses.",
             "applicationCategory": "IT Services"
           }
         }
@@ -417,6 +417,26 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "river-run",
+    "brand_name": "River Run",
+    "domain": "river-run.com",
+    "summary": "Milwaukee-based IT services company providing reliable technology support.",
+    "pricing": {
+      "price_model": "flat",
+      "price_notes": "They manage to remain budget-friendly while providing comprehensive IT solutions.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Managed IT",
+      "Maintenance Monitoring",
+      "Cloud Solutions",
+      "Security",
+      "Backup"
+    ],
+    "integrations": []
+  },
+  {
     "slug": "link-computer-corporation",
     "brand_name": "Link Computer Corporation",
     "domain": "linkcorp.com",
@@ -492,22 +512,6 @@ const alternatives = [
     },
     "features": [],
     "integrations": []
-  },
-  {
-    "slug": "dpc-technology",
-    "brand_name": "DPC Technology",
-    "domain": "dpctechnology.com",
-    "summary": "DPC Technology provides comprehensive IT services and support for small to medium-sized businesses.",
-    "pricing": {
-      "price_model": "unknown",
-      "price_notes": null,
-      "has_free_tier": false,
-      "starting_price": null
-    },
-    "features": [],
-    "integrations": [
-      "ConnectWise"
-    ]
   }
 ]
 
@@ -523,7 +527,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.154Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.148Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best InSource, Inc Alternatives
@@ -595,7 +599,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.154Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.148Z">2025-11-30</time>
             </p>
           </footer>
         </div>

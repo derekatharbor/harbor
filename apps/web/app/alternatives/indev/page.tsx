@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.289Z
+// Generated: 2025-11-30T19:44:53.292Z
 // Alternative to: InDev
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best InDev Alternatives',
     description: 'Top alternatives to InDev for Technology Services.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.289Z',
-    modifiedTime: '2025-11-30T19:36:57.289Z',
+    publishedTime: '2025-11-30T19:44:53.292Z',
+    modifiedTime: '2025-11-30T19:44:53.292Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/indev#article",
       "headline": "Best InDev Alternatives",
       "description": "Top alternatives to InDev for Technology Services. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.289Z",
-      "dateModified": "2025-11-30T19:36:57.289Z",
+      "datePublished": "2025-11-30T19:44:53.292Z",
+      "dateModified": "2025-11-30T19:44:53.292Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/indev#list",
       "name": "InDev Alternatives",
-      "numberOfItems": 8,
+      "numberOfItems": 9,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -124,6 +124,17 @@ const schemaOrg = {
         {
           "@type": "ListItem",
           "position": 8,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "VSolvit",
+            "url": "https://useharbor.io/brands/vsolvit",
+            "description": "VSolvit is a technology services provider specializing in solutions for federal programs.",
+            "applicationCategory": "Technology Services"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
           "item": {
             "@type": "SoftwareApplication",
             "name": "Fusion Global Solutions",
@@ -284,6 +295,28 @@ const alternatives = [
     "integrations": []
   },
   {
+    "slug": "vsolvit",
+    "brand_name": "VSolvit",
+    "domain": "vsolvit.com",
+    "summary": "VSolvit is a technology services provider specializing in solutions for federal programs.",
+    "pricing": {
+      "price_model": "custom",
+      "price_notes": "Pricing details are not explicitly stated.",
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Efficient Geospatial Solutions",
+      "Enterprise System Delivery",
+      "Mission-Aligned Application Development",
+      "Forecast-Driven Decision Support",
+      "Fixed-Price Project Execution"
+    ],
+    "integrations": [
+      "Cloud Integration"
+    ]
+  },
+  {
     "slug": "fusion-global-solutions",
     "brand_name": "Fusion Global Solutions",
     "domain": "fusiongs.com",
@@ -311,7 +344,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.289Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.292Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best InDev Alternatives
@@ -383,7 +416,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.289Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.292Z">2025-11-30</time>
             </p>
           </footer>
         </div>

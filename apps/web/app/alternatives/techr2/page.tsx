@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.303Z
+// Generated: 2025-11-30T19:44:53.305Z
 // Alternative to: TechR2
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best TechR2 Alternatives',
     description: 'Top alternatives to TechR2 for Data Security.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.303Z',
-    modifiedTime: '2025-11-30T19:36:57.303Z',
+    publishedTime: '2025-11-30T19:44:53.305Z',
+    modifiedTime: '2025-11-30T19:44:53.305Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/techr2#article",
       "headline": "Best TechR2 Alternatives",
       "description": "Top alternatives to TechR2 for Data Security. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.303Z",
-      "dateModified": "2025-11-30T19:36:57.303Z",
+      "datePublished": "2025-11-30T19:44:53.305Z",
+      "dateModified": "2025-11-30T19:44:53.305Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -543,7 +543,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.303Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.305Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best TechR2 Alternatives
@@ -615,7 +615,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.303Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.305Z">2025-11-30</time>
             </p>
           </footer>
         </div>

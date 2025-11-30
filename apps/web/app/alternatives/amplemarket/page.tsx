@@ -1,5 +1,5 @@
 // AUTO-GENERATED ALTERNATIVES PAGE
-// Generated: 2025-11-30T19:36:57.229Z
+// Generated: 2025-11-30T19:44:53.235Z
 // Alternative to: Amplemarket
 
 import { Metadata } from 'next'
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     title: 'Best Amplemarket Alternatives',
     description: 'Top alternatives to Amplemarket for Sales Technology.',
     type: 'article',
-    publishedTime: '2025-11-30T19:36:57.229Z',
-    modifiedTime: '2025-11-30T19:36:57.229Z',
+    publishedTime: '2025-11-30T19:44:53.235Z',
+    modifiedTime: '2025-11-30T19:44:53.235Z',
   },
 }
 
@@ -25,8 +25,8 @@ const schemaOrg = {
       "@id": "https://useharbor.io/alternatives/amplemarket#article",
       "headline": "Best Amplemarket Alternatives",
       "description": "Top alternatives to Amplemarket for Sales Technology. Compare features, pricing, and integrations.",
-      "datePublished": "2025-11-30T19:36:57.229Z",
-      "dateModified": "2025-11-30T19:36:57.229Z",
+      "datePublished": "2025-11-30T19:44:53.235Z",
+      "dateModified": "2025-11-30T19:44:53.235Z",
       "author": {
         "@type": "Organization",
         "name": "Harbor",
@@ -42,7 +42,7 @@ const schemaOrg = {
       "@type": "ItemList",
       "@id": "https://useharbor.io/alternatives/amplemarket#list",
       "name": "Amplemarket Alternatives",
-      "numberOfItems": 3,
+      "numberOfItems": 6,
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -74,6 +74,39 @@ const schemaOrg = {
             "name": "Scratchpad",
             "url": "https://useharbor.io/brands/scratchpad",
             "description": "Scratchpad is an AI-powered workspace designed to enhance sales productivity by minimizing administrative tasks.",
+            "applicationCategory": "Sales Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "People.ai",
+            "url": "https://useharbor.io/brands/peopleai",
+            "description": "AI Revenue Platform for Sales Teams.",
+            "applicationCategory": "Sales Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Nooks",
+            "url": "https://useharbor.io/brands/nooks",
+            "description": "Nooks is an AI-powered platform designed to enhance outbound prospecting and sales coaching.",
+            "applicationCategory": "Sales Technology"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "Aligned",
+            "url": "https://useharbor.io/brands/aligned",
+            "description": "A collaboration tool designed to modernize the buyer-seller experience.",
             "applicationCategory": "Sales Technology"
           }
         }
@@ -158,6 +191,78 @@ const alternatives = [
       "Outlook",
       "Gong"
     ]
+  },
+  {
+    "slug": "peopleai",
+    "brand_name": "People.ai",
+    "domain": "people.ai",
+    "summary": "AI Revenue Platform for Sales Teams.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Capture and unify GTM data from seller activities and sales tools",
+      "Automated, data-driven account strategies",
+      "Automate deal qualification",
+      "Visualize deal health",
+      "Unify pipeline management and forecasting"
+    ],
+    "integrations": []
+  },
+  {
+    "slug": "nooks",
+    "brand_name": "Nooks",
+    "domain": "nooks.ai",
+    "summary": "Nooks is an AI-powered platform designed to enhance outbound prospecting and sales coaching.",
+    "pricing": {
+      "price_model": "unknown",
+      "price_notes": null,
+      "has_free_tier": false,
+      "starting_price": null
+    },
+    "features": [
+      "Account Researcher",
+      "List Builder",
+      "Email Writer",
+      "Parallel Dialer",
+      "AI Scorecards"
+    ],
+    "integrations": [
+      "CRM",
+      "SEP"
+    ]
+  },
+  {
+    "slug": "aligned",
+    "brand_name": "Aligned",
+    "domain": "alignedup.com",
+    "summary": "A collaboration tool designed to modernize the buyer-seller experience.",
+    "pricing": {
+      "price_model": "per_user",
+      "price_notes": "Free tier available with limited features",
+      "has_free_tier": true,
+      "starting_price": "$29/mo"
+    },
+    "features": [
+      "Unlimited rooms and templates",
+      "AI Content Generator",
+      "Task manager",
+      "Room analytics",
+      "Buyer journey insights"
+    ],
+    "integrations": [
+      "Salesforce",
+      "HubSpot",
+      "Gong",
+      "PandaDoc",
+      "Calendly",
+      "Google Calendar",
+      "Slack",
+      "Zoom"
+    ]
   }
 ]
 
@@ -173,7 +278,7 @@ export default function AlternativesPage() {
         <div className="max-w-4xl mx-auto px-4 py-12">
           <header className="mb-12">
             <p className="text-sm text-gray-400 mb-2">
-              Last verified: <time dateTime="2025-11-30T19:36:57.229Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
+              Last verified: <time dateTime="2025-11-30T19:44:53.235Z">November 30, 2025</time> &bull; {alternatives.length} alternatives
             </p>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               Best Amplemarket Alternatives
@@ -245,7 +350,7 @@ export default function AlternativesPage() {
             <p>
               This list is generated from structured data collected by Harbor.
               <br />
-              Last verified: <time dateTime="2025-11-30T19:36:57.229Z">2025-11-30</time>
+              Last verified: <time dateTime="2025-11-30T19:44:53.235Z">2025-11-30</time>
             </p>
           </footer>
         </div>
