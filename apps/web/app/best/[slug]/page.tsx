@@ -97,7 +97,7 @@ function capitalize(str: string): string {
 
 // Fetch profiles for this listicle
 async function fetchProfiles(config: ListicleConfig): Promise<Profile[]> {
-  let query = supabase
+  let query = getSupabase()
     .from('ai_profiles')
     .select('slug, brand_name, domain, category, visibility_score, feed_data')
     .not('feed_data', 'is', null)
