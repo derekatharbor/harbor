@@ -1,11 +1,69 @@
 // apps/web/components/landing/HarborIndexSection.tsx
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
+interface Brand {
+  id: string
+  brand_name: string
+  slug: string
+  domain: string
+  logo_url: string
+  visibility_score: number
+  industry: string
+}
+
 export default function HarborIndexSection() {
+  const [topBrands, setTopBrands] = useState<Brand[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/index/brands?limit=5')
+      .then(res => res.json())
+      .then(data => {
+        setTopBrands(data.slice(0, 5))
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to fetch brands:', err)
+        setLoading(false)
+      })
+  }, [])
+
   return (
     <section className="relative bg-white py-20 md:py-32" data-nav-theme="light">
+      {/* Animation styles */}
+      <style jsx>{`
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-shift {
+          animation: gradient-shift 6s ease infinite;
+        }
+        @keyframes glow-pulse {
+          0%, 100% { 
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 40px rgba(34, 211, 238, 0.2);
+          }
+          50% { 
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 0 60px rgba(34, 211, 238, 0.3);
+          }
+        }
+        .animate-glow-pulse {
+          animation: glow-pulse 3s ease-in-out infinite;
+        }
+        @keyframes border-shimmer {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .animate-border-shimmer {
+          background-size: 200% 100%;
+          animation: border-shimmer 3s linear infinite;
+        }
+      `}</style>
+
       <div className="max-w-6xl mx-auto px-6">
 
         {/* Main Navy Card with Glow */}
@@ -23,11 +81,6 @@ export default function HarborIndexSection() {
           <div className="relative bg-[#101A31] rounded-[1.5rem] overflow-hidden">
             
             {/* Wireframe Background Pattern */}
-            {/* 
-              Derek: Add wireframe image at /public/wireframe-index-card.png
-              Recommended size: 1400x800px, PNG with transparency
-              Should be subtle abstract lines/grid pattern
-            */}
             <div 
               className="absolute inset-0 pointer-events-none opacity-[0.08]"
               style={{
@@ -50,13 +103,25 @@ export default function HarborIndexSection() {
                 </div>
               </div>
 
-              {/* Headline - Using hero gradient (white → cyan → blue) */}
+              {/* Animated Headline */}
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-center mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+                <span 
+                  className="bg-clip-text text-transparent animate-gradient-shift"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #fff, #a5f3fc, #60a5fa, #a5f3fc, #fff)',
+                    backgroundSize: '200% 100%',
+                  }}
+                >
                   An AI visibility index built from
                 </span>
                 <br />
-                <span className="bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+                <span 
+                  className="bg-clip-text text-transparent animate-gradient-shift"
+                  style={{
+                    backgroundImage: 'linear-gradient(90deg, #fff, #a5f3fc, #60a5fa, #a5f3fc, #fff)',
+                    backgroundSize: '200% 100%',
+                  }}
+                >
                   20,000+ brands.
                 </span>
               </h2>
@@ -69,24 +134,31 @@ export default function HarborIndexSection() {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 md:mb-16">
                 
-                {/* Primary Button - Reversed gradient (blue → cyan → white) */}
+                {/* Primary Button - Solid white with animated glow */}
                 <a
                   href="/brands"
-                  className="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-[#101A31] transition-all duration-200 hover:brightness-90 bg-gradient-to-r from-blue-400 via-cyan-200 to-white"
+                  className="inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-[#101A31] bg-white transition-all duration-200 hover:bg-white/90 animate-glow-pulse"
                 >
                   Browse the Index
                 </a>
 
-                {/* Secondary Button - Same gradient as border */}
+                {/* Secondary Button - Animated gradient border */}
                 <a
                   href="/auth/signup"
-                  className="relative inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-white transition-all duration-200 hover:bg-white/5"
-                  style={{
-                    background: 'linear-gradient(#101A31, #101A31) padding-box, linear-gradient(to right, #3b82f6, #67e8f9, #ffffff) border-box',
-                    border: '2px solid transparent'
-                  }}
+                  className="relative inline-flex items-center justify-center px-8 py-4 rounded-lg text-lg font-semibold text-white overflow-hidden group"
                 >
-                  Claim your brand
+                  {/* Animated gradient border */}
+                  <span 
+                    className="absolute inset-0 rounded-lg animate-border-shimmer"
+                    style={{
+                      background: 'linear-gradient(90deg, #3b82f6, #22d3ee, #ffffff, #22d3ee, #3b82f6)',
+                      padding: '2px',
+                    }}
+                  />
+                  {/* Inner background */}
+                  <span className="absolute inset-[2px] rounded-[6px] bg-[#101A31] group-hover:bg-[#1a2a4a] transition-colors" />
+                  {/* Text */}
+                  <span className="relative z-10">Claim your brand</span>
                 </a>
               </div>
 
@@ -123,36 +195,61 @@ export default function HarborIndexSection() {
                       <span className="w-24 text-right">Score</span>
                     </div>
 
-                    {/* Sample Rows - Matching your screenshot style */}
-                    {[
-                      { rank: 1, name: 'Microsoft', domain: 'microsoft.com', industry: 'Technology', score: '100.0%', delta: '+5.8%' },
-                      { rank: 2, name: 'SketchUp', domain: 'sketchup.com', industry: '3D Design', score: '100.0%', delta: '+5.8%' },
-                      { rank: 3, name: 'SpotHero', domain: 'spothero.com', industry: 'Transportation', score: '100.0%', delta: '+5.8%' },
-                      { rank: 4, name: 'Nike', domain: 'nike.com', industry: 'Retail', score: '95.2%', delta: '+5.8%' },
-                      { rank: 5, name: 'Lumion', domain: 'lumion.com', industry: '3D Rendering', score: '95.0%', delta: '+5.8%' },
-                    ].map((item, i) => (
-                      <div 
-                        key={item.rank}
-                        className="flex items-center py-4 border-b border-white/5"
-                      >
-                        <span className="w-16 text-sm text-white/50">#{item.rank}</span>
-                        <div className="flex-1 flex items-center gap-3">
-                          {/* Placeholder for logo */}
-                          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                            <span className="text-xs text-white/30">{item.name.charAt(0)}</span>
+                    {/* Real brand rows from API */}
+                    {loading ? (
+                      // Skeleton loading
+                      [...Array(5)].map((_, i) => (
+                        <div key={i} className="flex items-center py-4 border-b border-white/5 animate-pulse">
+                          <span className="w-16 h-4 bg-white/10 rounded" />
+                          <div className="flex-1 flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-white/10" />
+                            <div className="space-y-2">
+                              <div className="w-24 h-4 bg-white/10 rounded" />
+                              <div className="w-16 h-3 bg-white/5 rounded" />
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-white">{item.name}</p>
-                            <p className="text-xs text-white/40">{item.domain}</p>
+                          <span className="w-32 h-4 bg-white/10 rounded hidden md:block" />
+                          <span className="w-16 h-4 bg-white/10 rounded ml-auto" />
+                        </div>
+                      ))
+                    ) : (
+                      topBrands.map((brand, i) => (
+                        <div 
+                          key={brand.id}
+                          className="flex items-center py-4 border-b border-white/5"
+                        >
+                          <span className="w-16 text-sm text-white/50">#{i + 1}</span>
+                          <div className="flex-1 flex items-center gap-3">
+                            {/* Brand logo */}
+                            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden">
+                              {brand.logo_url ? (
+                                <Image
+                                  src={brand.logo_url}
+                                  alt={brand.brand_name}
+                                  width={40}
+                                  height={40}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none'
+                                  }}
+                                />
+                              ) : (
+                                <span className="text-xs text-white/30">{brand.brand_name.charAt(0)}</span>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-white">{brand.brand_name}</p>
+                              <p className="text-xs text-white/40">{brand.domain}</p>
+                            </div>
+                          </div>
+                          <span className="w-32 text-sm text-white/50 text-left hidden md:block">{brand.industry || 'Technology'}</span>
+                          <div className="w-24 text-right">
+                            <span className="text-sm font-semibold text-white">{brand.visibility_score?.toFixed(1) || '95.0'}%</span>
+                            <span className="text-xs text-emerald-400 ml-2">+5.8%</span>
                           </div>
                         </div>
-                        <span className="w-32 text-sm text-white/50 text-left hidden md:block">{item.industry}</span>
-                        <div className="w-24 text-right">
-                          <span className="text-sm font-semibold text-white">{item.score}</span>
-                          <span className="text-xs text-emerald-400 ml-2">{item.delta}</span>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                 </div>
 
