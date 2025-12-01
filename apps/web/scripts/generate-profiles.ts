@@ -25,16 +25,17 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 /**
- * Harbor AI Profile Generator - Updated v2
+ * Harbor AI Profile Generator - v3 (with enrichment)
  * 
- * Changes:
- * - Multi-page crawling (/, /about, /products, /company)
- * - Switched from Claude to OpenAI (cheaper for batch generation)
- * - Structured visibility scoring with subscores
- * - Correct feed URL: https://useharbor.io/brands/{slug}/harbor.json
+ * Now includes enrichment data in a single pass:
+ * - pricing (has_free_tier, starting_price, price_model)
+ * - integrations (array of integration names)
+ * - features (array of key features)
+ * - icp (ideal customer profile)
+ * - category (normalized category)
  * 
  * Usage:
- *   npm run generate:profiles              # Generate 10 profiles (test)
+ *   npm run generate:profiles              # Generate all ungenerated profiles
  *   npm run generate:profiles -- --limit 100
  *   npm run generate:profiles -- --dry-run
  */
@@ -55,15 +56,19 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Cost per profile (GPT-4o-mini): ~$0.02
-const ESTIMATED_COST = 0.02;
+// Cost per profile (GPT-4o-mini): ~$0.0005 with combined prompt
+const ESTIMATED_COST = 0.0005;
 
 // Candidate paths for multi-page crawling
 const ABOUT_PATHS = ["/about", "/about-us", "/our-story", "/company"];
 const PRODUCTS_PATHS = ["/products", "/product", "/services", "/solutions", "/what-we-do"];
 const COMPANY_PATHS = ["/company", "/about", "/team", "/who-we-are"];
+const PRICING_PATHS = ['/pricing', '/plans', '/price', '/packages', '/buy', '/subscribe'];
+const INTEGRATION_PATHS = ['/integrations', '/apps', '/marketplace', '/partners', '/connect', '/plugins'];
+const FEATURES_PATHS = ['/features', '/product', '/solutions', '/capabilities'];
 
 const MAX_CHARS_PER_PAGE = 4000;
+const REQUEST_TIMEOUT_MS = 8000;
 
 // ============================================================================
 // TYPES
@@ -77,6 +82,13 @@ interface VisibilityScoring {
   breadth_of_coverage_0_10: number;
   total_visibility_score_0_100: number;
   score_rationale: string;
+}
+
+interface PricingInfo {
+  has_free_tier: boolean;
+  starting_price: string | null;
+  price_model: 'per_user' | 'flat' | 'usage' | 'tiered' | 'custom' | 'unknown';
+  price_notes: string | null;
 }
 
 interface AIProfileResponse {
@@ -99,6 +111,12 @@ interface AIProfileResponse {
     industry_tags: string[];
   };
   visibility_scoring: VisibilityScoring;
+  // Enrichment fields (now included in main generation)
+  pricing: PricingInfo;
+  integrations: string[];
+  features: string[];
+  icp: string;
+  category: string;
 }
 
 // ============================================================================
@@ -106,43 +124,50 @@ interface AIProfileResponse {
 // ============================================================================
 
 function sanitizeHtmlToText(html: string): string {
-  // Remove scripts, styles, and tags
-  const clean = html
+  return html
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
+    .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '')
+    .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
-  
-  return clean;
+}
+
+async function fetchPage(url: string): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    
+    const res = await fetch(url, {
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'HarborBot/1.0 (AI Profile Generator; +https://useharbor.io/bot)',
+        'Accept': 'text/html,application/xhtml+xml',
+      },
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeout);
+    
+    if (res.ok) {
+      const html = await res.text();
+      return sanitizeHtmlToText(html);
+    }
+  } catch (err) {
+    // Silently fail - page doesn't exist or timeout
+  }
+  return null;
 }
 
 async function fetchFirstOkPath(baseUrl: string, paths: string[]): Promise<string | null> {
   for (const path of paths) {
     const url = new URL(path, baseUrl).toString();
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      
-      const res = await fetch(url, {
-        method: 'GET',
-        redirect: 'follow',
-        headers: {
-          'User-Agent': 'HarborBot/1.0 (AI Profile Generator; +https://useharbor.io/bot)'
-        },
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeout);
-      
-      if (res.ok) {
-        const html = await res.text();
-        const text = sanitizeHtmlToText(html);
-        return text || null;
-      }
-    } catch (err) {
-      // Swallow and try next path
-      continue;
+    const content = await fetchPage(url);
+    if (content && content.length > 200) {
+      return content.slice(0, MAX_CHARS_PER_PAGE);
     }
   }
   return null;
@@ -152,39 +177,74 @@ function clip(text: string | null): string {
   return text ? text.slice(0, MAX_CHARS_PER_PAGE) : '';
 }
 
-async function crawlMultiplePages(domain: string): Promise<string> {
+async function crawlAllPages(domain: string): Promise<{
+  combined: string;
+  sections: {
+    homepage: string | null;
+    about: string | null;
+    products: string | null;
+    company: string | null;
+    pricing: string | null;
+    integrations: string | null;
+    features: string | null;
+  };
+}> {
   const baseUrl = `https://${domain}`;
   
-  console.log(`  → Crawling multiple pages for ${domain}...`);
+  console.log(`  → Crawling pages for ${domain}...`);
   
   // Fetch all pages in parallel
-  const [homepageText, aboutText, productsText, companyText] = await Promise.all([
-    fetchFirstOkPath(baseUrl, ['/']),
+  const [
+    homepageText,
+    aboutText,
+    productsText,
+    companyText,
+    pricingText,
+    integrationsText,
+    featuresText
+  ] = await Promise.all([
+    fetchPage(baseUrl),
     fetchFirstOkPath(baseUrl, ABOUT_PATHS),
     fetchFirstOkPath(baseUrl, PRODUCTS_PATHS),
     fetchFirstOkPath(baseUrl, COMPANY_PATHS),
+    fetchFirstOkPath(baseUrl, PRICING_PATHS),
+    fetchFirstOkPath(baseUrl, INTEGRATION_PATHS),
+    fetchFirstOkPath(baseUrl, FEATURES_PATHS),
   ]);
   
-  const combinedText = [
-    clip(homepageText),
-    clip(aboutText),
-    clip(productsText),
-    clip(companyText),
-  ]
-    .filter(Boolean)
-    .join('\n\n-----\n\n');
+  const sections = {
+    homepage: clip(homepageText),
+    about: clip(aboutText),
+    products: clip(productsText),
+    company: clip(companyText),
+    pricing: clip(pricingText),
+    integrations: clip(integrationsText),
+    features: clip(featuresText),
+  };
   
-  if (!combinedText) {
-    throw new Error('No content found - all pages returned 404 or empty');
-  }
+  // Build combined text with section markers
+  const parts: string[] = [];
+  if (sections.homepage) parts.push(`=== HOMEPAGE ===\n${sections.homepage}`);
+  if (sections.about) parts.push(`=== ABOUT ===\n${sections.about}`);
+  if (sections.products) parts.push(`=== PRODUCTS/SERVICES ===\n${sections.products}`);
+  if (sections.company) parts.push(`=== COMPANY ===\n${sections.company}`);
+  if (sections.pricing) parts.push(`=== PRICING ===\n${sections.pricing}`);
+  if (sections.integrations) parts.push(`=== INTEGRATIONS ===\n${sections.integrations}`);
+  if (sections.features) parts.push(`=== FEATURES ===\n${sections.features}`);
   
-  console.log(`  → Extracted ${combinedText.length} chars from ${domain}`);
+  const combined = parts.join('\n\n');
   
-  return combinedText;
+  const foundPages = Object.entries(sections)
+    .filter(([_, v]) => v)
+    .map(([k]) => k);
+  
+  console.log(`  → Found pages: ${foundPages.join(', ') || 'none'} (${combined.length} chars)`);
+  
+  return { combined, sections };
 }
 
 // ============================================================================
-// AI PROFILE GENERATOR - OpenAI with structured scoring
+// AI PROFILE GENERATOR - OpenAI with structured scoring + enrichment
 // ============================================================================
 
 async function generateProfileWithOpenAI(
@@ -195,9 +255,9 @@ async function generateProfileWithOpenAI(
   
   console.log(`  → Generating profile with OpenAI...`);
   
-  const systemPrompt = `You are analyzing the public website of a brand to create an AI-ready profile and visibility score.
+  const systemPrompt = `You are analyzing the public website of a brand to create an AI-ready profile with visibility scoring and enrichment data.
 
-You will receive cleaned text from the brand's website.
+You will receive cleaned text from the brand's website (homepage, about, products, pricing, integrations, features pages).
 
 Your goals:
 1. Extract a concise but accurate description of the brand
@@ -205,27 +265,35 @@ Your goals:
 3. Infer 3-6 realistic FAQs and answers if possible
 4. Infer basic company info where reasonably clear
 5. Assign visibility subscores based ONLY on the website content provided
-6. Return a single JSON object matching the exact schema
+6. Extract pricing information (free tier, starting price, pricing model)
+7. Extract integrations (other tools/platforms this product connects with)
+8. Extract 5-10 key features
+9. Identify ICP (ideal customer profile)
+10. Assign a primary software category
 
 If information is not present, use null or "unknown" instead of guessing.
 
-CRITICAL: For company_info.founded_year and company_info.hq_location, ONLY include if explicitly stated on the website. If not found, use null. DO NOT infer or guess based on context.`;
+CRITICAL: For company_info.founded_year and company_info.hq_location, ONLY include if explicitly stated. If not found, use null.
+For integrations, extract actual product/platform names (e.g., "Salesforce", "Slack", "QuickBooks", "Zapier").
+For features, extract key capabilities, not marketing fluff.`;
 
   const userPrompt = `Here is cleaned text from the brand's website:
 
 ${websiteContent}
 
-Using ONLY this text, create a profile and score the brand's AI visibility.
+Using ONLY this text, create a complete profile with enrichment data.
 
 For visibility scoring, use this rubric:
-
 1. brand_clarity_0_25: Is it clear what the company does and who it's for? (0-25 points)
 2. offerings_clarity_0_25: Are the main products/services understandable and reusable in AI answers? (0-25 points)
 3. trust_and_basics_0_20: Can you identify basic trust elements (what they do, who they serve, location/contact)? (0-20 points)
-4. structure_for_ai_0_20: Is the content structured in a way that makes it easy for AI to extract (headings, sections, Q&A)? (0-20 points)
+4. structure_for_ai_0_20: Is the content structured in a way that makes it easy for AI to extract? (0-20 points)
 5. breadth_of_coverage_0_10: Does the site cover typical questions (what, who, how, pricing, support)? (0-10 points)
 
-Score each subdimension strictly within its range. Sum them into total_visibility_score_0_100.
+For pricing:
+- has_free_tier: true if "Free", "Free trial", "Free plan" mentioned
+- starting_price: Extract lowest price (e.g., "$9/month", "$49/user/month") or null if not found
+- price_model: per_user | flat | usage | tiered | custom | unknown
 
 Return ONLY a JSON object with this exact structure:
 {
@@ -246,129 +314,155 @@ Return ONLY a JSON object with this exact structure:
     }
   ],
   "company_info": {
-    "hq_location": "string or null if not found",
-    "founded_year": "number or null if not found - DO NOT GUESS",
+    "hq_location": "string or null",
+    "founded_year": "number or null",
     "employee_band": "1-10|11-50|51-200|201-1000|1000+|unknown",
-    "industry_tags": ["string", "string"]
+    "industry_tags": ["tag1", "tag2"]
   },
   "visibility_scoring": {
-    "brand_clarity_0_25": 0,
-    "offerings_clarity_0_25": 0,
-    "trust_and_basics_0_20": 0,
-    "structure_for_ai_0_20": 0,
-    "breadth_of_coverage_0_10": 0,
-    "total_visibility_score_0_100": 0,
-    "score_rationale": "string (2-3 sentences explaining the score)"
-  }
+    "brand_clarity_0_25": number,
+    "offerings_clarity_0_25": number,
+    "trust_and_basics_0_20": number,
+    "structure_for_ai_0_20": number,
+    "breadth_of_coverage_0_10": number,
+    "total_visibility_score_0_100": number,
+    "score_rationale": "Brief explanation"
+  },
+  "pricing": {
+    "has_free_tier": boolean,
+    "starting_price": "string or null",
+    "price_model": "per_user|flat|usage|tiered|custom|unknown",
+    "price_notes": "string or null"
+  },
+  "integrations": ["Integration1", "Integration2", ...],
+  "features": ["Feature1", "Feature2", ...],
+  "icp": "Brief description of ideal customer (1 sentence)",
+  "category": "Primary software category (e.g., CRM, Project Management, Cybersecurity)"
 }`;
 
   try {
-    const completion = await openai.chat.completions.create({
+    const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      temperature: 0,
-      response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
-      ]
+      ],
+      response_format: { type: 'json_object' },
+      temperature: 0.3,
+      max_tokens: 2000,
     });
-    
-    const content = completion.choices[0].message.content;
+
+    const content = response.choices[0]?.message?.content;
     if (!content) {
       throw new Error('Empty response from OpenAI');
     }
+
+    const parsed = JSON.parse(content) as AIProfileResponse;
     
-    const profile: AIProfileResponse = JSON.parse(content);
+    // Validate and provide defaults for enrichment fields
+    if (!parsed.pricing) {
+      parsed.pricing = {
+        has_free_tier: false,
+        starting_price: null,
+        price_model: 'unknown',
+        price_notes: null
+      };
+    }
+    if (!parsed.integrations) parsed.integrations = [];
+    if (!parsed.features) parsed.features = [];
+    if (!parsed.icp) parsed.icp = parsed.company_info?.industry_tags?.[0] || 'Business professionals';
+    if (!parsed.category) parsed.category = parsed.company_info?.industry_tags?.[0] || 'Software';
     
-    // Validate and clamp scores
-    const vs = profile.visibility_scoring;
-    vs.brand_clarity_0_25 = Math.max(0, Math.min(25, vs.brand_clarity_0_25));
-    vs.offerings_clarity_0_25 = Math.max(0, Math.min(25, vs.offerings_clarity_0_25));
-    vs.trust_and_basics_0_20 = Math.max(0, Math.min(20, vs.trust_and_basics_0_20));
-    vs.structure_for_ai_0_20 = Math.max(0, Math.min(20, vs.structure_for_ai_0_20));
-    vs.breadth_of_coverage_0_10 = Math.max(0, Math.min(10, vs.breadth_of_coverage_0_10));
-    
-    // Recompute total in code (don't trust model's addition)
-    const computedTotal =
-      vs.brand_clarity_0_25 +
-      vs.offerings_clarity_0_25 +
-      vs.trust_and_basics_0_20 +
-      vs.structure_for_ai_0_20 +
-      vs.breadth_of_coverage_0_10;
-    
-    vs.total_visibility_score_0_100 = Math.max(0, Math.min(100, computedTotal));
-    
-    return profile;
-    
+    return parsed;
+
   } catch (error: any) {
-    console.error('Failed to generate profile with OpenAI:', error);
+    console.error(`  → OpenAI error: ${error.message}`);
     throw error;
   }
 }
 
 // ============================================================================
-// MAIN FUNCTION: GENERATE SINGLE PROFILE
+// SLUG GENERATOR
 // ============================================================================
 
-export async function generateAIProfile(
+function generateSlug(brandName: string): string {
+  return brandName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// ============================================================================
+// MAIN PROFILE GENERATOR
+// ============================================================================
+
+async function generateAIProfile(
   brandName: string,
   domain: string,
-  slug: string,
+  existingSlug?: string,
   industry?: string
 ): Promise<{ success: boolean; profile_id?: string; error?: string }> {
   
-  console.log(`\n🔍 Generating profile for ${brandName} (${domain})...`);
+  console.log(`\n📦 Processing: ${brandName} (${domain})`);
   
   try {
-    // Step 1: Check if already exists
-    const { data: existing } = await supabase
-      .from('ai_profiles')
-      .select('id')
-      .eq('domain', domain)
-      .single();
+    // Step 1: Generate slug
+    const slug = existingSlug || generateSlug(brandName);
     
-    if (existing) {
-      console.log(`✓ Profile already exists (${existing.id})`);
-      return { success: true, profile_id: existing.id };
+    // Step 2: Crawl all pages (including enrichment pages)
+    const { combined: websiteContent, sections } = await crawlAllPages(domain);
+    
+    if (!websiteContent || websiteContent.length < 100) {
+      throw new Error('Insufficient website content found');
     }
     
-    // Step 2: Crawl multiple pages
-    const websiteContent = await crawlMultiplePages(domain);
-    
-    // Step 3: Generate profile with OpenAI
+    // Step 3: Generate profile with OpenAI (includes enrichment)
     const profileData = await generateProfileWithOpenAI(brandName, domain, websiteContent);
     
-    // DEBUG: Log what we got from OpenAI
-    console.log(`  → Profile keys:`, Object.keys(profileData));
-    console.log(`  → Has offerings:`, !!profileData.offerings);
-    console.log(`  → Has FAQs:`, !!profileData.faqs);
-    console.log(`  → Has company_info:`, !!profileData.company_info);
-    console.log(`  → Has visibility_scoring:`, !!profileData.visibility_scoring);
-    
-    // Step 4: Extract visibility score
+    // Step 4: Calculate visibility score
     const visibilityScore = profileData.visibility_scoring.total_visibility_score_0_100;
-    console.log(`  → Visibility score: ${visibilityScore}/100`);
-    console.log(`     Brand clarity: ${profileData.visibility_scoring.brand_clarity_0_25}/25`);
+    
+    console.log(`  → Visibility Score: ${visibilityScore}/100`);
+    console.log(`     Brand: ${profileData.visibility_scoring.brand_clarity_0_25}/25`);
     console.log(`     Offerings: ${profileData.visibility_scoring.offerings_clarity_0_25}/25`);
     console.log(`     Trust: ${profileData.visibility_scoring.trust_and_basics_0_20}/20`);
     console.log(`     Structure: ${profileData.visibility_scoring.structure_for_ai_0_20}/20`);
     console.log(`     Breadth: ${profileData.visibility_scoring.breadth_of_coverage_0_10}/10`);
+    console.log(`  → Category: ${profileData.category}`);
+    console.log(`  → Pricing: ${profileData.pricing.has_free_tier ? 'Free tier' : 'Paid'}, ${profileData.pricing.starting_price || 'price unknown'}`);
+    console.log(`  → Integrations: ${profileData.integrations.length} found`);
+    console.log(`  → Features: ${profileData.features.length} found`);
     
     // Step 5: Logo URL (Brandfetch)
     const logoUrl = process.env.BRANDFETCH_API_KEY 
       ? `https://img.logo.dev/${domain}?token=${process.env.BRANDFETCH_API_KEY}`
-      : `https://img.logo.dev/${domain}`; // Fallback without token (lower rate limit)
+      : `https://img.logo.dev/${domain}`;
     
     // Step 6: Correct feed URL
     const feedUrl = `https://useharbor.io/brands/${slug}/harbor.json`;
     
-    // Step 7: Prepare feed_data with all structured info
+    // Step 7: Prepare feed_data with all structured info (including enrichment)
     const feedData = {
       version: '1.0',
       generated_at: new Date().toISOString(),
-      ...profileData,
+      brand_name: profileData.brand_name,
+      one_line_summary: profileData.one_line_summary,
+      short_description: profileData.short_description,
+      offerings: profileData.offerings,
+      faqs: profileData.faqs,
+      company_info: profileData.company_info,
+      visibility_scoring: profileData.visibility_scoring,
+      // Enrichment fields
+      pricing: profileData.pricing,
+      integrations: profileData.integrations,
+      features: profileData.features,
+      icp: profileData.icp,
+      category: profileData.category,
+      // Metadata
       schema_url: feedUrl,
-      verified: false
+      verified: false,
+      enriched_at: new Date().toISOString(),
+      enrichment_version: '1.0',
     };
     
     // Step 8: Save to database (upsert to allow re-crawls)
@@ -381,10 +475,12 @@ export async function generateAIProfile(
         logo_url: logoUrl,
         feed_data: feedData,
         visibility_score: visibilityScore,
-        industry: profileData.company_info.industry_tags[0] || industry || 'Unknown',
-        generation_method: 'batch_v2',
+        industry: profileData.category || industry || 'Unknown',
+        category: profileData.category || 'Software',
+        generation_method: 'batch_v3',
         generation_cost_usd: ESTIMATED_COST,
-        feed_url: feedUrl
+        feed_url: feedUrl,
+        enriched_at: new Date().toISOString(),
       }, {
         onConflict: 'slug'
       })
@@ -441,10 +537,10 @@ export async function runBatchGeneration(options: {
   dryRun?: boolean;
 } = {}) {
   
-  const { limit = 10, concurrency = 3, dryRun = false } = options;
+  const { limit = 10000, concurrency = 5, dryRun = false } = options;
   
-  console.log('\n🚀 Starting batch generation (OpenAI v2)');
-  console.log(`   Processing: ALL ungenerated brands`);
+  console.log('\n🚀 Starting batch generation (v3 with enrichment)');
+  console.log(`   Processing: ALL ungenerated brands (up to ${limit})`);
   console.log(`   Concurrency: ${concurrency}`);
   console.log(`   Dry run: ${dryRun}`);
   console.log('');
@@ -456,7 +552,7 @@ export async function runBatchGeneration(options: {
     .select('brand_name, domain, slug, industry')
     .eq('profile_generated', false)
     .order('priority', { ascending: false })
-    .limit(10000);
+    .limit(limit);
   
   console.log('   Query error:', error);
   console.log('   Brands returned:', brands?.length || 0);
@@ -474,12 +570,16 @@ export async function runBatchGeneration(options: {
     return { total: 0, successful: 0, failed: 0, cost: 0 };
   }
   
-  console.log(`📋 Found ${brands.length} brands to generate\n`);
+  console.log(`📋 Found ${brands.length} brands to generate`);
+  console.log(`💰 Estimated cost: $${(brands.length * ESTIMATED_COST).toFixed(4)}\n`);
   
   if (dryRun) {
     console.log('DRY RUN - Would generate:');
-    brands.forEach(b => console.log(`  - ${b.brand_name} (${b.domain})`));
-    console.log(`\nEstimated cost: $${(brands.length * ESTIMATED_COST).toFixed(2)}`);
+    brands.slice(0, 20).forEach(b => console.log(`  - ${b.brand_name} (${b.domain})`));
+    if (brands.length > 20) {
+      console.log(`  ... and ${brands.length - 20} more`);
+    }
+    console.log(`\nEstimated cost: $${(brands.length * ESTIMATED_COST).toFixed(4)}`);
     return;
   }
   
@@ -493,7 +593,7 @@ export async function runBatchGeneration(options: {
     const batchNum = Math.floor(i / concurrency) + 1;
     const totalBatches = Math.ceil(brands.length / concurrency);
     
-    console.log(`\n📦 Batch ${batchNum}/${totalBatches}`);
+    console.log(`\n━━━ Batch ${batchNum}/${totalBatches} ━━━`);
     
     const results = await Promise.all(
       batch.map(brand => 
@@ -511,25 +611,23 @@ export async function runBatchGeneration(options: {
     });
     
     const progress = Math.round(((i + batch.length) / brands.length) * 100);
-    console.log(`\n📊 Progress: ${i + batch.length}/${brands.length} (${progress}%)`);
-    console.log(`   ✓ Success: ${successful}`);
-    console.log(`   ✗ Failed: ${failed}`);
+    console.log(`\n📊 Progress: ${i + batch.length}/${brands.length} (${progress}%) | ✓ ${successful} | ✗ ${failed}`);
     
     // Rate limiting - pause between batches
     if (i + concurrency < brands.length) {
-      console.log(`   ⏳ Waiting 2s before next batch...`);
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log(`   ⏳ Waiting 1s before next batch...`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
   
   // Final summary
-  console.log('\n' + '='.repeat(60));
+  console.log('\n' + '═'.repeat(60));
   console.log('✅ BATCH GENERATION COMPLETE');
-  console.log('='.repeat(60));
+  console.log('═'.repeat(60));
   console.log(`Total brands: ${brands.length}`);
   console.log(`Successful: ${successful}`);
   console.log(`Failed: ${failed}`);
-  console.log(`Total cost: $${(successful * ESTIMATED_COST).toFixed(2)}`);
+  console.log(`Total cost: $${(successful * ESTIMATED_COST).toFixed(4)}`);
   
   if (errors.length > 0) {
     console.log('\n❌ Errors:');
@@ -557,34 +655,43 @@ const args = process.argv.slice(2);
 
 if (args.includes('--help')) {
   console.log(`
-Harbor AI Profile Generator v2 (OpenAI)
+Harbor AI Profile Generator v3 (with enrichment)
+
+Now generates profiles with pricing, integrations, features, ICP, and category
+in a single pass - no need to run enrich-profiles.ts separately.
 
 Usage:
-  npm run generate:profiles                    # Generate 10 profiles (default)
-  npm run generate:profiles -- --limit 100     # Generate 100 profiles
+  npm run generate:profiles                    # Generate all ungenerated profiles
+  npm run generate:profiles -- --limit 100     # Generate up to 100 profiles
   npm run generate:profiles -- --dry-run       # Test without generating
   npm run generate:profiles -- --concurrency 5 # Run 5 at a time
 
 Options:
-  --limit N         Number of profiles to generate (default: 10)
-  --concurrency N   Number to process in parallel (default: 3)
+  --limit N         Max profiles to generate (default: 10000)
+  --concurrency N   Number to process in parallel (default: 5)
   --dry-run         Show what would be generated without doing it
   --help            Show this help
 
-Changes in v2:
-  - Multi-page crawling (/, /about, /products, /company)
-  - Switched to OpenAI GPT-4o-mini (~$0.02/profile vs $0.10)
-  - Structured visibility scoring with subscores
-  - Correct feed URL: https://useharbor.io/brands/{slug}/harbor.json
+What's included per profile:
+  - Brand info (name, summary, description, offerings, FAQs)
+  - Company info (location, founded, size, industry)
+  - Visibility scoring (5 subscores + total)
+  - Pricing (free tier, starting price, model)
+  - Integrations (array of connected tools)
+  - Features (array of key capabilities)
+  - ICP (ideal customer profile)
+  - Category (normalized software category)
+
+Estimated cost: ~$0.0005/profile
   `);
   process.exit(0);
 }
 
 const limitIndex = args.indexOf('--limit');
-const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : 10;
+const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : 10000;
 
 const concurrencyIndex = args.indexOf('--concurrency');
-const concurrency = concurrencyIndex !== -1 ? parseInt(args[concurrencyIndex + 1]) : 3;
+const concurrency = concurrencyIndex !== -1 ? parseInt(args[concurrencyIndex + 1]) : 5;
 
 const dryRun = args.includes('--dry-run');
 
