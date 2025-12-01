@@ -76,9 +76,9 @@ export default function AddBrandModal({ isOpen, onClose, initialBrandName }: Add
 
       setStatus('success')
       
-      // Redirect to the new profile
+      // Redirect to the manage dashboard (they're auto-claimed)
       setTimeout(() => {
-        router.push(`/brands/${data.slug}`)
+        router.push(`/brands/${data.slug}/manage`)
       }, 1000)
 
     } catch (err: any) {

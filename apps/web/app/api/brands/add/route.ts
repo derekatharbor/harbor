@@ -244,7 +244,10 @@ export async function POST(request: NextRequest) {
 
     const nextRank = (maxRank?.rank_global || 0) + 1
 
-    // Create profile
+    // Use Brandfetch for logo (consistent with other profiles)
+    const logoUrl = `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
+
+    // Create profile - auto-claimed since they verified via email domain
     const { data: profile, error: insertError } = await supabase
       .from('ai_profiles')
       .insert({
@@ -252,13 +255,15 @@ export async function POST(request: NextRequest) {
         domain,
         brand_name: brandName,
         description: description || `${brandName} - AI visibility profile`,
-        logo_url: ogImage,
+        logo_url: logoUrl,
         visibility_score: null, // Will be calculated during enrichment
         rank_global: nextRank,
         category: 'Uncategorized', // Will be set during enrichment
-        claimed: false,
+        claimed: true, // Auto-claim since email domain matches
+        claimed_at: new Date().toISOString(),
+        claimed_by_email: email,
         created_at: new Date().toISOString(),
-        // Store email for follow-up
+        // Store metadata for follow-up
         metadata: {
           submitted_by: email,
           submitted_at: new Date().toISOString(),
