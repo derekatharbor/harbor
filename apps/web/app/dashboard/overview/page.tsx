@@ -29,7 +29,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
+  ReferenceLine
 } from 'recharts'
 
 interface ScanData {
@@ -59,15 +60,42 @@ interface CompetitorData {
   category: string
 }
 
+interface Snapshot {
+  snapshot_date: string
+  shopping_score: number
+  brand_score: number
+  website_score: number
+  harbor_score: number
+  conversation_count: number
+}
+
+interface SnapshotData {
+  snapshots: Snapshot[]
+  delta: {
+    shopping: number
+    brand: number
+    website: number
+    harbor: number
+  }
+}
+
+interface ChartDataPoint {
+  date: string
+  you: number
+  [key: string]: number | string
+}
+
 export default function OverviewPage() {
   const { currentDashboard } = useBrand()
   const [scanData, setScanData] = useState<ScanData | null>(null)
   const [loading, setLoading] = useState(true)
   const [competitorData, setCompetitorData] = useState<CompetitorData | null>(null)
+  const [snapshotData, setSnapshotData] = useState<SnapshotData | null>(null)
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([])
   const [scanStatus, setScanStatus] = useState<'none' | 'running' | 'done'>('none')
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
   const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
-  const [timeRange, setTimeRange] = useState('7d')
+  const [timeRange, setTimeRange] = useState('30d')
 
   const router = useRouter()
 
@@ -127,6 +155,25 @@ export default function OverviewPage() {
           const compData = await compResponse.json()
           setCompetitorData(compData)
         }
+
+        // Fetch snapshot data for trends
+        const snapshotResponse = await fetch(`/api/snapshots?dashboardId=${currentDashboard.id}&range=${timeRange}`)
+        if (snapshotResponse.ok) {
+          const snapData = await snapshotResponse.json()
+          setSnapshotData(snapData)
+          
+          // Build chart data from snapshots
+          if (snapData.snapshots && snapData.snapshots.length > 0) {
+            const chartPoints: ChartDataPoint[] = snapData.snapshots.map((snap: Snapshot) => {
+              const date = new Date(snap.snapshot_date)
+              return {
+                date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                you: snap.harbor_score || 0
+              }
+            })
+            setChartData(chartPoints)
+          }
+        }
         
       } catch (error) {
         console.error('Failed to fetch data:', error)
@@ -136,19 +183,21 @@ export default function OverviewPage() {
     }
 
     fetchData()
-  }, [currentDashboard, router])
+  }, [currentDashboard, router, timeRange])
 
   const hasScanData = scanData && scanData.last_scan
 
-  // Mock chart data - will be replaced with real historical data
-  const chartData = [
-    { date: 'Jan', you: 45, competitor1: 62, competitor2: 55 },
-    { date: 'Feb', you: 48, competitor1: 64, competitor2: 58 },
-    { date: 'Mar', you: 52, competitor1: 63, competitor2: 56 },
-    { date: 'Apr', you: 58, competitor1: 65, competitor2: 60 },
-    { date: 'May', you: 62, competitor1: 64, competitor2: 62 },
-    { date: 'Jun', you: scanData?.visibility_score || 65, competitor1: 66, competitor2: 63 },
-  ]
+  // Use real deltas from snapshot data, fallback to 0
+  const deltas = snapshotData?.delta || { shopping: 0, brand: 0, website: 0, harbor: 0 }
+  
+  // For the status banner, use harbor delta
+  const visibilityDelta = deltas.harbor
+
+  // If no snapshots yet, show current data as single point
+  const displayChartData = chartData.length > 0 ? chartData : (scanData ? [{
+    date: 'Now',
+    you: scanData.harbor_score
+  }] : [])
 
   if (loading) {
     return (
@@ -163,11 +212,6 @@ export default function OverviewPage() {
       </div>
     )
   }
-
-  // Delta calculation (mock - would come from historical data)
-  const visibilityDelta: number = 5.2
-  const sentimentDelta: number = 2
-  const positionDelta: number = -1
 
   return (
     <div className="min-h-screen bg-primary" data-page="overview">
@@ -281,8 +325,13 @@ export default function OverviewPage() {
 
               {/* Chart */}
               <div className="p-4 h-[300px]">
+                {displayChartData.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-muted">
+                    <p>Run a scan to start tracking your visibility</p>
+                  </div>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                  <LineChart data={displayChartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                     <XAxis 
                       dataKey="date" 
@@ -355,23 +404,32 @@ export default function OverviewPage() {
                       name={currentDashboard?.brand_name || 'You'}
                       stroke="#3B82F6" 
                       strokeWidth={2}
-                      dot={false}
+                      dot={displayChartData.length === 1}
                       activeDot={{ r: 4 }}
                     />
-                    {competitorData?.competitors?.slice(0, 2).map((comp, idx) => (
-                      <Line 
-                        key={comp.id}
-                        type="monotone" 
-                        dataKey={`competitor${idx + 1}`}
-                        name={comp.brand_name}
-                        stroke={idx === 0 ? '#10B981' : '#F59E0B'}
-                        strokeWidth={2}
-                        dot={false}
-                        activeDot={{ r: 4 }}
-                      />
-                    ))}
+                    {/* Show competitor current scores as reference lines */}
+                    {competitorData?.competitors?.slice(0, 2).map((comp, idx) => {
+                      // Add competitor scores as horizontal reference lines
+                      const compScore = comp.visibility_score
+                      return (
+                        <ReferenceLine 
+                          key={comp.id}
+                          y={compScore}
+                          stroke={idx === 0 ? '#10B981' : '#F59E0B'}
+                          strokeDasharray="5 5"
+                          strokeWidth={1.5}
+                          label={{
+                            value: `${comp.brand_name}: ${compScore}%`,
+                            position: 'right',
+                            fill: idx === 0 ? '#10B981' : '#F59E0B',
+                            fontSize: 11
+                          }}
+                        />
+                      )
+                    })}
                   </LineChart>
                 </ResponsiveContainer>
+                )}
               </div>
             </div>
 
@@ -462,10 +520,17 @@ export default function OverviewPage() {
               </div>
               <div className="metric-value text-2xl">{scanData.shopping_visibility}%</div>
               <div className="text-sm text-secondary mt-1">Shopping Visibility</div>
-              <div className="delta delta-up text-xs mt-2">
-                <TrendingUp className="w-3 h-3" />
-                +3% vs last week
-              </div>
+              {deltas.shopping !== 0 ? (
+                <div className={`delta ${deltas.shopping > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
+                  {deltas.shopping > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {deltas.shopping > 0 ? '+' : ''}{deltas.shopping}% vs previous
+                </div>
+              ) : (
+                <div className="delta delta-neutral text-xs mt-2">
+                  <Minus className="w-3 h-3" />
+                  No change
+                </div>
+              )}
             </Link>
 
             <Link href="/dashboard/brand" className="card card-interactive p-4">
@@ -477,10 +542,17 @@ export default function OverviewPage() {
               </div>
               <div className="metric-value text-2xl">{scanData.brand_visibility}%</div>
               <div className="text-sm text-secondary mt-1">Brand Visibility</div>
-              <div className="delta delta-up text-xs mt-2">
-                <TrendingUp className="w-3 h-3" />
-                +2% vs last week
-              </div>
+              {deltas.brand !== 0 ? (
+                <div className={`delta ${deltas.brand > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
+                  {deltas.brand > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {deltas.brand > 0 ? '+' : ''}{deltas.brand}% vs previous
+                </div>
+              ) : (
+                <div className="delta delta-neutral text-xs mt-2">
+                  <Minus className="w-3 h-3" />
+                  No change
+                </div>
+              )}
             </Link>
 
             <Link href="/dashboard/website" className="card card-interactive p-4">
@@ -492,10 +564,17 @@ export default function OverviewPage() {
               </div>
               <div className="metric-value text-2xl">{scanData.site_readability}%</div>
               <div className="text-sm text-secondary mt-1">Website Readiness</div>
-              <div className="delta delta-neutral text-xs mt-2">
-                <Minus className="w-3 h-3" />
-                No change
-              </div>
+              {deltas.website !== 0 ? (
+                <div className={`delta ${deltas.website > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
+                  {deltas.website > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                  {deltas.website > 0 ? '+' : ''}{deltas.website}% vs previous
+                </div>
+              ) : (
+                <div className="delta delta-neutral text-xs mt-2">
+                  <Minus className="w-3 h-3" />
+                  No change
+                </div>
+              )}
             </Link>
 
             <Link href="/dashboard/conversations" className="card card-interactive p-4">
@@ -507,9 +586,9 @@ export default function OverviewPage() {
               </div>
               <div className="metric-value text-2xl">{scanData.conversation_topics}</div>
               <div className="text-sm text-secondary mt-1">Topics Tracked</div>
-              <div className="delta delta-up text-xs mt-2">
-                <TrendingUp className="w-3 h-3" />
-                +5 new this week
+              <div className="delta delta-neutral text-xs mt-2">
+                <Minus className="w-3 h-3" />
+                --
               </div>
             </Link>
           </div>
