@@ -165,9 +165,9 @@ export default function OverviewPage() {
   }
 
   // Delta calculation (mock - would come from historical data)
-  const visibilityDelta = 5.2
-  const sentimentDelta = 2
-  const positionDelta = -1
+  const visibilityDelta: number = 5.2
+  const sentimentDelta: number = 2
+  const positionDelta: number = -1
 
   return (
     <div className="min-h-screen bg-primary" data-page="overview">
