@@ -300,17 +300,37 @@ export default function OverviewPage() {
                     <Tooltip 
                       content={({ active, payload, label }) => {
                         if (!active || !payload?.length) return null
+                        
+                        // Build logo map for tooltip
+                        const logoMap: Record<string, string | undefined> = {
+                          [currentDashboard?.brand_name || 'You']: currentDashboard?.logo_url || undefined
+                        }
+                        competitorData?.competitors?.slice(0, 2).forEach((comp) => {
+                          logoMap[comp.brand_name] = comp.logo_url
+                        })
+                        
                         return (
-                          <div className="bg-card border border-border rounded-lg shadow-lg p-3 min-w-[200px]">
-                            <div className="font-medium text-primary mb-2">{label}</div>
-                            <div className="space-y-2">
+                          <div className="bg-card border border-border rounded-lg shadow-lg p-3 min-w-[240px]">
+                            <div className="font-medium text-primary mb-3">{label}</div>
+                            <div className="space-y-2.5">
                               {payload.map((entry: any, idx: number) => (
                                 <div key={idx} className="flex items-center gap-3">
                                   <div 
-                                    className="w-2 h-2 rounded-full flex-shrink-0" 
+                                    className="w-2.5 h-2.5 rounded-sm flex-shrink-0" 
                                     style={{ backgroundColor: entry.color }}
                                   />
-                                  <span className="text-secondary flex-1 truncate">{entry.name}</span>
+                                  {logoMap[entry.name] ? (
+                                    <img 
+                                      src={logoMap[entry.name]} 
+                                      alt={entry.name}
+                                      className="w-5 h-5 rounded object-contain flex-shrink-0"
+                                    />
+                                  ) : (
+                                    <div className="w-5 h-5 rounded bg-secondary flex items-center justify-center text-2xs font-medium text-muted flex-shrink-0">
+                                      {entry.name?.charAt(0)}
+                                    </div>
+                                  )}
+                                  <span className="text-secondary flex-1">{entry.name}</span>
                                   <span className="font-medium text-primary">{entry.value}%</span>
                                 </div>
                               ))}
