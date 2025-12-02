@@ -177,9 +177,9 @@ export default function OverviewPage() {
       <div className="page-header-bar">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            {currentDashboard?.metadata?.logo_url ? (
+            {currentDashboard?.logo_url ? (
               <img 
-                src={currentDashboard.metadata.logo_url} 
+                src={currentDashboard.logo_url} 
                 alt={currentDashboard.brand_name}
                 className="w-6 h-6 rounded"
               />
@@ -356,9 +356,9 @@ export default function OverviewPage() {
                 {competitorData && (
                   <div className="ranking-row is-user">
                     <span className="ranking-position">{competitorData.userRank}</span>
-                    {currentDashboard?.metadata?.logo_url ? (
+                    {currentDashboard?.logo_url ? (
                       <img 
-                        src={currentDashboard.metadata.logo_url} 
+                        src={currentDashboard.logo_url} 
                         alt={currentDashboard.brand_name}
                         className="ranking-logo"
                       />
