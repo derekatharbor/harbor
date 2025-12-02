@@ -298,18 +298,36 @@ export default function OverviewPage() {
                       tickFormatter={(value) => `${value}%`}
                     />
                     <Tooltip 
-                      contentStyle={{
-                        background: 'var(--bg-card)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                      content={({ active, payload, label }) => {
+                        if (!active || !payload?.length) return null
+                        return (
+                          <div className="bg-card border border-border rounded-lg shadow-lg p-3 min-w-[200px]">
+                            <div className="font-medium text-primary mb-2">{label}</div>
+                            <div className="space-y-2">
+                              {payload.map((entry: any, idx: number) => (
+                                <div key={idx} className="flex items-center gap-3">
+                                  <div 
+                                    className="w-2 h-2 rounded-full flex-shrink-0" 
+                                    style={{ backgroundColor: entry.color }}
+                                  />
+                                  <span className="text-secondary flex-1 truncate">{entry.name}</span>
+                                  <span className="font-medium text-primary">{entry.value}%</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )
                       }}
-                      labelStyle={{ color: 'var(--text-primary)', fontWeight: 500 }}
                     />
                     <Legend 
                       iconType="circle"
                       iconSize={8}
-                      wrapperStyle={{ paddingTop: '10px' }}
+                      wrapperStyle={{ paddingTop: '16px' }}
+                      formatter={(value: string) => (
+                        <span style={{ color: 'var(--text-secondary)', marginRight: '16px', fontSize: '13px' }}>
+                          {value}
+                        </span>
+                      )}
                     />
                     <Line 
                       type="monotone" 
