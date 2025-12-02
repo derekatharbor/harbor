@@ -53,7 +53,7 @@ export default function DashboardLayout({
         
         <main 
           className={`
-            flex-1 p-4 lg:p-8 relative 
+            flex-1 relative 
             transition-[margin] duration-300 
             ${sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-60'}
           `}

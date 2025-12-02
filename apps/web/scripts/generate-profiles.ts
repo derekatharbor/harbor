@@ -537,7 +537,7 @@ export async function runBatchGeneration(options: {
   dryRun?: boolean;
 } = {}) {
   
-  const { limit = 10000, concurrency = 5, dryRun = false } = options;
+  const { limit = 50000, concurrency = 5, dryRun = false } = options;
   
   console.log('\n🚀 Starting batch generation (v3 with enrichment)');
   console.log(`   Processing: ALL ungenerated brands (up to ${limit})`);
@@ -547,12 +547,13 @@ export async function runBatchGeneration(options: {
   
   // Fetch brands to generate (override Supabase default 1000 row limit)
   console.log('🔍 Querying brand_list table...');
-  const { data: brands, error } = await supabase
-    .from('brand_list')
-    .select('brand_name, domain, slug, industry')
-    .eq('profile_generated', false)
-    .order('priority', { ascending: false })
-    .limit(limit);
+const { data: brands, error } = await supabase
+  .from('brand_list')
+  .select('brand_name, domain, slug, industry')
+  .eq('profile_generated', false)
+  .is('generation_error', null)  // Skip already-errored brands
+  .order('priority', { ascending: false })
+  .range(0, limit - 1);  // Use range instead of limit
   
   console.log('   Query error:', error);
   console.log('   Brands returned:', brands?.length || 0);
@@ -688,7 +689,7 @@ Estimated cost: ~$0.0005/profile
 }
 
 const limitIndex = args.indexOf('--limit');
-const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : 10000;
+const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : 50000;
 
 const concurrencyIndex = args.indexOf('--concurrency');
 const concurrency = concurrencyIndex !== -1 ? parseInt(args[concurrencyIndex + 1]) : 5;

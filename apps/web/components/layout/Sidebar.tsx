@@ -95,16 +95,17 @@ export default function Sidebar() {
     { name: 'Brand Profile', href: '/dashboard/brand-settings', icon: User },
   ]
 
-  // Get current page accent color
+  // Get current page accent color (updated for new palette)
   const getAccentColor = () => {
-    if (pathname === '/dashboard/overview') return '#2979FF' // Cerulean
-    if (pathname === '/dashboard/brand-settings') return '#22D3EE' // Teal (was coral)
-    if (pathname === '/dashboard/shopping') return '#00C6B7' // Aqua
-    if (pathname === '/dashboard/brand') return '#4EE4FF' // Periwinkle
-    if (pathname === '/dashboard/conversations') return '#FFB84D' // Amber/Gold
-    if (pathname === '/dashboard/website') return '#E879F9' // Magenta/Pink
-    if (pathname === '/dashboard/competitors') return '#A855F7' // Purple
-    return '#22D3EE' // Teal fallback (was coral)
+    if (pathname === '/dashboard/overview') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/brand-settings') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/shopping') return '#10B981' // Green
+    if (pathname === '/dashboard/brand') return '#06B6D4' // Cyan
+    if (pathname === '/dashboard/conversations') return '#F59E0B' // Amber
+    if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
+    if (pathname === '/dashboard/competitors') return '#EC4899' // Pink
+    if (pathname === '/dashboard/guide') return '#3B82F6' // Blue
+    return '#3B82F6' // Default blue
   }
 
   const accentColor = getAccentColor()
@@ -207,8 +208,8 @@ export default function Sidebar() {
             })}
           </div>
         )}
-        
-        {/* Favorites Section - Collapsed view with icons only */}
+
+        {/* Collapsed Favorites */}
         {isCollapsed && (
           <div className="px-4 pt-6 pb-3">
             {favorites.map((item) => {
