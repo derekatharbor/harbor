@@ -313,9 +313,6 @@ export default function CompetitorManagePage() {
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-muted" strokeWidth={1.5} />
               <h1 className="text-xl font-semibold text-primary">Brands</h1>
-              <span className="text-sm text-muted">
-                {competitors.length}/{getPlanLimit()}
-              </span>
             </div>
             
             <button
@@ -355,9 +352,7 @@ export default function CompetitorManagePage() {
                   </div>
                   
                   <h3 className="font-medium text-primary mb-1">{brand.brand_name}</h3>
-                  <p className="text-sm text-muted mb-5">
-                    {Math.round(brand.visibility_score)}% visibility score
-                  </p>
+                  <p className="text-sm text-muted mb-5">{brand.domain}</p>
                   
                   <div className="flex items-center gap-2">
                     <button
@@ -368,7 +363,10 @@ export default function CompetitorManagePage() {
                       {addingCompetitor === brand.domain ? (
                         <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                       ) : (
-                        'Track'
+                        <>
+                          <Plus className="w-3.5 h-3.5" />
+                          Start Tracking
+                        </>
                       )}
                     </button>
                     <button
@@ -481,7 +479,13 @@ export default function CompetitorManagePage() {
                     </div>
                     
                     <h3 className="font-medium text-primary">{comp.brand_name}</h3>
-                    <p className="text-sm text-muted">{comp.domain}</p>
+                    <p className="text-sm text-muted mb-3">{comp.domain}</p>
+                    
+                    {/* Actively Tracking badge */}
+                    <div className="flex items-center gap-1.5 text-xs text-chart-2">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Actively Tracking</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -489,17 +493,15 @@ export default function CompetitorManagePage() {
           )}
         </section>
 
-        {/* Plan limit notice */}
-        {atLimit && (
-          <div className="card p-4 bg-amber-500/10 border-amber-500/20 flex items-start gap-3">
-            <Info className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-primary font-medium">Competitor limit reached</p>
-              <p className="text-sm text-muted mt-1">
-                You're tracking {competitors.length} of {getPlanLimit()} competitors on your {currentDashboard?.plan || 'solo'} plan.{' '}
-                <a href="/pricing" className="text-chart-1 hover:underline">Upgrade</a> to track more.
-              </p>
-            </div>
+        {/* Upgrade CTA - show when approaching or at limit */}
+        {competitors.length > 0 && (
+          <div className="flex items-center justify-between text-sm text-muted">
+            <span>Tracking {competitors.length} of {getPlanLimit()} brands</span>
+            {competitors.length >= getPlanLimit() - 1 && (
+              <a href="/pricing" className="text-chart-1 hover:underline font-medium">
+                Want to track more? Upgrade →
+              </a>
+            )}
           </div>
         )}
       </div>
