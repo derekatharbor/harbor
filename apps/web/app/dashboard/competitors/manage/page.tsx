@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/competitors/manage/page.tsx
-// Competitor Management - Peec-inspired layout
+// Competitor Management - Peec-inspired design, Harbor styling
 
 'use client'
 
@@ -9,11 +9,9 @@ import {
   Plus, 
   X, 
   Search, 
-  Loader2, 
   MoreHorizontal,
   Trash2,
   Check,
-  ExternalLink,
   Info
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
@@ -43,23 +41,59 @@ interface SearchResult {
   visibility_score: number
 }
 
-// Gradient colors for tracked brand card headers (like Peec)
-const HEADER_COLORS = [
-  'from-rose-200/80 to-rose-100/40 dark:from-rose-500/20 dark:to-rose-500/5',
-  'from-amber-200/80 to-amber-100/40 dark:from-amber-500/20 dark:to-amber-500/5',
-  'from-emerald-200/80 to-emerald-100/40 dark:from-emerald-500/20 dark:to-emerald-500/5',
-  'from-cyan-200/80 to-cyan-100/40 dark:from-cyan-500/20 dark:to-cyan-500/5',
-  'from-violet-200/80 to-violet-100/40 dark:from-violet-500/20 dark:to-violet-500/5',
-  'from-pink-200/80 to-pink-100/40 dark:from-pink-500/20 dark:to-pink-500/5',
-  'from-sky-200/80 to-sky-100/40 dark:from-sky-500/20 dark:to-sky-500/5',
-  'from-orange-200/80 to-orange-100/40 dark:from-orange-500/20 dark:to-orange-500/5',
+// Gradient colors for tracked brand card headers (Peec-style)
+const HEADER_GRADIENTS = [
+  'from-rose-100 to-rose-50',
+  'from-amber-100 to-amber-50', 
+  'from-emerald-100 to-emerald-50',
+  'from-cyan-100 to-cyan-50',
+  'from-violet-100 to-violet-50',
+  'from-pink-100 to-pink-50',
+  'from-sky-100 to-sky-50',
+  'from-orange-100 to-orange-50',
 ]
 
-function getHeaderColor(index: number): string {
-  return HEADER_COLORS[index % HEADER_COLORS.length]
+// Dark mode variants
+const HEADER_GRADIENTS_DARK = [
+  'dark:from-rose-900/40 dark:to-rose-900/20',
+  'dark:from-amber-900/40 dark:to-amber-900/20',
+  'dark:from-emerald-900/40 dark:to-emerald-900/20', 
+  'dark:from-cyan-900/40 dark:to-cyan-900/20',
+  'dark:from-violet-900/40 dark:to-violet-900/20',
+  'dark:from-pink-900/40 dark:to-pink-900/20',
+  'dark:from-sky-900/40 dark:to-sky-900/20',
+  'dark:from-orange-900/40 dark:to-orange-900/20',
+]
+
+function getHeaderGradient(index: number): string {
+  const light = HEADER_GRADIENTS[index % HEADER_GRADIENTS.length]
+  const dark = HEADER_GRADIENTS_DARK[index % HEADER_GRADIENTS_DARK.length]
+  return `${light} ${dark}`
 }
 
-// Brand logo component with fallback
+// Tooltip component (matching Shopping page)
+function Tooltip({ content }: { content: string }) {
+  const [show, setShow] = useState(false)
+  
+  return (
+    <div className="relative inline-flex">
+      <div
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        className="cursor-help"
+      >
+        <Info className="w-3.5 h-3.5 text-muted" />
+      </div>
+      {show && (
+        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 p-3 text-xs text-secondary bg-primary border border-border rounded-lg shadow-xl">
+          {content}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Brand logo with Brandfetch fallback
 function BrandLogo({ 
   domain, 
   name, 
@@ -77,20 +111,23 @@ function BrandLogo({
   if (error || !logoUrl) {
     return (
       <div 
-        className={`rounded-xl bg-secondary flex items-center justify-center text-primary font-bold ${className}`}
+        className={`rounded-xl bg-secondary flex items-center justify-center text-muted font-semibold ${className}`}
         style={{ width: size, height: size, fontSize: size * 0.4 }}
       >
-        {name.charAt(0).toUpperCase()}
+        {name?.charAt(0)?.toUpperCase() || '?'}
       </div>
     )
   }
   
   return (
-    <div className={`rounded-xl overflow-hidden bg-white ${className}`} style={{ width: size, height: size }}>
+    <div 
+      className={`rounded-xl bg-white flex items-center justify-center overflow-hidden shadow-sm ${className}`}
+      style={{ width: size, height: size }}
+    >
       <img
         src={logoUrl}
         alt={name}
-        className="w-full h-full object-contain p-1.5"
+        className="w-full h-full object-contain p-2"
         onError={() => setError(true)}
       />
     </div>
@@ -140,23 +177,30 @@ export default function CompetitorManagePage() {
     fetchCompetitors()
   }, [currentDashboard?.id])
 
-  // Search brands
+  // Search brands with debounce
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
     
     if (searchQuery.length < 2) {
       setSearchResults([])
+      setSearching(false)
       return
     }
     
+    setSearching(true)
+    
     searchTimeout.current = setTimeout(async () => {
-      setSearching(true)
       try {
-        const res = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=8`)
+        const res = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
         if (res.ok) {
           const data = await res.json()
           const trackedDomains = new Set(competitors.map(c => c.domain))
-          setSearchResults((data.brands || []).filter((b: SearchResult) => !trackedDomains.has(b.domain)))
+          const ownDomain = currentDashboard?.domain
+          setSearchResults(
+            (data.brands || []).filter((b: SearchResult) => 
+              !trackedDomains.has(b.domain) && b.domain !== ownDomain
+            )
+          )
         }
       } catch (err) {
         console.error('Search failed:', err)
@@ -168,7 +212,7 @@ export default function CompetitorManagePage() {
     return () => {
       if (searchTimeout.current) clearTimeout(searchTimeout.current)
     }
-  }, [searchQuery, competitors])
+  }, [searchQuery, competitors, currentDashboard?.domain])
 
   // Add competitor
   const addCompetitor = async (brand: { brand_name: string; domain: string; logo_url?: string | null }, source = 'manual') => {
@@ -250,88 +294,79 @@ export default function CompetitorManagePage() {
   // Loading state
   if (loading || brandLoading) {
     return (
-      <>
-        <MobileHeader />
-        <div className="max-w-screen-xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-          <div className="animate-pulse space-y-8">
-            <div className="h-10 w-48 bg-secondary rounded-lg" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className="h-40 bg-secondary rounded-xl" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </>
+      <div className="min-h-screen bg-primary flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
+      </div>
     )
   }
 
   const atLimit = competitors.length >= getPlanLimit()
 
   return (
-    <>
+    <div className="min-h-screen bg-primary">
       <MobileHeader />
-      <div className="max-w-screen-xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Users className="w-6 h-6 lg:w-8 lg:h-8 text-[#A855F7]" strokeWidth={1.5} />
-            <h1 className="text-2xl lg:text-3xl font-heading font-bold text-primary">
-              Brands
-            </h1>
-            <span className="text-sm text-muted px-2 py-0.5 bg-secondary rounded-full">
-              {competitors.length}/{getPlanLimit()}
-            </span>
+      
+      {/* Header */}
+      <div className="border-b border-border bg-primary">
+        <div className="px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Users className="w-5 h-5 text-muted" strokeWidth={1.5} />
+              <h1 className="text-xl font-semibold text-primary">Brands</h1>
+              <span className="text-sm text-muted">
+                {competitors.length}/{getPlanLimit()}
+              </span>
+            </div>
+            
+            <button
+              onClick={() => setShowAddModal(true)}
+              disabled={atLimit}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                atLimit
+                  ? 'bg-secondary text-muted cursor-not-allowed'
+                  : 'bg-primary text-primary-foreground hover:opacity-90 cursor-pointer border border-border hover:border-primary/30'
+              }`}
+            >
+              <Plus className="w-4 h-4" />
+              Add Brand
+            </button>
           </div>
-          
-          <button
-            onClick={() => setShowAddModal(true)}
-            disabled={atLimit}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              atLimit
-                ? 'bg-secondary text-muted cursor-not-allowed'
-                : 'bg-primary text-primary-foreground hover:opacity-90 cursor-pointer'
-            }`}
-          >
-            <Plus className="w-4 h-4" />
-            Add Brand
-          </button>
         </div>
+      </div>
 
-        {/* Suggested Brands */}
+      <div className="p-6 space-y-10">
+        {/* Suggested Brands Section */}
         {suggested.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-lg font-semibold text-primary">Suggested Brands</h2>
+          <section>
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="text-base font-medium text-primary">Suggested Brands</h2>
               <span className="text-sm text-muted">· {suggested.length}</span>
+              <Tooltip content="Brands in your category that frequently appear in AI responses. Track them to benchmark your visibility." />
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {suggested.map((brand) => (
                 <div
                   key={brand.domain}
-                  className="bg-card border border-border rounded-xl p-4 hover:border-border/80 transition-colors"
+                  className="card p-5 hover:border-border/80 transition-all group"
                 >
-                  {/* Logo */}
-                  <div className="mb-3">
-                    <BrandLogo domain={brand.domain} name={brand.brand_name} size={48} />
+                  <div className="mb-4">
+                    <BrandLogo domain={brand.domain} name={brand.brand_name} size={52} />
                   </div>
                   
-                  {/* Name & Mentions */}
-                  <h3 className="font-semibold text-primary mb-0.5">{brand.brand_name}</h3>
-                  <p className="text-sm text-muted mb-4">
-                    {Math.round(brand.visibility_score)}% visibility
+                  <h3 className="font-medium text-primary mb-1">{brand.brand_name}</h3>
+                  <p className="text-sm text-muted mb-5">
+                    {Math.round(brand.visibility_score)}% visibility score
                   </p>
                   
-                  {/* Actions */}
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => addCompetitor(brand, 'suggested')}
                       disabled={addingCompetitor === brand.domain || atLimit}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {addingCompetitor === brand.domain ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                       ) : (
                         'Track'
                       )}
@@ -339,13 +374,9 @@ export default function CompetitorManagePage() {
                     <button
                       onClick={() => rejectSuggestion(brand)}
                       disabled={rejectingBrand === brand.domain}
-                      className="px-3 py-1.5 text-sm font-medium text-muted hover:text-primary hover:bg-secondary rounded-lg transition-all cursor-pointer disabled:opacity-50"
+                      className="px-3 py-2 text-sm font-medium text-muted hover:text-primary hover:bg-secondary rounded-lg transition-all cursor-pointer disabled:opacity-50"
                     >
-                      {rejectingBrand === brand.domain ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        'Reject'
-                      )}
+                      Reject
                     </button>
                   </div>
                 </div>
@@ -354,20 +385,25 @@ export default function CompetitorManagePage() {
           </section>
         )}
 
-        {/* Tracked Brands */}
+        {/* Tracked Brands Section */}
         <section>
-          <h2 className="text-lg font-semibold text-primary mb-4">Tracked Brands</h2>
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="text-base font-medium text-primary">Tracked Brands</h2>
+            <Tooltip content="These competitors are tracked across all your prompts. You'll see how your visibility compares to theirs." />
+          </div>
           
-          {competitors.length === 0 ? (
-            <div className="bg-card border border-dashed border-border rounded-xl p-12 text-center">
-              <Users className="w-12 h-12 text-muted mx-auto mb-4" strokeWidth={1} />
-              <h3 className="text-lg font-semibold text-primary mb-2">No competitors tracked yet</h3>
+          {competitors.length === 0 && suggested.length === 0 ? (
+            <div className="card p-12 text-center border-dashed">
+              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6 text-muted" strokeWidth={1.5} />
+              </div>
+              <h3 className="text-lg font-medium text-primary mb-2">No competitors tracked yet</h3>
               <p className="text-sm text-muted mb-6 max-w-md mx-auto">
-                Add competitors to benchmark your AI visibility against them. We'll track how you compare across all prompts.
+                Add competitors to benchmark your AI visibility against them. Track up to {getPlanLimit()} brands on your plan.
               </p>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 cursor-pointer transition-all"
               >
                 <Plus className="w-4 h-4" />
                 Add Your First Competitor
@@ -376,21 +412,21 @@ export default function CompetitorManagePage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* User's own brand card */}
-              <div className="bg-card border border-border rounded-xl overflow-hidden">
-                <div className={`h-16 bg-gradient-to-r from-[#A855F7]/30 to-[#A855F7]/10`} />
-                <div className="p-4 -mt-6">
-                  <div className="flex items-start justify-between mb-3">
+              <div className="card overflow-hidden">
+                <div className={`h-14 bg-gradient-to-r from-chart-1/20 to-chart-1/5`} />
+                <div className="p-5 -mt-7">
+                  <div className="flex items-start justify-between mb-4">
                     <BrandLogo 
                       domain={currentDashboard?.domain} 
-                      name={currentDashboard?.brand_name || 'You'} 
-                      size={48}
-                      className="border-2 border-card"
+                      name={currentDashboard?.brand_name || 'Your Brand'} 
+                      size={52}
+                      className="ring-2 ring-card"
                     />
-                    <span className="text-xs px-2 py-0.5 bg-[#A855F7]/20 text-[#A855F7] rounded-full font-medium">
+                    <span className="text-xs px-2.5 py-1 bg-chart-1/20 text-chart-1 rounded-full font-medium mt-2">
                       Your brand
                     </span>
                   </div>
-                  <h3 className="font-semibold text-primary">{currentDashboard?.brand_name}</h3>
+                  <h3 className="font-medium text-primary">{currentDashboard?.brand_name}</h3>
                   <p className="text-sm text-muted">{currentDashboard?.domain}</p>
                 </div>
               </div>
@@ -399,25 +435,27 @@ export default function CompetitorManagePage() {
               {competitors.map((comp, index) => (
                 <div 
                   key={comp.id} 
-                  className="bg-card border border-border rounded-xl overflow-hidden group"
+                  className="card overflow-hidden group"
                 >
-                  {/* Colored header bar */}
-                  <div className={`h-16 bg-gradient-to-r ${getHeaderColor(index)}`} />
+                  <div className={`h-14 bg-gradient-to-r ${getHeaderGradient(index)}`} />
                   
-                  <div className="p-4 -mt-6">
-                    <div className="flex items-start justify-between mb-3">
+                  <div className="p-5 -mt-7">
+                    <div className="flex items-start justify-between mb-4">
                       <BrandLogo 
                         domain={comp.domain} 
                         name={comp.brand_name} 
-                        size={48}
-                        className="border-2 border-card"
+                        size={52}
+                        className="ring-2 ring-card"
                       />
                       
-                      {/* Overflow menu */}
-                      <div className="relative">
+                      {/* 3-dot menu */}
+                      <div className="relative mt-2">
                         <button
-                          onClick={() => setOpenMenuId(openMenuId === comp.id ? null : comp.id)}
-                          className="p-1.5 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-all cursor-pointer opacity-0 group-hover:opacity-100"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setOpenMenuId(openMenuId === comp.id ? null : comp.id)
+                          }}
+                          className="p-1.5 rounded-lg hover:bg-secondary/80 text-muted hover:text-primary transition-all cursor-pointer opacity-0 group-hover:opacity-100"
                         >
                           <MoreHorizontal className="w-4 h-4" />
                         </button>
@@ -428,12 +466,12 @@ export default function CompetitorManagePage() {
                               className="fixed inset-0 z-40"
                               onClick={() => setOpenMenuId(null)}
                             />
-                            <div className="absolute right-0 top-full mt-1 z-50 w-40 bg-card border border-border rounded-lg shadow-xl py-1">
+                            <div className="absolute right-0 top-full mt-1 z-50 w-36 bg-card border border-border rounded-lg shadow-xl py-1">
                               <button
                                 onClick={() => removeCompetitor(comp.id)}
                                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-secondary transition-colors cursor-pointer"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-3.5 h-3.5" />
                                 Remove
                               </button>
                             </div>
@@ -442,7 +480,7 @@ export default function CompetitorManagePage() {
                       </div>
                     </div>
                     
-                    <h3 className="font-semibold text-primary">{comp.brand_name}</h3>
+                    <h3 className="font-medium text-primary">{comp.brand_name}</h3>
                     <p className="text-sm text-muted">{comp.domain}</p>
                   </div>
                 </div>
@@ -453,13 +491,13 @@ export default function CompetitorManagePage() {
 
         {/* Plan limit notice */}
         {atLimit && (
-          <div className="mt-8 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-3">
+          <div className="card p-4 bg-amber-500/10 border-amber-500/20 flex items-start gap-3">
             <Info className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm text-primary font-medium">Competitor limit reached</p>
               <p className="text-sm text-muted mt-1">
                 You're tracking {competitors.length} of {getPlanLimit()} competitors on your {currentDashboard?.plan || 'solo'} plan.{' '}
-                <a href="/pricing" className="text-[#A855F7] hover:underline">Upgrade</a> to track more.
+                <a href="/pricing" className="text-chart-1 hover:underline">Upgrade</a> to track more.
               </p>
             </div>
           </div>
@@ -470,43 +508,46 @@ export default function CompetitorManagePage() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => {
               setShowAddModal(false)
               setSearchQuery('')
               setSearchResults([])
             }}
           />
-          <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-hidden">
+          <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <div>
+                <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
+                <p className="text-sm text-muted mt-0.5">Search from 60,000+ brands</p>
+              </div>
               <button
                 onClick={() => {
                   setShowAddModal(false)
                   setSearchQuery('')
                   setSearchResults([])
                 }}
-                className="p-1.5 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors cursor-pointer"
+                className="p-2 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Search Input */}
-            <div className="p-4 border-b border-border">
+            <div className="p-5 border-b border-border">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by company name or domain..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-[#A855F7]/50 focus:border-transparent"
+                  className="w-full pl-11 pr-4 py-3 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-chart-1/50 focus:border-chart-1/50 transition-all"
                   autoFocus
                 />
                 {searching && (
-                  <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-muted" />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-muted/30 border-t-muted rounded-full animate-spin" />
                 )}
               </div>
             </div>
@@ -520,23 +561,23 @@ export default function CompetitorManagePage() {
                       key={brand.domain}
                       onClick={() => addCompetitor(brand)}
                       disabled={addingCompetitor === brand.domain}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors text-left cursor-pointer disabled:opacity-50"
+                      className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left cursor-pointer disabled:opacity-50 group"
                     >
-                      <BrandLogo domain={brand.domain} name={brand.brand_name} size={40} />
+                      <BrandLogo domain={brand.domain} name={brand.brand_name} size={44} />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-primary truncate">{brand.brand_name}</p>
                         <p className="text-sm text-muted truncate">{brand.domain}</p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {brand.industry && (
-                          <span className="text-xs text-muted px-2 py-0.5 bg-secondary rounded hidden md:block">
+                          <span className="text-xs text-muted px-2 py-1 bg-secondary rounded hidden sm:block">
                             {brand.industry}
                           </span>
                         )}
                         {addingCompetitor === brand.domain ? (
-                          <Loader2 className="w-4 h-4 animate-spin text-[#A855F7]" />
+                          <div className="w-5 h-5 border-2 border-chart-1/30 border-t-chart-1 rounded-full animate-spin" />
                         ) : (
-                          <Plus className="w-4 h-4 text-muted" />
+                          <Plus className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
                         )}
                       </div>
                     </button>
@@ -548,31 +589,32 @@ export default function CompetitorManagePage() {
                   <button
                     onClick={() => {
                       const customDomain = searchQuery.includes('.') 
-                        ? searchQuery.toLowerCase()
-                        : `${searchQuery.toLowerCase().replace(/\s+/g, '')}.com`
+                        ? searchQuery.toLowerCase().trim()
+                        : `${searchQuery.toLowerCase().replace(/\s+/g, '').trim()}.com`
                       addCompetitor({
-                        brand_name: searchQuery,
+                        brand_name: searchQuery.trim(),
                         domain: customDomain,
                         logo_url: null
                       })
                     }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary text-primary hover:bg-secondary/80 transition-colors text-sm cursor-pointer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-secondary/80 text-primary transition-colors text-sm cursor-pointer font-medium"
                   >
                     <Plus className="w-4 h-4" />
-                    Add "{searchQuery}" as custom competitor
+                    Add "{searchQuery}" manually
                   </button>
                 </div>
               ) : searchQuery.length < 2 ? (
-                <div className="p-8 text-center">
-                  <Search className="w-10 h-10 text-muted/50 mx-auto mb-3" />
-                  <p className="text-sm text-muted">Search from 60,000+ brands</p>
-                  <p className="text-xs text-muted/60 mt-1">Or enter a custom company name</p>
+                <div className="p-10 text-center">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-5 h-5 text-muted" />
+                  </div>
+                  <p className="text-sm text-muted">Type at least 2 characters to search</p>
                 </div>
               ) : null}
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
