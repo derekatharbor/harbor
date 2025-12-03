@@ -358,10 +358,10 @@ export default function CompetitorManagePage() {
                     <button
                       onClick={() => addCompetitor(brand, 'suggested')}
                       disabled={addingCompetitor === brand.domain || atLimit}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
                       {addingCompetitor === brand.domain ? (
-                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
                       ) : (
                         <>
                           <Plus className="w-3.5 h-3.5" />
