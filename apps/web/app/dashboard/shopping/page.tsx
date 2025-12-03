@@ -292,12 +292,12 @@ export default function ShoppingPage() {
     { date: 'Nov', you: data?.visibility_score || 72, comp1: 60, comp2: 58, comp3: 55 },
   ]
 
-  // Model breakdown data with logos
+  // Model breakdown data with Brandfetch logos
   const modelBreakdown = [
-    { model: 'ChatGPT', score: 85, delta: 12, color: '#10B981', logo: 'https://asset.brandfetch.io/idBy2KvEch/idOnyiE_LN.png' },
-    { model: 'Claude', score: 78, delta: 8, color: '#8B5CF6', logo: 'https://asset.brandfetch.io/id20mQyGeY/idh6e3KQDK.jpeg' },
-    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6', logo: 'https://asset.brandfetch.io/idmJWH0Cvo/idaShip8j5.png' },
-    { model: 'Perplexity', score: 68, delta: 5, color: '#F59E0B', logo: 'https://asset.brandfetch.io/id2S-kXbuK/idwbvnv2IR.jpeg' },
+    { model: 'ChatGPT', score: 85, delta: 12, color: '#10B981', logo: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y' },
+    { model: 'Claude', score: 78, delta: 8, color: '#8B5CF6', logo: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y' },
+    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6', logo: 'https://cdn.brandfetch.io/google.com?c=1id1Fyz-h7an5-5KR_y' },
+    { model: 'Perplexity', score: 68, delta: 5, color: '#F59E0B', logo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y' },
   ]
 
   // Attributes with real-ish data
