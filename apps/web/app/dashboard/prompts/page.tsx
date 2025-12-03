@@ -217,13 +217,10 @@ export default function PromptsPage() {
       
       if (res.ok) {
         const data = await res.json()
-        // Refresh the list
         await fetchPrompts()
-        // Close modal and reset
         setNewPromptText('')
         setNewPromptTopic('')
         setShowAddModal(false)
-        // Switch to active tab to see new prompt
         setActiveTab('active')
       } else {
         const error = await res.json()
@@ -237,7 +234,7 @@ export default function PromptsPage() {
     }
   }
 
-  // Activate a suggested prompt (copy to user prompts)
+  // Activate a suggested prompt
   const handleActivatePrompt = async (prompt: Prompt) => {
     setSaving(true)
     try {
@@ -654,7 +651,7 @@ export default function PromptsPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prompts per topic</label>
                   <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
                     <option value="5">5</option>
-                    <option value="10" selected>10</option>
+                    <option value="10">10</option>
                     <option value="15">15</option>
                     <option value="20">20</option>
                     <option value="25">25</option>
