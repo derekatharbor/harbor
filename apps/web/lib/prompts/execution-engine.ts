@@ -2,7 +2,6 @@
 // Location: lib/prompts/execution-engine.ts
 // Runs prompts against ChatGPT, Claude, Gemini, Perplexity and stores results
 
-import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 import { GoogleGenerativeAI } from '@google/generative-ai'
@@ -342,7 +341,7 @@ export async function executePromptAllModels(
 
 // Store results in Supabase
 export async function storeExecutionResults(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   results: ExecutionResult[]
 ): Promise<void> {
   for (const result of results) {
