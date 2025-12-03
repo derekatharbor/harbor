@@ -47,21 +47,10 @@ interface SearchResult {
   visibility_score: number
 }
 
-// Gradient colors for card headers
-const HEADER_GRADIENTS = [
-  'from-rose-100 to-rose-50 dark:from-rose-900/30 dark:to-rose-900/10',
-  'from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10', 
-  'from-emerald-100 to-emerald-50 dark:from-emerald-900/30 dark:to-emerald-900/10',
-  'from-cyan-100 to-cyan-50 dark:from-cyan-900/30 dark:to-cyan-900/10',
-  'from-violet-100 to-violet-50 dark:from-violet-900/30 dark:to-violet-900/10',
-  'from-sky-100 to-sky-50 dark:from-sky-900/30 dark:to-sky-900/10',
-]
+// Neutral gray banner - user can customize color in edit panel later
+const BANNER_COLOR = 'bg-gray-100 dark:bg-zinc-800'
 
-function getHeaderGradient(index: number): string {
-  return HEADER_GRADIENTS[index % HEADER_GRADIENTS.length]
-}
-
-// Brand logo component
+// Brand logo component - sits on banner, not cropped
 function BrandLogo({ 
   domain, 
   name, 
@@ -79,7 +68,7 @@ function BrandLogo({
   if (error || !logoUrl) {
     return (
       <div 
-        className={`rounded-xl bg-[#1a1a1a] dark:bg-white/10 flex items-center justify-center text-white dark:text-white/80 font-semibold ${className}`}
+        className={`rounded-xl bg-[#1a1a1a] dark:bg-zinc-700 flex items-center justify-center text-white font-semibold ${className}`}
         style={{ width: size, height: size, fontSize: size * 0.4 }}
       >
         {name?.charAt(0)?.toUpperCase() || '?'}
@@ -89,13 +78,13 @@ function BrandLogo({
   
   return (
     <div 
-      className={`rounded-xl bg-white flex items-center justify-center overflow-hidden shadow-sm ${className}`}
+      className={`rounded-xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden ${className}`}
       style={{ width: size, height: size }}
     >
       <img
         src={logoUrl}
         alt={name}
-        className="w-full h-full object-contain p-2"
+        className="w-full h-full object-cover"
         onError={() => setError(true)}
       />
     </div>
@@ -202,8 +191,8 @@ function EditPanel({
       
       {/* Panel */}
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card border-l border-border shadow-2xl z-50 overflow-y-auto">
-        {/* Header gradient */}
-        <div className={`h-28 bg-gradient-to-r from-rose-100 to-rose-50 dark:from-rose-900/30 dark:to-rose-900/10`} />
+        {/* Header - neutral gray by default */}
+        <div className="h-28 bg-gray-100 dark:bg-zinc-800" />
         
         {/* Logo overlapping header */}
         <div className="px-6 -mt-10">
@@ -536,42 +525,42 @@ export default function CompetitorManagePage() {
                   {suggested.map((brand) => (
                     <div
                       key={brand.domain}
-                      className="relative group"
+                      className="relative group border border-border rounded-xl overflow-hidden bg-card hover:border-primary/20 transition-all"
                     >
-                      <div className="card p-5 hover:border-primary/20 transition-all h-full">
-                        {/* Colored header stripe */}
-                        <div className={`absolute top-0 left-0 right-0 h-12 rounded-t-lg bg-gradient-to-r ${getHeaderGradient(suggested.indexOf(brand))}`} />
+                      {/* Gray banner */}
+                      <div className="h-14 bg-gray-100 dark:bg-zinc-800" />
+                      
+                      {/* Content */}
+                      <div className="px-5 pb-5 -mt-6">
+                        <BrandLogo domain={brand.domain} name={brand.brand_name} size={52} />
                         
-                        <div className="relative pt-4">
-                          <div className="mb-4">
-                            <BrandLogo domain={brand.domain} name={brand.brand_name} size={48} />
-                          </div>
-                          
-                          <h3 className="font-medium text-primary mb-1">{brand.brand_name}</h3>
-                          <p className="text-sm text-muted mb-5">
-                            {brand.mention_count || Math.floor(Math.random() * 10) + 1} Mentions
-                          </p>
-                          
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => addCompetitor(brand, 'suggested')}
-                              disabled={addingCompetitor === brand.domain || atLimit}
-                              className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                            >
-                              {addingCompetitor === brand.domain ? (
-                                <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
-                              ) : (
-                                'Track'
-                              )}
-                            </button>
-                            <button
-                              onClick={() => rejectSuggestion(brand)}
-                              disabled={rejectingBrand === brand.domain}
-                              className="px-4 py-2 text-sm font-medium text-muted hover:text-primary border border-border hover:border-primary/20 rounded-lg transition-all cursor-pointer disabled:opacity-50"
-                            >
-                              Reject
-                            </button>
-                          </div>
+                        <h3 className="font-medium text-primary mt-3 mb-1">{brand.brand_name}</h3>
+                        <p className="text-sm text-muted mb-4">
+                          {brand.mention_count || Math.floor(Math.random() * 10) + 1} Mentions
+                        </p>
+                        
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => addCompetitor(brand, 'suggested')}
+                            disabled={addingCompetitor === brand.domain || atLimit}
+                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                          >
+                            {addingCompetitor === brand.domain ? (
+                              <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
+                            ) : (
+                              <>
+                                <Plus className="w-3.5 h-3.5" />
+                                Start Tracking
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => rejectSuggestion(brand)}
+                            disabled={rejectingBrand === brand.domain}
+                            className="px-4 py-2 text-sm font-medium text-primary bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg transition-all cursor-pointer disabled:opacity-50"
+                          >
+                            Reject
+                          </button>
                         </div>
                       </div>
                       
@@ -607,47 +596,52 @@ export default function CompetitorManagePage() {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* User's own brand */}
-                  <div className="card overflow-hidden">
-                    <div className={`h-12 bg-gradient-to-r from-chart-1/20 to-chart-1/5`} />
-                    <div className="p-5 -mt-6">
-                      <div className="flex items-start justify-between mb-3">
+                  <div className="border border-border rounded-xl overflow-hidden bg-card">
+                    {/* Subtle tinted banner for your brand */}
+                    <div className="h-14 bg-rose-50 dark:bg-rose-900/20" />
+                    <div className="px-5 pb-5 -mt-6">
+                      <div className="flex items-start justify-between">
                         <BrandLogo 
                           domain={currentDashboard?.domain} 
                           name={currentDashboard?.brand_name || 'Your Brand'} 
-                          size={48}
-                          className="ring-2 ring-card"
+                          size={52}
                         />
-                        <span className="text-xs px-2.5 py-1 bg-secondary text-muted rounded-full font-medium">
+                        <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-full font-medium mt-8">
                           Your brand
                         </span>
                       </div>
-                      <h3 className="font-medium text-primary">{currentDashboard?.brand_name}</h3>
-                      <p className="text-sm text-muted">{currentDashboard?.domain}</p>
+                      <h3 className="font-medium text-primary mt-3">{currentDashboard?.brand_name}</h3>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-md">
+                          {currentDashboard?.domain}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Competitor cards */}
-                  {competitors.map((comp, index) => (
+                  {competitors.map((comp) => (
                     <div 
                       key={comp.id} 
-                      className="card overflow-hidden group cursor-pointer hover:border-primary/20 transition-all"
+                      className="border border-border rounded-xl overflow-hidden bg-card group cursor-pointer hover:border-primary/20 transition-all"
                       onClick={() => setEditingCompetitor(comp)}
                     >
-                      <div className={`h-12 bg-gradient-to-r ${getHeaderGradient(index)}`} />
+                      <div className="h-14 bg-gray-100 dark:bg-zinc-800" />
                       
-                      <div className="p-5 -mt-6">
-                        <div className="flex items-start justify-between mb-3">
-                          <BrandLogo 
-                            domain={comp.domain} 
-                            name={comp.brand_name} 
-                            size={48}
-                            className="ring-2 ring-card"
-                          />
-                          <MoreHorizontal className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity mt-2" />
-                        </div>
+                      <div className="px-5 pb-5 -mt-6">
+                        <BrandLogo 
+                          domain={comp.domain} 
+                          name={comp.brand_name} 
+                          size={52}
+                        />
                         
-                        <h3 className="font-medium text-primary">{comp.brand_name}</h3>
-                        <p className="text-sm text-muted">{comp.domain}</p>
+                        <h3 className="font-medium text-primary mt-3">{comp.brand_name}</h3>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-md">
+                            {comp.domain}
+                          </span>
+                          <MoreHorizontal className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
                       </div>
                     </div>
                   ))}
