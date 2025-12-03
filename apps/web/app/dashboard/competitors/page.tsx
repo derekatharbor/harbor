@@ -13,14 +13,17 @@ interface Competitor {
   id: string
   slug: string
   brand_name: string
+  domain?: string
   industry: string
   visibility_score: number
   rank_global?: number
   logo_url?: string
+  is_tracked?: boolean
 }
 
 interface CompetitorData {
   competitors: Competitor[]
+  trackedCount: number
   userRank: number
   userScore?: number
   totalInCategory: number
@@ -160,11 +163,24 @@ export default function CompetitorsPage() {
                 Competitive Intelligence
               </h1>
             </div>
+            <Link
+              href="/dashboard/competitors/manage"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary/80 hover:text-primary border border-border hover:border-primary/20 rounded-lg transition-colors"
+            >
+              Manage Brands
+            </Link>
           </div>
           
-          <p className="text-sm text-secondary/60">
-            How you compare to other brands in <span className="text-primary font-medium">{data.category}</span>
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-secondary/60">
+              How you compare to other brands in <span className="text-primary font-medium">{data.category}</span>
+            </p>
+            {data.trackedCount > 0 && (
+              <p className="text-sm text-secondary/60">
+                Tracking <span className="text-emerald-500 font-medium">{data.trackedCount}</span> competitors
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Metric Cards */}
@@ -291,7 +307,7 @@ export default function CompetitorsPage() {
             {/* Competitors */}
             {data.competitors.map((comp, index) => {
               return (
-                <div key={comp.id} className="p-4 lg:p-6 hover:bg-white/[0.02] transition-colors">
+                <div key={comp.id} className={`p-4 lg:p-6 hover:bg-white/[0.02] transition-colors ${comp.is_tracked ? 'border-l-2 border-emerald-500/50' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-white/5 flex items-center justify-center text-secondary/60 font-mono text-sm">
@@ -315,8 +331,13 @@ export default function CompetitorsPage() {
                         )}
                       </div>
                       <div>
-                        <div className="text-primary font-medium">{comp.brand_name}</div>
-                        <div className="text-secondary/60 text-sm">{comp.industry}</div>
+                        <div className="text-primary font-medium flex items-center gap-2">
+                          {comp.brand_name}
+                          {comp.is_tracked && (
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500">Tracked</span>
+                          )}
+                        </div>
+                        <div className="text-secondary/60 text-sm">{comp.domain || comp.industry}</div>
                       </div>
                     </div>
                     

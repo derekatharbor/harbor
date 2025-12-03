@@ -1,5 +1,5 @@
 // apps/web/app/api/competitors/route.ts
-// FIXED: Properly identify user in leaderboard and calculate rank
+// UPDATED: Show tracked competitors first, then fill with category data
 
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -30,21 +30,19 @@ export async function GET(request: Request) {
       )
     }
     
-    console.log('[Competitors API] Fetching for brandId:', brandId)
-    
     const supabase = getSupabaseClient()
     
     // 1. Get the dashboard
     const { data: dashboard, error: dashboardError } = await supabase
       .from('dashboards')
-      .select('id, brand_name, metadata')
+      .select('id, brand_name, domain, metadata')
       .eq('id', brandId)
       .single()
     
     if (dashboardError || !dashboard) {
-      console.error('[Competitors API] Dashboard not found:', dashboardError)
       return NextResponse.json({
         competitors: [],
+        trackedCompetitors: [],
         userRank: 0,
         totalInCategory: 0,
         category: 'Unknown'
@@ -54,13 +52,17 @@ export async function GET(request: Request) {
     const userCategory = dashboard.metadata?.category || 'Unknown'
     const userBrandName = dashboard.brand_name.toLowerCase().trim()
     
-    console.log('[Competitors API] User:', dashboard.brand_name, 'Category:', userCategory)
+    // 2. Get user's tracked competitors from dashboard_competitors
+    const { data: trackedCompetitors } = await supabase
+      .from('dashboard_competitors')
+      .select('*')
+      .eq('dashboard_id', brandId)
+      .eq('status', 'active')
 
-    // 2. Get user's AI Readiness score from ai_profiles (same source as competitors)
+    // 3. Get user's score from ai_profiles
     let userScore = 0
     let userProfileId: string | null = null
     
-    // First try to find by dashboard_id link
     const { data: linkedProfile } = await supabase
       .from('ai_profiles')
       .select('id, visibility_score')
@@ -70,9 +72,7 @@ export async function GET(request: Request) {
     if (linkedProfile?.visibility_score) {
       userScore = linkedProfile.visibility_score
       userProfileId = linkedProfile.id
-      console.log('[Competitors API] User score from linked ai_profile:', userScore)
     } else {
-      // Fallback: find by brand name match
       const { data: namedProfile } = await supabase
         .from('ai_profiles')
         .select('id, visibility_score')
@@ -82,114 +82,105 @@ export async function GET(request: Request) {
       if (namedProfile?.visibility_score) {
         userScore = namedProfile.visibility_score
         userProfileId = namedProfile.id
-        console.log('[Competitors API] User score from name-matched ai_profile:', userScore)
       }
     }
 
-    // If still no score, they haven't been crawled yet
-    if (!userScore) {
-      console.log('[Competitors API] No ai_profile found for user - not yet crawled')
-      return NextResponse.json({
-        competitors: [],
-        userRank: 0,
-        totalInCategory: 0,
-        category: userCategory,
-        message: 'Brand not yet indexed'
+    // 4. Get visibility scores for tracked competitors
+    const trackedWithScores = await Promise.all(
+      (trackedCompetitors || []).map(async (tc) => {
+        // Try to find in ai_profiles by domain or name
+        const { data: profile } = await supabase
+          .from('ai_profiles')
+          .select('visibility_score, logo_url, slug')
+          .or(`domain.eq.${tc.domain},brand_name.ilike.${tc.brand_name}`)
+          .limit(1)
+          .single()
+
+        return {
+          id: tc.id,
+          slug: profile?.slug || tc.brand_name.toLowerCase().replace(/\s+/g, '-'),
+          brand_name: tc.brand_name,
+          domain: tc.domain,
+          industry: userCategory,
+          visibility_score: profile?.visibility_score || 0,
+          logo_url: tc.logo_url || profile?.logo_url,
+          is_tracked: true
+        }
       })
+    )
+
+    // Sort tracked by visibility score
+    trackedWithScores.sort((a, b) => b.visibility_score - a.visibility_score)
+
+    // 5. Get category competitors to fill remaining slots
+    let categoryCompetitors: any[] = []
+    
+    if (userCategory !== 'Unknown') {
+      const trackedDomains = new Set(trackedCompetitors?.map(tc => tc.domain) || [])
+      
+      const { data: allProfiles } = await supabase
+        .from('ai_profiles')
+        .select('id, slug, brand_name, domain, industry, visibility_score, logo_url, dashboard_id')
+        .eq('industry', userCategory)
+        .not('visibility_score', 'is', null)
+        .order('visibility_score', { ascending: false })
+        .limit(50)
+
+      categoryCompetitors = (allProfiles || [])
+        .filter(p => {
+          const isUser = p.id === userProfileId ||
+                         p.dashboard_id === brandId || 
+                         p.brand_name.toLowerCase().trim() === userBrandName ||
+                         p.domain === dashboard.domain
+          const isTracked = trackedDomains.has(p.domain)
+          return !isUser && !isTracked
+        })
+        .map(p => ({
+          id: p.id,
+          slug: p.slug || p.brand_name.toLowerCase().replace(/\s+/g, '-'),
+          brand_name: p.brand_name,
+          domain: p.domain,
+          industry: p.industry || userCategory,
+          visibility_score: p.visibility_score || 0,
+          logo_url: p.logo_url,
+          is_tracked: false
+        }))
     }
 
-    console.log('[Competitors API] Final user score:', userScore)
+    // 6. Combine: tracked first, then category (up to 10 total)
+    const allCompetitors = [
+      ...trackedWithScores,
+      ...categoryCompetitors.slice(0, Math.max(0, 10 - trackedWithScores.length))
+    ]
 
-    // 3. Handle Unknown category
-    if (userCategory === 'Unknown') {
-      return NextResponse.json({
-        competitors: [],
-        userRank: 1,
-        totalInCategory: 1,
-        category: 'Unknown'
-      })
-    }
+    // 7. Calculate user rank among all competitors shown
+    const higherScored = allCompetitors.filter(c => c.visibility_score > userScore).length
+    const userRank = higherScored + 1
 
-    // 4. Get ALL competitor profiles in the same industry
-    // After consolidation, we can use exact matching
-    const { data: allProfiles, error: compError } = await supabase
-      .from('ai_profiles')
-      .select('id, slug, brand_name, industry, visibility_score, logo_url, dashboard_id')
-      .eq('industry', userCategory)
-      .not('visibility_score', 'is', null)
-      .order('visibility_score', { ascending: false })
-      .limit(200)
-
-    if (compError) {
-      console.error('[Competitors API] Error fetching competitors:', compError)
-    }
-
-    console.log('[Competitors API] Found', allProfiles?.length || 0, 'profiles in industry:', userCategory)
-
-    // 5. Build leaderboard - EXCLUDING the user first
-    const competitors = (allProfiles || [])
-      .filter(p => {
-        // Exclude user by profile ID, dashboard_id, OR brand name
-        const isUser = p.id === userProfileId ||
-                       p.dashboard_id === brandId || 
-                       p.brand_name.toLowerCase().trim() === userBrandName
-        return !isUser
-      })
-      .map(p => ({
-        id: p.id,
-        slug: p.slug || p.brand_name.toLowerCase().replace(/\s+/g, '-'),
-        brand_name: p.brand_name,
-        industry: p.industry || userCategory,
-        visibility_score: p.visibility_score || 0,
-        logo_url: p.logo_url
-      }))
-
-    console.log('[Competitors API] Competitors after filtering:', competitors.length)
-
-    // 6. Calculate user's rank by counting how many have higher scores
-    const higherScored = competitors.filter(c => c.visibility_score > userScore).length
-    const userRank = higherScored + 1 // User is ranked after all with higher scores
-
-    console.log('[Competitors API] Competitors with higher score:', higherScored)
-    console.log('[Competitors API] User rank:', userRank)
-
-    // 7. Get top 5 competitors and assign their actual ranks
-    const topCompetitors = competitors
+    // Assign ranks
+    const competitorsWithRanks = allCompetitors
       .sort((a, b) => b.visibility_score - a.visibility_score)
-      .slice(0, 5)
       .map((c, idx) => {
-        // Calculate actual rank considering user's position
         let actualRank = idx + 1
         if (c.visibility_score < userScore) {
-          actualRank = idx + 2 // User is ahead, so bump their rank
+          actualRank = idx + 2
         }
-        return {
-          ...c,
-          rank_global: actualRank
-        }
+        return { ...c, rank_global: actualRank }
       })
 
-    const totalInCategory = competitors.length + 1 // +1 for user
-
-    console.log('[Competitors API] Returning:', {
+    return NextResponse.json({
+      competitors: competitorsWithRanks,
+      trackedCount: trackedWithScores.length,
       userRank,
       userScore,
-      totalInCategory,
-      topCompetitors: topCompetitors.length
-    })
-
-    return NextResponse.json({
-      competitors: topCompetitors,
-      userRank,
-      userScore, // Include user's AI Readiness score
-      totalInCategory,
+      totalInCategory: allCompetitors.length + 1,
       category: userCategory
     })
     
   } catch (error) {
-    console.error('[Competitors API] Critical error:', error)
+    console.error('[Competitors API] Error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch competitors', details: error instanceof Error ? error.message : 'Unknown' },
+      { error: 'Failed to fetch competitors' },
       { status: 500 }
     )
   }
