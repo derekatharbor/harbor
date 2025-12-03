@@ -81,7 +81,7 @@ export default function Sidebar() {
   // Analytics section - understanding how AI sees you
   const analytics = [
     { name: 'Overview', href: '/dashboard/overview', icon: Home },
-    { name: 'Prompts', href: '/dashboard/conversations', icon: MessageSquare },
+    { name: 'Prompts', href: '/dashboard/prompts', icon: MessageSquare },
     { name: 'Shopping', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand', href: '/dashboard/brand', icon: Star },
     { name: 'Website', href: '/dashboard/website', icon: Globe },
@@ -102,7 +102,7 @@ export default function Sidebar() {
   // Get current page accent color (updated for new palette)
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#3B82F6' // Blue
-    if (pathname === '/dashboard/conversations') return '#F59E0B' // Amber (Prompts)
+    if (pathname === '/dashboard/prompts') return '#F59E0B' // Amber (Prompts)
     if (pathname === '/dashboard/shopping') return '#10B981' // Green
     if (pathname === '/dashboard/brand') return '#06B6D4' // Cyan
     if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
