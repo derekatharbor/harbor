@@ -16,44 +16,53 @@ export async function GET(request: NextRequest) {
     const supabase = getSupabase()
     const { searchParams } = new URL(request.url)
     const dashboardId = searchParams.get('dashboard_id')
+    const includeSeeds = searchParams.get('include_seeds') !== 'false'
 
-    // Get seed prompts with their latest execution stats
-    const { data: seedPrompts, error: seedError } = await supabase
-      .from('seed_prompts')
-      .select('id, prompt_text, topic, intent, is_active, created_at')
-      .eq('is_active', true)
-      .order('topic', { ascending: true })
-      .order('created_at', { ascending: true })
-
-    if (seedError) {
-      throw seedError
+    // Get user prompts for this dashboard
+    let userPrompts: any[] = []
+    if (dashboardId) {
+      const { data } = await supabase
+        .from('user_prompts')
+        .select('id, prompt_text, topic, location, tags, status, is_active, created_at')
+        .eq('dashboard_id', dashboardId)
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+      
+      userPrompts = data || []
     }
 
-    // Get execution stats for each prompt
-    const promptIds = seedPrompts?.map(p => p.id) || []
+    // Get seed prompts (suggested/system prompts)
+    let seedPrompts: any[] = []
+    if (includeSeeds) {
+      const { data, error: seedError } = await supabase
+        .from('seed_prompts')
+        .select('id, prompt_text, topic, intent, is_active, created_at')
+        .eq('is_active', true)
+        .order('topic', { ascending: true })
+        .order('created_at', { ascending: true })
+        .limit(50) // Limit seed prompts shown
+      
+      seedPrompts = data || []
+    }
     
-    // Get latest executions with brand mentions
+    // Combine for processing
+    const allPromptIds = [
+      ...userPrompts.map(p => p.id),
+      ...seedPrompts.map(p => p.id)
+    ]
+
+    // Get execution stats
     const { data: executions } = await supabase
       .from('prompt_executions')
-      .select(`
-        prompt_id,
-        model,
-        executed_at,
-        error
-      `)
-      .in('prompt_id', promptIds)
+      .select('prompt_id, model, executed_at, error')
+      .in('prompt_id', allPromptIds)
       .is('error', null)
       .order('executed_at', { ascending: false })
 
     // Get brand mentions
     const { data: mentions } = await supabase
       .from('prompt_brand_mentions')
-      .select(`
-        execution_id,
-        brand_name,
-        position,
-        sentiment
-      `)
+      .select('execution_id, brand_name, position, sentiment')
 
     // Build execution map
     const execMap = new Map<string, {
@@ -76,50 +85,60 @@ export async function GET(request: NextRequest) {
       execMap.set(exec.prompt_id, existing)
     })
 
-    // Build mentions map by execution_id
-    const mentionsMap = new Map<string, any[]>()
-    mentions?.forEach(m => {
-      const existing = mentionsMap.get(m.execution_id) || []
-      existing.push(m)
-      mentionsMap.set(m.execution_id, existing)
-    })
-
-    // Calculate stats per prompt
-    const prompts = seedPrompts?.map(prompt => {
+    // Format user prompts (active)
+    const activePrompts = userPrompts.map(prompt => {
       const stats = execMap.get(prompt.id)
-      
-      // Calculate visibility (% of executions with any brand mention)
-      // For now, use execution count as a proxy for volume
       const volume = stats ? Math.min(100, stats.execCount * 20) : 0
-      
-      // Get average position and sentiment from mentions
-      let avgPosition: number | null = null
-      let dominantSentiment: 'positive' | 'neutral' | 'negative' | null = null
-      let mentionCount = 0
-
-      // This is simplified - in production you'd join properly
-      // For now, estimate based on execution count
       const visibility = stats ? Math.round((stats.execCount / 3) * 100) : 0
-
+      
       return {
         id: prompt.id,
         prompt_text: prompt.prompt_text,
         topic: prompt.topic,
         status: 'active' as const,
         visibility_score: Math.min(100, visibility),
-        sentiment: dominantSentiment,
-        position: avgPosition,
-        mentions: mentionCount,
+        sentiment: null,
+        position: null,
+        mentions: 0,
         volume,
         last_executed_at: stats?.lastExecuted || null,
-        models_tested: stats ? Array.from(stats.models) : []
+        source: 'user'
       }
-    }) || []
+    })
+
+    // Format seed prompts (suggested)
+    const suggestedPrompts = seedPrompts.map(prompt => {
+      const stats = execMap.get(prompt.id)
+      const volume = stats ? Math.min(100, stats.execCount * 20) : 0
+      const visibility = stats ? Math.round((stats.execCount / 3) * 100) : 0
+      
+      return {
+        id: prompt.id,
+        prompt_text: prompt.prompt_text,
+        topic: prompt.topic,
+        status: 'suggested' as const,
+        visibility_score: Math.min(100, visibility),
+        sentiment: null,
+        position: null,
+        mentions: 0,
+        volume,
+        last_executed_at: stats?.lastExecuted || null,
+        source: 'seed'
+      }
+    })
+
+    // Get all unique topics
+    const allTopics = [...new Set([
+      ...activePrompts.map(p => p.topic),
+      ...suggestedPrompts.map(p => p.topic)
+    ].filter(Boolean))]
 
     return NextResponse.json({
-      prompts,
-      total: prompts.length,
-      topics: [...new Set(prompts.map(p => p.topic).filter(Boolean))]
+      prompts: activePrompts,
+      suggested: suggestedPrompts.slice(0, 5), // Top 5 suggestions
+      all_suggested: suggestedPrompts,
+      total: activePrompts.length,
+      topics: allTopics
     })
 
   } catch (error) {

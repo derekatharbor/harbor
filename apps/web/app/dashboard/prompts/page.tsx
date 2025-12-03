@@ -120,36 +120,45 @@ export default function PromptsPage() {
   
   const [activeTab, setActiveTab] = useState<TabId>('active')
   const [prompts, setPrompts] = useState<Prompt[]>([])
+  const [suggestedPrompts, setSuggestedPrompts] = useState<Prompt[]>([])
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set(['all']))
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showTopicModal, setShowTopicModal] = useState(false)
   const [newPromptText, setNewPromptText] = useState('')
   const [newPromptTopic, setNewPromptTopic] = useState('')
+  const [newPromptLocation, setNewPromptLocation] = useState('us')
   
   // Plan limits
   const promptLimit = currentDashboard?.plan === 'agency' ? 100 : 
                       currentDashboard?.plan === 'enterprise' ? 999 : 25
 
-  // Fetch prompts from seed_prompts and execution results
-  useEffect(() => {
-    const fetchPrompts = async () => {
-      try {
-        // Fetch seed prompts with their execution stats
-        const res = await fetch('/api/prompts/list')
-        if (res.ok) {
-          const data = await res.json()
-          setPrompts(data.prompts || [])
-        }
-      } catch (err) {
-        console.error('Failed to fetch prompts:', err)
-      } finally {
-        setLoading(false)
+  // Fetch prompts
+  const fetchPrompts = async () => {
+    try {
+      const params = new URLSearchParams()
+      if (currentDashboard?.id) {
+        params.append('dashboard_id', currentDashboard.id)
       }
+      
+      const res = await fetch(`/api/prompts/list?${params}`)
+      if (res.ok) {
+        const data = await res.json()
+        setPrompts(data.prompts || [])
+        setSuggestedPrompts(data.suggested || [])
+      }
+    } catch (err) {
+      console.error('Failed to fetch prompts:', err)
+    } finally {
+      setLoading(false)
     }
-    
+  }
+
+  useEffect(() => {
     fetchPrompts()
-  }, [])
+  }, [currentDashboard?.id])
 
   // Toggle topic expansion
   const toggleTopic = (topicName: string) => {
@@ -162,8 +171,10 @@ export default function PromptsPage() {
     setExpandedTopics(newExpanded)
   }
 
-  // Filter prompts
-  const filteredPrompts = prompts.filter(p => {
+  // Filter prompts based on tab
+  const currentPrompts = activeTab === 'suggested' ? suggestedPrompts : prompts
+  
+  const filteredPrompts = currentPrompts.filter(p => {
     const matchesSearch = !searchQuery || 
       p.prompt_text.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesSearch
@@ -189,12 +200,66 @@ export default function PromptsPage() {
   
   // Add prompt
   const handleAddPrompt = async () => {
-    if (!newPromptText.trim()) return
+    if (!newPromptText.trim() || saving) return
     
-    // TODO: Wire to API
-    setNewPromptText('')
-    setNewPromptTopic('')
-    setShowAddModal(false)
+    setSaving(true)
+    try {
+      const res = await fetch('/api/prompts/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dashboard_id: currentDashboard?.id,
+          prompt_text: newPromptText,
+          topic: newPromptTopic || null,
+          location: newPromptLocation
+        })
+      })
+      
+      if (res.ok) {
+        const data = await res.json()
+        // Refresh the list
+        await fetchPrompts()
+        // Close modal and reset
+        setNewPromptText('')
+        setNewPromptTopic('')
+        setShowAddModal(false)
+        // Switch to active tab to see new prompt
+        setActiveTab('active')
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to add prompt')
+      }
+    } catch (err) {
+      console.error('Failed to add prompt:', err)
+      alert('Failed to add prompt')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  // Activate a suggested prompt (copy to user prompts)
+  const handleActivatePrompt = async (prompt: Prompt) => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/prompts/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dashboard_id: currentDashboard?.id,
+          prompt_text: prompt.prompt_text,
+          topic: prompt.topic
+        })
+      })
+      
+      if (res.ok) {
+        await fetchPrompts()
+        setActiveTab('active')
+      }
+    } catch (err) {
+      console.error('Failed to activate prompt:', err)
+    } finally {
+      setSaving(false)
+    }
   }
 
   // Navigate to prompt detail
@@ -228,7 +293,10 @@ export default function PromptsPage() {
           </div>
           
           <div className="flex items-center gap-2">
-            <button className="px-4 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer">
+            <button 
+              onClick={() => setShowTopicModal(true)}
+              className="px-4 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
               Add Topic
             </button>
             <button
@@ -466,9 +534,10 @@ export default function PromptsPage() {
                   <textarea
                     value={newPromptText}
                     onChange={(e) => setNewPromptText(e.target.value.slice(0, 200))}
-                    placeholder="What is the best insurance?"
+                    placeholder="What is the best project management software for small teams?"
                     className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 resize-none h-24 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
                   />
+                  <p className="text-xs text-gray-400 mt-1">Tip: Ask what people would search for when looking for your product.</p>
                 </div>
 
                 <div>
@@ -479,24 +548,41 @@ export default function PromptsPage() {
                     className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
                   >
                     <option value="">No Topic</option>
-                    <option value="project-management">Project Management</option>
-                    <option value="crm-sales">CRM & Sales</option>
-                    <option value="marketing">Marketing & SEO</option>
+                    <option value="Project Management">Project Management</option>
+                    <option value="CRM & Sales">CRM & Sales</option>
+                    <option value="Marketing & SEO">Marketing & SEO</option>
+                    <option value="HR & Recruiting">HR & Recruiting</option>
+                    <option value="Finance & Accounting">Finance & Accounting</option>
+                    <option value="Communication">Communication</option>
+                    <option value="Design & Creative">Design & Creative</option>
+                    <option value="Developer Tools">Developer Tools</option>
+                    <option value="Customer Support">Customer Support</option>
+                    <option value="E-commerce">E-commerce</option>
+                    <option value="Analytics & BI">Analytics & BI</option>
+                    <option value="Security">Security</option>
+                    <option value="AI & Automation">AI & Automation</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IP Address</label>
+                  <select 
+                    value={newPromptLocation}
+                    onChange={(e) => setNewPromptLocation(e.target.value)}
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
+                  >
                     <option value="us">🇺🇸 United States</option>
                     <option value="uk">🇬🇧 United Kingdom</option>
                     <option value="ca">🇨🇦 Canada</option>
+                    <option value="de">🇩🇪 Germany</option>
+                    <option value="fr">🇫🇷 France</option>
+                    <option value="au">🇦🇺 Australia</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 cursor-pointer">
+                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition-colors">
                     <span className="text-sm">Select tags for new prompts</span>
                     <Plus className="w-4 h-4 ml-auto" />
                   </div>
@@ -513,8 +599,95 @@ export default function PromptsPage() {
               </button>
               <button
                 onClick={handleAddPrompt}
-                disabled={!newPromptText.trim()}
+                disabled={!newPromptText.trim() || saving}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {saving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    Add
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Topic Modal */}
+      {showTopicModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowTopicModal(false)}
+          />
+          <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <button 
+              onClick={() => setShowTopicModal(false)}
+              className="absolute top-4 right-4 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+
+            <div className="p-6">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Add new Topic</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                Create a Topic without mentioning your own brand. Every topic will have prompts
+              </p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topic</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. SEO optimization"
+                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prompts per topic</label>
+                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IP address</label>
+                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                    <option value="us">🇺🇸 United States</option>
+                    <option value="uk">🇬🇧 United Kingdom</option>
+                    <option value="ca">🇨🇦 Canada</option>
+                    <option value="de">🇩🇪 Germany</option>
+                    <option value="fr">🇫🇷 France</option>
+                    <option value="au">🇦🇺 Australia</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Language</label>
+                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end px-6 py-4">
+              <button
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Add
