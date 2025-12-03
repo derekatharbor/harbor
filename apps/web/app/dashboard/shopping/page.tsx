@@ -296,7 +296,7 @@ export default function ShoppingPage() {
   const modelBreakdown = [
     { model: 'ChatGPT', score: 85, delta: 12, color: '#10B981', logo: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y' },
     { model: 'Claude', score: 78, delta: 8, color: '#8B5CF6', logo: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y' },
-    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6', logo: 'https://cdn.brandfetch.io/google.com?c=1id1Fyz-h7an5-5KR_y' },
+    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6', logo: 'https://cdn.brandfetch.io/gemini.google.com?c=1id1Fyz-h7an5-5KR_y' },
     { model: 'Perplexity', score: 68, delta: 5, color: '#F59E0B', logo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y' },
   ]
 
@@ -591,11 +591,11 @@ export default function ShoppingPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {modelBreakdown.map((model) => (
                   <div key={model.model} className="p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2.5 mb-3">
                       <img 
                         src={model.logo} 
                         alt={model.model}
-                        className="w-5 h-5 rounded object-contain"
+                        className="w-7 h-7 rounded-md object-contain"
                       />
                       <span className="text-sm text-secondary">{model.model}</span>
                     </div>
