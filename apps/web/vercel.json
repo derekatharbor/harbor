@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/prompts/execute-batch",
+      "schedule": "0 6,18 * * 1,4"
+    }
+  ]
+}
