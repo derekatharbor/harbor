@@ -17,7 +17,7 @@ import {
   Moon,
   Sun,
   Lightbulb,
-  Database,
+  Layers,
   LogOut
 } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -93,7 +93,7 @@ export default function Sidebar() {
 
   // Manage section - brand data and settings
   const manage = [
-    { name: 'Brand Hub', href: '/dashboard/brand-hub', icon: Database },
+    { name: 'Brand Hub', href: '/dashboard/brand-hub', icon: Layers },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ]
 

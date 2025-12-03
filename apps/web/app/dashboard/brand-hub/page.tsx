@@ -4,7 +4,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Database, Package, Link2, FileText, DollarSign, Award, Users, Plus, ArrowRight } from 'lucide-react'
+import { Layers, Package, Link2, FileText, DollarSign, Award, Users, Plus, ArrowRight } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -112,7 +112,7 @@ export default function BrandHubPage() {
       <div className="page-header-bar">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-chart-1/10 flex items-center justify-center">
-            <Database className="w-4 h-4 text-chart-1" />
+            <Layers className="w-4 h-4 text-chart-1" />
           </div>
           <div>
             <h1 className="text-lg font-semibold text-primary">Brand Hub</h1>
