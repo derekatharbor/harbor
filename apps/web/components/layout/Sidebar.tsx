@@ -18,7 +18,8 @@ import {
   Sun,
   TrendingUp,
   Layers,
-  LogOut
+  LogOut,
+  Users
 } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import BrandSwitcher from './BrandSwitcher'
@@ -94,6 +95,7 @@ export default function Sidebar() {
   // Manage section - brand data and settings
   const manage = [
     { name: 'Brand Hub', href: '/dashboard/brand-hub', icon: Layers },
+    { name: 'Competitors', href: '/dashboard/competitors/manage', icon: Users },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ]
 
@@ -106,6 +108,7 @@ export default function Sidebar() {
     if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
     if (pathname === '/dashboard/opportunities') return '#F97316' // Orange
     if (pathname === '/dashboard/brand-hub') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/competitors/manage') return '#A855F7' // Purple
     if (pathname === '/dashboard/settings') return '#6B7280' // Gray
     return '#3B82F6' // Default blue
   }
