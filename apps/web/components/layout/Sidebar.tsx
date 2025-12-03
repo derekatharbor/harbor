@@ -12,13 +12,12 @@ import {
   MessageSquare, 
   Globe,
   Settings,
-  FileText,
   ChevronLeft,
   ChevronRight,
   Moon,
   Sun,
-  User,
-  Users,
+  Lightbulb,
+  Database,
   LogOut
 } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -78,33 +77,36 @@ export default function Sidebar() {
     window.dispatchEvent(new Event('sidebar-toggle'))
   }
 
-  const favorites = [
-    { name: 'Quick Start Guide', href: '/dashboard/guide', icon: FileText },
-  ]
-
-  const intelligence = [
+  // Analytics section - understanding how AI sees you
+  const analytics = [
     { name: 'Overview', href: '/dashboard/overview', icon: Home },
-    { name: 'Competitive Intel', href: '/dashboard/competitors', icon: Users },
-    { name: 'Shopping Visibility', href: '/dashboard/shopping', icon: ShoppingBag },
-    { name: 'Brand Visibility', href: '/dashboard/brand', icon: Star },
-    { name: 'Conversation Volumes', href: '/dashboard/conversations', icon: MessageSquare },
-    { name: 'Website Analytics', href: '/dashboard/website', icon: Globe },
+    { name: 'Prompts', href: '/dashboard/conversations', icon: MessageSquare },
+    { name: 'Shopping', href: '/dashboard/shopping', icon: ShoppingBag },
+    { name: 'Brand', href: '/dashboard/brand', icon: Star },
+    { name: 'Website', href: '/dashboard/website', icon: Globe },
   ]
 
-  const brandSettings = [
-    { name: 'Brand Profile', href: '/dashboard/brand-settings', icon: User },
+  // Action section - things to do
+  const actions = [
+    { name: 'Opportunities', href: '/dashboard/opportunities', icon: Lightbulb },
+  ]
+
+  // Manage section - brand data and settings
+  const manage = [
+    { name: 'Brand Hub', href: '/dashboard/brand-hub', icon: Database },
+    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ]
 
   // Get current page accent color (updated for new palette)
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#3B82F6' // Blue
-    if (pathname === '/dashboard/brand-settings') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/conversations') return '#F59E0B' // Amber (Prompts)
     if (pathname === '/dashboard/shopping') return '#10B981' // Green
     if (pathname === '/dashboard/brand') return '#06B6D4' // Cyan
-    if (pathname === '/dashboard/conversations') return '#F59E0B' // Amber
     if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
-    if (pathname === '/dashboard/competitors') return '#EC4899' // Pink
-    if (pathname === '/dashboard/guide') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/opportunities') return '#F97316' // Orange
+    if (pathname === '/dashboard/brand-hub') return '#3B82F6' // Blue
+    if (pathname === '/dashboard/settings') return '#6B7280' // Gray
     return '#3B82F6' // Default blue
   }
 
@@ -174,82 +176,16 @@ export default function Sidebar() {
       {/* Scrollable Navigation - Everything in one scroll area */}
       {/* When collapsed, no overflow needed (allows tooltips to show) */}
       <nav className={`flex-1 ${isCollapsed ? '' : 'overflow-y-auto overflow-x-hidden'}`}>
-        {/* Favorites Section */}
-        {!isCollapsed && (
-          <div className="px-4 pt-6 pb-3">
-            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
-              Favorites
-            </div>
-            
-            {favorites.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1
-                    transition-colors cursor-pointer
-                    ${isActive 
-                      ? 'text-white pl-[10px]' 
-                      : 'text-softgray/60 hover:text-white hover:bg-white/5'
-                    }
-                  `}
-                  style={isActive ? {
-                    borderLeft: `2px solid ${accentColor}`
-                  } : {}}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-                  <span className="text-sm font-body truncate">{item.name}</span>
-                </Link>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Collapsed Favorites */}
-        {isCollapsed && (
-          <div className="px-4 pt-6 pb-3">
-            {favorites.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`
-                    flex items-center rounded-lg mb-1 py-3 justify-center
-                    transition-colors cursor-pointer relative group
-                    ${isActive 
-                      ? 'text-white' 
-                      : 'text-softgray/60 hover:text-white hover:bg-white/5'
-                    }
-                  `}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-                  
-                  {/* Tooltip */}
-                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
-                    {item.name}
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        )}
-
-        {/* Intelligence Section */}
-        <div className="px-4 py-3">
+        
+        {/* Analytics Section */}
+        <div className="px-4 pt-6 pb-3">
           {!isCollapsed && (
             <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
-              Intelligence
+              Analytics
             </div>
           )}
           
-          {intelligence.map((item) => {
+          {analytics.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             
@@ -285,9 +221,59 @@ export default function Sidebar() {
           })}
         </div>
 
-        {/* Brand Settings Section - Below Intelligence with subtle divider */}
+        {/* Action Section */}
+        <div className="px-4 py-3">
+          {!isCollapsed && (
+            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+              Action
+            </div>
+          )}
+          
+          {actions.map((item) => {
+            const Icon = item.icon
+            const isActive = pathname === item.href
+            
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
+                  flex items-center rounded-lg mb-1
+                  transition-colors cursor-pointer relative group
+                  ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+                  ${isActive 
+                    ? 'text-white' 
+                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                  }
+                  ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
+                `}
+                style={isActive && !isCollapsed ? {
+                  borderLeft: `2px solid ${accentColor}`
+                } : {}}
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+                {!isCollapsed && <span className="text-sm font-body truncate">{item.name}</span>}
+                
+                {/* Tooltip - only shows when collapsed */}
+                {isCollapsed && (
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                    {item.name}
+                  </div>
+                )}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Manage Section */}
         <div className="px-4 py-3 border-t border-white/[0.03]">
-          {brandSettings.map((item) => {
+          {!isCollapsed && (
+            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+              Manage
+            </div>
+          )}
+          
+          {manage.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             
@@ -360,36 +346,6 @@ export default function Sidebar() {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Control Center - scrolls with content */}
-        <div className="px-4 py-3 border-t border-white/5">
-          <Link
-            href="/dashboard/settings"
-            className={`
-              flex items-center rounded-lg
-              transition-colors cursor-pointer relative group
-              ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
-              ${pathname === '/dashboard/settings'
-                ? 'text-white'
-                : 'text-softgray/60 hover:text-white hover:bg-white/5'
-              }
-              ${pathname === '/dashboard/settings' && !isCollapsed ? 'pl-[10px]' : ''}
-            `}
-            style={pathname === '/dashboard/settings' && !isCollapsed ? {
-              borderLeft: `2px solid ${accentColor}`
-            } : {}}
-          >
-            <Settings className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
-            {!isCollapsed && <span className="text-sm font-body">Control Center</span>}
-            
-            {/* Tooltip - only shows when collapsed */}
-            {isCollapsed && (
-              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
-                Control Center
-              </div>
-            )}
-          </Link>
         </div>
 
         {/* Sign Out */}
