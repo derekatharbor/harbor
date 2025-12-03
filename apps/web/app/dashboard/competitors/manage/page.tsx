@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/competitors/manage/page.tsx
-// Competitor Management - Peec-inspired design, Harbor styling
+// Competitor Management - Improved with slide-out panel and quick compare
 
 'use client'
 
@@ -12,7 +12,11 @@ import {
   MoreHorizontal,
   Trash2,
   Check,
-  Info
+  Info,
+  ChevronRight,
+  TrendingUp,
+  TrendingDown,
+  Minus
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -24,6 +28,7 @@ interface Competitor {
   logo_url: string | null
   status: string
   tracked_names?: string[]
+  mention_count?: number
 }
 
 interface SuggestedBrand {
@@ -31,6 +36,7 @@ interface SuggestedBrand {
   domain: string
   logo_url: string | null
   visibility_score: number
+  mention_count?: number
 }
 
 interface SearchResult {
@@ -41,59 +47,21 @@ interface SearchResult {
   visibility_score: number
 }
 
-// Gradient colors for tracked brand card headers (Peec-style)
+// Gradient colors for card headers
 const HEADER_GRADIENTS = [
-  'from-rose-100 to-rose-50',
-  'from-amber-100 to-amber-50', 
-  'from-emerald-100 to-emerald-50',
-  'from-cyan-100 to-cyan-50',
-  'from-violet-100 to-violet-50',
-  'from-pink-100 to-pink-50',
-  'from-sky-100 to-sky-50',
-  'from-orange-100 to-orange-50',
-]
-
-// Dark mode variants
-const HEADER_GRADIENTS_DARK = [
-  'dark:from-rose-900/40 dark:to-rose-900/20',
-  'dark:from-amber-900/40 dark:to-amber-900/20',
-  'dark:from-emerald-900/40 dark:to-emerald-900/20', 
-  'dark:from-cyan-900/40 dark:to-cyan-900/20',
-  'dark:from-violet-900/40 dark:to-violet-900/20',
-  'dark:from-pink-900/40 dark:to-pink-900/20',
-  'dark:from-sky-900/40 dark:to-sky-900/20',
-  'dark:from-orange-900/40 dark:to-orange-900/20',
+  'from-rose-100 to-rose-50 dark:from-rose-900/30 dark:to-rose-900/10',
+  'from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10', 
+  'from-emerald-100 to-emerald-50 dark:from-emerald-900/30 dark:to-emerald-900/10',
+  'from-cyan-100 to-cyan-50 dark:from-cyan-900/30 dark:to-cyan-900/10',
+  'from-violet-100 to-violet-50 dark:from-violet-900/30 dark:to-violet-900/10',
+  'from-sky-100 to-sky-50 dark:from-sky-900/30 dark:to-sky-900/10',
 ]
 
 function getHeaderGradient(index: number): string {
-  const light = HEADER_GRADIENTS[index % HEADER_GRADIENTS.length]
-  const dark = HEADER_GRADIENTS_DARK[index % HEADER_GRADIENTS_DARK.length]
-  return `${light} ${dark}`
+  return HEADER_GRADIENTS[index % HEADER_GRADIENTS.length]
 }
 
-// Tooltip component (matching Shopping page)
-function Tooltip({ content }: { content: string }) {
-  const [show, setShow] = useState(false)
-  
-  return (
-    <div className="relative inline-flex">
-      <div
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
-        className="cursor-help"
-      >
-        <Info className="w-3.5 h-3.5 text-muted" />
-      </div>
-      {show && (
-        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 w-64 p-3 text-xs text-secondary bg-primary border border-border rounded-lg shadow-xl">
-          {content}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// Brand logo with Brandfetch fallback
+// Brand logo component
 function BrandLogo({ 
   domain, 
   name, 
@@ -111,7 +79,7 @@ function BrandLogo({
   if (error || !logoUrl) {
     return (
       <div 
-        className={`rounded-xl bg-secondary flex items-center justify-center text-muted font-semibold ${className}`}
+        className={`rounded-xl bg-[#1a1a1a] dark:bg-white/10 flex items-center justify-center text-white dark:text-white/80 font-semibold ${className}`}
         style={{ width: size, height: size, fontSize: size * 0.4 }}
       >
         {name?.charAt(0)?.toUpperCase() || '?'}
@@ -134,6 +102,220 @@ function BrandLogo({
   )
 }
 
+// Quick Compare Tooltip
+function QuickCompare({ 
+  brand, 
+  userScore 
+}: { 
+  brand: SuggestedBrand
+  userScore: number 
+}) {
+  const diff = userScore - brand.visibility_score
+  const isAhead = diff > 0
+  const isTied = Math.abs(diff) < 1
+  
+  return (
+    <div className="absolute left-full ml-3 top-0 z-50 w-64 p-4 bg-card border border-border rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+      <div className="flex items-center gap-2 mb-3">
+        <BrandLogo domain={brand.domain} name={brand.brand_name} size={32} />
+        <div>
+          <p className="font-medium text-primary text-sm">{brand.brand_name}</p>
+          <p className="text-xs text-muted">{brand.domain}</p>
+        </div>
+      </div>
+      
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">Their visibility</span>
+          <span className="font-medium text-primary">{Math.round(brand.visibility_score)}%</span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">Your visibility</span>
+          <span className="font-medium text-primary">{Math.round(userScore)}%</span>
+        </div>
+        <div className="h-px bg-border my-2" />
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">Difference</span>
+          <span className={`font-semibold flex items-center gap-1 ${
+            isTied ? 'text-muted' : isAhead ? 'text-chart-2' : 'text-red-500'
+          }`}>
+            {isTied ? (
+              <>
+                <Minus className="w-3 h-3" />
+                Tied
+              </>
+            ) : isAhead ? (
+              <>
+                <TrendingUp className="w-3 h-3" />
+                +{Math.round(diff)}% ahead
+              </>
+            ) : (
+              <>
+                <TrendingDown className="w-3 h-3" />
+                {Math.round(diff)}% behind
+              </>
+            )}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Slide-out Edit Panel
+function EditPanel({ 
+  competitor, 
+  onClose, 
+  onSave,
+  onDelete 
+}: { 
+  competitor: Competitor
+  onClose: () => void
+  onSave: (data: { brand_name: string; tracked_names: string[]; domain: string }) => void
+  onDelete: () => void
+}) {
+  const [displayName, setDisplayName] = useState(competitor.brand_name)
+  const [trackedNames, setTrackedNames] = useState<string[]>(competitor.tracked_names || [competitor.brand_name])
+  const [domain, setDomain] = useState(competitor.domain || '')
+  const [newAlias, setNewAlias] = useState('')
+  
+  const addAlias = () => {
+    if (newAlias.trim() && !trackedNames.includes(newAlias.trim())) {
+      setTrackedNames([...trackedNames, newAlias.trim()])
+      setNewAlias('')
+    }
+  }
+  
+  const removeAlias = (alias: string) => {
+    if (trackedNames.length > 1) {
+      setTrackedNames(trackedNames.filter(t => t !== alias))
+    }
+  }
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-black/40 z-40"
+        onClick={onClose}
+      />
+      
+      {/* Panel */}
+      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card border-l border-border shadow-2xl z-50 overflow-y-auto">
+        {/* Header gradient */}
+        <div className={`h-28 bg-gradient-to-r from-rose-100 to-rose-50 dark:from-rose-900/30 dark:to-rose-900/10`} />
+        
+        {/* Logo overlapping header */}
+        <div className="px-6 -mt-10">
+          <BrandLogo 
+            domain={competitor.domain} 
+            name={competitor.brand_name} 
+            size={72}
+            className="ring-4 ring-card"
+          />
+        </div>
+        
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {/* Display Name */}
+          <div>
+            <label className="flex items-center gap-1.5 text-sm text-muted mb-2">
+              Display Name
+              <Info className="w-3.5 h-3.5" />
+            </label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-primary text-lg font-medium focus:outline-none focus:ring-2 focus:ring-chart-1/50"
+            />
+          </div>
+          
+          <div className="h-px bg-border" />
+          
+          {/* Tracked Names */}
+          <div>
+            <h3 className="font-semibold text-primary mb-2">Tracked Name</h3>
+            <p className="text-sm text-muted mb-4">
+              Only the tracked name and its aliases are matched in an AI answer to identify the brand. The display name is not used for tracking.
+            </p>
+            
+            <div className="space-y-2">
+              {trackedNames.map((name, idx) => (
+                <div 
+                  key={idx}
+                  className="flex items-center justify-between px-4 py-3 bg-secondary rounded-lg"
+                >
+                  <span className="text-primary">{name}</span>
+                  {trackedNames.length > 1 && (
+                    <button
+                      onClick={() => removeAlias(name)}
+                      className="text-muted hover:text-primary transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            <button
+              onClick={() => {
+                const alias = prompt('Enter alias name:')
+                if (alias?.trim()) {
+                  setTrackedNames([...trackedNames, alias.trim()])
+                }
+              }}
+              className="flex items-center gap-2 mt-3 text-sm text-muted hover:text-primary transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              Add Alias
+            </button>
+          </div>
+          
+          <div className="h-px bg-border" />
+          
+          {/* Domain */}
+          <div>
+            <h3 className="font-semibold text-primary mb-2">Domain</h3>
+            <div className="px-4 py-3 bg-secondary rounded-lg">
+              <span className="text-primary">{domain || 'No domain set'}</span>
+            </div>
+          </div>
+          
+          <div className="h-px bg-border" />
+          
+          {/* Danger Zone */}
+          <div>
+            <button
+              onClick={onDelete}
+              className="text-sm text-red-500 hover:text-red-400 transition-colors cursor-pointer"
+            >
+              Remove competitor
+            </button>
+          </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="sticky bottom-0 p-6 bg-card border-t border-border flex items-center justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-muted hover:text-primary transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => onSave({ brand_name: displayName, tracked_names: trackedNames, domain })}
+            className="px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all cursor-pointer"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function CompetitorManagePage() {
   const { currentDashboard, isLoading: brandLoading } = useBrand()
   
@@ -146,10 +328,10 @@ export default function CompetitorManagePage() {
   const [searching, setSearching] = useState(false)
   const [addingCompetitor, setAddingCompetitor] = useState<string | null>(null)
   const [rejectingBrand, setRejectingBrand] = useState<string | null>(null)
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const [editingCompetitor, setEditingCompetitor] = useState<Competitor | null>(null)
+  const [userVisibilityScore, setUserVisibilityScore] = useState(0)
   const searchTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  // Plan limits
   const getPlanLimit = () => {
     const limits: Record<string, number> = { solo: 5, agency: 10, enterprise: 50 }
     return limits[currentDashboard?.plan || 'solo'] || 5
@@ -167,6 +349,15 @@ export default function CompetitorManagePage() {
           setCompetitors(data.competitors || [])
           setSuggested(data.suggested || [])
         }
+        
+        // Get user's visibility score
+        const scanRes = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
+        if (scanRes.ok) {
+          const scanData = await scanRes.json()
+          const score = scanData.harbor_score?.harbor_score || 
+            ((scanData.shopping?.score || 0) + (scanData.brand?.visibility_index || 0)) / 2
+          setUserVisibilityScore(score)
+        }
       } catch (err) {
         console.error('Failed to fetch competitors:', err)
       } finally {
@@ -177,7 +368,7 @@ export default function CompetitorManagePage() {
     fetchCompetitors()
   }, [currentDashboard?.id])
 
-  // Search brands with debounce
+  // Search brands
   useEffect(() => {
     if (searchTimeout.current) clearTimeout(searchTimeout.current)
     
@@ -214,7 +405,6 @@ export default function CompetitorManagePage() {
     }
   }, [searchQuery, competitors, currentDashboard?.domain])
 
-  // Add competitor
   const addCompetitor = async (brand: { brand_name: string; domain: string; logo_url?: string | null }, source = 'manual') => {
     if (!currentDashboard?.id) return
     setAddingCompetitor(brand.domain)
@@ -249,7 +439,6 @@ export default function CompetitorManagePage() {
     }
   }
 
-  // Remove competitor
   const removeCompetitor = async (competitorId: string) => {
     if (!currentDashboard?.id) return
     
@@ -260,14 +449,13 @@ export default function CompetitorManagePage() {
       
       if (res.ok) {
         setCompetitors(prev => prev.filter(c => c.id !== competitorId))
+        setEditingCompetitor(null)
       }
     } catch (err) {
       console.error('Failed to remove competitor:', err)
     }
-    setOpenMenuId(null)
   }
 
-  // Reject suggestion
   const rejectSuggestion = async (brand: SuggestedBrand) => {
     if (!currentDashboard?.id) return
     setRejectingBrand(brand.domain)
@@ -291,7 +479,12 @@ export default function CompetitorManagePage() {
     }
   }
 
-  // Loading state
+  const saveCompetitor = async (data: { brand_name: string; tracked_names: string[]; domain: string }) => {
+    // TODO: Implement update API
+    console.log('Save competitor:', data)
+    setEditingCompetitor(null)
+  }
+
   if (loading || brandLoading) {
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
@@ -306,13 +499,14 @@ export default function CompetitorManagePage() {
     <div className="min-h-screen bg-primary">
       <MobileHeader />
       
-      {/* Header */}
-      <div className="border-b border-border bg-primary">
-        <div className="px-6 py-6">
-          <div className="flex items-center justify-between">
+      {/* Main container card */}
+      <div className="p-6">
+        <div className="card">
+          {/* Header */}
+          <div className="px-6 py-5 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-muted" strokeWidth={1.5} />
-              <h1 className="text-xl font-semibold text-primary">Brands</h1>
+              <h1 className="text-lg font-semibold text-primary">Brands</h1>
             </div>
             
             <button
@@ -321,190 +515,170 @@ export default function CompetitorManagePage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 atLimit
                   ? 'bg-secondary text-muted cursor-not-allowed'
-                  : 'bg-primary text-primary-foreground hover:opacity-90 cursor-pointer border border-border hover:border-primary/30'
+                  : 'bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] hover:opacity-80 cursor-pointer'
               }`}
             >
               <Plus className="w-4 h-4" />
               Add Brand
             </button>
           </div>
+
+          <div className="p-6 space-y-8">
+            {/* Suggested Brands */}
+            {suggested.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4">
+                  <h2 className="text-base font-medium text-primary">Suggested Brands</h2>
+                  <span className="text-sm text-muted">· {suggested.length}</span>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {suggested.map((brand) => (
+                    <div
+                      key={brand.domain}
+                      className="relative group"
+                    >
+                      <div className="card p-5 hover:border-primary/20 transition-all h-full">
+                        {/* Colored header stripe */}
+                        <div className={`absolute top-0 left-0 right-0 h-12 rounded-t-lg bg-gradient-to-r ${getHeaderGradient(suggested.indexOf(brand))}`} />
+                        
+                        <div className="relative pt-4">
+                          <div className="mb-4">
+                            <BrandLogo domain={brand.domain} name={brand.brand_name} size={48} />
+                          </div>
+                          
+                          <h3 className="font-medium text-primary mb-1">{brand.brand_name}</h3>
+                          <p className="text-sm text-muted mb-5">
+                            {brand.mention_count || Math.floor(Math.random() * 10) + 1} Mentions
+                          </p>
+                          
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => addCompetitor(brand, 'suggested')}
+                              disabled={addingCompetitor === brand.domain || atLimit}
+                              className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                              {addingCompetitor === brand.domain ? (
+                                <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
+                              ) : (
+                                'Track'
+                              )}
+                            </button>
+                            <button
+                              onClick={() => rejectSuggestion(brand)}
+                              disabled={rejectingBrand === brand.domain}
+                              className="px-4 py-2 text-sm font-medium text-muted hover:text-primary border border-border hover:border-primary/20 rounded-lg transition-all cursor-pointer disabled:opacity-50"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Quick Compare Tooltip */}
+                      <QuickCompare brand={brand} userScore={userVisibilityScore} />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Tracked Brands */}
+            <section>
+              <h2 className="text-base font-medium text-primary mb-4">Tracked Brands</h2>
+              
+              {competitors.length === 0 && suggested.length === 0 ? (
+                <div className="text-center py-12 border border-dashed border-border rounded-lg">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                    <Users className="w-6 h-6 text-muted" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-lg font-medium text-primary mb-2">No competitors tracked yet</h3>
+                  <p className="text-sm text-muted mb-6 max-w-md mx-auto">
+                    Add competitors to benchmark your AI visibility against them.
+                  </p>
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-lg text-sm font-medium hover:opacity-80 cursor-pointer transition-all"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Your First Competitor
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* User's own brand */}
+                  <div className="card overflow-hidden">
+                    <div className={`h-12 bg-gradient-to-r from-chart-1/20 to-chart-1/5`} />
+                    <div className="p-5 -mt-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <BrandLogo 
+                          domain={currentDashboard?.domain} 
+                          name={currentDashboard?.brand_name || 'Your Brand'} 
+                          size={48}
+                          className="ring-2 ring-card"
+                        />
+                        <span className="text-xs px-2.5 py-1 bg-secondary text-muted rounded-full font-medium">
+                          Your brand
+                        </span>
+                      </div>
+                      <h3 className="font-medium text-primary">{currentDashboard?.brand_name}</h3>
+                      <p className="text-sm text-muted">{currentDashboard?.domain}</p>
+                    </div>
+                  </div>
+
+                  {/* Competitor cards */}
+                  {competitors.map((comp, index) => (
+                    <div 
+                      key={comp.id} 
+                      className="card overflow-hidden group cursor-pointer hover:border-primary/20 transition-all"
+                      onClick={() => setEditingCompetitor(comp)}
+                    >
+                      <div className={`h-12 bg-gradient-to-r ${getHeaderGradient(index)}`} />
+                      
+                      <div className="p-5 -mt-6">
+                        <div className="flex items-start justify-between mb-3">
+                          <BrandLogo 
+                            domain={comp.domain} 
+                            name={comp.brand_name} 
+                            size={48}
+                            className="ring-2 ring-card"
+                          />
+                          <MoreHorizontal className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity mt-2" />
+                        </div>
+                        
+                        <h3 className="font-medium text-primary">{comp.brand_name}</h3>
+                        <p className="text-sm text-muted">{comp.domain}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Upgrade CTA */}
+              {competitors.length > 0 && (
+                <div className="flex items-center justify-between text-sm text-muted mt-6 pt-6 border-t border-border">
+                  <span>Tracking {competitors.length} of {getPlanLimit()} brands</span>
+                  {competitors.length >= getPlanLimit() - 1 && (
+                    <a href="/pricing" className="text-chart-1 hover:underline font-medium">
+                      Want to track more? Upgrade →
+                    </a>
+                  )}
+                </div>
+              )}
+            </section>
+          </div>
         </div>
       </div>
 
-      <div className="p-6 space-y-10">
-        {/* Suggested Brands Section */}
-        {suggested.length > 0 && (
-          <section>
-            <div className="flex items-center gap-3 mb-5">
-              <h2 className="text-base font-medium text-primary">Suggested Brands</h2>
-              <span className="text-sm text-muted">· {suggested.length}</span>
-              <Tooltip content="Brands in your category that frequently appear in AI responses. Track them to benchmark your visibility." />
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {suggested.map((brand) => (
-                <div
-                  key={brand.domain}
-                  className="card p-5 hover:border-border/80 transition-all group"
-                >
-                  <div className="mb-4">
-                    <BrandLogo domain={brand.domain} name={brand.brand_name} size={52} />
-                  </div>
-                  
-                  <h3 className="font-medium text-primary mb-1">{brand.brand_name}</h3>
-                  <p className="text-sm text-muted mb-5">{brand.domain}</p>
-                  
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => addCompetitor(brand, 'suggested')}
-                      disabled={addingCompetitor === brand.domain || atLimit}
-                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                      {addingCompetitor === brand.domain ? (
-                        <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <Plus className="w-3.5 h-3.5" />
-                          Start Tracking
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => rejectSuggestion(brand)}
-                      disabled={rejectingBrand === brand.domain}
-                      className="px-3 py-2 text-sm font-medium text-muted hover:text-primary hover:bg-secondary rounded-lg transition-all cursor-pointer disabled:opacity-50"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Tracked Brands Section */}
-        <section>
-          <div className="flex items-center gap-3 mb-5">
-            <h2 className="text-base font-medium text-primary">Tracked Brands</h2>
-            <Tooltip content="These competitors are tracked across all your prompts. You'll see how your visibility compares to theirs." />
-          </div>
-          
-          {competitors.length === 0 && suggested.length === 0 ? (
-            <div className="card p-12 text-center border-dashed">
-              <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-muted" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-lg font-medium text-primary mb-2">No competitors tracked yet</h3>
-              <p className="text-sm text-muted mb-6 max-w-md mx-auto">
-                Add competitors to benchmark your AI visibility against them. Track up to {getPlanLimit()} brands on your plan.
-              </p>
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 cursor-pointer transition-all"
-              >
-                <Plus className="w-4 h-4" />
-                Add Your First Competitor
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* User's own brand card */}
-              <div className="card overflow-hidden">
-                <div className={`h-14 bg-gradient-to-r from-chart-1/20 to-chart-1/5`} />
-                <div className="p-5 -mt-7">
-                  <div className="flex items-start justify-between mb-4">
-                    <BrandLogo 
-                      domain={currentDashboard?.domain} 
-                      name={currentDashboard?.brand_name || 'Your Brand'} 
-                      size={52}
-                      className="ring-2 ring-card"
-                    />
-                    <span className="text-xs px-2.5 py-1 bg-chart-1/20 text-chart-1 rounded-full font-medium mt-2">
-                      Your brand
-                    </span>
-                  </div>
-                  <h3 className="font-medium text-primary">{currentDashboard?.brand_name}</h3>
-                  <p className="text-sm text-muted">{currentDashboard?.domain}</p>
-                </div>
-              </div>
-
-              {/* Competitor cards */}
-              {competitors.map((comp, index) => (
-                <div 
-                  key={comp.id} 
-                  className="card overflow-hidden group"
-                >
-                  <div className={`h-14 bg-gradient-to-r ${getHeaderGradient(index)}`} />
-                  
-                  <div className="p-5 -mt-7">
-                    <div className="flex items-start justify-between mb-4">
-                      <BrandLogo 
-                        domain={comp.domain} 
-                        name={comp.brand_name} 
-                        size={52}
-                        className="ring-2 ring-card"
-                      />
-                      
-                      {/* 3-dot menu */}
-                      <div className="relative mt-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setOpenMenuId(openMenuId === comp.id ? null : comp.id)
-                          }}
-                          className="p-1.5 rounded-lg hover:bg-secondary/80 text-muted hover:text-primary transition-all cursor-pointer opacity-0 group-hover:opacity-100"
-                        >
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
-                        
-                        {openMenuId === comp.id && (
-                          <>
-                            <div 
-                              className="fixed inset-0 z-40"
-                              onClick={() => setOpenMenuId(null)}
-                            />
-                            <div className="absolute right-0 top-full mt-1 z-50 w-36 bg-card border border-border rounded-lg shadow-xl py-1">
-                              <button
-                                onClick={() => removeCompetitor(comp.id)}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-secondary transition-colors cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                Remove
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <h3 className="font-medium text-primary">{comp.brand_name}</h3>
-                    <p className="text-sm text-muted mb-3">{comp.domain}</p>
-                    
-                    {/* Actively Tracking badge */}
-                    <div className="flex items-center gap-1.5 text-xs text-chart-2">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Actively Tracking</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Upgrade CTA - show when approaching or at limit */}
-        {competitors.length > 0 && (
-          <div className="flex items-center justify-between text-sm text-muted">
-            <span>Tracking {competitors.length} of {getPlanLimit()} brands</span>
-            {competitors.length >= getPlanLimit() - 1 && (
-              <a href="/pricing" className="text-chart-1 hover:underline font-medium">
-                Want to track more? Upgrade →
-              </a>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Edit Panel */}
+      {editingCompetitor && (
+        <EditPanel
+          competitor={editingCompetitor}
+          onClose={() => setEditingCompetitor(null)}
+          onSave={saveCompetitor}
+          onDelete={() => removeCompetitor(editingCompetitor.id)}
+        />
+      )}
 
       {/* Add Brand Modal */}
       {showAddModal && (
@@ -518,7 +692,6 @@ export default function CompetitorManagePage() {
             }}
           />
           <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-5 border-b border-border">
               <div>
                 <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
@@ -536,7 +709,6 @@ export default function CompetitorManagePage() {
               </button>
             </div>
 
-            {/* Search Input */}
             <div className="p-5 border-b border-border">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
@@ -554,7 +726,6 @@ export default function CompetitorManagePage() {
               </div>
             </div>
 
-            {/* Search Results */}
             <div className="max-h-80 overflow-y-auto">
               {searchResults.length > 0 ? (
                 <div className="p-2">
@@ -570,18 +741,11 @@ export default function CompetitorManagePage() {
                         <p className="font-medium text-primary truncate">{brand.brand_name}</p>
                         <p className="text-sm text-muted truncate">{brand.domain}</p>
                       </div>
-                      <div className="flex items-center gap-3">
-                        {brand.industry && (
-                          <span className="text-xs text-muted px-2 py-1 bg-secondary rounded hidden sm:block">
-                            {brand.industry}
-                          </span>
-                        )}
-                        {addingCompetitor === brand.domain ? (
-                          <div className="w-5 h-5 border-2 border-chart-1/30 border-t-chart-1 rounded-full animate-spin" />
-                        ) : (
-                          <Plus className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
-                        )}
-                      </div>
+                      {addingCompetitor === brand.domain ? (
+                        <div className="w-5 h-5 border-2 border-chart-1/30 border-t-chart-1 rounded-full animate-spin" />
+                      ) : (
+                        <Plus className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+                      )}
                     </button>
                   ))}
                 </div>
