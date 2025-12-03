@@ -5,7 +5,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { 
   MessageSquare, 
   Plus, 
@@ -14,10 +13,9 @@ import {
   ChevronDown,
   ChevronRight,
   MoreHorizontal,
-  Eye,
-  Smile,
-  Meh,
-  Frown,
+  TrendingUp,
+  TrendingDown,
+  Minus,
   X,
   Sparkles,
   Calendar,
@@ -55,12 +53,12 @@ function VolumeBar({ value }: { value: number }) {
   const filled = Math.round((value / 100) * bars)
   
   return (
-    <div className="flex items-center gap-[3px]">
+    <div className="flex items-center gap-0.5">
       {Array.from({ length: bars }).map((_, i) => (
         <div
           key={i}
-          className={`w-[5px] h-[18px] rounded-[2px] transition-colors ${
-            i < filled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'
+          className={`w-1.5 h-4 rounded-sm ${
+            i < filled ? 'bg-chart-2' : 'bg-secondary'
           }`}
         />
       ))}
@@ -69,18 +67,23 @@ function VolumeBar({ value }: { value: number }) {
 }
 
 // Sentiment display
-function SentimentDisplay({ sentiment }: { sentiment: string | null }) {
-  if (!sentiment) return <span className="text-gray-400">—</span>
+function SentimentBadge({ sentiment }: { sentiment: string | null }) {
+  if (!sentiment) return <span className="text-muted">—</span>
   
   const config = {
-    positive: { icon: Smile, color: 'text-emerald-500' },
-    neutral: { icon: Meh, color: 'text-gray-400' },
-    negative: { icon: Frown, color: 'text-red-500' },
+    positive: { icon: TrendingUp, color: 'text-chart-2', bg: 'bg-chart-2/10' },
+    neutral: { icon: Minus, color: 'text-muted', bg: 'bg-secondary' },
+    negative: { icon: TrendingDown, color: 'text-red-400', bg: 'bg-red-400/10' },
   }
   
-  const { icon: Icon, color } = config[sentiment as keyof typeof config] || config.neutral
+  const { icon: Icon, color, bg } = config[sentiment as keyof typeof config] || config.neutral
   
-  return <Icon className={`w-5 h-5 ${color}`} />
+  return (
+    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded ${bg}`}>
+      <Icon className={`w-3 h-3 ${color}`} />
+      <span className={`text-xs capitalize ${color}`}>{sentiment}</span>
+    </div>
+  )
 }
 
 // Filter pill button
@@ -102,8 +105,8 @@ function FilterPill({
         inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium
         transition-all cursor-pointer
         ${active 
-          ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-transparent' 
-          : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+          ? 'bg-primary text-primary border-border' 
+          : 'bg-card text-secondary border-border hover:text-primary'
         }
       `}
     >
@@ -216,7 +219,6 @@ export default function PromptsPage() {
       })
       
       if (res.ok) {
-        const data = await res.json()
         await fetchPrompts()
         setNewPromptText('')
         setNewPromptTopic('')
@@ -266,18 +268,18 @@ export default function PromptsPage() {
 
   if (loading || brandLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+      <div className="min-h-screen bg-primary flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-primary">
       <MobileHeader />
       
       {/* Top Filter Bar */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-card border-b border-border">
         <div className="px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FilterPill 
@@ -292,13 +294,13 @@ export default function PromptsPage() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => setShowTopicModal(true)}
-              className="px-4 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-1.5 text-sm font-medium text-secondary hover:text-primary transition-colors cursor-pointer"
             >
               Add Topic
             </button>
             <button
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
+              className="btn-primary inline-flex items-center gap-2"
             >
               Add Prompt
             </button>
@@ -307,29 +309,23 @@ export default function PromptsPage() {
       </div>
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-card border-b border-border">
         <div className="px-6 py-4">
           <div className="flex items-center gap-2 mb-4">
-            <MessageSquare className="w-5 h-5 text-gray-400" strokeWidth={1.5} />
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Prompts</h1>
-            <span className="text-sm text-gray-500">
+            <MessageSquare className="w-5 h-5 text-muted" strokeWidth={1.5} />
+            <h1 className="text-lg font-semibold text-primary">Prompts</h1>
+            <span className="text-sm text-muted">
               · {activeCount} / {promptLimit} Prompts
             </span>
           </div>
           
           {/* Tabs */}
-          <div className="flex items-center gap-1">
+          <div className="pill-group">
             {(['active', 'suggested', 'inactive'] as TabId[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`
-                  px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer capitalize
-                  ${activeTab === tab
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                  }
-                `}
+                className={`pill capitalize ${activeTab === tab ? 'active' : ''}`}
               >
                 {tab}
               </button>
@@ -339,21 +335,21 @@ export default function PromptsPage() {
       </div>
 
       {/* Search & Export Bar */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-card border-b border-border">
         <div className="px-6 py-3 flex items-center justify-between">
           <div /> {/* Spacer */}
           <div className="flex items-center gap-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search"
-                className="pl-9 pr-4 py-1.5 text-sm bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 w-48 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
+                className="input pl-9 pr-4 py-1.5 text-sm w-48"
               />
             </div>
-            <button className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-600 rounded-lg transition-colors cursor-pointer">
+            <button className="btn-secondary inline-flex items-center gap-2 text-sm">
               <Upload className="w-4 h-4" />
               Export
             </button>
@@ -362,16 +358,15 @@ export default function PromptsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-800 mx-6 mt-6 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="card mx-6 mt-6 overflow-hidden">
         {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+        <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-secondary border-b border-border text-xs font-medium text-muted uppercase tracking-wider">
           <div className="col-span-5 flex items-center gap-2">
-            <input type="checkbox" className="rounded border-gray-300 dark:border-gray-600" />
+            <input type="checkbox" className="rounded border-border" />
             <span>Prompt</span>
             <ChevronDown className="w-3 h-3" />
           </div>
           <div className="col-span-1 flex items-center gap-1">
-            <Eye className="w-3 h-3" />
             <span>Visibility</span>
             <ChevronDown className="w-3 h-3" />
           </div>
@@ -386,7 +381,7 @@ export default function PromptsPage() {
           <div className="col-span-1">Mentions</div>
           <div className="col-span-1 flex items-center gap-1">
             <span>Volume</span>
-            <span className="text-[10px] px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded font-medium normal-case">Beta</span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-chart-1/10 text-chart-1 rounded font-medium normal-case">Beta</span>
           </div>
           <div className="col-span-1"></div>
         </div>
@@ -394,14 +389,14 @@ export default function PromptsPage() {
         {/* Table Body */}
         {groupedByTopic.length === 0 ? (
           <div className="text-center py-16">
-            <MessageSquare className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No prompts yet</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            <MessageSquare className="w-12 h-12 text-muted mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-primary mb-2">No prompts yet</h3>
+            <p className="text-sm text-secondary mb-6">
               Add prompts to track how your brand appears in AI responses.
             </p>
             <button
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
+              className="btn-primary inline-flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add Your First Prompt
@@ -415,27 +410,27 @@ export default function PromptsPage() {
               <div key={group.name}>
                 {/* Topic Row */}
                 <div 
-                  className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/30 cursor-pointer transition-colors group"
+                  className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-light hover:bg-hover cursor-pointer transition-colors group"
                   onClick={() => toggleTopic(group.name)}
                 >
                   <div className="col-span-5 flex items-center gap-3">
                     {isExpanded ? (
-                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                      <ChevronDown className="w-4 h-4 text-muted" />
                     ) : (
-                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                      <ChevronRight className="w-4 h-4 text-muted" />
                     )}
                     <div>
-                      <span className="font-medium text-gray-900 dark:text-white">{group.name}</span>
-                      <span className="text-gray-400 dark:text-gray-500 ml-2 text-sm">{group.prompts.length} prompts</span>
+                      <span className="font-medium text-primary">{group.name}</span>
+                      <span className="text-muted ml-2 text-sm">{group.prompts.length} prompts</span>
                     </div>
-                    <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                      <MoreHorizontal className="w-4 h-4 text-gray-400" />
+                    <button className="p-1 hover:bg-secondary rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                      <MoreHorizontal className="w-4 h-4 text-muted" />
                     </button>
                   </div>
-                  <div className="col-span-1 text-gray-900 dark:text-white font-medium">{group.avgVisibility}%</div>
-                  <div className="col-span-2 text-gray-400">—</div>
-                  <div className="col-span-1 text-gray-400">—</div>
-                  <div className="col-span-1 text-gray-400">—</div>
+                  <div className="col-span-1 text-primary font-medium">{group.avgVisibility}%</div>
+                  <div className="col-span-2 text-muted">—</div>
+                  <div className="col-span-1 text-muted">—</div>
+                  <div className="col-span-1 text-muted">—</div>
                   <div className="col-span-2"></div>
                 </div>
 
@@ -444,28 +439,28 @@ export default function PromptsPage() {
                   <div 
                     key={prompt.id}
                     onClick={() => handlePromptClick(prompt.id)}
-                    className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-gray-100 dark:border-gray-700/50 hover:bg-blue-50 dark:hover:bg-blue-900/10 cursor-pointer transition-colors group"
+                    className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-light hover:bg-hover cursor-pointer transition-colors group"
                   >
                     <div className="col-span-5 flex items-center gap-3 pl-7">
                       <input 
                         type="checkbox" 
-                        className="rounded border-gray-300 dark:border-gray-600"
+                        className="rounded border-border"
                         onClick={(e) => e.stopPropagation()} 
                       />
-                      <span className="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <span className="text-primary group-hover:text-chart-1 transition-colors">
                         {prompt.prompt_text}
                       </span>
                     </div>
-                    <div className="col-span-1 text-gray-900 dark:text-white font-medium">
+                    <div className="col-span-1 text-primary font-medium">
                       {prompt.visibility_score}%
                     </div>
                     <div className="col-span-2">
-                      <SentimentDisplay sentiment={prompt.sentiment} />
+                      <SentimentBadge sentiment={prompt.sentiment} />
                     </div>
-                    <div className="col-span-1 text-gray-900 dark:text-white">
+                    <div className="col-span-1 text-primary">
                       {prompt.position ? `#${prompt.position}` : '—'}
                     </div>
-                    <div className="col-span-1 text-gray-900 dark:text-white">
+                    <div className="col-span-1 text-primary">
                       {prompt.mentions || '—'}
                     </div>
                     <div className="col-span-1">
@@ -482,16 +477,16 @@ export default function PromptsPage() {
 
       {/* Suggested Prompts Banner (shown on Suggested tab) */}
       {activeTab === 'suggested' && (
-        <div className="mx-6 mt-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="mx-6 mt-4 p-4 card">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Sparkles className="w-5 h-5 text-amber-500" />
+              <Sparkles className="w-5 h-5 text-warning" />
               <div>
-                <span className="font-medium text-gray-900 dark:text-white">Suggested prompts.</span>
-                <span className="text-gray-500 dark:text-gray-400 ml-1">Expand your brand's presence with suggested prompts.</span>
+                <span className="font-medium text-primary">Suggested prompts.</span>
+                <span className="text-secondary ml-1">Expand your brand's presence with suggested prompts.</span>
               </div>
             </div>
-            <button className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer">
+            <button className="text-sm font-medium text-secondary hover:text-primary transition-colors cursor-pointer">
               Suggest more
             </button>
           </div>
@@ -505,44 +500,44 @@ export default function PromptsPage() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowAddModal(false)}
           />
-          <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+          <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-border">
             {/* Modal Tabs */}
-            <div className="flex border-b border-gray-200 dark:border-gray-700">
-              <button className="flex-1 px-6 py-4 text-sm font-medium text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white">
+            <div className="flex border-b border-border">
+              <button className="flex-1 px-6 py-4 text-sm font-medium text-primary border-b-2 border-chart-1">
                 Add Prompt
               </button>
-              <button className="flex-1 px-6 py-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-pointer">
+              <button className="flex-1 px-6 py-4 text-sm font-medium text-muted hover:text-secondary transition-colors cursor-pointer">
                 Bulk Upload
               </button>
             </div>
 
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Add Prompt</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <h3 className="text-lg font-semibold text-primary mb-1">Add Prompt</h3>
+              <p className="text-sm text-secondary mb-6">
                 Create a competitive prompt without mentioning your own brand. Every line will be a separate prompt.
               </p>
 
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Prompt</label>
-                    <span className="text-xs text-gray-400">{newPromptText.length}/200</span>
+                    <label className="text-sm font-medium text-primary">Prompt</label>
+                    <span className="text-xs text-muted">{newPromptText.length}/200</span>
                   </div>
                   <textarea
                     value={newPromptText}
                     onChange={(e) => setNewPromptText(e.target.value.slice(0, 200))}
                     placeholder="What is the best project management software for small teams?"
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 resize-none h-24 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
+                    className="input w-full resize-none h-24"
                   />
-                  <p className="text-xs text-gray-400 mt-1">Tip: Ask what people would search for when looking for your product.</p>
+                  <p className="text-xs text-muted mt-1">Tip: Ask what people would search for when looking for your product.</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topic</label>
+                  <label className="block text-sm font-medium text-primary mb-2">Topic</label>
                   <select
                     value={newPromptTopic}
                     onChange={(e) => setNewPromptTopic(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
+                    className="input w-full cursor-pointer"
                   >
                     <option value="">No Topic</option>
                     <option value="Project Management">Project Management</option>
@@ -562,11 +557,11 @@ export default function PromptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IP Address</label>
+                  <label className="block text-sm font-medium text-primary mb-2">IP Address</label>
                   <select 
                     value={newPromptLocation}
                     onChange={(e) => setNewPromptLocation(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10"
+                    className="input w-full cursor-pointer"
                   >
                     <option value="us">🇺🇸 United States</option>
                     <option value="uk">🇬🇧 United Kingdom</option>
@@ -578,8 +573,8 @@ export default function PromptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tags</label>
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-400 cursor-pointer hover:border-gray-300 dark:hover:border-gray-500 transition-colors">
+                  <label className="block text-sm font-medium text-primary mb-2">Tags</label>
+                  <div className="input flex items-center gap-2 text-muted cursor-pointer hover:border-secondary transition-colors">
                     <span className="text-sm">Select tags for new prompts</span>
                     <Plus className="w-4 h-4 ml-auto" />
                   </div>
@@ -587,17 +582,17 @@ export default function PromptsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 bg-secondary border-t border-border">
               <button
                 onClick={() => setShowAddModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="btn-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddPrompt}
                 disabled={!newPromptText.trim() || saving}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary inline-flex items-center gap-2 disabled:opacity-50"
               >
                 {saving ? (
                   <>
@@ -623,33 +618,33 @@ export default function PromptsPage() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowTopicModal(false)}
           />
-          <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+          <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-border">
             <button 
               onClick={() => setShowTopicModal(false)}
-              className="absolute top-4 right-4 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+              className="absolute top-4 right-4 p-1 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
             >
-              <X className="w-5 h-5 text-gray-400" />
+              <X className="w-5 h-5 text-muted" />
             </button>
 
             <div className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Add new Topic</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <h3 className="text-xl font-semibold text-primary mb-1">Add new Topic</h3>
+              <p className="text-sm text-secondary mb-6">
                 Create a Topic without mentioning your own brand. Every topic will have prompts
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topic</label>
+                  <label className="block text-sm font-medium text-primary mb-2">Topic</label>
                   <input
                     type="text"
                     placeholder="e.g. SEO optimization"
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="input w-full"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Prompts per topic</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                  <label className="block text-sm font-medium text-primary mb-2">Prompts per topic</label>
+                  <select className="input w-full cursor-pointer">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="15">15</option>
@@ -659,8 +654,8 @@ export default function PromptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">IP address</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                  <label className="block text-sm font-medium text-primary mb-2">IP address</label>
+                  <select className="input w-full cursor-pointer">
                     <option value="us">🇺🇸 United States</option>
                     <option value="uk">🇬🇧 United Kingdom</option>
                     <option value="ca">🇨🇦 Canada</option>
@@ -671,8 +666,8 @@ export default function PromptsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Language</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10">
+                  <label className="block text-sm font-medium text-primary mb-2">Language</label>
+                  <select className="input w-full cursor-pointer">
                     <option value="en">English</option>
                     <option value="es">Spanish</option>
                     <option value="fr">French</option>
@@ -683,9 +678,7 @@ export default function PromptsPage() {
             </div>
 
             <div className="flex items-center justify-end px-6 py-4">
-              <button
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors cursor-pointer"
-              >
+              <button className="btn-primary inline-flex items-center gap-2">
                 <Plus className="w-4 h-4" />
                 Add
               </button>
