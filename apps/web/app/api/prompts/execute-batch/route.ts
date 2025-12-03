@@ -5,10 +5,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { executePromptAllModels, storeExecutionResults } from '@/lib/prompts/execution-engine'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Verify cron secret to prevent unauthorized calls
 function verifyCronSecret(request: NextRequest): boolean {
@@ -26,6 +28,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const supabase = getSupabase()
     const body = await request.json().catch(() => ({}))
     const batchSize = body.batch_size || 25
     const batchType = body.batch_type || 'scheduled'
@@ -147,6 +150,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const supabase = getSupabase()
   const { searchParams } = new URL(request.url)
   const batchId = searchParams.get('batch_id')
 

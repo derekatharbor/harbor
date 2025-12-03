@@ -5,13 +5,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SEED_PROMPTS, TOPICS, PROMPT_STATS } from '@/lib/seed-prompts'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabase()
     const body = await request.json().catch(() => ({}))
     const force = body.force === true
 
@@ -78,6 +81,8 @@ export async function POST(request: NextRequest) {
 
 // GET to check current seed status
 export async function GET() {
+  const supabase = getSupabase()
+  
   const { data: prompts, count } = await supabase
     .from('seed_prompts')
     .select('topic', { count: 'exact' })
