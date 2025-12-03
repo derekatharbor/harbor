@@ -16,7 +16,7 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  Lightbulb,
+  TrendingUp,
   Layers,
   LogOut
 } from 'lucide-react'
@@ -88,7 +88,7 @@ export default function Sidebar() {
 
   // Action section - things to do
   const actions = [
-    { name: 'Opportunities', href: '/dashboard/opportunities', icon: Lightbulb },
+    { name: 'Opportunities', href: '/dashboard/opportunities', icon: TrendingUp },
   ]
 
   // Manage section - brand data and settings
