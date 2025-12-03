@@ -104,7 +104,7 @@ async function executeClaude(promptText: string): Promise<{ text: string; tokens
 // Execute prompt against Gemini
 async function executeGemini(promptText: string): Promise<{ text: string; tokens: number }> {
   const genAI = getGemini()
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
   
   const result = await model.generateContent({
     contents: [
@@ -140,7 +140,7 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'llama-3.1-sonar-small-128k-online',
+      model: 'sonar',
       messages: [
         {
           role: 'system',
@@ -149,10 +149,14 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
         { role: 'user', content: promptText }
       ],
       max_tokens: 1000,
-      temperature: 0.7,
-      return_citations: true
+      temperature: 0.7
     })
   })
+
+  if (!response.ok) {
+    const text = await response.text()
+    throw new Error(`Perplexity API error: ${response.status} - ${text.substring(0, 100)}`)
+  }
 
   const data = await response.json()
   

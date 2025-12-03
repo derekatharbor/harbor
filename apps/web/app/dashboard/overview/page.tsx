@@ -16,7 +16,9 @@ import {
   Globe,
   ShoppingBag,
   ChevronDown,
-  Minus
+  Minus,
+  Briefcase, // New icon for Brand/Brands card
+  Plus // New icon for Add button
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -30,9 +32,14 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  ReferenceLine
+  ReferenceLine,
+  Cell, // For donut chart
+  PieChart, // For donut chart
+  Pie // For donut chart
 } from 'recharts'
+import Image from 'next/image' // Recommended for Next.js
 
+// --- [TYPE INTERFACES REMAIN UNCHANGED] ---
 interface ScanData {
   shopping_visibility: number
   brand_visibility: number
@@ -84,6 +91,21 @@ interface ChartDataPoint {
   you: number
   [key: string]: number | string
 }
+// --- [END TYPE INTERFACES] ---
+
+// Placeholder for Top Sources/Domains data
+const TOP_SOURCES_DATA = [
+  { domain: 'experian.com', used: 59, citations: 1.2, type: 'Corporate' },
+  { domain: 'nerdwallet.com', used: 41, citations: 1.4, type: 'Editorial' },
+  { domain: 'cnbc.com', used: 30, citations: 1.2, type: 'Corporate' },
+]
+const PIE_COLORS = ['#FF6B4A', '#2979FF', '#10B981', '#F59E0B']
+
+// Placeholder for Brands with Highest Visibility table
+const HIGH_VISIBILITY_BRANDS = [
+  { rank: 1, name: 'Brim', visibility: 0, sentiment: '-', position: '-' }
+]
+
 
 export default function OverviewPage() {
   const { currentDashboard } = useBrand()
@@ -94,11 +116,13 @@ export default function OverviewPage() {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([])
   const [scanStatus, setScanStatus] = useState<'none' | 'running' | 'done'>('none')
   const [currentScanId, setCurrentScanId] = useState<string | null>(null)
-  const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
-  const [timeRange, setTimeRange] = useState('30d')
+  // Peec screenshot shows no metric selector, but we keep this for future use
+  const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility') 
+  const [timeRange, setTimeRange] = useState('7d') // Default to 7d to match Peec screenshot
 
   const router = useRouter()
 
+  // --- [EFFECT HOOK REMAINS LARGELY UNCHANGED] ---
   useEffect(() => {
     async function fetchData() {
       if (!currentDashboard) {
@@ -124,7 +148,7 @@ export default function OverviewPage() {
                 return
               }
             }
-            router.push('/dashboard')
+            // Changed from router.push to just return to allow loading state for no-scan
             return
           }
           
@@ -184,6 +208,7 @@ export default function OverviewPage() {
 
     fetchData()
   }, [currentDashboard, router, timeRange])
+  // --- [END EFFECT HOOK] ---
 
   const hasScanData = scanData && scanData.last_scan
 
@@ -191,7 +216,7 @@ export default function OverviewPage() {
   const deltas = snapshotData?.delta || { shopping: 0, brand: 0, website: 0, harbor: 0 }
   
   // For the status banner, use harbor delta
-  const visibilityDelta = deltas.harbor
+  // const visibilityDelta = deltas.harbor // No longer needed for Peec header bar
 
   // If no snapshots yet, show current data as single point
   const displayChartData = chartData.length > 0 ? chartData : (scanData ? [{
@@ -201,12 +226,12 @@ export default function OverviewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-primary" data-page="overview">
+      <div className="min-h-screen bg-[#101A31]" data-page="overview"> {/* Primary Navy background */}
         <MobileHeader />
         <div className="p-6">
           <div className="animate-pulse space-y-4">
-            <div className="h-12 bg-card rounded-lg w-full"></div>
-            <div className="h-64 bg-card rounded-lg w-full"></div>
+            <div className="h-12 bg-[#141E38] rounded-lg w-full"></div> {/* Card background */}
+            <div className="h-64 bg-[#141E38] rounded-lg w-full"></div>
           </div>
         </div>
       </div>
@@ -214,79 +239,65 @@ export default function OverviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary" data-page="overview">
+    // Update bg-primary to specific Primary Navy color
+    <div className="min-h-screen bg-[#101A31] text-[#F4F6F8] font-[Source Code Pro]" data-page="overview"> 
       <MobileHeader />
       
       {/* Header Bar - Peec style */}
-      <div className="page-header-bar">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+      {/* Replaced old page-header-bar with the Peec filter pill structure */}
+      <div className="sticky top-0 z-10 bg-[#101A31] px-6 pt-4 pb-2 border-b border-[#141E38] shadow-lg">
+        <div className="flex items-center gap-2">
+          {/* Brand Selector Pill */}
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 text-sm font-medium hover:bg-white/10 transition-colors">
             {currentDashboard?.logo_url ? (
               <img 
                 src={currentDashboard.logo_url} 
                 alt={currentDashboard.brand_name}
-                className="w-6 h-6 rounded"
+                className="w-4 h-4 rounded-full object-cover"
               />
             ) : (
-              <div className="w-6 h-6 rounded bg-secondary flex items-center justify-center text-xs font-medium text-muted">
+              <div className="w-4 h-4 rounded-full bg-[#1a1a1a] flex items-center justify-center text-[8px] font-bold text-white">
                 {currentDashboard?.brand_name?.charAt(0) || 'B'}
               </div>
             )}
-            <span className="font-medium text-primary">{currentDashboard?.brand_name || 'Brand'}</span>
-            <ChevronDown className="w-4 h-4 text-muted" />
-          </div>
-        </div>
+            {currentDashboard?.brand_name || 'Brand'}
+            <ChevronDown className="w-3 h-3 text-white/50" />
+          </button>
 
-        <div className="flex items-center gap-3">
-          {/* Time Range Pills */}
-          <div className="pill-group">
-            {['7d', '30d', '90d'].map((range) => (
-              <button
-                key={range}
-                onClick={() => setTimeRange(range)}
-                className={`pill ${timeRange === range ? 'active' : ''}`}
-              >
-                {range === '7d' ? 'Last 7 days' : range === '30d' ? 'Last 30 days' : 'Last 90 days'}
-              </button>
-            ))}
-          </div>
+          {/* Time Range Pill */}
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 text-sm font-medium hover:bg-white/10 transition-colors">
+            Last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '90 days'}
+            <ChevronDown className="w-3 h-3 text-white/50" />
+          </button>
+          
+          {/* All Models Pill */}
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 text-sm font-medium hover:bg-white/10 transition-colors">
+            All Models
+            <ChevronDown className="w-3 h-3 text-white/50" />
+          </button>
 
-          {/* Export Button */}
-          <button className="btn-secondary flex items-center gap-2">
-            <Download className="w-4 h-4" />
-            Export
+          {/* All Topics Pill */}
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 text-sm font-medium hover:bg-white/10 transition-colors">
+            All Topics
+            <ChevronDown className="w-3 h-3 text-white/50" />
           </button>
         </div>
       </div>
 
-      {/* Status Banner */}
-      {hasScanData && (
-        <div className="status-banner">
-          <div className="status-banner-text">
-            <span className="font-medium text-primary">Overview</span>
-            <span className="mx-2">•</span>
-            <span>
-              {currentDashboard?.brand_name}'s Visibility 
-              {visibilityDelta >= 0 ? ' trending up ' : ' trending down '}
-              by {Math.abs(visibilityDelta)}% this month
-            </span>
-          </div>
-          <div className="status-banner-metrics">
-            <span>
-              Visibility: <strong className="text-primary">{competitorData?.userRank || '-'}/{competitorData?.totalInCategory || '-'}</strong>
-              {visibilityDelta !== 0 && (
-                <span className={visibilityDelta > 0 ? 'text-positive ml-1' : 'text-negative ml-1'}>
-                  {visibilityDelta > 0 ? '↑' : '↓'}
-                </span>
-              )}
-            </span>
-            <span>•</span>
-            <span>
-              Score: <strong className="text-primary">{scanData?.harbor_score || 0}</strong>
-            </span>
-          </div>
+
+      {/* Status/Guidance Banner - Matching Peec screenshot */}
+      <div className="bg-[#141E38] mx-6 mt-4 p-3 rounded-lg flex justify-between items-center text-sm font-[Space Grotesk]">
+        <p className="text-[#F4F6F8]">
+          <span className='font-bold'>Need help or want guidance?</span> Join the Daily Kickstart Session!
+        </p>
+        <div className="flex items-center gap-3">
+          <button className="text-white/60 hover:text-white transition-colors text-xs font-medium">Dismiss</button>
+          {/* Black button styling */}
+          <button className="bg-[#1a1a1a] text-white px-3 py-1.5 rounded-lg hover:bg-[#333] transition-colors text-xs font-medium">
+            Join
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Scan Running State */}
       {scanStatus === 'running' && currentScanId && !hasScanData && (
@@ -298,54 +309,46 @@ export default function OverviewPage() {
       {/* Main Content */}
       {hasScanData && (
         <div className="p-6 space-y-6">
-          {/* Top Row: Chart + Competitor Table */}
+          {/* Top Row: Chart + Brands Card */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Chart Section */}
-            <div className="lg:col-span-2 card p-0 overflow-hidden">
-              {/* Chart Header */}
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <div className="pill-group">
-                  {(['visibility', 'sentiment', 'position'] as const).map((metric) => (
-                    <button
-                      key={metric}
-                      onClick={() => setActiveMetric(metric)}
-                      className={`pill flex items-center gap-1.5 ${activeMetric === metric ? 'active' : ''}`}
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      {metric.charAt(0).toUpperCase() + metric.slice(1)}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button className="expand-btn" title="View detailed chart">
-                    <ArrowUpRight className="w-4 h-4" />
-                  </button>
-                </div>
+            
+            {/* 1. Chart Section (2/3 width) - Now called 'Visibility' */}
+            <div className="lg:col-span-2 bg-[#141E38] p-0 rounded-lg overflow-hidden border border-[#212C46]">
+              {/* Chart Header - Simplified to match Peec screenshot */}
+              <div className="flex items-center justify-between p-4 border-b border-[#212C46]">
+                <h3 className="font-medium text-sm text-[#F4F6F8]">
+                  Visibility <span className="text-white/60">• Percentage of chats mentioning each brand</span>
+                </h3>
+                <button className="text-white/60 hover:text-[#FF6B4A] transition-colors flex items-center gap-1 text-xs font-medium">
+                  <Download className="w-3.5 h-3.5" />
+                  Export
+                </button>
               </div>
 
               {/* Chart */}
               <div className="p-4 h-[300px]">
                 {displayChartData.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-muted">
+                  <div className="h-full flex items-center justify-center text-white/50">
                     <p>Run a scan to start tracking your visibility</p>
                   </div>
                 ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={displayChartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#212C46" vertical={false} /> {/* Darker grid */}
                     <XAxis 
                       dataKey="date" 
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                      tick={{ fill: '#F4F6F8', fontSize: 12 }}
                     />
                     <YAxis 
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
+                      tick={{ fill: '#F4F6F8', fontSize: 12 }}
                       domain={[0, 100]}
                       tickFormatter={(value) => `${value}%`}
                     />
+                    {/* Tooltip and Lines remain, but ensure colors are adapted for dark background */}
                     <Tooltip 
                       content={({ active, payload, label }) => {
                         if (!active || !payload?.length) return null
@@ -359,8 +362,9 @@ export default function OverviewPage() {
                         })
                         
                         return (
-                          <div className="bg-card border border-border rounded-lg shadow-lg p-3 min-w-[240px]">
-                            <div className="font-medium text-primary mb-3">{label}</div>
+                          // Dark background for tooltip
+                          <div className="bg-[#101A31] border border-[#212C46] rounded-lg shadow-lg p-3 min-w-[240px]">
+                            <div className="font-medium text-[#F4F6F8] mb-3">{label}</div>
                             <div className="space-y-2.5">
                               {payload.map((entry: any, idx: number) => (
                                 <div key={idx} className="flex items-center gap-3">
@@ -368,19 +372,20 @@ export default function OverviewPage() {
                                     className="w-2.5 h-2.5 rounded-sm flex-shrink-0" 
                                     style={{ backgroundColor: entry.color }}
                                   />
+                                  {/* Simplified logo display */}
                                   {logoMap[entry.name] ? (
                                     <img 
                                       src={logoMap[entry.name]} 
                                       alt={entry.name}
-                                      className="w-5 h-5 rounded object-contain flex-shrink-0"
+                                      className="w-5 h-5 rounded object-contain flex-shrink-0 bg-white p-0.5"
                                     />
                                   ) : (
-                                    <div className="w-5 h-5 rounded bg-secondary flex items-center justify-center text-2xs font-medium text-muted flex-shrink-0">
+                                    <div className="w-5 h-5 rounded bg-white flex items-center justify-center text-2xs font-medium text-black flex-shrink-0">
                                       {entry.name?.charAt(0)}
                                     </div>
                                   )}
-                                  <span className="text-secondary flex-1">{entry.name}</span>
-                                  <span className="font-medium text-primary">{entry.value}%</span>
+                                  <span className="text-[#F4F6F8]/80 flex-1">{entry.name}</span>
+                                  <span className="font-medium text-[#F4F6F8]">{entry.value}%</span>
                                 </div>
                               ))}
                             </div>
@@ -393,7 +398,7 @@ export default function OverviewPage() {
                       iconSize={8}
                       wrapperStyle={{ paddingTop: '16px' }}
                       formatter={(value: string) => (
-                        <span style={{ color: 'var(--text-secondary)', marginRight: '16px', fontSize: '13px' }}>
+                        <span style={{ color: '#F4F6F8', marginRight: '16px', fontSize: '13px' }}>
                           {value}
                         </span>
                       )}
@@ -402,26 +407,25 @@ export default function OverviewPage() {
                       type="monotone" 
                       dataKey="you" 
                       name={currentDashboard?.brand_name || 'You'}
-                      stroke="#3B82F6" 
+                      stroke="#FF6B4A" // Accent Coral
                       strokeWidth={2}
                       dot={displayChartData.length === 1}
                       activeDot={{ r: 4 }}
                     />
-                    {/* Show competitor current scores as reference lines */}
+                    {/* Reference Lines - keep for comparison, use Cerulean Blue/Accent Coral */}
                     {competitorData?.competitors?.slice(0, 2).map((comp, idx) => {
-                      // Add competitor scores as horizontal reference lines
                       const compScore = comp.visibility_score
                       return (
                         <ReferenceLine 
                           key={comp.id}
                           y={compScore}
-                          stroke={idx === 0 ? '#10B981' : '#F59E0B'}
+                          stroke={idx === 0 ? '#2979FF' : '#FF6B4A'} // Cerulean Blue / Accent Coral
                           strokeDasharray="5 5"
                           strokeWidth={1.5}
                           label={{
                             value: `${comp.brand_name}: ${compScore}%`,
                             position: 'right',
-                            fill: idx === 0 ? '#10B981' : '#F59E0B',
+                            fill: idx === 0 ? '#2979FF' : '#FF6B4A',
                             fontSize: 11
                           }}
                         />
@@ -431,170 +435,149 @@ export default function OverviewPage() {
                 </ResponsiveContainer>
                 )}
               </div>
+              {/* PeecAI watermark placeholder */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+                <span className="text-8xl font-bold font-[Space Grotesk] text-[#F4F6F8]">Harbor AI</span>
+              </div>
             </div>
 
-            {/* Competitor Ranking */}
-            <div className="card p-0 overflow-hidden">
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <div>
-                  <h3 className="font-semibold text-primary text-sm">Competitors</h3>
-                  <p className="text-xs text-muted mt-0.5">
-                    {competitorData?.category || 'Your category'}
-                  </p>
-                </div>
-                <Link href="/dashboard/competitors" className="expand-btn" title="View all competitors">
-                  <ArrowUpRight className="w-4 h-4" />
+            {/* 2. Brands/Competitor List Card (1/3 width) */}
+            <div className="bg-[#141E38] p-0 rounded-lg overflow-hidden border border-[#212C46]">
+              <div className="flex items-center justify-between p-4 border-b border-[#212C46]">
+                <h3 className="font-medium text-sm text-[#F4F6F8]">
+                  Brands <span className="text-white/60">• Brands with highest visibility</span>
+                </h3>
+                <Link href="/dashboard/competitors" className="text-white/60 hover:text-[#FF6B4A] transition-colors text-xs font-medium flex items-center">
+                  Show All <ArrowUpRight className="w-3.5 h-3.5 ml-1" />
                 </Link>
               </div>
 
-              <div className="divide-y divide-border-light">
-                {/* User's position */}
-                {competitorData && (
-                  <div className="ranking-row is-user">
-                    <span className="ranking-position">{competitorData.userRank}</span>
-                    {currentDashboard?.logo_url ? (
-                      <img 
-                        src={currentDashboard.logo_url} 
-                        alt={currentDashboard.brand_name}
-                        className="ranking-logo"
-                      />
-                    ) : (
-                      <div className="ranking-logo flex items-center justify-center text-2xs font-medium">
-                        {currentDashboard?.brand_name?.charAt(0)}
-                      </div>
-                    )}
-                    <span className="ranking-name">
-                      {currentDashboard?.brand_name}
-                      <span className="ml-1.5 text-xs bg-info/10 text-info px-1.5 py-0.5 rounded">You</span>
-                    </span>
-                    <span className="ranking-score">{competitorData.userScore}%</span>
-                  </div>
-                )}
-
-                {/* Competitors */}
-                {competitorData?.competitors?.slice(0, 5).map((comp, idx) => {
-                  // Skip if this would be the same as user position
-                  const displayRank = comp.rank_global || idx + 1
-                  
-                  return (
-                    <Link 
-                      key={comp.id} 
-                      href={`/brands/${comp.slug}`}
-                      className="ranking-row"
-                    >
-                      <span className="ranking-position">{displayRank}</span>
-                      {comp.logo_url ? (
-                        <img 
-                          src={comp.logo_url} 
-                          alt={comp.brand_name}
-                          className="ranking-logo"
-                        />
-                      ) : (
-                        <div className="ranking-logo flex items-center justify-center text-2xs font-medium">
-                          {comp.brand_name?.charAt(0)}
+              {/* Brands Table */}
+              <table className="w-full text-sm text-left font-[Source Code Pro] border-separate border-spacing-0">
+                <thead>
+                  <tr className="text-white/50 text-xs font-medium uppercase tracking-wider">
+                    <th scope="col" className="px-4 py-2 font-normal w-10">#</th>
+                    <th scope="col" className="px-4 py-2 font-normal">Brand</th>
+                    <th scope="col" className="px-4 py-2 font-normal text-right">Visibility</th>
+                    <th scope="col" className="px-4 py-2 font-normal text-right">Sentiment</th>
+                    <th scope="col" className="px-4 py-2 font-normal text-right w-10">Position</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {HIGH_VISIBILITY_BRANDS.map((item, index) => (
+                    <tr key={index} className="border-b border-[#212C46] last:border-b-0">
+                      <td className="px-4 py-3">{item.rank}</td>
+                      <td className="px-4 py-3 flex items-center gap-2">
+                        {/* Peec style logo on white background */}
+                        <div className="w-6 h-6 rounded bg-white flex items-center justify-center p-0.5">
+                          <Briefcase className="w-4 h-4 text-black" />
                         </div>
-                      )}
-                      <span className="ranking-name truncate">{comp.brand_name}</span>
-                      <span className="ranking-score">{comp.visibility_score}%</span>
-                    </Link>
-                  )
-                })}
+                        <span className="text-[#F4F6F8]">{item.name}</span>
+                      </td>
+                      <td className="px-4 py-3 text-right">{item.visibility}%</td>
+                      <td className="px-4 py-3 text-right">{item.sentiment}</td>
+                      <td className="px-4 py-3 text-right">{item.position}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                {(!competitorData?.competitors || competitorData.competitors.length === 0) && (
-                  <div className="p-4 text-center text-sm text-muted">
-                    No competitors found in your category
-                  </div>
-                )}
+              {/* Add Brands Button - centered, light gray background */}
+              <div className="p-4 text-center border-t border-[#212C46]">
+                <button className="flex items-center justify-center w-full py-2 bg-white/5 text-white/80 rounded-lg hover:bg-white/10 transition-colors">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Brands
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Bottom Row: Quick Stats + Module Summary */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/dashboard/shopping" className="card card-interactive p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-8 h-8 rounded-lg bg-chart-2/10 flex items-center justify-center">
-                  <ShoppingBag className="w-4 h-4 text-chart-2" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-muted" />
+          {/* Bottom Row: Top Sources Card */}
+          <div className="grid grid-cols-1 gap-6">
+            <div className="bg-[#141E38] p-0 rounded-lg overflow-hidden border border-[#212C46]">
+              <div className="flex items-center justify-between p-4 border-b border-[#212C46]">
+                <h3 className="font-medium text-sm text-[#F4F6F8]">
+                  Top Sources <span className="text-white/60">• Sources across active models</span>
+                </h3>
+                <Link href="/dashboard/sources" className="text-white/60 hover:text-[#FF6B4A] transition-colors text-xs font-medium flex items-center">
+                  Show All <ArrowUpRight className="w-3.5 h-3.5 ml-1" />
+                </Link>
               </div>
-              <div className="metric-value text-2xl">{scanData.shopping_visibility}%</div>
-              <div className="text-sm text-secondary mt-1">Shopping Visibility</div>
-              {deltas.shopping !== 0 ? (
-                <div className={`delta ${deltas.shopping > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
-                  {deltas.shopping > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                  {deltas.shopping > 0 ? '+' : ''}{deltas.shopping}% vs previous
-                </div>
-              ) : (
-                <div className="delta delta-neutral text-xs mt-2">
-                  <Minus className="w-3 h-3" />
-                  No change
-                </div>
-              )}
-            </Link>
 
-            <Link href="/dashboard/brand" className="card card-interactive p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-8 h-8 rounded-lg bg-chart-1/10 flex items-center justify-center">
-                  <Eye className="w-4 h-4 text-chart-1" />
+              <div className="flex">
+                {/* Donut Chart (20% width) */}
+                <div className="w-1/4 p-4 flex items-center justify-center border-r border-[#212C46]">
+                  {/* Total Citations Metric */}
+                  <div className="relative flex items-center justify-center">
+                    <PieChart width={120} height={120}>
+                      <Pie
+                        data={TOP_SOURCES_DATA}
+                        dataKey="used"
+                        nameKey="domain"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={45}
+                        outerRadius={60}
+                        paddingAngle={2}
+                        fill="#8884d8"
+                        startAngle={90}
+                        endAngle={-270}
+                      >
+                        {TOP_SOURCES_DATA.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                    {/* Text overlay for total citations */}
+                    <div className="absolute text-center">
+                      <span className="text-2xl font-bold font-[Space Grotesk]">284</span>
+                      <p className="text-white/60 text-[10px] uppercase mt-0.5">Citations</p>
+                    </div>
+                  </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-muted" />
-              </div>
-              <div className="metric-value text-2xl">{scanData.brand_visibility}%</div>
-              <div className="text-sm text-secondary mt-1">Brand Visibility</div>
-              {deltas.brand !== 0 ? (
-                <div className={`delta ${deltas.brand > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
-                  {deltas.brand > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                  {deltas.brand > 0 ? '+' : ''}{deltas.brand}% vs previous
-                </div>
-              ) : (
-                <div className="delta delta-neutral text-xs mt-2">
-                  <Minus className="w-3 h-3" />
-                  No change
-                </div>
-              )}
-            </Link>
 
-            <Link href="/dashboard/website" className="card card-interactive p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-8 h-8 rounded-lg bg-chart-5/10 flex items-center justify-center">
-                  <Globe className="w-4 h-4 text-chart-5" />
+                {/* Sources Table (80% width) */}
+                <div className="w-3/4">
+                  <table className="w-full text-sm text-left font-[Source Code Pro] border-separate border-spacing-0">
+                    <thead>
+                      <tr className="text-white/50 text-xs font-medium uppercase tracking-wider">
+                        <th scope="col" className="px-4 py-2 font-normal w-1/4">Domain type</th>
+                        <th scope="col" className="px-4 py-2 font-normal w-1/4">Domain</th>
+                        <th scope="col" className="px-4 py-2 font-normal text-right">Used</th>
+                        <th scope="col" className="px-4 py-2 font-normal text-right">Avg. Citations</th>
+                        <th scope="col" className="px-4 py-2 font-normal text-right">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {TOP_SOURCES_DATA.map((item, index) => (
+                        <tr key={index} className="border-b border-[#212C46] last:border-b-0">
+                          <td className="px-4 py-3 text-center">
+                            {/* Placeholder for Domain Type Donut Chart */}
+                            <div className="w-4 h-4 rounded-full mx-auto" style={{ backgroundColor: PIE_COLORS[index] }} />
+                          </td>
+                          <td className="px-4 py-3 flex items-center gap-2">
+                            <Briefcase className='w-4 h-4 text-white/50'/>
+                            <span className="text-[#F4F6F8]">{item.domain}</span>
+                          </td>
+                          <td className="px-4 py-3 text-right">{item.used}%</td>
+                          <td className="px-4 py-3 text-right">{item.citations}</td>
+                          <td className="px-4 py-3 text-right">
+                            {/* Gray Pill for Type */}
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/5 text-white/80">
+                              {item.type}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-muted" />
               </div>
-              <div className="metric-value text-2xl">{scanData.site_readability}%</div>
-              <div className="text-sm text-secondary mt-1">Website Readiness</div>
-              {deltas.website !== 0 ? (
-                <div className={`delta ${deltas.website > 0 ? 'delta-up' : 'delta-down'} text-xs mt-2`}>
-                  {deltas.website > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                  {deltas.website > 0 ? '+' : ''}{deltas.website}% vs previous
-                </div>
-              ) : (
-                <div className="delta delta-neutral text-xs mt-2">
-                  <Minus className="w-3 h-3" />
-                  No change
-                </div>
-              )}
-            </Link>
-
-            <Link href="/dashboard/conversations" className="card card-interactive p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-8 h-8 rounded-lg bg-chart-3/10 flex items-center justify-center">
-                  <MessageSquare className="w-4 h-4 text-chart-3" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 text-muted" />
-              </div>
-              <div className="metric-value text-2xl">{scanData.conversation_topics}</div>
-              <div className="text-sm text-secondary mt-1">Topics Tracked</div>
-              <div className="delta delta-neutral text-xs mt-2">
-                <Minus className="w-3 h-3" />
-                --
-              </div>
-            </Link>
+            </div>
           </div>
-
-          {/* Last Updated */}
-          <div className="text-xs text-muted">
+          
+          {/* Last Updated (Keep) */}
+          <div className="text-xs text-white/50">
             Last updated: {new Date(scanData.last_scan!).toLocaleDateString('en-US', { 
               month: 'short', 
               day: 'numeric', 
@@ -603,6 +586,10 @@ export default function OverviewPage() {
               minute: '2-digit'
             })}
           </div>
+
+          {/* Comment out the old module summary for now */}
+          {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">...</div> */}
+
         </div>
       )}
     </div>
