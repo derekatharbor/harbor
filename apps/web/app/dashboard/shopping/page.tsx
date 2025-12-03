@@ -292,12 +292,12 @@ export default function ShoppingPage() {
     { date: 'Nov', you: data?.visibility_score || 72, comp1: 60, comp2: 58, comp3: 55 },
   ]
 
-  // Model breakdown data
+  // Model breakdown data with logos
   const modelBreakdown = [
-    { model: 'ChatGPT', score: 85, delta: 12, color: '#10B981' },
-    { model: 'Claude', score: 78, delta: 8, color: '#8B5CF6' },
-    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6' },
-    { model: 'Perplexity', score: 68, delta: 5, color: '#F59E0B' },
+    { model: 'ChatGPT', score: 85, delta: 12, color: '#10B981', logo: 'https://asset.brandfetch.io/idBy2KvEch/idOnyiE_LN.png' },
+    { model: 'Claude', score: 78, delta: 8, color: '#8B5CF6', logo: 'https://asset.brandfetch.io/id20mQyGeY/idh6e3KQDK.jpeg' },
+    { model: 'Gemini', score: 72, delta: -3, color: '#3B82F6', logo: 'https://asset.brandfetch.io/idmJWH0Cvo/idaShip8j5.png' },
+    { model: 'Perplexity', score: 68, delta: 5, color: '#F59E0B', logo: 'https://asset.brandfetch.io/id2S-kXbuK/idwbvnv2IR.jpeg' },
   ]
 
   // Attributes with real-ish data
@@ -365,27 +365,29 @@ export default function ShoppingPage() {
       <MobileHeader />
       
       {/* Header */}
-      <div className="page-header-bar">
-        <div className="flex items-center gap-3 mb-4">
-          <ShoppingBag className="w-5 h-5 text-muted" strokeWidth={1.5} />
-          <h1 className="text-xl font-semibold text-primary">Shopping</h1>
-        </div>
+      <div className="border-b border-border bg-primary">
+        <div className="px-6 pt-6">
+          <div className="flex items-center gap-3 mb-6">
+            <ShoppingBag className="w-5 h-5 text-muted" strokeWidth={1.5} />
+            <h1 className="text-xl font-semibold text-primary">Shopping</h1>
+          </div>
 
-        {/* Tabs - Left aligned */}
-        <div className="flex items-center gap-6 border-b border-border -mx-6 px-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`pb-3 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer ${
-                activeTab === tab.id
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-muted hover:text-secondary'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {/* Tabs - Left aligned */}
+          <div className="flex items-center gap-6">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`pb-3 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer ${
+                  activeTab === tab.id
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted hover:text-secondary'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -589,8 +591,12 @@ export default function ShoppingPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {modelBreakdown.map((model) => (
                   <div key={model.model} className="p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: model.color }} />
+                    <div className="flex items-center gap-2 mb-3">
+                      <img 
+                        src={model.logo} 
+                        alt={model.model}
+                        className="w-5 h-5 rounded object-contain"
+                      />
                       <span className="text-sm text-secondary">{model.model}</span>
                     </div>
                     <div className="flex items-baseline gap-2">
@@ -702,14 +708,14 @@ export default function ShoppingPage() {
                   className="absolute inset-0"
                   style={{
                     backgroundImage: `radial-gradient(circle, var(--color-border) 1px, transparent 1px)`,
-                    backgroundSize: '24px 24px'
+                    backgroundSize: '20px 20px'
                   }}
                 />
                 
                 {/* Quadrant overlays */}
                 <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
                   <div className="bg-amber-500/5" />
-                  <div className="bg-chart-2/10" />
+                  <div className="bg-chart-2/8" />
                   <div className="bg-red-500/5" />
                   <div className="bg-purple-500/5" />
                 </div>
@@ -733,77 +739,99 @@ export default function ShoppingPage() {
 
                 {/* Item bubbles */}
                 {items.map((item) => {
-                  const x = (item.visibility / 100) * 90 + 5
-                  const y = (1 - item.sentiment) * 90 + 5
-                  const size = Math.max(50, Math.min(80, item.mentions * 1.5))
+                  const x = (item.visibility / 100) * 85 + 7.5
+                  const y = (1 - item.sentiment) * 85 + 7.5
+                  const size = Math.max(56, Math.min(72, item.mentions * 1.2))
                   
                   const isHighVis = item.visibility > 50
                   const isPosSent = item.sentiment > 0.5
+                  const isNearTop = y < 30
+                  
                   let glowColor = 'rgba(239, 68, 68, 0.3)'
-                  if (isHighVis && isPosSent) glowColor = 'rgba(16, 185, 129, 0.4)'
-                  else if (!isHighVis && isPosSent) glowColor = 'rgba(139, 92, 246, 0.3)'
-                  else if (isHighVis && !isPosSent) glowColor = 'rgba(245, 158, 11, 0.3)'
+                  let textColor = '#EF4444'
+                  if (isHighVis && isPosSent) {
+                    glowColor = 'rgba(16, 185, 129, 0.4)'
+                    textColor = '#10B981'
+                  } else if (!isHighVis && isPosSent) {
+                    glowColor = 'rgba(139, 92, 246, 0.3)'
+                    textColor = '#8B5CF6'
+                  } else if (isHighVis && !isPosSent) {
+                    glowColor = 'rgba(245, 158, 11, 0.3)'
+                    textColor = '#F59E0B'
+                  }
                   
                   return (
                     <div
                       key={item.id}
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-110 group"
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-transform hover:scale-105 group"
                       style={{ left: `${x}%`, top: `${y}%` }}
                       onClick={() => setSelectedItem(item)}
                     >
+                      {/* Glow effect */}
                       <div 
-                        className="absolute inset-0 rounded-full blur-xl opacity-60"
+                        className="absolute rounded-full blur-2xl opacity-50 -z-10"
                         style={{ 
-                          width: size * 1.5, 
-                          height: size * 1.5,
-                          marginLeft: -size * 0.25,
-                          marginTop: -size * 0.25,
+                          width: size * 2, 
+                          height: size * 2,
+                          left: '50%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
                           backgroundColor: glowColor 
                         }}
                       />
+                      {/* Item bubble */}
                       <div 
-                        className="relative rounded-xl bg-primary border-2 border-border flex items-center justify-center overflow-hidden shadow-lg group-hover:border-chart-1 transition-colors"
+                        className="relative rounded-xl bg-primary border-2 border-border overflow-hidden shadow-lg group-hover:border-chart-1 transition-colors"
                         style={{ width: size, height: size }}
                       >
-                        <BrandLogo 
-                          name={item.name} 
-                          logoUrl={item.logo_url}
-                          productImage={item.product_image}
-                          size={size - 16} 
-                        />
+                        {item.logo_url || item.product_image ? (
+                          <img 
+                            src={item.product_image || item.logo_url || ''} 
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-secondary text-muted font-semibold text-lg">
+                            {item.name?.charAt(0)?.toUpperCase() || '?'}
+                          </div>
+                        )}
                       </div>
+                      {/* Mention count */}
                       <div 
-                        className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-sm font-medium"
-                        style={{ color: glowColor.replace('0.3', '1').replace('0.4', '1') }}
+                        className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-sm font-semibold"
+                        style={{ color: textColor }}
                       >
                         {item.mentions}
                       </div>
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-primary border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-10">
+                      {/* Hover tooltip - position based on location */}
+                      <div className={`absolute left-1/2 -translate-x-1/2 px-3 py-2 bg-primary border border-border rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-20 ${
+                        isNearTop ? 'top-full mt-8' : 'bottom-full mb-8'
+                      }`}>
                         <p className="text-sm font-medium text-primary">{item.name}</p>
-                        <p className="text-xs text-muted">Visibility: {item.visibility}% • Sentiment: {Math.round(item.sentiment * 100)}%</p>
+                        <p className="text-xs text-muted">Visibility: {item.visibility}% · Sentiment: {Math.round(item.sentiment * 100)}%</p>
                       </div>
                     </div>
                   )
                 })}
-
-                {/* Legend */}
-                <div className="absolute bottom-4 left-4 p-3 bg-primary/95 border border-border rounded-lg text-xs space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-chart-2" />
-                    <span className="text-secondary">High visibility + Positive sentiment</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-amber-500" />
-                    <span className="text-secondary">High visibility + Negative sentiment</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-purple-500" />
-                    <span className="text-secondary">Low visibility + Positive sentiment</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <span className="text-secondary">Low visibility + Negative sentiment</span>
-                  </div>
+              </div>
+              
+              {/* Legend - Clean inline style like Profound */}
+              <div className="flex items-center justify-center gap-6 mt-6 pt-4 border-t border-border">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-chart-2" />
+                  <span className="text-xs text-muted">High vis + Positive</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                  <span className="text-xs text-muted">High vis + Negative</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                  <span className="text-xs text-muted">Low vis + Positive</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                  <span className="text-xs text-muted">Low vis + Negative</span>
                 </div>
               </div>
             </div>
@@ -869,7 +897,7 @@ export default function ShoppingPage() {
 
             {/* Top Converting Prompts */}
             <div className="card p-6">
-              <h3 className="text-sm font-medium text-primary mb-4">🔥 Top Converting Prompts</h3>
+              <h3 className="text-sm font-medium text-primary mb-4">Top Converting Prompts</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
                   { prompt: `Best ${currentDashboard?.metadata?.category || 'tool'} for startups`, rank: 1, growth: '+45%' },
