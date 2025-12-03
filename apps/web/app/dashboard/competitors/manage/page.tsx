@@ -114,8 +114,8 @@ export default function CompetitorManagePage() {
 
   // Plan limits
   const getPlanLimit = () => {
-    const limits: Record<string, number> = { free: 3, solo: 5, agency: 10, enterprise: 50 }
-    return limits[currentDashboard?.plan || 'free'] || 3
+    const limits: Record<string, number> = { solo: 5, agency: 10, enterprise: 50 }
+    return limits[currentDashboard?.plan || 'solo'] || 5
   }
 
   // Fetch competitors
@@ -458,7 +458,7 @@ export default function CompetitorManagePage() {
             <div>
               <p className="text-sm text-primary font-medium">Competitor limit reached</p>
               <p className="text-sm text-muted mt-1">
-                You're tracking {competitors.length} of {getPlanLimit()} competitors on your {currentDashboard?.plan || 'free'} plan.{' '}
+                You're tracking {competitors.length} of {getPlanLimit()} competitors on your {currentDashboard?.plan || 'solo'} plan.{' '}
                 <a href="/pricing" className="text-[#A855F7] hover:underline">Upgrade</a> to track more.
               </p>
             </div>

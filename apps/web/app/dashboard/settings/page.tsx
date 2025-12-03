@@ -289,7 +289,6 @@ export default function ControlCenterPage() {
                     </span>
                   </div>
                   <p className="text-sm text-secondary/60">
-                    {currentDashboard.plan === 'free' && '1 brand • 3 competitors • Limited scans'}
                     {currentDashboard.plan === 'solo' && '1 brand • 5 competitors • Weekly scans'}
                     {currentDashboard.plan === 'agency' && '5 brands • 10 competitors • Daily scans'}
                     {currentDashboard.plan === 'enterprise' && 'Unlimited brands • Unlimited competitors • API access'}
