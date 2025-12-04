@@ -130,9 +130,9 @@ export default function Sidebar() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 flex items-center justify-center">
               <img 
-                src="/images/Harbor_White_Logo.png" 
+                src={theme === 'dark' ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
                 alt="Harbor Logo" 
-                className="w-10 h-10 object-contain dark:invert-0 invert"
+                className="w-10 h-10 object-contain"
               />
             </div>
             <h1 className="text-lg font-heading font-bold text-sidebar-foreground">
@@ -147,9 +147,9 @@ export default function Sidebar() {
             title="Expand sidebar"
           >
             <img 
-              src="/images/Harbor_White_Logo.png" 
+              src={theme === 'dark' ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
               alt="Harbor Logo" 
-              className="w-10 h-10 object-contain group-hover:opacity-0 transition-opacity dark:invert-0 invert"
+              className="w-10 h-10 object-contain group-hover:opacity-0 transition-opacity"
             />
             <ChevronRight className="w-5 h-5 text-sidebar-foreground absolute opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2} />
           </button>
