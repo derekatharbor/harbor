@@ -6,8 +6,6 @@
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { 
-  TrendingUp,
-  TrendingDown,
   ArrowUpRight,
   Download,
   Eye,
@@ -23,15 +21,6 @@ import {
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts'
 
 // ============================================================================
 // TYPES
@@ -157,31 +146,6 @@ export default function OverviewPage() {
 
   const brandName = currentDashboard?.brand_name || 'Your Brand'
   const brandLogo = currentDashboard?.logo_url
-
-  // Generate chart data from competitors (for now, show current values as last point)
-  // TODO: Replace with historical data from visibility_snapshots table
-  const chartData = competitors.length > 0 ? [
-    { date: 'Now', ...Object.fromEntries(competitors.map(c => [c.name, c.visibility])) }
-  ] : []
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload?.length) return null
-    
-    return (
-      <div className="bg-card border border-border rounded-lg shadow-lg p-3 min-w-[200px]">
-        <div className="font-medium text-primary mb-2">{label}</div>
-        <div className="space-y-1.5">
-          {payload.map((entry: any, idx: number) => (
-            <div key={idx} className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: entry.color }} />
-              <span className="text-secondary flex-1 text-sm">{entry.name}</span>
-              <span className="font-medium text-primary text-sm">{entry.value}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
 
   if (loading) {
     return (
@@ -338,23 +302,6 @@ export default function OverviewPage() {
                 >
                   <Target className="w-3.5 h-3.5" />
                   Position
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <button 
-                  className={`expand-btn ${chartType === 'line' ? 'bg-hover border-muted' : ''}`}
-                  onClick={() => setChartType('line')}
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M3 12l6-6 4 4 8-8" />
-                  </svg>
-                </button>
-                <button 
-                  className={`expand-btn ${chartType === 'bar' ? 'bg-hover border-muted' : ''}`}
-                  onClick={() => setChartType('bar')}
-                >
-                  <BarChart3 className="w-4 h-4" />
                 </button>
               </div>
             </div>
