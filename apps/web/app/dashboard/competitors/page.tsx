@@ -54,6 +54,21 @@ interface ApiResponse {
 const USER_COLOR = '#EC4899'
 const BRAND_COLOR = '#3B82F6' // Blue - cleaner, more professional
 
+// Build Brandfetch logo URL from brand name
+function getBrandLogo(name: string, size: number = 32): string {
+  const cleanName = name.toLowerCase().trim()
+  
+  // If name already looks like a domain, use it directly
+  if (cleanName.includes('.com') || cleanName.includes('.io') || cleanName.includes('.co')) {
+    const domain = cleanName.replace(/[^a-z0-9.]/g, '')
+    return `https://cdn.brandfetch.io/${domain}/w/${size}/h/${size}`
+  }
+  
+  // Otherwise, assume .com
+  const slug = cleanName.replace(/[^a-z0-9]/g, '')
+  return `https://cdn.brandfetch.io/${slug}.com/w/${size}/h/${size}`
+}
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
@@ -278,7 +293,7 @@ export default function CompetitorsPage() {
                       <div key={comp.name} className="flex items-center gap-3 py-1">
                         <span className="text-xs text-muted w-5 tabular-nums text-right">{idx + 1}</span>
                         <img 
-                          src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                          src={getBrandLogo(comp.name)}
                           alt=""
                           className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
                           onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -319,7 +334,7 @@ export default function CompetitorsPage() {
                     <div className="text-xs text-muted uppercase tracking-wide mb-2">Most Mentioned</div>
                     <div className="flex items-center gap-2">
                       <img 
-                        src={`https://cdn.brandfetch.io/${competitors[0]?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                        src={getBrandLogo(competitors[0]?.name || '')}
                         alt=""
                         className="w-6 h-6 rounded bg-secondary object-contain"
                         onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -337,7 +352,7 @@ export default function CompetitorsPage() {
                         <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Sentiment</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={`https://cdn.brandfetch.io/${bestSentiment?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                            src={getBrandLogo(bestSentiment?.name || '')}
                             alt=""
                             className="w-6 h-6 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -357,7 +372,7 @@ export default function CompetitorsPage() {
                         <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Avg Position</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={`https://cdn.brandfetch.io/${bestPosition?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                            src={getBrandLogo(bestPosition?.name || '')}
                             alt=""
                             className="w-6 h-6 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -454,7 +469,7 @@ export default function CompetitorsPage() {
                       <td>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                            src={getBrandLogo(comp.name)}
                             alt=""
                             className="w-6 h-6 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -512,21 +527,19 @@ export default function CompetitorsPage() {
                   <button
                     key={comp.name}
                     onClick={() => setSelectedCompetitor(comp)}
-                    className={`w-full p-3 flex items-center gap-3 text-left transition-colors hover:bg-hover ${
+                    className={`w-full px-4 py-2 flex items-center gap-2 text-left transition-colors hover:bg-hover ${
                       selectedCompetitor?.name === comp.name ? 'bg-hover' : ''
                     }`}
                   >
-                    <span className="text-xs text-muted w-6">#{comp.rank}</span>
+                    <span className="text-xs text-muted w-5 tabular-nums">#{comp.rank}</span>
                     <img 
-                      src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                      src={getBrandLogo(comp.name)}
                       alt=""
-                      className="w-6 h-6 rounded bg-secondary object-contain"
+                      className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
                       onError={(e) => { e.currentTarget.style.display = 'none' }}
                     />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-primary truncate">{comp.name}</div>
-                      <div className="text-xs text-muted">{comp.mentions} mentions</div>
-                    </div>
+                    <span className="text-sm text-primary truncate flex-1">{comp.name}</span>
+                    <span className="text-xs text-muted tabular-nums">{comp.mentions}</span>
                     {selectedCompetitor?.name === comp.name && (
                       <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                     )}
@@ -544,16 +557,32 @@ export default function CompetitorsPage() {
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
-                          <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2">
-                            <span className="text-lg font-bold text-primary">{brandName.charAt(0)}</span>
+                          <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2 overflow-hidden">
+                            <img 
+                              src={getBrandLogo(currentDashboard?.domain || brandName, 48)}
+                              alt=""
+                              className="w-full h-full object-contain"
+                              onError={(e) => { 
+                                e.currentTarget.style.display = 'none'
+                                e.currentTarget.parentElement!.innerHTML = `<span class="text-lg font-bold text-primary">${brandName.charAt(0)}</span>`
+                              }}
+                            />
                           </div>
                           <div className="text-sm font-medium text-primary">{brandName}</div>
                           <div className="text-xs text-muted">You</div>
                         </div>
                         <div className="text-2xl text-muted">vs</div>
                         <div className="text-center">
-                          <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2">
-                            <span className="text-lg font-bold text-secondary">{selectedCompetitor.name.charAt(0)}</span>
+                          <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2 overflow-hidden">
+                            <img 
+                              src={getBrandLogo(selectedCompetitor.name, 48)}
+                              alt=""
+                              className="w-full h-full object-contain"
+                              onError={(e) => { 
+                                e.currentTarget.style.display = 'none'
+                                e.currentTarget.parentElement!.innerHTML = `<span class="text-lg font-bold text-secondary">${selectedCompetitor.name.charAt(0)}</span>`
+                              }}
+                            />
                           </div>
                           <div className="text-sm font-medium text-primary">{selectedCompetitor.name}</div>
                           <div className="text-xs text-muted">#{selectedCompetitor.rank}</div>
