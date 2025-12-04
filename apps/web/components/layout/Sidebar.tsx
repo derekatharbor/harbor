@@ -19,7 +19,8 @@ import {
   TrendingUp,
   Layers,
   LogOut,
-  Users
+  Users,
+  Link2
 } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import BrandSwitcher from './BrandSwitcher'
@@ -82,6 +83,7 @@ export default function Sidebar() {
   const analytics = [
     { name: 'Overview', href: '/dashboard/overview', icon: Home },
     { name: 'Prompts', href: '/dashboard/prompts', icon: MessageSquare },
+    { name: 'Sources', href: '/dashboard/sources', icon: Link2 },
     { name: 'Shopping', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand', href: '/dashboard/brand', icon: Star },
     { name: 'Website', href: '/dashboard/website', icon: Globe },
@@ -103,6 +105,7 @@ export default function Sidebar() {
   const getAccentColor = () => {
     if (pathname === '/dashboard/overview') return '#3B82F6' // Blue
     if (pathname === '/dashboard/prompts') return '#F59E0B' // Amber (Prompts)
+    if (pathname?.startsWith('/dashboard/sources')) return '#EC4899' // Pink (Sources)
     if (pathname === '/dashboard/shopping') return '#10B981' // Green
     if (pathname === '/dashboard/brand') return '#06B6D4' // Cyan
     if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
@@ -218,7 +221,12 @@ export default function Sidebar() {
           
           {analytics.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href
+            // Handle nested routes for Sources and Prompts
+            const isActive = item.href === '/dashboard/sources' 
+              ? pathname?.startsWith('/dashboard/sources')
+              : item.href === '/dashboard/prompts'
+              ? pathname?.startsWith('/dashboard/prompts')
+              : pathname === item.href
             
             return (
               <Link
