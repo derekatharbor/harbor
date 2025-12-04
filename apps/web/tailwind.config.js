@@ -31,6 +31,14 @@ module.exports = {
           4: '#EC4899',
           5: '#8B5CF6',
         },
+        // Sidebar colors (CSS variable based for theme switching)
+        sidebar: {
+          DEFAULT: 'var(--sidebar)',
+          foreground: 'var(--sidebar-foreground)',
+          muted: 'var(--sidebar-muted)',
+          hover: 'var(--sidebar-hover)',
+          border: 'var(--sidebar-border)',
+        },
         // Legacy colors for backwards compat
         coral: '#EF4444', // Mapped to negative
         cerulean: '#3B82F6',

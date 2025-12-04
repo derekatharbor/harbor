@@ -76,10 +76,12 @@
     --chart-4: #EC4899;
     --chart-5: #8B5CF6;
     
-    /* Sidebar stays dark navy in both modes */
-    --sidebar-bg: #0B1521;
-    --sidebar-text: #F4F6F8;
-    --sidebar-border: rgba(255, 255, 255, 0.05);
+    /* Sidebar - light mode */
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: #111827;
+    --sidebar-muted: #6B7280;
+    --sidebar-hover: #F3F4F6;
+    --sidebar-border: #E5E7EB;
   }
 
   /* ========================================
@@ -104,9 +106,11 @@
     --warning: #F59E0B;
     --info: #3B82F6;
     
-    /* Sidebar stays dark navy */
-    --sidebar-bg: #0B1521;
-    --sidebar-text: #F4F6F8;
+    /* Sidebar - dark mode */
+    --sidebar: #0B1521;
+    --sidebar-foreground: #F4F6F8;
+    --sidebar-muted: rgba(244, 246, 248, 0.5);
+    --sidebar-hover: rgba(255, 255, 255, 0.05);
     --sidebar-border: rgba(255, 255, 255, 0.05);
   }
 
@@ -130,12 +134,23 @@
 
 @layer components {
   /* ========================================
-     SIDEBAR (FIXED, DARK NAVY)
+     SIDEBAR (THEME AWARE)
      ======================================== */
 
-  .sidebar-dark {
-    background: var(--sidebar-bg);
-    border-color: var(--sidebar-border);
+  .bg-sidebar {
+    background-color: var(--sidebar);
+  }
+  
+  .text-sidebar-foreground {
+    color: var(--sidebar-foreground);
+  }
+  
+  .text-sidebar-muted {
+    color: var(--sidebar-muted);
+  }
+  
+  .bg-sidebar-hover {
+    background-color: var(--sidebar-hover);
   }
 
   .nav-item {

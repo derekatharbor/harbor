@@ -118,28 +118,24 @@ export default function Sidebar() {
   return (
     <aside 
       className={`
-        sidebar-dark
         hidden lg:flex fixed left-0 top-0 h-screen 
-        border-r flex-col transition-all duration-300 z-[100] 
+        border-r border-border flex-col transition-all duration-300 z-[100] 
+        bg-sidebar
         ${isCollapsed ? 'w-20' : 'w-60 overflow-hidden'}
       `}
-      style={{
-        backgroundColor: '#0B1521',
-        borderColor: 'rgba(255, 255, 255, 0.05)'
-      }}
     >
       {/* Header with collapse button */}
-      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-border flex items-center justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 flex items-center justify-center">
               <img 
                 src="/images/Harbor_White_Logo.png" 
                 alt="Harbor Logo" 
-                className="w-10 h-10 object-contain"
+                className="w-10 h-10 object-contain dark:invert-0 invert"
               />
             </div>
-            <h1 className="text-lg font-heading font-bold text-white">
+            <h1 className="text-lg font-heading font-bold text-sidebar-foreground">
               Harbor
             </h1>
           </div>
@@ -153,25 +149,25 @@ export default function Sidebar() {
             <img 
               src="/images/Harbor_White_Logo.png" 
               alt="Harbor Logo" 
-              className="w-10 h-10 object-contain group-hover:opacity-0 transition-opacity"
+              className="w-10 h-10 object-contain group-hover:opacity-0 transition-opacity dark:invert-0 invert"
             />
-            <ChevronRight className="w-5 h-5 text-white absolute opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2} />
+            <ChevronRight className="w-5 h-5 text-sidebar-foreground absolute opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2} />
           </button>
         )}
         {!isCollapsed && (
           <button
             onClick={toggleCollapse}
-            className="p-1.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 hover:bg-sidebar-hover rounded-lg transition-colors cursor-pointer"
             title="Collapse sidebar"
           >
-            <ChevronLeft className="w-5 h-5 text-softgray/60" strokeWidth={1.5} />
+            <ChevronLeft className="w-5 h-5 text-sidebar-muted" strokeWidth={1.5} />
           </button>
         )}
       </div>
 
       {/* Brand Switcher - hide when collapsed */}
       {!isCollapsed && (
-        <div className="px-4 py-4 border-b border-white/5">
+        <div className="px-4 py-4 border-b border-border">
           <BrandSwitcher />
         </div>
       )}
@@ -183,7 +179,7 @@ export default function Sidebar() {
         {/* Analytics Section */}
         <div className="px-4 pt-6 pb-3">
           {!isCollapsed && (
-            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+            <div className="text-xs text-sidebar-muted uppercase tracking-wider mb-3 px-3">
               Analytics
             </div>
           )}
@@ -201,8 +197,8 @@ export default function Sidebar() {
                   transition-colors cursor-pointer relative group
                   ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                   ${isActive 
-                    ? 'text-white' 
-                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    ? 'text-sidebar-foreground' 
+                    : 'text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover'
                   }
                   ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
                 `}
@@ -215,7 +211,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-sidebar text-sidebar-foreground text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-border shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -227,7 +223,7 @@ export default function Sidebar() {
         {/* Action Section */}
         <div className="px-4 py-3">
           {!isCollapsed && (
-            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+            <div className="text-xs text-sidebar-muted uppercase tracking-wider mb-3 px-3">
               Action
             </div>
           )}
@@ -245,8 +241,8 @@ export default function Sidebar() {
                   transition-colors cursor-pointer relative group
                   ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                   ${isActive 
-                    ? 'text-white' 
-                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    ? 'text-sidebar-foreground' 
+                    : 'text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover'
                   }
                   ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
                 `}
@@ -259,7 +255,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-sidebar text-sidebar-foreground text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-border shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -269,9 +265,9 @@ export default function Sidebar() {
         </div>
 
         {/* Manage Section */}
-        <div className="px-4 py-3 border-t border-white/[0.03]">
+        <div className="px-4 py-3 border-t border-border">
           {!isCollapsed && (
-            <div className="text-xs text-softgray/40 uppercase tracking-wider mb-3 px-3">
+            <div className="text-xs text-sidebar-muted uppercase tracking-wider mb-3 px-3">
               Manage
             </div>
           )}
@@ -289,8 +285,8 @@ export default function Sidebar() {
                   transition-colors cursor-pointer relative group
                   ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
                   ${isActive 
-                    ? 'text-white' 
-                    : 'text-softgray/60 hover:text-white hover:bg-white/5'
+                    ? 'text-sidebar-foreground' 
+                    : 'text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover'
                   }
                   ${isActive && !isCollapsed ? 'pl-[10px]' : ''}
                 `}
@@ -303,7 +299,7 @@ export default function Sidebar() {
                 
                 {/* Tooltip - only shows when collapsed */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+                  <div className="absolute left-full ml-2 px-3 py-1.5 bg-sidebar text-sidebar-foreground text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-border shadow-lg">
                     {item.name}
                   </div>
                 )}
@@ -313,7 +309,7 @@ export default function Sidebar() {
         </div>
 
         {/* Theme Toggle - scrolls with content */}
-        <div className="px-4 py-3 border-t border-white/5">
+        <div className="px-4 py-3 border-t border-border">
           <div
             onClick={toggleTheme}
             role="button"
@@ -328,7 +324,7 @@ export default function Sidebar() {
               flex items-center rounded-lg
               transition-colors cursor-pointer relative group
               ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
-              text-softgray/60 hover:text-white hover:bg-white/5
+              text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover
             `}
           >
             {theme === 'light' ? (
@@ -344,7 +340,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-3 py-1.5 bg-sidebar text-sidebar-foreground text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-border shadow-lg">
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </div>
             )}
@@ -352,14 +348,14 @@ export default function Sidebar() {
         </div>
 
         {/* Sign Out */}
-        <div className="px-4 py-3 border-t border-white/5">
+        <div className="px-4 py-3 border-t border-border">
           <button
             onClick={handleSignOut}
             className={`
               w-full flex items-center rounded-lg
               transition-colors cursor-pointer relative group
               ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
-              text-softgray/60 hover:text-red-400 hover:bg-red-500/5
+              text-sidebar-muted hover:text-red-400 hover:bg-red-500/10
             `}
           >
             <LogOut className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
@@ -367,7 +363,7 @@ export default function Sidebar() {
             
             {/* Tooltip - only shows when collapsed */}
             {isCollapsed && (
-              <div className="absolute left-full ml-2 px-3 py-1.5 bg-[#1a2332] text-white text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-white/10 shadow-lg">
+              <div className="absolute left-full ml-2 px-3 py-1.5 bg-sidebar text-sidebar-foreground text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] border border-border shadow-lg">
                 Sign Out
               </div>
             )}
