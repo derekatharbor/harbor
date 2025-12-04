@@ -284,7 +284,7 @@ function classifySourceType(domain: string): Citation['source_type'] {
 export async function executePromptAllModels(
   promptId: string, 
   promptText: string,
-  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'gemini', 'perplexity']
+  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'perplexity'] // Gemini disabled - 404 errors
 ): Promise<ExecutionResult[]> {
   const results: ExecutionResult[] = []
   const executedAt = new Date().toISOString()
