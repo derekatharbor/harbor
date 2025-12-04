@@ -1,7 +1,7 @@
 // Harbor Prompt Execution Engine
-// Location: lib/prompts/execution-engine.ts
 // Runs prompts against ChatGPT, Claude, Gemini, Perplexity and stores results
 
+import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 import { GoogleGenerativeAI } from '@google/generative-ai'
@@ -20,9 +20,9 @@ export interface ExecutionResult {
 
 export interface BrandMention {
   brand_name: string
-  position: number
+  position: number  // 1st, 2nd, 3rd mentioned
   sentiment: 'positive' | 'neutral' | 'negative'
-  context: string
+  context: string  // snippet where brand was mentioned
 }
 
 export interface Citation {
@@ -31,7 +31,7 @@ export interface Citation {
   source_type: 'editorial' | 'corporate' | 'institutional' | 'ugc' | 'unknown'
 }
 
-// Initialize clients (lazy)
+// Initialize clients (lazy - only when needed)
 let openaiClient: OpenAI | null = null
 let anthropicClient: Anthropic | null = null
 let geminiClient: GoogleGenerativeAI | null = null
@@ -62,7 +62,7 @@ async function executeChatGPT(promptText: string): Promise<{ text: string; token
   const openai = getOpenAI()
   
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o',
+    model: 'gpt-4o-mini', // Cheapest: ~$0.15/M in, $0.60/M out (vs gpt-4o at $2.50/$10)
     messages: [
       {
         role: 'system',
@@ -85,7 +85,7 @@ async function executeClaude(promptText: string): Promise<{ text: string; tokens
   const anthropic = getAnthropic()
   
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-3-5-haiku-20241022', // Cheapest: $0.80/M in, $4/M out (vs Sonnet at $3/$15)
     max_tokens: 1000,
     system: 'You are a helpful assistant providing software recommendations. Be specific about product names and include relevant details about why each is recommended.',
     messages: [
@@ -104,7 +104,7 @@ async function executeClaude(promptText: string): Promise<{ text: string; tokens
 // Execute prompt against Gemini
 async function executeGemini(promptText: string): Promise<{ text: string; tokens: number }> {
   const genAI = getGemini()
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
   
   const result = await model.generateContent({
     contents: [
@@ -123,6 +123,8 @@ async function executeGemini(promptText: string): Promise<{ text: string; tokens
 
   const response = result.response
   const text = response.text()
+  
+  // Gemini doesn't return token count easily, estimate it
   const estimatedTokens = Math.ceil((promptText.length + text.length) / 4)
   
   return {
@@ -140,7 +142,7 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'sonar-pro',
+      model: 'sonar', // Cheapest: $1/M input, $1/M output (vs sonar-pro at $3/$15)
       messages: [
         {
           role: 'system',
@@ -148,14 +150,11 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
         },
         { role: 'user', content: promptText }
       ],
-      max_tokens: 1000
+      max_tokens: 1000,
+      temperature: 0.7,
+      return_citations: true
     })
   })
-
-  if (!response.ok) {
-    const text = await response.text()
-    throw new Error(`Perplexity API error: ${response.status} - ${text.substring(0, 200)}`)
-  }
 
   const data = await response.json()
   
@@ -170,6 +169,7 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
 function parseBrandMentions(text: string, knownBrands?: string[]): BrandMention[] {
   const mentions: BrandMention[] = []
   
+  // Common SaaS brands to look for (can be expanded)
   const defaultBrands = [
     'Asana', 'Monday.com', 'ClickUp', 'Notion', 'Trello', 'Basecamp', 'Jira', 'Linear',
     'Salesforce', 'HubSpot', 'Pipedrive', 'Zoho', 'Close', 'Copper',
@@ -195,10 +195,14 @@ function parseBrandMentions(text: string, knownBrands?: string[]): BrandMention[
     
     if (match) {
       position++
+      
+      // Extract context (50 chars before and after)
       const index = text.toLowerCase().indexOf(brand.toLowerCase())
       const start = Math.max(0, index - 50)
       const end = Math.min(text.length, index + brand.length + 50)
       const context = text.slice(start, end)
+      
+      // Simple sentiment detection based on surrounding words
       const sentiment = detectSentiment(context)
       
       mentions.push({
@@ -246,6 +250,7 @@ function parseCitations(urls: string[]): Citation[] {
       domain = url
     }
     
+    // Classify source type
     const sourceType = classifySourceType(domain)
     
     return {
@@ -268,6 +273,7 @@ function classifySourceType(domain: string): Citation['source_type'] {
   if (institutionalDomains.some(d => lower.includes(d))) return 'institutional'
   if (ugcDomains.some(d => lower.includes(d))) return 'ugc'
   
+  // If it's a known brand domain, it's corporate
   const brandDomains = ['asana.com', 'monday.com', 'notion.so', 'hubspot.com', 'salesforce.com', 'zendesk.com', 'shopify.com', 'stripe.com']
   if (brandDomains.some(d => lower.includes(d))) return 'corporate'
   
@@ -278,11 +284,12 @@ function classifySourceType(domain: string): Citation['source_type'] {
 export async function executePromptAllModels(
   promptId: string, 
   promptText: string,
-  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'perplexity']
+  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'gemini', 'perplexity']
 ): Promise<ExecutionResult[]> {
   const results: ExecutionResult[] = []
   const executedAt = new Date().toISOString()
 
+  // Execute in parallel for speed
   const executions = await Promise.allSettled(
     models.map(async (model) => {
       try {
@@ -333,6 +340,7 @@ export async function executePromptAllModels(
     })
   )
 
+  // Process results
   for (const execution of executions) {
     if (execution.status === 'fulfilled') {
       results.push(execution.value)
@@ -344,10 +352,11 @@ export async function executePromptAllModels(
 
 // Store results in Supabase
 export async function storeExecutionResults(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   results: ExecutionResult[]
 ): Promise<void> {
   for (const result of results) {
+    // Store main execution record
     const { data: execution, error: execError } = await supabase
       .from('prompt_executions')
       .insert({
@@ -366,6 +375,7 @@ export async function storeExecutionResults(
       continue
     }
 
+    // Store brand mentions
     if (result.brands_mentioned.length > 0) {
       const mentions = result.brands_mentioned.map(m => ({
         execution_id: execution.id,
@@ -378,6 +388,7 @@ export async function storeExecutionResults(
       await supabase.from('prompt_brand_mentions').insert(mentions)
     }
 
+    // Store citations
     if (result.citations.length > 0) {
       const citations = result.citations.map(c => ({
         execution_id: execution.id,
@@ -411,6 +422,7 @@ export function calculateVisibilityFromExecutions(
       totalPosition += mention.position
       positionCount++
       
+      // Convert sentiment to number
       if (mention.sentiment === 'positive') totalSentiment += 1
       else if (mention.sentiment === 'negative') totalSentiment -= 1
     }

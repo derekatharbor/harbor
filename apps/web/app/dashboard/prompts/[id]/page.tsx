@@ -69,10 +69,10 @@ interface SourceData {
 // Model logo component
 function ModelLogo({ model, size = 20 }: { model: string; size?: number }) {
   const logoMap: Record<string, string> = {
-    chatgpt: 'https://img.logo.dev/openai.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
-    claude: 'https://img.logo.dev/anthropic.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
-    gemini: 'https://img.logo.dev/google.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
-    perplexity: 'https://img.logo.dev/perplexity.ai?token=pk_X-1ZO13GSgeOGP3a5JYvJw'
+    chatgpt: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y',
+    claude: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y',
+    gemini: 'https://cdn.brandfetch.io/gemini.google.com?c=1id1Fyz-h7an5-5KR_y',
+    perplexity: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y'
   }
   
   return (
@@ -84,6 +84,58 @@ function ModelLogo({ model, size = 20 }: { model: string; size?: number }) {
       className="rounded object-contain"
     />
   )
+}
+
+// Brand domain mapping for logos
+function getBrandLogoUrl(brandName: string): string {
+  const domainMap: Record<string, string> = {
+    'asana': 'asana.com',
+    'monday.com': 'monday.com',
+    'clickup': 'clickup.com',
+    'notion': 'notion.so',
+    'trello': 'trello.com',
+    'jira': 'atlassian.com',
+    'basecamp': 'basecamp.com',
+    'linear': 'linear.app',
+    'todoist': 'todoist.com',
+    'wrike': 'wrike.com',
+    'smartsheet': 'smartsheet.com',
+    'airtable': 'airtable.com',
+    'hubspot': 'hubspot.com',
+    'salesforce': 'salesforce.com',
+    'pipedrive': 'pipedrive.com',
+    'zoho': 'zoho.com',
+    'zendesk': 'zendesk.com',
+    'intercom': 'intercom.com',
+    'freshdesk': 'freshdesk.com',
+    'slack': 'slack.com',
+    'microsoft teams': 'microsoft.com',
+    'zoom': 'zoom.us',
+    'figma': 'figma.com',
+    'canva': 'canva.com',
+    'mailchimp': 'mailchimp.com',
+    'klaviyo': 'klaviyo.com',
+    'semrush': 'semrush.com',
+    'ahrefs': 'ahrefs.com',
+    'moz': 'moz.com',
+    'shopify': 'shopify.com',
+    'stripe': 'stripe.com',
+    'quickbooks': 'quickbooks.intuit.com',
+    'xero': 'xero.com',
+    'gusto': 'gusto.com',
+    'rippling': 'rippling.com',
+    'github': 'github.com',
+    'gitlab': 'gitlab.com',
+    'vercel': 'vercel.com',
+    'zapier': 'zapier.com',
+    'make': 'make.com',
+    'jasper': 'jasper.ai',
+    'copy.ai': 'copy.ai',
+  }
+  
+  const key = brandName.toLowerCase()
+  const domain = domainMap[key] || `${key.replace(/\s+/g, '').replace('.com', '')}.com`
+  return `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
 }
 
 // Sentiment badge
@@ -345,7 +397,7 @@ export default function PromptDetailPage() {
                     <td className="text-primary font-medium">
                       <div className="flex items-center gap-2">
                         <img 
-                          src={`https://img.logo.dev/${brand.brand_name.toLowerCase().replace(/\s+/g, '').replace('.com', '')}.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw`}
+                          src={getBrandLogoUrl(brand.brand_name)}
                           alt=""
                           className="w-5 h-5 rounded object-contain"
                           onError={(e) => {
