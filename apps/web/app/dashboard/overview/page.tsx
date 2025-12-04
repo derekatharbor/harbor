@@ -376,16 +376,19 @@ export default function OverviewPage() {
                   </div>
                   
                   <div className="col-span-2 text-sm text-center">
-                    <span className="text-muted">|</span>
-                    <span className="ml-1 text-secondary">{comp.sentiment}</span>
+                    <span className="text-secondary">{comp.sentiment}%</span>
+                    {comp.sentimentDelta !== null && (
+                      <span className={`ml-1 text-xs ${comp.sentimentDelta > 0 ? 'text-positive' : 'text-negative'}`}>
+                        {comp.sentimentDelta > 0 ? '↑' : '↓'} {Math.abs(comp.sentimentDelta)}
+                      </span>
+                    )}
                   </div>
                   
                   <div className="col-span-3 text-sm text-right">
-                    <span className="text-muted">±</span>
-                    <span className="ml-1 text-secondary">{comp.position}</span>
+                    <span className="text-secondary">{comp.position}</span>
                     {comp.positionDelta !== null && (
                       <span className={`ml-1 text-xs ${comp.positionDelta < 0 ? 'text-positive' : 'text-negative'}`}>
-                        {comp.positionDelta < 0 ? '↓' : '↑'} {Math.abs(comp.positionDelta)}
+                        {comp.positionDelta < 0 ? '↑' : '↓'} {Math.abs(comp.positionDelta)}
                       </span>
                     )}
                   </div>

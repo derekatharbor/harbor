@@ -129,24 +129,26 @@ export async function GET(
         ? Math.round((stats.sentiments.positive / totalSentimentVotes) * 100)
         : 50
 
-      // Visibility = mentions weighted by position
-      const positionWeight = Math.max(0.2, 1 - (avgPosition - 1) * 0.1)
-      const visibility = Math.min(100, Math.round(stats.mentions * 5 * positionWeight))
-
       return {
         name,
         mentions: stats.mentions,
-        visibility,
         sentiment: sentimentScore,
         position: Math.round(avgPosition * 10) / 10,
+        visibility: 0, // Will be calculated below
         isUser: name.toLowerCase() === userBrandName || 
                 name.toLowerCase().includes(userBrandName) ||
                 userBrandName.includes(name.toLowerCase())
       }
     })
 
-    // Sort by mentions (most mentioned = most visible)
+    // Sort by mentions (most mentioned first)
     brandsArray.sort((a, b) => b.mentions - a.mentions)
+
+    // Calculate visibility RELATIVE to top brand
+    const maxMentions = brandsArray.length > 0 ? brandsArray[0].mentions : 1
+    brandsArray.forEach(brand => {
+      brand.visibility = Math.round((brand.mentions / maxMentions) * 100)
+    })
 
     // Take top N
     const topBrands = brandsArray.slice(0, limit)
