@@ -16,9 +16,9 @@ import {
   ExternalLink,
   ChevronDown,
   Settings,
-  Smile,
-  Meh,
-  Frown,
+  TrendingUp,
+  TrendingDown,
+  Minus,
   Plus,
   X
 } from 'lucide-react'
@@ -87,27 +87,33 @@ function ModelLogo({ model, size = 20 }: { model: string; size?: number }) {
   )
 }
 
-// Sentiment icon
-function SentimentIcon({ sentiment, size = 16 }: { sentiment: string | null; size?: number }) {
-  if (!sentiment) return <span className="text-gray-400">—</span>
+// Sentiment badge
+function SentimentBadge({ sentiment }: { sentiment: string | null }) {
+  if (!sentiment) return <span className="text-muted">—</span>
   
-  const icons = {
-    positive: <Smile className={`w-${size/4} h-${size/4} text-emerald-500`} />,
-    neutral: <Meh className={`w-${size/4} h-${size/4} text-gray-400`} />,
-    negative: <Frown className={`w-${size/4} h-${size/4} text-red-500`} />
+  const config = {
+    positive: { icon: TrendingUp, color: 'text-chart-2', bg: 'bg-chart-2/10' },
+    neutral: { icon: Minus, color: 'text-muted', bg: 'bg-secondary' },
+    negative: { icon: TrendingDown, color: 'text-red-400', bg: 'bg-red-400/10' },
   }
   
-  return icons[sentiment as keyof typeof icons] || icons.neutral
+  const { icon: Icon, color, bg } = config[sentiment as keyof typeof config] || config.neutral
+  
+  return (
+    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded ${bg}`}>
+      <Icon className={`w-3 h-3 ${color}`} />
+    </div>
+  )
 }
 
 // Source type badge
 function SourceTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
-    editorial: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    corporate: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-    institutional: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    ugc: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-    unknown: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
+    editorial: 'badge-positive',
+    corporate: 'bg-purple-100 text-purple-700',
+    institutional: 'bg-chart-2/10 text-chart-2',
+    ugc: 'bg-warning/10 text-warning',
+    unknown: 'bg-secondary text-muted'
   }
   
   return (
@@ -126,13 +132,13 @@ function VisibilityChart({ data }: { data: { date: string; value: number }[] }) 
       {data.map((point, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-2">
           <div 
-            className="w-full bg-gray-200 dark:bg-gray-700 rounded-t transition-all duration-500"
+            className="w-full bg-secondary rounded-t transition-all duration-500"
             style={{ 
               height: `${(point.value / maxValue) * 100}%`,
               minHeight: '4px'
             }}
           />
-          <span className="text-[10px] text-gray-400">{point.date}</span>
+          <span className="text-[10px] text-muted">{point.date}</span>
         </div>
       ))}
     </div>
@@ -187,20 +193,20 @@ export default function PromptDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+      <div className="min-h-screen bg-primary flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
       </div>
     )
   }
 
   if (!prompt) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-primary flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Prompt not found</h2>
+          <h2 className="text-xl font-semibold text-primary mb-2">Prompt not found</h2>
           <button
             onClick={() => router.push('/dashboard/prompts')}
-            className="text-blue-600 hover:text-blue-700"
+            className="text-chart-1 hover:underline cursor-pointer"
           >
             Back to Prompts
           </button>
@@ -210,34 +216,34 @@ export default function PromptDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-primary">
       <MobileHeader />
       
       {/* Top Bar */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-card border-b border-border">
         <div className="px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push('/dashboard/prompts')}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+              className="p-2 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
             >
-              <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+              <ArrowLeft className="w-5 h-5 text-secondary" />
             </button>
-            <span className="text-gray-400">Prompts</span>
+            <span className="text-muted">Prompts</span>
           </div>
           
           <div className="flex items-center gap-2">
-            <button className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+            <button className="btn-secondary inline-flex items-center gap-2 text-sm">
               <Calendar className="w-4 h-4" />
               Last 7 days
               <ChevronDown className="w-3 h-3" />
             </button>
-            <button className="inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+            <button className="btn-secondary inline-flex items-center gap-2 text-sm">
               All Models
               <ChevronDown className="w-3 h-3" />
             </button>
-            <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
-              <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <button className="p-2 hover:bg-secondary rounded-lg transition-colors cursor-pointer">
+              <Settings className="w-5 h-5 text-secondary" />
             </button>
           </div>
         </div>
@@ -246,44 +252,44 @@ export default function PromptDetailPage() {
       {/* Main Content */}
       <div className="p-6">
         {/* Prompt Header Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Prompt</p>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+        <div className="card p-6 mb-6">
+          <p className="text-xs text-muted uppercase tracking-wider mb-2">Prompt</p>
+          <h1 className="text-2xl font-semibold text-primary mb-6">
             {prompt.prompt_text}
           </h1>
           
           {/* Meta Row */}
           <div className="grid grid-cols-5 gap-6 text-sm">
             <div>
-              <p className="text-gray-400 mb-1">Date added</p>
-              <p className="text-gray-900 dark:text-white">
+              <p className="text-muted mb-1">Date added</p>
+              <p className="text-primary">
                 {new Date(prompt.created_at).toLocaleDateString()}
               </p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Topic</p>
-              <p className="text-gray-900 dark:text-white">{prompt.topic || '—'}</p>
+              <p className="text-muted mb-1">Topic</p>
+              <p className="text-primary">{prompt.topic || '—'}</p>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Volume</p>
-              <div className="flex items-center gap-1">
+              <p className="text-muted mb-1">Volume</p>
+              <div className="flex items-center gap-0.5">
                 {[1,2,3,4,5].map(i => (
-                  <div key={i} className={`w-1.5 h-4 rounded-sm ${i <= 3 ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'}`} />
+                  <div key={i} className={`w-1.5 h-4 rounded-sm ${i <= 3 ? 'bg-chart-2' : 'bg-secondary'}`} />
                 ))}
               </div>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Location</p>
+              <p className="text-muted mb-1">Location</p>
               <div className="flex items-center gap-2">
                 <span className="text-lg">🇺🇸</span>
-                <span className="text-gray-900 dark:text-white">US</span>
+                <span className="text-primary">US</span>
               </div>
             </div>
             <div>
-              <p className="text-gray-400 mb-1">Status</p>
+              <p className="text-muted mb-1">Status</p>
               <span className="inline-flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                <span className="text-emerald-600 dark:text-emerald-400">Active</span>
+                <span className="w-2 h-2 bg-chart-2 rounded-full"></span>
+                <span className="text-chart-2">Active</span>
               </span>
             </div>
           </div>
@@ -292,14 +298,14 @@ export default function PromptDetailPage() {
         {/* Two Column Layout */}
         <div className="grid grid-cols-2 gap-6 mb-6">
           {/* Visibility Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-gray-400" />
-                <span className="font-medium text-gray-900 dark:text-white">Visibility</span>
-                <span className="text-gray-400 text-sm">· Percentage of chats mentioning each brand</span>
+                <Eye className="w-4 h-4 text-muted" />
+                <span className="font-medium text-primary">Visibility</span>
+                <span className="text-muted text-sm">· Percentage of chats mentioning each brand</span>
               </div>
-              <button className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
+              <button className="text-sm text-secondary hover:text-primary cursor-pointer">
                 Export
               </button>
             </div>
@@ -307,42 +313,42 @@ export default function PromptDetailPage() {
           </div>
 
           {/* Brands Table */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Tag className="w-4 h-4 text-gray-400" />
-                <span className="font-medium text-gray-900 dark:text-white">Brands</span>
-                <span className="text-gray-400 text-sm">· Brands with highest visibility</span>
+                <Tag className="w-4 h-4 text-muted" />
+                <span className="font-medium text-primary">Brands</span>
+                <span className="text-muted text-sm">· Brands with highest visibility</span>
               </div>
-              <button className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
+              <button className="text-sm text-secondary hover:text-primary cursor-pointer">
                 Show All ↗
               </button>
             </div>
             
-            <table className="w-full">
+            <table className="data-table">
               <thead>
-                <tr className="text-xs text-gray-400 uppercase tracking-wider">
-                  <th className="text-left py-2 font-medium">#</th>
-                  <th className="text-left py-2 font-medium">Brand</th>
-                  <th className="text-left py-2 font-medium">Visibility</th>
-                  <th className="text-left py-2 font-medium">Sentiment</th>
-                  <th className="text-left py-2 font-medium">Position</th>
+                <tr>
+                  <th>#</th>
+                  <th>Brand</th>
+                  <th>Visibility</th>
+                  <th>Sentiment</th>
+                  <th>Position</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody>
                 {(prompt.brands?.length > 0 ? prompt.brands : [
                   { brand_name: 'Asana', visibility_pct: 67, sentiment: 'positive', avg_position: 1 },
                   { brand_name: 'Monday.com', visibility_pct: 67, sentiment: 'positive', avg_position: 2 },
                   { brand_name: 'ClickUp', visibility_pct: 50, sentiment: 'neutral', avg_position: 3 },
                 ]).map((brand, i) => (
-                  <tr key={brand.brand_name} className="border-t border-gray-100 dark:border-gray-700">
-                    <td className="py-3 text-gray-400">{i + 1}</td>
-                    <td className="py-3 text-gray-900 dark:text-white font-medium">{brand.brand_name}</td>
-                    <td className="py-3 text-gray-900 dark:text-white">{brand.visibility_pct}%</td>
-                    <td className="py-3">
-                      <SentimentIcon sentiment={brand.sentiment} />
+                  <tr key={brand.brand_name}>
+                    <td className="text-muted">{i + 1}</td>
+                    <td className="text-primary font-medium">{brand.brand_name}</td>
+                    <td className="text-primary">{brand.visibility_pct}%</td>
+                    <td>
+                      <SentimentBadge sentiment={brand.sentiment} />
                     </td>
-                    <td className="py-3 text-gray-900 dark:text-white">
+                    <td className="text-primary">
                       {brand.avg_position ? `#${brand.avg_position}` : '—'}
                     </td>
                   </tr>
@@ -350,7 +356,7 @@ export default function PromptDetailPage() {
               </tbody>
             </table>
             
-            <button className="w-full mt-4 py-2 border border-dashed border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500 transition-colors cursor-pointer flex items-center justify-center gap-2">
+            <button className="w-full mt-4 py-2 border border-dashed border-border rounded-lg text-sm text-secondary hover:text-primary hover:border-muted transition-colors cursor-pointer flex items-center justify-center gap-2">
               <Plus className="w-4 h-4" />
               Add Brands
             </button>
@@ -358,20 +364,20 @@ export default function PromptDetailPage() {
         </div>
 
         {/* Top Sources */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div className="card p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-gray-400" />
-              <span className="font-medium text-gray-900 dark:text-white">Top Sources</span>
-              <span className="text-gray-400 text-sm">· Sources across active models</span>
+              <Globe className="w-4 h-4 text-muted" />
+              <span className="font-medium text-primary">Top Sources</span>
+              <span className="text-muted text-sm">· Sources across active models</span>
             </div>
-            <button className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer">
+            <button className="text-sm text-secondary hover:text-primary cursor-pointer">
               Show All ↗
             </button>
           </div>
 
           <div className="grid grid-cols-3 gap-6">
-            {/* Citation Donut - Placeholder */}
+            {/* Citation Donut */}
             <div className="flex items-center justify-center">
               <div className="relative w-32 h-32">
                 <svg className="w-full h-full -rotate-90">
@@ -380,146 +386,165 @@ export default function PromptDetailPage() {
                     cy="64"
                     r="56"
                     fill="none"
-                    stroke="#e5e7eb"
+                    stroke="var(--bg-secondary)"
                     strokeWidth="12"
-                    className="dark:stroke-gray-700"
                   />
                   <circle
                     cx="64"
                     cy="64"
                     r="56"
                     fill="none"
-                    stroke="#10b981"
+                    stroke="var(--chart-2)"
                     strokeWidth="12"
                     strokeDasharray={`${(prompt.sources?.length || 3) * 30} 352`}
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-2xl font-bold text-primary">
                     {prompt.sources?.length || 0}
                   </span>
-                  <span className="text-xs text-gray-400">Citations</span>
+                  <span className="text-xs text-muted">Citations</span>
                 </div>
               </div>
             </div>
 
-            {/* Sources Table */}
-            <div className="col-span-2">
-              <table className="w-full">
-                <thead>
-                  <tr className="text-xs text-gray-400 uppercase tracking-wider">
-                    <th className="text-left py-2 font-medium">Domain</th>
-                    <th className="text-left py-2 font-medium">Used</th>
-                    <th className="text-left py-2 font-medium">Avg. Citations</th>
-                    <th className="text-left py-2 font-medium">Type</th>
-                  </tr>
-                </thead>
-                <tbody className="text-sm">
-                  {(prompt.sources?.length > 0 ? prompt.sources : [
-                    { domain: 'g2.com', used_pct: 75, avg_citations: 2.1, source_type: 'editorial' },
-                    { domain: 'capterra.com', used_pct: 50, avg_citations: 1.5, source_type: 'editorial' },
-                    { domain: 'asana.com', used_pct: 33, avg_citations: 1.0, source_type: 'corporate' },
-                  ]).map((source) => (
-                    <tr key={source.domain} className="border-t border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 cursor-pointer">
-                      <td className="py-3">
-                        <div className="flex items-center gap-2">
-                          <img 
-                            src={`https://www.google.com/s2/favicons?domain=${source.domain}&sz=32`}
-                            alt=""
-                            className="w-5 h-5 rounded"
-                          />
-                          <span className="text-gray-900 dark:text-white">{source.domain}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 text-gray-900 dark:text-white">{source.used_pct}%</td>
-                      <td className="py-3 text-gray-900 dark:text-white">{source.avg_citations.toFixed(1)}</td>
-                      <td className="py-3">
-                        <SourceTypeBadge type={source.source_type} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Source Type Legend */}
+            <div className="flex flex-col justify-center gap-2">
+              {['Editorial', 'Institutional', 'UGC', 'Corporate'].map((type, i) => (
+                <div key={type} className="flex items-center gap-2">
+                  <span className={`w-3 h-3 rounded-sm ${
+                    i === 0 ? 'bg-chart-1' : 
+                    i === 1 ? 'bg-chart-2' : 
+                    i === 2 ? 'bg-warning' : 
+                    'bg-chart-4'
+                  }`} />
+                  <span className="text-sm text-secondary">{type}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Source List */}
+            <div className="space-y-2">
+              {(prompt.sources?.slice(0, 4) || [
+                { domain: 'youtube.com', used_pct: 100, avg_citations: 2, source_type: 'ugc' },
+                { domain: 'zapier.com', used_pct: 67, avg_citations: 1.5, source_type: 'corporate' },
+                { domain: 'pcmag.com', used_pct: 50, avg_citations: 1, source_type: 'editorial' },
+              ]).map((source) => (
+                <div key={source.domain} className="flex items-center justify-between py-1">
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src={`https://www.google.com/s2/favicons?domain=${source.domain}&sz=32`}
+                      alt=""
+                      className="w-4 h-4 rounded"
+                    />
+                    <span className="text-sm text-primary">{source.domain}</span>
+                  </div>
+                  <SourceTypeBadge type={source.source_type} />
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Model Responses */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        {/* Recent Chats / Model Responses */}
+        <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-900 dark:text-white">Recent Responses</span>
-              <span className="text-gray-400 text-sm">· Compare AI model answers</span>
+              <span className="font-medium text-primary">Recent Chats</span>
+              <span className="text-muted text-sm">· Last 100 chats in the selected time period</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="btn-secondary text-sm">
+                Export
+              </button>
             </div>
           </div>
 
           {/* Model Tabs */}
-          <div className="flex items-center gap-2 mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
-            {['chatgpt', 'claude', 'perplexity'].map((model) => (
-              <button
-                key={model}
-                onClick={() => setActiveModel(model)}
-                className={`
-                  inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer
-                  ${activeModel === model
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                  }
-                `}
-              >
-                <ModelLogo model={model} size={16} />
-                <span className="capitalize">{model}</span>
-              </button>
-            ))}
+          <div className="flex items-center gap-1 mb-4 border-b border-border">
+            {['chatgpt', 'claude', 'perplexity'].map((model) => {
+              const execution = prompt?.executions?.find(e => e.model === model)
+              const isActive = activeModel === model
+              
+              return (
+                <button
+                  key={model}
+                  onClick={() => setActiveModel(model)}
+                  className={`
+                    flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer
+                    ${isActive 
+                      ? 'border-chart-1 text-primary' 
+                      : 'border-transparent text-muted hover:text-secondary'
+                    }
+                  `}
+                >
+                  <ModelLogo model={model} size={16} />
+                  <span className="capitalize">{model}</span>
+                  {execution ? (
+                    <span className={`ml-1 px-1.5 py-0.5 rounded text-xs ${
+                      execution.brands_mentioned?.length > 0 
+                        ? 'bg-chart-2/10 text-chart-2' 
+                        : 'bg-secondary text-muted'
+                    }`}>
+                      {execution.brands_mentioned?.length > 0 ? 'Yes' : 'No'}
+                    </span>
+                  ) : (
+                    <span className="ml-1 px-1.5 py-0.5 bg-secondary text-muted rounded text-xs">
+                      Pending
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </div>
 
           {/* Response Content */}
-          <div className="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4">
-            {activeExecution ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none">
-                <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">
-                  {activeExecution.response_text.slice(0, 800)}
-                  {activeExecution.response_text.length > 800 && '...'}
+          {activeExecution ? (
+            <div className="space-y-4">
+              <div className="bg-secondary rounded-lg p-4">
+                <p className="text-secondary text-sm leading-relaxed line-clamp-6">
+                  {activeExecution.response_text || 'No response text available.'}
                 </p>
-                {activeExecution.response_text.length > 800 && (
-                  <button 
-                    onClick={() => setShowResponseModal(true)}
-                    className="text-blue-600 dark:text-blue-400 text-sm font-medium mt-2 cursor-pointer"
-                  >
-                    Read full response ↗
-                  </button>
-                )}
+                <button 
+                  onClick={() => setShowResponseModal(true)}
+                  className="text-sm text-chart-1 hover:underline mt-2 cursor-pointer"
+                >
+                  Read full response →
+                </button>
               </div>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                No response data yet. Run a scan to see AI responses.
-              </p>
-            )}
-          </div>
 
-          {/* Citations for this model */}
-          {activeExecution?.citations && activeExecution.citations.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">Sources cited:</p>
-              <div className="flex flex-wrap gap-2">
-                {activeExecution.citations.map((citation, i) => (
-                  <a
-                    key={i}
-                    href={citation.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    <img 
-                      src={`https://www.google.com/s2/favicons?domain=${citation.domain}&sz=16`}
-                      alt=""
-                      className="w-4 h-4 rounded"
-                    />
-                    {citation.domain}
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                ))}
-              </div>
+              {/* Citations */}
+              {activeExecution.citations?.length > 0 && (
+                <div>
+                  <p className="text-sm font-medium text-primary mb-2">
+                    Citations ({activeExecution.citations.length})
+                  </p>
+                  <div className="space-y-2">
+                    {activeExecution.citations.map((citation, i) => (
+                      <a
+                        key={i}
+                        href={citation.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors group"
+                      >
+                        <img 
+                          src={`https://www.google.com/s2/favicons?domain=${citation.domain}&sz=32`}
+                          alt=""
+                          className="w-4 h-4 rounded"
+                        />
+                        <span className="truncate">{citation.url}</span>
+                        <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted">
+              <p>No execution data for {activeModel} yet.</p>
+              <p className="text-sm mt-1">Run a scan to see results.</p>
             </div>
           )}
         </div>
@@ -532,30 +557,23 @@ export default function PromptDetailPage() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setShowResponseModal(false)}
           />
-          <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex items-center gap-3">
-                <ModelLogo model={activeModel || 'chatgpt'} size={24} />
-                <span className="font-medium text-gray-900 dark:text-white capitalize">{activeModel}</span>
-                <span className="text-gray-400">🇺🇸 US</span>
+          <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden border border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <ModelLogo model={activeExecution.model} />
+                <span className="font-medium text-primary capitalize">{activeExecution.model} Response</span>
               </div>
-              <button
+              <button 
                 onClick={() => setShowResponseModal(false)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+                className="p-1 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-5 h-5 text-muted" />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto flex-1">
-              <div className="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 mb-4">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">User prompt:</p>
-                <p className="text-gray-900 dark:text-white">{prompt.prompt_text}</p>
-              </div>
-              <div className="prose prose-sm dark:prose-invert max-w-none">
-                <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">
-                  {activeExecution.response_text}
-                </p>
-              </div>
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              <p className="text-secondary whitespace-pre-wrap leading-relaxed">
+                {activeExecution.response_text}
+              </p>
             </div>
           </div>
         </div>
