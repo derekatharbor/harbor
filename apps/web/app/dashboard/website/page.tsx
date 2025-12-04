@@ -131,14 +131,20 @@ export default function WebsitePage() {
     setExpandedPages(next)
   }
 
-  // Derived data
-  const totalIssues = data ? data.issues_count.high + data.issues_count.medium + data.issues_count.low : 0
-  const schemaTypesList = data ? Object.entries(data.schema_types) : []
-  const filteredPages = data?.pages.filter(p => {
+  // Derived data with defensive checks
+  const issuesCount = data?.issues_count || { high: 0, medium: 0, low: 0 }
+  const totalIssues = issuesCount.high + issuesCount.medium + issuesCount.low
+  const schemaTypesList = data?.schema_types ? Object.entries(data.schema_types) : []
+  const readabilityScore = data?.readability_score ?? 0
+  const schemaCoverage = data?.schema_coverage ?? 0
+  const pagesScanned = data?.pages_scanned ?? 0
+  const recommendations = data?.recommendations || []
+  const pages = data?.pages || []
+  const filteredPages = pages.filter(p => {
     if (searchQuery && !p.url.toLowerCase().includes(searchQuery.toLowerCase())) return false
     if (issueFilter === 'all') return true
     return p.issues.some(i => i.severity === issueFilter)
-  }) || []
+  })
 
   const brandName = currentDashboard?.brand_name || 'Your Website'
 
@@ -234,17 +240,17 @@ export default function WebsitePage() {
           <Globe className="w-4 h-4" />
           <span className="font-medium text-primary">Technical Analysis</span>
           <span className="mx-1">•</span>
-          <span>{data.pages_scanned} pages analyzed</span>
-          {data.cached && data.crawled_at && (
+          <span>{pagesScanned} pages analyzed</span>
+          {data?.cached && data?.crawled_at && (
             <>
               <span className="mx-1">•</span>
-              <span>Last crawled {new Date(data.crawled_at).toLocaleDateString()}</span>
+              <span>Last crawled {new Date(data?.crawled_at || '').toLocaleDateString()}</span>
             </>
           )}
         </div>
         <div className="status-banner-metrics">
-          {data.issues_count.high > 0 && <span className="text-negative">{data.issues_count.high} critical</span>}
-          {data.issues_count.medium > 0 && <span className="text-warning">{data.issues_count.medium} warnings</span>}
+          {issuesCount.high > 0 && <span className="text-negative">{issuesCount.high} critical</span>}
+          {issuesCount.medium > 0 && <span className="text-warning">{issuesCount.medium} warnings</span>}
           {totalIssues === 0 && <span className="text-positive">All clear</span>}
         </div>
       </div>
@@ -254,30 +260,30 @@ export default function WebsitePage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">AI Readability</div>
-            <div className={`metric-value ${data.readability_score >= 80 ? 'text-positive' : data.readability_score >= 50 ? 'text-warning' : 'text-negative'}`}>
-              {data.readability_score}
+            <div className={`metric-value ${readabilityScore >= 80 ? 'text-positive' : readabilityScore >= 50 ? 'text-warning' : 'text-negative'}`}>
+              {readabilityScore}
             </div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Schema Coverage</div>
-            <div className={`metric-value ${data.schema_coverage >= 70 ? 'text-positive' : data.schema_coverage >= 40 ? 'text-warning' : 'text-negative'}`}>
-              {data.schema_coverage}%
+            <div className={`metric-value ${schemaCoverage >= 70 ? 'text-positive' : schemaCoverage >= 40 ? 'text-warning' : 'text-negative'}`}>
+              {schemaCoverage}%
             </div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Pages</div>
-            <div className="metric-value">{data.pages_scanned}</div>
+            <div className="metric-value">{pagesScanned}</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Critical</div>
-            <div className={`metric-value ${data.issues_count.high > 0 ? 'text-negative' : 'text-positive'}`}>
-              {data.issues_count.high}
+            <div className={`metric-value ${issuesCount.high > 0 ? 'text-negative' : 'text-positive'}`}>
+              {issuesCount.high}
             </div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Warnings</div>
-            <div className={`metric-value ${data.issues_count.medium > 0 ? 'text-warning' : 'text-positive'}`}>
-              {data.issues_count.medium}
+            <div className={`metric-value ${issuesCount.medium > 0 ? 'text-warning' : 'text-positive'}`}>
+              {issuesCount.medium}
             </div>
           </div>
           <div className="card p-4">
@@ -304,9 +310,9 @@ export default function WebsitePage() {
                   <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </div>
-              {data.recommendations.length > 0 ? (
+              {recommendations.length > 0 ? (
                 <div className="divide-y divide-border-light">
-                  {data.recommendations.map((rec, idx) => (
+                  {recommendations.map((rec, idx) => (
                     <div key={idx} className="p-4 hover:bg-hover transition-colors">
                       <div className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
@@ -574,8 +580,8 @@ export default function WebsitePage() {
             {/* Score Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { label: 'Performance', value: data.readability_score, hasValue: true },
-                { label: 'Best practices', value: data.schema_coverage, hasValue: true },
+                { label: 'Performance', value: readabilityScore, hasValue: true },
+                { label: 'Best practices', value: schemaCoverage, hasValue: true },
                 { label: 'SEO', value: null, hasValue: false },
                 { label: 'Speed', value: null, hasValue: false },
                 { label: 'Key content', value: null, hasValue: false },
