@@ -9,14 +9,9 @@ import {
   Users,
   TrendingUp,
   TrendingDown,
-  Eye,
-  MessageSquare,
   Target,
   Crown,
-  AlertCircle,
-  ArrowUpRight,
   Minus,
-  ChevronDown,
   Search,
   BarChart3,
   Zap
@@ -52,21 +47,22 @@ interface ApiResponse {
 
 // Single accent for user highlighting
 const USER_COLOR = '#EC4899'
-const BRAND_COLOR = '#3B82F6' // Blue - cleaner, more professional
+const BAR_COLOR = '#374151' // Gray-700 - professional dark gray
 
-// Build Brandfetch logo URL from brand name
-function getBrandLogo(name: string, size: number = 32): string {
+// Build Brandfetch logo URL - request 3x size for retina displays
+function getBrandLogo(name: string, displaySize: number = 32): string {
   const cleanName = name.toLowerCase().trim()
+  const fetchSize = displaySize * 3  // 3x for crisp retina
   
   // If name already looks like a domain, use it directly
   if (cleanName.includes('.com') || cleanName.includes('.io') || cleanName.includes('.co')) {
     const domain = cleanName.replace(/[^a-z0-9.]/g, '')
-    return `https://cdn.brandfetch.io/${domain}/w/${size}/h/${size}`
+    return `https://cdn.brandfetch.io/${domain}/w/${fetchSize}/h/${fetchSize}?c=1idE5OcNNVB`
   }
   
   // Otherwise, assume .com
   const slug = cleanName.replace(/[^a-z0-9]/g, '')
-  return `https://cdn.brandfetch.io/${slug}.com/w/${size}/h/${size}`
+  return `https://cdn.brandfetch.io/${slug}.com/w/${fetchSize}/h/${fetchSize}?c=1idE5OcNNVB`
 }
 
 // ============================================================================
@@ -278,22 +274,22 @@ export default function CompetitorsPage() {
           <>
             {/* Top Section: Horizontal Bars + Insights */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Top 8 Horizontal Bar Chart */}
+              {/* Top 10 Horizontal Bar Chart */}
               <div className="lg:col-span-2 card p-0 overflow-hidden">
                 <div className="p-4 border-b border-border">
                   <h3 className="font-semibold text-primary text-sm">Top 10 Brands by Mentions</h3>
                   <p className="text-xs text-muted mt-0.5">How often each brand appears in AI responses</p>
                 </div>
-                <div className="p-5 space-y-2">
+                <div className="p-4 space-y-1">
                   {competitors.slice(0, 10).map((comp, idx) => {
                     const maxMentions = competitors[0]?.mentions || 1
                     const barWidth = (comp.mentions / maxMentions) * 100
                     
                     return (
-                      <div key={comp.name} className="flex items-center gap-3 py-1">
+                      <div key={comp.name} className="flex items-center gap-3 py-1.5">
                         <span className="text-xs text-muted w-5 tabular-nums text-right">{idx + 1}</span>
                         <img 
-                          src={getBrandLogo(comp.name)}
+                          src={getBrandLogo(comp.name, 20)}
                           alt=""
                           className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
                           onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -308,8 +304,8 @@ export default function CompetitorsPage() {
                             className="h-full rounded transition-all duration-500"
                             style={{ 
                               width: `${barWidth}%`,
-                              backgroundColor: comp.isUser ? USER_COLOR : BRAND_COLOR,
-                              opacity: comp.isUser ? 1 : 0.8 - (idx * 0.04)
+                              backgroundColor: comp.isUser ? USER_COLOR : BAR_COLOR,
+                              opacity: comp.isUser ? 1 : 0.9 - (idx * 0.05)
                             }}
                           />
                         </div>
@@ -322,7 +318,7 @@ export default function CompetitorsPage() {
                 </div>
               </div>
 
-              {/* Insights Panel */}
+              {/* Insights Panel - Tighter rows */}
               <div className="card p-0 overflow-hidden">
                 <div className="p-4 border-b border-border">
                   <h3 className="font-semibold text-primary text-sm">Quick Insights</h3>
@@ -330,36 +326,36 @@ export default function CompetitorsPage() {
                 </div>
                 <div className="divide-y divide-border-light">
                   {/* Most Mentioned */}
-                  <div className="p-4">
-                    <div className="text-xs text-muted uppercase tracking-wide mb-2">Most Mentioned</div>
+                  <div className="px-4 py-3">
+                    <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Most Mentioned</div>
                     <div className="flex items-center gap-2">
                       <img 
-                        src={getBrandLogo(competitors[0]?.name || '')}
+                        src={getBrandLogo(competitors[0]?.name || '', 20)}
                         alt=""
-                        className="w-6 h-6 rounded bg-secondary object-contain"
+                        className="w-5 h-5 rounded bg-secondary object-contain"
                         onError={(e) => { e.currentTarget.style.display = 'none' }}
                       />
-                      <span className="font-medium text-primary">{competitors[0]?.name || '--'}</span>
+                      <span className="font-medium text-primary text-sm">{competitors[0]?.name || '--'}</span>
                     </div>
-                    <div className="text-xs text-muted mt-1">{competitors[0]?.mentions || 0} mentions</div>
+                    <div className="text-xs text-muted mt-0.5">{competitors[0]?.mentions || 0} mentions</div>
                   </div>
 
                   {/* Best Sentiment */}
                   {(() => {
                     const bestSentiment = [...competitors].sort((a, b) => b.sentiment - a.sentiment)[0]
                     return (
-                      <div className="p-4">
-                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Sentiment</div>
+                      <div className="px-4 py-3">
+                        <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Sentiment</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(bestSentiment?.name || '')}
+                            src={getBrandLogo(bestSentiment?.name || '', 20)}
                             alt=""
-                            className="w-6 h-6 rounded bg-secondary object-contain"
+                            className="w-5 h-5 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
-                          <span className="font-medium text-primary">{bestSentiment?.name || '--'}</span>
+                          <span className="font-medium text-primary text-sm">{bestSentiment?.name || '--'}</span>
                         </div>
-                        <div className="text-xs text-muted mt-1">{bestSentiment?.sentiment || 0}% positive</div>
+                        <div className="text-xs text-muted mt-0.5">{bestSentiment?.sentiment || 0}% positive</div>
                       </div>
                     )
                   })()}
@@ -368,38 +364,38 @@ export default function CompetitorsPage() {
                   {(() => {
                     const bestPosition = [...competitors].filter(c => c.position > 0).sort((a, b) => a.position - b.position)[0]
                     return (
-                      <div className="p-4">
-                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Avg Position</div>
+                      <div className="px-4 py-3">
+                        <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Avg Position</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(bestPosition?.name || '')}
+                            src={getBrandLogo(bestPosition?.name || '', 20)}
                             alt=""
-                            className="w-6 h-6 rounded bg-secondary object-contain"
+                            className="w-5 h-5 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
-                          <span className="font-medium text-primary">{bestPosition?.name || '--'}</span>
+                          <span className="font-medium text-primary text-sm">{bestPosition?.name || '--'}</span>
                         </div>
-                        <div className="text-xs text-muted mt-1">Position {bestPosition?.position.toFixed(1) || '--'} avg</div>
+                        <div className="text-xs text-muted mt-0.5">Position {bestPosition?.position.toFixed(1) || '--'} avg</div>
                       </div>
                     )
                   })()}
 
                   {/* Your Gap to #1 */}
-                  <div className="p-4 bg-secondary/30">
-                    <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Gap to #1</div>
+                  <div className="px-4 py-3 bg-secondary/30">
+                    <div className="text-[10px] text-muted uppercase tracking-wide mb-1">Your Gap to #1</div>
                     {foundUserData ? (
                       <>
-                        <div className="text-2xl font-semibold text-primary">
+                        <div className="text-xl font-semibold text-primary">
                           {competitors[0]?.mentions - userData.mentions}
                         </div>
-                        <div className="text-xs text-muted mt-1">mentions behind {competitors[0]?.name}</div>
+                        <div className="text-xs text-muted">mentions behind {competitors[0]?.name}</div>
                       </>
                     ) : (
                       <>
-                        <div className="text-2xl font-semibold text-primary">
+                        <div className="text-xl font-semibold text-primary">
                           {competitors[0]?.mentions || 0}
                         </div>
-                        <div className="text-xs text-muted mt-1">mentions to match {competitors[0]?.name}</div>
+                        <div className="text-xs text-muted">mentions to match {competitors[0]?.name}</div>
                       </>
                     )}
                   </div>
@@ -410,10 +406,10 @@ export default function CompetitorsPage() {
                     const top3Mentions = competitors.slice(0, 3).reduce((sum, c) => sum + c.mentions, 0)
                     const concentration = totalMentions > 0 ? Math.round((top3Mentions / totalMentions) * 100) : 0
                     return (
-                      <div className="p-4">
-                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Market Concentration</div>
-                        <div className="text-2xl font-semibold text-primary">{concentration}%</div>
-                        <div className="text-xs text-muted mt-1">of mentions go to top 3 brands</div>
+                      <div className="px-4 py-3">
+                        <div className="text-[10px] text-muted uppercase tracking-wide mb-1">Market Concentration</div>
+                        <div className="text-xl font-semibold text-primary">{concentration}%</div>
+                        <div className="text-xs text-muted">of mentions go to top 3 brands</div>
                       </div>
                     )
                   })()}
@@ -469,7 +465,7 @@ export default function CompetitorsPage() {
                       <td>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(comp.name)}
+                            src={getBrandLogo(comp.name, 24)}
                             alt=""
                             className="w-6 h-6 rounded bg-secondary object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -487,7 +483,7 @@ export default function CompetitorsPage() {
                               className="h-full rounded-full"
                               style={{ 
                                 width: `${comp.visibility}%`,
-                                backgroundColor: comp.isUser ? USER_COLOR : BRAND_COLOR,
+                                backgroundColor: comp.isUser ? USER_COLOR : BAR_COLOR,
                                 opacity: comp.isUser ? 1 : 0.6
                               }}
                             />
@@ -533,7 +529,7 @@ export default function CompetitorsPage() {
                   >
                     <span className="text-xs text-muted w-5 tabular-nums">#{comp.rank}</span>
                     <img 
-                      src={getBrandLogo(comp.name)}
+                      src={getBrandLogo(comp.name, 20)}
                       alt=""
                       className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
                       onError={(e) => { e.currentTarget.style.display = 'none' }}
@@ -647,7 +643,7 @@ export default function CompetitorsPage() {
                               />
                               <div 
                                 className="transition-all"
-                                style={{ width: `${compPct}%`, backgroundColor: BRAND_COLOR, opacity: 0.5 }}
+                                style={{ width: `${compPct}%`, backgroundColor: BAR_COLOR, opacity: 0.5 }}
                               />
                             </div>
                           </div>
