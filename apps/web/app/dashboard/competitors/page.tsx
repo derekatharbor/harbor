@@ -52,7 +52,7 @@ interface ApiResponse {
 
 // Single accent for user highlighting
 const USER_COLOR = '#EC4899'
-const BRAND_COLOR = '#6366F1'
+const BRAND_COLOR = '#3B82F6' // Blue - cleaner, more professional
 
 // ============================================================================
 // MAIN COMPONENT
@@ -266,35 +266,35 @@ export default function CompetitorsPage() {
               {/* Top 8 Horizontal Bar Chart */}
               <div className="lg:col-span-2 card p-0 overflow-hidden">
                 <div className="p-4 border-b border-border">
-                  <h3 className="font-semibold text-primary text-sm">Top Brands by Mentions</h3>
+                  <h3 className="font-semibold text-primary text-sm">Top 10 Brands by Mentions</h3>
                   <p className="text-xs text-muted mt-0.5">How often each brand appears in AI responses</p>
                 </div>
-                <div className="p-4 space-y-3">
-                  {competitors.slice(0, 8).map((comp, idx) => {
+                <div className="p-5 space-y-2">
+                  {competitors.slice(0, 10).map((comp, idx) => {
                     const maxMentions = competitors[0]?.mentions || 1
                     const barWidth = (comp.mentions / maxMentions) * 100
                     
                     return (
-                      <div key={comp.name} className="flex items-center gap-3">
-                        <span className="text-xs text-muted w-4 tabular-nums">{idx + 1}</span>
+                      <div key={comp.name} className="flex items-center gap-3 py-1">
+                        <span className="text-xs text-muted w-5 tabular-nums text-right">{idx + 1}</span>
                         <img 
                           src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
                           alt=""
                           className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
                           onError={(e) => { e.currentTarget.style.display = 'none' }}
                         />
-                        <div className="w-24 flex-shrink-0">
+                        <div className="w-28 flex-shrink-0">
                           <span className={`text-sm truncate ${comp.isUser ? 'font-medium text-primary' : 'text-secondary'}`}>
                             {comp.name}
                           </span>
                         </div>
-                        <div className="flex-1 h-6 bg-secondary/50 rounded overflow-hidden relative">
+                        <div className="flex-1 h-5 bg-secondary/30 rounded overflow-hidden relative">
                           <div 
                             className="h-full rounded transition-all duration-500"
                             style={{ 
                               width: `${barWidth}%`,
                               backgroundColor: comp.isUser ? USER_COLOR : BRAND_COLOR,
-                              opacity: comp.isUser ? 1 : 0.7 - (idx * 0.05)
+                              opacity: comp.isUser ? 1 : 0.8 - (idx * 0.04)
                             }}
                           />
                         </div>
