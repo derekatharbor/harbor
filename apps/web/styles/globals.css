@@ -39,7 +39,7 @@
     --positive: #22C55E;
     --negative: #EF4444;
     --warning: #F59E0B;
-    --info: #3B82F6;
+    --info: #171717;
     --chart-1: #3B82F6;
     --chart-2: #10B981;
     --chart-3: #F59E0B;
@@ -66,7 +66,7 @@
     --positive: #22C55E;
     --negative: #EF4444;
     --warning: #F59E0B;
-    --info: #3B82F6;
+    --info: #F9FAFB;
     --sidebar: #171717;
     --sidebar-foreground: #F4F6F8;
     --sidebar-muted: rgba(244, 246, 248, 0.5);
@@ -287,7 +287,7 @@
   .badge-positive { background: rgba(34, 197, 94, 0.1); color: #22C55E; }
   .badge-negative { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
   .badge-neutral { background: var(--bg-secondary); color: var(--text-muted); }
-  .badge-info { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+  .badge-info { background: rgba(23, 23, 23, 0.1); color: #171717; }
   .badge-warning { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
   .badge-purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
 
