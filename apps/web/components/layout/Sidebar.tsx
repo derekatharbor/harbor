@@ -119,13 +119,13 @@ export default function Sidebar() {
   const accentColor = getAccentColor()
   const isDark = theme === 'dark'
 
-  // Theme colors
+  // Theme colors - #171717 for dark mode
   const colors = {
-    bg: isDark ? '#0B1521' : '#FFFFFF',
+    bg: isDark ? '#171717' : '#FFFFFF',
     text: isDark ? '#F4F6F8' : '#111827',
     muted: isDark ? 'rgba(244,246,248,0.5)' : '#6B7280',
-    border: isDark ? 'rgba(255,255,255,0.05)' : '#E5E7EB',
-    hover: isDark ? 'rgba(255,255,255,0.05)' : '#F3F4F6',
+    border: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',
+    hover: isDark ? 'rgba(255,255,255,0.06)' : '#F3F4F6',
   }
 
   return (

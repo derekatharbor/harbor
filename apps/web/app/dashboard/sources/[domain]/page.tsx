@@ -169,8 +169,8 @@ export default function SourceDetailPage() {
 
   const isDark = theme === 'dark'
   const colors = {
-    bg: isDark ? '#0F1419' : '#FAFBFC',
-    card: isDark ? '#1A1F26' : '#FFFFFF',
+    bg: isDark ? '#0F0F0F' : '#FAFBFC',
+    card: isDark ? '#171717' : '#FFFFFF',
     text: isDark ? '#F9FAFB' : '#111827',
     muted: isDark ? '#6B7280' : '#9CA3AF',
     border: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',

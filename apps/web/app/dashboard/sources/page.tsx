@@ -102,7 +102,7 @@ function DonutChart({
   })
 
   const hoveredData = hoveredType ? data.find(d => d.type === hoveredType) : null
-  const centerBg = isDark ? '#1A1F26' : '#FFFFFF'
+  const centerBg = isDark ? '#171717' : '#FFFFFF'
   const textColor = isDark ? '#F9FAFB' : '#111827'
   const mutedColor = isDark ? '#9CA3AF' : '#6B7280'
 
@@ -251,7 +251,7 @@ function GapToggle({
           <div 
             className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg text-xs w-64 shadow-xl"
             style={{ 
-              backgroundColor: isDark ? '#374151' : '#FFFFFF',
+              backgroundColor: isDark ? '#262626' : '#FFFFFF',
               color: isDark ? '#F9FAFB' : '#111827',
               border: `1px solid ${isDark ? 'rgba(255,255,255,0.2)' : '#E5E7EB'}`,
               zIndex: 9999,
@@ -263,7 +263,7 @@ function GapToggle({
               style={{ 
                 borderTop: '6px solid transparent',
                 borderBottom: '6px solid transparent',
-                borderRight: `6px solid ${isDark ? '#374151' : '#FFFFFF'}`,
+                borderRight: `6px solid ${isDark ? '#262626' : '#FFFFFF'}`,
               }}
             />
           </div>
@@ -292,7 +292,7 @@ function ChartViewToggle({
         onClick={() => onChange('historical')}
         className="px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer"
         style={{ 
-          backgroundColor: view === 'historical' ? (isDark ? '#374151' : '#FFFFFF') : 'transparent',
+          backgroundColor: view === 'historical' ? (isDark ? '#262626' : '#FFFFFF') : 'transparent',
           color: view === 'historical' ? (isDark ? '#F9FAFB' : '#111827') : (isDark ? '#9CA3AF' : '#6B7280'),
         }}
       >
@@ -302,7 +302,7 @@ function ChartViewToggle({
         onClick={() => onChange('total')}
         className="px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer"
         style={{ 
-          backgroundColor: view === 'total' ? (isDark ? '#374151' : '#FFFFFF') : 'transparent',
+          backgroundColor: view === 'total' ? (isDark ? '#262626' : '#FFFFFF') : 'transparent',
           color: view === 'total' ? (isDark ? '#F9FAFB' : '#111827') : (isDark ? '#9CA3AF' : '#6B7280'),
         }}
       >
@@ -378,12 +378,12 @@ export default function SourcesPage() {
 
   const isDark = theme === 'dark'
   const colors = {
-    bg: isDark ? '#0F1419' : '#FAFBFC',
-    card: isDark ? '#1A1F26' : '#FFFFFF',
+    bg: isDark ? '#0F0F0F' : '#FAFBFC',
+    card: isDark ? '#171717' : '#FFFFFF',
     text: isDark ? '#F9FAFB' : '#111827',
     muted: isDark ? '#6B7280' : '#9CA3AF',
     border: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',
-    hover: isDark ? 'rgba(255,255,255,0.05)' : '#F3F4F6',
+    hover: isDark ? 'rgba(255,255,255,0.06)' : '#F3F4F6',
   }
 
   // Filter sources
@@ -531,7 +531,7 @@ export default function SourcesPage() {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+                        backgroundColor: isDark ? '#262626' : '#FFFFFF',
                         border: `1px solid ${colors.border}`,
                         borderRadius: '8px',
                         fontSize: '12px'
