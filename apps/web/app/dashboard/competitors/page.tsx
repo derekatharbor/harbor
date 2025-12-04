@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/competitors/page.tsx
-// Competitive Intelligence - Compare your brand against competitors in AI search
+// Competitive Intelligence - All brands mentioned in AI responses, compared
 
 'use client'
 
@@ -13,11 +13,25 @@ import {
   MessageSquare,
   Target,
   Crown,
-  BarChart3,
-  AlertCircle
+  AlertCircle,
+  ArrowRight,
+  Minus,
+  ChevronRight,
+  ExternalLink,
+  Sparkles,
+  BarChart3
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell
+} from 'recharts'
 
 // ============================================================================
 // TYPES
@@ -46,6 +60,126 @@ interface ApiResponse {
 }
 
 // ============================================================================
+// HELPER COMPONENTS
+// ============================================================================
+
+function MetricCard({ 
+  title, 
+  value, 
+  delta, 
+  suffix = '',
+  sublabel,
+  icon: Icon
+}: { 
+  title: string
+  value: number | string
+  delta?: number | null
+  suffix?: string
+  sublabel?: string
+  icon: any
+}) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Icon className="w-4 h-4 text-muted" />
+          <span className="text-xs text-muted uppercase tracking-wide">{title}</span>
+        </div>
+        {delta !== undefined && delta !== null && (
+          <div className={`flex items-center gap-1 text-xs font-medium ${
+            delta > 0 ? 'text-positive' : delta < 0 ? 'text-negative' : 'text-muted'
+          }`}>
+            {delta > 0 ? <TrendingUp className="w-3 h-3" /> : delta < 0 ? <TrendingDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
+            {delta > 0 ? '+' : ''}{typeof delta === 'number' ? delta.toFixed(1) : delta}{suffix}
+          </div>
+        )}
+      </div>
+      <div className="text-3xl font-bold text-primary">
+        {value}<span className="text-xl text-muted">{suffix}</span>
+      </div>
+      {sublabel && <div className="text-xs text-muted mt-1">{sublabel}</div>}
+    </div>
+  )
+}
+
+function ComparisonBar({ 
+  label, 
+  userValue, 
+  competitorValue, 
+  userName, 
+  competitorName,
+  format = 'number',
+  lowerIsBetter = false
+}: { 
+  label: string
+  userValue: number
+  competitorValue: number
+  userName: string
+  competitorName: string
+  format?: 'number' | 'percent' | 'position'
+  lowerIsBetter?: boolean
+}) {
+  const total = userValue + competitorValue || 1
+  const userPercent = (userValue / total) * 100
+  const competitorPercent = (competitorValue / total) * 100
+  
+  const formatValue = (v: number) => {
+    if (format === 'percent') return `${v}%`
+    if (format === 'position') return v.toFixed(1)
+    return v.toLocaleString()
+  }
+
+  const userWinning = lowerIsBetter ? userValue < competitorValue : userValue > competitorValue
+  const tied = userValue === competitorValue
+
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <span className="text-sm text-secondary">{label}</span>
+        <div className="flex items-center gap-4 text-sm">
+          <span className={`font-medium ${userWinning && !tied ? 'text-accent' : 'text-secondary'}`}>
+            {formatValue(userValue)}
+          </span>
+          <span className="text-muted">vs</span>
+          <span className={`font-medium ${!userWinning && !tied ? 'text-primary' : 'text-secondary'}`}>
+            {formatValue(competitorValue)}
+          </span>
+        </div>
+      </div>
+      <div className="flex h-2 rounded-full overflow-hidden bg-border">
+        <div 
+          className="bg-accent transition-all duration-300"
+          style={{ width: `${userPercent}%` }}
+        />
+        <div 
+          className="bg-secondary/50 transition-all duration-300"
+          style={{ width: `${competitorPercent}%` }}
+        />
+      </div>
+      <div className="flex justify-between text-xs text-muted">
+        <span>{userName}</span>
+        <span>{competitorName}</span>
+      </div>
+    </div>
+  )
+}
+
+function BrandLogo({ name, size = 32 }: { name: string; size?: number }) {
+  const domain = name.toLowerCase().replace(/\s+/g, '').replace(/\.com$/i, '') + '.com'
+  return (
+    <img 
+      src={`https://cdn.brandfetch.io/${domain}/w/400/h/400`}
+      alt=""
+      className="rounded bg-card object-contain"
+      style={{ width: size, height: size }}
+      onError={(e) => { 
+        e.currentTarget.style.display = 'none'
+      }}
+    />
+  )
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
@@ -56,7 +190,7 @@ export default function CompetitorsPage() {
   const [competitors, setCompetitors] = useState<CompetitorData[]>([])
   const [totalBrands, setTotalBrands] = useState(0)
   const [userRank, setUserRank] = useState<number | null>(null)
-  const [selectedCompetitor, setSelectedCompetitor] = useState<CompetitorData | null>(null)
+  const [selectedCompetitorIndex, setSelectedCompetitorIndex] = useState<number>(0)
 
   const brandName = currentDashboard?.brand_name || 'Your Brand'
 
@@ -69,11 +203,9 @@ export default function CompetitorsPage() {
 
       try {
         setLoading(true)
-        const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=15`)
+        const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=20`)
         
-        if (!response.ok) {
-          throw new Error('Failed to fetch competitors')
-        }
+        if (!response.ok) throw new Error('Failed to fetch competitors')
 
         const data: ApiResponse = await response.json()
         
@@ -81,11 +213,9 @@ export default function CompetitorsPage() {
         setTotalBrands(data.total_brands_found || 0)
         setUserRank(data.user_rank)
         
-        // Select first non-user competitor by default
-        const firstCompetitor = data.competitors?.find(c => !c.isUser)
-        if (firstCompetitor) {
-          setSelectedCompetitor(firstCompetitor)
-        }
+        // Default to first non-user competitor
+        const firstCompetitorIdx = data.competitors?.findIndex(c => !c.isUser) ?? 0
+        setSelectedCompetitorIndex(Math.max(0, firstCompetitorIdx))
         
       } catch (err) {
         console.error('Error fetching competitors:', err)
@@ -98,9 +228,19 @@ export default function CompetitorsPage() {
     fetchCompetitors()
   }, [currentDashboard?.id])
 
-  // Get user's data
+  // Get user's data and selected competitor
   const userData = competitors.find(c => c.isUser)
-  const competitorData = competitors.filter(c => !c.isUser)
+  const nonUserCompetitors = competitors.filter(c => !c.isUser)
+  const selectedCompetitor = nonUserCompetitors[selectedCompetitorIndex] || nonUserCompetitors[0]
+
+  // Prepare chart data
+  const chartData = competitors.slice(0, 10).map(c => ({
+    name: c.name.length > 12 ? c.name.slice(0, 12) + '...' : c.name,
+    fullName: c.name,
+    mentions: c.mentions,
+    isUser: c.isUser,
+    color: c.isUser ? '#FF6B4A' : '#3B82F6'
+  }))
 
   // Loading state
   if (loading) {
@@ -109,8 +249,8 @@ export default function CompetitorsPage() {
         <MobileHeader />
         <div className="p-6 animate-pulse space-y-6">
           <div className="h-8 bg-card rounded w-48"></div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1,2,3].map(i => <div key={i} className="h-32 bg-card rounded-lg"></div>)}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[1,2,3,4].map(i => <div key={i} className="h-28 bg-card rounded-lg"></div>)}
           </div>
           <div className="h-96 bg-card rounded-lg"></div>
         </div>
@@ -128,12 +268,15 @@ export default function CompetitorsPage() {
           <div className="card p-12 text-center">
             <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4" />
             <h3 className="text-lg font-medium text-primary mb-2">No Competitor Data Yet</h3>
-            <p className="text-secondary mb-6">
-              Run prompts related to your industry to see how you compare against other brands in AI responses.
+            <p className="text-secondary mb-2 max-w-md mx-auto">
+              This page shows all brands mentioned in AI responses to your tracked prompts.
+            </p>
+            <p className="text-muted text-sm mb-6 max-w-md mx-auto">
+              Run prompts related to your industry to discover which brands AI recommends alongside yours.
             </p>
             <Link 
               href="/dashboard/prompts" 
-              className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
             >
               <Target className="w-4 h-4" />
               View Prompts
@@ -150,264 +293,277 @@ export default function CompetitorsPage() {
 
       <div className="p-6 space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-primary">Competitive Intelligence</h1>
             <p className="text-secondary mt-1">
-              {totalBrands} brands found in AI responses
+              {totalBrands} brands found across AI responses
             </p>
           </div>
-          {userRank && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-lg border border-border">
-              <Crown className="w-4 h-4 text-accent" />
-              <span className="text-sm text-secondary">Your rank:</span>
-              <span className="text-lg font-semibold text-primary">#{userRank}</span>
-              <span className="text-sm text-muted">of {totalBrands}</span>
+          {userRank && userData && (
+            <div className="flex items-center gap-3 px-4 py-3 bg-card rounded-lg border border-border">
+              <Crown className="w-5 h-5 text-accent" />
+              <div>
+                <div className="text-xs text-muted uppercase tracking-wide">Your Rank</div>
+                <div className="text-xl font-bold text-primary">
+                  #{userRank} <span className="text-sm font-normal text-muted">of {totalBrands}</span>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Your Visibility */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 text-muted mb-3">
-              <Eye className="w-4 h-4" />
-              <span className="text-xs uppercase tracking-wider">Your Visibility</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-semibold text-primary">
-                {userData?.visibility || 0}%
-              </span>
-              {userData?.visibilityDelta !== null && userData?.visibilityDelta !== undefined && (
-                <span className={`text-sm ${userData.visibilityDelta > 0 ? 'text-positive' : 'text-negative'}`}>
-                  {userData.visibilityDelta > 0 ? '↑' : '↓'} {Math.abs(userData.visibilityDelta)}%
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-muted mt-2">Relative to top competitor</p>
-          </div>
-
-          {/* Your Sentiment */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 text-muted mb-3">
-              <MessageSquare className="w-4 h-4" />
-              <span className="text-xs uppercase tracking-wider">Your Sentiment</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-semibold text-primary">
-                {userData?.sentiment || 0}%
-              </span>
-              {userData?.sentimentDelta !== null && userData?.sentimentDelta !== undefined && (
-                <span className={`text-sm ${userData.sentimentDelta > 0 ? 'text-positive' : 'text-negative'}`}>
-                  {userData.sentimentDelta > 0 ? '↑' : '↓'} {Math.abs(userData.sentimentDelta)}%
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-muted mt-2">Positive mention rate</p>
-          </div>
-
-          {/* Your Position */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 text-muted mb-3">
-              <Target className="w-4 h-4" />
-              <span className="text-xs uppercase tracking-wider">Avg Position</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-semibold text-primary">
-                {userData?.position?.toFixed(1) || '-'}
-              </span>
-              {userData?.positionDelta !== null && userData?.positionDelta !== undefined && (
-                <span className={`text-sm ${userData.positionDelta < 0 ? 'text-positive' : 'text-negative'}`}>
-                  {userData.positionDelta < 0 ? '↑' : '↓'} {Math.abs(userData.positionDelta).toFixed(1)}
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-muted mt-2">When mentioned in responses</p>
-          </div>
+        {/* Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <MetricCard 
+            title="Your Visibility" 
+            value={userData?.visibility || 0} 
+            suffix="%" 
+            delta={userData?.visibilityDelta}
+            sublabel="vs top competitor"
+            icon={Eye}
+          />
+          <MetricCard 
+            title="Your Mentions" 
+            value={userData?.mentions || 0} 
+            delta={null}
+            sublabel="total in AI responses"
+            icon={MessageSquare}
+          />
+          <MetricCard 
+            title="Sentiment" 
+            value={userData?.sentiment || 0} 
+            suffix="%" 
+            delta={userData?.sentimentDelta}
+            sublabel="positive mentions"
+            icon={Sparkles}
+          />
+          <MetricCard 
+            title="Avg Position" 
+            value={userData?.position?.toFixed(1) || '-'} 
+            delta={userData?.positionDelta}
+            sublabel="when mentioned (1 = first)"
+            icon={Target}
+          />
         </div>
 
-        {/* Main Content Grid */}
+        {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Competitor List */}
+          
+          {/* Left: Brand Leaderboard */}
           <div className="lg:col-span-1 card p-0 overflow-hidden">
             <div className="px-4 py-3 border-b border-border">
-              <h3 className="font-medium text-primary">All Brands</h3>
+              <h3 className="font-medium text-primary">Brand Leaderboard</h3>
+              <p className="text-xs text-muted mt-1">Click to compare</p>
             </div>
-            <div className="divide-y divide-border max-h-[500px] overflow-y-auto">
-              {competitors.map((comp) => (
-                <button
-                  key={comp.name}
-                  onClick={() => !comp.isUser && setSelectedCompetitor(comp)}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-hover transition-colors text-left ${
-                    selectedCompetitor?.name === comp.name ? 'bg-hover' : ''
-                  } ${comp.isUser ? 'bg-accent/5' : ''}`}
-                >
-                  <span className={`w-6 text-sm font-medium ${comp.isUser ? 'text-accent' : 'text-muted'}`}>
-                    {comp.rank}
-                  </span>
-                  <img 
-                    src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/\s+/g, '').replace(/\.com$/i, '')}.com/w/400/h/400`}
-                    alt=""
-                    className="w-8 h-8 rounded bg-card"
-                    onError={(e) => { e.currentTarget.style.display = 'none' }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-primary truncate">{comp.name}</span>
-                      {comp.isUser && (
-                        <span className="text-[10px] px-1.5 py-0.5 bg-accent/10 text-accent rounded">YOU</span>
-                      )}
-                    </div>
-                    <span className="text-xs text-muted">{comp.mentions} mentions</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium text-primary">{comp.visibility}%</div>
-                    <div className="text-xs text-muted">visibility</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Comparison View */}
-          <div className="lg:col-span-2 space-y-6">
-            {selectedCompetitor && userData ? (
-              <>
-                {/* Head to Head */}
-                <div className="card p-6">
-                  <h3 className="font-medium text-primary mb-6">
-                    {brandName} vs {selectedCompetitor.name}
-                  </h3>
-                  
-                  <div className="space-y-6">
-                    {/* Visibility Comparison */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-muted">Visibility</span>
-                        <div className="flex gap-4">
-                          <span className="text-accent font-medium">{userData.visibility}%</span>
-                          <span className="text-secondary font-medium">{selectedCompetitor.visibility}%</span>
-                        </div>
+            <div className="divide-y divide-border max-h-[520px] overflow-y-auto">
+              {competitors.map((comp, idx) => {
+                const isSelected = !comp.isUser && nonUserCompetitors[selectedCompetitorIndex]?.name === comp.name
+                return (
+                  <button
+                    key={comp.name}
+                    onClick={() => {
+                      if (!comp.isUser) {
+                        const newIdx = nonUserCompetitors.findIndex(c => c.name === comp.name)
+                        if (newIdx >= 0) setSelectedCompetitorIndex(newIdx)
+                      }
+                    }}
+                    disabled={comp.isUser}
+                    className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors ${
+                      comp.isUser 
+                        ? 'bg-accent/5 cursor-default' 
+                        : isSelected 
+                          ? 'bg-hover' 
+                          : 'hover:bg-hover cursor-pointer'
+                    }`}
+                  >
+                    <span className={`w-6 text-sm font-medium tabular-nums ${comp.isUser ? 'text-accent' : 'text-muted'}`}>
+                      {comp.rank}
+                    </span>
+                    <BrandLogo name={comp.name} size={28} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-primary truncate">{comp.name}</span>
+                        {comp.isUser && (
+                          <span className="text-[10px] px-1.5 py-0.5 bg-accent/10 text-accent rounded shrink-0">YOU</span>
+                        )}
                       </div>
-                      <div className="flex gap-1 h-3">
-                        <div 
-                          className="bg-accent rounded-l"
-                          style={{ width: `${(userData.visibility / (userData.visibility + selectedCompetitor.visibility)) * 100}%` }}
-                        />
-                        <div 
-                          className="bg-secondary/30 rounded-r"
-                          style={{ width: `${(selectedCompetitor.visibility / (userData.visibility + selectedCompetitor.visibility)) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Sentiment Comparison */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-muted">Sentiment</span>
-                        <div className="flex gap-4">
-                          <span className="text-accent font-medium">{userData.sentiment}%</span>
-                          <span className="text-secondary font-medium">{selectedCompetitor.sentiment}%</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-1 h-3">
-                        <div 
-                          className="bg-accent rounded-l"
-                          style={{ width: `${(userData.sentiment / (userData.sentiment + selectedCompetitor.sentiment)) * 100}%` }}
-                        />
-                        <div 
-                          className="bg-secondary/30 rounded-r"
-                          style={{ width: `${(selectedCompetitor.sentiment / (userData.sentiment + selectedCompetitor.sentiment)) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Mentions Comparison */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-muted">Mentions</span>
-                        <div className="flex gap-4">
-                          <span className="text-accent font-medium">{userData.mentions}</span>
-                          <span className="text-secondary font-medium">{selectedCompetitor.mentions}</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-1 h-3">
-                        <div 
-                          className="bg-accent rounded-l"
-                          style={{ width: `${(userData.mentions / (userData.mentions + selectedCompetitor.mentions)) * 100}%` }}
-                        />
-                        <div 
-                          className="bg-secondary/30 rounded-r"
-                          style={{ width: `${(selectedCompetitor.mentions / (userData.mentions + selectedCompetitor.mentions)) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Position Comparison */}
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-muted">Avg Position (lower is better)</span>
-                        <div className="flex gap-4">
-                          <span className="text-accent font-medium">{userData.position?.toFixed(1) || '-'}</span>
-                          <span className="text-secondary font-medium">{selectedCompetitor.position?.toFixed(1) || '-'}</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-1 h-3">
-                        {userData.position && selectedCompetitor.position && (
-                          <>
-                            <div 
-                              className="bg-accent rounded-l"
-                              style={{ width: `${((1/userData.position) / ((1/userData.position) + (1/selectedCompetitor.position))) * 100}%` }}
-                            />
-                            <div 
-                              className="bg-secondary/30 rounded-r"
-                              style={{ width: `${((1/selectedCompetitor.position) / ((1/userData.position) + (1/selectedCompetitor.position))) * 100}%` }}
-                            />
-                          </>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted">{comp.mentions} mentions</span>
+                        {comp.sentiment > 0 && (
+                          <span className={`text-xs ${comp.sentiment >= 70 ? 'text-positive' : comp.sentiment >= 40 ? 'text-secondary' : 'text-negative'}`}>
+                            · {comp.sentiment}% positive
+                          </span>
                         )}
                       </div>
                     </div>
-                  </div>
+                    <div className="text-right">
+                      <div className="font-semibold text-primary tabular-nums">{comp.visibility}%</div>
+                    </div>
+                    {!comp.isUser && (
+                      <ChevronRight className={`w-4 h-4 transition-colors ${isSelected ? 'text-accent' : 'text-muted'}`} />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-                  {/* Summary */}
-                  <div className="mt-6 pt-6 border-t border-border">
+          {/* Right: Comparison Panel */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* Head to Head Comparison */}
+            {selectedCompetitor && userData ? (
+              <div className="card p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-medium text-primary">Head to Head</h3>
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded bg-accent" />
+                      <span className="text-secondary">{brandName}</span>
+                    </div>
+                    <span className="text-muted">vs</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded bg-secondary/50" />
+                      <span className="text-secondary">{selectedCompetitor.name}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-6">
+                  <ComparisonBar 
+                    label="Visibility Score"
+                    userValue={userData.visibility}
+                    competitorValue={selectedCompetitor.visibility}
+                    userName={brandName}
+                    competitorName={selectedCompetitor.name}
+                    format="percent"
+                  />
+                  <ComparisonBar 
+                    label="Total Mentions"
+                    userValue={userData.mentions}
+                    competitorValue={selectedCompetitor.mentions}
+                    userName={brandName}
+                    competitorName={selectedCompetitor.name}
+                    format="number"
+                  />
+                  <ComparisonBar 
+                    label="Positive Sentiment"
+                    userValue={userData.sentiment}
+                    competitorValue={selectedCompetitor.sentiment}
+                    userName={brandName}
+                    competitorName={selectedCompetitor.name}
+                    format="percent"
+                  />
+                  {userData.position && selectedCompetitor.position && (
+                    <ComparisonBar 
+                      label="Average Position"
+                      userValue={userData.position}
+                      competitorValue={selectedCompetitor.position}
+                      userName={brandName}
+                      competitorName={selectedCompetitor.name}
+                      format="position"
+                      lowerIsBetter={true}
+                    />
+                  )}
+                </div>
+
+                {/* Summary */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  {userData.visibility !== selectedCompetitor.visibility ? (
                     <div className={`flex items-center gap-2 ${
-                      userData.visibility > selectedCompetitor.visibility ? 'text-positive' : 'text-negative'
+                      userData.visibility > selectedCompetitor.visibility ? 'text-positive' : 'text-secondary'
                     }`}>
                       {userData.visibility > selectedCompetitor.visibility ? (
-                        <TrendingUp className="w-4 h-4" />
+                        <>
+                          <TrendingUp className="w-4 h-4" />
+                          <span className="text-sm">
+                            You lead by <strong>{userData.visibility - selectedCompetitor.visibility} points</strong> in visibility
+                          </span>
+                        </>
                       ) : (
-                        <TrendingDown className="w-4 h-4" />
+                        <>
+                          <TrendingDown className="w-4 h-4" />
+                          <span className="text-sm">
+                            <strong>{selectedCompetitor.name}</strong> leads by {selectedCompetitor.visibility - userData.visibility} points
+                          </span>
+                        </>
                       )}
-                      <span className="text-sm font-medium">
-                        {userData.visibility > selectedCompetitor.visibility 
-                          ? `You're ${userData.visibility - selectedCompetitor.visibility} points ahead in visibility`
-                          : `${selectedCompetitor.name} leads by ${selectedCompetitor.visibility - userData.visibility} points in visibility`
-                        }
-                      </span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Trend placeholder */}
-                <div className="card p-6">
-                  <h3 className="font-medium text-primary mb-4">Visibility Trend</h3>
-                  <div className="h-48 flex items-center justify-center text-center">
-                    <div>
-                      <BarChart3 className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
-                      <p className="text-sm text-muted">Historical trend data coming soon</p>
-                      <p className="text-xs text-muted mt-1">Check back after more scans to see trends</p>
+                  ) : (
+                    <div className="flex items-center gap-2 text-muted">
+                      <Minus className="w-4 h-4" />
+                      <span className="text-sm">You're tied in visibility</span>
                     </div>
-                  </div>
+                  )}
                 </div>
-              </>
+              </div>
             ) : (
               <div className="card p-12 text-center">
                 <Users className="w-10 h-10 text-muted mx-auto mb-3" />
-                <p className="text-secondary">Select a competitor to compare</p>
+                <p className="text-secondary">Select a competitor from the leaderboard</p>
               </div>
             )}
+
+            {/* Mentions Distribution Chart */}
+            <div className="card p-6">
+              <h3 className="font-medium text-primary mb-4">Mentions Distribution</h3>
+              <p className="text-xs text-muted mb-4">Top 10 brands by AI mention frequency</p>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 20 }}>
+                    <XAxis type="number" hide />
+                    <YAxis 
+                      type="category" 
+                      dataKey="name" 
+                      width={100}
+                      tick={{ fill: 'var(--color-secondary)', fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip 
+                      content={({ active, payload }) => {
+                        if (!active || !payload?.length) return null
+                        const data = payload[0].payload
+                        return (
+                          <div className="bg-card border border-border rounded-lg shadow-lg p-3">
+                            <div className="font-medium text-primary">{data.fullName}</div>
+                            <div className="text-sm text-secondary mt-1">{data.mentions.toLocaleString()} mentions</div>
+                          </div>
+                        )
+                      }}
+                    />
+                    <Bar dataKey="mentions" radius={[0, 4, 4, 0]}>
+                      {chartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.isUser ? '#FF6B4A' : '#3B82F6'} fillOpacity={entry.isUser ? 1 : 0.6} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Insight Card */}
+            <div className="card p-6 bg-accent/5 border-accent/20">
+              <div className="flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-primary mb-1">What is this data?</h4>
+                  <p className="text-sm text-secondary leading-relaxed">
+                    This leaderboard shows all brands mentioned by AI models (ChatGPT, Claude, Perplexity) 
+                    in response to prompts you're tracking. Higher visibility means the brand appears 
+                    more frequently and earlier in AI recommendations. Use this to understand your 
+                    competitive position in AI-powered search and discovery.
+                  </p>
+                  <Link 
+                    href="/dashboard/prompts" 
+                    className="inline-flex items-center gap-1 text-sm text-accent hover:underline mt-3"
+                  >
+                    View tracked prompts <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
