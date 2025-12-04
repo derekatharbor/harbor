@@ -4,7 +4,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   Globe,
@@ -37,7 +36,6 @@ interface TypeBreakdown {
   topDomains: string[]
 }
 
-// Type label formatting
 const TYPE_LABELS: Record<string, string> = {
   editorial: 'Editorial',
   corporate: 'Corporate',
@@ -61,14 +59,10 @@ const TYPE_COLORS: Record<string, string> = {
 // Donut chart component
 function DonutChart({ 
   data, 
-  activeType, 
-  onTypeClick,
   total,
   isDark
 }: { 
   data: TypeBreakdown[]
-  activeType: string | null
-  onTypeClick: (type: string | null) => void
   total: number
   isDark: boolean
 }) {
@@ -99,26 +93,24 @@ function DonutChart({
     }
   })
 
-  const activeData = hoveredType ? data.find(d => d.type === hoveredType) : 
-                     activeType ? data.find(d => d.type === activeType) : null
+  const hoveredData = hoveredType ? data.find(d => d.type === hoveredType) : null
 
   const centerBg = isDark ? '#1A1F26' : '#FFFFFF'
   const textColor = isDark ? '#F9FAFB' : '#111827'
-  const mutedColor = isDark ? '#6B7280' : '#9CA3AF'
+  const mutedColor = isDark ? '#9CA3AF' : '#6B7280'
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex flex-col items-center">
       {/* Donut */}
-      <div className="relative">
-        <svg viewBox="0 0 100 100" className="w-36 h-36">
+      <div className="relative mb-4">
+        <svg viewBox="0 0 100 100" className="w-40 h-40">
           {arcs.map((arc) => (
             <path
               key={arc.type}
               d={arc.path}
               fill={arc.color}
               className="cursor-pointer transition-opacity"
-              opacity={activeType === null || activeType === arc.type || hoveredType === arc.type ? 1 : 0.3}
-              onClick={() => onTypeClick(activeType === arc.type ? null : arc.type)}
+              opacity={hoveredType === null || hoveredType === arc.type ? 1 : 0.3}
               onMouseEnter={() => setHoveredType(arc.type)}
               onMouseLeave={() => setHoveredType(null)}
             />
@@ -129,29 +121,29 @@ function DonutChart({
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-2xl font-bold" style={{ color: textColor }}>
-            {activeData ? `${activeData.percentage}%` : total}
+            {hoveredData ? `${hoveredData.count}` : total}
           </span>
           <span className="text-xs" style={{ color: mutedColor }}>
-            {activeData ? TYPE_LABELS[activeData.type] : 'Citations'}
+            {hoveredData ? TYPE_LABELS[hoveredData.type] : 'Citations'}
           </span>
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-        {data.map((item) => (
-          <button
+      {/* Legend - horizontal layout */}
+      <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+        {data.filter(d => d.count > 0).map((item) => (
+          <div
             key={item.type}
-            onClick={() => onTypeClick(activeType === item.type ? null : item.type)}
-            className="flex items-center gap-2 text-sm py-1 cursor-pointer hover:opacity-80 transition-opacity"
-            style={{ opacity: activeType === null || activeType === item.type ? 1 : 0.5 }}
+            className="flex items-center gap-1.5 text-xs"
+            onMouseEnter={() => setHoveredType(item.type)}
+            onMouseLeave={() => setHoveredType(null)}
           >
             <div 
-              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+              className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: TYPE_COLORS[item.type] || TYPE_COLORS.other }}
             />
             <span style={{ color: textColor }}>{TYPE_LABELS[item.type]}</span>
-          </button>
+          </div>
         ))}
       </div>
     </div>
@@ -177,13 +169,12 @@ function SourceTypeBadge({ type }: { type: string }) {
   )
 }
 
-// Get logo URL with fallback
 function getBrandLogo(domain: string): string {
   const clean = domain.replace('www.', '')
   return `https://cdn.brandfetch.io/${clean}?c=1id1Fyz-h7an5-5KR_y`
 }
 
-// Toggle component with tooltip
+// Toggle component with tooltip that opens upward
 function Toggle({ 
   enabled, 
   onChange, 
@@ -215,7 +206,7 @@ function Toggle({
         />
       </button>
       
-      {/* Help icon with tooltip */}
+      {/* Help icon with tooltip - opens to the RIGHT instead of up */}
       <div 
         className="relative"
         onMouseEnter={() => setShowTooltip(true)}
@@ -228,17 +219,22 @@ function Toggle({
         
         {showTooltip && (
           <div 
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs w-64 z-50 shadow-lg"
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 rounded-lg text-xs w-64 z-[100] shadow-lg"
             style={{ 
-              backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+              backgroundColor: isDark ? '#374151' : '#FFFFFF',
               color: isDark ? '#F9FAFB' : '#111827',
               border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#E5E7EB'}`
             }}
           >
             {tooltip}
+            {/* Arrow pointing left */}
             <div 
-              className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 -mt-1"
-              style={{ backgroundColor: isDark ? '#1F2937' : '#FFFFFF', borderRight: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#E5E7EB'}`, borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#E5E7EB'}` }}
+              className="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0"
+              style={{ 
+                borderTop: '6px solid transparent',
+                borderBottom: '6px solid transparent',
+                borderRight: `6px solid ${isDark ? '#374151' : '#FFFFFF'}`,
+              }}
             />
           </div>
         )}
@@ -250,7 +246,6 @@ function Toggle({
 const ITEMS_PER_PAGE = 25
 
 export default function SourcesPage() {
-  const router = useRouter()
   const { currentDashboard } = useBrand()
   
   const [sources, setSources] = useState<Source[]>([])
@@ -258,7 +253,7 @@ export default function SourcesPage() {
   const [totals, setTotals] = useState({ totalCitations: 0, uniqueDomains: 0, highAuthority: 0 })
   const [loading, setLoading] = useState(true)
   const [gapAnalysis, setGapAnalysis] = useState(false)
-  const [activeType, setActiveType] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'domains' | 'urls'>('domains')
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
@@ -284,7 +279,7 @@ export default function SourcesPage() {
 
   useEffect(() => {
     setCurrentPage(1)
-  }, [activeType, searchQuery, gapAnalysis])
+  }, [searchQuery, gapAnalysis])
 
   const fetchSources = async () => {
     setLoading(true)
@@ -323,7 +318,6 @@ export default function SourcesPage() {
 
   // Filter sources
   const filteredSources = sources.filter(s => {
-    if (activeType && s.sourceType !== activeType) return false
     if (searchQuery && !s.domain.toLowerCase().includes(searchQuery.toLowerCase())) return false
     return true
   })
@@ -335,7 +329,7 @@ export default function SourcesPage() {
     currentPage * ITEMS_PER_PAGE
   )
 
-  // Get top domains for the bar chart
+  // Top domains for chart
   const topDomains = sources.slice(0, 6)
 
   if (loading) {
@@ -372,87 +366,101 @@ export default function SourcesPage() {
         </button>
       </div>
 
-      {/* Stats Row */}
-      <div className="px-6 py-4 flex items-center gap-8" style={{ borderBottom: `1px solid ${colors.border}` }}>
-        <div>
-          <span className="text-2xl font-bold" style={{ color: colors.text }}>{totals.totalCitations}</span>
-          <span className="text-sm ml-2" style={{ color: colors.muted }}>Total citations</span>
-        </div>
-        <div>
-          <span className="text-2xl font-bold" style={{ color: colors.text }}>{totals.uniqueDomains}</span>
-          <span className="text-sm ml-2" style={{ color: colors.muted }}>Unique sources</span>
-        </div>
-        <div>
-          <span className="text-2xl font-bold" style={{ color: colors.text }}>{totals.highAuthority}</span>
-          <span className="text-sm ml-2" style={{ color: colors.muted }}>High authority</span>
-        </div>
+      {/* Tabs - Domains | URLs */}
+      <div className="px-6 pt-4 flex items-center gap-1" style={{ borderBottom: `1px solid ${colors.border}` }}>
+        <button
+          onClick={() => setActiveTab('domains')}
+          className="px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer"
+          style={{ 
+            color: activeTab === 'domains' ? colors.text : colors.muted,
+            borderColor: activeTab === 'domains' ? '#F97316' : 'transparent'
+          }}
+        >
+          Domains
+        </button>
+        <button
+          onClick={() => setActiveTab('urls')}
+          className="px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer"
+          style={{ 
+            color: activeTab === 'urls' ? colors.text : colors.muted,
+            borderColor: activeTab === 'urls' ? '#F97316' : 'transparent'
+          }}
+        >
+          URLs
+        </button>
       </div>
 
-      {/* Charts Section - Source Usage + Donut */}
       <div className="p-6">
-        <div 
-          className="rounded-xl p-6 mb-6"
-          style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}
-        >
-          <div className="flex items-start justify-between">
-            {/* Source Usage by Domain - Bar Chart */}
-            <div className="flex-1 mr-8">
-              <h3 className="text-sm font-medium mb-4" style={{ color: colors.text }}>Source Usage by Domain</h3>
-              
-              {/* Legend */}
-              <div className="flex items-center gap-4 mb-4 flex-wrap">
-                {topDomains.map((s) => (
-                  <div key={s.domain} className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: TYPE_COLORS[s.sourceType] || TYPE_COLORS.other }} />
-                    <span className="text-xs" style={{ color: colors.muted }}>{s.domain}</span>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Simple horizontal bar representation */}
-              <div className="space-y-3">
-                {topDomains.map((s) => {
-                  const pct = Math.round((s.totalCitations / totals.totalCitations) * 100)
-                  return (
-                    <div key={s.domain} className="flex items-center gap-3">
-                      <img 
-                        src={getBrandLogo(s.domain)}
-                        alt=""
-                        className="w-5 h-5 rounded object-contain flex-shrink-0"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${s.domain}&sz=32`
+        {/* Charts Row - Two separate cards */}
+        <div className="grid grid-cols-3 gap-6 mb-6">
+          {/* Source Usage Card - Takes 2 columns */}
+          <div 
+            className="col-span-2 rounded-xl p-6"
+            style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}
+          >
+            <h3 className="text-sm font-medium mb-4" style={{ color: colors.text }}>Source Usage by Domain</h3>
+            
+            {/* Legend */}
+            <div className="flex items-center gap-4 mb-6 flex-wrap">
+              {topDomains.map((s) => (
+                <div key={s.domain} className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: TYPE_COLORS[s.sourceType] || TYPE_COLORS.other }} />
+                  <img 
+                    src={getBrandLogo(s.domain)}
+                    alt=""
+                    className="w-4 h-4 rounded object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${s.domain}&sz=32`
+                    }}
+                  />
+                  <span className="text-xs" style={{ color: colors.muted }}>{s.domain}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Horizontal bars */}
+            <div className="space-y-3">
+              {topDomains.map((s) => {
+                const pct = Math.round((s.totalCitations / totals.totalCitations) * 100)
+                return (
+                  <div key={s.domain} className="flex items-center gap-3">
+                    <img 
+                      src={getBrandLogo(s.domain)}
+                      alt=""
+                      className="w-5 h-5 rounded object-contain flex-shrink-0"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${s.domain}&sz=32`
+                      }}
+                    />
+                    <div className="flex-1 h-7 rounded-md overflow-hidden" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#F3F4F6' }}>
+                      <div 
+                        className="h-full rounded-md flex items-center px-2 transition-all"
+                        style={{ 
+                          width: `${Math.max(pct * 1.5, 8)}%`,
+                          backgroundColor: TYPE_COLORS[s.sourceType] || TYPE_COLORS.other,
                         }}
-                      />
-                      <div className="flex-1">
-                        <div 
-                          className="h-6 rounded-md flex items-center px-2"
-                          style={{ 
-                            width: `${Math.max(pct * 2, 10)}%`,
-                            backgroundColor: TYPE_COLORS[s.sourceType] || TYPE_COLORS.other,
-                            opacity: 0.8
-                          }}
-                        >
-                          <span className="text-xs text-white font-medium">{pct}%</span>
-                        </div>
+                      >
+                        <span className="text-xs text-white font-medium">{pct}%</span>
                       </div>
-                      <span className="text-xs w-16 text-right" style={{ color: colors.muted }}>{s.totalCitations}</span>
                     </div>
-                  )
-                })}
-              </div>
+                    <span className="text-sm w-10 text-right font-medium" style={{ color: colors.text }}>{s.totalCitations}</span>
+                  </div>
+                )
+              })}
             </div>
+          </div>
 
-            {/* Domain Type Donut */}
-            <div className="flex-shrink-0">
-              <h3 className="text-sm font-medium mb-4" style={{ color: colors.text }}>Domain type</h3>
-              <DonutChart 
-                data={typeBreakdown} 
-                activeType={activeType}
-                onTypeClick={setActiveType}
-                total={totals.totalCitations}
-                isDark={isDark}
-              />
-            </div>
+          {/* Domain Type Card - Takes 1 column */}
+          <div 
+            className="rounded-xl p-6"
+            style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}
+          >
+            <h3 className="text-sm font-medium mb-4" style={{ color: colors.text }}>Domain type</h3>
+            <DonutChart 
+              data={typeBreakdown} 
+              total={totals.totalCitations}
+              isDark={isDark}
+            />
           </div>
         </div>
 
@@ -467,12 +475,11 @@ export default function SourcesPage() {
             style={{ borderBottom: `1px solid ${colors.border}` }}
           >
             <div className="flex items-center gap-4">
-              {/* All Domain Types button */}
+              {/* All Domain Types */}
               <button
-                onClick={() => setActiveType(null)}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors cursor-pointer"
                 style={{ 
-                  backgroundColor: activeType === null ? (isDark ? '#374151' : '#E5E7EB') : 'transparent',
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#F3F4F6',
                   color: colors.text,
                   border: `1px solid ${colors.border}`
                 }}
@@ -509,7 +516,6 @@ export default function SourcesPage() {
                 />
               </div>
 
-              {/* Count */}
               <span className="text-sm" style={{ color: colors.muted }}>
                 {filteredSources.length} sources
               </span>
