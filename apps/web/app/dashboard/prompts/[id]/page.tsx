@@ -5,7 +5,6 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import Image from 'next/image'
 import {
   ArrowLeft,
   Eye,
@@ -70,19 +69,19 @@ interface SourceData {
 // Model logo component
 function ModelLogo({ model, size = 20 }: { model: string; size?: number }) {
   const logoMap: Record<string, string> = {
-    chatgpt: '/logos/chatgpt.svg',
-    claude: '/logos/claude.svg',
-    gemini: '/logos/gemini.svg',
-    perplexity: '/logos/perplexity.svg'
+    chatgpt: 'https://img.logo.dev/openai.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
+    claude: 'https://img.logo.dev/anthropic.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
+    gemini: 'https://img.logo.dev/google.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw',
+    perplexity: 'https://img.logo.dev/perplexity.ai?token=pk_X-1ZO13GSgeOGP3a5JYvJw'
   }
   
   return (
-    <Image
+    <img
       src={logoMap[model] || logoMap.chatgpt}
       alt={model}
       width={size}
       height={size}
-      className="rounded"
+      className="rounded object-contain"
     />
   )
 }
@@ -194,7 +193,7 @@ export default function PromptDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
     )
   }
@@ -206,7 +205,7 @@ export default function PromptDetailPage() {
           <h2 className="text-xl font-semibold text-primary mb-2">Prompt not found</h2>
           <button
             onClick={() => router.push('/dashboard/prompts')}
-            className="text-chart-1 hover:underline cursor-pointer"
+            className="text-gray-700 hover:underline cursor-pointer"
           >
             Back to Prompts
           </button>
@@ -225,11 +224,11 @@ export default function PromptDetailPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push('/dashboard/prompts')}
-              className="p-2 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
+              className="flex items-center gap-2 p-2 -ml-2 hover:bg-secondary rounded-lg transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5 text-secondary" />
+              <span className="text-muted">Prompts</span>
             </button>
-            <span className="text-muted">Prompts</span>
           </div>
           
           <div className="flex items-center gap-2">
@@ -343,7 +342,19 @@ export default function PromptDetailPage() {
                 ]).map((brand, i) => (
                   <tr key={brand.brand_name}>
                     <td className="text-muted">{i + 1}</td>
-                    <td className="text-primary font-medium">{brand.brand_name}</td>
+                    <td className="text-primary font-medium">
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src={`https://img.logo.dev/${brand.brand_name.toLowerCase().replace(/\s+/g, '').replace('.com', '')}.com?token=pk_X-1ZO13GSgeOGP3a5JYvJw`}
+                          alt=""
+                          className="w-5 h-5 rounded object-contain"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                        />
+                        {brand.brand_name}
+                      </div>
+                    </td>
                     <td className="text-primary">{brand.visibility_pct}%</td>
                     <td>
                       <SentimentBadge sentiment={brand.sentiment} />
@@ -473,7 +484,7 @@ export default function PromptDetailPage() {
                   className={`
                     flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer
                     ${isActive 
-                      ? 'border-chart-1 text-primary' 
+                      ? 'border-gray-900 text-primary' 
                       : 'border-transparent text-muted hover:text-secondary'
                     }
                   `}
@@ -507,7 +518,7 @@ export default function PromptDetailPage() {
                 </p>
                 <button 
                   onClick={() => setShowResponseModal(true)}
-                  className="text-sm text-chart-1 hover:underline mt-2 cursor-pointer"
+                  className="text-sm text-gray-700 hover:underline mt-2 cursor-pointer"
                 >
                   Read full response →
                 </button>
