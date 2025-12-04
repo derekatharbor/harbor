@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { 
   Home,
-  ShoppingBag, 
   Star,
   MessageSquare, 
   Globe,
@@ -84,20 +83,19 @@ export default function Sidebar() {
     { name: 'Overview', href: '/dashboard/overview', icon: Home },
     { name: 'Prompts', href: '/dashboard/prompts', icon: MessageSquare },
     { name: 'Sources', href: '/dashboard/sources', icon: Link2 },
-    { name: 'Shopping', href: '/dashboard/shopping', icon: ShoppingBag },
     { name: 'Brand', href: '/dashboard/brand', icon: Star },
     { name: 'Website', href: '/dashboard/website', icon: Globe },
+    { name: 'Competitors', href: '/dashboard/competitors', icon: Users },
   ]
 
   // Action section - things to do
   const actions = [
-    { name: 'Opportunities', href: '/dashboard/opportunities', icon: TrendingUp },
+    { name: 'Improve', href: '/dashboard/improve', icon: TrendingUp },
   ]
 
   // Manage section - brand data and settings
   const manage = [
     { name: 'Brand Hub', href: '/dashboard/brand-hub', icon: Layers },
-    { name: 'Competitors', href: '/dashboard/competitors/manage', icon: Users },
     { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   ]
 
@@ -106,12 +104,11 @@ export default function Sidebar() {
     if (pathname === '/dashboard/overview') return '#3B82F6' // Blue
     if (pathname === '/dashboard/prompts') return '#F59E0B' // Amber (Prompts)
     if (pathname?.startsWith('/dashboard/sources')) return '#EC4899' // Pink (Sources)
-    if (pathname === '/dashboard/shopping') return '#10B981' // Green
-    if (pathname === '/dashboard/brand') return '#06B6D4' // Cyan
-    if (pathname === '/dashboard/website') return '#8B5CF6' // Purple
-    if (pathname === '/dashboard/opportunities') return '#F97316' // Orange
+    if (pathname?.startsWith('/dashboard/brand')) return '#06B6D4' // Cyan
+    if (pathname?.startsWith('/dashboard/website')) return '#8B5CF6' // Purple
+    if (pathname?.startsWith('/dashboard/competitors')) return '#A855F7' // Purple
+    if (pathname?.startsWith('/dashboard/improve')) return '#22C55E' // Green
     if (pathname === '/dashboard/brand-hub') return '#3B82F6' // Blue
-    if (pathname === '/dashboard/competitors/manage') return '#A855F7' // Purple
     if (pathname === '/dashboard/settings') return '#6B7280' // Gray
     return '#3B82F6' // Default blue
   }

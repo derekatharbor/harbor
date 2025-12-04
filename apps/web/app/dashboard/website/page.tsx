@@ -1,722 +1,516 @@
 // apps/web/app/dashboard/website/page.tsx
+// Website Analytics - How AI-readable is your website
 
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Globe, TrendingUp, CheckCircle, AlertTriangle, XCircle, Target, ChevronDown, ChevronRight, FileCode } from 'lucide-react'
-import ScanProgressModal from '@/components/scan/ScanProgressModal'
-import ActionCard from '@/components/optimization/ActionCard'
-import ActionModal from '@/components/optimization/ActionModal'
-import { analyzeWebsiteData, TaskRecommendation } from '@/lib/optimization/generator'
-import { OptimizationTask } from '@/lib/optimization/tasks'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { 
+  Globe,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  ArrowUpRight,
+  ChevronDown,
+  Calendar,
+  FileCode,
+  Search,
+  ExternalLink,
+  Code,
+  FileText,
+  Layers,
+  TrendingUp,
+  TrendingDown
+} from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
-interface WebsiteIssue {
-  url: string
-  issue_code: string
-  severity: string
-  message: string
-  schema_found: boolean
-}
-
 interface WebsiteData {
   readability_score: number
+  readability_delta: number
+  pages_scanned: number
   schema_coverage: number
-  issues: WebsiteIssue[]
+  issues_count: {
+    high: number
+    medium: number
+    low: number
+  }
+  schema_types: Array<{
+    type: string
+    count: number
+    percentage: number
+  }>
+  pages: Array<{
+    url: string
+    title: string
+    readability: number
+    schema_types: string[]
+    issues: Array<{
+      type: string
+      severity: 'high' | 'medium' | 'low'
+      message: string
+    }>
+    last_scanned: string
+  }>
+  recommendations: Array<{
+    title: string
+    description: string
+    impact: 'high' | 'medium' | 'low'
+    affected_pages: number
+  }>
 }
 
-interface GroupedIssues {
-  code: string
-  title: string
-  severity: string
-  count: number
-  urls: string[]
-  message: string
+// Mock data
+const MOCK_DATA: WebsiteData = {
+  readability_score: 76,
+  readability_delta: 4.2,
+  pages_scanned: 142,
+  schema_coverage: 68,
+  issues_count: {
+    high: 3,
+    medium: 12,
+    low: 8
+  },
+  schema_types: [
+    { type: 'Organization', count: 1, percentage: 100 },
+    { type: 'Product', count: 24, percentage: 85 },
+    { type: 'FAQPage', count: 8, percentage: 32 },
+    { type: 'Article', count: 45, percentage: 78 },
+    { type: 'BreadcrumbList', count: 120, percentage: 85 },
+    { type: 'Review', count: 12, percentage: 42 },
+  ],
+  pages: [
+    { 
+      url: '/pricing', 
+      title: 'Pricing - Plans & Features',
+      readability: 92, 
+      schema_types: ['Organization', 'BreadcrumbList'],
+      issues: [],
+      last_scanned: '2024-12-03'
+    },
+    { 
+      url: '/products/crm', 
+      title: 'CRM Software | Sales Hub',
+      readability: 88, 
+      schema_types: ['Product', 'BreadcrumbList', 'FAQPage'],
+      issues: [
+        { type: 'missing_schema', severity: 'low', message: 'Missing Review schema' }
+      ],
+      last_scanned: '2024-12-03'
+    },
+    { 
+      url: '/blog/sales-tips', 
+      title: '25 Sales Tips for 2024',
+      readability: 74, 
+      schema_types: ['Article', 'BreadcrumbList'],
+      issues: [
+        { type: 'thin_content', severity: 'medium', message: 'Content may be too brief for topic depth' }
+      ],
+      last_scanned: '2024-12-03'
+    },
+    { 
+      url: '/about', 
+      title: 'About Us | Company History',
+      readability: 65, 
+      schema_types: ['Organization'],
+      issues: [
+        { type: 'missing_schema', severity: 'high', message: 'Missing key schema types' },
+        { type: 'no_faq', severity: 'medium', message: 'No FAQ section found' }
+      ],
+      last_scanned: '2024-12-02'
+    },
+    { 
+      url: '/features', 
+      title: 'Features Overview',
+      readability: 58, 
+      schema_types: ['BreadcrumbList'],
+      issues: [
+        { type: 'missing_schema', severity: 'high', message: 'Missing Product schema' },
+        { type: 'no_meta', severity: 'high', message: 'Meta description missing' },
+        { type: 'thin_content', severity: 'medium', message: 'Low content-to-code ratio' }
+      ],
+      last_scanned: '2024-12-02'
+    },
+  ],
+  recommendations: [
+    {
+      title: 'Add Product schema to feature pages',
+      description: 'Product pages are missing structured data that helps AI understand your offerings.',
+      impact: 'high',
+      affected_pages: 8
+    },
+    {
+      title: 'Create FAQ sections for top landing pages',
+      description: 'FAQ content with proper schema helps AI answer user questions about your product.',
+      impact: 'high',
+      affected_pages: 12
+    },
+    {
+      title: 'Fix missing meta descriptions',
+      description: 'Meta descriptions help AI understand page purpose and relevance.',
+      impact: 'medium',
+      affected_pages: 5
+    }
+  ]
+}
+
+const SEVERITY_STYLES = {
+  high: 'bg-negative/10 text-negative',
+  medium: 'bg-warning/10 text-warning',
+  low: 'bg-muted/10 text-muted'
+}
+
+function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
+  const strokeWidth = 8
+  const radius = (size - strokeWidth) / 2
+  const circumference = radius * 2 * Math.PI
+  const offset = circumference - (score / 100) * circumference
+
+  const getColor = (score: number) => {
+    if (score >= 80) return '#22C55E'
+    if (score >= 60) return '#F59E0B'
+    return '#EF4444'
+  }
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke="var(--bg-secondary)"
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={getColor(score)}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-500"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-3xl font-bold text-primary">{score}</span>
+        <span className="text-xs text-muted">/ 100</span>
+      </div>
+    </div>
+  )
+}
+
+function PageRow({ page }: { page: WebsiteData['pages'][0] }) {
+  const [expanded, setExpanded] = useState(false)
+  const hasIssues = page.issues.length > 0
+  const highIssues = page.issues.filter(i => i.severity === 'high').length
+
+  return (
+    <div className="border-b border-border last:border-0">
+      <div 
+        className="flex items-center gap-4 px-4 py-3 hover:bg-hover cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        {/* Status indicator */}
+        <div className="flex-shrink-0">
+          {highIssues > 0 ? (
+            <XCircle className="w-4 h-4 text-negative" />
+          ) : hasIssues ? (
+            <AlertTriangle className="w-4 h-4 text-warning" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4 text-positive" />
+          )}
+        </div>
+
+        {/* URL and title */}
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-medium text-primary truncate">{page.title}</div>
+          <div className="text-xs text-muted truncate">{page.url}</div>
+        </div>
+
+        {/* Schema badges */}
+        <div className="hidden lg:flex items-center gap-1.5">
+          {page.schema_types.slice(0, 3).map((type, idx) => (
+            <span key={idx} className="px-2 py-0.5 bg-secondary rounded text-xs text-muted">
+              {type}
+            </span>
+          ))}
+          {page.schema_types.length > 3 && (
+            <span className="text-xs text-muted">+{page.schema_types.length - 3}</span>
+          )}
+        </div>
+
+        {/* Readability score */}
+        <div className="w-16 text-right">
+          <span className={`text-sm font-medium ${
+            page.readability >= 80 ? 'text-positive' :
+            page.readability >= 60 ? 'text-warning' : 'text-negative'
+          }`}>
+            {page.readability}%
+          </span>
+        </div>
+
+        {/* Expand */}
+        <ChevronDown className={`w-4 h-4 text-muted transition-transform ${expanded ? 'rotate-180' : ''}`} />
+      </div>
+
+      {expanded && page.issues.length > 0 && (
+        <div className="px-4 pb-4 pl-12 space-y-2">
+          {page.issues.map((issue, idx) => (
+            <div key={idx} className={`flex items-center gap-2 px-3 py-2 rounded-lg ${SEVERITY_STYLES[issue.severity]}`}>
+              <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="text-sm">{issue.message}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function WebsiteAnalyticsPage() {
   const { currentDashboard } = useBrand()
-  
   const [data, setData] = useState<WebsiteData | null>(null)
-  const [scanData, setScanData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [showScanModal, setShowScanModal] = useState(false)
-  const [currentScanId, setCurrentScanId] = useState<string | null>(null)
-  
-  // Recommendations state
-  const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
-  const [selectedTask, setSelectedTask] = useState<OptimizationTask | null>(null)
-  const [showActionModal, setShowActionModal] = useState(false)
-  
-  // UI state for collapsible sections
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    high: true,
-    med: false,
-    low: false
-  })
+  const [activeTab, setActiveTab] = useState<'pages' | 'schema' | 'issues'>('pages')
 
   useEffect(() => {
-    async function fetchData() {
-      if (!currentDashboard) {
-        setLoading(false)
-        return
-      }
+    const timer = setTimeout(() => {
+      setData(MOCK_DATA)
+      setLoading(false)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [])
 
-      try {
-        const response = await fetch(`/api/scan/latest?dashboardId=${currentDashboard.id}`)
-        if (!response.ok) throw new Error('Failed to fetch')
-        
-        const result = await response.json()
-        setScanData(result)
-        
-        if (!result.scan) {
-          setData(null)
-          setLoading(false)
-          return
-        }
-        
-        console.log('📊 [Website] Raw data:', result.website)
-        console.log('📊 [Website] Issues sample:', result.website?.issues?.slice(0, 3))
-        
-        // Generate recommendations AND update data with normalized issues
-        if (result.website && result.website.issues) {
-          // Ensure issues have message field (API might send it as details)
-          const normalizedIssues = result.website.issues
-            .map((issue: any) => {
-              let message = issue.message
-              
-              // If no message, try to extract from details
-              if (!message && issue.details) {
-                try {
-                  message = typeof issue.details === 'string' 
-                    ? JSON.parse(issue.details).message 
-                    : issue.details.message
-                } catch (e) {
-                  console.warn('Failed to parse details:', issue.details)
-                  message = ''
-                }
-              }
-              
-              // Infer issue_code from message if missing
-              let issueCode = issue.issue_code
-              if (!issueCode && message) {
-                if (message.includes('Missing Product schema')) {
-                  issueCode = 'missing_product_schema'
-                } else if (message.includes('No structured data found')) {
-                  issueCode = 'no_schema'
-                } else if (message.includes('Content is complex') || message.includes('simplify for AI parsing')) {
-                  issueCode = 'low_readability'
-                } else if (message.includes('Multiple H1 tags')) {
-                  issueCode = 'multiple_h1'
-                } else if (message.includes('Missing meta description')) {
-                  issueCode = 'missing_meta_description'
-                } else if (message.includes('Missing FAQ schema')) {
-                  issueCode = 'missing_faq_schema'
-                } else if (message.includes('Missing Organization schema') || message.includes('Organization schema')) {
-                  issueCode = 'missing_org_schema'
-                } else if (message.includes('Missing Breadcrumb schema')) {
-                  issueCode = 'missing_breadcrumb_schema'
-                } else if (message.includes('Missing canonical') || message.includes('canonical tag')) {
-                  issueCode = 'missing_canonical'
-                } else {
-                  issueCode = 'unknown'
-                }
-              }
-              
-              return {
-                ...issue,
-                message: message || '',
-                issue_code: issueCode || 'unknown'
-              }
-            })
-            // Filter out readability issues for JSON/data files
-            .filter((issue: any) => {
-              const url = issue.url?.toLowerCase() || ''
-              const isDataFile = url.endsWith('.json') || 
-                                 url.endsWith('.xml') || 
-                                 url.endsWith('.txt') ||
-                                 url.includes('/api/') ||
-                                 url.includes('harbor.json')
-              
-              // Skip readability issues for data files - they're not meant to be readable
-              if (isDataFile && issue.issue_code === 'low_readability') {
-                return false
-              }
-              
-              return true
-            });
-          
-          console.log('📊 [Website] Normalized issues sample:', normalizedIssues.slice(0, 3))
-          
-          const normalizedData = {
-            ...result.website,
-            issues: normalizedIssues
-          }
-          
-          // Update data state with normalized issues
-          setData(normalizedData)
-          
-          const tasks = analyzeWebsiteData(normalizedData)
-          setRecommendations(tasks)
-          console.log('📋 [Website] Recommendations:', tasks.length)
-        } else {
-          setData(result.website)
-        }
-      } catch (error) {
-        console.error('Error fetching website data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  const brandName = currentDashboard?.brand_name || 'Your Website'
+  const domain = currentDashboard?.domain || 'example.com'
 
-    fetchData()
-  }, [currentDashboard])
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'No recent scan'
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-      })
-    } catch {
-      return 'No recent scan'
-    }
-  }
-
-  const groupIssuesByCode = (issues: WebsiteIssue[]): GroupedIssues[] => {
-    const groups = new Map<string, GroupedIssues>()
-    
-    for (const issue of issues) {
-      // Skip issues without issue_code or unknown issues
-      if (!issue.issue_code || issue.issue_code === 'unknown') {
-        console.log('Skipping unidentified issue:', issue.message?.slice(0, 50))
-        continue
-      }
-      
-      const existing = groups.get(issue.issue_code)
-      
-      if (existing) {
-        existing.count++
-        existing.urls.push(issue.url)
-      } else {
-        const title = formatIssueTitle(issue.issue_code)
-        
-        groups.set(issue.issue_code, {
-          code: issue.issue_code,
-          title,
-          severity: issue.severity,
-          count: 1,
-          urls: [issue.url],
-          message: issue.message || ''
-        })
-      }
-    }
-    
-    return Array.from(groups.values()).sort((a, b) => b.count - a.count)
-  }
-
-  const formatIssueTitle = (code: string): string => {
-    if (!code) return 'Unknown Issue'
-    
-    const titles: Record<string, string> = {
-      no_schema: 'Missing Schema Markup',
-      low_readability: 'Low Content Readability',
-      multiple_h1: 'Multiple H1 Tags',
-      missing_meta_description: 'Missing Meta Description',
-      missing_faq_schema: 'Missing FAQ Schema',
-      missing_org_schema: 'Missing Organization Schema',
-      missing_product_schema: 'Missing Product Schema',
-      missing_breadcrumb_schema: 'Missing Breadcrumb Schema',
-      invalid_schema: 'Invalid Schema Markup',
-      duplicate_content: 'Duplicate Content',
-      missing_canonical: 'Missing Canonical Tag',
-      broken_links: 'Broken Internal Links',
-      // Handle variations
-      'missing-product-schema': 'Missing Product Schema',
-      'no-schema': 'Missing Schema Markup',
-      'low-readability': 'Low Content Readability',
-      'multiple-h1': 'Multiple H1 Tags'
-    }
-    
-    // Return mapped title or format the code
-    return titles[code] || titles[code.replace(/_/g, '-')] || code.split(/[_-]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  }
-
-  const getSeverityColor = (severity: string) => {
-    if (severity === 'high') return 'text-red-400'
-    if (severity === 'med') return 'text-amber-400'
-    return 'text-blue-400'
-  }
-
-  const toggleSection = (severity: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [severity]: !prev[severity]
-    }))
-  }
-
-  // Loading skeleton
   if (loading) {
     return (
-      <>
+      <div className="min-h-screen bg-primary" data-page="website">
         <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto animate-pulse space-y-8 pt-20 lg:pt-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-border rounded-lg"></div>
-              <div className="h-10 w-64 bg-border rounded"></div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="bg-card rounded-lg p-6 border border-border h-32"></div>
-            ))}
+        <div className="p-6 animate-pulse space-y-6">
+          <div className="h-8 bg-card rounded w-48"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[1,2,3,4].map(i => <div key={i} className="h-28 bg-card rounded-lg"></div>)}
           </div>
         </div>
-      </>
-    )
-  }
-
-  // Empty state
-  if (!data || !scanData?.scan) {
-    return (
-      <>
-        <MobileHeader />
-        <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Globe className="w-6 h-6 lg:w-8 lg:h-8 text-[#E879F9]" strokeWidth={1.5} />
-                <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
-                  Website Analytics
-                </h1>
-              </div>
-            </div>
-            
-            <p className="text-sm text-secondary/60 mb-2">
-              How AI crawlers read and understand your website
-            </p>
-          </div>
-
-          <div className="bg-card rounded-xl p-8 lg:p-12 border border-border">
-            <div className="max-w-lg mx-auto text-center">
-              <div className="w-16 h-16 rounded-full bg-[#E879F9]/10 flex items-center justify-center mx-auto mb-6">
-                <Globe className="w-8 h-8 text-[#E879F9]" strokeWidth={1.5} />
-              </div>
-              
-              <h2 className="text-xl lg:text-2xl font-heading font-bold text-primary mb-3">
-                Waiting for scan data
-              </h2>
-              
-              <p className="text-secondary/60 text-sm leading-relaxed">
-                Once your scan completes, you'll see your schema markup, meta tags, content structure, and technical signals that help AI models understand your site.
-              </p>
-            </div>
-          </div>
-
-          <ScanProgressModal
-            isOpen={showScanModal}
-            onClose={() => setShowScanModal(false)}
-            scanId={currentScanId}
-          />
-        </div>
-      </>
-    )
-  }
-
-  const highSeverity = data.issues.filter(i => i.severity === 'high').length
-  const medSeverity = data.issues.filter(i => i.severity === 'med').length
-  const lowSeverity = data.issues.filter(i => i.severity === 'low').length
-  
-  const groupedIssues = {
-    high: groupIssuesByCode(data.issues.filter(i => i.severity === 'high')),
-    med: groupIssuesByCode(data.issues.filter(i => i.severity === 'med')),
-    low: groupIssuesByCode(data.issues.filter(i => i.severity === 'low'))
-  }
-
-  // Main content
-  return (
-    <>
-      <MobileHeader />
-      <div className="max-w-screen-2xl mx-auto pt-20 lg:pt-0 px-4 lg:px-0">
-        {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Globe className="w-6 h-6 lg:w-8 lg:h-8 text-[#E879F9]" strokeWidth={1.5} />
-              <h1 className="text-2xl lg:text-4xl font-heading font-bold text-primary">
-                Website Analytics
-              </h1>
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-secondary/60 mb-2">
-                How AI crawlers read and understand your website structure
-              </p>
-              <p className="text-sm text-secondary/70 italic">
-                Last scan: {formatDate(scanData.scan.finished_at || scanData.scan.started_at)}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Readiness Score - Hero Card */}
-        <div className="bg-card rounded-lg border border-border p-6 mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-            {/* Score Ring */}
-            <div className="flex items-center justify-center lg:justify-start">
-              <div 
-                className="relative w-28 h-28 rounded-full flex items-center justify-center"
-                style={{ 
-                  background: `conic-gradient(from 180deg, #E879F9 0%, #22d3ee ${Math.round((data.readability_score + data.schema_coverage) / 2)}%, var(--border) ${Math.round((data.readability_score + data.schema_coverage) / 2)}%)`
-                }}
-              >
-                <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center bg-card">
-                  <span className="text-3xl font-bold text-primary">
-                    {Math.round((data.readability_score + data.schema_coverage) / 2)}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Description */}
-            <div className="flex-1 text-center lg:text-left">
-              <h2 className="text-lg font-heading font-semibold text-primary mb-1">
-                AI Readiness Score
-              </h2>
-              <p className="text-sm text-secondary/60 mb-4 max-w-md">
-                How prepared your website is for AI crawlers. Based on content readability ({data.readability_score}%) and schema markup coverage ({data.schema_coverage}%).
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#E879F9]"></div>
-                  <span className="text-xs text-secondary/60">Readability: {data.readability_score}%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#22d3ee]"></div>
-                  <span className="text-xs text-secondary/60">Schema: {data.schema_coverage}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-card rounded-lg p-6 border border-border">
-            <div className="flex items-center gap-2 mb-4">
-              <Target className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-              <p className="text-xs text-secondary/60 uppercase tracking-wider">Readability Score</p>
-              <div className="group relative">
-                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
-                  ?
-                </div>
-                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
-                  How easy it is for AI to understand your content. Higher scores mean AI can read and cite your pages more accurately.
-                </div>
-              </div>
-            </div>
-            <div className="text-4xl font-heading font-bold text-primary mb-2">
-              {data.readability_score}<span className="text-2xl text-secondary/40">%</span>
-            </div>
-            <p className="text-sm text-secondary/60">AI optimization</p>
-          </div>
-
-          <div className="bg-card rounded-lg p-6 border border-border">
-            <div className="flex items-center gap-2 mb-4">
-              <FileCode className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-              <p className="text-xs text-secondary/60 uppercase tracking-wider">Schema Coverage</p>
-              <div className="group relative">
-                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
-                  ?
-                </div>
-                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
-                  Percentage of pages with structured data. Schema tells AI what your pages are about—without it, AI skips your content.
-                </div>
-              </div>
-            </div>
-            <div className="text-4xl font-heading font-bold text-primary mb-2">
-              {data.schema_coverage}<span className="text-2xl text-secondary/40">%</span>
-            </div>
-            <p className="text-sm text-secondary/60">Pages with schema</p>
-          </div>
-
-          <div className="bg-card rounded-lg p-6 border border-border">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-              <p className="text-xs text-secondary/60 uppercase tracking-wider">Total Issues</p>
-              <div className="group relative">
-                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
-                  ?
-                </div>
-                <div className="absolute left-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
-                  Technical problems preventing AI from understanding your site. Fix high priority issues first for the biggest impact.
-                </div>
-              </div>
-            </div>
-            <div className="text-4xl font-heading font-bold text-primary mb-2">
-              {data.issues.length}
-            </div>
-            <p className="text-sm text-secondary/60">Across all pages</p>
-          </div>
-
-          <div className="bg-card rounded-lg p-6 border border-border">
-            <div className="flex items-center gap-2 mb-4">
-              <XCircle className="w-5 h-5 text-[#E879F9]" strokeWidth={1.5} />
-              <p className="text-xs text-secondary/60 uppercase tracking-wider">High Priority</p>
-              <div className="group relative">
-                <div className="w-4 h-4 rounded-full border border-secondary/30 flex items-center justify-center cursor-help text-[10px] text-secondary/60">
-                  ?
-                </div>
-                <div className="absolute right-0 top-6 w-64 p-3 bg-[#121A24] border border-[#E879F9]/30 rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 text-xs text-secondary/90 leading-relaxed">
-                  Critical issues that significantly hurt your AI visibility. Start here—these are quick wins with big results.
-                </div>
-              </div>
-            </div>
-            <div className="text-4xl font-heading font-bold text-primary mb-2">
-              {highSeverity}
-            </div>
-            <p className="text-sm text-secondary/60">Critical issues</p>
-          </div>
-        </div>
-
-        {/* Grouped Issues */}
-        <div className="bg-card rounded-lg border border-border mb-8">
-          <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-heading font-bold text-primary">
-              Technical Issues
-            </h2>
-            <p className="text-sm text-secondary/60 mt-1">
-              Grouped by type and severity
-            </p>
-          </div>
-
-          <div className="divide-y divide-border">
-            {/* High Severity Section */}
-            {highSeverity > 0 && (
-              <div>
-                <button
-                  onClick={() => toggleSection('high')}
-                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    {expandedSections.high ? (
-                      <ChevronDown className="w-5 h-5 text-secondary/60" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-secondary/60" />
-                    )}
-                    <XCircle className="w-5 h-5 text-red-400" strokeWidth={1.5} />
-                    <span className="font-heading font-semibold text-primary">
-                      High Priority Issues
-                    </span>
-                    <span className="px-2 py-0.5 bg-red-500/10 text-red-400 text-sm font-medium rounded">
-                      {highSeverity}
-                    </span>
-                  </div>
-                </button>
-                
-                {expandedSections.high && (
-                  <div className="px-6 pb-6 space-y-3">
-                    {groupedIssues.high.map((group, idx) => (
-                      <details key={idx} className="group">
-                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-red-500/30 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-primary">{group.title}</span>
-                            <span className="text-sm text-secondary/60">{group.count} pages</span>
-                          </div>
-                        </summary>
-                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
-                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
-                          <div className="space-y-1 max-h-40 overflow-y-auto">
-                            {group.urls.slice(0, 10).map((url, i) => (
-                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
-                                {url}
-                              </div>
-                            ))}
-                            {group.urls.length > 10 && (
-                              <div className="text-xs text-secondary/50 italic">
-                                +{group.urls.length - 10} more pages
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Medium Severity Section */}
-            {medSeverity > 0 && (
-              <div>
-                <button
-                  onClick={() => toggleSection('med')}
-                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    {expandedSections.med ? (
-                      <ChevronDown className="w-5 h-5 text-secondary/60" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-secondary/60" />
-                    )}
-                    <AlertTriangle className="w-5 h-5 text-amber-400" strokeWidth={1.5} />
-                    <span className="font-heading font-semibold text-primary">
-                      Medium Priority Issues
-                    </span>
-                    <span className="px-2 py-0.5 bg-amber-500/10 text-amber-400 text-sm font-medium rounded">
-                      {medSeverity}
-                    </span>
-                  </div>
-                </button>
-                
-                {expandedSections.med && (
-                  <div className="px-6 pb-6 space-y-3">
-                    {groupedIssues.med.map((group, idx) => (
-                      <details key={idx} className="group">
-                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-amber-500/30 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-primary">{group.title}</span>
-                            <span className="text-sm text-secondary/60">{group.count} pages</span>
-                          </div>
-                        </summary>
-                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
-                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
-                          <div className="space-y-1 max-h-40 overflow-y-auto">
-                            {group.urls.slice(0, 10).map((url, i) => (
-                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
-                                {url}
-                              </div>
-                            ))}
-                            {group.urls.length > 10 && (
-                              <div className="text-xs text-secondary/50 italic">
-                                +{group.urls.length - 10} more pages
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Low Severity Section */}
-            {lowSeverity > 0 && (
-              <div>
-                <button
-                  onClick={() => toggleSection('low')}
-                  className="w-full p-6 flex items-center justify-between hover:bg-hover transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    {expandedSections.low ? (
-                      <ChevronDown className="w-5 h-5 text-secondary/60" />
-                    ) : (
-                      <ChevronRight className="w-5 h-5 text-secondary/60" />
-                    )}
-                    <CheckCircle className="w-5 h-5 text-blue-400" strokeWidth={1.5} />
-                    <span className="font-heading font-semibold text-primary">
-                      Low Priority Issues
-                    </span>
-                    <span className="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-sm font-medium rounded">
-                      {lowSeverity}
-                    </span>
-                  </div>
-                </button>
-                
-                {expandedSections.low && (
-                  <div className="px-6 pb-6 space-y-3">
-                    {groupedIssues.low.map((group, idx) => (
-                      <details key={idx} className="group">
-                        <summary className="cursor-pointer p-4 bg-background rounded-lg border border-border hover:border-blue-500/30 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-primary">{group.title}</span>
-                            <span className="text-sm text-secondary/60">{group.count} pages</span>
-                          </div>
-                        </summary>
-                        <div className="mt-2 p-4 bg-background/50 rounded-lg border border-border/50">
-                          <p className="text-sm text-secondary/70 mb-3">{group.message}</p>
-                          <div className="space-y-1 max-h-40 overflow-y-auto">
-                            {group.urls.slice(0, 10).map((url, i) => (
-                              <div key={i} className="text-xs font-mono text-secondary/60 truncate">
-                                {url}
-                              </div>
-                            ))}
-                            {group.urls.length > 10 && (
-                              <div className="text-xs text-secondary/50 italic">
-                                +{group.urls.length - 10} more pages
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Optimize Section - Only show when there are recommendations */}
-        {recommendations.length > 0 && (
-          <div className="bg-card rounded-lg border border-border">
-            <div className="p-6 border-b border-border">
-              <h2 className="text-xl font-heading font-bold text-primary">
-                Optimize Website Structure
-              </h2>
-              <p className="text-sm text-secondary/60 mt-1">
-                {recommendations.length} recommended action{recommendations.length === 1 ? '' : 's'} to improve AI readability
-              </p>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                {recommendations.map((rec) => (
-                  <ActionCard
-                    key={rec.task.id}
-                    task={rec.task}
-                    onClick={() => {
-                      setSelectedTask(rec.task)
-                      setShowActionModal(true)
-                    }}
-                    context={rec.context}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Action Modal */}
-        {selectedTask && (
-          <ActionModal
-            isOpen={showActionModal}
-            onClose={() => {
-              setShowActionModal(false)
-              setSelectedTask(null)
-            }}
-            task={selectedTask}
-            dashboardId={currentDashboard?.id || ''}
-            brandName={currentDashboard?.brand_name || ''}
-            context={recommendations.find(r => r.task.id === selectedTask.id)?.context}
-          />
-        )}
-
-        <ScanProgressModal
-          isOpen={showScanModal}
-          onClose={() => setShowScanModal(false)}
-          scanId={currentScanId}
-        />
       </div>
-    </>
+    )
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-primary" data-page="website">
+        <MobileHeader />
+        <div className="p-6">
+          <div className="card p-12 text-center">
+            <Globe className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
+            <h2 className="text-xl font-semibold text-primary mb-2">No Website Data Yet</h2>
+            <p className="text-sm text-muted">Run a scan to analyze your website's AI readability.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const totalIssues = data.issues_count.high + data.issues_count.medium + data.issues_count.low
+
+  return (
+    <div className="min-h-screen bg-primary" data-page="website">
+      <MobileHeader />
+
+      {/* Header Bar */}
+      <div className="page-header-bar">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-border">
+            <Globe className="w-4 h-4 text-muted" />
+            <span className="font-medium text-primary text-sm">{domain}</span>
+          </div>
+
+          <button className="dropdown-trigger">
+            <Calendar className="w-4 h-4 text-muted" />
+            <span>Last scan</span>
+            <ChevronDown className="w-4 h-4 text-muted" />
+          </button>
+        </div>
+      </div>
+
+      {/* Status Banner */}
+      <div className="status-banner">
+        <div className="status-banner-text flex items-center gap-2">
+          <FileCode className="w-4 h-4" />
+          <span className="font-medium text-primary">Website Analytics</span>
+          <span className="mx-1">•</span>
+          <span>How AI-readable is your website content and structure</span>
+        </div>
+      </div>
+
+      <div className="p-6 space-y-6">
+        {/* Top Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Score Ring */}
+          <div className="card p-6 flex flex-col items-center justify-center">
+            <ScoreRing score={data.readability_score} />
+            <div className="mt-4 text-center">
+              <div className="text-sm font-medium text-primary">AI Readability Score</div>
+              <div className="flex items-center justify-center gap-1 mt-1">
+                {data.readability_delta > 0 ? (
+                  <TrendingUp className="w-3 h-3 text-positive" />
+                ) : (
+                  <TrendingDown className="w-3 h-3 text-negative" />
+                )}
+                <span className={`text-xs ${data.readability_delta > 0 ? 'text-positive' : 'text-negative'}`}>
+                  {data.readability_delta > 0 ? '+' : ''}{data.readability_delta}% vs last scan
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <FileText className="w-4 h-4 text-muted" />
+              <span className="text-xs text-muted uppercase tracking-wide">Pages Scanned</span>
+            </div>
+            <div className="text-3xl font-bold text-primary">{data.pages_scanned}</div>
+          </div>
+
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Layers className="w-4 h-4 text-muted" />
+              <span className="text-xs text-muted uppercase tracking-wide">Schema Coverage</span>
+            </div>
+            <div className="text-3xl font-bold text-primary">{data.schema_coverage}%</div>
+          </div>
+
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle className="w-4 h-4 text-muted" />
+              <span className="text-xs text-muted uppercase tracking-wide">Issues Found</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-3xl font-bold text-primary">{totalIssues}</span>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-negative">{data.issues_count.high} critical</span>
+                <span className="text-muted">•</span>
+                <span className="text-warning">{data.issues_count.medium} warnings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs + Content */}
+        <div className="card p-0 overflow-hidden">
+          {/* Tab header */}
+          <div className="flex items-center gap-4 px-4 pt-4 border-b border-border">
+            <button 
+              onClick={() => setActiveTab('pages')}
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'pages' 
+                  ? 'text-primary border-primary' 
+                  : 'text-muted border-transparent hover:text-secondary'
+              }`}
+            >
+              Pages ({data.pages.length})
+            </button>
+            <button 
+              onClick={() => setActiveTab('schema')}
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === 'schema' 
+                  ? 'text-primary border-primary' 
+                  : 'text-muted border-transparent hover:text-secondary'
+              }`}
+            >
+              Schema Types
+            </button>
+            <button 
+              onClick={() => setActiveTab('issues')}
+              className={`pb-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === 'issues' 
+                  ? 'text-primary border-primary' 
+                  : 'text-muted border-transparent hover:text-secondary'
+              }`}
+            >
+              Issues
+              {data.issues_count.high > 0 && (
+                <span className="px-1.5 py-0.5 text-xs rounded-full bg-negative/10 text-negative">
+                  {data.issues_count.high}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Tab content */}
+          {activeTab === 'pages' && (
+            <div>
+              {/* Table header */}
+              <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted border-b border-border bg-secondary/30">
+                <div className="w-4"></div>
+                <div className="flex-1">Page</div>
+                <div className="hidden lg:block w-48">Schema</div>
+                <div className="w-16 text-right">Score</div>
+                <div className="w-4"></div>
+              </div>
+              {data.pages.map((page, idx) => (
+                <PageRow key={idx} page={page} />
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'schema' && (
+            <div className="p-4 space-y-4">
+              {data.schema_types.map((schema, idx) => (
+                <div key={idx} className="flex items-center gap-4">
+                  <div className="w-32">
+                    <span className="text-sm font-medium text-primary">{schema.type}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-positive rounded-full transition-all"
+                        style={{ width: `${schema.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-24 text-right">
+                    <span className="text-sm text-secondary">{schema.count} pages</span>
+                    <span className="text-xs text-muted ml-2">({schema.percentage}%)</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'issues' && (
+            <div className="p-4 space-y-4">
+              {data.recommendations.map((rec, idx) => (
+                <div key={idx} className="p-4 rounded-lg bg-secondary/30 border border-border">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 text-xs rounded font-medium ${SEVERITY_STYLES[rec.impact]}`}>
+                          {rec.impact} impact
+                        </span>
+                        <span className="text-xs text-muted">{rec.affected_pages} pages affected</span>
+                      </div>
+                      <h4 className="text-sm font-medium text-primary mb-1">{rec.title}</h4>
+                      <p className="text-sm text-secondary">{rec.description}</p>
+                    </div>
+                    <Link href="/dashboard/improve" className="expand-btn flex-shrink-0">
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }
