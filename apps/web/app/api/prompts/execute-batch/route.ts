@@ -1,5 +1,6 @@
-// Location: app/api/prompts/execute-batch/route.ts
+// POST /api/prompts/execute-batch
 // Execute batch of seed prompts - called by cron job
+// This is the main data collection engine
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -27,10 +28,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const supabase = getSupabase()
+
   try {
-    const supabase = getSupabase()
     const body = await request.json().catch(() => ({}))
-    const batchSize = body.batch_size || 25
+    const batchSize = body.batch_size || body.limit || 25 // Process 25 prompts per run to stay under timeout
     const batchType = body.batch_type || 'scheduled'
 
     // Create batch record
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to create batch record')
     }
 
-    // Get seed prompts
+    // Get seed prompts that haven't been run recently (> 3 days ago)
     const { data: prompts, error: promptsError } = await supabase
       .from('seed_prompts')
       .select('id, prompt_text, topic')
@@ -61,6 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!prompts || prompts.length === 0) {
+      // Update batch as completed with no work
       await supabase
         .from('prompt_execution_batches')
         .update({
@@ -77,11 +80,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Track results
     let totalTokens = 0
     let completed = 0
     let failed = 0
     const errors: string[] = []
 
+    // Execute each prompt
     for (const prompt of prompts) {
       try {
         const results = await executePromptAllModels(
@@ -102,7 +107,7 @@ export async function POST(request: NextRequest) {
           completed++
         }
 
-        // Small delay to avoid rate limits
+        // Small delay between prompts to avoid rate limits
         await new Promise(resolve => setTimeout(resolve, 500))
 
       } catch (error) {
@@ -111,8 +116,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const estimatedCost = (totalTokens / 1000000) * 10
+    // Calculate estimated cost (updated for cheaper models)
+    // GPT-4o-mini: ~$0.0004 per 1K tokens, Claude Haiku: ~$0.002, Gemini Flash: ~$0.0001, Perplexity Sonar: ~$0.001
+    const estimatedCost = (totalTokens / 1000000) * 2 // rough average with cheaper models
 
+    // Update batch record
     await supabase
       .from('prompt_execution_batches')
       .update({
@@ -126,6 +134,9 @@ export async function POST(request: NextRequest) {
         error: errors.length > 0 ? errors.join('; ') : null
       })
       .eq('id', batch.id)
+
+    // Update citation stats (aggregate)
+    await supabase.rpc('update_citation_stats')
 
     return NextResponse.json({
       success: true,
@@ -149,6 +160,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// GET endpoint to check batch status
 export async function GET(request: NextRequest) {
   const supabase = getSupabase()
   const { searchParams } = new URL(request.url)
@@ -164,6 +176,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ batch })
   }
 
+  // Return recent batches
   const { data: batches } = await supabase
     .from('prompt_execution_batches')
     .select('*')

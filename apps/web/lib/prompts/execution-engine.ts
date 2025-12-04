@@ -352,7 +352,7 @@ export async function executePromptAllModels(
 
 // Store results in Supabase
 export async function storeExecutionResults(
-  supabase: ReturnType<typeof createClient>,
+  supabase: any,
   results: ExecutionResult[]
 ): Promise<void> {
   for (const result of results) {
