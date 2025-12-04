@@ -23,17 +23,6 @@ import {
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell,
-  PieChart,
-  Pie
-} from 'recharts'
 
 // ============================================================================
 // TYPES
@@ -61,8 +50,9 @@ interface ApiResponse {
   user_rank: number | null
 }
 
-// Colors for charts
-const CHART_COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EC4899', '#8B5CF6', '#06B6D4']
+// Single accent for user highlighting
+const USER_COLOR = '#EC4899'
+const BRAND_COLOR = '#6366F1'
 
 // ============================================================================
 // MAIN COMPONENT
@@ -115,27 +105,29 @@ export default function CompetitorsPage() {
     fetchCompetitors()
   }, [currentDashboard?.id])
 
-  // Get user's data
-  const userData = competitors.find(c => c.isUser)
+  // Get user's data - create fallback if not in list
+  const foundUserData = competitors.find(c => c.isUser)
+  const userData: CompetitorData = foundUserData || {
+    rank: totalBrands + 1,
+    name: brandName,
+    domain: null,
+    logo: '',
+    visibility: 0,
+    visibilityDelta: null,
+    sentiment: 0,
+    sentimentDelta: null,
+    position: 0,
+    positionDelta: null,
+    mentions: 0,
+    isUser: true,
+    color: USER_COLOR
+  }
   const nonUserCompetitors = competitors.filter(c => !c.isUser)
   
   // Filter competitors by search
   const filteredCompetitors = searchQuery 
     ? competitors.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : competitors
-
-  // Chart data
-  const barChartData = competitors.slice(0, 10).map(c => ({
-    name: c.name.length > 15 ? c.name.slice(0, 15) + '...' : c.name,
-    fullName: c.name,
-    mentions: c.mentions,
-    isUser: c.isUser
-  }))
-
-  const sentimentChartData = selectedCompetitor && userData ? [
-    { name: brandName, value: userData.sentiment, fill: '#EC4899' },
-    { name: selectedCompetitor.name, value: selectedCompetitor.sentiment, fill: '#3B82F6' }
-  ] : []
 
   // Loading state
   if (loading) {
@@ -224,11 +216,13 @@ export default function CompetitorsPage() {
           <span>{totalBrands} brands found in AI responses</span>
         </div>
         <div className="status-banner-metrics">
-          {userData && (
+          {foundUserData ? (
             <>
               <span>Your visibility: <strong className="text-primary">{userData.visibility}%</strong></span>
-              <span>Sentiment: <strong className={userData.sentiment >= 60 ? 'text-positive' : userData.sentiment >= 40 ? 'text-primary' : 'text-negative'}>{userData.sentiment}%</strong></span>
+              <span>Sentiment: <strong className="text-primary">{userData.sentiment}%</strong></span>
             </>
+          ) : (
+            <span className="text-muted">Your brand not detected in responses</span>
           )}
         </div>
       </div>
@@ -238,23 +232,23 @@ export default function CompetitorsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Visibility</div>
-            <div className="metric-value">{userData?.visibility || 0}%</div>
+            <div className="metric-value">{userData.visibility}%</div>
             <div className="text-xs text-muted mt-1">relative to top brand</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Mentions</div>
-            <div className="metric-value">{userData?.mentions || 0}</div>
+            <div className="metric-value">{userData.mentions}</div>
             <div className="text-xs text-muted mt-1">in AI responses</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Avg Position</div>
-            <div className="metric-value">{userData?.position?.toFixed(1) || '--'}</div>
+            <div className="metric-value">{userData.position > 0 ? userData.position.toFixed(1) : '--'}</div>
             <div className="text-xs text-muted mt-1">when mentioned (1 = first)</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Sentiment</div>
-            <div className={`metric-value ${(userData?.sentiment || 0) >= 60 ? 'text-positive' : (userData?.sentiment || 0) >= 40 ? '' : 'text-negative'}`}>
-              {userData?.sentiment || 0}%
+            <div className="metric-value">
+              {userData.sentiment}%
             </div>
             <div className="text-xs text-muted mt-1">positive mentions</div>
           </div>
@@ -266,11 +260,156 @@ export default function CompetitorsPage() {
         
         {/* LEADERBOARD VIEW */}
         {activeView === 'leaderboard' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Table */}
-            <div className="lg:col-span-2 card p-0 overflow-hidden">
+          <>
+            {/* Top Section: Horizontal Bars + Insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Top 8 Horizontal Bar Chart */}
+              <div className="lg:col-span-2 card p-0 overflow-hidden">
+                <div className="p-4 border-b border-border">
+                  <h3 className="font-semibold text-primary text-sm">Top Brands by Mentions</h3>
+                  <p className="text-xs text-muted mt-0.5">How often each brand appears in AI responses</p>
+                </div>
+                <div className="p-4 space-y-3">
+                  {competitors.slice(0, 8).map((comp, idx) => {
+                    const maxMentions = competitors[0]?.mentions || 1
+                    const barWidth = (comp.mentions / maxMentions) * 100
+                    
+                    return (
+                      <div key={comp.name} className="flex items-center gap-3">
+                        <span className="text-xs text-muted w-4 tabular-nums">{idx + 1}</span>
+                        <img 
+                          src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                          alt=""
+                          className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
+                          onError={(e) => { e.currentTarget.style.display = 'none' }}
+                        />
+                        <div className="w-24 flex-shrink-0">
+                          <span className={`text-sm truncate ${comp.isUser ? 'font-medium text-primary' : 'text-secondary'}`}>
+                            {comp.name}
+                          </span>
+                        </div>
+                        <div className="flex-1 h-6 bg-secondary/50 rounded overflow-hidden relative">
+                          <div 
+                            className="h-full rounded transition-all duration-500"
+                            style={{ 
+                              width: `${barWidth}%`,
+                              backgroundColor: comp.isUser ? USER_COLOR : BRAND_COLOR,
+                              opacity: comp.isUser ? 1 : 0.7 - (idx * 0.05)
+                            }}
+                          />
+                        </div>
+                        <span className="text-sm tabular-nums text-primary w-12 text-right font-medium">
+                          {comp.mentions}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Insights Panel */}
+              <div className="card p-0 overflow-hidden">
+                <div className="p-4 border-b border-border">
+                  <h3 className="font-semibold text-primary text-sm">Quick Insights</h3>
+                  <p className="text-xs text-muted mt-0.5">Key competitive signals</p>
+                </div>
+                <div className="divide-y divide-border-light">
+                  {/* Most Mentioned */}
+                  <div className="p-4">
+                    <div className="text-xs text-muted uppercase tracking-wide mb-2">Most Mentioned</div>
+                    <div className="flex items-center gap-2">
+                      <img 
+                        src={`https://cdn.brandfetch.io/${competitors[0]?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                        alt=""
+                        className="w-6 h-6 rounded bg-secondary object-contain"
+                        onError={(e) => { e.currentTarget.style.display = 'none' }}
+                      />
+                      <span className="font-medium text-primary">{competitors[0]?.name || '--'}</span>
+                    </div>
+                    <div className="text-xs text-muted mt-1">{competitors[0]?.mentions || 0} mentions</div>
+                  </div>
+
+                  {/* Best Sentiment */}
+                  {(() => {
+                    const bestSentiment = [...competitors].sort((a, b) => b.sentiment - a.sentiment)[0]
+                    return (
+                      <div className="p-4">
+                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Sentiment</div>
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={`https://cdn.brandfetch.io/${bestSentiment?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                            alt=""
+                            className="w-6 h-6 rounded bg-secondary object-contain"
+                            onError={(e) => { e.currentTarget.style.display = 'none' }}
+                          />
+                          <span className="font-medium text-primary">{bestSentiment?.name || '--'}</span>
+                        </div>
+                        <div className="text-xs text-muted mt-1">{bestSentiment?.sentiment || 0}% positive</div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* Best Position */}
+                  {(() => {
+                    const bestPosition = [...competitors].filter(c => c.position > 0).sort((a, b) => a.position - b.position)[0]
+                    return (
+                      <div className="p-4">
+                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Best Avg Position</div>
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={`https://cdn.brandfetch.io/${bestPosition?.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com/w/32/h/32`}
+                            alt=""
+                            className="w-6 h-6 rounded bg-secondary object-contain"
+                            onError={(e) => { e.currentTarget.style.display = 'none' }}
+                          />
+                          <span className="font-medium text-primary">{bestPosition?.name || '--'}</span>
+                        </div>
+                        <div className="text-xs text-muted mt-1">Position {bestPosition?.position.toFixed(1) || '--'} avg</div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* Your Gap to #1 */}
+                  <div className="p-4 bg-secondary/30">
+                    <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Gap to #1</div>
+                    {foundUserData ? (
+                      <>
+                        <div className="text-2xl font-semibold text-primary">
+                          {competitors[0]?.mentions - userData.mentions}
+                        </div>
+                        <div className="text-xs text-muted mt-1">mentions behind {competitors[0]?.name}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-2xl font-semibold text-primary">
+                          {competitors[0]?.mentions || 0}
+                        </div>
+                        <div className="text-xs text-muted mt-1">mentions to match {competitors[0]?.name}</div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Market Concentration */}
+                  {(() => {
+                    const totalMentions = competitors.reduce((sum, c) => sum + c.mentions, 0)
+                    const top3Mentions = competitors.slice(0, 3).reduce((sum, c) => sum + c.mentions, 0)
+                    const concentration = totalMentions > 0 ? Math.round((top3Mentions / totalMentions) * 100) : 0
+                    return (
+                      <div className="p-4">
+                        <div className="text-xs text-muted uppercase tracking-wide mb-2">Market Concentration</div>
+                        <div className="text-2xl font-semibold text-primary">{concentration}%</div>
+                        <div className="text-xs text-muted mt-1">of mentions go to top 3 brands</div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              </div>
+            </div>
+
+            {/* Full Leaderboard Table */}
+            <div className="card p-0 overflow-hidden">
               <div className="flex items-center justify-between p-4 border-b border-border">
-                <h3 className="font-semibold text-primary text-sm">Brand Leaderboard</h3>
+                <h3 className="font-semibold text-primary text-sm">Full Leaderboard</h3>
                 <div className="relative">
                   <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2" />
                   <input 
@@ -301,14 +440,14 @@ export default function CompetitorsPage() {
                       onClick={() => !comp.isUser && setSelectedCompetitor(comp)}
                       className={`cursor-pointer transition-colors ${
                         comp.isUser 
-                          ? 'bg-[rgba(var(--pageAccent-rgb),0.05)]' 
+                          ? 'bg-[rgba(236,72,153,0.05)]' 
                           : selectedCompetitor?.name === comp.name 
                             ? 'bg-hover' 
                             : ''
                       }`}
                     >
                       <td>
-                        <span className={`font-medium ${comp.isUser ? 'text-accent' : 'text-muted'}`}>
+                        <span className={`font-medium ${comp.isUser ? 'text-[#EC4899]' : 'text-muted'}`}>
                           {comp.rank}
                         </span>
                       </td>
@@ -322,7 +461,7 @@ export default function CompetitorsPage() {
                           />
                           <span className="font-medium text-primary">{comp.name}</span>
                           {comp.isUser && (
-                            <span className="badge badge-purple text-[10px]">YOU</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(236,72,153,0.1)] text-[#EC4899] font-medium">YOU</span>
                           )}
                         </div>
                       </td>
@@ -330,18 +469,22 @@ export default function CompetitorsPage() {
                         <div className="flex items-center gap-2">
                           <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
                             <div 
-                              className="h-full bg-accent rounded-full"
-                              style={{ width: `${comp.visibility}%` }}
+                              className="h-full rounded-full"
+                              style={{ 
+                                width: `${comp.visibility}%`,
+                                backgroundColor: comp.isUser ? USER_COLOR : BRAND_COLOR,
+                                opacity: comp.isUser ? 1 : 0.6
+                              }}
                             />
                           </div>
-                          <span className="text-sm tabular-nums">{comp.visibility}%</span>
+                          <span className="text-sm tabular-nums text-secondary">{comp.visibility}%</span>
                         </div>
                       </td>
                       <td className="tabular-nums">{comp.mentions}</td>
                       <td>
-                        <span className={`text-sm font-medium ${
-                          comp.sentiment >= 60 ? 'text-positive' : 
-                          comp.sentiment >= 40 ? 'text-secondary' : 'text-negative'
+                        <span className={`text-sm tabular-nums ${
+                          comp.sentiment >= 60 ? 'text-primary' : 
+                          comp.sentiment >= 40 ? 'text-secondary' : 'text-muted'
                         }`}>
                           {comp.sentiment}%
                         </span>
@@ -352,51 +495,7 @@ export default function CompetitorsPage() {
                 </tbody>
               </table>
             </div>
-
-            {/* Side Chart */}
-            <div className="card p-0 overflow-hidden">
-              <div className="p-4 border-b border-border">
-                <h3 className="font-semibold text-primary text-sm">Mentions Distribution</h3>
-                <p className="text-xs text-muted mt-0.5">Top 10 brands by frequency</p>
-              </div>
-              <div className="p-4 h-[400px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={barChartData} layout="vertical" margin={{ left: 0, right: 10 }}>
-                    <XAxis type="number" hide />
-                    <YAxis 
-                      type="category" 
-                      dataKey="name" 
-                      width={90}
-                      tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <Tooltip 
-                      content={({ active, payload }) => {
-                        if (!active || !payload?.length) return null
-                        const d = payload[0].payload
-                        return (
-                          <div className="card p-2 shadow-lg">
-                            <div className="text-sm font-medium text-primary">{d.fullName}</div>
-                            <div className="text-xs text-muted">{d.mentions} mentions</div>
-                          </div>
-                        )
-                      }}
-                    />
-                    <Bar dataKey="mentions" radius={[0, 4, 4, 0]}>
-                      {barChartData.map((entry, idx) => (
-                        <Cell 
-                          key={idx} 
-                          fill={entry.isUser ? 'var(--pageAccent)' : CHART_COLORS[idx % CHART_COLORS.length]} 
-                          fillOpacity={entry.isUser ? 1 : 0.7}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
+          </>
         )}
 
         {/* COMPARE VIEW */}
@@ -429,7 +528,7 @@ export default function CompetitorsPage() {
                       <div className="text-xs text-muted">{comp.mentions} mentions</div>
                     </div>
                     {selectedCompetitor?.name === comp.name && (
-                      <div className="w-2 h-2 rounded-full bg-accent"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                     )}
                   </button>
                 ))}
@@ -438,15 +537,15 @@ export default function CompetitorsPage() {
 
             {/* Comparison Panel */}
             <div className="lg:col-span-2 space-y-6">
-              {selectedCompetitor && userData ? (
+              {selectedCompetitor ? (
                 <>
                   {/* Head to Head Header */}
                   <div className="card p-6">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-4">
                         <div className="text-center">
-                          <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-2">
-                            <span className="text-lg font-bold text-accent">{brandName.charAt(0)}</span>
+                          <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2">
+                            <span className="text-lg font-bold text-primary">{brandName.charAt(0)}</span>
                           </div>
                           <div className="text-sm font-medium text-primary">{brandName}</div>
                           <div className="text-xs text-muted">You</div>
@@ -462,13 +561,13 @@ export default function CompetitorsPage() {
                       </div>
                       <div className="text-right">
                         {userData.visibility > selectedCompetitor.visibility ? (
-                          <div className="text-positive">
-                            <TrendingUp className="w-5 h-5 inline mr-1" />
+                          <div className="text-primary">
+                            <TrendingUp className="w-5 h-5 inline mr-1 opacity-60" />
                             <span className="text-sm font-medium">You lead</span>
                           </div>
                         ) : userData.visibility < selectedCompetitor.visibility ? (
-                          <div className="text-negative">
-                            <TrendingDown className="w-5 h-5 inline mr-1" />
+                          <div className="text-secondary">
+                            <TrendingDown className="w-5 h-5 inline mr-1 opacity-60" />
                             <span className="text-sm font-medium">They lead</span>
                           </div>
                         ) : (
@@ -500,7 +599,7 @@ export default function CompetitorsPage() {
                             <div className="flex justify-between text-xs mb-1">
                               <span className="text-muted">{metric.label}</span>
                               <div className="flex gap-4">
-                                <span className={userWins ? 'text-accent font-medium' : 'text-secondary'}>
+                                <span className={userWins ? 'text-primary font-medium' : 'text-secondary'}>
                                   {typeof metric.userVal === 'number' && metric.suffix !== '%' 
                                     ? metric.userVal.toLocaleString() 
                                     : metric.userVal?.toFixed?.(1) || metric.userVal}{metric.suffix}
@@ -514,12 +613,12 @@ export default function CompetitorsPage() {
                             </div>
                             <div className="flex h-2 rounded-full overflow-hidden bg-border">
                               <div 
-                                className="bg-accent transition-all"
-                                style={{ width: `${userPct}%` }}
+                                className="transition-all"
+                                style={{ width: `${userPct}%`, backgroundColor: USER_COLOR }}
                               />
                               <div 
-                                className="bg-blue-500/60 transition-all"
-                                style={{ width: `${compPct}%` }}
+                                className="transition-all"
+                                style={{ width: `${compPct}%`, backgroundColor: BRAND_COLOR, opacity: 0.5 }}
                               />
                             </div>
                           </div>
