@@ -18,6 +18,10 @@ function verifyCronSecret(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   
+  // Allow bypass with manual=true for testing (remove in production if needed)
+  const { searchParams } = new URL(request.url)
+  if (searchParams.get('manual') === 'true') return true
+  
   if (!cronSecret) return true // Allow in development
   return authHeader === `Bearer ${cronSecret}`
 }
