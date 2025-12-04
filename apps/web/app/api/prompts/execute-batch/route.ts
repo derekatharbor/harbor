@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => ({}))
     const batchSize = body.batch_size || body.limit || 25 // Process 25 prompts per run to stay under timeout
     const batchType = body.batch_type || 'scheduled'
+    const topic = body.topic || null // NEW: Optional topic filter
 
     // Create batch record
     const { data: batch, error: batchError } = await supabase
@@ -54,11 +55,19 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to create batch record')
     }
 
-    // Get seed prompts that haven't been run recently (> 3 days ago)
-    const { data: prompts, error: promptsError } = await supabase
+    // Build query for seed prompts
+    let query = supabase
       .from('seed_prompts')
       .select('id, prompt_text, topic')
       .eq('is_active', true)
+    
+    // NEW: Filter by topic if provided
+    if (topic) {
+      query = query.eq('topic', topic)
+    }
+    
+    // Get seed prompts that haven't been run recently (> 3 days ago)
+    const { data: prompts, error: promptsError } = await query
       .order('created_at', { ascending: true })
       .limit(batchSize)
 
@@ -80,7 +89,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'No prompts to execute',
-        batch_id: batch.id
+        batch_id: batch.id,
+        topic: topic || 'all'
       })
     }
 
@@ -145,6 +155,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       batch_id: batch.id,
+      topic: topic || 'all',
       results: {
         prompts_total: prompts.length,
         completed,
