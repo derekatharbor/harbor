@@ -169,8 +169,9 @@ export default function WebsitePage() {
     )
   }
 
-  // Empty / Error state
-  if (!data?.has_data || error) {
+  // Empty / Error state - check actual data, not just has_data flag
+  const hasActualData = data && (pagesScanned > 0 || schemaTypesList.length > 0 || pages.length > 0)
+  if (error || !hasActualData) {
     return (
       <div className="min-h-screen bg-primary" data-page="website">
         <MobileHeader />
