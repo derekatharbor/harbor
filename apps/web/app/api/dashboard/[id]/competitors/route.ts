@@ -1,267 +1,214 @@
-// apps/web/app/api/dashboard/[id]/competitors/route.ts
-// API for managing dashboard competitors
+// app/api/dashboard/[id]/competitors/route.ts
+// Aggregate competitor data from prompt_brand_mentions for Overview page
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables')
-  }
-  
-  return createClient(supabaseUrl, supabaseKey)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
 }
 
-// GET - List competitors for a dashboard
+interface CompetitorData {
+  rank: number
+  name: string
+  domain: string | null
+  logo: string
+  visibility: number
+  visibilityDelta: number | null
+  sentiment: number
+  sentimentDelta: number | null
+  position: number
+  positionDelta: number | null
+  mentions: number
+  isUser: boolean
+  color: string
+}
+
+// Color palette for chart lines
+const COLORS = [
+  '#FF6B4A', // Coral (user's brand)
+  '#3B82F6', // Blue
+  '#22C55E', // Green
+  '#8B5CF6', // Purple
+  '#F59E0B', // Amber
+  '#EC4899', // Pink
+  '#06B6D4', // Cyan
+  '#EF4444', // Red
+]
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id: dashboardId } = await params
-
   try {
-    const supabase = getSupabaseClient()
+    const { id: dashboardId } = await params
+    const { searchParams } = new URL(request.url)
+    const limit = parseInt(searchParams.get('limit') || '10')
     
-    // Get active competitors
-    const { data: competitors, error } = await supabase
-      .from('dashboard_competitors')
-      .select('*')
-      .eq('dashboard_id', dashboardId)
-      .eq('status', 'active')
-      .order('created_at', { ascending: true })
+    const supabase = getSupabase()
 
-    if (error) throw error
-
-    // Get dashboard info for category-based suggestions
-    const { data: dashboard } = await supabase
+    // Get dashboard info
+    const { data: dashboard, error: dashError } = await supabase
       .from('dashboards')
-      .select('metadata, domain')
+      .select('brand_name, domain')
       .eq('id', dashboardId)
       .single()
 
-    const category = dashboard?.metadata?.category
-
-    // Get suggested competitors from ai_profiles in same category
-    let suggested: any[] = []
-    if (category) {
-      const { data: suggestions } = await supabase
-        .from('ai_profiles')
-        .select('brand_name, domain, logo_url, visibility_score')
-        .eq('industry', category)
-        .neq('domain', dashboard?.domain) // Exclude self
-        .order('visibility_score', { ascending: false })
-        .limit(15)
-
-      // Filter out already tracked competitors
-      const trackedDomains = new Set(competitors?.map(c => c.domain) || [])
-      
-      // Also get rejected domains
-      const { data: rejected } = await supabase
-        .from('dashboard_competitors')
-        .select('domain')
-        .eq('dashboard_id', dashboardId)
-        .eq('status', 'rejected')
-      
-      const rejectedDomains = new Set(rejected?.map(r => r.domain) || [])
-
-      suggested = (suggestions || [])
-        .filter(s => !trackedDomains.has(s.domain) && !rejectedDomains.has(s.domain))
-        .slice(0, 8)
+    if (dashError || !dashboard) {
+      return NextResponse.json({ error: 'Dashboard not found' }, { status: 404 })
     }
 
-    return NextResponse.json({
-      competitors: competitors || [],
-      suggested,
-      category
-    })
-  } catch (error: any) {
-    console.error('Error fetching competitors:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch competitors' },
-      { status: 500 }
-    )
-  }
-}
+    const userBrandName = dashboard.brand_name.toLowerCase()
 
-// POST - Add a competitor
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id: dashboardId } = await params
-
-  try {
-    const supabase = getSupabaseClient()
-    const body = await request.json()
-    const { brand_name, domain, logo_url, source = 'manual' } = body
-
-    if (!brand_name) {
-      return NextResponse.json(
-        { error: 'Brand name is required' },
-        { status: 400 }
-      )
-    }
-
-    // Check competitor limit based on plan
-    const { data: dashboard } = await supabase
-      .from('dashboards')
-      .select('plan')
-      .eq('id', dashboardId)
-      .single()
-
-    const { count } = await supabase
-      .from('dashboard_competitors')
-      .select('*', { count: 'exact', head: true })
-      .eq('dashboard_id', dashboardId)
-      .eq('status', 'active')
-
-    const limits: Record<string, number> = {
-      solo: 5,
-      agency: 10,
-      enterprise: 50
-    }
-    const limit = limits[dashboard?.plan || 'solo'] || 5
-
-    if ((count || 0) >= limit) {
-      return NextResponse.json(
-        { error: `You can track up to ${limit} competitors on your ${dashboard?.plan} plan` },
-        { status: 400 }
-      )
-    }
-
-    // Check if already exists
-    if (domain) {
-      const { data: existing } = await supabase
-        .from('dashboard_competitors')
-        .select('id, status')
-        .eq('dashboard_id', dashboardId)
-        .eq('domain', domain)
-        .single()
-
-      if (existing) {
-        if (existing.status === 'rejected') {
-          // Reactivate rejected competitor
-          const { data: updated, error } = await supabase
-            .from('dashboard_competitors')
-            .update({ status: 'active', brand_name, logo_url })
-            .eq('id', existing.id)
-            .select()
-            .single()
-
-          if (error) throw error
-          return NextResponse.json({ competitor: updated })
-        }
-        return NextResponse.json(
-          { error: 'This competitor is already being tracked' },
-          { status: 400 }
+    // Get all brand mentions with execution data
+    const { data: mentions, error: mentionsError } = await supabase
+      .from('prompt_brand_mentions')
+      .select(`
+        brand_name,
+        position,
+        sentiment,
+        prompt_executions!inner (
+          id,
+          executed_at
         )
+      `)
+
+    if (mentionsError) {
+      console.error('Error fetching mentions:', mentionsError)
+      return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 })
+    }
+
+    // Aggregate by brand
+    const brandStats = new Map<string, {
+      mentions: number
+      positions: number[]
+      sentiments: { positive: number; neutral: number; negative: number }
+    }>()
+
+    mentions?.forEach((mention: any) => {
+      const brandName = mention.brand_name?.trim()
+      if (!brandName) return
+
+      const existing = brandStats.get(brandName) || {
+        mentions: 0,
+        positions: [],
+        sentiments: { positive: 0, neutral: 0, negative: 0 }
+      }
+
+      existing.mentions++
+      
+      if (mention.position) {
+        existing.positions.push(mention.position)
+      }
+
+      const sentiment = (mention.sentiment || 'neutral').toLowerCase()
+      if (sentiment === 'positive' || sentiment === 'pos') {
+        existing.sentiments.positive++
+      } else if (sentiment === 'negative' || sentiment === 'neg') {
+        existing.sentiments.negative++
+      } else {
+        existing.sentiments.neutral++
+      }
+
+      brandStats.set(brandName, existing)
+    })
+
+    // Convert to array and calculate scores
+    const brandsArray = Array.from(brandStats.entries()).map(([name, stats]) => {
+      const avgPosition = stats.positions.length > 0
+        ? stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length
+        : 5
+
+      const totalSentimentVotes = stats.sentiments.positive + stats.sentiments.neutral + stats.sentiments.negative
+      const sentimentScore = totalSentimentVotes > 0
+        ? Math.round((stats.sentiments.positive / totalSentimentVotes) * 100)
+        : 50
+
+      // Visibility = mentions weighted by position
+      const positionWeight = Math.max(0.2, 1 - (avgPosition - 1) * 0.1)
+      const visibility = Math.min(100, Math.round(stats.mentions * 5 * positionWeight))
+
+      return {
+        name,
+        mentions: stats.mentions,
+        visibility,
+        sentiment: sentimentScore,
+        position: Math.round(avgPosition * 10) / 10,
+        isUser: name.toLowerCase() === userBrandName || 
+                name.toLowerCase().includes(userBrandName) ||
+                userBrandName.includes(name.toLowerCase())
+      }
+    })
+
+    // Sort by mentions (most mentioned = most visible)
+    brandsArray.sort((a, b) => b.mentions - a.mentions)
+
+    // Take top N
+    const topBrands = brandsArray.slice(0, limit)
+
+    // Format for UI
+    const competitors: CompetitorData[] = topBrands.map((brand, idx) => ({
+      rank: idx + 1,
+      name: brand.name,
+      domain: null, // Could look up from ai_profiles
+      logo: `/logos/${brand.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.png`,
+      visibility: brand.visibility,
+      visibilityDelta: null, // Need historical data
+      sentiment: brand.sentiment,
+      sentimentDelta: null,
+      position: brand.position,
+      positionDelta: null,
+      mentions: brand.mentions,
+      isUser: brand.isUser,
+      color: brand.isUser ? COLORS[0] : COLORS[(idx % (COLORS.length - 1)) + 1]
+    }))
+
+    // If user's brand isn't in top N, add them
+    const userInList = competitors.some(c => c.isUser)
+    if (!userInList) {
+      const userBrand = brandsArray.find(b => b.isUser)
+      if (userBrand) {
+        const userRank = brandsArray.findIndex(b => b.isUser) + 1
+        competitors.unshift({
+          rank: userRank,
+          name: userBrand.name,
+          domain: dashboard.domain,
+          logo: `/logos/${userBrand.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.png`,
+          visibility: userBrand.visibility,
+          visibilityDelta: null,
+          sentiment: userBrand.sentiment,
+          sentimentDelta: null,
+          position: userBrand.position,
+          positionDelta: null,
+          mentions: userBrand.mentions,
+          isUser: true,
+          color: COLORS[0]
+        })
       }
     }
 
-    // Generate logo URL if not provided
-    const finalLogoUrl = logo_url || (domain ? `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y` : null)
+    // Re-sort to put user first if they exist
+    competitors.sort((a, b) => {
+      if (a.isUser) return -1
+      if (b.isUser) return 1
+      return a.rank - b.rank
+    })
 
-    // Insert new competitor
-    const { data: competitor, error } = await supabase
-      .from('dashboard_competitors')
-      .insert({
-        dashboard_id: dashboardId,
-        brand_name,
-        domain,
-        logo_url: finalLogoUrl,
-        tracked_names: [brand_name],
-        source,
-        status: 'active'
-      })
-      .select()
-      .single()
+    return NextResponse.json({
+      competitors,
+      total_brands_found: brandsArray.length,
+      user_rank: brandsArray.findIndex(b => b.isUser) + 1 || null
+    })
 
-    if (error) throw error
-
-    return NextResponse.json({ competitor })
-  } catch (error: any) {
-    console.error('Error adding competitor:', error)
+  } catch (error) {
+    console.error('Error in competitors API:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to add competitor' },
-      { status: 500 }
-    )
-  }
-}
-
-// DELETE - Remove a competitor
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id: dashboardId } = await params
-
-  try {
-    const supabase = getSupabaseClient()
-    const { searchParams } = new URL(request.url)
-    const competitorId = searchParams.get('competitorId')
-
-    if (!competitorId) {
-      return NextResponse.json(
-        { error: 'Competitor ID is required' },
-        { status: 400 }
-      )
-    }
-
-    const { error } = await supabase
-      .from('dashboard_competitors')
-      .delete()
-      .eq('id', competitorId)
-      .eq('dashboard_id', dashboardId)
-
-    if (error) throw error
-
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error removing competitor:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to remove competitor' },
-      { status: 500 }
-    )
-  }
-}
-
-// PATCH - Reject a suggested competitor
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id: dashboardId } = await params
-
-  try {
-    const supabase = getSupabaseClient()
-    const body = await request.json()
-    const { domain, brand_name, action } = body
-
-    if (action === 'reject' && domain) {
-      // Insert as rejected so it won't be suggested again
-      const { error } = await supabase
-        .from('dashboard_competitors')
-        .insert({
-          dashboard_id: dashboardId,
-          brand_name: brand_name || domain,
-          domain,
-          status: 'rejected',
-          source: 'suggested'
-        })
-
-      if (error && !error.message.includes('duplicate')) throw error
-    }
-
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating competitor:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update competitor' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
