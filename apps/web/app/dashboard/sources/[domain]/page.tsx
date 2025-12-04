@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import {
   ArrowLeft,
   Globe,
@@ -197,8 +198,44 @@ Best,
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.bg }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div className="min-h-screen" style={{ backgroundColor: colors.bg }}>
+        <MobileHeader />
+        
+        {/* Header skeleton */}
+        <div style={{ backgroundColor: colors.card, borderBottom: `1px solid ${colors.border}` }}>
+          <div className="px-6 py-4">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: colors.hover }} />
+              <div className="w-16 h-4 rounded" style={{ backgroundColor: colors.hover }} />
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: colors.hover }} />
+              <div>
+                <div className="w-40 h-6 rounded mb-2" style={{ backgroundColor: colors.hover }} />
+                <div className="w-32 h-4 rounded" style={{ backgroundColor: colors.hover }} />
+              </div>
+            </div>
+          </div>
+
+          <div className="px-6 flex gap-4 pb-0">
+            <div className="w-16 h-10 rounded" style={{ backgroundColor: colors.hover }} />
+            <div className="w-16 h-10 rounded" style={{ backgroundColor: colors.hover }} />
+          </div>
+        </div>
+
+        {/* Content skeleton */}
+        <div className="p-6">
+          <div className="rounded-xl p-4" style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4 py-3" style={{ borderBottom: i < 4 ? `1px solid ${colors.border}` : 'none' }}>
+                <div className="w-8 h-4 rounded" style={{ backgroundColor: colors.hover }} />
+                <div className="w-48 h-4 rounded" style={{ backgroundColor: colors.hover }} />
+                <div className="w-20 h-4 rounded ml-auto" style={{ backgroundColor: colors.hover }} />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -211,16 +248,16 @@ Best,
       <div style={{ backgroundColor: colors.card, borderBottom: `1px solid ${colors.border}` }}>
         <div className="px-6 py-4">
           {/* Breadcrumb */}
-          <button
-            onClick={() => router.push('/dashboard/sources')}
-            className="flex items-center gap-2 mb-4 transition-colors cursor-pointer"
+          <Link
+            href="/dashboard/sources"
+            className="flex items-center gap-2 mb-4 transition-colors"
             style={{ color: colors.muted }}
             onMouseEnter={(e) => e.currentTarget.style.color = colors.text}
             onMouseLeave={(e) => e.currentTarget.style.color = colors.muted}
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Sources</span>
-          </button>
+          </Link>
           
           {/* Domain Header */}
           <div className="flex items-center justify-between">
