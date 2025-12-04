@@ -10,178 +10,92 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  ArrowUpRight,
-  ChevronDown,
-  Calendar,
+  RefreshCw,
   FileCode,
   Search,
   ExternalLink,
   Code,
-  FileText,
   Layers,
-  TrendingUp,
-  TrendingDown
+  AlertCircle,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
+// ============================================================================
+// TYPES
+// ============================================================================
+
+interface PageData {
+  url: string
+  schemas: Array<{
+    type: string
+    complete: boolean
+    missing_fields?: string[]
+  }>
+  issues: Array<{
+    url: string
+    issue_code: string
+    severity: 'high' | 'med' | 'low'
+    details?: any
+  }>
+  readability_score?: number
+  status?: 'good' | 'warning' | 'error'
+}
+
+interface Recommendation {
+  id: string
+  title: string
+  description: string
+  impact: 'high' | 'medium' | 'low'
+  pages_affected: number
+}
+
 interface WebsiteData {
   readability_score: number
-  readability_delta: number
-  pages_scanned: number
   schema_coverage: number
+  pages_scanned: number
   issues_count: {
     high: number
     medium: number
     low: number
   }
-  schema_types: Array<{
-    type: string
-    count: number
-    percentage: number
-  }>
-  pages: Array<{
-    url: string
-    title: string
-    readability: number
-    schema_types: string[]
-    issues: Array<{
-      type: string
-      severity: 'high' | 'medium' | 'low'
-      message: string
-    }>
-    last_scanned: string
-  }>
-  recommendations: Array<{
-    title: string
-    description: string
-    impact: 'high' | 'medium' | 'low'
-    affected_pages: number
-  }>
+  schema_types: Record<string, { found: number; complete: number }>
+  pages: PageData[]
+  recommendations: Recommendation[]
+  has_data: boolean
+  cached: boolean
+  crawled_at: string
 }
 
-// Mock data
-const MOCK_DATA: WebsiteData = {
-  readability_score: 76,
-  readability_delta: 4.2,
-  pages_scanned: 142,
-  schema_coverage: 68,
-  issues_count: {
-    high: 3,
-    medium: 12,
-    low: 8
-  },
-  schema_types: [
-    { type: 'Organization', count: 1, percentage: 100 },
-    { type: 'Product', count: 24, percentage: 85 },
-    { type: 'FAQPage', count: 8, percentage: 32 },
-    { type: 'Article', count: 45, percentage: 78 },
-    { type: 'BreadcrumbList', count: 120, percentage: 85 },
-    { type: 'Review', count: 12, percentage: 42 },
-  ],
-  pages: [
-    { 
-      url: '/pricing', 
-      title: 'Pricing - Plans & Features',
-      readability: 92, 
-      schema_types: ['Organization', 'BreadcrumbList'],
-      issues: [],
-      last_scanned: '2024-12-03'
-    },
-    { 
-      url: '/products/crm', 
-      title: 'CRM Software | Sales Hub',
-      readability: 88, 
-      schema_types: ['Product', 'BreadcrumbList', 'FAQPage'],
-      issues: [
-        { type: 'missing_schema', severity: 'low', message: 'Missing Review schema' }
-      ],
-      last_scanned: '2024-12-03'
-    },
-    { 
-      url: '/blog/sales-tips', 
-      title: '25 Sales Tips for 2024',
-      readability: 74, 
-      schema_types: ['Article', 'BreadcrumbList'],
-      issues: [
-        { type: 'thin_content', severity: 'medium', message: 'Content may be too brief for topic depth' }
-      ],
-      last_scanned: '2024-12-03'
-    },
-    { 
-      url: '/about', 
-      title: 'About Us | Company History',
-      readability: 65, 
-      schema_types: ['Organization'],
-      issues: [
-        { type: 'missing_schema', severity: 'high', message: 'Missing key schema types' },
-        { type: 'no_faq', severity: 'medium', message: 'No FAQ section found' }
-      ],
-      last_scanned: '2024-12-02'
-    },
-    { 
-      url: '/features', 
-      title: 'Features Overview',
-      readability: 58, 
-      schema_types: ['BreadcrumbList'],
-      issues: [
-        { type: 'missing_schema', severity: 'high', message: 'Missing Product schema' },
-        { type: 'no_meta', severity: 'high', message: 'Meta description missing' },
-        { type: 'thin_content', severity: 'medium', message: 'Low content-to-code ratio' }
-      ],
-      last_scanned: '2024-12-02'
-    },
-  ],
-  recommendations: [
-    {
-      title: 'Add Product schema to feature pages',
-      description: 'Product pages are missing structured data that helps AI understand your offerings.',
-      impact: 'high',
-      affected_pages: 8
-    },
-    {
-      title: 'Create FAQ sections for top landing pages',
-      description: 'FAQ content with proper schema helps AI answer user questions about your product.',
-      impact: 'high',
-      affected_pages: 12
-    },
-    {
-      title: 'Fix missing meta descriptions',
-      description: 'Meta descriptions help AI understand page purpose and relevance.',
-      impact: 'medium',
-      affected_pages: 5
-    }
-  ]
-}
-
-const SEVERITY_STYLES = {
-  high: 'bg-negative/10 text-negative',
-  medium: 'bg-warning/10 text-warning',
-  low: 'bg-muted/10 text-muted'
-}
+// ============================================================================
+// HELPER COMPONENTS
+// ============================================================================
 
 function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
   const strokeWidth = 8
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const offset = circumference - (score / 100) * circumference
-
+  
   const getColor = (score: number) => {
     if (score >= 80) return '#22C55E'
-    if (score >= 60) return '#F59E0B'
+    if (score >= 50) return '#F59E0B'
     return '#EF4444'
   }
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
+      <svg className="transform -rotate-90" width={size} height={size}>
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="var(--bg-secondary)"
+          stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="none"
+          className="text-border"
         />
         <circle
           cx={size / 2}
@@ -190,128 +104,133 @@ function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
           stroke={getColor(score)}
           strokeWidth={strokeWidth}
           fill="none"
-          strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
+          strokeLinecap="round"
           className="transition-all duration-500"
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold text-primary">{score}</span>
-        <span className="text-xs text-muted">/ 100</span>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold text-primary">{score}</span>
       </div>
     </div>
   )
 }
 
-function PageRow({ page }: { page: WebsiteData['pages'][0] }) {
-  const [expanded, setExpanded] = useState(false)
-  const hasIssues = page.issues.length > 0
-  const highIssues = page.issues.filter(i => i.severity === 'high').length
-
+function SeverityBadge({ severity }: { severity: 'high' | 'med' | 'low' }) {
+  const styles = {
+    high: 'bg-red-500/10 text-red-400',
+    med: 'bg-yellow-500/10 text-yellow-400',
+    low: 'bg-blue-500/10 text-blue-400'
+  }
+  const labels = { high: 'High', med: 'Medium', low: 'Low' }
+  
   return (
-    <div className="border-b border-border last:border-0">
-      <div 
-        className="flex items-center gap-4 px-4 py-3 hover:bg-hover cursor-pointer"
-        onClick={() => setExpanded(!expanded)}
-      >
-        {/* Status indicator */}
-        <div className="flex-shrink-0">
-          {highIssues > 0 ? (
-            <XCircle className="w-4 h-4 text-negative" />
-          ) : hasIssues ? (
-            <AlertTriangle className="w-4 h-4 text-warning" />
-          ) : (
-            <CheckCircle2 className="w-4 h-4 text-positive" />
-          )}
-        </div>
-
-        {/* URL and title */}
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium text-primary truncate">{page.title}</div>
-          <div className="text-xs text-muted truncate">{page.url}</div>
-        </div>
-
-        {/* Schema badges */}
-        <div className="hidden lg:flex items-center gap-1.5">
-          {page.schema_types.slice(0, 3).map((type, idx) => (
-            <span key={idx} className="px-2 py-0.5 bg-secondary rounded text-xs text-muted">
-              {type}
-            </span>
-          ))}
-          {page.schema_types.length > 3 && (
-            <span className="text-xs text-muted">+{page.schema_types.length - 3}</span>
-          )}
-        </div>
-
-        {/* Readability score */}
-        <div className="w-16 text-right">
-          <span className={`text-sm font-medium ${
-            page.readability >= 80 ? 'text-positive' :
-            page.readability >= 60 ? 'text-warning' : 'text-negative'
-          }`}>
-            {page.readability}%
-          </span>
-        </div>
-
-        {/* Expand */}
-        <ChevronDown className={`w-4 h-4 text-muted transition-transform ${expanded ? 'rotate-180' : ''}`} />
-      </div>
-
-      {expanded && page.issues.length > 0 && (
-        <div className="px-4 pb-4 pl-12 space-y-2">
-          {page.issues.map((issue, idx) => (
-            <div key={idx} className={`flex items-center gap-2 px-3 py-2 rounded-lg ${SEVERITY_STYLES[issue.severity]}`}>
-              <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="text-sm">{issue.message}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <span className={`text-xs px-2 py-0.5 rounded ${styles[severity]}`}>
+      {labels[severity]}
+    </span>
   )
 }
 
-export default function WebsiteAnalyticsPage() {
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+export default function WebsitePage() {
   const { currentDashboard } = useBrand()
-  const [data, setData] = useState<WebsiteData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'pages' | 'schema' | 'issues'>('pages')
+  const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [data, setData] = useState<WebsiteData | null>(null)
+  const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set())
+  const [activeTab, setActiveTab] = useState<'overview' | 'pages' | 'schemas'>('overview')
+
+  const fetchData = async (forceRefresh = false) => {
+    if (!currentDashboard?.id) {
+      setLoading(false)
+      return
+    }
+
+    try {
+      if (forceRefresh) setRefreshing(true)
+      else setLoading(true)
+
+      const url = `/api/dashboard/${currentDashboard.id}/website-analytics${forceRefresh ? '?refresh=true' : ''}`
+      const response = await fetch(url)
+      
+      if (!response.ok) {
+        const err = await response.json()
+        throw new Error(err.message || 'Failed to fetch website data')
+      }
+
+      const result = await response.json()
+      setData(result)
+      
+    } catch (err) {
+      console.error('Error fetching website data:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load data')
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setData(MOCK_DATA)
-      setLoading(false)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [])
+    fetchData()
+  }, [currentDashboard?.id])
 
-  const brandName = currentDashboard?.brand_name || 'Your Website'
-  const domain = currentDashboard?.domain || 'example.com'
+  const togglePage = (url: string) => {
+    const newExpanded = new Set(expandedPages)
+    if (newExpanded.has(url)) {
+      newExpanded.delete(url)
+    } else {
+      newExpanded.add(url)
+    }
+    setExpandedPages(newExpanded)
+  }
 
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-primary" data-page="website">
         <MobileHeader />
         <div className="p-6 animate-pulse space-y-6">
           <div className="h-8 bg-card rounded w-48"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[1,2,3,4].map(i => <div key={i} className="h-28 bg-card rounded-lg"></div>)}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[1,2,3,4].map(i => <div key={i} className="h-32 bg-card rounded-lg"></div>)}
           </div>
+          <div className="h-96 bg-card rounded-lg"></div>
         </div>
       </div>
     )
   }
 
-  if (!data) {
+  // Empty/Error state
+  if (!data || !data.has_data) {
     return (
       <div className="min-h-screen bg-primary" data-page="website">
         <MobileHeader />
         <div className="p-6">
+          <h1 className="text-2xl font-semibold text-primary mb-6">Website Analytics</h1>
           <div className="card p-12 text-center">
-            <Globe className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
-            <h2 className="text-xl font-semibold text-primary mb-2">No Website Data Yet</h2>
-            <p className="text-sm text-muted">Run a scan to analyze your website's AI readability.</p>
+            <Globe className="w-12 h-12 text-muted mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-primary mb-2">
+              {error ? 'Crawl Failed' : 'No Website Data Yet'}
+            </h3>
+            <p className="text-secondary mb-6 max-w-md mx-auto">
+              {error 
+                ? `We couldn't crawl your website: ${error}`
+                : 'Run a crawl to analyze your website\'s AI-readability, schema coverage, and content structure.'
+              }
+            </p>
+            <button 
+              onClick={() => fetchData(true)}
+              disabled={refreshing}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Crawling...' : 'Run Website Crawl'}
+            </button>
           </div>
         </div>
       </div>
@@ -319,197 +238,315 @@ export default function WebsiteAnalyticsPage() {
   }
 
   const totalIssues = data.issues_count.high + data.issues_count.medium + data.issues_count.low
+  const schemaTypesList = Object.entries(data.schema_types)
 
   return (
     <div className="min-h-screen bg-primary" data-page="website">
       <MobileHeader />
 
-      {/* Header Bar */}
-      <div className="page-header-bar">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg border border-border">
-            <Globe className="w-4 h-4 text-muted" />
-            <span className="font-medium text-primary text-sm">{domain}</span>
-          </div>
-
-          <button className="dropdown-trigger">
-            <Calendar className="w-4 h-4 text-muted" />
-            <span>Last scan</span>
-            <ChevronDown className="w-4 h-4 text-muted" />
-          </button>
-        </div>
-      </div>
-
-      {/* Status Banner */}
-      <div className="status-banner">
-        <div className="status-banner-text flex items-center gap-2">
-          <FileCode className="w-4 h-4" />
-          <span className="font-medium text-primary">Website Analytics</span>
-          <span className="mx-1">•</span>
-          <span>How AI-readable is your website content and structure</span>
-        </div>
-      </div>
-
       <div className="p-6 space-y-6">
-        {/* Top Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Score Ring */}
-          <div className="card p-6 flex flex-col items-center justify-center">
-            <ScoreRing score={data.readability_score} />
-            <div className="mt-4 text-center">
-              <div className="text-sm font-medium text-primary">AI Readability Score</div>
-              <div className="flex items-center justify-center gap-1 mt-1">
-                {data.readability_delta > 0 ? (
-                  <TrendingUp className="w-3 h-3 text-positive" />
-                ) : (
-                  <TrendingDown className="w-3 h-3 text-negative" />
-                )}
-                <span className={`text-xs ${data.readability_delta > 0 ? 'text-positive' : 'text-negative'}`}>
-                  {data.readability_delta > 0 ? '+' : ''}{data.readability_delta}% vs last scan
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <FileText className="w-4 h-4 text-muted" />
-              <span className="text-xs text-muted uppercase tracking-wide">Pages Scanned</span>
-            </div>
-            <div className="text-3xl font-bold text-primary">{data.pages_scanned}</div>
-          </div>
-
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <Layers className="w-4 h-4 text-muted" />
-              <span className="text-xs text-muted uppercase tracking-wide">Schema Coverage</span>
-            </div>
-            <div className="text-3xl font-bold text-primary">{data.schema_coverage}%</div>
-          </div>
-
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle className="w-4 h-4 text-muted" />
-              <span className="text-xs text-muted uppercase tracking-wide">Issues Found</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl font-bold text-primary">{totalIssues}</span>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-negative">{data.issues_count.high} critical</span>
-                <span className="text-muted">•</span>
-                <span className="text-warning">{data.issues_count.medium} warnings</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs + Content */}
-        <div className="card p-0 overflow-hidden">
-          {/* Tab header */}
-          <div className="flex items-center gap-4 px-4 pt-4 border-b border-border">
-            <button 
-              onClick={() => setActiveTab('pages')}
-              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'pages' 
-                  ? 'text-primary border-primary' 
-                  : 'text-muted border-transparent hover:text-secondary'
-              }`}
-            >
-              Pages ({data.pages.length})
-            </button>
-            <button 
-              onClick={() => setActiveTab('schema')}
-              className={`pb-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'schema' 
-                  ? 'text-primary border-primary' 
-                  : 'text-muted border-transparent hover:text-secondary'
-              }`}
-            >
-              Schema Types
-            </button>
-            <button 
-              onClick={() => setActiveTab('issues')}
-              className={`pb-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
-                activeTab === 'issues' 
-                  ? 'text-primary border-primary' 
-                  : 'text-muted border-transparent hover:text-secondary'
-              }`}
-            >
-              Issues
-              {data.issues_count.high > 0 && (
-                <span className="px-1.5 py-0.5 text-xs rounded-full bg-negative/10 text-negative">
-                  {data.issues_count.high}
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-primary">Website Analytics</h1>
+            <p className="text-secondary mt-1">
+              {data.pages_scanned} pages analyzed
+              {data.cached && data.crawled_at && (
+                <span className="text-muted ml-2">
+                  · Last crawled {new Date(data.crawled_at).toLocaleDateString()}
                 </span>
               )}
-            </button>
+            </p>
+          </div>
+          <button
+            onClick={() => fetchData(true)}
+            disabled={refreshing}
+            className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg hover:bg-hover disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Crawling...' : 'Refresh'}
+          </button>
+        </div>
+
+        {/* Score Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Readability Score */}
+          <div className="card p-5 flex items-center gap-4">
+            <ScoreRing score={data.readability_score} size={80} />
+            <div>
+              <div className="text-xs text-muted uppercase tracking-wider mb-1">AI Readability</div>
+              <div className="text-lg font-semibold text-primary">{data.readability_score}%</div>
+              <div className="text-xs text-muted">Overall score</div>
+            </div>
           </div>
 
-          {/* Tab content */}
-          {activeTab === 'pages' && (
-            <div>
-              {/* Table header */}
-              <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted border-b border-border bg-secondary/30">
-                <div className="w-4"></div>
-                <div className="flex-1">Page</div>
-                <div className="hidden lg:block w-48">Schema</div>
-                <div className="w-16 text-right">Score</div>
-                <div className="w-4"></div>
-              </div>
-              {data.pages.map((page, idx) => (
-                <PageRow key={idx} page={page} />
-              ))}
+          {/* Schema Coverage */}
+          <div className="card p-5">
+            <div className="flex items-center gap-2 text-muted mb-3">
+              <Code className="w-4 h-4" />
+              <span className="text-xs uppercase tracking-wider">Schema Coverage</span>
             </div>
-          )}
+            <div className="text-3xl font-semibold text-primary">{data.schema_coverage}%</div>
+            <div className="text-xs text-muted mt-1">{schemaTypesList.length} schema types found</div>
+          </div>
 
-          {activeTab === 'schema' && (
-            <div className="p-4 space-y-4">
-              {data.schema_types.map((schema, idx) => (
-                <div key={idx} className="flex items-center gap-4">
-                  <div className="w-32">
-                    <span className="text-sm font-medium text-primary">{schema.type}</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-positive rounded-full transition-all"
-                        style={{ width: `${schema.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-24 text-right">
-                    <span className="text-sm text-secondary">{schema.count} pages</span>
-                    <span className="text-xs text-muted ml-2">({schema.percentage}%)</span>
-                  </div>
-                </div>
-              ))}
+          {/* Pages Scanned */}
+          <div className="card p-5">
+            <div className="flex items-center gap-2 text-muted mb-3">
+              <Layers className="w-4 h-4" />
+              <span className="text-xs uppercase tracking-wider">Pages Scanned</span>
             </div>
-          )}
+            <div className="text-3xl font-semibold text-primary">{data.pages_scanned}</div>
+            <div className="text-xs text-muted mt-1">pages analyzed</div>
+          </div>
 
-          {activeTab === 'issues' && (
-            <div className="p-4 space-y-4">
-              {data.recommendations.map((rec, idx) => (
-                <div key={idx} className="p-4 rounded-lg bg-secondary/30 border border-border">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`px-2 py-0.5 text-xs rounded font-medium ${SEVERITY_STYLES[rec.impact]}`}>
-                          {rec.impact} impact
-                        </span>
-                        <span className="text-xs text-muted">{rec.affected_pages} pages affected</span>
-                      </div>
-                      <h4 className="text-sm font-medium text-primary mb-1">{rec.title}</h4>
-                      <p className="text-sm text-secondary">{rec.description}</p>
-                    </div>
-                    <Link href="/dashboard/improve" className="expand-btn flex-shrink-0">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              ))}
+          {/* Issues */}
+          <div className="card p-5">
+            <div className="flex items-center gap-2 text-muted mb-3">
+              <AlertTriangle className="w-4 h-4" />
+              <span className="text-xs uppercase tracking-wider">Issues Found</span>
             </div>
-          )}
+            <div className="text-3xl font-semibold text-primary">{totalIssues}</div>
+            <div className="flex gap-3 mt-2">
+              {data.issues_count.high > 0 && (
+                <span className="text-xs text-red-400">{data.issues_count.high} high</span>
+              )}
+              {data.issues_count.medium > 0 && (
+                <span className="text-xs text-yellow-400">{data.issues_count.medium} med</span>
+              )}
+              {data.issues_count.low > 0 && (
+                <span className="text-xs text-blue-400">{data.issues_count.low} low</span>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 p-1 bg-card rounded-lg w-fit">
+          {(['overview', 'pages', 'schemas'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-md text-sm font-medium capitalize transition-colors ${
+                activeTab === tab 
+                  ? 'bg-accent text-white' 
+                  : 'text-secondary hover:text-primary'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recommendations */}
+            <div className="card p-0 overflow-hidden">
+              <div className="px-4 py-3 border-b border-border">
+                <h3 className="font-medium text-primary">Recommendations</h3>
+              </div>
+              {data.recommendations.length > 0 ? (
+                <div className="divide-y divide-border">
+                  {data.recommendations.map((rec, idx) => (
+                    <div key={idx} className="p-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-medium text-primary">{rec.title}</h4>
+                            <span className={`text-xs px-2 py-0.5 rounded ${
+                              rec.impact === 'high' ? 'bg-red-500/10 text-red-400' :
+                              rec.impact === 'medium' ? 'bg-yellow-500/10 text-yellow-400' :
+                              'bg-blue-500/10 text-blue-400'
+                            }`}>
+                              {rec.impact} impact
+                            </span>
+                          </div>
+                          <p className="text-sm text-secondary mt-1">{rec.description}</p>
+                          <p className="text-xs text-muted mt-2">{rec.pages_affected} pages affected</p>
+                        </div>
+                        <Link
+                          href="/dashboard/improve"
+                          className="shrink-0 text-accent hover:underline text-sm"
+                        >
+                          Fix →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 text-center">
+                  <CheckCircle2 className="w-10 h-10 text-positive mx-auto mb-3" />
+                  <p className="text-secondary">No major issues found!</p>
+                </div>
+              )}
+            </div>
+
+            {/* Schema Types */}
+            <div className="card p-0 overflow-hidden">
+              <div className="px-4 py-3 border-b border-border">
+                <h3 className="font-medium text-primary">Schema Types Found</h3>
+              </div>
+              {schemaTypesList.length > 0 ? (
+                <div className="divide-y divide-border">
+                  {schemaTypesList.map(([type, counts]) => (
+                    <div key={type} className="px-4 py-3 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <FileCode className="w-4 h-4 text-muted" />
+                        <span className="text-primary">{type}</span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-secondary">{counts.found} found</span>
+                        {counts.complete < counts.found && (
+                          <span className="text-xs text-yellow-400">
+                            {counts.found - counts.complete} incomplete
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 text-center">
+                  <AlertCircle className="w-10 h-10 text-muted mx-auto mb-3" />
+                  <p className="text-secondary">No schemas detected</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'pages' && (
+          <div className="card p-0 overflow-hidden">
+            <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+              <h3 className="font-medium text-primary">Pages ({data.pages.length})</h3>
+            </div>
+            <div className="divide-y divide-border max-h-[600px] overflow-y-auto">
+              {data.pages.map((page) => (
+                <div key={page.url}>
+                  <button
+                    onClick={() => togglePage(page.url)}
+                    className="w-full px-4 py-3 flex items-center gap-3 hover:bg-hover text-left"
+                  >
+                    {expandedPages.has(page.url) ? (
+                      <ChevronDown className="w-4 h-4 text-muted" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-muted" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-primary truncate">{page.url}</div>
+                      <div className="flex items-center gap-3 mt-1">
+                        {page.schemas.length > 0 && (
+                          <span className="text-xs text-muted">
+                            {page.schemas.length} schema{page.schemas.length !== 1 ? 's' : ''}
+                          </span>
+                        )}
+                        {page.issues.length > 0 && (
+                          <span className="text-xs text-yellow-400">
+                            {page.issues.length} issue{page.issues.length !== 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {page.status === 'good' && <CheckCircle2 className="w-4 h-4 text-positive" />}
+                      {page.status === 'warning' && <AlertTriangle className="w-4 h-4 text-yellow-400" />}
+                      {page.status === 'error' && <XCircle className="w-4 h-4 text-red-400" />}
+                      {page.readability_score !== undefined && (
+                        <span className="text-sm text-muted">{page.readability_score}%</span>
+                      )}
+                    </div>
+                  </button>
+                  
+                  {expandedPages.has(page.url) && (
+                    <div className="px-4 pb-4 pl-11 space-y-3">
+                      {/* Schemas */}
+                      {page.schemas.length > 0 && (
+                        <div>
+                          <div className="text-xs text-muted uppercase tracking-wider mb-2">Schemas</div>
+                          <div className="flex flex-wrap gap-2">
+                            {page.schemas.map((schema, idx) => (
+                              <span 
+                                key={idx}
+                                className={`text-xs px-2 py-1 rounded ${
+                                  schema.complete 
+                                    ? 'bg-positive/10 text-positive' 
+                                    : 'bg-yellow-500/10 text-yellow-400'
+                                }`}
+                              >
+                                {schema.type}
+                                {!schema.complete && ' (incomplete)'}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Issues */}
+                      {page.issues.length > 0 && (
+                        <div>
+                          <div className="text-xs text-muted uppercase tracking-wider mb-2">Issues</div>
+                          <div className="space-y-2">
+                            {page.issues.map((issue, idx) => (
+                              <div key={idx} className="flex items-center gap-2">
+                                <SeverityBadge severity={issue.severity} />
+                                <span className="text-sm text-secondary">{issue.issue_code.replace(/_/g, ' ')}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <a
+                        href={`https://${currentDashboard?.domain}${page.url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                      >
+                        View page <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'schemas' && (
+          <div className="card p-6">
+            <h3 className="font-medium text-primary mb-4">Schema Coverage by Type</h3>
+            <div className="space-y-4">
+              {schemaTypesList.map(([type, counts]) => (
+                <div key={type}>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-primary">{type}</span>
+                    <span className="text-muted">{counts.complete}/{counts.found} complete</span>
+                  </div>
+                  <div className="h-2 bg-border rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-accent rounded-full transition-all"
+                      style={{ width: `${(counts.complete / counts.found) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+              {schemaTypesList.length === 0 && (
+                <div className="text-center py-8">
+                  <Code className="w-10 h-10 text-muted mx-auto mb-3" />
+                  <p className="text-secondary">No schemas detected on your website</p>
+                  <Link 
+                    href="/dashboard/improve" 
+                    className="text-accent hover:underline text-sm mt-2 inline-block"
+                  >
+                    Learn how to add schemas →
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
