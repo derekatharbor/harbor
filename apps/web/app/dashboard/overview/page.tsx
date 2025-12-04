@@ -357,7 +357,7 @@ export default function OverviewPage() {
                     <span className="text-muted text-sm w-4">{comp.rank}</span>
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: comp.color }} />
                     <img 
-                      src={`https://www.google.com/s2/favicons?domain=${comp.name.toLowerCase().replace(/\s+/g, '')}.com&sz=32`} 
+                      src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/\s+/g, '').replace(/\.com$/i, '')}.com/w/400/h/400`} 
                       alt="" 
                       className="w-5 h-5 rounded" 
                       onError={(e) => { e.currentTarget.style.display = 'none' }} 
