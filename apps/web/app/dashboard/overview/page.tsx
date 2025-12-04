@@ -369,11 +369,12 @@ export default function OverviewPage() {
               <div className="col-span-4 text-right">Position</div>
             </div>
 
-            <div className="divide-y divide-border-light max-h-[320px] overflow-y-auto">
+            <div className="divide-y divide-border max-h-[320px] overflow-y-auto">
               {MOCK_COMPETITOR_TABLE.map((comp) => (
                 <div 
                   key={comp.name}
                   className={`grid grid-cols-12 gap-1 px-4 py-3 items-center hover:bg-hover ${comp.isUser ? 'bg-secondary/50' : ''}`}
+                  style={{ borderColor: 'var(--border)' }}
                 >
                   <div className="col-span-5 flex items-center gap-2">
                     <span className="text-muted text-sm w-4">{comp.rank}</span>

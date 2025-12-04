@@ -36,6 +36,7 @@ import {
 } from 'recharts'
 
 interface BrandData {
+  brand_name: string
   visibility_index: number
   visibility_delta: number
   total_mentions: number
@@ -63,45 +64,7 @@ interface BrandData {
     type: 'product' | 'person' | 'competitor' | 'concept'
     strength: number
   }>
-}
-
-// Mock data for development
-const MOCK_DATA: BrandData = {
-  visibility_index: 72,
-  visibility_delta: 5.2,
-  total_mentions: 847,
-  mentions_delta: 12,
-  sentiment_score: 78,
-  sentiment_delta: 2.1,
-  descriptors: [
-    { word: 'innovative', sentiment: 'positive', weight: 95, count: 124 },
-    { word: 'reliable', sentiment: 'positive', weight: 88, count: 98 },
-    { word: 'user-friendly', sentiment: 'positive', weight: 82, count: 87 },
-    { word: 'scalable', sentiment: 'positive', weight: 76, count: 72 },
-    { word: 'enterprise-grade', sentiment: 'neutral', weight: 71, count: 65 },
-    { word: 'modern', sentiment: 'positive', weight: 68, count: 58 },
-    { word: 'expensive', sentiment: 'negative', weight: 45, count: 34 },
-    { word: 'complex', sentiment: 'negative', weight: 38, count: 28 },
-    { word: 'established', sentiment: 'neutral', weight: 52, count: 42 },
-    { word: 'secure', sentiment: 'positive', weight: 79, count: 68 },
-  ],
-  sentiment_breakdown: {
-    positive: 64,
-    neutral: 24,
-    negative: 12
-  },
-  model_breakdown: [
-    { model: 'ChatGPT', mentions: 312, sentiment: 82 },
-    { model: 'Claude', mentions: 287, sentiment: 76 },
-    { model: 'Perplexity', mentions: 248, sentiment: 74 },
-  ],
-  associations: [
-    { entity: 'CRM', type: 'concept', strength: 92 },
-    { entity: 'Sales Automation', type: 'concept', strength: 87 },
-    { entity: 'Salesforce', type: 'competitor', strength: 78 },
-    { entity: 'Marketing Hub', type: 'product', strength: 85 },
-    { entity: 'Enterprise', type: 'concept', strength: 72 },
-  ]
+  has_data: boolean
 }
 
 const SENTIMENT_COLORS = {
@@ -165,6 +128,14 @@ function DescriptorCloud({ descriptors }: { descriptors: BrandData['descriptors'
       default:
         return 'bg-secondary text-secondary border-border hover:bg-hover'
     }
+  }
+
+  if (!descriptors || descriptors.length === 0) {
+    return (
+      <div className="text-center py-6 text-muted text-sm">
+        Run more prompts to see how AI describes your brand
+      </div>
+    )
   }
 
   // Sort by weight
@@ -231,6 +202,14 @@ function SentimentDonut({ breakdown }: { breakdown: BrandData['sentiment_breakdo
 }
 
 function ModelComparison({ models }: { models: BrandData['model_breakdown'] }) {
+  if (!models || models.length === 0) {
+    return (
+      <div className="text-center py-6 text-muted text-sm">
+        No model data yet
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-4">
       {models.map((model) => (
@@ -269,18 +248,35 @@ export default function BrandVisibilityPage() {
   const { currentDashboard } = useBrand()
   const [data, setData] = useState<BrandData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [timeRange, setTimeRange] = useState('7d')
 
   useEffect(() => {
-    // Simulate loading - replace with real API
-    const timer = setTimeout(() => {
-      setData(MOCK_DATA)
-      setLoading(false)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [])
+    async function fetchBrandData() {
+      if (!currentDashboard?.id) {
+        setLoading(false)
+        return
+      }
 
-  const brandName = currentDashboard?.brand_name || 'Your Brand'
+      try {
+        const response = await fetch(`/api/dashboard/${currentDashboard.id}/brand-visibility`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch brand data')
+        }
+        const result = await response.json()
+        setData(result)
+      } catch (err) {
+        console.error('Error fetching brand data:', err)
+        setError('Failed to load brand data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBrandData()
+  }, [currentDashboard?.id])
+
+  const brandName = data?.brand_name || currentDashboard?.brand_name || 'Your Brand'
   const brandLogo = currentDashboard?.logo_url
 
   if (loading) {
@@ -300,7 +296,7 @@ export default function BrandVisibilityPage() {
     )
   }
 
-  if (!data) {
+  if (!data || !data.has_data) {
     return (
       <div className="min-h-screen bg-primary" data-page="brand">
         <MobileHeader />
@@ -309,8 +305,15 @@ export default function BrandVisibilityPage() {
             <Sparkles className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
             <h2 className="text-xl font-semibold text-primary mb-2">No Brand Data Yet</h2>
             <p className="text-sm text-muted mb-6">
-              Run your first scan to see how AI models perceive your brand.
+              Run prompts to see how AI models perceive your brand.
             </p>
+            <Link 
+              href="/dashboard/prompts"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+            >
+              Go to Prompts
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>
@@ -440,31 +443,37 @@ export default function BrandVisibilityPage() {
               </div>
             </div>
             <div className="p-4">
-              <div className="space-y-3">
-                {data.associations.map((assoc, idx) => (
-                  <div key={idx} className="flex items-center justify-between py-2">
-                    <div className="flex items-center gap-3">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        assoc.type === 'competitor' ? 'bg-warning/10 text-warning' :
-                        assoc.type === 'product' ? 'bg-info/10 text-info' :
-                        'bg-secondary text-muted'
-                      }`}>
-                        {assoc.type}
-                      </span>
-                      <span className="text-sm text-primary font-medium">{assoc.entity}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-primary rounded-full"
-                          style={{ width: `${assoc.strength}%` }}
-                        />
+              {data.associations && data.associations.length > 0 ? (
+                <div className="space-y-3">
+                  {data.associations.map((assoc, idx) => (
+                    <div key={idx} className="flex items-center justify-between py-2">
+                      <div className="flex items-center gap-3">
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                          assoc.type === 'competitor' ? 'bg-warning/10 text-warning' :
+                          assoc.type === 'product' ? 'bg-info/10 text-info' :
+                          'bg-secondary text-muted'
+                        }`}>
+                          {assoc.type}
+                        </span>
+                        <span className="text-sm text-primary font-medium">{assoc.entity}</span>
                       </div>
-                      <span className="text-xs text-muted w-8 text-right">{assoc.strength}%</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary rounded-full"
+                            style={{ width: `${assoc.strength}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-muted w-8 text-right">{assoc.strength}%</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 text-muted text-sm">
+                  Association data coming soon
+                </div>
+              )}
             </div>
           </div>
         </div>
