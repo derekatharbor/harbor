@@ -346,7 +346,11 @@ export default function CompetitorsPage() {
     )
   }
 
-  const userRank = 2 // Calculate based on visibility vs competitors
+  // Calculate user rank based on visibility vs competitors
+  const userRank = [MOCK_USER_BRAND.metrics.visibility, ...MOCK_COMPETITORS.map(c => c.metrics.visibility)]
+    .sort((a, b) => b - a)
+    .indexOf(MOCK_USER_BRAND.metrics.visibility) + 1
+  
   const totalTracked = MOCK_COMPETITORS.length
 
   return (
