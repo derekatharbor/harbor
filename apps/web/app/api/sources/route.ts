@@ -65,44 +65,86 @@ function getAuthorityScore(domain: string): 'high' | 'medium' | 'low' {
 
 // Enhanced source type classification
 function classifySourceType(domain: string): string {
-  const d = domain.toLowerCase()
+  const d = domain.toLowerCase().replace('www.', '')
   
   // Editorial / News
   if (['forbes.com', 'nytimes.com', 'wsj.com', 'bloomberg.com', 'reuters.com', 
        'techcrunch.com', 'wired.com', 'theverge.com', 'cnbc.com', 'businessinsider.com',
        'venturebeat.com', 'mashable.com', 'engadget.com', 'arstechnica.com',
-       'pcmag.com', 'cnet.com', 'zdnet.com', 'thenextweb.com'].some(e => d.includes(e))) {
+       'pcmag.com', 'cnet.com', 'zdnet.com', 'thenextweb.com', 'inc.com',
+       'entrepreneur.com', 'fastcompany.com', 'fortune.com', 'time.com',
+       'bbc.com', 'bbc.co.uk', 'cnn.com', 'theguardian.com', 'washingtonpost.com',
+       'usatoday.com', 'huffpost.com', 'businesswire.com', 'prnewswire.com',
+       'techradar.com', 'tomshardware.com', 'digitaltrends.com', 'gizmodo.com',
+       'lifehacker.com', 'makeuseof.com', 'howtogeek.com', 'androidauthority.com',
+       '9to5mac.com', '9to5google.com', 'macrumors.com', 'appleinsider.com'].some(e => d.includes(e))) {
     return 'editorial'
   }
   
   // Review sites
   if (['g2.com', 'capterra.com', 'trustradius.com', 'softwareadvice.com', 
-       'getapp.com', 'trustpilot.com', 'yelp.com'].some(e => d.includes(e))) {
+       'getapp.com', 'trustpilot.com', 'yelp.com', 'reviews.com', 
+       'consumerreports.org', 'wirecutter.com', 'tomsguide.com',
+       'toptenreviews.com', 'softwarepundit.com', 'selectsoftwarereviews.com',
+       'slant.co', 'alternativeto.net', 'producthunt.com', 'saasworthy.com',
+       'financesonline.com', 'softwareworld.co', 'crozdesk.com'].some(e => d.includes(e))) {
     return 'review'
   }
   
-  // Institutional / Research
+  // Institutional / Research / Education
   if (['.edu', '.gov', 'gartner.com', 'forrester.com', 'mckinsey.com', 
-       'hbr.org', 'statista.com', 'pewresearch.org'].some(e => d.includes(e))) {
+       'hbr.org', 'statista.com', 'pewresearch.org', 'ibm.com/think',
+       'deloitte.com', 'accenture.com', 'bcg.com', 'bain.com', 'kpmg.com',
+       'pwc.com', 'ey.com', 'nielsen.com', 'idc.com', 'emarketer.com',
+       'brookings.edu', 'rand.org', 'nist.gov', 'ieee.org', 'acm.org'].some(e => d.includes(e))) {
     return 'institutional'
   }
   
-  // UGC
+  // UGC - User Generated Content
   if (['reddit.com', 'quora.com', 'youtube.com', 'twitter.com', 'facebook.com',
-       'medium.com', 'dev.to', 'stackoverflow.com', 'producthunt.com'].some(e => d.includes(e))) {
+       'medium.com', 'dev.to', 'stackoverflow.com', 'stackexchange.com',
+       'news.ycombinator.com', 'hashnode.dev', 'substack.com', 'ghost.io',
+       'wordpress.com', 'blogger.com', 'tumblr.com', 'discord.com',
+       'slack.com', 'github.com', 'gitlab.com', 'bitbucket.org',
+       'indiehackers.com', 'lobste.rs', 'hackernoon.com'].some(e => d.includes(e))) {
     return 'ugc'
   }
   
   // Reference / Documentation
-  if (['wikipedia.org', 'docs.', 'help.', 'support.', 'developer.'].some(e => d.includes(e))) {
+  if (['wikipedia.org', 'wikimedia.org', 'britannica.com', 'dictionary.com',
+       'merriam-webster.com', 'investopedia.com', 'webmd.com', 'healthline.com',
+       'mayoclinic.org', 'nih.gov', 'cdc.gov', 'who.int'].some(e => d.includes(e))) {
     return 'reference'
   }
   
-  // Corporate (brand's own site or competitor sites)
+  // Corporate (SaaS companies, tech companies)
   if (['asana.com', 'monday.com', 'clickup.com', 'notion.so', 'trello.com',
        'hubspot.com', 'salesforce.com', 'zendesk.com', 'shopify.com', 'stripe.com',
-       'zapier.com', 'slack.com', 'zoom.us', 'figma.com', 'canva.com'].some(e => d.includes(e))) {
+       'zapier.com', 'slack.com', 'zoom.us', 'figma.com', 'canva.com',
+       'atlassian.com', 'jira.com', 'confluence.com', 'airtable.com',
+       'mailchimp.com', 'intercom.com', 'drift.com', 'freshworks.com',
+       'servicenow.com', 'workday.com', 'oracle.com', 'sap.com', 'microsoft.com',
+       'google.com', 'amazon.com', 'apple.com', 'adobe.com', 'dropbox.com',
+       'box.com', 'docusign.com', 'pandadoc.com', 'calendly.com',
+       'typeform.com', 'surveymonkey.com', 'webflow.com', 'squarespace.com',
+       'wix.com', 'godaddy.com', 'namecheap.com', 'cloudflare.com',
+       'twilio.com', 'sendgrid.com', 'segment.com', 'mixpanel.com',
+       'amplitude.com', 'heap.io', 'hotjar.com', 'crazy egg.com',
+       'buffer.com', 'hootsuite.com', 'sproutsocial.com', 'later.com',
+       'semrush.com', 'ahrefs.com', 'moz.com', 'screaming frog.co.uk',
+       'nerdwallet.com', 'creditkarma.com', 'mint.com', 'experian.com',
+       'equifax.com', 'transunion.com', 'bankrate.com', 'lendingtree.com'].some(e => d.includes(e))) {
     return 'corporate'
+  }
+  
+  // Check for blog patterns (often editorial-style)
+  if (d.includes('blog.') || d.includes('/blog') || d.endsWith('.blog')) {
+    return 'editorial'
+  }
+  
+  // Check for docs patterns (reference)
+  if (d.includes('docs.') || d.includes('/docs') || d.includes('help.') || d.includes('support.')) {
+    return 'reference'
   }
   
   return 'other'

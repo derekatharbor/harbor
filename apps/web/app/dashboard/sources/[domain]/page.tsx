@@ -11,15 +11,11 @@ import {
   Link as LinkIcon,
   MessageSquare,
   ExternalLink,
-  TrendingUp,
-  TrendingDown,
-  Minus,
   Check,
   X,
   Target,
   Mail,
   Copy,
-  ChevronDown
 } from 'lucide-react'
 import MobileHeader from '@/components/layout/MobileHeader'
 import { useBrand } from '@/contexts/BrandContext'
@@ -58,16 +54,22 @@ function ModelLogo({ model }: { model: string }) {
     <img 
       src={logos[model] || logos.chatgpt} 
       alt={model} 
-      className="w-5 h-5 rounded"
+      className="w-5 h-5 rounded object-contain"
     />
   )
+}
+
+// Get Brandfetch logo URL
+function getBrandLogo(domain: string): string {
+  const clean = domain.replace('www.', '')
+  return `https://cdn.brandfetch.io/${clean}?c=1id1Fyz-h7an5-5KR_y`
 }
 
 // URL type badge
 function UrlTypeBadge({ type }: { type: string }) {
   const colors: Record<string, string> = {
     listicle: 'bg-cyan-100 text-cyan-700',
-    'how-to': 'bg-chart-2/10 text-chart-2',
+    'how-to': 'bg-emerald-100 text-emerald-700',
     review: 'bg-purple-100 text-purple-700',
     comparison: 'bg-blue-100 text-blue-700',
     guide: 'bg-green-100 text-green-700',
@@ -75,18 +77,28 @@ function UrlTypeBadge({ type }: { type: string }) {
     other: 'bg-gray-100 text-gray-700'
   }
   
+  const labels: Record<string, string> = {
+    listicle: 'Listicle',
+    'how-to': 'How-To',
+    review: 'Review',
+    comparison: 'Comparison',
+    guide: 'Guide',
+    news: 'News',
+    other: 'Other'
+  }
+  
   return (
-    <span className={`text-xs px-2 py-1 rounded-md font-medium capitalize ${colors[type] || colors.other}`}>
-      {type.replace('-', ' ')}
+    <span className={`text-xs px-2 py-0.5 rounded font-medium ${colors[type] || colors.other}`}>
+      {labels[type] || 'Other'}
     </span>
   )
 }
 
-// Brand mentioned badge
+// Brand mentioned badge - uses black/gray instead of green
 function BrandMentionedBadge({ mentioned }: { mentioned: boolean }) {
   if (mentioned) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-chart-2/10 text-chart-2 text-xs font-medium">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-900 text-white text-xs font-medium">
         <Check className="w-3 h-3" /> Yes
       </span>
     )
@@ -214,9 +226,12 @@ Best,
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img 
-                src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
+                src={getBrandLogo(domain)}
                 alt=""
-                className="w-12 h-12 rounded-lg"
+                className="w-12 h-12 rounded-lg object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`
+                }}
               />
               <div>
                 <h1 className="text-2xl font-heading font-bold" style={{ color: colors.text }}>
@@ -232,9 +247,9 @@ Best,
                   </span>
                   <span style={{ color: colors.border }}>•</span>
                   {sourceStats.brandMentioned ? (
-                    <span className="text-sm text-chart-2">Your brand is mentioned</span>
+                    <span className="text-sm" style={{ color: colors.text }}>Your brand is mentioned</span>
                   ) : (
-                    <span className="text-sm text-warning">Gap opportunity</span>
+                    <span className="text-sm text-amber-500">Gap opportunity</span>
                   )}
                 </div>
               </div>
@@ -259,7 +274,7 @@ Best,
               {!sourceStats.brandMentioned && (
                 <button
                   onClick={() => setShowPitchModal(true)}
-                  className="px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 bg-chart-2 text-white hover:bg-chart-2/90 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 transition-colors cursor-pointer"
                 >
                   <Mail className="w-4 h-4" />
                   Draft Pitch
@@ -273,11 +288,7 @@ Best,
         <div className="px-6 flex gap-1">
           <button
             onClick={() => setActiveTab('urls')}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
-              activeTab === 'urls'
-                ? 'border-gray-900 text-primary'
-                : 'border-transparent text-muted hover:text-primary'
-            }`}
+            className="px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
             style={{ 
               color: activeTab === 'urls' ? colors.text : colors.muted,
               borderColor: activeTab === 'urls' ? (isDark ? '#F9FAFB' : '#111827') : 'transparent'
@@ -290,7 +301,7 @@ Best,
           </button>
           <button
             onClick={() => setActiveTab('chats')}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer`}
+            className="px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
             style={{ 
               color: activeTab === 'chats' ? colors.text : colors.muted,
               borderColor: activeTab === 'chats' ? (isDark ? '#F9FAFB' : '#111827') : 'transparent'
@@ -319,16 +330,18 @@ Best,
                   <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Type</th>
                   <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>
                     <div className="flex items-center gap-1">
-                      <img 
-                        src={currentDashboard?.domain ? `https://cdn.brandfetch.io/${currentDashboard.domain}` : ''}
-                        alt=""
-                        className="w-4 h-4 rounded"
-                      />
+                      {currentDashboard?.domain && (
+                        <img 
+                          src={getBrandLogo(currentDashboard.domain)}
+                          alt=""
+                          className="w-4 h-4 rounded object-contain"
+                        />
+                      )}
                       Mentioned
                     </div>
                   </th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Used Total</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Avg Citations</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Used Total</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Avg Citations</th>
                 </tr>
               </thead>
               <tbody>
@@ -352,12 +365,15 @@ Best,
                           className="flex items-start gap-2 group"
                         >
                           <img 
-                            src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+                            src={getBrandLogo(domain)}
                             alt=""
-                            className="w-4 h-4 rounded mt-0.5 flex-shrink-0"
+                            className="w-4 h-4 rounded mt-0.5 flex-shrink-0 object-contain"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`
+                            }}
                           />
                           <div className="min-w-0">
-                            <div className="font-medium truncate max-w-md group-hover:text-chart-1 transition-colors" style={{ color: colors.text }}>
+                            <div className="font-medium truncate max-w-md group-hover:underline transition-colors" style={{ color: colors.text }}>
                               {url.title || url.url.split('/').pop() || url.url}
                             </div>
                             <div className="text-xs truncate max-w-md" style={{ color: colors.muted }}>
@@ -372,10 +388,10 @@ Best,
                       <td className="px-4 py-3">
                         <BrandMentionedBadge mentioned={url.brandMentioned} />
                       </td>
-                      <td className="px-4 py-3" style={{ color: colors.text }}>
+                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
                         {url.usedTotal}
                       </td>
-                      <td className="px-4 py-3" style={{ color: colors.text }}>
+                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
                         {url.avgCitations.toFixed(1)}
                       </td>
                     </tr>
@@ -394,10 +410,10 @@ Best,
               <thead>
                 <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
                   <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Chat</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Citations</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Mentions</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Citations</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Mentions</th>
                   <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Sources</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Created</th>
+                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Created</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,7 +437,7 @@ Best,
                         <div className="flex items-start gap-3">
                           <ModelLogo model={chat.model} />
                           <div className="min-w-0">
-                            <div className="font-medium" style={{ color: colors.text }}>
+                            <div className="font-medium text-sm" style={{ color: colors.text }}>
                               {chat.prompt}
                             </div>
                             <div className="text-sm mt-1 line-clamp-2" style={{ color: colors.muted }}>
@@ -430,10 +446,10 @@ Best,
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3" style={{ color: colors.text }}>
+                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
                         {chat.citations}
                       </td>
-                      <td className="px-4 py-3" style={{ color: colors.text }}>
+                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
                         {chat.mentions}
                       </td>
                       <td className="px-4 py-3">
@@ -441,10 +457,13 @@ Best,
                           {chat.sources.slice(0, 4).map((src, i) => (
                             <img 
                               key={i}
-                              src={`https://www.google.com/s2/favicons?domain=${src}&sz=32`}
+                              src={getBrandLogo(src)}
                               alt=""
-                              className="w-4 h-4 rounded"
+                              className="w-4 h-4 rounded object-contain"
                               title={src}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = `https://www.google.com/s2/favicons?domain=${src}&sz=32`
+                              }}
                             />
                           ))}
                           {chat.sources.length > 4 && (
@@ -454,7 +473,7 @@ Best,
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm" style={{ color: colors.muted }}>
+                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.muted }}>
                         {new Date(chat.executed_at).toLocaleDateString()}
                       </td>
                     </tr>
@@ -482,7 +501,7 @@ Best,
               style={{ borderBottom: `1px solid ${colors.border}` }}
             >
               <div className="flex items-center gap-3">
-                <Target className="w-5 h-5 text-chart-2" />
+                <Target className="w-5 h-5" style={{ color: colors.text }} />
                 <h2 className="font-semibold" style={{ color: colors.text }}>
                   Draft Pitch for {domain}
                 </h2>
@@ -529,7 +548,7 @@ Best,
                 </button>
                 <button
                   onClick={() => setShowPitchModal(false)}
-                  className="px-4 py-2 rounded-lg text-sm bg-chart-2 text-white hover:bg-chart-2/90 transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-lg text-sm bg-gray-900 text-white hover:bg-gray-800 transition-colors cursor-pointer"
                 >
                   Done
                 </button>
