@@ -159,47 +159,72 @@ export default function ProductShowcase() {
                   </div>
                 )}
 
-                {/* SENTIMENT TAB - Muted glassmorphism bars */}
+                {/* SENTIMENT TAB - Descriptor pills like brand visibility page */}
                 {activeTab === 'sentiment' && (
-                  <div className="space-y-5">
+                  <div className="space-y-6">
                     {[
-                      { name: 'ChatGPT', logo: '/logos/chatgpt.svg', positive: 65, neutral: 25, negative: 10, score: 82 },
-                      { name: 'Claude', logo: '/logos/claude.svg', positive: 58, neutral: 30, negative: 12, score: 76 },
-                      { name: 'Gemini', logo: '/logos/gemini.svg', positive: 72, neutral: 22, negative: 6, score: 90 },
-                      { name: 'Perplexity', logo: '/logos/perplexity.svg', positive: 62, neutral: 28, negative: 10, score: 81 },
+                      { 
+                        name: 'ChatGPT', 
+                        logo: '/logos/chatgpt.svg', 
+                        descriptors: [
+                          { text: 'Innovative', sentiment: 'positive' },
+                          { text: 'Reliable', sentiment: 'positive' },
+                          { text: 'Enterprise-ready', sentiment: 'positive' },
+                          { text: 'Complex', sentiment: 'neutral' },
+                        ]
+                      },
+                      { 
+                        name: 'Claude', 
+                        logo: '/logos/claude.svg', 
+                        descriptors: [
+                          { text: 'Trusted', sentiment: 'positive' },
+                          { text: 'Scalable', sentiment: 'positive' },
+                          { text: 'Established', sentiment: 'neutral' },
+                        ]
+                      },
+                      { 
+                        name: 'Gemini', 
+                        logo: '/logos/gemini.svg', 
+                        descriptors: [
+                          { text: 'Fast', sentiment: 'positive' },
+                          { text: 'Modern', sentiment: 'positive' },
+                          { text: 'Growing', sentiment: 'positive' },
+                          { text: 'Expensive', sentiment: 'negative' },
+                        ]
+                      },
+                      { 
+                        name: 'Perplexity', 
+                        logo: '/logos/perplexity.svg', 
+                        descriptors: [
+                          { text: 'User-friendly', sentiment: 'positive' },
+                          { text: 'Affordable', sentiment: 'positive' },
+                          { text: 'Limited integrations', sentiment: 'negative' },
+                        ]
+                      },
                     ].map((model) => (
-                      <div key={model.name} className="flex items-center gap-4">
+                      <div key={model.name} className="flex items-start gap-4">
                         {/* Model */}
-                        <div className="flex items-center gap-2 w-28 flex-shrink-0">
-                          <Image src={model.logo} alt={model.name} width={18} height={18} className="w-[18px] h-[18px] opacity-60" />
-                          <span className="text-white/50 text-sm">{model.name}</span>
+                        <div className="flex items-center gap-2 w-28 flex-shrink-0 pt-1">
+                          <Image src={model.logo} alt={model.name} width={18} height={18} className="w-[18px] h-[18px] opacity-70" />
+                          <span className="text-white/60 text-sm">{model.name}</span>
                         </div>
                         
-                        {/* Sentiment bar - glassmorphism container */}
-                        <div className="flex-1 flex h-7 rounded-md overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-                          <div 
-                            className="bg-emerald-500/60 flex items-center justify-center"
-                            style={{ width: `${model.positive}%` }}
-                          >
-                            <span className="text-white/80 text-xs font-medium">Positive</span>
-                          </div>
-                          <div 
-                            className="bg-white/[0.08] flex items-center justify-center"
-                            style={{ width: `${model.neutral}%` }}
-                          >
-                            <span className="text-white/40 text-xs font-medium">Neutral</span>
-                          </div>
-                          <div 
-                            className="bg-red-500/40"
-                            style={{ width: `${model.negative}%` }}
-                          />
-                        </div>
-                        
-                        {/* Score */}
-                        <div className="w-12 text-right flex-shrink-0">
-                          <span className="text-emerald-400/80 text-sm font-medium">
-                            {model.score}%
-                          </span>
+                        {/* Descriptor pills */}
+                        <div className="flex flex-wrap gap-2">
+                          {model.descriptors.map((desc, idx) => (
+                            <span
+                              key={idx}
+                              className={`px-3 py-1 rounded-full border text-xs font-medium ${
+                                desc.sentiment === 'positive' 
+                                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                                  : desc.sentiment === 'negative'
+                                  ? 'bg-red-500/10 text-red-400 border-red-500/20'
+                                  : 'bg-white/[0.03] text-white/50 border-white/10'
+                              }`}
+                            >
+                              {desc.text}
+                            </span>
+                          ))}
                         </div>
                       </div>
                     ))}
@@ -219,19 +244,19 @@ export default function ProductShowcase() {
                     
                     {/* Rows */}
                     {[
-                      { rank: 1, domain: 'reddit.com', type: 'UGC', typeColor: 'bg-orange-500/10 text-orange-400/70 border border-orange-500/20', citations: '32%' },
-                      { rank: 2, domain: 'techradar.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/70 border border-blue-500/20', citations: '28%' },
-                      { rank: 3, domain: 'g2.com', type: 'Review', typeColor: 'bg-emerald-500/10 text-emerald-400/70 border border-emerald-500/20', citations: '24%' },
-                      { rank: 4, domain: 'wikipedia.org', type: 'Reference', typeColor: 'bg-purple-500/10 text-purple-400/70 border border-purple-500/20', citations: '18%' },
-                      { rank: 5, domain: 'forbes.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/70 border border-blue-500/20', citations: '14%' },
+                      { rank: 1, domain: 'reddit.com', type: 'UGC', typeColor: 'bg-orange-500/10 text-orange-400/80 border border-orange-500/20', citations: '32%' },
+                      { rank: 2, domain: 'techradar.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/80 border border-blue-500/20', citations: '28%' },
+                      { rank: 3, domain: 'g2.com', type: 'Review', typeColor: 'bg-emerald-500/10 text-emerald-400/80 border border-emerald-500/20', citations: '24%' },
+                      { rank: 4, domain: 'wikipedia.org', type: 'Reference', typeColor: 'bg-purple-500/10 text-purple-400/80 border border-purple-500/20', citations: '18%' },
+                      { rank: 5, domain: 'forbes.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/80 border border-blue-500/20', citations: '14%' },
                     ].map((source) => (
                       <div key={source.rank} className="grid grid-cols-12 gap-4 py-3.5 border-b border-white/[0.04] items-center">
                         <div className="col-span-1 text-white/20 text-sm">{source.rank}</div>
                         <div className="col-span-5 flex items-center gap-3">
                           <img 
-                            src={`https://cdn.brandfetch.io/${source.domain}/w/400/h/400?c=1id_zeP0K7d`}
+                            src={`https://cdn.brandfetch.io/${source.domain}?c=1id1Fyz-h7an5-5KR_y`}
                             alt=""
-                            className="w-5 h-5 rounded opacity-70"
+                            className="w-5 h-5 rounded"
                           />
                           <span className="text-white/70 text-sm">{source.domain}</span>
                         </div>
