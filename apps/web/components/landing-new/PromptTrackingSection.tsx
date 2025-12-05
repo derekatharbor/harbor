@@ -24,15 +24,15 @@ export default function PromptTrackingSection() {
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Turn AI search insights into new customers with Harbor
           </h2>
-          <div className="flex items-start lg:pl-8 lg:border-l lg:border-white/10">
-            <p className="text-white/50 text-lg leading-relaxed lg:pt-2">
+          <div className="flex items-end lg:pl-8 lg:border-l lg:border-white/10">
+            <p className="text-white/50 text-lg leading-relaxed">
               Identify the prompts that matter, monitor your rankings, and act before your competitors do.
             </p>
           </div>
         </div>
 
         {/* Two cards side by side */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-6">
+        <div className="grid lg:grid-cols-2 gap-8 mb-6 items-start">
           {/* Left Card - Set up Prompts (table only) */}
           <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] p-6 lg:p-8">
             <h3 className="text-xl font-semibold text-white mb-3">Set up Prompts</h3>
@@ -187,8 +187,8 @@ export default function PromptTrackingSection() {
               </div>
               <div className="text-white/40 text-sm mb-4">Choose which tags are important.</div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-3 py-1.5 bg-orange-500/20 text-orange-400 text-sm rounded-lg border border-orange-500/20">Problem-aware</span>
-                <span className="px-3 py-1.5 bg-cyan-500/20 text-cyan-400 text-sm rounded-lg border border-cyan-500/20">Mid-market</span>
+                <span className="px-3 py-1.5 bg-orange-500/30 text-orange-300 text-sm rounded-md font-medium">Problem-aware</span>
+                <span className="px-3 py-1.5 bg-cyan-500/30 text-cyan-300 text-sm rounded-md font-medium">Mid-market</span>
               </div>
             </div>
             <div className="bg-white/[0.02] rounded-xl p-5 border border-white/[0.06]">
