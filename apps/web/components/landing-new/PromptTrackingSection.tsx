@@ -32,7 +32,7 @@ export default function PromptTrackingSection() {
         </div>
 
         {/* Two cards side by side */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-6 items-start">
+        <div className="grid lg:grid-cols-2 gap-6 mb-6">
           {/* Left Card - Set up Prompts (table only) */}
           <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] p-6 lg:p-8">
             <h3 className="text-xl font-semibold text-white mb-3">Set up Prompts</h3>
@@ -71,6 +71,7 @@ export default function PromptTrackingSection() {
                 { prompt: 'Best AI-native CRM 2025', visibility: '84%', models: [0, 1, 2], created: '1d ago', tag: 'Corporate' },
                 { prompt: 'CRM software with advanced workflow automation', visibility: '78%', models: [0, 2, 3], created: '1d ago', tag: 'Corporate' },
                 { prompt: 'Top-rated CRM platforms with analytics', visibility: '71%', models: [1, 3], created: '2d ago', tag: 'Corporate' },
+                { prompt: 'Enterprise CRM solutions for scaling teams', visibility: '68%', models: [0, 1, 2, 3], created: '3d ago', tag: 'Enterprise' },
               ].map((row, idx) => (
                 <div key={idx} className="grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-white/[0.04] last:border-0 hover:bg-white/[0.02] transition-colors">
                   <div className="col-span-5 text-white/70 text-sm truncate">{row.prompt}</div>
