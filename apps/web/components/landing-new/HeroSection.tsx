@@ -42,7 +42,7 @@ export default function HeroSection() {
       <div className="relative z-10 flex-1 flex flex-col justify-center max-w-5xl mx-auto px-6 pt-32 pb-16">
         {/* Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
-          See what{' '}
+          Get recommended by{' '}
           <span className="relative inline-flex items-center gap-3">
             <span
               className={`inline-flex items-center gap-3 transition-all duration-400 ${
@@ -61,15 +61,12 @@ export default function HeroSection() {
               <span className="text-white">{currentModel.name}</span>
             </span>
           </span>
-          <br />
-          says about your brand
         </h1>
 
         {/* Subheadline */}
-        <p className="mt-6 text-lg sm:text-xl text-white/50 max-w-2xl leading-relaxed">
-          Track your visibility across AI search engines.
-          <br className="hidden sm:block" />
-          Understand how AI sees you. Optimize to get recommended.
+        <p className="mt-6 text-lg sm:text-xl text-white/50 max-w-xl leading-relaxed">
+          Track and improve your visibility across AI search engines. 
+          Get found when it matters.
         </p>
 
         {/* CTAs */}
@@ -99,7 +96,7 @@ export default function HeroSection() {
             alt="Harbor Dashboard"
             width={1600}
             height={1000}
-            className="w-full h-auto rounded-xl border border-white/10"
+            className="w-full h-auto rounded-xl"
             priority
           />
           
