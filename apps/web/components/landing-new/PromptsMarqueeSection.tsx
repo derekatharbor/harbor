@@ -40,7 +40,7 @@ const PROMPT_ROWS = [
 function PromptPill({ model, text }: { model: number; text: string }) {
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.03] backdrop-blur-sm rounded-full border border-white/[0.08] whitespace-nowrap">
-      <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
         <img
           src={AI_MODELS[model].logo}
           alt={AI_MODELS[model].name}
