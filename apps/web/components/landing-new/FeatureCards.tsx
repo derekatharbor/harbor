@@ -1,109 +1,333 @@
 // components/landing-new/FeatureCards.tsx
-import { Eye, Target, Zap } from 'lucide-react'
+'use client'
 
-export default function FeatureCards() {
-  const features = [
-    {
-      icon: Eye,
-      title: 'Real-time Visibility',
-      description: 'Track how often AI models mention your brand across ChatGPT, Claude, Gemini, and Perplexity.',
-      visual: (
-        <div className="flex items-end gap-2 h-32">
-          {[30, 45, 60, 75, 85].map((h, i) => (
-            <div key={i} className="flex-1 rounded-t-sm bg-gradient-to-t from-cyan-500/30 to-cyan-400/60" style={{ height: `${h}%` }} />
-          ))}
-        </div>
-      )
-    },
-    {
-      icon: Target,
-      title: 'Competitor Intelligence',
-      description: 'See how you stack up against competitors. Identify gaps and opportunities in AI recommendations.',
-      visual: (
-        <div className="space-y-2">
-          {['Your Brand', 'Competitor A', 'Competitor B'].map((name, i) => (
-            <div key={name} className="flex items-center gap-3">
-              <span className="text-white/40 text-xs w-24 truncate">{name}</span>
-              <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full rounded-full ${i === 0 ? 'bg-cyan-400' : 'bg-white/20'}`}
-                  style={{ width: `${85 - i * 20}%` }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      )
-    },
-    {
-      icon: Zap,
-      title: 'Actionable Insights',
-      description: 'Get specific recommendations to improve your AI visibility with schema markup and content optimization.',
-      visual: (
-        <div className="space-y-2">
-          {[
-            { task: 'Add Organization schema', status: 'done' },
-            { task: 'Optimize product pages', status: 'pending' },
-            { task: 'Update meta descriptions', status: 'pending' },
-          ].map((item) => (
-            <div key={item.task} className="flex items-center gap-2 text-xs">
-              <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                item.status === 'done' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-white/30'
-              }`}>
-                {item.status === 'done' ? '✓' : '○'}
-              </div>
-              <span className={item.status === 'done' ? 'text-white/60 line-through' : 'text-white/60'}>
-                {item.task}
-              </span>
-            </div>
-          ))}
-        </div>
-      )
-    }
-  ]
+import { useState } from 'react'
+import { Plus, X } from 'lucide-react'
+import Image from 'next/image'
 
+const AI_PROMPTS = [
+  { model: 'ChatGPT', logo: '/logos/chatgpt.svg', prompt: 'What\'s the best CRM for startups?' },
+  { model: 'Claude', logo: '/logos/claude.svg', prompt: 'Compare HubSpot vs Salesforce' },
+  { model: 'Gemini', logo: '/logos/gemini.svg', prompt: 'Top marketing automation tools 2025' },
+  { model: 'Perplexity', logo: '/logos/perplexity.svg', prompt: 'Best project management software' },
+]
+
+const FEATURES = [
+  {
+    id: 'visibility',
+    title: 'Track AI visibility',
+    subtitle: 'across every model',
+    modalTitle: 'Real-time AI Visibility Tracking',
+    modalDescription: 'See exactly how often AI models recommend your brand. Track mentions across ChatGPT, Claude, Gemini, and Perplexity in real-time. Understand which prompts surface your brand and which don\'t.',
+    modalBullets: [
+      'Monitor mentions across all major AI models',
+      'Track visibility trends over time',
+      'See the exact prompts where you appear',
+      'Benchmark against industry averages',
+    ],
+  },
+  {
+    id: 'competitors',
+    title: 'Outrank your',
+    subtitle: 'competitors',
+    modalTitle: 'Competitive Intelligence',
+    modalDescription: 'Know exactly where you stand against competitors in AI recommendations. See who\'s winning share of voice and identify opportunities to close the gap.',
+    modalBullets: [
+      'Side-by-side competitor comparisons',
+      'Share of voice analysis',
+      'Gap identification and opportunities',
+      'Track competitor movement over time',
+    ],
+  },
+  {
+    id: 'optimize',
+    title: 'Optimize to get',
+    subtitle: 'recommended',
+    modalTitle: 'Actionable Optimization',
+    modalDescription: 'Get specific, prioritized recommendations to improve your AI visibility. From schema markup to content optimization, know exactly what to fix and why it matters.',
+    modalBullets: [
+      'Prioritized action items',
+      'Schema markup generators',
+      'Content optimization suggestions',
+      'Track improvement over time',
+    ],
+  },
+]
+
+// Floating AI Prompt Card Component
+function FloatingPromptCard({ 
+  model, 
+  logo, 
+  prompt, 
+  className = '',
+  style = {}
+}: { 
+  model: string
+  logo: string
+  prompt: string
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
-    <section className="relative py-24 bg-[#0a0a0a]">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Built for the AI search era
-          </h2>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto">
-            Everything you need to monitor and optimize your brand's presence in AI-powered search.
-          </p>
+    <div 
+      className={`absolute bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-2xl ${className}`}
+      style={style}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <Image src={logo} alt={model} width={20} height={20} className="w-5 h-5" />
+        <span className="text-white/60 text-xs font-medium">{model}</span>
+      </div>
+      <p className="text-white/80 text-sm leading-relaxed">{prompt}</p>
+    </div>
+  )
+}
+
+// Feature Card Component
+function FeatureCard({ 
+  feature, 
+  children,
+  onClick 
+}: { 
+  feature: typeof FEATURES[0]
+  children: React.ReactNode
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative bg-[#111] hover:bg-[#151515] border border-white/[0.08] hover:border-white/[0.15] rounded-2xl overflow-hidden transition-all duration-300 text-left h-[420px] flex flex-col"
+    >
+      {/* Visual area */}
+      <div className="flex-1 relative overflow-hidden">
+        {children}
+      </div>
+      
+      {/* Title area */}
+      <div className="p-6 flex items-end justify-between">
+        <div>
+          <h3 className="text-white text-xl font-semibold leading-tight">
+            {feature.title}
+            <br />
+            {feature.subtitle}
+          </h3>
         </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <div 
-              key={feature.title}
-              className="group relative bg-gradient-to-b from-white/[0.03] to-transparent rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-all duration-300"
-            >
-              {/* Glassmorphism glow on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="relative">
-                {/* Icon */}
-                <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4">
-                  <feature.icon className="w-5 h-5 text-cyan-400" />
-                </div>
-
-                {/* Title */}
-                <h3 className="text-white font-semibold text-lg mb-2">{feature.title}</h3>
-                
-                {/* Description */}
-                <p className="text-white/50 text-sm mb-6 leading-relaxed">{feature.description}</p>
-
-                {/* Visual */}
-                <div className="bg-white/[0.02] rounded-lg p-4 border border-white/5">
-                  {feature.visual}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-colors">
+          <Plus className="w-5 h-5 text-white/40 group-hover:text-white/70 transition-colors" />
         </div>
       </div>
-    </section>
+    </button>
+  )
+}
+
+// Modal Component
+function FeatureModal({ 
+  feature, 
+  isOpen, 
+  onClose 
+}: { 
+  feature: typeof FEATURES[0] | null
+  isOpen: boolean
+  onClose: () => void
+}) {
+  if (!isOpen || !feature) return null
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      
+      {/* Modal */}
+      <div 
+        className="relative bg-[#111] border border-white/10 rounded-2xl max-w-lg w-full p-8 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+        >
+          <X className="w-4 h-4 text-white/60" />
+        </button>
+
+        <h2 className="text-2xl font-bold text-white mb-4">{feature.modalTitle}</h2>
+        <p className="text-white/50 leading-relaxed mb-6">{feature.modalDescription}</p>
+        
+        <ul className="space-y-3">
+          {feature.modalBullets.map((bullet, i) => (
+            <li key={i} className="flex items-start gap-3">
+              <div className="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              </div>
+              <span className="text-white/70 text-sm">{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+export default function FeatureCards() {
+  const [activeModal, setActiveModal] = useState<typeof FEATURES[0] | null>(null)
+
+  return (
+    <>
+      <section className="relative py-24 bg-[#0a0a0a]">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Header */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+              Built for the<br />AI search era
+            </h2>
+            <p className="text-white/50 text-lg leading-relaxed lg:pt-2">
+              AI is reshaping how customers discover brands. Harbor gives you the visibility and tools to thrive in this new landscape.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Card 1: AI Visibility with floating prompts */}
+            <FeatureCard 
+              feature={FEATURES[0]}
+              onClick={() => setActiveModal(FEATURES[0])}
+            >
+              {/* Wireframe grid background */}
+              <div 
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, white 1px, transparent 1px),
+                    linear-gradient(to bottom, white 1px, transparent 1px)
+                  `,
+                  backgroundSize: '40px 40px'
+                }}
+              />
+              
+              {/* Floating prompt cards */}
+              <FloatingPromptCard
+                {...AI_PROMPTS[0]}
+                className="w-48"
+                style={{ top: '15%', left: '10%', transform: 'rotate(-3deg)' }}
+              />
+              <FloatingPromptCard
+                {...AI_PROMPTS[1]}
+                className="w-52"
+                style={{ top: '35%', right: '5%', transform: 'rotate(2deg)' }}
+              />
+              <FloatingPromptCard
+                {...AI_PROMPTS[2]}
+                className="w-44"
+                style={{ bottom: '25%', left: '15%', transform: 'rotate(1deg)' }}
+              />
+            </FeatureCard>
+
+            {/* Card 2: Competitors - placeholder visual */}
+            <FeatureCard 
+              feature={FEATURES[1]}
+              onClick={() => setActiveModal(FEATURES[1])}
+            >
+              {/* Wireframe grid background */}
+              <div 
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, white 1px, transparent 1px),
+                    linear-gradient(to bottom, white 1px, transparent 1px)
+                  `,
+                  backgroundSize: '40px 40px'
+                }}
+              />
+              
+              {/* Placeholder: Comparison bars */}
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                <div className="w-full space-y-4">
+                  {[
+                    { label: 'Your Brand', width: '85%', highlight: true },
+                    { label: 'Competitor A', width: '62%', highlight: false },
+                    { label: 'Competitor B', width: '45%', highlight: false },
+                  ].map((bar, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className={bar.highlight ? 'text-white/80' : 'text-white/40'}>{bar.label}</span>
+                        <span className={bar.highlight ? 'text-cyan-400' : 'text-white/30'}>{bar.width}</span>
+                      </div>
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full ${bar.highlight ? 'bg-gradient-to-r from-cyan-500 to-blue-500' : 'bg-white/10'}`}
+                          style={{ width: bar.width }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FeatureCard>
+
+            {/* Card 3: Optimize - placeholder visual */}
+            <FeatureCard 
+              feature={FEATURES[2]}
+              onClick={() => setActiveModal(FEATURES[2])}
+            >
+              {/* Wireframe grid background */}
+              <div 
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(to right, white 1px, transparent 1px),
+                    linear-gradient(to bottom, white 1px, transparent 1px)
+                  `,
+                  backgroundSize: '40px 40px'
+                }}
+              />
+              
+              {/* Placeholder: Task list */}
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                <div className="w-full space-y-3">
+                  {[
+                    { task: 'Add Organization schema', done: true },
+                    { task: 'Optimize product descriptions', done: true },
+                    { task: 'Update meta descriptions', done: false },
+                    { task: 'Add FAQ schema', done: false },
+                    { task: 'Improve page load speed', done: false },
+                  ].map((item, i) => (
+                    <div 
+                      key={i} 
+                      className={`flex items-center gap-3 p-3 rounded-lg border ${
+                        item.done 
+                          ? 'bg-white/[0.02] border-white/5' 
+                          : 'bg-transparent border-white/10'
+                      }`}
+                    >
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        item.done 
+                          ? 'bg-emerald-500/20 text-emerald-400' 
+                          : 'bg-white/5 text-white/30'
+                      }`}>
+                        {item.done ? '✓' : ''}
+                      </div>
+                      <span className={`text-sm ${
+                        item.done ? 'text-white/40 line-through' : 'text-white/70'
+                      }`}>
+                        {item.task}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FeatureCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
+      <FeatureModal
+        feature={activeModal}
+        isOpen={!!activeModal}
+        onClose={() => setActiveModal(null)}
+      />
+    </>
   )
 }
