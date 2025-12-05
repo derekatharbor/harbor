@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/images/harbor-white-logo.svg"
+                src="/images/harbor-logo-white.svg"
                 alt="Harbor"
                 width={120}
                 height={32}

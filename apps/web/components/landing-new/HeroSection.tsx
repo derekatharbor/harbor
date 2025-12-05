@@ -90,13 +90,13 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Dashboard Screenshot - Full width, flat, with fade */}
-      <div className="relative w-full max-w-7xl mx-auto px-6">
+      {/* Dashboard Screenshot - Full width, flush, with fade */}
+      <div className="relative w-full">
         {/* Glow behind screenshot */}
-        <div className="absolute -inset-4 bg-gradient-to-t from-cyan-500/20 via-blue-500/10 to-transparent blur-3xl opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-blue-500/10 to-transparent blur-3xl opacity-40 pointer-events-none" />
         
-        {/* Screenshot container - no browser chrome */}
-        <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+        {/* Screenshot - no container, just the image */}
+        <div className="relative">
           <Image
             src="/images/dashboard-hero.png"
             alt="Harbor Dashboard"
@@ -107,7 +107,7 @@ export default function HeroSection() {
           />
           
           {/* Fade to black at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pointer-events-none" />
         </div>
       </div>
 

@@ -42,7 +42,7 @@ export default function Nav() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/harbor-white-logo.svg"
+              src="/images/harbor-logo-white.svg"
               alt="Harbor"
               width={120}
               height={32}
