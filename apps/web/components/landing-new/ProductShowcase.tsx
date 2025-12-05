@@ -32,7 +32,7 @@ export default function IndexShowcase() {
           
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
             50,000+ brands.<br />
-            Exposed.
+            How visible is yours?
           </h2>
           
           <p className="text-white/50 text-lg leading-relaxed mb-8">
@@ -123,11 +123,11 @@ export default function IndexShowcase() {
               ))}
             </div>
 
-            {/* Fade overlay at bottom */}
+            {/* Fade overlay at bottom - covers last 3-4 rows */}
             <div 
-              className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+              className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
               style={{
-                background: 'linear-gradient(to top, #0a0a0a 0%, #0a0a0a 20%, transparent 100%)'
+                background: 'linear-gradient(to top, #0a0a0a 0%, #0a0a0a 40%, transparent 100%)'
               }}
             />
           </div>
