@@ -39,11 +39,11 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center max-w-5xl mx-auto px-6 pt-32 pb-16">
+      <div className="relative z-10 flex-1 flex flex-col justify-center items-center max-w-5xl mx-auto px-6 pt-32 pb-16 text-center">
         {/* Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
           Get recommended by{' '}
-          <span className="relative inline-flex items-center gap-3">
+          <span className="relative inline-flex items-center justify-center gap-3">
             <span
               className={`inline-flex items-center gap-3 transition-all duration-400 ${
                 isAnimating 
@@ -70,7 +70,7 @@ export default function HeroSection() {
         </p>
 
         {/* CTAs */}
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/signup"
             className="px-6 py-3.5 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
@@ -79,7 +79,7 @@ export default function HeroSection() {
           </Link>
           <Link
             href="/claim"
-            className="group flex items-center gap-2 px-4 py-3.5 text-white/70 hover:text-white text-sm font-medium transition-colors"
+            className="group flex items-center gap-2 px-5 py-3 text-white/70 hover:text-white text-sm font-medium rounded-full hover:bg-white/10 transition-all"
           >
             Claim your brand
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
