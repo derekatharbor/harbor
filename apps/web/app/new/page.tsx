@@ -5,6 +5,7 @@ import FeatureCards from '@/components/landing-new/FeatureCards'
 import ProductShowcase from '@/components/landing-new/ProductShowcase'
 import PromptTrackingSection from '@/components/landing-new/PromptTrackingSection'
 import IndexShowcase from '@/components/landing-new/IndexShowcase'
+import PromptsMarqueeSection from '@/components/landing-new/PromptsMarqueeSection'
 import CTASection from '@/components/landing-new/CTASection'
 import Footer from '@/components/landing-new/Footer'
 
@@ -17,6 +18,7 @@ export default function NewLandingPage() {
       <ProductShowcase />
       <PromptTrackingSection />
       <IndexShowcase />
+      <PromptsMarqueeSection />
       <CTASection />
       <Footer />
     </main>
