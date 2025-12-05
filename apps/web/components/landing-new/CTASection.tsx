@@ -7,7 +7,7 @@ export default function CTASection() {
     <section className="relative py-24 bg-[#0a0a0a]">
       <div className="max-w-6xl mx-auto px-6">
         {/* Main container with rounded corners */}
-        <div className="relative bg-white/[0.02] backdrop-blur-xl rounded-3xl border border-white/[0.08] overflow-hidden min-h-[500px]">
+        <div className="relative bg-white/[0.02] backdrop-blur-xl rounded-3xl border border-white/[0.08] overflow-hidden min-h-[480px]">
           
           {/* Content grid */}
           <div className="grid lg:grid-cols-2 gap-8 h-full">
@@ -38,41 +38,33 @@ export default function CTASection() {
             </div>
 
             {/* Right side - Dashboard image */}
-            <div className="relative hidden lg:block">
+            <div className="relative hidden lg:block overflow-visible">
               {/* Image container with perspective tilt */}
               <div 
-                className="absolute inset-0 flex items-center"
+                className="absolute inset-0"
                 style={{ perspective: '1500px' }}
               >
                 <div 
-                  className="relative w-full h-full"
+                  className="absolute top-1/2 -translate-y-1/2 left-0"
                   style={{ 
-                    transform: 'rotateY(-8deg) rotateX(2deg)',
-                    transformOrigin: 'center center'
+                    transform: 'rotateY(-12deg) rotateX(4deg)',
+                    transformOrigin: 'left center'
                   }}
                 >
-                  {/* Dashboard image - replace src with your image */}
+                  {/* Dashboard image - large and bleeding off right */}
                   <img
                     src="/images/dashboard-cta.png"
                     alt="Harbor Dashboard"
-                    className="absolute top-8 left-0 w-[140%] h-auto rounded-xl shadow-2xl"
+                    className="w-[800px] max-w-none h-auto rounded-xl shadow-2xl opacity-90"
                   />
                 </div>
               </div>
 
-              {/* Fade overlay on the right */}
+              {/* Soft fade on the left edge of image area */}
               <div 
-                className="absolute inset-y-0 right-0 w-32 pointer-events-none"
+                className="absolute inset-y-0 left-0 w-24 pointer-events-none z-10"
                 style={{
-                  background: 'linear-gradient(to left, rgba(10,10,10,1) 0%, transparent 100%)'
-                }}
-              />
-              
-              {/* Fade overlay on the bottom */}
-              <div 
-                className="absolute inset-x-0 bottom-0 h-32 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, transparent 100%)'
+                  background: 'linear-gradient(to right, rgba(255,255,255,0.02) 0%, transparent 100%)'
                 }}
               />
             </div>
