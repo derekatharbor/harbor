@@ -221,7 +221,11 @@ export async function POST(request: NextRequest) {
       .eq('id', batch.id)
 
     // Update citation stats (aggregate)
-    await supabase.rpc('update_citation_stats').catch(() => {})
+    try {
+      await supabase.rpc('update_citation_stats')
+    } catch {
+      // Ignore if RPC doesn't exist
+    }
 
     return NextResponse.json({
       success: true,
