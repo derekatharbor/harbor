@@ -1,7 +1,7 @@
 // components/landing-new/IndexShowcase.tsx
 'use client'
 
-import { ArrowRight, Search, TrendingUp, Users } from 'lucide-react'
+import { ArrowRight, Search, TrendingUp, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
 const SAMPLE_BRANDS = [
@@ -19,33 +19,55 @@ export default function IndexShowcase() {
   return (
     <section className="relative py-32 bg-[#0a0a0a] overflow-hidden">
       {/* Gradient accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-b from-cyan-500/10 to-transparent blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-cyan-500/10 to-transparent blur-[120px] pointer-events-none" />
       
       <div className="relative max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-white/60 text-sm mb-6">
-            <Users className="w-4 h-4" />
-            <span>50,000+ brands indexed</span>
+        {/* Header - Left aligned like Linear */}
+        <div className="max-w-xl mb-8">
+          <div className="inline-flex items-center gap-2 text-cyan-400 text-sm font-medium mb-4">
+            <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <span>The AI Visibility Index</span>
+            <ChevronRight className="w-4 h-4" />
           </div>
           
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
-            The AI Visibility Index
+            50,000+ brands.<br />
+            How visible is yours?
           </h2>
           
-          <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
-            See how your brand stacks up against competitors. Claim your free profile 
-            and start tracking your AI visibility today.
+          <p className="text-white/50 text-lg leading-relaxed mb-8">
+            <span className="text-white">See how AI ranks your brand.</span>{' '}
+            Browse the index, compare against competitors, and claim your 
+            profile to start improving your visibility.
           </p>
+
+          {/* CTAs */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/brands"
+              className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/15 text-white font-medium rounded-lg transition-colors"
+            >
+              Browse the Index
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/claim"
+              className="text-white/50 hover:text-white text-sm transition-colors"
+            >
+              Claim your brand for free →
+            </Link>
+          </div>
         </div>
 
-        {/* Tilted Leaderboard */}
-        <div className="relative max-w-3xl mx-auto" style={{ perspective: '1000px' }}>
+        {/* Tilted Leaderboard - tilted BACK (receding into page) */}
+        <div className="relative mt-16" style={{ perspective: '1500px' }}>
           <div 
             className="relative bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-2xl overflow-hidden"
             style={{ 
-              transform: 'rotateX(10deg) rotateY(-5deg)',
-              transformOrigin: 'center center'
+              transform: 'rotateX(20deg)',
+              transformOrigin: 'center top',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)'
             }}
           >
             {/* Search header */}
@@ -102,32 +124,7 @@ export default function IndexShowcase() {
                 </div>
               ))}
             </div>
-
-            {/* Fade overlay at bottom */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-              style={{
-                background: 'linear-gradient(to top, #0a0a0a 0%, transparent 100%)'
-              }}
-            />
           </div>
-        </div>
-
-        {/* CTA */}
-        <div className="flex flex-col items-center mt-12 gap-4">
-          <Link
-            href="/brands"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-white/90 transition-colors"
-          >
-            Browse the Index
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/claim"
-            className="text-white/50 hover:text-white text-sm transition-colors"
-          >
-            Claim your brand profile for free →
-          </Link>
         </div>
       </div>
     </section>
