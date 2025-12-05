@@ -1,14 +1,12 @@
 // components/landing-new/PromptsMarqueeSection.tsx
 'use client'
 
-import Image from 'next/image'
-
-// AI Model logos
+// AI Model logos via Brandfetch
 const AI_MODELS = [
-  { name: 'ChatGPT', logo: '/logos/chatgpt.svg' },
-  { name: 'Claude', logo: '/logos/claude.svg' },
-  { name: 'Gemini', logo: '/logos/gemini.svg' },
-  { name: 'Perplexity', logo: '/logos/perplexity.svg' },
+  { name: 'ChatGPT', logo: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y' },
+  { name: 'Claude', logo: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y' },
+  { name: 'Gemini', logo: 'https://cdn.brandfetch.io/google.com?c=1id1Fyz-h7an5-5KR_y' },
+  { name: 'Perplexity', logo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y' },
 ]
 
 // Prompt data for each row
@@ -41,14 +39,12 @@ const PROMPT_ROWS = [
 
 function PromptPill({ model, text }: { model: number; text: string }) {
   return (
-    <div className="flex items-center gap-2.5 px-4 py-2.5 bg-white/[0.03] backdrop-blur-sm rounded-full border border-white/[0.08] whitespace-nowrap">
-      <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-        <Image
+    <div className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.03] backdrop-blur-sm rounded-full border border-white/[0.08] whitespace-nowrap">
+      <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <img
           src={AI_MODELS[model].logo}
           alt={AI_MODELS[model].name}
-          width={14}
-          height={14}
-          className="w-3.5 h-3.5 object-contain"
+          className="w-5 h-5 object-contain"
         />
       </div>
       <span className="text-white/70 text-sm">{text}</span>
@@ -86,8 +82,8 @@ export default function PromptsMarqueeSection() {
       {/* Headline */}
       <div className="max-w-4xl mx-auto px-6 text-center mb-16">
         <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-          AI platforms are becoming the new search engines.{' '}
-          <span className="text-white/50">Track the prompts that define your brand&apos;s relevance.</span>
+          Every day, millions ask AI for recommendations.{' '}
+          <span className="text-white/50">Make sure they hear about you.</span>
         </h2>
       </div>
 
