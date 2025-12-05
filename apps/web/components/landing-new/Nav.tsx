@@ -113,6 +113,9 @@ export default function Nav() {
             <Link href="/pricing" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
               Pricing
             </Link>
+            <Link href="/universities" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+              Universities
+            </Link>
             <Link href="/brands" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
               Directory
             </Link>
@@ -147,6 +150,7 @@ export default function Nav() {
           <div className="px-6 py-4 space-y-3">
             <Link href="/product" className="block py-2 text-white/70 hover:text-white">Product</Link>
             <Link href="/pricing" className="block py-2 text-white/70 hover:text-white">Pricing</Link>
+            <Link href="/universities" className="block py-2 text-white/70 hover:text-white">Universities</Link>
             <Link href="/brands" className="block py-2 text-white/70 hover:text-white">Directory</Link>
             <Link href="/docs" className="block py-2 text-white/70 hover:text-white">Docs</Link>
             <div className="pt-4 border-t border-white/10 space-y-3">
