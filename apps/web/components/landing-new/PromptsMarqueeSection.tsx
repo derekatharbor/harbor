@@ -82,8 +82,8 @@ export default function PromptsMarqueeSection() {
       {/* Headline */}
       <div className="max-w-4xl mx-auto px-6 text-center mb-16">
         <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-          Every day, millions ask AI for recommendations.{' '}
-          <span className="text-white/50">Make sure they hear about you.</span>
+          Every day, millions of users ask AI for recommendations.{' '}
+          <span className="text-white/50">Make sure they mention you.</span>
         </h2>
       </div>
 
