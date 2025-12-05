@@ -45,24 +45,24 @@ interface ApiResponse {
   user_rank: number | null
 }
 
-// Single accent for user highlighting
+// Colors
 const USER_COLOR = '#EC4899'
-const BAR_COLOR = '#374151' // Gray-700 - professional dark gray
+const BAR_COLOR = '#3B82F6' // Blue
 
-// Build Brandfetch logo URL - request 3x size for retina displays
-function getBrandLogo(name: string, displaySize: number = 32): string {
+// Build Brandfetch logo URL - always request 128px for quality
+function getBrandLogo(name: string): string {
+  if (!name) return ''
   const cleanName = name.toLowerCase().trim()
-  const fetchSize = displaySize * 3  // 3x for crisp retina
   
-  // If name already looks like a domain, use it directly
+  // If name already has a TLD, use it directly
   if (cleanName.includes('.com') || cleanName.includes('.io') || cleanName.includes('.co')) {
     const domain = cleanName.replace(/[^a-z0-9.]/g, '')
-    return `https://cdn.brandfetch.io/${domain}/w/${fetchSize}/h/${fetchSize}?c=1idE5OcNNVB`
+    return `https://cdn.brandfetch.io/${domain}/w/128/h/128`
   }
   
   // Otherwise, assume .com
   const slug = cleanName.replace(/[^a-z0-9]/g, '')
-  return `https://cdn.brandfetch.io/${slug}.com/w/${fetchSize}/h/${fetchSize}?c=1idE5OcNNVB`
+  return `https://cdn.brandfetch.io/${slug}.com/w/128/h/128`
 }
 
 // ============================================================================
@@ -258,9 +258,7 @@ export default function CompetitorsPage() {
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Sentiment</div>
-            <div className="metric-value">
-              {userData.sentiment}%
-            </div>
+            <div className="metric-value">{userData.sentiment}%</div>
             <div className="text-xs text-muted mt-1">positive mentions</div>
           </div>
         </div>
@@ -289,9 +287,9 @@ export default function CompetitorsPage() {
                       <div key={comp.name} className="flex items-center gap-3 py-1.5">
                         <span className="text-xs text-muted w-5 tabular-nums text-right">{idx + 1}</span>
                         <img 
-                          src={getBrandLogo(comp.name, 20)}
+                          src={getBrandLogo(comp.name)}
                           alt=""
-                          className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
+                          className="w-5 h-5 rounded object-contain flex-shrink-0"
                           onError={(e) => { e.currentTarget.style.display = 'none' }}
                         />
                         <div className="w-28 flex-shrink-0">
@@ -318,7 +316,7 @@ export default function CompetitorsPage() {
                 </div>
               </div>
 
-              {/* Insights Panel - Tighter rows */}
+              {/* Insights Panel */}
               <div className="card p-0 overflow-hidden">
                 <div className="p-4 border-b border-border">
                   <h3 className="font-semibold text-primary text-sm">Quick Insights</h3>
@@ -330,9 +328,9 @@ export default function CompetitorsPage() {
                     <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Most Mentioned</div>
                     <div className="flex items-center gap-2">
                       <img 
-                        src={getBrandLogo(competitors[0]?.name || '', 20)}
+                        src={getBrandLogo(competitors[0]?.name || '')}
                         alt=""
-                        className="w-5 h-5 rounded bg-secondary object-contain"
+                        className="w-5 h-5 rounded object-contain"
                         onError={(e) => { e.currentTarget.style.display = 'none' }}
                       />
                       <span className="font-medium text-primary text-sm">{competitors[0]?.name || '--'}</span>
@@ -348,9 +346,9 @@ export default function CompetitorsPage() {
                         <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Sentiment</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(bestSentiment?.name || '', 20)}
+                            src={getBrandLogo(bestSentiment?.name || '')}
                             alt=""
-                            className="w-5 h-5 rounded bg-secondary object-contain"
+                            className="w-5 h-5 rounded object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
                           <span className="font-medium text-primary text-sm">{bestSentiment?.name || '--'}</span>
@@ -368,9 +366,9 @@ export default function CompetitorsPage() {
                         <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Avg Position</div>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(bestPosition?.name || '', 20)}
+                            src={getBrandLogo(bestPosition?.name || '')}
                             alt=""
-                            className="w-5 h-5 rounded bg-secondary object-contain"
+                            className="w-5 h-5 rounded object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
                           <span className="font-medium text-primary text-sm">{bestPosition?.name || '--'}</span>
@@ -465,9 +463,9 @@ export default function CompetitorsPage() {
                       <td>
                         <div className="flex items-center gap-2">
                           <img 
-                            src={getBrandLogo(comp.name, 24)}
+                            src={getBrandLogo(comp.name)}
                             alt=""
-                            className="w-6 h-6 rounded bg-secondary object-contain"
+                            className="w-6 h-6 rounded object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
                           <span className="font-medium text-primary">{comp.name}</span>
@@ -529,9 +527,9 @@ export default function CompetitorsPage() {
                   >
                     <span className="text-xs text-muted w-5 tabular-nums">#{comp.rank}</span>
                     <img 
-                      src={getBrandLogo(comp.name, 20)}
+                      src={getBrandLogo(comp.name)}
                       alt=""
-                      className="w-5 h-5 rounded bg-secondary object-contain flex-shrink-0"
+                      className="w-5 h-5 rounded object-contain flex-shrink-0"
                       onError={(e) => { e.currentTarget.style.display = 'none' }}
                     />
                     <span className="text-sm text-primary truncate flex-1">{comp.name}</span>
@@ -555,12 +553,14 @@ export default function CompetitorsPage() {
                         <div className="text-center">
                           <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2 overflow-hidden">
                             <img 
-                              src={getBrandLogo(currentDashboard?.domain || brandName, 48)}
+                              src={getBrandLogo(currentDashboard?.domain || brandName)}
                               alt=""
                               className="w-full h-full object-contain"
                               onError={(e) => { 
                                 e.currentTarget.style.display = 'none'
-                                e.currentTarget.parentElement!.innerHTML = `<span class="text-lg font-bold text-primary">${brandName.charAt(0)}</span>`
+                                if (e.currentTarget.parentElement) {
+                                  e.currentTarget.parentElement.innerHTML = `<span class="text-lg font-bold text-primary">${brandName.charAt(0)}</span>`
+                                }
                               }}
                             />
                           </div>
@@ -571,12 +571,14 @@ export default function CompetitorsPage() {
                         <div className="text-center">
                           <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center mb-2 overflow-hidden">
                             <img 
-                              src={getBrandLogo(selectedCompetitor.name, 48)}
+                              src={getBrandLogo(selectedCompetitor.name)}
                               alt=""
                               className="w-full h-full object-contain"
                               onError={(e) => { 
                                 e.currentTarget.style.display = 'none'
-                                e.currentTarget.parentElement!.innerHTML = `<span class="text-lg font-bold text-secondary">${selectedCompetitor.name.charAt(0)}</span>`
+                                if (e.currentTarget.parentElement) {
+                                  e.currentTarget.parentElement.innerHTML = `<span class="text-lg font-bold text-secondary">${selectedCompetitor.name.charAt(0)}</span>`
+                                }
                               }}
                             />
                           </div>
