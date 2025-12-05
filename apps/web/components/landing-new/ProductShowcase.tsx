@@ -17,39 +17,6 @@ export default function ProductShowcase() {
     { id: 'sources', label: 'Sources' },
   ]
 
-  const models = [
-    { name: 'ChatGPT', color: '#10a37f', logo: '/logos/chatgpt.svg', data: [20, 35, 42, 55, 62, 68] },
-    { name: 'Claude', color: '#d4a574', logo: '/logos/claude.svg', data: [15, 28, 38, 45, 58, 65] },
-    { name: 'Gemini', color: '#4285f4', logo: '/logos/gemini.svg', data: [10, 22, 30, 38, 48, 55] },
-    { name: 'Perplexity', color: '#20b8cd', logo: '/logos/perplexity.svg', data: [8, 18, 25, 35, 42, 50] },
-  ]
-
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
-
-  // Generate smooth SVG path
-  const generatePath = (data: number[], index: number) => {
-    const height = 180
-    const width = 320
-    const paddingX = 0
-    const paddingY = 10
-    const usableHeight = height - paddingY * 2
-    const xStep = width / (data.length - 1)
-    
-    let path = `M ${paddingX} ${usableHeight - (data[0] / 100) * usableHeight + paddingY}`
-    
-    data.forEach((point, i) => {
-      if (i === 0) return
-      const x = paddingX + (i * xStep)
-      const y = usableHeight - (point / 100) * usableHeight + paddingY
-      const prevX = paddingX + ((i - 1) * xStep)
-      const prevY = usableHeight - (data[i - 1] / 100) * usableHeight + paddingY
-      const cpX = (prevX + x) / 2
-      path += ` C ${cpX} ${prevY}, ${cpX} ${y}, ${x} ${y}`
-    })
-    
-    return path
-  }
-
   return (
     <section className="relative py-24 bg-[#0a0a0a] overflow-hidden">
       {/* Gradient accent */}
@@ -96,17 +63,17 @@ export default function ProductShowcase() {
 
           {/* Right - Dashboard Preview */}
           <div className="relative">
-            <div className="bg-[#111]/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+            <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-2xl overflow-hidden">
               {/* Tab header */}
-              <div className="flex gap-6 px-8 pt-6 border-b border-white/10">
+              <div className="flex gap-6 px-8 pt-6 border-b border-white/[0.06]">
                 {tabs.map((tab) => (
                   <button 
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`text-sm font-medium pb-4 border-b-2 transition-colors ${
                       activeTab === tab.id 
-                        ? 'text-white border-cyan-400' 
-                        : 'text-white/40 border-transparent hover:text-white/60'
+                        ? 'text-white border-white/40' 
+                        : 'text-white/30 border-transparent hover:text-white/50'
                     }`}
                   >
                     {tab.label}
@@ -116,129 +83,134 @@ export default function ProductShowcase() {
 
               {/* Tab content */}
               <div className="p-8">
-                {/* VISIBILITY TAB - Multi-line chart per model */}
+                {/* VISIBILITY TAB - Multi-line chart like Linear's Cycle chart */}
                 {activeTab === 'visibility' && (
                   <div>
                     {/* Legend */}
-                    <div className="flex flex-wrap gap-4 mb-6">
-                      {models.map((model) => (
-                        <div key={model.name} className="flex items-center gap-2">
+                    <div className="flex flex-wrap gap-6 mb-8">
+                      {[
+                        { name: 'ChatGPT', color: '#6b7280' },
+                        { name: 'Claude', color: '#d97706' },
+                        { name: 'Gemini', color: '#6366f1' },
+                        { name: 'Perplexity', color: '#6366f1', dashed: true },
+                      ].map((item) => (
+                        <div key={item.name} className="flex items-center gap-2">
                           <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: model.color }}
+                            className={`w-3 h-3 rounded-sm ${item.dashed ? 'border-2 border-dashed' : ''}`}
+                            style={{ 
+                              backgroundColor: item.dashed ? 'transparent' : item.color,
+                              borderColor: item.dashed ? item.color : 'transparent'
+                            }}
                           />
-                          <span className="text-white/60 text-xs">{model.name}</span>
+                          <span className="text-white/40 text-sm">{item.name}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* Chart */}
-                    <div className="relative h-48">
-                      {/* Y axis */}
-                      <div className="absolute left-0 top-0 bottom-6 w-8 flex flex-col justify-between text-right">
-                        {['100%', '50%', '0%'].map((label) => (
-                          <span key={label} className="text-white/30 text-xs">{label}</span>
-                        ))}
-                      </div>
-                      
-                      {/* Chart area */}
-                      <div className="ml-10 h-full">
-                        {/* Grid lines */}
-                        <div className="absolute left-10 right-0 top-0 bottom-6 flex flex-col justify-between">
-                          {[0, 1, 2].map((i) => (
-                            <div key={i} className="border-t border-white/5" />
-                          ))}
-                        </div>
-                        
-                        {/* SVG Lines */}
-                        <svg className="w-full h-[calc(100%-24px)]" viewBox="0 0 320 180" preserveAspectRatio="none">
-                          {models.map((model, idx) => (
-                            <path
-                              key={model.name}
-                              d={generatePath(model.data, idx)}
-                              fill="none"
-                              stroke={model.color}
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                            />
-                          ))}
-                        </svg>
+                    <div className="relative h-52">
+                      {/* SVG Lines */}
+                      <svg className="w-full h-full" viewBox="0 0 400 180" preserveAspectRatio="none">
+                        {/* ChatGPT - gray, top line */}
+                        <path
+                          d="M 0 140 C 30 138, 50 130, 80 125 C 110 120, 140 118, 180 100 C 220 82, 260 75, 300 60 C 340 45, 370 38, 400 30"
+                          fill="none"
+                          stroke="#6b7280"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                        {/* Claude - amber/gold, middle line */}
+                        <path
+                          d="M 0 165 C 40 160, 70 155, 100 145 C 140 132, 180 125, 220 110 C 260 95, 300 85, 340 70 C 370 60, 390 55, 400 50"
+                          fill="none"
+                          stroke="#d97706"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                        {/* Gemini - indigo, solid bottom line */}
+                        <path
+                          d="M 0 175 C 50 172, 80 168, 120 158 C 160 148, 200 140, 240 125 C 280 110, 320 100, 360 85 C 380 78, 395 72, 400 68"
+                          fill="none"
+                          stroke="#6366f1"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                        {/* Perplexity - indigo dashed, projection line */}
+                        <path
+                          d="M 200 140 C 240 128, 280 115, 320 98 C 360 81, 390 68, 400 60"
+                          fill="none"
+                          stroke="#6366f1"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeDasharray="6 6"
+                        />
+                      </svg>
 
-                        {/* X axis */}
-                        <div className="flex justify-between pt-2">
-                          {months.map((month) => (
-                            <span key={month} className="text-white/30 text-xs">{month}</span>
-                          ))}
-                        </div>
+                      {/* X axis labels */}
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-white/20 text-xs">
+                        <span>Jan</span>
+                        <span>Feb</span>
+                        <span>Mar</span>
+                        <span>Apr</span>
+                        <span>May</span>
+                        <span>Jun</span>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* SENTIMENT TAB - Sentiment breakdown per model */}
+                {/* SENTIMENT TAB - Muted glassmorphism bars */}
                 {activeTab === 'sentiment' && (
-                  <div className="space-y-4">
-                    {models.map((model) => (
+                  <div className="space-y-5">
+                    {[
+                      { name: 'ChatGPT', logo: '/logos/chatgpt.svg', positive: 65, neutral: 25, negative: 10, score: 82 },
+                      { name: 'Claude', logo: '/logos/claude.svg', positive: 58, neutral: 30, negative: 12, score: 76 },
+                      { name: 'Gemini', logo: '/logos/gemini.svg', positive: 72, neutral: 22, negative: 6, score: 90 },
+                      { name: 'Perplexity', logo: '/logos/perplexity.svg', positive: 62, neutral: 28, negative: 10, score: 81 },
+                    ].map((model) => (
                       <div key={model.name} className="flex items-center gap-4">
                         {/* Model */}
-                        <div className="flex items-center gap-2 w-28">
-                          <Image src={model.logo} alt={model.name} width={20} height={20} className="w-5 h-5" />
-                          <span className="text-white/70 text-sm">{model.name}</span>
+                        <div className="flex items-center gap-2 w-28 flex-shrink-0">
+                          <Image src={model.logo} alt={model.name} width={18} height={18} className="w-[18px] h-[18px] opacity-60" />
+                          <span className="text-white/50 text-sm">{model.name}</span>
                         </div>
                         
-                        {/* Sentiment bar */}
-                        <div className="flex-1 flex h-6 rounded-lg overflow-hidden bg-white/5">
+                        {/* Sentiment bar - glassmorphism container */}
+                        <div className="flex-1 flex h-7 rounded-md overflow-hidden bg-white/[0.03] border border-white/[0.06]">
                           <div 
-                            className="bg-emerald-500/80 flex items-center justify-center"
-                            style={{ width: `${60 + Math.random() * 20}%` }}
+                            className="bg-emerald-500/60 flex items-center justify-center"
+                            style={{ width: `${model.positive}%` }}
                           >
-                            <span className="text-white text-xs font-medium">Positive</span>
+                            <span className="text-white/80 text-xs font-medium">Positive</span>
                           </div>
                           <div 
-                            className="bg-white/20 flex items-center justify-center"
-                            style={{ width: `${15 + Math.random() * 10}%` }}
+                            className="bg-white/[0.08] flex items-center justify-center"
+                            style={{ width: `${model.neutral}%` }}
                           >
-                            <span className="text-white/60 text-xs">Neutral</span>
+                            <span className="text-white/40 text-xs font-medium">Neutral</span>
                           </div>
                           <div 
-                            className="bg-red-500/60 flex items-center justify-center"
-                            style={{ width: `${5 + Math.random() * 10}%` }}
-                          >
-                          </div>
+                            className="bg-red-500/40"
+                            style={{ width: `${model.negative}%` }}
+                          />
                         </div>
                         
                         {/* Score */}
-                        <div className="w-12 text-right">
-                          <span className="text-emerald-400 text-sm font-medium">
-                            {Math.floor(75 + Math.random() * 20)}%
+                        <div className="w-12 text-right flex-shrink-0">
+                          <span className="text-emerald-400/80 text-sm font-medium">
+                            {model.score}%
                           </span>
                         </div>
                       </div>
                     ))}
-                    
-                    {/* Legend */}
-                    <div className="flex items-center gap-6 pt-4 mt-4 border-t border-white/5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                        <span className="text-white/40 text-xs">Positive</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-white/30" />
-                        <span className="text-white/40 text-xs">Neutral</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                        <span className="text-white/40 text-xs">Negative</span>
-                      </div>
-                    </div>
                   </div>
                 )}
 
-                {/* SOURCES TAB - Domain list like Sources page */}
+                {/* SOURCES TAB - Domain list with Brandfetch logos */}
                 {activeTab === 'sources' && (
                   <div>
                     {/* Header */}
-                    <div className="grid grid-cols-12 gap-4 pb-3 border-b border-white/10 text-xs text-white/40 uppercase tracking-wider">
+                    <div className="grid grid-cols-12 gap-4 pb-3 border-b border-white/[0.06] text-xs text-white/30 uppercase tracking-wider">
                       <div className="col-span-1">#</div>
                       <div className="col-span-5">Domain</div>
                       <div className="col-span-3">Type</div>
@@ -247,24 +219,28 @@ export default function ProductShowcase() {
                     
                     {/* Rows */}
                     {[
-                      { rank: 1, domain: 'reddit.com', icon: '🔴', type: 'UGC', typeColor: 'bg-orange-500/20 text-orange-400', citations: '32%' },
-                      { rank: 2, domain: 'techradar.com', icon: '📡', type: 'Editorial', typeColor: 'bg-blue-500/20 text-blue-400', citations: '28%' },
-                      { rank: 3, domain: 'g2.com', icon: '⭐', type: 'Review', typeColor: 'bg-emerald-500/20 text-emerald-400', citations: '24%' },
-                      { rank: 4, domain: 'wikipedia.org', icon: '📚', type: 'Reference', typeColor: 'bg-purple-500/20 text-purple-400', citations: '18%' },
-                      { rank: 5, domain: 'forbes.com', icon: '📰', type: 'Editorial', typeColor: 'bg-blue-500/20 text-blue-400', citations: '14%' },
+                      { rank: 1, domain: 'reddit.com', type: 'UGC', typeColor: 'bg-orange-500/10 text-orange-400/70 border border-orange-500/20', citations: '32%' },
+                      { rank: 2, domain: 'techradar.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/70 border border-blue-500/20', citations: '28%' },
+                      { rank: 3, domain: 'g2.com', type: 'Review', typeColor: 'bg-emerald-500/10 text-emerald-400/70 border border-emerald-500/20', citations: '24%' },
+                      { rank: 4, domain: 'wikipedia.org', type: 'Reference', typeColor: 'bg-purple-500/10 text-purple-400/70 border border-purple-500/20', citations: '18%' },
+                      { rank: 5, domain: 'forbes.com', type: 'Editorial', typeColor: 'bg-blue-500/10 text-blue-400/70 border border-blue-500/20', citations: '14%' },
                     ].map((source) => (
-                      <div key={source.rank} className="grid grid-cols-12 gap-4 py-3 border-b border-white/5 items-center">
-                        <div className="col-span-1 text-white/30 text-sm">{source.rank}</div>
-                        <div className="col-span-5 flex items-center gap-2">
-                          <span className="text-sm">{source.icon}</span>
-                          <span className="text-white text-sm">{source.domain}</span>
+                      <div key={source.rank} className="grid grid-cols-12 gap-4 py-3.5 border-b border-white/[0.04] items-center">
+                        <div className="col-span-1 text-white/20 text-sm">{source.rank}</div>
+                        <div className="col-span-5 flex items-center gap-3">
+                          <img 
+                            src={`https://cdn.brandfetch.io/${source.domain}/w/400/h/400?c=1id_zeP0K7d`}
+                            alt=""
+                            className="w-5 h-5 rounded opacity-70"
+                          />
+                          <span className="text-white/70 text-sm">{source.domain}</span>
                         </div>
                         <div className="col-span-3">
                           <span className={`px-2 py-1 rounded text-xs font-medium ${source.typeColor}`}>
                             {source.type}
                           </span>
                         </div>
-                        <div className="col-span-3 text-right text-white/60 text-sm">{source.citations}</div>
+                        <div className="col-span-3 text-right text-white/40 text-sm">{source.citations}</div>
                       </div>
                     ))}
                   </div>
