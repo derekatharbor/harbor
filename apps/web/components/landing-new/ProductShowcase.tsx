@@ -65,7 +65,9 @@ export default function IndexShowcase() {
             className="relative bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-2xl overflow-hidden"
             style={{ 
               transform: 'rotateX(20deg)',
-              transformOrigin: 'center top'
+              transformOrigin: 'center top',
+              maskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 50%, transparent 100%)'
             }}
           >
             {/* Search header */}
@@ -122,14 +124,6 @@ export default function IndexShowcase() {
                 </div>
               ))}
             </div>
-
-            {/* Fade overlay at bottom - covers last 3-4 rows */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
-              style={{
-                background: 'linear-gradient(to top, #0a0a0a 0%, #0a0a0a 40%, transparent 100%)'
-              }}
-            />
           </div>
         </div>
       </div>
