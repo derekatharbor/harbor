@@ -131,6 +131,106 @@ function FeatureModal({
 }) {
   if (!isOpen || !feature) return null
 
+  // Render the visual based on feature id
+  const renderVisual = () => {
+    switch (feature.id) {
+      case 'visibility':
+        return (
+          <div className="relative h-48 bg-[#0a0a0a] rounded-xl overflow-hidden mb-6">
+            {/* Wireframe grid */}
+            <div 
+              className="absolute inset-0 opacity-[0.05]"
+              style={{
+                backgroundImage: `
+                  linear-gradient(to right, white 1px, transparent 1px),
+                  linear-gradient(to bottom, white 1px, transparent 1px)
+                `,
+                backgroundSize: '30px 30px'
+              }}
+            />
+            {/* Floating cards */}
+            <div className="absolute top-4 left-4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-40">
+              <div className="flex items-center gap-2 mb-1">
+                <Image src="/logos/chatgpt.svg" alt="ChatGPT" width={16} height={16} />
+                <span className="text-white/60 text-xs">ChatGPT</span>
+              </div>
+              <p className="text-white/80 text-xs">What's the best CRM?</p>
+            </div>
+            <div className="absolute top-6 right-4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-40">
+              <div className="flex items-center gap-2 mb-1">
+                <Image src="/logos/claude.svg" alt="Claude" width={16} height={16} />
+                <span className="text-white/60 text-xs">Claude</span>
+              </div>
+              <p className="text-white/80 text-xs">Compare HubSpot vs Salesforce</p>
+            </div>
+            <div className="absolute bottom-4 left-1/4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-44">
+              <div className="flex items-center gap-2 mb-1">
+                <Image src="/logos/gemini.svg" alt="Gemini" width={16} height={16} />
+                <span className="text-white/60 text-xs">Gemini</span>
+              </div>
+              <p className="text-white/80 text-xs">Top marketing tools 2025</p>
+            </div>
+          </div>
+        )
+      case 'competitors':
+        return (
+          <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-5 mb-6">
+            <div className="space-y-4">
+              {[
+                { label: 'Your Brand', width: '85%', highlight: true },
+                { label: 'Competitor A', width: '62%', highlight: false },
+                { label: 'Competitor B', width: '45%', highlight: false },
+              ].map((bar, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className={bar.highlight ? 'text-white/80' : 'text-white/40'}>{bar.label}</span>
+                    <span className={bar.highlight ? 'text-cyan-400' : 'text-white/30'}>{bar.width}</span>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${bar.highlight ? 'bg-gradient-to-r from-cyan-500 to-blue-500' : 'bg-white/10'}`}
+                      style={{ width: bar.width }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      case 'optimize':
+        return (
+          <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4 mb-6">
+            <div className="space-y-2">
+              {[
+                { task: 'Add Organization schema', done: true },
+                { task: 'Optimize product descriptions', done: true },
+                { task: 'Update meta descriptions', done: false },
+                { task: 'Add FAQ schema', done: false },
+              ].map((item, i) => (
+                <div 
+                  key={i} 
+                  className={`flex items-center gap-3 p-2.5 rounded-lg ${item.done ? 'bg-white/[0.02]' : ''}`}
+                >
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+                    item.done 
+                      ? 'bg-emerald-500/20 text-emerald-400' 
+                      : 'bg-white/5 text-white/30 border border-white/10'
+                  }`}>
+                    {item.done ? '✓' : ''}
+                  </div>
+                  <span className={`text-sm ${item.done ? 'text-white/40 line-through' : 'text-white/70'}`}>
+                    {item.task}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-6"
@@ -153,6 +253,10 @@ function FeatureModal({
         </button>
 
         <h2 className="text-2xl font-bold text-white mb-4">{feature.modalTitle}</h2>
+        
+        {/* Visual from card */}
+        {renderVisual()}
+        
         <p className="text-white/50 leading-relaxed mb-6">{feature.modalDescription}</p>
         
         <ul className="space-y-3">
@@ -206,115 +310,94 @@ export default function FeatureCards() {
                 }}
               />
               
-              {/* Floating prompt cards */}
+              {/* Floating prompt cards - less overlap */}
               <FloatingPromptCard
                 {...AI_PROMPTS[0]}
                 className="w-48"
-                style={{ top: '15%', left: '10%', transform: 'rotate(-3deg)' }}
+                style={{ top: '8%', left: '5%', transform: 'rotate(-2deg)' }}
               />
               <FloatingPromptCard
                 {...AI_PROMPTS[1]}
-                className="w-52"
-                style={{ top: '35%', right: '5%', transform: 'rotate(2deg)' }}
+                className="w-48"
+                style={{ top: '12%', right: '3%', transform: 'rotate(3deg)' }}
               />
               <FloatingPromptCard
                 {...AI_PROMPTS[2]}
-                className="w-44"
-                style={{ bottom: '25%', left: '15%', transform: 'rotate(1deg)' }}
+                className="w-48"
+                style={{ bottom: '15%', left: '20%', transform: 'rotate(1deg)' }}
               />
             </FeatureCard>
 
-            {/* Card 2: Competitors - placeholder visual */}
+            {/* Card 2: Competitors - frosted glass container */}
             <FeatureCard 
               feature={FEATURES[1]}
               onClick={() => setActiveModal(FEATURES[1])}
             >
-              {/* Wireframe grid background */}
-              <div 
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(to right, white 1px, transparent 1px),
-                    linear-gradient(to bottom, white 1px, transparent 1px)
-                  `,
-                  backgroundSize: '40px 40px'
-                }}
-              />
-              
-              {/* Placeholder: Comparison bars */}
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <div className="w-full space-y-4">
-                  {[
-                    { label: 'Your Brand', width: '85%', highlight: true },
-                    { label: 'Competitor A', width: '62%', highlight: false },
-                    { label: 'Competitor B', width: '45%', highlight: false },
-                  ].map((bar, i) => (
-                    <div key={i} className="space-y-2">
-                      <div className="flex justify-between text-xs">
-                        <span className={bar.highlight ? 'text-white/80' : 'text-white/40'}>{bar.label}</span>
-                        <span className={bar.highlight ? 'text-cyan-400' : 'text-white/30'}>{bar.width}</span>
+              {/* Placeholder: Comparison bars in frosted card */}
+              <div className="absolute inset-0 flex items-center justify-center p-6">
+                <div className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-5">
+                  <div className="space-y-4">
+                    {[
+                      { label: 'Your Brand', width: '85%', highlight: true },
+                      { label: 'Competitor A', width: '62%', highlight: false },
+                      { label: 'Competitor B', width: '45%', highlight: false },
+                    ].map((bar, i) => (
+                      <div key={i} className="space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className={bar.highlight ? 'text-white/80' : 'text-white/40'}>{bar.label}</span>
+                          <span className={bar.highlight ? 'text-cyan-400' : 'text-white/30'}>{bar.width}</span>
+                        </div>
+                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${bar.highlight ? 'bg-gradient-to-r from-cyan-500 to-blue-500' : 'bg-white/10'}`}
+                            style={{ width: bar.width }}
+                          />
+                        </div>
                       </div>
-                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full ${bar.highlight ? 'bg-gradient-to-r from-cyan-500 to-blue-500' : 'bg-white/10'}`}
-                          style={{ width: bar.width }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </FeatureCard>
 
-            {/* Card 3: Optimize - placeholder visual */}
+            {/* Card 3: Optimize - frosted glass container */}
             <FeatureCard 
               feature={FEATURES[2]}
               onClick={() => setActiveModal(FEATURES[2])}
             >
-              {/* Wireframe grid background */}
-              <div 
-                className="absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(to right, white 1px, transparent 1px),
-                    linear-gradient(to bottom, white 1px, transparent 1px)
-                  `,
-                  backgroundSize: '40px 40px'
-                }}
-              />
-              
-              {/* Placeholder: Task list */}
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <div className="w-full space-y-3">
-                  {[
-                    { task: 'Add Organization schema', done: true },
-                    { task: 'Optimize product descriptions', done: true },
-                    { task: 'Update meta descriptions', done: false },
-                    { task: 'Add FAQ schema', done: false },
-                    { task: 'Improve page load speed', done: false },
-                  ].map((item, i) => (
-                    <div 
-                      key={i} 
-                      className={`flex items-center gap-3 p-3 rounded-lg border ${
-                        item.done 
-                          ? 'bg-white/[0.02] border-white/5' 
-                          : 'bg-transparent border-white/10'
-                      }`}
-                    >
-                      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                        item.done 
-                          ? 'bg-emerald-500/20 text-emerald-400' 
-                          : 'bg-white/5 text-white/30'
-                      }`}>
-                        {item.done ? '✓' : ''}
+              {/* Placeholder: Task list in frosted card */}
+              <div className="absolute inset-0 flex items-center justify-center p-6">
+                <div className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4">
+                  <div className="space-y-2">
+                    {[
+                      { task: 'Add Organization schema', done: true },
+                      { task: 'Optimize product descriptions', done: true },
+                      { task: 'Update meta descriptions', done: false },
+                      { task: 'Add FAQ schema', done: false },
+                    ].map((item, i) => (
+                      <div 
+                        key={i} 
+                        className={`flex items-center gap-3 p-2.5 rounded-lg ${
+                          item.done 
+                            ? 'bg-white/[0.02]' 
+                            : 'bg-transparent'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+                          item.done 
+                            ? 'bg-emerald-500/20 text-emerald-400' 
+                            : 'bg-white/5 text-white/30 border border-white/10'
+                        }`}>
+                          {item.done ? '✓' : ''}
+                        </div>
+                        <span className={`text-sm ${
+                          item.done ? 'text-white/40 line-through' : 'text-white/70'
+                        }`}>
+                          {item.task}
+                        </span>
                       </div>
-                      <span className={`text-sm ${
-                        item.done ? 'text-white/40 line-through' : 'text-white/70'
-                      }`}>
-                        {item.task}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </FeatureCard>
