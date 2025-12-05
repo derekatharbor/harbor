@@ -136,39 +136,48 @@ function FeatureModal({
     switch (feature.id) {
       case 'visibility':
         return (
-          <div className="relative h-48 bg-[#0a0a0a] rounded-xl overflow-hidden mb-6">
-            {/* Wireframe grid */}
+          <div className="relative h-56 bg-[#111] rounded-xl overflow-hidden mb-6 border border-white/[0.08]">
+            {/* Wireframe grid - same as card */}
             <div 
-              className="absolute inset-0 opacity-[0.05]"
+              className="absolute inset-0 opacity-[0.03]"
               style={{
                 backgroundImage: `
                   linear-gradient(to right, white 1px, transparent 1px),
                   linear-gradient(to bottom, white 1px, transparent 1px)
                 `,
-                backgroundSize: '30px 30px'
+                backgroundSize: '40px 40px'
               }}
             />
-            {/* Floating cards */}
-            <div className="absolute top-4 left-4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-40">
-              <div className="flex items-center gap-2 mb-1">
-                <Image src="/logos/chatgpt.svg" alt="ChatGPT" width={16} height={16} />
-                <span className="text-white/60 text-xs">ChatGPT</span>
+            {/* Floating cards - same positioning as card */}
+            <div 
+              className="absolute bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4 w-48"
+              style={{ top: '8%', left: '5%', transform: 'rotate(-2deg)' }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Image src="/logos/chatgpt.svg" alt="ChatGPT" width={20} height={20} className="w-5 h-5" />
+                <span className="text-white/60 text-xs font-medium">ChatGPT</span>
               </div>
-              <p className="text-white/80 text-xs">What's the best CRM?</p>
+              <p className="text-white/80 text-sm leading-relaxed">What's the best CRM for startups?</p>
             </div>
-            <div className="absolute top-6 right-4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-40">
-              <div className="flex items-center gap-2 mb-1">
-                <Image src="/logos/claude.svg" alt="Claude" width={16} height={16} />
-                <span className="text-white/60 text-xs">Claude</span>
+            <div 
+              className="absolute bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4 w-48"
+              style={{ top: '12%', right: '3%', transform: 'rotate(3deg)' }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Image src="/logos/claude.svg" alt="Claude" width={20} height={20} className="w-5 h-5" />
+                <span className="text-white/60 text-xs font-medium">Claude</span>
               </div>
-              <p className="text-white/80 text-xs">Compare HubSpot vs Salesforce</p>
+              <p className="text-white/80 text-sm leading-relaxed">Compare HubSpot vs Salesforce</p>
             </div>
-            <div className="absolute bottom-4 left-1/4 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-lg p-3 w-44">
-              <div className="flex items-center gap-2 mb-1">
-                <Image src="/logos/gemini.svg" alt="Gemini" width={16} height={16} />
-                <span className="text-white/60 text-xs">Gemini</span>
+            <div 
+              className="absolute bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-xl p-4 w-48"
+              style={{ bottom: '15%', left: '20%', transform: 'rotate(1deg)' }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Image src="/logos/gemini.svg" alt="Gemini" width={20} height={20} className="w-5 h-5" />
+                <span className="text-white/60 text-xs font-medium">Gemini</span>
               </div>
-              <p className="text-white/80 text-xs">Top marketing tools 2025</p>
+              <p className="text-white/80 text-sm leading-relaxed">Top marketing automation tools 2025</p>
             </div>
           </div>
         )
