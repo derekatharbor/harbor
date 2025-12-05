@@ -1,6 +1,8 @@
 // POST /api/prompts/execute-batch
 // Execute batch of seed prompts - called by cron job
 // This is the main data collection engine
+// 
+// NEW: Respects priority and frequency_days to avoid re-running fresh prompts
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -36,9 +38,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json().catch(() => ({}))
-    const batchSize = body.batch_size || body.limit || 25 // Process 25 prompts per run to stay under timeout
+    const batchSize = body.batch_size || body.limit || 25
     const batchType = body.batch_type || 'scheduled'
-    const topic = body.topic || null // NEW: Optional topic filter
+    const topic = body.topic || null
+    const priority = body.priority || null // NEW: Filter by priority (core, standard, long-tail)
+    const force = body.force || false // NEW: Skip freshness check if true
 
     // Create batch record
     const { data: batch, error: batchError } = await supabase
@@ -55,27 +59,83 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to create batch record')
     }
 
-    // Build query for seed prompts
-    let query = supabase
-      .from('seed_prompts')
-      .select('id, prompt_text, topic')
-      .eq('is_active', true)
-    
-    // NEW: Filter by topic if provided
+    // Fetch prompts that need execution
+    // Uses a raw query to handle the freshness logic properly
+    let queryText = `
+      SELECT id, prompt_text, topic, priority, frequency_days, last_executed_at
+      FROM seed_prompts
+      WHERE is_active = true
+    `
+    const queryParams: any[] = []
+    let paramIndex = 1
+
+    // Filter by topic if provided
     if (topic) {
-      query = query.eq('topic', topic)
-    }
-    
-    // Get seed prompts that haven't been run recently (> 3 days ago)
-    const { data: prompts, error: promptsError } = await query
-      .order('created_at', { ascending: true })
-      .limit(batchSize)
-
-    if (promptsError) {
-      throw new Error('Failed to fetch prompts')
+      queryText += ` AND topic = $${paramIndex}`
+      queryParams.push(topic)
+      paramIndex++
     }
 
-    if (!prompts || prompts.length === 0) {
+    // Filter by priority if provided
+    if (priority) {
+      queryText += ` AND priority = $${paramIndex}`
+      queryParams.push(priority)
+      paramIndex++
+    }
+
+    // Freshness check: only get prompts that are stale (unless force=true)
+    if (!force) {
+      queryText += `
+        AND (
+          last_executed_at IS NULL
+          OR last_executed_at < NOW() - (COALESCE(frequency_days, 30) || ' days')::INTERVAL
+        )
+      `
+    }
+
+    // Order: prioritize never-run prompts, then oldest executions
+    queryText += `
+      ORDER BY 
+        CASE WHEN last_executed_at IS NULL THEN 0 ELSE 1 END,
+        last_executed_at ASC NULLS FIRST
+      LIMIT $${paramIndex}
+    `
+    queryParams.push(batchSize)
+
+    const { data: prompts, error: promptsError } = await supabase
+      .rpc('execute_raw_query', { query_text: queryText, query_params: queryParams })
+
+    // Fallback if RPC doesn't exist - use standard query
+    let promptsToRun = prompts
+    if (promptsError || !prompts) {
+      // Simpler fallback query without the interval math
+      let fallbackQuery = supabase
+        .from('seed_prompts')
+        .select('id, prompt_text, topic, priority, frequency_days, last_executed_at')
+        .eq('is_active', true)
+
+      if (topic) {
+        fallbackQuery = fallbackQuery.eq('topic', topic)
+      }
+      if (priority) {
+        fallbackQuery = fallbackQuery.eq('priority', priority)
+      }
+      if (!force) {
+        // Get prompts that haven't been run OR were run more than 7 days ago (safe default)
+        fallbackQuery = fallbackQuery.or('last_executed_at.is.null,last_executed_at.lt.' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      }
+
+      const { data: fallbackPrompts, error: fallbackError } = await fallbackQuery
+        .order('last_executed_at', { ascending: true, nullsFirst: true })
+        .limit(batchSize)
+
+      if (fallbackError) {
+        throw new Error('Failed to fetch prompts: ' + fallbackError.message)
+      }
+      promptsToRun = fallbackPrompts
+    }
+
+    if (!promptsToRun || promptsToRun.length === 0) {
       // Update batch as completed with no work
       await supabase
         .from('prompt_execution_batches')
@@ -88,9 +148,11 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'No prompts to execute',
+        message: 'No stale prompts to execute - all prompts are fresh',
         batch_id: batch.id,
-        topic: topic || 'all'
+        topic: topic || 'all',
+        priority: priority || 'all',
+        hint: 'Use force=true to run regardless of freshness'
       })
     }
 
@@ -99,9 +161,10 @@ export async function POST(request: NextRequest) {
     let completed = 0
     let failed = 0
     const errors: string[] = []
+    const executedPromptIds: string[] = []
 
     // Execute each prompt
-    for (const prompt of prompts) {
+    for (const prompt of promptsToRun) {
       try {
         const results = await executePromptAllModels(
           prompt.id,
@@ -110,15 +173,16 @@ export async function POST(request: NextRequest) {
 
         await storeExecutionResults(supabase, results)
 
-        const promptTokens = results.reduce((sum, r) => sum + r.tokens_used, 0)
+        const promptTokens = results.reduce((sum: number, r: any) => sum + r.tokens_used, 0)
         totalTokens += promptTokens
         
-        const promptErrors = results.filter(r => r.error)
+        const promptErrors = results.filter((r: any) => r.error)
         if (promptErrors.length === results.length) {
           failed++
           errors.push(`Prompt ${prompt.id}: All models failed`)
         } else {
           completed++
+          executedPromptIds.push(prompt.id)
         }
 
         // Small delay between prompts to avoid rate limits
@@ -130,16 +194,23 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Calculate estimated cost (updated for cheaper models)
-    // GPT-4o-mini: ~$0.0004 per 1K tokens, Claude Haiku: ~$0.002, Gemini Flash: ~$0.0001, Perplexity Sonar: ~$0.001
-    const estimatedCost = (totalTokens / 1000000) * 2 // rough average with cheaper models
+    // UPDATE: Mark executed prompts with new last_executed_at
+    if (executedPromptIds.length > 0) {
+      await supabase
+        .from('seed_prompts')
+        .update({ last_executed_at: new Date().toISOString() })
+        .in('id', executedPromptIds)
+    }
+
+    // Calculate estimated cost
+    const estimatedCost = (totalTokens / 1000000) * 2
 
     // Update batch record
     await supabase
       .from('prompt_execution_batches')
       .update({
-        status: failed === prompts.length ? 'failed' : 'completed',
-        prompts_total: prompts.length,
+        status: failed === promptsToRun.length ? 'failed' : 'completed',
+        prompts_total: promptsToRun.length,
         prompts_completed: completed,
         prompts_failed: failed,
         total_tokens_used: totalTokens,
@@ -150,14 +221,15 @@ export async function POST(request: NextRequest) {
       .eq('id', batch.id)
 
     // Update citation stats (aggregate)
-    await supabase.rpc('update_citation_stats')
+    await supabase.rpc('update_citation_stats').catch(() => {})
 
     return NextResponse.json({
       success: true,
       batch_id: batch.id,
       topic: topic || 'all',
+      priority: priority || 'all',
       results: {
-        prompts_total: prompts.length,
+        prompts_total: promptsToRun.length,
         completed,
         failed,
         total_tokens: totalTokens,
@@ -175,11 +247,58 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint to check batch status
+// GET endpoint to check batch status or see what's stale
 export async function GET(request: NextRequest) {
   const supabase = getSupabase()
   const { searchParams } = new URL(request.url)
   const batchId = searchParams.get('batch_id')
+  const checkStale = searchParams.get('check_stale')
+
+  // Check what prompts are stale and ready to run
+  if (checkStale === 'true') {
+    const topic = searchParams.get('topic')
+    
+    let query = supabase
+      .from('seed_prompts')
+      .select('id, prompt_text, topic, priority, frequency_days, last_executed_at')
+      .eq('is_active', true)
+      .or('last_executed_at.is.null,last_executed_at.lt.' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+
+    if (topic) {
+      query = query.eq('topic', topic)
+    }
+
+    const { data: stalePrompts, error } = await query
+      .order('last_executed_at', { ascending: true, nullsFirst: true })
+      .limit(100)
+
+    // Also get summary by topic
+    const { data: summary } = await supabase
+      .from('seed_prompts')
+      .select('topic, priority')
+      .eq('is_active', true)
+      .or('last_executed_at.is.null,last_executed_at.lt.' + new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+
+    const topicCounts: Record<string, number> = {}
+    const priorityCounts: Record<string, number> = {}
+    summary?.forEach(p => {
+      topicCounts[p.topic] = (topicCounts[p.topic] || 0) + 1
+      priorityCounts[p.priority || 'standard'] = (priorityCounts[p.priority || 'standard'] || 0) + 1
+    })
+
+    return NextResponse.json({
+      stale_count: stalePrompts?.length || 0,
+      by_topic: topicCounts,
+      by_priority: priorityCounts,
+      sample: stalePrompts?.slice(0, 10).map(p => ({
+        id: p.id,
+        prompt: p.prompt_text.slice(0, 60) + '...',
+        topic: p.topic,
+        priority: p.priority,
+        last_run: p.last_executed_at
+      }))
+    })
+  }
 
   if (batchId) {
     const { data: batch } = await supabase
