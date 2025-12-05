@@ -34,7 +34,7 @@ export default function PromptTrackingSection() {
         {/* Two cards side by side */}
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
           {/* Left Card - Set up Prompts (table only) */}
-          <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] p-6 lg:p-8">
+          <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/[0.08] p-6 lg:p-8 relative overflow-hidden">
             <h3 className="text-xl font-semibold text-white mb-3">Set up Prompts</h3>
             <p className="text-white/40 text-sm mb-6 leading-relaxed max-w-md">
               Prompts are the foundation of your AI search strategy. Uncover and organize the prompts that matter most for your AI search strategy.
@@ -72,6 +72,7 @@ export default function PromptTrackingSection() {
                 { prompt: 'CRM software with advanced workflow automation', visibility: '78%', models: [0, 2, 3], created: '1d ago', tag: 'Corporate' },
                 { prompt: 'Top-rated CRM platforms with analytics', visibility: '71%', models: [1, 3], created: '2d ago', tag: 'Corporate' },
                 { prompt: 'Enterprise CRM solutions for scaling teams', visibility: '68%', models: [0, 1, 2, 3], created: '3d ago', tag: 'Enterprise' },
+                { prompt: 'CRM tools with AI-powered lead scoring', visibility: '64%', models: [0, 1], created: '4d ago', tag: 'Corporate' },
               ].map((row, idx) => (
                 <div key={idx} className="grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-white/[0.04] last:border-0 hover:bg-white/[0.02] transition-colors">
                   <div className="col-span-5 text-white/70 text-sm truncate">{row.prompt}</div>
@@ -101,6 +102,14 @@ export default function PromptTrackingSection() {
                 </div>
               ))}
             </div>
+
+            {/* Fade overlay on table */}
+            <div 
+              className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to top, rgba(10,10,10,1) 0%, rgba(10,10,10,0.9) 30%, rgba(10,10,10,0) 100%)'
+              }}
+            />
           </div>
 
           {/* Right Card - Use Data to Pick Winners */}
