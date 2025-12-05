@@ -1,4 +1,5 @@
 // components/landing-new/Footer.tsx
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -14,11 +15,14 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">H</span>
-              </div>
-              <span className="text-white font-semibold text-lg">Harbor</span>
+            <Link href="/" className="inline-block mb-4">
+              <Image
+                src="/images/harbor-white-logo.svg"
+                alt="Harbor"
+                width={120}
+                height={32}
+                className="h-7 w-auto"
+              />
             </Link>
             <p className="text-white/40 text-sm leading-relaxed">
               AI visibility intelligence for modern brands.

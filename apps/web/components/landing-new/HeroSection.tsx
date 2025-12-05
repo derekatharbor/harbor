@@ -7,10 +7,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const AI_MODELS = [
-  { name: 'ChatGPT', color: '#10a37f' },
-  { name: 'Claude', color: '#d4a574' },
-  { name: 'Gemini', color: '#4285f4' },
-  { name: 'Perplexity', color: '#20b8cd' },
+  { name: 'ChatGPT', logo: '/logos/chatgpt.svg' },
+  { name: 'Claude', logo: '/logos/claude.svg' },
+  { name: 'Gemini', logo: '/logos/gemini.svg' },
+  { name: 'Perplexity', logo: '/logos/perplexity.svg' },
 ]
 
 export default function HeroSection() {
@@ -23,8 +23,8 @@ export default function HeroSection() {
       setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % AI_MODELS.length)
         setIsAnimating(false)
-      }, 200) // Half of animation duration
-    }, 2500) // Change every 2.5 seconds
+      }, 200)
+    }, 2500)
 
     return () => clearInterval(interval)
   }, [])
@@ -43,16 +43,22 @@ export default function HeroSection() {
         {/* Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight">
           See what{' '}
-          <span className="relative inline-block">
+          <span className="relative inline-flex items-center gap-3">
             <span
-              className={`inline-block transition-all duration-400 ${
+              className={`inline-flex items-center gap-3 transition-all duration-400 ${
                 isAnimating 
                   ? 'opacity-0 scale-95 blur-sm' 
                   : 'opacity-100 scale-100 blur-0'
               }`}
-              style={{ color: currentModel.color }}
             >
-              {currentModel.name}
+              <Image
+                src={currentModel.logo}
+                alt={currentModel.name}
+                width={56}
+                height={56}
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14"
+              />
+              <span className="text-white">{currentModel.name}</span>
             </span>
           </span>
           <br />
@@ -75,30 +81,12 @@ export default function HeroSection() {
             Start for free
           </Link>
           <Link
-            href="/brands"
+            href="/claim"
             className="group flex items-center gap-2 px-4 py-3.5 text-white/70 hover:text-white text-sm font-medium transition-colors"
           >
-            Browse 38,000+ brands
+            Claim your brand
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-        </div>
-
-        {/* AI Model indicators */}
-        <div className="mt-8 flex items-center gap-6">
-          {AI_MODELS.map((model, index) => (
-            <div
-              key={model.name}
-              className={`flex items-center gap-2 transition-opacity duration-300 ${
-                index === currentIndex ? 'opacity-100' : 'opacity-30'
-              }`}
-            >
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: model.color }}
-              />
-              <span className="text-white/60 text-sm font-medium">{model.name}</span>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -107,37 +95,19 @@ export default function HeroSection() {
         {/* Glow behind screenshot */}
         <div className="absolute -inset-4 bg-gradient-to-t from-cyan-500/20 via-blue-500/10 to-transparent blur-3xl opacity-40" />
         
-        {/* Screenshot container */}
+        {/* Screenshot container - no browser chrome */}
         <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl">
-          {/* Browser chrome */}
-          <div className="bg-[#1a1a1a] px-4 py-3 flex items-center gap-3 border-b border-white/10">
-            <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-              <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-              <div className="w-3 h-3 rounded-full bg-[#28ca41]" />
-            </div>
-            <div className="flex-1 max-w-md mx-auto">
-              <div className="bg-white/5 rounded-md px-3 py-1.5 text-white/40 text-xs text-center">
-                app.useharbor.io
-              </div>
-            </div>
-            <div className="w-16" /> {/* Spacer for symmetry */}
-          </div>
-
-          {/* Screenshot image */}
-          <div className="relative bg-[#0f0f0f]">
-            <Image
-              src="/images/dashboard-hero.png"
-              alt="Harbor Dashboard"
-              width={1600}
-              height={1000}
-              className="w-full h-auto"
-              priority
-            />
-            
-            {/* Fade to black at bottom - strong gradient */}
-            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent" />
-          </div>
+          <Image
+            src="/images/dashboard-hero.png"
+            alt="Harbor Dashboard"
+            width={1600}
+            height={1000}
+            className="w-full h-auto"
+            priority
+          />
+          
+          {/* Fade to black at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent" />
         </div>
       </div>
 

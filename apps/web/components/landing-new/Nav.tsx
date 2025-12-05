@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { ChevronDown, Menu, X } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Nav() {
@@ -39,11 +40,14 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">H</span>
-            </div>
-            <span className="text-white font-semibold text-lg">Harbor</span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/harbor-white-logo.svg"
+              alt="Harbor"
+              width={120}
+              height={32}
+              className="h-7 w-auto"
+            />
           </Link>
 
           {/* Desktop Nav */}
