@@ -1,10 +1,12 @@
 // Harbor Prompt Execution Engine
 // Runs prompts against ChatGPT, Claude, Gemini, Perplexity and stores results
+// Updated to use unified extraction for brands AND universities
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { extractEntities, storeExtractionResults } from './unified-extraction'
 
 // Types
 export interface ExecutionResult {
@@ -62,11 +64,11 @@ async function executeChatGPT(promptText: string): Promise<{ text: string; token
   const openai = getOpenAI()
   
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini', // Cheapest: ~$0.15/M in, $0.60/M out (vs gpt-4o at $2.50/$10)
+    model: 'gpt-4o-mini',
     messages: [
       {
         role: 'system',
-        content: 'You are a helpful assistant providing software recommendations. Be specific about product names and include relevant details about why each is recommended.'
+        content: 'You are a helpful assistant providing recommendations. Be specific about names and include relevant details about why each is recommended.'
       },
       { role: 'user', content: promptText }
     ],
@@ -85,9 +87,9 @@ async function executeClaude(promptText: string): Promise<{ text: string; tokens
   const anthropic = getAnthropic()
   
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-haiku-20241022', // Cheapest: $0.80/M in, $4/M out (vs Sonnet at $3/$15)
+    model: 'claude-3-5-haiku-20241022',
     max_tokens: 1000,
-    system: 'You are a helpful assistant providing software recommendations. Be specific about product names and include relevant details about why each is recommended.',
+    system: 'You are a helpful assistant providing recommendations. Be specific about names and include relevant details about why each is recommended.',
     messages: [
       { role: 'user', content: promptText }
     ]
@@ -111,7 +113,7 @@ async function executeGemini(promptText: string): Promise<{ text: string; tokens
       {
         role: 'user',
         parts: [
-          { text: 'You are a helpful assistant providing software recommendations. Be specific about product names and include relevant details about why each is recommended.\n\n' + promptText }
+          { text: 'You are a helpful assistant providing recommendations. Be specific about names and include relevant details about why each is recommended.\n\n' + promptText }
         ]
       }
     ],
@@ -124,7 +126,6 @@ async function executeGemini(promptText: string): Promise<{ text: string; tokens
   const response = result.response
   const text = response.text()
   
-  // Gemini doesn't return token count easily, estimate it
   const estimatedTokens = Math.ceil((promptText.length + text.length) / 4)
   
   return {
@@ -142,11 +143,11 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'sonar', // Cheapest: $1/M input, $1/M output (vs sonar-pro at $3/$15)
+      model: 'sonar',
       messages: [
         {
           role: 'system',
-          content: 'You are a helpful assistant providing software recommendations. Be specific about product names and include relevant details about why each is recommended.'
+          content: 'You are a helpful assistant providing recommendations. Be specific about names and include relevant details about why each is recommended.'
         },
         { role: 'user', content: promptText }
       ],
@@ -165,81 +166,6 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
   }
 }
 
-// Parse brand mentions from response text
-function parseBrandMentions(text: string, knownBrands?: string[]): BrandMention[] {
-  const mentions: BrandMention[] = []
-  
-  // Common SaaS brands to look for (can be expanded)
-  const defaultBrands = [
-    'Asana', 'Monday.com', 'ClickUp', 'Notion', 'Trello', 'Basecamp', 'Jira', 'Linear',
-    'Salesforce', 'HubSpot', 'Pipedrive', 'Zoho', 'Close', 'Copper',
-    'Ahrefs', 'SEMrush', 'Moz', 'Mailchimp', 'Klaviyo', 'ConvertKit', 'Buffer', 'Hootsuite',
-    'Greenhouse', 'Lever', 'Workable', 'Gusto', 'Rippling', 'BambooHR', 'Workday',
-    'QuickBooks', 'Xero', 'FreshBooks', 'Wave', 'Brex', 'Ramp',
-    'Slack', 'Microsoft Teams', 'Discord', 'Zoom', 'Google Meet', 'Loom',
-    'Figma', 'Sketch', 'Adobe XD', 'Canva', 'Miro', 'FigJam',
-    'GitHub', 'GitLab', 'VS Code', 'Vercel', 'Netlify', 'AWS', 'Heroku',
-    'Zendesk', 'Intercom', 'Freshdesk', 'Help Scout', 'Drift', 'Front',
-    'Shopify', 'WooCommerce', 'BigCommerce', 'Stripe', 'PayPal', 'Square',
-    'Mixpanel', 'Amplitude', 'Heap', 'Tableau', 'Power BI', 'Looker', 'Metabase',
-    '1Password', 'LastPass', 'Okta', 'Auth0', 'Vanta', 'Drata',
-    'Zapier', 'Make', 'n8n', 'Jasper', 'Copy.ai', 'ChatGPT', 'Claude'
-  ]
-  
-  const brandsToCheck = knownBrands || defaultBrands
-  let position = 0
-  
-  for (const brand of brandsToCheck) {
-    const regex = new RegExp(`\\b${brand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi')
-    const match = text.match(regex)
-    
-    if (match) {
-      position++
-      
-      // Extract context (50 chars before and after)
-      const index = text.toLowerCase().indexOf(brand.toLowerCase())
-      const start = Math.max(0, index - 50)
-      const end = Math.min(text.length, index + brand.length + 50)
-      const context = text.slice(start, end)
-      
-      // Simple sentiment detection based on surrounding words
-      const sentiment = detectSentiment(context)
-      
-      mentions.push({
-        brand_name: brand,
-        position,
-        sentiment,
-        context: context.trim()
-      })
-    }
-  }
-  
-  return mentions
-}
-
-// Simple sentiment detection
-function detectSentiment(text: string): 'positive' | 'neutral' | 'negative' {
-  const lower = text.toLowerCase()
-  
-  const positiveWords = ['best', 'great', 'excellent', 'top', 'leading', 'powerful', 'recommended', 'popular', 'favorite', 'love', 'amazing', 'perfect', 'ideal']
-  const negativeWords = ['worst', 'bad', 'poor', 'expensive', 'difficult', 'complex', 'limited', 'lacking', 'avoid', 'disappointing', 'frustrating']
-  
-  let positiveCount = 0
-  let negativeCount = 0
-  
-  for (const word of positiveWords) {
-    if (lower.includes(word)) positiveCount++
-  }
-  
-  for (const word of negativeWords) {
-    if (lower.includes(word)) negativeCount++
-  }
-  
-  if (positiveCount > negativeCount) return 'positive'
-  if (negativeCount > positiveCount) return 'negative'
-  return 'neutral'
-}
-
 // Parse citations from Perplexity response
 function parseCitations(urls: string[]): Citation[] {
   return urls.map(url => {
@@ -250,7 +176,6 @@ function parseCitations(urls: string[]): Citation[] {
       domain = url
     }
     
-    // Classify source type
     const sourceType = classifySourceType(domain)
     
     return {
@@ -263,7 +188,7 @@ function parseCitations(urls: string[]): Citation[] {
 
 // Classify citation source type
 function classifySourceType(domain: string): Citation['source_type'] {
-  const editorialDomains = ['techcrunch.com', 'forbes.com', 'wired.com', 'theverge.com', 'zdnet.com', 'cnet.com', 'pcmag.com', 'g2.com', 'capterra.com', 'trustradius.com']
+  const editorialDomains = ['techcrunch.com', 'forbes.com', 'wired.com', 'theverge.com', 'zdnet.com', 'cnet.com', 'pcmag.com', 'g2.com', 'capterra.com', 'trustradius.com', 'usnews.com', 'niche.com']
   const institutionalDomains = ['.edu', '.gov', '.org']
   const ugcDomains = ['reddit.com', 'quora.com', 'medium.com', 'dev.to', 'stackoverflow.com']
   
@@ -273,7 +198,6 @@ function classifySourceType(domain: string): Citation['source_type'] {
   if (institutionalDomains.some(d => lower.includes(d))) return 'institutional'
   if (ugcDomains.some(d => lower.includes(d))) return 'ugc'
   
-  // If it's a known brand domain, it's corporate
   const brandDomains = ['asana.com', 'monday.com', 'notion.so', 'hubspot.com', 'salesforce.com', 'zendesk.com', 'shopify.com', 'stripe.com']
   if (brandDomains.some(d => lower.includes(d))) return 'corporate'
   
@@ -284,12 +208,11 @@ function classifySourceType(domain: string): Citation['source_type'] {
 export async function executePromptAllModels(
   promptId: string, 
   promptText: string,
-  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'perplexity'] // Gemini disabled - 404 errors
+  models: ('chatgpt' | 'claude' | 'gemini' | 'perplexity')[] = ['chatgpt', 'claude', 'perplexity']
 ): Promise<ExecutionResult[]> {
   const results: ExecutionResult[] = []
   const executedAt = new Date().toISOString()
 
-  // Execute in parallel for speed
   const executions = await Promise.allSettled(
     models.map(async (model) => {
       try {
@@ -310,7 +233,6 @@ export async function executePromptAllModels(
             break
         }
 
-        const brandMentions = parseBrandMentions(response.text)
         const citations = model === 'perplexity' && response.citations 
           ? parseCitations(response.citations)
           : []
@@ -319,7 +241,7 @@ export async function executePromptAllModels(
           model,
           prompt_id: promptId,
           response_text: response.text,
-          brands_mentioned: brandMentions,
+          brands_mentioned: [], // Will be populated by unified extraction
           citations,
           executed_at: executedAt,
           tokens_used: response.tokens
@@ -340,7 +262,6 @@ export async function executePromptAllModels(
     })
   )
 
-  // Process results
   for (const execution of executions) {
     if (execution.status === 'fulfilled') {
       results.push(execution.value)
@@ -350,9 +271,9 @@ export async function executePromptAllModels(
   return results
 }
 
-// Store results in Supabase
+// Store results in Supabase - NOW USES UNIFIED EXTRACTION
 export async function storeExecutionResults(
-  supabase: any,
+  supabase: SupabaseClient,
   results: ExecutionResult[]
 ): Promise<void> {
   for (const result of results) {
@@ -375,20 +296,17 @@ export async function storeExecutionResults(
       continue
     }
 
-    // Store brand mentions
-    if (result.brands_mentioned.length > 0) {
-      const mentions = result.brands_mentioned.map(m => ({
-        execution_id: execution.id,
-        brand_name: m.brand_name,
-        position: m.position,
-        sentiment: m.sentiment,
-        context: m.context
-      }))
-
-      await supabase.from('prompt_brand_mentions').insert(mentions)
+    // NEW: Use unified extraction for brands AND universities
+    if (result.response_text && !result.error) {
+      try {
+        const entities = await extractEntities(supabase, result.response_text)
+        await storeExtractionResults(supabase, execution.id, entities)
+      } catch (extractError) {
+        console.error('Extraction failed for execution:', execution.id, extractError)
+      }
     }
 
-    // Store citations
+    // Store citations (Perplexity only)
     if (result.citations.length > 0) {
       const citations = result.citations.map(c => ({
         execution_id: execution.id,
@@ -422,7 +340,6 @@ export function calculateVisibilityFromExecutions(
       totalPosition += mention.position
       positionCount++
       
-      // Convert sentiment to number
       if (mention.sentiment === 'positive') totalSentiment += 1
       else if (mention.sentiment === 'negative') totalSentiment -= 1
     }
