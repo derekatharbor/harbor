@@ -90,24 +90,27 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Dashboard Screenshot - Full width, flush, with fade */}
-      <div className="relative w-full">
-        {/* Glow behind screenshot */}
-        <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-blue-500/10 to-transparent blur-3xl opacity-40 pointer-events-none" />
-        
-        {/* Screenshot - no container, just the image */}
+      {/* Dashboard Screenshot - Contained width with strong fade */}
+      <div className="relative w-full max-w-6xl mx-auto px-6">
+        {/* Screenshot */}
         <div className="relative">
           <Image
             src="/images/dashboard-hero.png"
             alt="Harbor Dashboard"
             width={1600}
             height={1000}
-            className="w-full h-auto"
+            className="w-full h-auto rounded-xl border border-white/10"
             priority
           />
           
-          {/* Fade to black at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/90 to-transparent pointer-events-none" />
+          {/* Fade overlay - starts 1/3 from bottom, completely hides bottom */}
+          <div 
+            className="absolute inset-x-0 bottom-0 pointer-events-none"
+            style={{
+              height: '50%',
+              background: 'linear-gradient(to top, #0a0a0a 0%, #0a0a0a 30%, transparent 100%)'
+            }}
+          />
         </div>
       </div>
 
