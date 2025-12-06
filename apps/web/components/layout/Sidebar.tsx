@@ -90,7 +90,7 @@ export default function Sidebar() {
 
   // Action section - things to do
   const actions = [
-    { name: 'Improve', href: '/dashboard/improve', icon: TrendingUp },
+    { name: 'Opportunities', href: '/dashboard/opportunities', icon: TrendingUp },
   ]
 
   // Manage section - brand data and settings
@@ -107,7 +107,7 @@ export default function Sidebar() {
     if (pathname?.startsWith('/dashboard/brand')) return '#06B6D4' // Cyan
     if (pathname?.startsWith('/dashboard/website')) return '#8B5CF6' // Purple
     if (pathname?.startsWith('/dashboard/competitors')) return '#A855F7' // Purple
-    if (pathname?.startsWith('/dashboard/improve')) return '#22C55E' // Green
+    if (pathname?.startsWith('/dashboard/opportunities')) return '#22C55E' // Green
     if (pathname === '/dashboard/brand-hub') return '#3B82F6' // Blue
     if (pathname === '/dashboard/settings') return '#6B7280' // Gray
     return '#3B82F6' // Default blue

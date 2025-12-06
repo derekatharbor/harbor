@@ -51,8 +51,8 @@ export default function Footer() {
             © {new Date().getFullYear()} Harbor. All rights reserved.
           </p>
           <div className="flex items-center gap-6 mt-4 sm:mt-0">
-            <Link href="#" className="text-white/30 hover:text-white text-sm transition-colors">Privacy</Link>
-            <Link href="#" className="text-white/30 hover:text-white text-sm transition-colors">Terms</Link>
+            <Link href="/privacy" className="text-white/30 hover:text-white text-sm transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-white/30 hover:text-white text-sm transition-colors">Terms</Link>
           </div>
         </div>
       </div>
