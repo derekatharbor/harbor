@@ -66,6 +66,7 @@ export async function GET(request: NextRequest) {
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
             <div
               style={{
+                display: 'flex',
                 background: 'rgba(255,255,255,0.1)',
                 borderRadius: 20,
                 padding: '8px 16px',
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
           </div>
 
           {/* Title */}
-          <div style={{ color: 'white', fontSize: 48, fontWeight: 700, marginBottom: 40 }}>
+          <div style={{ display: 'flex', color: 'white', fontSize: 48, fontWeight: 700, marginBottom: 40 }}>
             {nameA} vs {nameB}
           </div>
 
@@ -103,16 +104,15 @@ export async function GET(request: NextRequest) {
                 justifyContent: 'center',
               }}
             >
-              <div style={{ color: 'white', fontSize: 32, fontWeight: 600, marginBottom: 8 }}>
+              <div style={{ display: 'flex', color: 'white', fontSize: 32, fontWeight: 600, marginBottom: 8 }}>
                 {nameA}
               </div>
-              {locationA && (
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 18, marginBottom: 24 }}>
-                  {locationA}
-                </div>
-              )}
+              <div style={{ display: 'flex', color: 'rgba(255,255,255,0.5)', fontSize: 18, marginBottom: 24 }}>
+                {locationA || ' '}
+              </div>
               <div
                 style={{
+                  display: 'flex',
                   color: leader === 'A' ? '#10b981' : 'white',
                   fontSize: 72,
                   fontWeight: 700,
@@ -120,12 +120,13 @@ export async function GET(request: NextRequest) {
               >
                 {scoreA.toFixed(1)}%
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 18, marginTop: 8 }}>
+              <div style={{ display: 'flex', color: 'rgba(255,255,255,0.5)', fontSize: 18, marginTop: 8 }}>
                 AI Visibility Score
               </div>
               {leader === 'A' && (
                 <div
                   style={{
+                    display: 'flex',
                     marginTop: 20,
                     background: 'rgba(16,185,129,0.15)',
                     border: '1px solid rgba(16,185,129,0.3)',
@@ -150,14 +151,14 @@ export async function GET(request: NextRequest) {
                 padding: '0 40px',
               }}
             >
-              <div style={{ width: 1, height: 80, background: 'rgba(255,255,255,0.1)' }} />
+              <div style={{ display: 'flex', width: 1, height: 80, background: 'rgba(255,255,255,0.1)' }} />
               <div
                 style={{
+                  display: 'flex',
                   background: 'rgba(255,255,255,0.1)',
                   borderRadius: 999,
                   width: 60,
                   height: 60,
-                  display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'rgba(255,255,255,0.6)',
@@ -168,7 +169,7 @@ export async function GET(request: NextRequest) {
               >
                 vs
               </div>
-              <div style={{ width: 1, height: 80, background: 'rgba(255,255,255,0.1)' }} />
+              <div style={{ display: 'flex', width: 1, height: 80, background: 'rgba(255,255,255,0.1)' }} />
             </div>
 
             {/* University B */}
@@ -181,16 +182,15 @@ export async function GET(request: NextRequest) {
                 justifyContent: 'center',
               }}
             >
-              <div style={{ color: 'white', fontSize: 32, fontWeight: 600, marginBottom: 8 }}>
+              <div style={{ display: 'flex', color: 'white', fontSize: 32, fontWeight: 600, marginBottom: 8 }}>
                 {nameB}
               </div>
-              {locationB && (
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 18, marginBottom: 24 }}>
-                  {locationB}
-                </div>
-              )}
+              <div style={{ display: 'flex', color: 'rgba(255,255,255,0.5)', fontSize: 18, marginBottom: 24 }}>
+                {locationB || ' '}
+              </div>
               <div
                 style={{
+                  display: 'flex',
                   color: leader === 'B' ? '#10b981' : 'white',
                   fontSize: 72,
                   fontWeight: 700,
@@ -198,12 +198,13 @@ export async function GET(request: NextRequest) {
               >
                 {scoreB.toFixed(1)}%
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 18, marginTop: 8 }}>
+              <div style={{ display: 'flex', color: 'rgba(255,255,255,0.5)', fontSize: 18, marginTop: 8 }}>
                 AI Visibility Score
               </div>
               {leader === 'B' && (
                 <div
                   style={{
+                    display: 'flex',
                     marginTop: 20,
                     background: 'rgba(16,185,129,0.15)',
                     border: '1px solid rgba(16,185,129,0.3)',
@@ -222,16 +223,16 @@ export async function GET(request: NextRequest) {
           {/* Lead Banner */}
           <div
             style={{
+              display: 'flex',
               marginTop: 24,
               background: 'rgba(16,185,129,0.1)',
               border: '1px solid rgba(16,185,129,0.2)',
               borderRadius: 16,
               padding: '16px 24px',
-              display: 'flex',
               justifyContent: 'center',
             }}
           >
-            <div style={{ color: '#10b981', fontSize: 22 }}>
+            <div style={{ display: 'flex', color: '#10b981', fontSize: 22 }}>
               {leader === 'A' ? nameA : nameB} leads by {leadAmount} points in AI visibility
             </div>
           </div>
@@ -239,12 +240,12 @@ export async function GET(request: NextRequest) {
           {/* Footer */}
           <div
             style={{
-              marginTop: 20,
               display: 'flex',
+              marginTop: 20,
               justifyContent: 'flex-end',
             }}
           >
-            <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: 16 }}>
+            <div style={{ display: 'flex', color: 'rgba(255,255,255,0.3)', fontSize: 16 }}>
               useharbor.io/universities
             </div>
           </div>
@@ -267,10 +268,10 @@ export async function GET(request: NextRequest) {
             justifyContent: 'center',
           }}
         >
-          <div style={{ color: 'white', fontSize: 48, fontWeight: 700, marginBottom: 16 }}>
+          <div style={{ display: 'flex', color: 'white', fontSize: 48, fontWeight: 700, marginBottom: 16 }}>
             University Comparison
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 24 }}>
+          <div style={{ display: 'flex', color: 'rgba(255,255,255,0.5)', fontSize: 24 }}>
             useharbor.io/universities
           </div>
         </div>
