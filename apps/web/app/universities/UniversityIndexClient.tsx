@@ -31,10 +31,8 @@ interface University {
 const CLASSIC_RIVALRIES = [
   { a: 'harvard', b: 'yale', name: 'The Game' },
   { a: 'stanford', b: 'uc-berkeley', name: 'The Big Game' },
-  { a: 'michigan', b: 'ohio-state', name: 'The Game' },
   { a: 'duke', b: 'unc', name: 'Tobacco Road' },
   { a: 'usc', b: 'ucla', name: 'Crosstown Showdown' },
-  { a: 'texas', b: 'texas-am', name: 'Lone Star Showdown' },
   { a: 'penn-state', b: 'ohio-state', name: 'Big Ten Clash' },
 ]
 
@@ -437,7 +435,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
             <h2 className="text-lg font-semibold text-white">Classic Rivalries</h2>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {CLASSIC_RIVALRIES.map((rivalry, idx) => {
               const uniA = universities.find(u => u.slug === rivalry.a)
               const uniB = universities.find(u => u.slug === rivalry.b)
