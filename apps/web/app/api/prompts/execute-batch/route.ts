@@ -227,6 +227,20 @@ export async function POST(request: NextRequest) {
       // Ignore if RPC doesn't exist
     }
 
+    // Update brand visibility scores
+    try {
+      await supabase.rpc('update_brand_visibility')
+    } catch {
+      // Ignore if RPC doesn't exist yet
+    }
+
+    // Update university visibility scores
+    try {
+      await supabase.rpc('update_university_visibility')
+    } catch {
+      // Ignore if RPC doesn't exist
+    }
+
     return NextResponse.json({
       success: true,
       batch_id: batch.id,
