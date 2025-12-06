@@ -466,3 +466,15 @@ button, [role="button"], [type="button"], [type="submit"], a[href],
 input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
 textarea, select { cursor: text !important; }
 [type="checkbox"], [type="radio"] { cursor: pointer !important; }
+
+/* Global clickable element cursor fix */
+a, button, [onclick], [role="button"], [role="link"], 
+select, summary, [tabindex]:not([tabindex="-1"]) {
+  cursor: pointer !important;
+}
+
+/* Ensure table rows with onClick are clickable */
+tr[class*="hover:"], tr[class*="cursor-pointer"],
+div[class*="hover:bg-"], button[class*="hover:"] {
+  cursor: pointer !important;
+}

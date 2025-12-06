@@ -84,11 +84,7 @@ function MarqueeRow({ domains, direction, speed = 30 }: { domains: string[], dir
         {duplicatedDomains.map((domain, idx) => (
           <div 
             key={`${domain}-${idx}`}
-            className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-xl flex-shrink-0 overflow-hidden"
-            style={{
-              background: 'rgba(255,255,255,0.03)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)',
-            }}
+            className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-xl flex-shrink-0 overflow-hidden bg-white/[0.02] border border-white/[0.06]"
           >
             <img 
               src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
@@ -347,21 +343,13 @@ export default function UniversityIndexClient({ universities: initialUniversitie
 
       {/* Perspective Logo Marquee (Profound-style) */}
       <section className="relative py-10 overflow-hidden">
-        {/* Contained perspective wrapper */}
-        <div className="relative w-full max-w-[1400px] mx-auto overflow-hidden">
-          {/* Center glow/highlight */}
-          <div 
-            className="absolute inset-0 pointer-events-none z-0"
-            style={{
-              background: 'radial-gradient(circle at center, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 60%)'
-            }}
-          />
-          
+        {/* Contained perspective wrapper - 1050px max, no background */}
+        <div className="relative w-full max-w-[1050px] mx-auto overflow-hidden">
           {/* Left fade mask */}
           <div 
             className="absolute left-0 top-0 w-[200px] h-full z-20 pointer-events-none"
             style={{
-              background: 'linear-gradient(to right, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%)'
+              background: 'linear-gradient(to right, #0a0a0a 0%, transparent 100%)'
             }}
           />
           
@@ -369,7 +357,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
           <div 
             className="absolute right-0 top-0 w-[200px] h-full z-20 pointer-events-none"
             style={{
-              background: 'linear-gradient(to left, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%)'
+              background: 'linear-gradient(to left, #0a0a0a 0%, transparent 100%)'
             }}
           />
 
