@@ -1,8 +1,8 @@
 // app/universities/UniversityIndexClient.tsx
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { Search, ArrowRight, TrendingUp, TrendingDown, ChevronDown, X, Download, Share2, Trophy, Swords } from 'lucide-react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import { Search, ArrowRight, TrendingUp, TrendingDown, ChevronDown, X, Share2, Trophy, Swords, Sparkles, GraduationCap, Beaker, Briefcase, PartyPopper, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
 import Footer from '@/components/landing-new/Footer'
@@ -27,38 +27,14 @@ interface University {
   known_for: string[] | null
 }
 
-// Mock data for development
-const MOCK_UNIVERSITIES: University[] = [
-  { id: '1', name: 'Stanford University', short_name: 'Stanford', slug: 'stanford', domain: 'stanford.edu', logo_url: null, city: 'Stanford', state: 'CA', institution_type: 'private', enrollment: 17680, acceptance_rate: 3.68, us_news_rank: 3, athletic_conference: 'ACC', visibility_score: 94.2, total_mentions: 2847, sentiment_score: 89.5, known_for: ['Computer Science', 'Engineering', 'Business'] },
-  { id: '2', name: 'Massachusetts Institute of Technology', short_name: 'MIT', slug: 'mit', domain: 'mit.edu', logo_url: null, city: 'Cambridge', state: 'MA', institution_type: 'private', enrollment: 11858, acceptance_rate: 3.96, us_news_rank: 2, athletic_conference: 'NEWMAC', visibility_score: 93.8, total_mentions: 3124, sentiment_score: 91.2, known_for: ['Engineering', 'Computer Science', 'Research'] },
-  { id: '3', name: 'Harvard University', short_name: 'Harvard', slug: 'harvard', domain: 'harvard.edu', logo_url: null, city: 'Cambridge', state: 'MA', institution_type: 'private', enrollment: 23731, acceptance_rate: 3.19, us_news_rank: 4, athletic_conference: 'Ivy League', visibility_score: 92.5, total_mentions: 4521, sentiment_score: 85.3, known_for: ['Law', 'Business', 'Medicine'] },
-  { id: '4', name: 'Yale University', short_name: 'Yale', slug: 'yale', domain: 'yale.edu', logo_url: null, city: 'New Haven', state: 'CT', institution_type: 'private', enrollment: 14776, acceptance_rate: 4.35, us_news_rank: 5, athletic_conference: 'Ivy League', visibility_score: 89.7, total_mentions: 2156, sentiment_score: 87.8, known_for: ['Law', 'Drama', 'Liberal Arts'] },
-  { id: '5', name: 'Princeton University', short_name: 'Princeton', slug: 'princeton', domain: 'princeton.edu', logo_url: null, city: 'Princeton', state: 'NJ', institution_type: 'private', enrollment: 8478, acceptance_rate: 3.98, us_news_rank: 1, athletic_conference: 'Ivy League', visibility_score: 88.4, total_mentions: 1987, sentiment_score: 90.1, known_for: ['Mathematics', 'Physics', 'Economics'] },
-  { id: '6', name: 'University of California, Berkeley', short_name: 'UC Berkeley', slug: 'uc-berkeley', domain: 'berkeley.edu', logo_url: null, city: 'Berkeley', state: 'CA', institution_type: 'public', enrollment: 45307, acceptance_rate: 11.6, us_news_rank: 15, athletic_conference: 'Big Ten', visibility_score: 87.9, total_mentions: 2654, sentiment_score: 82.4, known_for: ['Computer Science', 'Engineering', 'Research'] },
-  { id: '7', name: 'University of Michigan', short_name: 'Michigan', slug: 'michigan', domain: 'umich.edu', logo_url: null, city: 'Ann Arbor', state: 'MI', institution_type: 'public', enrollment: 47907, acceptance_rate: 17.7, us_news_rank: 21, athletic_conference: 'Big Ten', visibility_score: 85.2, total_mentions: 2234, sentiment_score: 84.7, known_for: ['Business', 'Engineering', 'Sports'] },
-  { id: '8', name: 'Duke University', short_name: 'Duke', slug: 'duke', domain: 'duke.edu', logo_url: null, city: 'Durham', state: 'NC', institution_type: 'private', enrollment: 17620, acceptance_rate: 5.93, us_news_rank: 7, athletic_conference: 'ACC', visibility_score: 84.8, total_mentions: 1876, sentiment_score: 86.9, known_for: ['Basketball', 'Medicine', 'Business'] },
-  { id: '9', name: 'University of Pennsylvania', short_name: 'Penn', slug: 'upenn', domain: 'upenn.edu', logo_url: null, city: 'Philadelphia', state: 'PA', institution_type: 'private', enrollment: 28201, acceptance_rate: 5.68, us_news_rank: 6, athletic_conference: 'Ivy League', visibility_score: 84.1, total_mentions: 1654, sentiment_score: 85.2, known_for: ['Business', 'Finance', 'Medicine'] },
-  { id: '10', name: 'Columbia University', short_name: 'Columbia', slug: 'columbia', domain: 'columbia.edu', logo_url: null, city: 'New York', state: 'NY', institution_type: 'private', enrollment: 36649, acceptance_rate: 3.85, us_news_rank: 12, athletic_conference: 'Ivy League', visibility_score: 83.6, total_mentions: 2087, sentiment_score: 81.5, known_for: ['Journalism', 'Business', 'Law'] },
-  { id: '11', name: 'University of Notre Dame', short_name: 'Notre Dame', slug: 'notre-dame', domain: 'nd.edu', logo_url: null, city: 'Notre Dame', state: 'IN', institution_type: 'private', enrollment: 14012, acceptance_rate: 12.9, us_news_rank: 18, athletic_conference: 'ACC', visibility_score: 82.4, total_mentions: 1543, sentiment_score: 88.7, known_for: ['Football', 'Business', 'Theology'] },
-  { id: '12', name: 'Northwestern University', short_name: 'Northwestern', slug: 'northwestern', domain: 'northwestern.edu', logo_url: null, city: 'Evanston', state: 'IL', institution_type: 'private', enrollment: 23161, acceptance_rate: 7.0, us_news_rank: 9, athletic_conference: 'Big Ten', visibility_score: 81.9, total_mentions: 1432, sentiment_score: 84.3, known_for: ['Journalism', 'Business', 'Engineering'] },
-  { id: '13', name: 'University of Southern California', short_name: 'USC', slug: 'usc', domain: 'usc.edu', logo_url: null, city: 'Los Angeles', state: 'CA', institution_type: 'private', enrollment: 49500, acceptance_rate: 9.2, us_news_rank: 28, athletic_conference: 'Big Ten', visibility_score: 81.2, total_mentions: 1876, sentiment_score: 79.8, known_for: ['Film', 'Business', 'Football'] },
-  { id: '14', name: 'University of Texas at Austin', short_name: 'UT Austin', slug: 'ut-austin', domain: 'utexas.edu', logo_url: null, city: 'Austin', state: 'TX', institution_type: 'public', enrollment: 51991, acceptance_rate: 31.8, us_news_rank: 32, athletic_conference: 'SEC', visibility_score: 80.5, total_mentions: 1987, sentiment_score: 82.1, known_for: ['Business', 'Engineering', 'Football'] },
-  { id: '15', name: 'Ohio State University', short_name: 'Ohio State', slug: 'ohio-state', domain: 'osu.edu', logo_url: null, city: 'Columbus', state: 'OH', institution_type: 'public', enrollment: 61369, acceptance_rate: 53.0, us_news_rank: 43, athletic_conference: 'Big Ten', visibility_score: 79.8, total_mentions: 1654, sentiment_score: 80.4, known_for: ['Football', 'Engineering', 'Business'] },
-  { id: '16', name: 'University of North Carolina at Chapel Hill', short_name: 'UNC', slug: 'unc-chapel-hill', domain: 'unc.edu', logo_url: null, city: 'Chapel Hill', state: 'NC', institution_type: 'public', enrollment: 32385, acceptance_rate: 16.8, us_news_rank: 22, athletic_conference: 'ACC', visibility_score: 79.2, total_mentions: 1432, sentiment_score: 83.6, known_for: ['Basketball', 'Public Health', 'Business'] },
-  { id: '17', name: 'University of Florida', short_name: 'UF', slug: 'uf', domain: 'ufl.edu', logo_url: null, city: 'Gainesville', state: 'FL', institution_type: 'public', enrollment: 61833, acceptance_rate: 23.3, us_news_rank: 28, athletic_conference: 'SEC', visibility_score: 78.4, total_mentions: 1321, sentiment_score: 81.2, known_for: ['Research', 'Sports', 'Business'] },
-  { id: '18', name: 'Georgia Institute of Technology', short_name: 'Georgia Tech', slug: 'georgia-tech', domain: 'gatech.edu', logo_url: null, city: 'Atlanta', state: 'GA', institution_type: 'public', enrollment: 47285, acceptance_rate: 16.9, us_news_rank: 33, athletic_conference: 'ACC', visibility_score: 77.8, total_mentions: 1543, sentiment_score: 84.9, known_for: ['Engineering', 'Computer Science', 'Research'] },
-  { id: '19', name: 'University of California, Los Angeles', short_name: 'UCLA', slug: 'ucla', domain: 'ucla.edu', logo_url: null, city: 'Los Angeles', state: 'CA', institution_type: 'public', enrollment: 46430, acceptance_rate: 8.76, us_news_rank: 15, athletic_conference: 'Big Ten', visibility_score: 86.3, total_mentions: 2432, sentiment_score: 83.7, known_for: ['Film', 'Medicine', 'Basketball'] },
-  { id: '20', name: 'Cornell University', short_name: 'Cornell', slug: 'cornell', domain: 'cornell.edu', logo_url: null, city: 'Ithaca', state: 'NY', institution_type: 'private', enrollment: 25898, acceptance_rate: 7.26, us_news_rank: 12, athletic_conference: 'Ivy League', visibility_score: 82.7, total_mentions: 1765, sentiment_score: 85.4, known_for: ['Engineering', 'Hotel Management', 'Agriculture'] },
-]
-
 // Pre-built rivalries
 const CLASSIC_RIVALRIES = [
   { a: 'harvard', b: 'yale', name: 'The Game' },
   { a: 'stanford', b: 'uc-berkeley', name: 'The Big Game' },
   { a: 'michigan', b: 'ohio-state', name: 'The Game' },
-  { a: 'duke', b: 'unc-chapel-hill', name: 'Tobacco Road' },
+  { a: 'duke', b: 'unc', name: 'Tobacco Road' },
   { a: 'usc', b: 'ucla', name: 'Crosstown Showdown' },
-  { a: 'ut-austin', b: 'uf', name: 'SEC Showdown' },
+  { a: 'texas', b: 'texas-am', name: 'Lone Star Showdown' },
 ]
 
 const CONFERENCES = [
@@ -69,7 +45,6 @@ const CONFERENCES = [
   'SEC',
   'Big 12',
   'PAC-12',
-  'NEWMAC',
 ]
 
 const INSTITUTION_TYPES = [
@@ -78,69 +53,122 @@ const INSTITUTION_TYPES = [
   { value: 'private', label: 'Private' },
 ]
 
+// Insight categories for the "Best For" section
+const INSIGHT_CATEGORIES = [
+  { key: 'engineering', label: 'Best for Engineering', icon: Beaker, keywords: ['Engineering', 'Computer Science', 'Tech'] },
+  { key: 'business', label: 'Best for Business', icon: Briefcase, keywords: ['Business', 'Finance', 'MBA'] },
+  { key: 'research', label: 'Best for Research', icon: Sparkles, keywords: ['Research'] },
+  { key: 'premed', label: 'Best for Pre-Med', icon: GraduationCap, keywords: ['Medicine', 'Pre-Med', 'Medical'] },
+]
+
 interface Props {
-  universities?: University[]
+  universities: University[]
+  totalCount: number
 }
 
-export default function UniversityIndexClient({ universities: serverUniversities }: Props) {
-  const [universities, setUniversities] = useState<University[]>(serverUniversities || MOCK_UNIVERSITIES)
+export default function UniversityIndexClient({ universities: initialUniversities, totalCount }: Props) {
+  const [universities, setUniversities] = useState<University[]>(initialUniversities)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<University[]>([])
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [conferenceFilter, setConferenceFilter] = useState('All Conferences')
   const [typeFilter, setTypeFilter] = useState('all')
-  const [showFilters, setShowFilters] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
   
   // Comparison state
   const [compareA, setCompareA] = useState<University | null>(null)
   const [compareB, setCompareB] = useState<University | null>(null)
-  const [showCompareModal, setShowCompareModal] = useState(false)
   const [compareSearchA, setCompareSearchA] = useState('')
   const [compareSearchB, setCompareSearchB] = useState('')
+  const [compareResultsA, setCompareResultsA] = useState<University[]>([])
+  const [compareResultsB, setCompareResultsB] = useState<University[]>([])
+  const [showCompareDropdownA, setShowCompareDropdownA] = useState(false)
+  const [showCompareDropdownB, setShowCompareDropdownB] = useState(false)
 
-  // Sorted by visibility score
-  const sortedUniversities = useMemo(() => {
-    return [...universities].sort((a, b) => (b.visibility_score || 0) - (a.visibility_score || 0))
-  }, [universities])
+  // Search API function
+  const searchUniversities = useCallback(async (query: string): Promise<University[]> => {
+    if (!query.trim()) return []
+    
+    try {
+      const res = await fetch(`/api/universities?search=${encodeURIComponent(query)}&limit=8`)
+      if (!res.ok) return []
+      return await res.json()
+    } catch (error) {
+      console.error('Search error:', error)
+      return []
+    }
+  }, [])
 
-  // Filtered universities
+  // Handle main search
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([])
+      setShowSearchDropdown(false)
+      return
+    }
+
+    setIsSearching(true)
+    const debounce = setTimeout(async () => {
+      const results = await searchUniversities(searchQuery)
+      setSearchResults(results)
+      setShowSearchDropdown(true)
+      setIsSearching(false)
+    }, 300)
+
+    return () => clearTimeout(debounce)
+  }, [searchQuery, searchUniversities])
+
+  // Handle compare search A
+  useEffect(() => {
+    if (!compareSearchA.trim() || compareA) {
+      setCompareResultsA([])
+      setShowCompareDropdownA(false)
+      return
+    }
+
+    const debounce = setTimeout(async () => {
+      const results = await searchUniversities(compareSearchA)
+      setCompareResultsA(results)
+      setShowCompareDropdownA(true)
+    }, 300)
+
+    return () => clearTimeout(debounce)
+  }, [compareSearchA, compareA, searchUniversities])
+
+  // Handle compare search B
+  useEffect(() => {
+    if (!compareSearchB.trim() || compareB) {
+      setCompareResultsB([])
+      setShowCompareDropdownB(false)
+      return
+    }
+
+    const debounce = setTimeout(async () => {
+      const results = await searchUniversities(compareSearchB)
+      setCompareResultsB(results)
+      setShowCompareDropdownB(true)
+    }, 300)
+
+    return () => clearTimeout(debounce)
+  }, [compareSearchB, compareB, searchUniversities])
+
+  // Filter displayed universities
   const filteredUniversities = useMemo(() => {
-    return sortedUniversities.filter(uni => {
-      const matchesSearch = searchQuery === '' || 
-        uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (uni.short_name && uni.short_name.toLowerCase().includes(searchQuery.toLowerCase()))
-      
+    return universities.filter(uni => {
       const matchesConference = conferenceFilter === 'All Conferences' || 
         uni.athletic_conference === conferenceFilter
       
       const matchesType = typeFilter === 'all' || 
         uni.institution_type === typeFilter
 
-      return matchesSearch && matchesConference && matchesType
+      return matchesConference && matchesType
     })
-  }, [sortedUniversities, searchQuery, conferenceFilter, typeFilter])
+  }, [universities, conferenceFilter, typeFilter])
 
   // Get rank based on visibility score
   const getRank = (uni: University) => {
-    return sortedUniversities.findIndex(u => u.id === uni.id) + 1
-  }
-
-  // Filter universities for comparison dropdowns
-  const filterCompareResults = (query: string) => {
-    if (!query) return []
-    return universities.filter(uni => 
-      uni.name.toLowerCase().includes(query.toLowerCase()) ||
-      (uni.short_name && uni.short_name.toLowerCase().includes(query.toLowerCase()))
-    ).slice(0, 5)
-  }
-
-  // Handle rivalry card click
-  const handleRivalryClick = (aSlug: string, bSlug: string) => {
-    const uniA = universities.find(u => u.slug === aSlug)
-    const uniB = universities.find(u => u.slug === bSlug)
-    if (uniA && uniB) {
-      setCompareA(uniA)
-      setCompareB(uniB)
-      setShowCompareModal(true)
-    }
+    const sorted = [...universities].sort((a, b) => (b.visibility_score || 0) - (a.visibility_score || 0))
+    return sorted.findIndex(u => u.id === uni.id) + 1
   }
 
   // Get logo URL with Brandfetch fallback
@@ -149,6 +177,20 @@ export default function UniversityIndexClient({ universities: serverUniversities
     if (uni.domain) return `https://cdn.brandfetch.io/${uni.domain}?c=1id1Fyz-h7an5-5KR_y`
     return null
   }
+
+  // Get insight leaders (universities best known for each category)
+  const getInsightLeaders = () => {
+    return INSIGHT_CATEGORIES.map(category => {
+      const leader = universities.find(uni => 
+        uni.known_for?.some(kf => 
+          category.keywords.some(kw => kf.toLowerCase().includes(kw.toLowerCase()))
+        )
+      )
+      return { ...category, university: leader }
+    }).filter(c => c.university)
+  }
+
+  const insightLeaders = getInsightLeaders()
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -168,7 +210,7 @@ export default function UniversityIndexClient({ universities: serverUniversities
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-8">
             <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="text-white/60 text-sm">University Rankings</span>
+            <span className="text-white/60 text-sm">University AI Rankings</span>
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-6">
@@ -176,8 +218,7 @@ export default function UniversityIndexClient({ universities: serverUniversities
           </h1>
           
           <p className="text-lg md:text-xl text-white/50 leading-relaxed mb-10 max-w-2xl mx-auto">
-            See how ChatGPT, Claude, and Perplexity rank America's universities. 
-            What AI tells millions of students matters.
+            How ChatGPT, Claude, and Perplexity rank {totalCount.toLocaleString()}+ universities
           </p>
 
           {/* Search */}
@@ -188,29 +229,110 @@ export default function UniversityIndexClient({ universities: serverUniversities
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery && setShowSearchDropdown(true)}
                 placeholder="Search universities..."
                 className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 transition-colors"
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => {
+                    setSearchQuery('')
+                    setShowSearchDropdown(false)
+                  }}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
+
+            {/* Search Dropdown */}
+            {showSearchDropdown && searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl overflow-hidden z-50 shadow-2xl">
+                {searchResults.map(uni => (
+                  <Link
+                    key={uni.id}
+                    href={`/universities/${uni.slug}`}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
+                    onClick={() => setShowSearchDropdown(false)}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
+                      {getLogoUrl(uni) ? (
+                        <img src={getLogoUrl(uni)!} alt={uni.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-bold text-white/40">{(uni.short_name || uni.name).slice(0, 2)}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium truncate">{uni.short_name || uni.name}</div>
+                      <div className="text-white/40 text-sm truncate">{uni.city}, {uni.state}</div>
+                    </div>
+                    <div className="text-white/60 text-sm font-medium">{uni.visibility_score?.toFixed(1)}%</div>
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* No Results */}
+            {showSearchDropdown && searchQuery && searchResults.length === 0 && !isSearching && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl p-6 text-center z-50">
+                <p className="text-white/60 text-sm">No universities found for "{searchQuery}"</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
+      {/* Insights Section - Best For Categories */}
+      {insightLeaders.length > 0 && (
+        <section className="pb-12 px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center gap-3 mb-6">
+              <Sparkles className="w-5 h-5 text-amber-400" />
+              <h2 className="text-lg font-semibold text-white">AI Says They're Best For</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {insightLeaders.map((insight) => {
+                const Icon = insight.icon
+                const uni = insight.university!
+                return (
+                  <Link
+                    key={insight.key}
+                    href={`/universities/${uni.slug}`}
+                    className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 transition-all"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <Icon className="w-4 h-4 text-white/50" />
+                      <span className="text-white/50 text-xs uppercase tracking-wider">{insight.label}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
+                        {getLogoUrl(uni) ? (
+                          <img src={getLogoUrl(uni)!} alt={uni.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-xs font-bold text-white/40">{(uni.short_name || uni.name).slice(0, 2)}</span>
+                        )}
+                      </div>
+                      <div>
+                        <div className="text-white font-medium text-sm group-hover:text-white/90">{uni.short_name || uni.name}</div>
+                        <div className="text-white/40 text-xs">{uni.visibility_score?.toFixed(1)}% score</div>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Classic Rivalries Section */}
-      <section className="pb-16 px-6">
+      <section className="pb-12 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <Swords className="w-5 h-5 text-white/50" />
             <h2 className="text-lg font-semibold text-white">Classic Rivalries</h2>
-            <span className="text-white/40 text-sm">Click to compare</span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -220,15 +342,15 @@ export default function UniversityIndexClient({ universities: serverUniversities
               if (!uniA || !uniB) return null
 
               return (
-                <button
+                <Link
                   key={idx}
-                  onClick={() => handleRivalryClick(rivalry.a, rivalry.b)}
-                  className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 text-left transition-all"
+                  href={`/universities/compare?a=${rivalry.a}&b=${rivalry.b}`}
+                  className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 text-center transition-all"
                 >
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
                       {getLogoUrl(uniA) ? (
-                        <img src={getLogoUrl(uniA)!} alt={uniA.short_name || uniA.name} className="w-6 h-6 object-contain" />
+                        <img src={getLogoUrl(uniA)!} alt={uniA.short_name || uniA.name} className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-xs font-bold text-white/60">{(uniA.short_name || uniA.name).slice(0, 2)}</span>
                       )}
@@ -236,16 +358,16 @@ export default function UniversityIndexClient({ universities: serverUniversities
                     <span className="text-white/40 text-xs">vs</span>
                     <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
                       {getLogoUrl(uniB) ? (
-                        <img src={getLogoUrl(uniB)!} alt={uniB.short_name || uniB.name} className="w-6 h-6 object-contain" />
+                        <img src={getLogoUrl(uniB)!} alt={uniB.short_name || uniB.name} className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-xs font-bold text-white/60">{(uniB.short_name || uniB.name).slice(0, 2)}</span>
                       )}
                     </div>
                   </div>
-                  <p className="text-white/60 text-xs text-center group-hover:text-white/80 transition-colors">
+                  <p className="text-white/60 text-xs group-hover:text-white/80 transition-colors">
                     {rivalry.name}
                   </p>
-                </button>
+                </Link>
               )
             })}
           </div>
@@ -253,7 +375,7 @@ export default function UniversityIndexClient({ universities: serverUniversities
       </section>
 
       {/* Build Your Own Comparison */}
-      <section className="pb-16 px-6">
+      <section className="pb-12 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
@@ -263,89 +385,135 @@ export default function UniversityIndexClient({ universities: serverUniversities
               </div>
             </div>
 
-            <div className="grid md:grid-cols-[1fr,auto,1fr] gap-4 items-center">
+            <div className="grid md:grid-cols-[1fr,auto,1fr] gap-4 items-start">
               {/* University A Selector */}
               <div className="relative">
-                <input
-                  type="text"
-                  value={compareA ? (compareA.short_name || compareA.name) : compareSearchA}
-                  onChange={(e) => {
-                    setCompareSearchA(e.target.value)
-                    setCompareA(null)
-                  }}
-                  placeholder="Select first university..."
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20"
-                />
-                {compareSearchA && !compareA && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl overflow-hidden z-10">
-                    {filterCompareResults(compareSearchA).map(uni => (
-                      <button
-                        key={uni.id}
-                        onClick={() => {
-                          setCompareA(uni)
-                          setCompareSearchA('')
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
-                          {getLogoUrl(uni) ? (
-                            <img src={getLogoUrl(uni)!} alt={uni.name} className="w-6 h-6 object-contain" />
-                          ) : (
-                            <span className="text-xs font-bold text-white/60">{(uni.short_name || uni.name).slice(0, 2)}</span>
-                          )}
-                        </div>
-                        <div>
-                          <div className="text-white text-sm">{uni.name}</div>
-                          <div className="text-white/40 text-xs">{uni.city}, {uni.state}</div>
-                        </div>
-                      </button>
-                    ))}
+                {compareA ? (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/[0.05] border border-white/[0.12] rounded-xl">
+                    <div className="w-10 h-10 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center flex-shrink-0">
+                      {getLogoUrl(compareA) ? (
+                        <img src={getLogoUrl(compareA)!} alt={compareA.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-bold text-white/60">{(compareA.short_name || compareA.name).slice(0, 2)}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium truncate">{compareA.short_name || compareA.name}</div>
+                      <div className="text-white/40 text-xs">{compareA.visibility_score?.toFixed(1)}% AI Score</div>
+                    </div>
+                    <button
+                      onClick={() => setCompareA(null)}
+                      className="text-white/40 hover:text-white/60"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      value={compareSearchA}
+                      onChange={(e) => setCompareSearchA(e.target.value)}
+                      onFocus={() => compareSearchA && setShowCompareDropdownA(true)}
+                      placeholder="Search first university..."
+                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20"
+                    />
+                    {showCompareDropdownA && compareResultsA.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl overflow-hidden z-10 shadow-xl">
+                        {compareResultsA.map(uni => (
+                          <button
+                            key={uni.id}
+                            onClick={() => {
+                              setCompareA(uni)
+                              setCompareSearchA('')
+                              setShowCompareDropdownA(false)
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
+                              {getLogoUrl(uni) ? (
+                                <img src={getLogoUrl(uni)!} alt={uni.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <span className="text-xs font-bold text-white/60">{(uni.short_name || uni.name).slice(0, 2)}</span>
+                              )}
+                            </div>
+                            <div>
+                              <div className="text-white text-sm">{uni.short_name || uni.name}</div>
+                              <div className="text-white/40 text-xs">{uni.city}, {uni.state}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
               {/* VS */}
-              <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10">
+              <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 self-center">
                 <span className="text-white/60 font-bold text-sm">VS</span>
               </div>
 
               {/* University B Selector */}
               <div className="relative">
-                <input
-                  type="text"
-                  value={compareB ? (compareB.short_name || compareB.name) : compareSearchB}
-                  onChange={(e) => {
-                    setCompareSearchB(e.target.value)
-                    setCompareB(null)
-                  }}
-                  placeholder="Select second university..."
-                  className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20"
-                />
-                {compareSearchB && !compareB && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl overflow-hidden z-10">
-                    {filterCompareResults(compareSearchB).map(uni => (
-                      <button
-                        key={uni.id}
-                        onClick={() => {
-                          setCompareB(uni)
-                          setCompareSearchB('')
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
-                          {getLogoUrl(uni) ? (
-                            <img src={getLogoUrl(uni)!} alt={uni.name} className="w-6 h-6 object-contain" />
-                          ) : (
-                            <span className="text-xs font-bold text-white/60">{(uni.short_name || uni.name).slice(0, 2)}</span>
-                          )}
-                        </div>
-                        <div>
-                          <div className="text-white text-sm">{uni.name}</div>
-                          <div className="text-white/40 text-xs">{uni.city}, {uni.state}</div>
-                        </div>
-                      </button>
-                    ))}
+                {compareB ? (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-white/[0.05] border border-white/[0.12] rounded-xl">
+                    <div className="w-10 h-10 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center flex-shrink-0">
+                      {getLogoUrl(compareB) ? (
+                        <img src={getLogoUrl(compareB)!} alt={compareB.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-sm font-bold text-white/60">{(compareB.short_name || compareB.name).slice(0, 2)}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium truncate">{compareB.short_name || compareB.name}</div>
+                      <div className="text-white/40 text-xs">{compareB.visibility_score?.toFixed(1)}% AI Score</div>
+                    </div>
+                    <button
+                      onClick={() => setCompareB(null)}
+                      className="text-white/40 hover:text-white/60"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      value={compareSearchB}
+                      onChange={(e) => setCompareSearchB(e.target.value)}
+                      onFocus={() => compareSearchB && setShowCompareDropdownB(true)}
+                      placeholder="Search second university..."
+                      className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20"
+                    />
+                    {showCompareDropdownB && compareResultsB.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-[#141414] border border-white/[0.08] rounded-xl overflow-hidden z-10 shadow-xl">
+                        {compareResultsB.map(uni => (
+                          <button
+                            key={uni.id}
+                            onClick={() => {
+                              setCompareB(uni)
+                              setCompareSearchB('')
+                              setShowCompareDropdownB(false)
+                            }}
+                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
+                              {getLogoUrl(uni) ? (
+                                <img src={getLogoUrl(uni)!} alt={uni.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <span className="text-xs font-bold text-white/60">{(uni.short_name || uni.name).slice(0, 2)}</span>
+                              )}
+                            </div>
+                            <div>
+                              <div className="text-white text-sm">{uni.short_name || uni.name}</div>
+                              <div className="text-white/40 text-xs">{uni.city}, {uni.state}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -353,13 +521,13 @@ export default function UniversityIndexClient({ universities: serverUniversities
             {/* Compare Button */}
             {compareA && compareB && (
               <div className="mt-6 flex justify-center">
-                <button
-                  onClick={() => setShowCompareModal(true)}
+                <Link
+                  href={`/universities/compare?a=${compareA.slug}&b=${compareB.slug}`}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors"
                 >
                   Compare Universities
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
             )}
           </div>
@@ -400,14 +568,14 @@ export default function UniversityIndexClient({ universities: serverUniversities
 
             {/* Results count */}
             <span className="text-white/40 text-sm ml-auto">
-              {filteredUniversities.length} universities
+              Showing {filteredUniversities.length} of {totalCount.toLocaleString()} universities
             </span>
           </div>
         </div>
       </section>
 
       {/* Leaderboard Table */}
-      <section className="pb-20 px-6">
+      <section className="pb-8 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl overflow-hidden">
             <table className="w-full">
@@ -421,9 +589,9 @@ export default function UniversityIndexClient({ universities: serverUniversities
                 </tr>
               </thead>
               <tbody>
-                {filteredUniversities.map((uni, index) => {
+                {filteredUniversities.map((uni) => {
                   const rank = getRank(uni)
-                  const trend = Math.random() > 0.5 ? 'up' : 'down' // Mock trend
+                  const trend = (uni.visibility_score || 0) > 80 ? 'up' : 'down'
                   
                   return (
                     <tr 
@@ -447,7 +615,7 @@ export default function UniversityIndexClient({ universities: serverUniversities
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
                             {getLogoUrl(uni) ? (
-                              <img src={getLogoUrl(uni)!} alt={uni.name} className="w-8 h-8 object-contain" />
+                              <img src={getLogoUrl(uni)!} alt={uni.name} className="w-full h-full object-cover" />
                             ) : (
                               <span className="text-sm font-bold text-white/40">{(uni.short_name || uni.name).slice(0, 2)}</span>
                             )}
@@ -475,6 +643,19 @@ export default function UniversityIndexClient({ universities: serverUniversities
               </tbody>
             </table>
           </div>
+
+          {/* Browse More Button */}
+          {filteredUniversities.length < totalCount && (
+            <div className="mt-6 text-center">
+              <Link
+                href="/universities/all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors"
+              >
+                Browse all {totalCount.toLocaleString()} schools
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -498,143 +679,6 @@ export default function UniversityIndexClient({ universities: serverUniversities
           </div>
         </div>
       </section>
-
-      {/* Comparison Modal */}
-      {showCompareModal && compareA && compareB && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div 
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setShowCompareModal(false)}
-          />
-          
-          {/* Modal */}
-          <div className="relative bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            {/* Close button */}
-            <button
-              onClick={() => setShowCompareModal(false)}
-              className="absolute top-4 right-4 p-2 text-white/40 hover:text-white/60"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Header */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full mb-4">
-                <Swords className="w-4 h-4 text-white/50" />
-                <span className="text-white/60 text-sm">AI Visibility Matchup</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white">Head-to-Head Comparison</h3>
-            </div>
-
-            {/* Comparison Card */}
-            <div className="grid md:grid-cols-[1fr,auto,1fr] gap-6 items-start">
-              {/* University A */}
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center mx-auto mb-4">
-                  {getLogoUrl(compareA) ? (
-                    <img src={getLogoUrl(compareA)!} alt={compareA.name} className="w-16 h-16 object-contain" />
-                  ) : (
-                    <span className="text-2xl font-bold text-white/40">{(compareA.short_name || compareA.name).slice(0, 2)}</span>
-                  )}
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-1">{compareA.short_name || compareA.name}</h4>
-                <p className="text-white/40 text-sm mb-4">{compareA.city}, {compareA.state}</p>
-                
-                <div className="text-4xl font-bold text-white mb-2">{compareA.visibility_score?.toFixed(1)}%</div>
-                <p className="text-white/50 text-sm">AI Visibility Score</p>
-
-                <div className="mt-6 space-y-3 text-left">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">US News Rank</span>
-                    <span className="text-white">#{compareA.us_news_rank}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Acceptance Rate</span>
-                    <span className="text-white">{compareA.acceptance_rate}%</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Conference</span>
-                    <span className="text-white">{compareA.athletic_conference}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">AI Mentions</span>
-                    <span className="text-white">{compareA.total_mentions?.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* VS Divider */}
-              <div className="hidden md:flex flex-col items-center justify-center gap-4 py-8">
-                <div className="w-px h-20 bg-white/10" />
-                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                  <span className="text-white/60 font-bold text-sm">VS</span>
-                </div>
-                <div className="w-px h-20 bg-white/10" />
-              </div>
-
-              {/* University B */}
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center mx-auto mb-4">
-                  {getLogoUrl(compareB) ? (
-                    <img src={getLogoUrl(compareB)!} alt={compareB.name} className="w-16 h-16 object-contain" />
-                  ) : (
-                    <span className="text-2xl font-bold text-white/40">{(compareB.short_name || compareB.name).slice(0, 2)}</span>
-                  )}
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-1">{compareB.short_name || compareB.name}</h4>
-                <p className="text-white/40 text-sm mb-4">{compareB.city}, {compareB.state}</p>
-                
-                <div className="text-4xl font-bold text-white mb-2">{compareB.visibility_score?.toFixed(1)}%</div>
-                <p className="text-white/50 text-sm">AI Visibility Score</p>
-
-                <div className="mt-6 space-y-3 text-left">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">US News Rank</span>
-                    <span className="text-white">#{compareB.us_news_rank}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Acceptance Rate</span>
-                    <span className="text-white">{compareB.acceptance_rate}%</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Conference</span>
-                    <span className="text-white">{compareB.athletic_conference}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/50">AI Mentions</span>
-                    <span className="text-white">{compareB.total_mentions?.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Winner Banner */}
-            {compareA.visibility_score !== compareB.visibility_score && (
-              <div className="mt-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-center">
-                <p className="text-emerald-400 font-medium">
-                  {(compareA.visibility_score || 0) > (compareB.visibility_score || 0) 
-                    ? `${compareA.short_name || compareA.name} leads by ${((compareA.visibility_score || 0) - (compareB.visibility_score || 0)).toFixed(1)} points`
-                    : `${compareB.short_name || compareB.name} leads by ${((compareB.visibility_score || 0) - (compareA.visibility_score || 0)).toFixed(1)} points`
-                  }
-                </p>
-              </div>
-            )}
-
-            {/* Share Actions */}
-            <div className="mt-8 flex items-center justify-center gap-4">
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
-                <Download className="w-4 h-4" />
-                Download
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>

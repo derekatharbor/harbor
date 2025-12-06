@@ -1,5 +1,6 @@
 // app/universities/page.tsx
 import { Metadata } from 'next'
+import { createClient } from '@supabase/supabase-js'
 import UniversityIndexClient from './UniversityIndexClient'
 
 export const dynamic = 'force-dynamic'
@@ -14,6 +15,29 @@ export const metadata: Metadata = {
   },
 }
 
-export default function UniversitiesPage() {
-  return <UniversityIndexClient />
+export default async function UniversitiesPage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  // Fetch top 50 universities for initial render
+  const { data: universities, error } = await supabase
+    .from('university_profiles')
+    .select('*')
+    .eq('is_active', true)
+    .order('visibility_score', { ascending: false })
+    .limit(50)
+
+  if (error) {
+    console.error('Error fetching universities:', error)
+  }
+
+  // Get total count
+  const { count } = await supabase
+    .from('university_profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_active', true)
+
+  return <UniversityIndexClient universities={universities || []} totalCount={count || 0} />
 }
