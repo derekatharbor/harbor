@@ -37,7 +37,7 @@ const CLASSIC_RIVALRIES = [
   { a: 'texas', b: 'texas-am', name: 'Lone Star Showdown' },
 ]
 
-// Featured university domains for marquee (mix of well-known schools)
+// Featured university domains for marquee (3 rows)
 const MARQUEE_SCHOOLS = [
   // Row 1 (moves left)
   ['mit.edu', 'stanford.edu', 'harvard.edu', 'yale.edu', 'princeton.edu', 'columbia.edu', 'upenn.edu', 'brown.edu', 'dartmouth.edu', 'cornell.edu', 'duke.edu', 'northwestern.edu'],
@@ -76,24 +76,26 @@ function MarqueeRow({ domains, direction, speed = 30 }: { domains: string[], dir
   const duplicatedDomains = [...domains, ...domains, ...domains]
   
   return (
-    <div className="flex overflow-hidden py-2">
+    <div className="flex overflow-hidden py-1">
       <div 
-        className={`flex gap-4 ${direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'}`}
-        style={{ 
-          animationDuration: `${speed}s`,
-        }}
+        className={`flex gap-6 ${direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'}`}
+        style={{ animationDuration: `${speed}s` }}
       >
         {duplicatedDomains.map((domain, idx) => (
           <div 
             key={`${domain}-${idx}`}
-            className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden hover:border-white/20 transition-colors"
+            className="w-16 h-16 md:w-[72px] md:h-[72px] rounded-xl flex-shrink-0 overflow-hidden"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)',
+            }}
           >
             <img 
               src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
               alt={domain}
               className="w-full h-full object-cover"
               onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none'
+                (e.target as HTMLImageElement).style.opacity = '0'
               }}
             />
           </div>
@@ -343,25 +345,54 @@ export default function UniversityIndexClient({ universities: initialUniversitie
         </div>
       </section>
 
-      {/* Tilted Logo Marquee */}
-      <section className="relative py-8 overflow-hidden">
-        {/* Tilt container */}
-        <div 
-          className="relative -mx-20"
-          style={{ transform: 'rotate(-3deg)' }}
-        >
-          {/* Gradient fades on sides */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+      {/* Perspective Logo Marquee (Profound-style) */}
+      <section className="relative py-10 overflow-hidden">
+        {/* Contained perspective wrapper */}
+        <div className="relative w-full max-w-[1400px] mx-auto overflow-hidden">
+          {/* Center glow/highlight */}
+          <div 
+            className="absolute inset-0 pointer-events-none z-0"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0) 60%)'
+            }}
+          />
           
-          {/* Row 1 - moves left */}
-          <MarqueeRow domains={MARQUEE_SCHOOLS[0]} direction="left" speed={40} />
+          {/* Left fade mask */}
+          <div 
+            className="absolute left-0 top-0 w-[200px] h-full z-20 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to right, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%)'
+            }}
+          />
           
-          {/* Row 2 - moves right */}
-          <MarqueeRow domains={MARQUEE_SCHOOLS[1]} direction="right" speed={35} />
-          
-          {/* Row 3 - moves left */}
-          <MarqueeRow domains={MARQUEE_SCHOOLS[2]} direction="left" speed={45} />
+          {/* Right fade mask */}
+          <div 
+            className="absolute right-0 top-0 w-[200px] h-full z-20 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to left, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%)'
+            }}
+          />
+
+          {/* Perspective container */}
+          <div style={{ perspective: '1200px' }}>
+            {/* 3D tilted rows container */}
+            <div 
+              className="py-4"
+              style={{
+                transform: 'rotateX(8deg) translateZ(0)',
+                transformStyle: 'preserve-3d',
+              }}
+            >
+              {/* Row 1 - moves left */}
+              <MarqueeRow domains={MARQUEE_SCHOOLS[0]} direction="left" speed={40} />
+              
+              {/* Row 2 - moves right */}
+              <MarqueeRow domains={MARQUEE_SCHOOLS[1]} direction="right" speed={35} />
+              
+              {/* Row 3 - moves left */}
+              <MarqueeRow domains={MARQUEE_SCHOOLS[2]} direction="left" speed={45} />
+            </div>
+          </div>
         </div>
       </section>
 
