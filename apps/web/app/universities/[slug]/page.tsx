@@ -85,5 +85,31 @@ export default async function UniversityProfilePage({
     }
   }
 
-  return <UniversityProfileClient university={university} rivals={rivals} />
+  // Fetch real mentions with prompt info
+  const { data: mentions } = await supabase
+    .from('university_mentions')
+    .select(`
+      position,
+      sentiment,
+      context,
+      created_at,
+      prompt_executions!inner(
+        model_id,
+        seed_prompts!inner(prompt_text)
+      )
+    `)
+    .eq('university_id', university.id)
+    .order('created_at', { ascending: false })
+    .limit(50)
+
+  // Transform mentions into usable format
+  const promptMentions = mentions?.map(m => ({
+    prompt: (m.prompt_executions as any)?.seed_prompts?.prompt_text || 'Unknown prompt',
+    position: m.position,
+    sentiment: m.sentiment,
+    model: (m.prompt_executions as any)?.model_id || 'Unknown',
+    context: m.context
+  })) || []
+
+  return <UniversityProfileClient university={university} rivals={rivals} mentions={promptMentions} />
 }

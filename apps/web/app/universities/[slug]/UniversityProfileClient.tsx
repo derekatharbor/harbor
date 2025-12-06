@@ -36,30 +36,86 @@ interface University {
   rival_ids: string[] | null
 }
 
-// Mock prompt data - in production this would come from scans
-const MOCK_PROMPTS = [
-  { prompt: 'Best engineering schools in the US', position: 2, sentiment: 'positive', model: 'ChatGPT' },
-  { prompt: 'Is [university] worth the cost?', position: 1, sentiment: 'positive', model: 'Claude' },
-  { prompt: 'Top computer science programs', position: 3, sentiment: 'positive', model: 'Perplexity' },
-  { prompt: 'Best universities for pre-med', position: 5, sentiment: 'neutral', model: 'ChatGPT' },
-  { prompt: '[university] vs [rival] which is better', position: 1, sentiment: 'positive', model: 'Gemini' },
-  { prompt: 'Most prestigious universities', position: 4, sentiment: 'positive', model: 'Claude' },
-]
-
-const MOCK_AI_SAYS = [
-  "Known for its entrepreneurial culture and proximity to Silicon Valley",
-  "Highly selective with a strong emphasis on interdisciplinary research", 
-  "Produces more startup founders than almost any other university",
-  "Beautiful campus with world-class athletic facilities",
-  "Strong programs across engineering, business, and humanities",
-]
+interface Mention {
+  prompt: string
+  position: number
+  sentiment: string
+  model: string
+  context: string
+}
 
 interface Props {
   university: University
   rivals?: University[]
+  mentions?: Mention[]
 }
 
-export default function UniversityProfileClient({ university, rivals = [] }: Props) {
+// Format model name for display
+function formatModelName(modelId: string): string {
+  const modelMap: Record<string, string> = {
+    'gpt-4o-mini': 'ChatGPT',
+    'gpt-4o': 'ChatGPT',
+    'claude-3-5-haiku-20241022': 'Claude',
+    'claude-3-5-sonnet-20241022': 'Claude',
+    'sonar': 'Perplexity',
+    'sonar-pro': 'Perplexity'
+  }
+  return modelMap[modelId] || modelId
+}
+
+// Extract key phrases from contexts for "What AI Says"
+function extractAISays(mentions: Mention[], universityName: string): string[] {
+  // Get unique contexts and extract meaningful snippets
+  const contexts = mentions
+    .filter(m => m.context && m.context.length > 50)
+    .slice(0, 20)
+    .map(m => m.context)
+  
+  if (contexts.length === 0) {
+    return [`Frequently mentioned in AI responses about higher education`]
+  }
+
+  // Extract sentences that contain positive descriptors
+  const positivePatterns = [
+    /known for[^.]+/gi,
+    /renowned for[^.]+/gi,
+    /excels in[^.]+/gi,
+    /strong in[^.]+/gi,
+    /top[^.]{10,60}/gi,
+    /leading[^.]{10,60}/gi,
+    /best[^.]{10,50}/gi,
+    /excellent[^.]+/gi,
+  ]
+
+  const extracted = new Set<string>()
+  
+  for (const context of contexts) {
+    for (const pattern of positivePatterns) {
+      const matches = context.match(pattern)
+      if (matches) {
+        for (const match of matches) {
+          const cleaned = match.trim()
+          if (cleaned.length > 20 && cleaned.length < 150) {
+            // Capitalize first letter
+            extracted.add(cleaned.charAt(0).toUpperCase() + cleaned.slice(1))
+          }
+          if (extracted.size >= 5) break
+        }
+      }
+      if (extracted.size >= 5) break
+    }
+    if (extracted.size >= 5) break
+  }
+
+  // Fallback if no patterns matched
+  if (extracted.size === 0) {
+    return [`Frequently recommended in discussions about higher education`]
+  }
+
+  return Array.from(extracted).slice(0, 5)
+}
+
+export default function UniversityProfileClient({ university, rivals = [], mentions = [] }: Props) {
   const [activeTab, setActiveTab] = useState<'overview' | 'prompts' | 'comparison'>('overview')
 
   // Get logo URL with Brandfetch fallback
@@ -72,6 +128,17 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
   const logoUrl = getLogoUrl(university)
   const trend = (university.visibility_score || 0) > 85 ? 'up' : 'down'
   const trendValue = trend === 'up' ? '+2.3%' : '-1.2%'
+
+  // Extract AI says from real mentions
+  const aiSays = extractAISays(mentions, university.name)
+  
+  // Get unique prompts (deduplicated)
+  const uniquePrompts = mentions.reduce((acc, m) => {
+    if (!acc.find(p => p.prompt === m.prompt)) {
+      acc.push(m)
+    }
+    return acc
+  }, [] as Mention[]).slice(0, 10)
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -100,9 +167,9 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
           {/* University Header */}
           <div className="flex flex-col md:flex-row items-start gap-6">
             {/* Logo */}
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0 p-3">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
               {logoUrl ? (
-                <img src={logoUrl} alt={university.name} className="w-full h-full object-contain" />
+                <img src={logoUrl} alt={university.name} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-3xl font-bold text-white/40">
                   {(university.short_name || university.name).slice(0, 2)}
@@ -191,7 +258,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
             </h2>
             
             <div className="space-y-4">
-              {MOCK_AI_SAYS.map((statement, idx) => (
+              {aiSays.map((statement, idx) => (
                 <div key={idx} className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-white/40 text-xs">{idx + 1}</span>
@@ -202,7 +269,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
             </div>
 
             <p className="mt-6 text-white/40 text-sm">
-              Based on analysis of {university.total_mentions?.toLocaleString() || '1,000+'} AI-generated responses
+              Based on analysis of {university.total_mentions?.toLocaleString() || '0'} AI-generated responses
             </p>
           </div>
 
@@ -251,7 +318,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
             </p>
 
             <div className="space-y-3">
-              {MOCK_PROMPTS.map((prompt, idx) => (
+              {uniquePrompts.length > 0 ? uniquePrompts.map((prompt, idx) => (
                 <div 
                   key={idx}
                   className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.04]"
@@ -267,8 +334,8 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
                       #{prompt.position}
                     </div>
                     <div>
-                      <p className="text-white text-sm">{prompt.prompt.replace('[university]', university.short_name || university.name).replace('[rival]', 'rival')}</p>
-                      <p className="text-white/40 text-xs mt-0.5">{prompt.model}</p>
+                      <p className="text-white text-sm">{prompt.prompt}</p>
+                      <p className="text-white/40 text-xs mt-0.5">{formatModelName(prompt.model)}</p>
                     </div>
                   </div>
                   <span className={`px-2.5 py-1 rounded-full text-xs ${
@@ -281,7 +348,11 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
                     {prompt.sentiment}
                   </span>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center py-8 text-white/40">
+                  No prompt data yet. Check back after the next scan.
+                </div>
+              )}
             </div>
           </div>
 
@@ -301,9 +372,9 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
                     className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center p-1">
+                      <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center">
                         {getLogoUrl(rival) ? (
-                          <img src={getLogoUrl(rival)!} alt={rival.name} className="w-full h-full object-contain" />
+                          <img src={getLogoUrl(rival)!} alt={rival.name} className="w-full h-full object-cover" />
                         ) : (
                           <span className="text-sm font-bold text-white/40">{(rival.short_name || rival.name).slice(0, 2)}</span>
                         )}
