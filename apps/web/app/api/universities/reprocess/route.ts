@@ -27,29 +27,40 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Reprocess] Starting reprocessing - limit: ${limit}, topic: ${topicFilter}`)
 
-    // Get executions that need processing
+    // First get prompt IDs for the topic
+    let promptIds: string[] = []
+    if (topicFilter) {
+      const { data: prompts } = await supabase
+        .from('seed_prompts')
+        .select('id')
+        .eq('topic', topicFilter)
+        .eq('is_active', true)
+      
+      promptIds = prompts?.map(p => p.id) || []
+      
+      if (promptIds.length === 0) {
+        return NextResponse.json({
+          success: true,
+          message: `No prompts found for topic: ${topicFilter}`,
+          processed: 0
+        })
+      }
+    }
+
+    // Get executions
     let query = supabase
       .from('prompt_executions')
-      .select(`
-        id,
-        response_text,
-        prompt_id,
-        seed_prompts!inner(topic)
-      `)
+      .select('id, response_text, prompt_id')
       .not('response_text', 'is', null)
-      .not('error', 'is', null)
+      .is('error', null)
 
-    if (topicFilter) {
-      query = query.eq('seed_prompts.topic', topicFilter)
+    if (promptIds.length > 0) {
+      query = query.in('prompt_id', promptIds)
     }
 
-    // If not forcing, only get executions without university mentions
-    if (!force) {
-      // This is tricky - we need to left join and check for null
-      // For now, just process all and let upsert handle duplicates
-    }
-
-    const { data: executions, error: fetchError } = await query.limit(limit)
+    const { data: executions, error: fetchError } = await query
+      .order('executed_at', { ascending: false })
+      .limit(limit)
 
     if (fetchError) {
       throw new Error(`Failed to fetch executions: ${fetchError.message}`)
@@ -161,15 +172,28 @@ export async function GET() {
     .order('visibility_score', { ascending: false })
     .limit(20)
 
+  // Get prompt IDs for university topic
+  const { data: uniPrompts } = await supabase
+    .from('seed_prompts')
+    .select('id')
+    .eq('topic', 'universities')
+    .eq('is_active', true)
+
+  const uniPromptIds = uniPrompts?.map(p => p.id) || []
+
   // Count executions for university prompts
-  const { count: uniExecutions } = await supabase
-    .from('prompt_executions')
-    .select('*, seed_prompts!inner(topic)', { count: 'exact', head: true })
-    .eq('seed_prompts.topic', 'universities')
+  let uniExecutions = 0
+  if (uniPromptIds.length > 0) {
+    const { count } = await supabase
+      .from('prompt_executions')
+      .select('*', { count: 'exact', head: true })
+      .in('prompt_id', uniPromptIds)
+    uniExecutions = count || 0
+  }
 
   return NextResponse.json({
     prompts_by_topic: byTopic,
-    university_prompt_executions: uniExecutions || 0,
+    university_prompt_executions: uniExecutions,
     university_mentions_stored: mentionCount || 0,
     universities_with_scores: scoredUniversities?.length || 0,
     top_universities: scoredUniversities
