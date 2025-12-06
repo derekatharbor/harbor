@@ -45,12 +45,26 @@ export async function generateMetadata({
     const nameA = uniA.short_name || uniA.name
     const nameB = uniB.short_name || uniB.name
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
+    
     return {
       title: `${nameA} vs ${nameB} - AI Visibility Comparison - Harbor`,
       description: `Compare how AI models talk about ${nameA} and ${nameB}. Head-to-head visibility scores, rankings, and sentiment analysis.`,
       openGraph: {
         title: `${nameA} vs ${nameB} - AI Visibility Matchup`,
         description: `Which university wins in AI visibility? Compare ${nameA} and ${nameB} head-to-head.`,
+        images: [{
+          url: `${siteUrl}/api/og/compare?a=${searchParams.a}&b=${searchParams.b}`,
+          width: 1200,
+          height: 630,
+          alt: `${nameA} vs ${nameB} AI Visibility Comparison`,
+        }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${nameA} vs ${nameB} - AI Visibility Matchup`,
+        description: `Which university wins in AI visibility? Compare ${nameA} and ${nameB} head-to-head.`,
+        images: [`${siteUrl}/api/og/compare?a=${searchParams.a}&b=${searchParams.b}`],
       },
     }
   } catch (error) {
