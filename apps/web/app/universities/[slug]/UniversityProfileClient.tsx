@@ -91,7 +91,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
           {/* Back link */}
           <Link 
             href="/universities"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors mb-8 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Rankings
@@ -100,9 +100,9 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
           {/* University Header */}
           <div className="flex flex-col md:flex-row items-start gap-6">
             {/* Logo */}
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0 p-3">
               {logoUrl ? (
-                <img src={logoUrl} alt={university.name} className="w-20 h-20 md:w-24 md:h-24 object-cover" />
+                <img src={logoUrl} alt={university.name} className="w-full h-full object-contain" />
               ) : (
                 <span className="text-3xl font-bold text-white/40">
                   {(university.short_name || university.name).slice(0, 2)}
@@ -121,7 +121,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
                     href={`https://${university.domain}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/40 hover:text-white/60 transition-colors"
+                    className="text-white/40 hover:text-white/60 transition-colors cursor-pointer"
                   >
                     <ExternalLink className="w-5 h-5" />
                   </a>
@@ -298,12 +298,12 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
                   <Link
                     key={rival.id}
                     href={`/universities/compare?a=${university.slug}&b=${rival.slug}`}
-                    className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.04] hover:bg-white/[0.04] transition-colors"
+                    className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center p-1">
                         {getLogoUrl(rival) ? (
-                          <img src={getLogoUrl(rival)!} alt={rival.name} className="w-8 h-8 object-cover" />
+                          <img src={getLogoUrl(rival)!} alt={rival.name} className="w-full h-full object-contain" />
                         ) : (
                           <span className="text-sm font-bold text-white/40">{(rival.short_name || rival.name).slice(0, 2)}</span>
                         )}
@@ -325,7 +325,7 @@ export default function UniversityProfileClient({ university, rivals = [] }: Pro
             <p className="text-white/50 mb-4">Want to improve {university.short_name || university.name}'s AI visibility?</p>
             <Link
               href={`/contact?inquiry=university&school=${university.slug}`}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors cursor-pointer"
             >
               Talk to Our Team
               <ArrowRight className="w-4 h-4" />
