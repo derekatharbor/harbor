@@ -124,7 +124,7 @@ export default function CompareClient({ universityA, universityB }: Props) {
           {/* Back link */}
           <Link 
             href="/universities"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors mb-8 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Rankings
@@ -156,7 +156,7 @@ export default function CompareClient({ universityA, universityB }: Props) {
                   winner === 'A' ? 'bg-emerald-500/10 border-2 border-emerald-500/30' : 'bg-white/5'
                 }`}>
                   {logoA ? (
-                    <img src={logoA} alt={nameA} className="w-20 h-20 object-cover" />
+                    <img src={logoA} alt={nameA} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl font-bold text-white/40">{nameA.slice(0, 2)}</span>
                   )}
@@ -190,7 +190,7 @@ export default function CompareClient({ universityA, universityB }: Props) {
                   winner === 'B' ? 'bg-emerald-500/10 border-2 border-emerald-500/30' : 'bg-white/5'
                 }`}>
                   {logoB ? (
-                    <img src={logoB} alt={nameB} className="w-20 h-20 object-cover" />
+                    <img src={logoB} alt={nameB} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl font-bold text-white/40">{nameB.slice(0, 2)}</span>
                   )}

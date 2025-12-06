@@ -37,6 +37,16 @@ const CLASSIC_RIVALRIES = [
   { a: 'texas', b: 'texas-am', name: 'Lone Star Showdown' },
 ]
 
+// Featured university domains for marquee (mix of well-known schools)
+const MARQUEE_SCHOOLS = [
+  // Row 1 (moves left)
+  ['mit.edu', 'stanford.edu', 'harvard.edu', 'yale.edu', 'princeton.edu', 'columbia.edu', 'upenn.edu', 'brown.edu', 'dartmouth.edu', 'cornell.edu', 'duke.edu', 'northwestern.edu'],
+  // Row 2 (moves right)
+  ['berkeley.edu', 'ucla.edu', 'umich.edu', 'uchicago.edu', 'cmu.edu', 'nyu.edu', 'usc.edu', 'nd.edu', 'virginia.edu', 'wustl.edu', 'rice.edu', 'vanderbilt.edu'],
+  // Row 3 (moves left)
+  ['gatech.edu', 'utexas.edu', 'wisc.edu', 'illinois.edu', 'unc.edu', 'bu.edu', 'bc.edu', 'tufts.edu', 'rochester.edu', 'case.edu', 'lehigh.edu', 'wfu.edu'],
+]
+
 const CONFERENCES = [
   'All Conferences',
   'Ivy League',
@@ -60,6 +70,38 @@ const INSIGHT_CATEGORIES = [
   { key: 'research', label: 'Best for Research', icon: Sparkles, keywords: ['Research'] },
   { key: 'premed', label: 'Best for Pre-Med', icon: GraduationCap, keywords: ['Medicine', 'Pre-Med', 'Medical'] },
 ]
+
+// Marquee Row Component
+function MarqueeRow({ domains, direction, speed = 30 }: { domains: string[], direction: 'left' | 'right', speed?: number }) {
+  const duplicatedDomains = [...domains, ...domains, ...domains]
+  
+  return (
+    <div className="flex overflow-hidden py-2">
+      <div 
+        className={`flex gap-4 ${direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'}`}
+        style={{ 
+          animationDuration: `${speed}s`,
+        }}
+      >
+        {duplicatedDomains.map((domain, idx) => (
+          <div 
+            key={`${domain}-${idx}`}
+            className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden hover:border-white/20 transition-colors"
+          >
+            <img 
+              src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
+              alt={domain}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none'
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 interface Props {
   universities: University[]
@@ -194,10 +236,28 @@ export default function UniversityIndexClient({ universities: initialUniversitie
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Add marquee animations */}
+      <style jsx global>{`
+        @keyframes marquee-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.33%); }
+        }
+        @keyframes marquee-right {
+          0% { transform: translateX(-33.33%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee-left {
+          animation: marquee-left linear infinite;
+        }
+        .animate-marquee-right {
+          animation: marquee-right linear infinite;
+        }
+      `}</style>
+
       <Nav />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-20 px-6 overflow-hidden">
+      <section className="relative pt-32 pb-8 md:pt-40 md:pb-12 px-6 overflow-hidden">
         {/* Background glow */}
         <div 
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
@@ -231,7 +291,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery && setShowSearchDropdown(true)}
                 placeholder="Search universities..."
-                className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 transition-colors"
+                className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-white/20 transition-colors cursor-text"
               />
               {searchQuery && (
                 <button
@@ -239,7 +299,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                     setSearchQuery('')
                     setShowSearchDropdown(false)
                   }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -253,7 +313,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                   <Link
                     key={uni.id}
                     href={`/universities/${uni.slug}`}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer"
                     onClick={() => setShowSearchDropdown(false)}
                   >
                     <div className="w-10 h-10 rounded-lg bg-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
@@ -283,6 +343,28 @@ export default function UniversityIndexClient({ universities: initialUniversitie
         </div>
       </section>
 
+      {/* Tilted Logo Marquee */}
+      <section className="relative py-8 overflow-hidden">
+        {/* Tilt container */}
+        <div 
+          className="relative -mx-20"
+          style={{ transform: 'rotate(-3deg)' }}
+        >
+          {/* Gradient fades on sides */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          
+          {/* Row 1 - moves left */}
+          <MarqueeRow domains={MARQUEE_SCHOOLS[0]} direction="left" speed={40} />
+          
+          {/* Row 2 - moves right */}
+          <MarqueeRow domains={MARQUEE_SCHOOLS[1]} direction="right" speed={35} />
+          
+          {/* Row 3 - moves left */}
+          <MarqueeRow domains={MARQUEE_SCHOOLS[2]} direction="left" speed={45} />
+        </div>
+      </section>
+
       {/* Insights Section - Best For Categories */}
       {insightLeaders.length > 0 && (
         <section className="pb-12 px-6">
@@ -300,7 +382,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                   <Link
                     key={insight.key}
                     href={`/universities/${uni.slug}`}
-                    className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 transition-all"
+                    className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <Icon className="w-4 h-4 text-white/50" />
@@ -345,7 +427,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                 <Link
                   key={idx}
                   href={`/universities/compare?a=${rivalry.a}&b=${rivalry.b}`}
-                  className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 text-center transition-all"
+                  className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.08] rounded-xl p-4 text-center transition-all cursor-pointer"
                 >
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
@@ -403,7 +485,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                     </div>
                     <button
                       onClick={() => setCompareA(null)}
-                      className="text-white/40 hover:text-white/60"
+                      className="text-white/40 hover:text-white/60 cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -428,7 +510,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                               setCompareSearchA('')
                               setShowCompareDropdownA(false)
                             }}
-                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
+                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3 cursor-pointer"
                           >
                             <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
                               {getLogoUrl(uni) ? (
@@ -471,7 +553,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                     </div>
                     <button
                       onClick={() => setCompareB(null)}
-                      className="text-white/40 hover:text-white/60"
+                      className="text-white/40 hover:text-white/60 cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -496,7 +578,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
                               setCompareSearchB('')
                               setShowCompareDropdownB(false)
                             }}
-                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3"
+                            className="w-full px-4 py-3 text-left hover:bg-white/5 flex items-center gap-3 cursor-pointer"
                           >
                             <div className="w-8 h-8 rounded-lg bg-white/10 overflow-hidden flex items-center justify-center">
                               {getLogoUrl(uni) ? (
@@ -523,7 +605,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
               <div className="mt-6 flex justify-center">
                 <Link
                   href={`/universities/compare?a=${compareA.slug}&b=${compareB.slug}`}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors cursor-pointer"
                 >
                   Compare Universities
                   <ArrowRight className="w-4 h-4" />
@@ -649,7 +731,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
             <div className="mt-6 text-center">
               <Link
                 href="/universities/all"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
               >
                 Browse all {totalCount.toLocaleString()} schools
                 <ArrowRight className="w-4 h-4" />
@@ -671,7 +753,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
             </p>
             <Link
               href="/contact?inquiry=university"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-semibold rounded-xl hover:bg-white/90 transition-colors cursor-pointer"
             >
               Talk to Our Team
               <ArrowRight className="w-4 h-4" />
