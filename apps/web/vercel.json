@@ -3,6 +3,10 @@
     {
       "path": "/api/prompts/execute-batch",
       "schedule": "0 6,18 * * 1,4"
+    },
+    {
+      "path": "/api/cron/university-scan",
+      "schedule": "0 */4 * * *"
     }
   ]
 }

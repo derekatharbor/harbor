@@ -276,7 +276,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
           </h1>
           
           <p className="text-lg md:text-xl text-white/50 leading-relaxed mb-10 max-w-2xl mx-auto">
-            How ChatGPT, Claude, and Perplexity rank {totalCount.toLocaleString()}+ universities
+            How ChatGPT, Claude, and Perplexity rank U.S. universities
           </p>
 
           {/* Search */}
