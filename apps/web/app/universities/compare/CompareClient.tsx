@@ -1,308 +1,79 @@
-// app/universities/compare/CompareClient.tsx
-'use client'
+// app/universities/compare/page.tsx
+import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import CompareClient from './CompareClient'
 
-import { useState } from 'react'
-import { ArrowLeft, Share2, Download, Trophy, TrendingUp, TrendingDown, Check, X, Swords } from 'lucide-react'
-import Link from 'next/link'
-import Nav from '@/components/landing-new/Nav'
-import Footer from '@/components/landing-new/Footer'
-
-interface University {
-  id: string
-  name: string
-  short_name: string | null
-  slug: string
-  domain: string | null
-  logo_url: string | null
-  city: string | null
-  state: string | null
-  institution_type: string | null
-  enrollment: number | null
-  acceptance_rate: number | null
-  graduation_rate: number | null
-  us_news_rank: number | null
-  athletic_conference: string | null
-  visibility_score: number | null
-  total_mentions: number | null
-  sentiment_score: number | null
-  known_for: string[] | null
-}
-
-interface Props {
-  universityA: University
-  universityB: University
-}
-
-// Comparison metrics
-const COMPARISON_METRICS = [
-  { key: 'visibility_score', label: 'AI Visibility Score', suffix: '%', higherBetter: true },
-  { key: 'sentiment_score', label: 'AI Sentiment', suffix: '%', higherBetter: true },
-  { key: 'total_mentions', label: 'AI Mentions', suffix: '', higherBetter: true },
-  { key: 'us_news_rank', label: 'US News Rank', suffix: '', higherBetter: false },
-  { key: 'acceptance_rate', label: 'Acceptance Rate', suffix: '%', higherBetter: false },
-  { key: 'graduation_rate', label: 'Graduation Rate', suffix: '%', higherBetter: true },
-  { key: 'enrollment', label: 'Enrollment', suffix: '', higherBetter: null },
+// Mock data - same as other pages
+const MOCK_UNIVERSITIES = [
+  { id: '1', name: 'Stanford University', short_name: 'Stanford', slug: 'stanford', domain: 'stanford.edu', logo_url: null, city: 'Stanford', state: 'CA', institution_type: 'private', enrollment: 17680, acceptance_rate: 3.68, graduation_rate: 96, us_news_rank: 3, athletic_conference: 'ACC', visibility_score: 94.2, total_mentions: 2847, sentiment_score: 89.5, known_for: ['Computer Science', 'Engineering', 'Business'] },
+  { id: '2', name: 'Massachusetts Institute of Technology', short_name: 'MIT', slug: 'mit', domain: 'mit.edu', logo_url: null, city: 'Cambridge', state: 'MA', institution_type: 'private', enrollment: 11858, acceptance_rate: 3.96, graduation_rate: 97, us_news_rank: 2, athletic_conference: 'NEWMAC', visibility_score: 93.8, total_mentions: 3124, sentiment_score: 91.2, known_for: ['Engineering', 'Computer Science', 'Research'] },
+  { id: '3', name: 'Harvard University', short_name: 'Harvard', slug: 'harvard', domain: 'harvard.edu', logo_url: null, city: 'Cambridge', state: 'MA', institution_type: 'private', enrollment: 23731, acceptance_rate: 3.19, graduation_rate: 98, us_news_rank: 4, athletic_conference: 'Ivy League', visibility_score: 92.5, total_mentions: 4521, sentiment_score: 85.3, known_for: ['Law', 'Business', 'Medicine'] },
+  { id: '4', name: 'Yale University', short_name: 'Yale', slug: 'yale', domain: 'yale.edu', logo_url: null, city: 'New Haven', state: 'CT', institution_type: 'private', enrollment: 14776, acceptance_rate: 4.35, graduation_rate: 97, us_news_rank: 5, athletic_conference: 'Ivy League', visibility_score: 89.7, total_mentions: 2156, sentiment_score: 87.8, known_for: ['Law', 'Drama', 'Liberal Arts'] },
+  { id: '5', name: 'Princeton University', short_name: 'Princeton', slug: 'princeton', domain: 'princeton.edu', logo_url: null, city: 'Princeton', state: 'NJ', institution_type: 'private', enrollment: 8478, acceptance_rate: 3.98, graduation_rate: 98, us_news_rank: 1, athletic_conference: 'Ivy League', visibility_score: 88.4, total_mentions: 1987, sentiment_score: 90.1, known_for: ['Mathematics', 'Physics', 'Economics'] },
+  { id: '6', name: 'University of California, Berkeley', short_name: 'UC Berkeley', slug: 'uc-berkeley', domain: 'berkeley.edu', logo_url: null, city: 'Berkeley', state: 'CA', institution_type: 'public', enrollment: 45307, acceptance_rate: 11.6, graduation_rate: 93, us_news_rank: 15, athletic_conference: 'Big Ten', visibility_score: 87.9, total_mentions: 2654, sentiment_score: 82.4, known_for: ['Computer Science', 'Engineering', 'Research'] },
+  { id: '7', name: 'University of Michigan', short_name: 'Michigan', slug: 'michigan', domain: 'umich.edu', logo_url: null, city: 'Ann Arbor', state: 'MI', institution_type: 'public', enrollment: 47907, acceptance_rate: 17.7, graduation_rate: 93, us_news_rank: 21, athletic_conference: 'Big Ten', visibility_score: 85.2, total_mentions: 2234, sentiment_score: 84.7, known_for: ['Business', 'Engineering', 'Sports'] },
+  { id: '8', name: 'Duke University', short_name: 'Duke', slug: 'duke', domain: 'duke.edu', logo_url: null, city: 'Durham', state: 'NC', institution_type: 'private', enrollment: 17620, acceptance_rate: 5.93, graduation_rate: 96, us_news_rank: 7, athletic_conference: 'ACC', visibility_score: 84.8, total_mentions: 1876, sentiment_score: 86.9, known_for: ['Basketball', 'Medicine', 'Business'] },
+  { id: '9', name: 'University of Pennsylvania', short_name: 'Penn', slug: 'upenn', domain: 'upenn.edu', logo_url: null, city: 'Philadelphia', state: 'PA', institution_type: 'private', enrollment: 28201, acceptance_rate: 5.68, graduation_rate: 96, us_news_rank: 6, athletic_conference: 'Ivy League', visibility_score: 84.1, total_mentions: 1654, sentiment_score: 85.2, known_for: ['Business', 'Finance', 'Medicine'] },
+  { id: '10', name: 'Columbia University', short_name: 'Columbia', slug: 'columbia', domain: 'columbia.edu', logo_url: null, city: 'New York', state: 'NY', institution_type: 'private', enrollment: 36649, acceptance_rate: 3.85, graduation_rate: 96, us_news_rank: 12, athletic_conference: 'Ivy League', visibility_score: 83.6, total_mentions: 2087, sentiment_score: 81.5, known_for: ['Journalism', 'Business', 'Law'] },
+  { id: '11', name: 'University of Notre Dame', short_name: 'Notre Dame', slug: 'notre-dame', domain: 'nd.edu', logo_url: null, city: 'Notre Dame', state: 'IN', institution_type: 'private', enrollment: 14012, acceptance_rate: 12.9, graduation_rate: 97, us_news_rank: 18, athletic_conference: 'ACC', visibility_score: 82.4, total_mentions: 1543, sentiment_score: 88.7, known_for: ['Football', 'Business', 'Theology'] },
+  { id: '12', name: 'Northwestern University', short_name: 'Northwestern', slug: 'northwestern', domain: 'northwestern.edu', logo_url: null, city: 'Evanston', state: 'IL', institution_type: 'private', enrollment: 23161, acceptance_rate: 7.0, graduation_rate: 95, us_news_rank: 9, athletic_conference: 'Big Ten', visibility_score: 81.9, total_mentions: 1432, sentiment_score: 84.3, known_for: ['Journalism', 'Business', 'Engineering'] },
+  { id: '13', name: 'University of Southern California', short_name: 'USC', slug: 'usc', domain: 'usc.edu', logo_url: null, city: 'Los Angeles', state: 'CA', institution_type: 'private', enrollment: 49500, acceptance_rate: 9.2, graduation_rate: 92, us_news_rank: 28, athletic_conference: 'Big Ten', visibility_score: 81.2, total_mentions: 1876, sentiment_score: 79.8, known_for: ['Film', 'Business', 'Football'] },
+  { id: '14', name: 'University of Texas at Austin', short_name: 'UT Austin', slug: 'ut-austin', domain: 'utexas.edu', logo_url: null, city: 'Austin', state: 'TX', institution_type: 'public', enrollment: 51991, acceptance_rate: 31.8, graduation_rate: 88, us_news_rank: 32, athletic_conference: 'SEC', visibility_score: 80.5, total_mentions: 1987, sentiment_score: 82.1, known_for: ['Business', 'Engineering', 'Football'] },
+  { id: '15', name: 'Ohio State University', short_name: 'Ohio State', slug: 'ohio-state', domain: 'osu.edu', logo_url: null, city: 'Columbus', state: 'OH', institution_type: 'public', enrollment: 61369, acceptance_rate: 53.0, graduation_rate: 88, us_news_rank: 43, athletic_conference: 'Big Ten', visibility_score: 79.8, total_mentions: 1654, sentiment_score: 80.4, known_for: ['Football', 'Engineering', 'Business'] },
+  { id: '16', name: 'University of North Carolina at Chapel Hill', short_name: 'UNC', slug: 'unc-chapel-hill', domain: 'unc.edu', logo_url: null, city: 'Chapel Hill', state: 'NC', institution_type: 'public', enrollment: 32385, acceptance_rate: 16.8, graduation_rate: 91, us_news_rank: 22, athletic_conference: 'ACC', visibility_score: 79.2, total_mentions: 1432, sentiment_score: 83.6, known_for: ['Basketball', 'Public Health', 'Business'] },
+  { id: '17', name: 'University of Florida', short_name: 'UF', slug: 'uf', domain: 'ufl.edu', logo_url: null, city: 'Gainesville', state: 'FL', institution_type: 'public', enrollment: 61833, acceptance_rate: 23.3, graduation_rate: 90, us_news_rank: 28, athletic_conference: 'SEC', visibility_score: 78.4, total_mentions: 1321, sentiment_score: 81.2, known_for: ['Research', 'Sports', 'Business'] },
+  { id: '18', name: 'Georgia Institute of Technology', short_name: 'Georgia Tech', slug: 'georgia-tech', domain: 'gatech.edu', logo_url: null, city: 'Atlanta', state: 'GA', institution_type: 'public', enrollment: 47285, acceptance_rate: 16.9, graduation_rate: 92, us_news_rank: 33, athletic_conference: 'ACC', visibility_score: 77.8, total_mentions: 1543, sentiment_score: 84.9, known_for: ['Engineering', 'Computer Science', 'Research'] },
+  { id: '19', name: 'University of California, Los Angeles', short_name: 'UCLA', slug: 'ucla', domain: 'ucla.edu', logo_url: null, city: 'Los Angeles', state: 'CA', institution_type: 'public', enrollment: 46430, acceptance_rate: 8.76, graduation_rate: 92, us_news_rank: 15, athletic_conference: 'Big Ten', visibility_score: 86.3, total_mentions: 2432, sentiment_score: 83.7, known_for: ['Film', 'Medicine', 'Basketball'] },
+  { id: '20', name: 'Cornell University', short_name: 'Cornell', slug: 'cornell', domain: 'cornell.edu', logo_url: null, city: 'Ithaca', state: 'NY', institution_type: 'private', enrollment: 25898, acceptance_rate: 7.26, graduation_rate: 95, us_news_rank: 12, athletic_conference: 'Ivy League', visibility_score: 82.7, total_mentions: 1765, sentiment_score: 85.4, known_for: ['Engineering', 'Hotel Management', 'Agriculture'] },
 ]
 
-export default function CompareClient({ universityA, universityB }: Props) {
-  const [copied, setCopied] = useState(false)
+interface Props {
+  searchParams: { a?: string; b?: string }
+}
 
-  // Get logo URL with Brandfetch fallback
-  const getLogoUrl = (uni: University) => {
-    if (uni.logo_url) return uni.logo_url
-    if (uni.domain) return `https://cdn.brandfetch.io/${uni.domain}?c=1id1Fyz-h7an5-5KR_y`
-    return null
-  }
-
-  const logoA = getLogoUrl(universityA)
-  const logoB = getLogoUrl(universityB)
-
-  const nameA = universityA.short_name || universityA.name
-  const nameB = universityB.short_name || universityB.name
-
-  // Determine overall winner
-  const scoreA = universityA.visibility_score || 0
-  const scoreB = universityB.visibility_score || 0
-  const winner = scoreA > scoreB ? 'A' : scoreA < scoreB ? 'B' : 'tie'
-  const scoreDiff = Math.abs(scoreA - scoreB).toFixed(1)
-
-  // Handle share
-  const handleShare = async () => {
-    const url = window.location.href
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${nameA} vs ${nameB} - AI Visibility Matchup`,
-          text: `Compare AI visibility scores: ${nameA} (${scoreA.toFixed(1)}%) vs ${nameB} (${scoreB.toFixed(1)}%)`,
-          url: url,
-        })
-      } catch (err) {
-        // User cancelled or share failed
-      }
-    } else {
-      // Fallback to clipboard
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  if (!searchParams.a || !searchParams.b) {
+    return {
+      title: 'Compare Universities - Harbor',
     }
   }
 
-  // Get value comparison
-  const getComparison = (metric: typeof COMPARISON_METRICS[0]) => {
-    const valA = (universityA as any)[metric.key]
-    const valB = (universityB as any)[metric.key]
+  const uniA = MOCK_UNIVERSITIES.find(u => u.slug === searchParams.a)
+  const uniB = MOCK_UNIVERSITIES.find(u => u.slug === searchParams.b)
 
-    if (valA == null || valB == null) return { winner: null, valA, valB }
-    
-    if (metric.higherBetter === null) {
-      return { winner: null, valA, valB }
-    }
-
-    if (metric.higherBetter) {
-      return { winner: valA > valB ? 'A' : valA < valB ? 'B' : null, valA, valB }
-    } else {
-      return { winner: valA < valB ? 'A' : valA > valB ? 'B' : null, valA, valB }
+  if (!uniA || !uniB) {
+    return {
+      title: 'Compare Universities - Harbor',
     }
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Nav />
+  const nameA = uniA.short_name || uniA.name
+  const nameB = uniB.short_name || uniB.name
 
-      {/* Hero */}
-      <section className="relative pt-32 pb-8 md:pt-40 md:pb-12 px-6 overflow-hidden">
-        {/* Background glow */}
-        <div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%)'
-          }}
-        />
+  return {
+    title: `${nameA} vs ${nameB} - AI Visibility Comparison - Harbor`,
+    description: `Compare how AI models talk about ${nameA} and ${nameB}. Head-to-head visibility scores, rankings, and sentiment analysis.`,
+    openGraph: {
+      title: `${nameA} vs ${nameB} - AI Visibility Matchup`,
+      description: `Which university wins in AI visibility? Compare ${nameA} and ${nameB} head-to-head.`,
+    },
+  }
+}
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Back link */}
-          <Link 
-            href="/universities"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Rankings
-          </Link>
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full mb-4">
-              <Swords className="w-4 h-4 text-white/50" />
-              <span className="text-white/60 text-sm">AI Visibility Matchup</span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
-              {nameA} vs {nameB}
-            </h1>
-          </div>
-        </div>
-      </section>
+export default function ComparePage({ searchParams }: Props) {
+  if (!searchParams.a || !searchParams.b) {
+    redirect('/universities')
+  }
 
-      {/* Comparison Card */}
-      <section className="pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6 md:p-10">
-            
-            {/* Main Score Comparison */}
-            <div className="grid md:grid-cols-[1fr,auto,1fr] gap-8 items-center mb-10">
-              {/* University A */}
-              <div className="text-center">
-                <div className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center mx-auto mb-4 ${
-                  winner === 'A' ? 'bg-emerald-500/10 border-2 border-emerald-500/30' : 'bg-white/5'
-                }`}>
-                  {logoA ? (
-                    <img src={logoA} alt={nameA} className="w-20 h-20 object-contain" />
-                  ) : (
-                    <span className="text-2xl font-bold text-white/40">{nameA.slice(0, 2)}</span>
-                  )}
-                </div>
-                <h2 className="text-xl font-semibold text-white mb-1">{nameA}</h2>
-                <p className="text-white/40 text-sm mb-4">{universityA.city}, {universityA.state}</p>
-                <div className={`text-5xl font-bold mb-2 ${winner === 'A' ? 'text-emerald-400' : 'text-white'}`}>
-                  {scoreA.toFixed(1)}%
-                </div>
-                <p className="text-white/50 text-sm">AI Visibility Score</p>
-                {winner === 'A' && (
-                  <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
-                    <Trophy className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-400 text-sm font-medium">Leader</span>
-                  </div>
-                )}
-              </div>
+  const uniA = MOCK_UNIVERSITIES.find(u => u.slug === searchParams.a)
+  const uniB = MOCK_UNIVERSITIES.find(u => u.slug === searchParams.b)
 
-              {/* VS Divider */}
-              <div className="flex flex-col items-center justify-center gap-4">
-                <div className="hidden md:block w-px h-16 bg-white/10" />
-                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                  <span className="text-white/60 font-bold">VS</span>
-                </div>
-                <div className="hidden md:block w-px h-16 bg-white/10" />
-              </div>
+  if (!uniA || !uniB) {
+    redirect('/universities')
+  }
 
-              {/* University B */}
-              <div className="text-center">
-                <div className={`w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center mx-auto mb-4 ${
-                  winner === 'B' ? 'bg-emerald-500/10 border-2 border-emerald-500/30' : 'bg-white/5'
-                }`}>
-                  {logoB ? (
-                    <img src={logoB} alt={nameB} className="w-20 h-20 object-contain" />
-                  ) : (
-                    <span className="text-2xl font-bold text-white/40">{nameB.slice(0, 2)}</span>
-                  )}
-                </div>
-                <h2 className="text-xl font-semibold text-white mb-1">{nameB}</h2>
-                <p className="text-white/40 text-sm mb-4">{universityB.city}, {universityB.state}</p>
-                <div className={`text-5xl font-bold mb-2 ${winner === 'B' ? 'text-emerald-400' : 'text-white'}`}>
-                  {scoreB.toFixed(1)}%
-                </div>
-                <p className="text-white/50 text-sm">AI Visibility Score</p>
-                {winner === 'B' && (
-                  <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
-                    <Trophy className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-400 text-sm font-medium">Leader</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Winner Banner */}
-            {winner !== 'tie' && (
-              <div className="mb-10 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-center">
-                <p className="text-emerald-400 font-medium">
-                  {winner === 'A' ? nameA : nameB} leads by {scoreDiff} points in AI visibility
-                </p>
-              </div>
-            )}
-
-            {/* Detailed Metrics */}
-            <div className="border-t border-white/[0.08] pt-8">
-              <h3 className="text-lg font-semibold text-white mb-6">Detailed Comparison</h3>
-              
-              <div className="space-y-4">
-                {COMPARISON_METRICS.map(metric => {
-                  const comparison = getComparison(metric)
-                  
-                  return (
-                    <div 
-                      key={metric.key}
-                      className="grid grid-cols-[1fr,2fr,1fr] gap-4 items-center py-3 border-b border-white/[0.04]"
-                    >
-                      {/* Value A */}
-                      <div className={`text-right font-semibold ${
-                        comparison.winner === 'A' ? 'text-emerald-400' : 'text-white'
-                      }`}>
-                        {comparison.valA != null 
-                          ? `${metric.key === 'enrollment' ? comparison.valA.toLocaleString() : comparison.valA}${metric.suffix}`
-                          : '—'
-                        }
-                        {comparison.winner === 'A' && <Check className="inline w-4 h-4 ml-1" />}
-                      </div>
-
-                      {/* Label */}
-                      <div className="text-center text-white/50 text-sm">
-                        {metric.label}
-                      </div>
-
-                      {/* Value B */}
-                      <div className={`text-left font-semibold ${
-                        comparison.winner === 'B' ? 'text-emerald-400' : 'text-white'
-                      }`}>
-                        {comparison.winner === 'B' && <Check className="inline w-4 h-4 mr-1" />}
-                        {comparison.valB != null 
-                          ? `${metric.key === 'enrollment' ? comparison.valB.toLocaleString() : comparison.valB}${metric.suffix}`
-                          : '—'
-                        }
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Share Actions */}
-            <div className="mt-10 flex items-center justify-center gap-4">
-              <button 
-                onClick={handleShare}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-medium rounded-xl hover:bg-white/90 transition-colors"
-              >
-                <Share2 className="w-4 h-4" />
-                {copied ? 'Link Copied!' : 'Share Matchup'}
-              </button>
-              <Link
-                href="/universities"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors"
-              >
-                Compare Others
-              </Link>
-            </div>
-          </div>
-
-          {/* Individual Profile Links */}
-          <div className="mt-8 grid md:grid-cols-2 gap-4">
-            <Link
-              href={`/universities/${universityA.slug}`}
-              className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
-            >
-              <span className="text-white">View {nameA} Profile</span>
-              <TrendingUp className="w-4 h-4 text-white/40" />
-            </Link>
-            <Link
-              href={`/universities/${universityB.slug}`}
-              className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/[0.08] rounded-xl hover:bg-white/[0.04] transition-colors"
-            >
-              <span className="text-white">View {nameB} Profile</span>
-              <TrendingUp className="w-4 h-4 text-white/40" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  )
+  return <CompareClient universityA={uniA} universityB={uniB} />
 }
