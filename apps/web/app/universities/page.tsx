@@ -22,11 +22,13 @@ export default async function UniversitiesPage() {
   )
 
   // Fetch top 50 universities for initial render
+  // Sort by visibility_score first, then us_news_rank as fallback
   const { data: universities, error } = await supabase
     .from('university_profiles')
     .select('*')
     .eq('is_active', true)
-    .order('visibility_score', { ascending: false })
+    .order('visibility_score', { ascending: false, nullsFirst: false })
+    .order('us_news_rank', { ascending: true, nullsFirst: true })
     .limit(50)
 
   if (error) {
