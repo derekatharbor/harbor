@@ -35,6 +35,7 @@ const CLASSIC_RIVALRIES = [
   { a: 'duke', b: 'unc', name: 'Tobacco Road' },
   { a: 'usc', b: 'ucla', name: 'Crosstown Showdown' },
   { a: 'texas', b: 'texas-am', name: 'Lone Star Showdown' },
+  { a: 'penn-state', b: 'ohio-state', name: 'Big Ten Clash' },
 ]
 
 // Featured university domains for marquee (3 rows)
@@ -44,7 +45,7 @@ const MARQUEE_SCHOOLS = [
   // Row 2 (moves right)
   ['berkeley.edu', 'ucla.edu', 'umich.edu', 'uchicago.edu', 'cmu.edu', 'nyu.edu', 'usc.edu', 'nd.edu', 'virginia.edu', 'wustl.edu', 'rice.edu', 'vanderbilt.edu'],
   // Row 3 (moves left)
-  ['gatech.edu', 'utexas.edu', 'wisc.edu', 'illinois.edu', 'unc.edu', 'bu.edu', 'bc.edu', 'tufts.edu', 'rochester.edu', 'case.edu', 'lehigh.edu', 'wfu.edu'],
+  ['gatech.edu', 'utexas.edu', 'wisc.edu', 'illinois.edu', 'unc.edu', 'psu.edu', 'osu.edu', 'tufts.edu', 'rochester.edu', 'case.edu', 'lehigh.edu', 'wfu.edu'],
 ]
 
 const CONFERENCES = [
@@ -276,7 +277,7 @@ export default function UniversityIndexClient({ universities: initialUniversitie
           </h1>
           
           <p className="text-lg md:text-xl text-white/50 leading-relaxed mb-10 max-w-2xl mx-auto">
-            How ChatGPT, Claude, and Perplexity rank U.S. universities
+            How ChatGPT, Claude, and Perplexity rank {totalCount.toLocaleString()}+ universities
           </p>
 
           {/* Search */}
