@@ -21,15 +21,35 @@ export default async function UniversitiesPage() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  // Fetch top 50 universities for initial render
+  // Fetch top 100 universities for initial render
   // Sort by visibility_score first, then us_news_rank as fallback
-  const { data: universities, error } = await supabase
+  const { data: topUniversities, error } = await supabase
     .from('university_profiles')
     .select('*')
     .eq('is_active', true)
     .order('visibility_score', { ascending: false, nullsFirst: false })
     .order('us_news_rank', { ascending: true, nullsFirst: true })
-    .limit(50)
+    .limit(100)
+
+  // Also fetch rivalry schools to ensure they're always included
+  const rivalrySlugs = [
+    'harvard', 'yale', 'stanford', 'uc-berkeley', 'michigan', 'ohio-state',
+    'duke', 'unc', 'usc', 'ucla', 'texas', 'texas-am', 'penn-state'
+  ]
+  
+  const { data: rivalrySchools } = await supabase
+    .from('university_profiles')
+    .select('*')
+    .eq('is_active', true)
+    .in('slug', rivalrySlugs)
+
+  // Merge and deduplicate
+  const allSchools = [...(topUniversities || [])]
+  for (const school of (rivalrySchools || [])) {
+    if (!allSchools.find(s => s.id === school.id)) {
+      allSchools.push(school)
+    }
+  }
 
   if (error) {
     console.error('Error fetching universities:', error)
@@ -41,5 +61,5 @@ export default async function UniversitiesPage() {
     .select('*', { count: 'exact', head: true })
     .eq('is_active', true)
 
-  return <UniversityIndexClient universities={universities || []} totalCount={count || 0} />
+  return <UniversityIndexClient universities={allSchools || []} totalCount={count || 0} />
 }
