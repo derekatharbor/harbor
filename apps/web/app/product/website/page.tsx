@@ -27,8 +27,8 @@ function WebsiteAuditMock() {
 
   return (
     <div className="relative w-full max-w-5xl mx-auto">
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 blur-3xl opacity-30" />
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-emerald-500/10 blur-3xl opacity-20" />
       
       {/* Dashboard frame */}
       <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">

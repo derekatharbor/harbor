@@ -12,11 +12,11 @@ export const metadata = {
 // Mock dashboard visualization
 function DashboardMock() {
   const sources = [
-    { domain: 'techcrunch.com', type: 'Editorial', used: '24%', avg: '3.2', favicon: '📰' },
-    { domain: 'g2.com', type: 'Review', used: '18%', avg: '2.8', favicon: '⭐' },
-    { domain: 'forbes.com', type: 'Editorial', used: '15%', avg: '2.1', favicon: '📊' },
-    { domain: 'capterra.com', type: 'Review', used: '12%', avg: '4.1', favicon: '🔍' },
-    { domain: 'wikipedia.org', type: 'Reference', used: '9%', avg: '1.8', favicon: '📚' },
+    { domain: 'techcrunch.com', type: 'Editorial', used: '24%', avg: '3.2' },
+    { domain: 'g2.com', type: 'Review', used: '18%', avg: '2.8' },
+    { domain: 'forbes.com', type: 'Editorial', used: '15%', avg: '2.1' },
+    { domain: 'capterra.com', type: 'Review', used: '12%', avg: '4.1' },
+    { domain: 'wikipedia.org', type: 'Reference', used: '9%', avg: '1.8' },
   ]
 
   const types = [
@@ -29,8 +29,8 @@ function DashboardMock() {
 
   return (
     <div className="relative w-full max-w-5xl mx-auto">
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 blur-3xl opacity-30" />
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-20" />
       
       {/* Dashboard frame */}
       <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
@@ -140,7 +140,11 @@ function DashboardMock() {
                       <td className="px-4 py-3 text-xs text-white/40">{i + 1}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm">{source.favicon}</span>
+                          <img 
+                            src={`https://cdn.brandfetch.io/${source.domain}?c=1id1Fyz-h7an5-5KR_y`}
+                            alt={source.domain}
+                            className="w-5 h-5 rounded"
+                          />
                           <span className="text-sm text-white font-medium">{source.domain}</span>
                         </div>
                       </td>

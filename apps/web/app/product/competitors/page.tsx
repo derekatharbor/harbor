@@ -12,18 +12,18 @@ export const metadata = {
 // Mock leaderboard visualization
 function LeaderboardMock() {
   const competitors = [
-    { rank: 1, name: 'Notion', visibility: 94.2, delta: '+2.1', isLeader: true },
-    { rank: 2, name: 'Coda', visibility: 87.8, delta: '+1.3', isLeader: false },
-    { rank: 3, name: 'Your Brand', visibility: 72.4, delta: '+8.2', isUser: true },
-    { rank: 4, name: 'Airtable', visibility: 68.9, delta: '-0.4', isLeader: false },
-    { rank: 5, name: 'Monday.com', visibility: 61.2, delta: '+3.1', isLeader: false },
-    { rank: 6, name: 'ClickUp', visibility: 54.8, delta: '+1.8', isLeader: false },
+    { rank: 1, name: 'Notion', domain: 'notion.so', visibility: 94.2, delta: '+2.1', isLeader: true },
+    { rank: 2, name: 'Coda', domain: 'coda.io', visibility: 87.8, delta: '+1.3', isLeader: false },
+    { rank: 3, name: 'Your Brand', domain: null, visibility: 72.4, delta: '+8.2', isUser: true },
+    { rank: 4, name: 'Airtable', domain: 'airtable.com', visibility: 68.9, delta: '-0.4', isLeader: false },
+    { rank: 5, name: 'Monday.com', domain: 'monday.com', visibility: 61.2, delta: '+3.1', isLeader: false },
+    { rank: 6, name: 'ClickUp', domain: 'clickup.com', visibility: 54.8, delta: '+1.8', isLeader: false },
   ]
 
   return (
     <div className="relative w-full max-w-5xl mx-auto">
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 blur-3xl opacity-30" />
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-amber-500/10 blur-3xl opacity-20" />
       
       {/* Dashboard frame */}
       <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
@@ -109,11 +109,17 @@ function LeaderboardMock() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-medium ${
-                          c.isUser ? 'bg-pink-500 text-white' : 'bg-white/10 text-white/60'
-                        }`}>
-                          {c.name.charAt(0)}
-                        </div>
+                        {c.isUser ? (
+                          <div className="w-6 h-6 rounded-lg bg-pink-500 flex items-center justify-center text-xs font-medium text-white">
+                            {c.name.charAt(0)}
+                          </div>
+                        ) : (
+                          <img 
+                            src={`https://cdn.brandfetch.io/${c.domain}?c=1id1Fyz-h7an5-5KR_y`}
+                            alt={c.name}
+                            className="w-6 h-6 rounded"
+                          />
+                        )}
                         <span className={`text-sm font-medium ${c.isUser ? 'text-pink-400' : 'text-white'}`}>
                           {c.name}
                           {c.isUser && <span className="ml-2 text-xs text-pink-400/60">(You)</span>}

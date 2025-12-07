@@ -31,8 +31,8 @@ function DashboardMock() {
 
   return (
     <div className="relative w-full max-w-5xl mx-auto">
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-emerald-500/20 blur-3xl opacity-30" />
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-20" />
       
       {/* Dashboard frame */}
       <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
@@ -53,7 +53,7 @@ function DashboardMock() {
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">A</div>
+              <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-sm">A</div>
               <span className="font-semibold text-white">Acme Corp</span>
             </div>
             <div className="text-xs text-white/40">Last 7 days</div>
