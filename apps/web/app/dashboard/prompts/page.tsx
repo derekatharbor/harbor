@@ -114,8 +114,8 @@ export default function PromptsPage() {
   const [inactivePrompts, setInactivePrompts] = useState<Prompt[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set())
-  const [selectedPrompts, setSelectedPrompts] = useState<Set<string>>(new Set())
+  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set<string>())
+  const [selectedPrompts, setSelectedPrompts] = useState<Set<string>>(new Set<string>())
   const [showAddModal, setShowAddModal] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   
@@ -152,9 +152,9 @@ export default function PromptsPage() {
         setInactivePrompts([])
         
         // Auto-expand first topic
-        const topics = [...new Set((data.prompts || []).map((p: Prompt) => p.topic || 'No Topic'))]
+        const topics = [...new Set<string>((data.prompts || []).map((p: Prompt) => p.topic || 'No Topic'))]
         if (topics.length > 0) {
-          setExpandedTopics(new Set([topics[0]]))
+          setExpandedTopics(new Set<string>([topics[0]]))
         }
       }
     } catch (err) {
@@ -211,7 +211,7 @@ export default function PromptsPage() {
     for (const id of toTrack) {
       await trackPrompt(id)
     }
-    setSelectedPrompts(new Set())
+    setSelectedPrompts(new Set<string>())
   }
 
   const pausePrompt = async (promptId: string) => {
@@ -292,7 +292,7 @@ export default function PromptsPage() {
 
   const toggleTopic = (topicName: string) => {
     setExpandedTopics(prev => {
-      const next = new Set(prev)
+      const next = new Set<string>(prev)
       if (next.has(topicName)) {
         next.delete(topicName)
       } else {
@@ -304,7 +304,7 @@ export default function PromptsPage() {
 
   const toggleSelectPrompt = (promptId: string) => {
     setSelectedPrompts(prev => {
-      const next = new Set(prev)
+      const next = new Set<string>(prev)
       if (next.has(promptId)) {
         next.delete(promptId)
       } else {
@@ -316,7 +316,7 @@ export default function PromptsPage() {
 
   const selectAllInTopic = (topicPrompts: Prompt[]) => {
     setSelectedPrompts(prev => {
-      const next = new Set(prev)
+      const next = new Set<string>(prev)
       topicPrompts.forEach(p => next.add(p.id))
       return next
     })
@@ -412,7 +412,7 @@ export default function PromptsPage() {
               <Check className="w-4 h-4 text-accent" />
               {selectedPrompts.size} selected
               <button 
-                onClick={() => setSelectedPrompts(new Set())}
+                onClick={() => setSelectedPrompts(new Set<string>())}
                 className="text-muted hover:text-primary ml-2"
               >
                 Clear
@@ -450,9 +450,9 @@ export default function PromptsPage() {
                 className="rounded border-border"
                 onChange={(e) => {
                   if (e.target.checked) {
-                    setSelectedPrompts(new Set(filteredPrompts.map(p => p.id)))
+                    setSelectedPrompts(new Set<string>(filteredPrompts.map(p => p.id)))
                   } else {
-                    setSelectedPrompts(new Set())
+                    setSelectedPrompts(new Set<string>())
                   }
                 }}
                 checked={selectedPrompts.size === filteredPrompts.length && filteredPrompts.length > 0}
