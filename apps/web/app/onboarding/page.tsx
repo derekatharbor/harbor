@@ -229,7 +229,24 @@ export default function OnboardingPage() {
         throw new Error(data.error || 'Failed to create dashboard')
       }
 
-      router.push('/dashboard')
+      // Get the first selected prompt to run through the analyzing page
+      const firstPromptId = Array.from(selectedPrompts)[0]
+      const firstPrompt = availablePrompts.find(p => p.id === firstPromptId)
+      
+      if (firstPrompt) {
+        // Redirect to analyzing page with prompt details for live execution
+        const params = new URLSearchParams({
+          brand: brandName.trim(),
+          prompt: firstPrompt.prompt_text,
+          prompt_id: firstPromptId,
+          dashboard_id: data.dashboardId || ''
+        })
+        router.push(`/onboarding/analyzing?${params.toString()}`)
+      } else {
+        // No prompts selected, go directly to dashboard
+        router.push('/dashboard')
+      }
+      
       router.refresh()
       
     } catch (err: any) {
