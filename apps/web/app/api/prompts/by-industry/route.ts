@@ -3,29 +3,29 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-// Map user-friendly industry names to seed_prompts topics
+// Map user-friendly industry names to actual seed_prompts topics
 const INDUSTRY_TO_TOPIC_MAP: Record<string, string[]> = {
-  'Analytics & Business Intelligence': ['Analytics', 'Business Intelligence', 'Data Analytics', 'BI Tools'],
-  'Consulting & Professional Services': ['Consulting', 'Professional Services'],
-  'Customer Support': ['Customer Support', 'Help Desk', 'Customer Service', 'Support Software'],
-  'Cybersecurity': ['Cybersecurity', 'Security', 'Information Security'],
-  'Developer Tools': ['Developer Tools', 'Development', 'Programming', 'Software Development', 'DevOps'],
-  'E-commerce & Retail': ['E-commerce', 'Retail', 'Online Shopping', 'Shopping'],
-  'Education & E-learning': ['Education', 'E-learning', 'Learning', 'EdTech', 'Online Learning'],
-  'Finance & Accounting': ['Finance', 'Accounting', 'Financial Services', 'Banking', 'Fintech'],
-  'Food & Beverage': ['Food', 'Beverage', 'Restaurant', 'Food Delivery'],
-  'Healthcare & Medical': ['Healthcare', 'Medical', 'Health', 'Health Tech'],
-  'HR & Recruiting': ['HR', 'Recruiting', 'Human Resources', 'Talent', 'Hiring'],
-  'Legal & Compliance': ['Legal', 'Compliance', 'Legal Tech'],
-  'Manufacturing & Logistics': ['Manufacturing', 'Logistics', 'Supply Chain'],
-  'Marketing & Advertising': ['Marketing', 'Advertising', 'Digital Marketing', 'MarTech', 'Marketing Automation'],
-  'Media & Entertainment': ['Media', 'Entertainment', 'Streaming', 'Content'],
-  'Nonprofit & Government': ['Nonprofit', 'Government', 'Public Sector'],
-  'Project Management': ['Project Management', 'Task Management', 'Productivity', 'Collaboration'],
-  'Real Estate': ['Real Estate', 'Property', 'PropTech'],
-  'Sales & CRM': ['Sales', 'CRM', 'Customer Relationship', 'Sales Tools'],
-  'Technology & SaaS': ['Technology', 'SaaS', 'Software', 'Tech', 'Cloud'],
-  'Travel & Hospitality': ['Travel', 'Hospitality', 'Hotels', 'Tourism'],
+  'Analytics & Business Intelligence': ['Analytics & BI', 'AI & Automation'],
+  'Consulting & Professional Services': ['Communication', 'Project Management'],
+  'Customer Support': ['Customer Support', 'Communication'],
+  'Cybersecurity': ['Security'],
+  'Developer Tools': ['Developer Tools', 'AI & Automation'],
+  'E-commerce & Retail': ['E-commerce'],
+  'Education & E-learning': ['Communication'], // Not universities!
+  'Finance & Accounting': ['Finance & Accounting'],
+  'Food & Beverage': ['E-commerce'], // Closest match
+  'Healthcare & Medical': ['AI & Automation'],
+  'HR & Recruiting': ['HR & Recruiting'],
+  'Legal & Compliance': ['Security', 'Communication'],
+  'Manufacturing & Logistics': ['Project Management'],
+  'Marketing & Advertising': ['Marketing & SEO', 'Design & Creative'],
+  'Media & Entertainment': ['Design & Creative', 'Communication'],
+  'Nonprofit & Government': ['Communication', 'Project Management'],
+  'Project Management': ['Project Management', 'Communication'],
+  'Real Estate': ['CRM & Sales', 'Marketing & SEO'],
+  'Sales & CRM': ['CRM & Sales', 'Marketing & SEO'],
+  'Technology & SaaS': ['Developer Tools', 'AI & Automation', 'Analytics & BI'],
+  'Travel & Hospitality': ['E-commerce', 'Customer Support'],
 }
 
 export async function GET(request: Request) {
@@ -40,33 +40,38 @@ export async function GET(request: Request) {
     const supabase = createRouteHandlerClient({ cookies })
     
     // Get topics that match this industry
-    const topics = INDUSTRY_TO_TOPIC_MAP[industry] || [industry]
+    const topics = INDUSTRY_TO_TOPIC_MAP[industry] || []
+    
+    let prompts: any[] = []
     
     // First try to find prompts matching the industry topics
-    let { data: prompts, error } = await supabase
-      .from('seed_prompts')
-      .select('id, prompt_text, topic, intent')
-      .in('topic', topics)
-      .eq('is_active', true)
-      .order('created_at', { ascending: false })
-      .limit(50)
-    
-    if (error) {
-      console.error('Error fetching prompts:', error)
-      throw error
+    if (topics.length > 0) {
+      const { data, error } = await supabase
+        .from('seed_prompts')
+        .select('id, prompt_text, topic, intent')
+        .in('topic', topics)
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(50)
+      
+      if (!error && data) {
+        prompts = data
+      }
     }
 
-    // If no prompts found for specific industry, fetch general/popular prompts
-    if (!prompts || prompts.length === 0) {
+    // If no prompts found, get general brand prompts (EXCLUDE universities)
+    if (prompts.length === 0) {
       const { data: generalPrompts, error: generalError } = await supabase
         .from('seed_prompts')
         .select('id, prompt_text, topic, intent')
         .eq('is_active', true)
+        .neq('topic', 'universities') // Exclude university prompts!
         .order('created_at', { ascending: false })
         .limit(30)
       
-      if (generalError) throw generalError
-      prompts = generalPrompts || []
+      if (!generalError && generalPrompts) {
+        prompts = generalPrompts
+      }
     }
 
     return NextResponse.json({ 
