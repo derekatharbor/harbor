@@ -6,7 +6,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Eye, EyeOff, Loader2, Check } from 'lucide-react'
 
 export default function SignupPage() {
@@ -34,7 +34,7 @@ export default function SignupPage() {
     setError('')
 
     try {
-      const supabase = createClient()
+      const supabase = createClientComponentClient()
       const { error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -57,7 +57,7 @@ export default function SignupPage() {
   const handleGoogleSignup = async () => {
     setLoading(true)
     try {
-      const supabase = createClient()
+      const supabase = createClientComponentClient()
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
