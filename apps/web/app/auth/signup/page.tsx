@@ -1,4 +1,4 @@
-// apps/web/app/auth/signup/page.tsx
+// app/auth/signup/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -6,6 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ArrowRight, Loader2 } from 'lucide-react'
 
 export default function SignUpPage() {
   const searchParams = useSearchParams()
@@ -25,14 +26,12 @@ export default function SignUpPage() {
     setLoading(true)
     setError(null)
 
-    // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       setLoading(false)
       return
     }
 
-    // Validate password strength
     if (password.length < 8) {
       setError('Password must be at least 8 characters')
       setLoading(false)
@@ -40,7 +39,6 @@ export default function SignUpPage() {
     }
 
     try {
-      // Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -52,10 +50,8 @@ export default function SignUpPage() {
       if (authError) throw authError
 
       if (authData.user) {
-        // Check if email confirmation is required
         if (authData.session) {
-          // User is auto-logged in (email confirmation disabled)
-          // Call API to create org and user role (uses service role to bypass RLS)
+          // User is auto-logged in
           const setupResponse = await fetch('/api/auth/setup-account', {
             method: 'POST',
             headers: { 
@@ -69,13 +65,11 @@ export default function SignUpPage() {
             throw new Error(errorData.error || 'Failed to set up account')
           }
 
-          // Redirect to onboarding with brand if provided
           const onboardingUrl = brandFromUrl 
             ? `/onboarding?brand=${encodeURIComponent(brandFromUrl)}`
             : '/onboarding'
           router.push(onboardingUrl)
         } else {
-          // Email confirmation required - show message
           setError('Please check your email to confirm your account, then log in.')
         }
       }
@@ -87,49 +81,47 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Side - Sign Up Form */}
-      <div className="flex-1 flex items-center justify-center bg-white p-8 py-12">
-        <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="mb-8 lg:mb-12">
-            <Image
-              src="/images/harbor-logo.svg"
-              alt="Harbor"
-              width={120}
-              height={40}
-              className="h-10 w-auto"
-            />
-          </div>
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+      {/* Nav */}
+      <nav className="p-6">
+        <Link href="/" className="inline-block">
+          <Image
+            src="/images/harbor-logo-white.svg"
+            alt="Harbor"
+            width={100}
+            height={28}
+            className="h-7 w-auto"
+          />
+        </Link>
+      </nav>
 
-          <div className="mb-6 lg:mb-8">
-            <h1 className="text-3xl font-bold text-[#101A31] mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              {brandFromUrl ? `Add ${brandFromUrl} to Harbor` : 'Get started with Harbor'}
+      {/* Main content */}
+      <div className="flex-1 flex items-center justify-center px-6 pb-12">
+        <div className="w-full max-w-sm">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {brandFromUrl ? `Track ${brandFromUrl}` : 'Create your account'}
             </h1>
-            <p className="text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+            <p className="text-white/50 text-sm">
               {brandFromUrl 
-                ? 'Create an account to claim your brand and manage your AI visibility'
-                : 'Create your account to optimize your brand\'s AI visibility'
+                ? 'Sign up to claim your brand profile'
+                : 'Start tracking your AI visibility'
               }
             </p>
           </div>
 
-          <form onSubmit={handleSignUp} className="space-y-5">
+          {/* Form */}
+          <form onSubmit={handleSignUp} className="space-y-4">
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-800" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-                  {error}
-                </p>
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
 
             <div>
-              <label 
-                htmlFor="email" 
-                className="block text-sm font-medium text-[#101A31] mb-2 uppercase tracking-wide"
-                style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
-              >
-                Email Address
+              <label htmlFor="email" className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wide">
+                Email
               </label>
               <input
                 id="email"
@@ -137,18 +129,14 @@ export default function SignUpPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#F4F6F8] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-[#101A31]"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
+                autoFocus
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent text-white placeholder-white/30 text-sm"
                 placeholder="you@company.com"
               />
             </div>
 
             <div>
-              <label 
-                htmlFor="password" 
-                className="block text-sm font-medium text-[#101A31] mb-2 uppercase tracking-wide"
-                style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
-              >
+              <label htmlFor="password" className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wide">
                 Password
               </label>
               <input
@@ -157,21 +145,14 @@ export default function SignUpPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#F4F6F8] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-[#101A31]"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent text-white placeholder-white/30 text-sm"
                 placeholder="••••••••"
               />
-              <p className="mt-1 text-xs text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-                Must be at least 8 characters
-              </p>
+              <p className="mt-1.5 text-xs text-white/30">At least 8 characters</p>
             </div>
 
             <div>
-              <label 
-                htmlFor="confirmPassword" 
-                className="block text-sm font-medium text-[#101A31] mb-2 uppercase tracking-wide"
-                style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
-              >
+              <label htmlFor="confirmPassword" className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wide">
                 Confirm Password
               </label>
               <input
@@ -180,8 +161,7 @@ export default function SignUpPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#F4F6F8] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-[#101A31]"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent text-white placeholder-white/30 text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -189,38 +169,39 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#101A31] text-white rounded-lg font-medium hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#101A31] disabled:opacity-50 transition-all cursor-pointer"
-              style={{ fontFamily: 'Source Code Pro, monospace' }}
+              className="w-full py-3 px-4 bg-white text-black rounded-lg font-medium hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] focus:ring-white disabled:opacity-50 transition-all flex items-center justify-center gap-2 text-sm"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                <>
+                  Create account
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
-
-            <p className="text-xs text-[#6B7280] text-center" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              By creating an account, you agree to Harbor's Terms of Service and Privacy Policy
-            </p>
           </form>
 
-          <p className="mt-6 lg:mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-            Already have an account?{' '}
-            <Link 
-              href="/auth/login"
-              className="text-[#101A31] hover:text-[#1a2a4a] font-medium transition-colors underline underline-offset-2"
-            >
-              Sign in
-            </Link>
-          </p>
+          {/* Footer links */}
+          <div className="mt-6 space-y-4">
+            <p className="text-center text-xs text-white/30">
+              By signing up, you agree to our{' '}
+              <Link href="/terms" className="text-white/50 hover:text-white underline">Terms</Link>
+              {' '}and{' '}
+              <Link href="/privacy" className="text-white/50 hover:text-white underline">Privacy Policy</Link>
+            </p>
+            
+            <p className="text-center text-sm text-white/50">
+              Already have an account?{' '}
+              <Link href="/auth/login" className="text-white hover:underline font-medium">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
-      </div>
-
-      {/* Right Side - Topographic Map Background */}
-      <div className="hidden lg:flex flex-1 relative bg-[#101A31]">
-        <Image
-          src="/images/topo-map.png"
-          alt=""
-          fill
-          className="object-cover opacity-80"
-          priority
-        />
       </div>
     </div>
   )

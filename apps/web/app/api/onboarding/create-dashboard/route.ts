@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { brandName, domain, industry } = await request.json()
+    const { brandName, domain, industry, selectedPromptIds } = await request.json()
 
     if (!brandName || !domain) {
       return NextResponse.json(
@@ -122,6 +122,23 @@ export async function POST(request: Request) {
         { error: 'Failed to create dashboard' },
         { status: 500 }
       )
+    }
+
+    // Save selected prompts to dashboard_prompts
+    if (selectedPromptIds && selectedPromptIds.length > 0) {
+      const promptInserts = selectedPromptIds.map((promptId: string) => ({
+        dashboard_id: dashboard.id,
+        prompt_id: promptId
+      }))
+
+      const { error: promptsError } = await supabaseAdmin
+        .from('dashboard_prompts')
+        .insert(promptInserts)
+
+      if (promptsError) {
+        console.error('Error saving dashboard prompts:', promptsError)
+        // Don't fail the whole request, just log it
+      }
     }
 
     return NextResponse.json({

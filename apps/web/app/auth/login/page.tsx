@@ -1,4 +1,4 @@
-// apps/web/app/auth/login/page.tsx
+// app/auth/login/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -6,6 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ArrowRight, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -22,31 +23,22 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      console.log('🔐 Attempting login for:', email)
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) {
-        console.error('❌ Login error:', error)
-        throw error
-      }
+      if (error) throw error
 
       if (!data.user) {
         throw new Error('No user returned from login')
       }
 
-      console.log('✅ Login successful:', data.user.id)
-
-      // Always redirect to dashboard
-      // The dashboard will handle redirecting to onboarding if needed
+      // Redirect to dashboard - it will handle onboarding redirect if needed
       router.push('/dashboard')
       router.refresh()
       
     } catch (err: any) {
-      console.error('❌ Login failed:', err)
       setError(err.message || 'Invalid email or password')
     } finally {
       setLoading(false)
@@ -54,42 +46,40 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center bg-white p-8 py-12">
-        <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="mb-8 lg:mb-12">
-            <h1 className="text-3xl font-bold text-[#101A31]" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              Harbor
-            </h1>
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+      {/* Nav */}
+      <nav className="p-6">
+        <Link href="/" className="inline-block">
+          <Image
+            src="/images/harbor-logo-white.svg"
+            alt="Harbor"
+            width={100}
+            height={28}
+            className="h-7 w-auto"
+          />
+        </Link>
+      </nav>
+
+      {/* Main content */}
+      <div className="flex-1 flex items-center justify-center px-6 pb-12">
+        <div className="w-full max-w-sm">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-white mb-2">Welcome back</h1>
+            <p className="text-white/50 text-sm">Sign in to your account</p>
           </div>
 
-          <div className="mb-6 lg:mb-8">
-            <h1 className="text-3xl font-bold text-[#101A31] mb-2" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              Welcome back
-            </h1>
-            <p className="text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              Sign in to your Harbor account
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-6">
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-800" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-                  {error}
-                </p>
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
 
             <div>
-              <label 
-                htmlFor="email" 
-                className="block text-sm font-medium text-[#101A31] mb-2 uppercase tracking-wide"
-                style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
-              >
-                Email Address
+              <label htmlFor="email" className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wide">
+                Email
               </label>
               <input
                 id="email"
@@ -97,18 +87,14 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#F4F6F8] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-[#101A31]"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
+                autoFocus
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent text-white placeholder-white/30 text-sm"
                 placeholder="you@company.com"
               />
             </div>
 
             <div>
-              <label 
-                htmlFor="password" 
-                className="block text-sm font-medium text-[#101A31] mb-2 uppercase tracking-wide"
-                style={{ fontFamily: 'Source Code Pro, monospace', fontSize: '12px' }}
-              >
+              <label htmlFor="password" className="block text-xs font-medium text-white/50 mb-2 uppercase tracking-wide">
                 Password
               </label>
               <input
@@ -117,63 +103,37 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-[#F4F6F8] border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF6B4A] focus:border-transparent text-[#101A31]"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent text-white placeholder-white/30 text-sm"
                 placeholder="••••••••"
               />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-[#101A31] border-gray-300 rounded focus:ring-[#101A31]"
-                />
-                <span className="ml-2 text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-                  Remember me
-                </span>
-              </label>
-              <Link 
-                href="/auth/forgot-password"
-                className="text-sm text-[#101A31] hover:text-[#1a2a4a] transition-colors underline underline-offset-2"
-                style={{ fontFamily: 'Source Code Pro, monospace' }}
-              >
-                Forgot password?
-              </Link>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#101A31] text-white rounded-lg font-medium hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#101A31] disabled:opacity-50 transition-all cursor-pointer"
-              style={{ fontFamily: 'Source Code Pro, monospace' }}
+              className="w-full py-3 px-4 bg-white text-black rounded-lg font-medium hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] focus:ring-white disabled:opacity-50 transition-all flex items-center justify-center gap-2 text-sm"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign in
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
-          <p className="mt-6 lg:mt-8 text-center text-sm text-[#6B7280]" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-            Don't have an account?{' '}
-            <Link 
-              href="/auth/signup"
-              className="text-[#101A31] hover:text-[#1a2a4a] font-medium transition-colors underline underline-offset-2"
-            >
-              Sign up
-            </Link>
-          </p>
-        </div>
-      </div>
-
-      {/* Right Side - Topographic Map Background */}
-      <div className="hidden lg:flex flex-1 relative bg-[#101A31]">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#101A31] to-[#1a2845] opacity-90" />
-        <div className="relative z-10 flex items-center justify-center p-12">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-              Get your brand mentioned by AI
-            </h2>
-            <p className="text-xl text-gray-300" style={{ fontFamily: 'Source Code Pro, monospace' }}>
-              ChatGPT • Claude • Gemini • Perplexity
+          {/* Footer links */}
+          <div className="mt-6">
+            <p className="text-center text-sm text-white/50">
+              Don't have an account?{' '}
+              <Link href="/auth/signup" className="text-white hover:underline font-medium">
+                Sign up
+              </Link>
             </p>
           </div>
         </div>
