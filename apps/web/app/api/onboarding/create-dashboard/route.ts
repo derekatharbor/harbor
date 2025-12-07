@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { brandName, domain, industry, selectedPromptIds } = await request.json()
+    const { brandName, domain, industry, selectedPromptIds, competitorProfileIds } = await request.json()
 
     if (!brandName || !domain) {
       return NextResponse.json(
@@ -137,6 +137,23 @@ export async function POST(request: Request) {
 
       if (promptsError) {
         console.error('Error saving dashboard prompts:', promptsError)
+        // Don't fail the whole request, just log it
+      }
+    }
+
+    // Save selected competitors to dashboard_competitors
+    if (competitorProfileIds && competitorProfileIds.length > 0) {
+      const competitorInserts = competitorProfileIds.map((profileId: string) => ({
+        dashboard_id: dashboard.id,
+        profile_id: profileId
+      }))
+
+      const { error: competitorsError } = await supabaseAdmin
+        .from('dashboard_competitors')
+        .insert(competitorInserts)
+
+      if (competitorsError) {
+        console.error('Error saving dashboard competitors:', competitorsError)
         // Don't fail the whole request, just log it
       }
     }
