@@ -41,29 +41,42 @@ export async function GET(request: NextRequest) {
   const dashboardId = searchParams.get('dashboard_id')
 
   try {
-    // Get recent executions (excluding universities)
+    // Step 1: Get non-university prompt IDs
+    const { data: nonUniPrompts } = await supabase
+      .from('seed_prompts')
+      .select('id, prompt_text, topic')
+      .neq('topic', 'universities')
+    
+    const promptMap = new Map(nonUniPrompts?.map(p => [p.id, p]) || [])
+    const promptIds = Array.from(promptMap.keys())
+
+    if (promptIds.length === 0) {
+      return NextResponse.json({ prompts: [], total: 0 })
+    }
+
+    // Step 2: Get executions for those prompts
     const { data: executions, error } = await supabase
       .from('prompt_executions')
-      .select(`
-        id,
-        model,
-        response_text,
-        executed_at,
-        seed_prompts!inner (
-          id,
-          prompt_text,
-          topic
-        )
-      `)
-      .neq('seed_prompts.topic', 'universities')
+      .select('id, model, response_text, executed_at, prompt_id')
+      .in('prompt_id', promptIds)
       .not('response_text', 'is', null)
       .order('executed_at', { ascending: false })
-      .limit(100) // Get more than needed for brand filtering
+      .limit(100)
 
     if (error) throw error
 
+    // Merge prompt data
+    const executionsWithPrompts = executions?.map(e => ({
+      ...e,
+      seed_prompts: promptMap.get(e.prompt_id)
+    })) || []
+
     // Get brand mentions and citations for each execution
-    const executionIds = executions?.map(e => e.id) || []
+    const executionIds = executionsWithPrompts?.map(e => e.id) || []
+    
+    if (executionIds.length === 0) {
+      return NextResponse.json({ prompts: [], total: 0 })
+    }
     
     const { data: mentions } = await supabase
       .from('prompt_brand_mentions')
@@ -92,7 +105,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Build response
-    let results = executions?.map((exec: any) => {
+    let results = executionsWithPrompts?.map((exec: any) => {
       const execMentions = mentionsByExecution.get(exec.id) || []
       const execCitations = citationsByExecution.get(exec.id) || []
       
@@ -106,8 +119,8 @@ export async function GET(request: NextRequest) {
 
       return {
         id: exec.id,
-        prompt: exec.seed_prompts.prompt_text,
-        topic: exec.seed_prompts.topic,
+        prompt: exec.seed_prompts?.prompt_text || 'Unknown prompt',
+        topic: exec.seed_prompts?.topic || 'Unknown',
         model: exec.model,
         modelName: modelInfo.name,
         modelLogo: modelInfo.logo,

@@ -448,7 +448,7 @@ export default function OverviewPage() {
               <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
                 <div 
                   className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer ${
-                    brandMentionedOnly ? 'bg-accent' : 'bg-hover'
+                    brandMentionedOnly ? 'bg-accent' : 'bg-gray-300'
                   }`}
                   onClick={() => setBrandMentionedOnly(!brandMentionedOnly)}
                 >
