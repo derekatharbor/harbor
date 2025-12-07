@@ -25,7 +25,6 @@ export async function GET(request: NextRequest) {
     let onboardingPromptIds: Set<string> = new Set()
     
     if (dashboardId) {
-      // Get linked prompt IDs from dashboard_prompts
       const { data: dashboardPromptLinks } = await supabase
         .from('dashboard_prompts')
         .select('prompt_id')
@@ -35,7 +34,6 @@ export async function GET(request: NextRequest) {
         const promptIds = dashboardPromptLinks.map(dp => dp.prompt_id)
         onboardingPromptIds = new Set(promptIds)
         
-        // Fetch the actual prompt data from seed_prompts
         const { data: linkedPrompts } = await supabase
           .from('seed_prompts')
           .select('id, prompt_text, topic, intent, is_active, created_at')
@@ -46,7 +44,35 @@ export async function GET(request: NextRequest) {
     }
 
     // ============================================================
-    // 2. Get user-added prompts (user_prompts table)
+    // 2. Get dismissed prompts (for inactive tab)
+    // ============================================================
+    let dismissedPrompts: any[] = []
+    let dismissedPromptIds: Set<string> = new Set()
+    
+    if (dashboardId) {
+      const { data: dismissedLinks } = await supabase
+        .from('dashboard_dismissed_prompts')
+        .select('prompt_id, dismissed_at')
+        .eq('dashboard_id', dashboardId)
+      
+      if (dismissedLinks && dismissedLinks.length > 0) {
+        const promptIds = dismissedLinks.map(dp => dp.prompt_id)
+        dismissedPromptIds = new Set(promptIds)
+        
+        const { data: linkedPrompts } = await supabase
+          .from('seed_prompts')
+          .select('id, prompt_text, topic, intent, is_active, created_at')
+          .in('id', promptIds)
+        
+        dismissedPrompts = (linkedPrompts || []).map(p => ({
+          ...p,
+          dismissed_at: dismissedLinks.find(d => d.prompt_id === p.id)?.dismissed_at
+        }))
+      }
+    }
+
+    // ============================================================
+    // 3. Get user-added prompts (user_prompts table)
     // ============================================================
     let userPrompts: any[] = []
     if (dashboardId) {
@@ -61,7 +87,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ============================================================
-    // 3. Get seed prompts (exclude ones already selected)
+    // 4. Get seed prompts (exclude tracked and dismissed)
     // ============================================================
     let seedPrompts: any[] = []
     if (includeSeeds) {
@@ -73,17 +99,20 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: true })
         .limit(100)
       
-      // Filter out prompts already selected during onboarding
-      seedPrompts = (allSeeds || []).filter(p => !onboardingPromptIds.has(p.id))
+      // Filter out already tracked AND dismissed prompts
+      seedPrompts = (allSeeds || []).filter(p => 
+        !onboardingPromptIds.has(p.id) && !dismissedPromptIds.has(p.id)
+      )
     }
     
     // ============================================================
-    // 4. Get execution stats for all prompts
+    // 5. Get execution stats for all prompts
     // ============================================================
     const allPromptIds = [
       ...onboardingPrompts.map(p => p.id),
       ...userPrompts.map(p => p.id),
-      ...seedPrompts.map(p => p.id)
+      ...seedPrompts.map(p => p.id),
+      ...dismissedPrompts.map(p => p.id)
     ]
 
     let executions: any[] = []
@@ -98,7 +127,7 @@ export async function GET(request: NextRequest) {
       executions = data || []
     }
 
-    // Build execution map
+    // Build execution map with models
     const execMap = new Map<string, {
       execCount: number
       lastExecuted: string | null
@@ -120,9 +149,9 @@ export async function GET(request: NextRequest) {
     })
 
     // ============================================================
-    // 5. Format prompts for response
+    // 6. Format prompts for response
     // ============================================================
-    const formatPrompt = (prompt: any, source: 'onboarding' | 'user' | 'seed') => {
+    const formatPrompt = (prompt: any, source: 'onboarding' | 'user' | 'seed' | 'dismissed') => {
       const stats = execMap.get(prompt.id)
       const volume = stats ? Math.min(100, stats.execCount * 20) : 0
       const visibility = stats ? Math.round((stats.execCount / 3) * 100) : 0
@@ -131,14 +160,17 @@ export async function GET(request: NextRequest) {
         id: prompt.id,
         prompt_text: prompt.prompt_text,
         topic: prompt.topic || prompt.intent || null,
-        status: source === 'seed' ? 'suggested' as const : 'active' as const,
+        status: source === 'seed' ? 'suggested' as const : 
+                source === 'dismissed' ? 'inactive' as const : 'active' as const,
         visibility_score: Math.min(100, visibility),
         sentiment: null,
         position: null,
         mentions: 0,
         volume,
         last_executed_at: stats?.lastExecuted || null,
-        source
+        models_run: stats ? Array.from(stats.models) : [],
+        source,
+        dismissed_at: prompt.dismissed_at || null
       }
     }
 
@@ -151,16 +183,21 @@ export async function GET(request: NextRequest) {
     // Suggested = remaining seed prompts
     const suggestedPrompts = seedPrompts.map(p => formatPrompt(p, 'seed'))
 
+    // Inactive = dismissed prompts
+    const inactivePrompts = dismissedPrompts.map(p => formatPrompt(p, 'dismissed'))
+
     // Get all unique topics
     const allTopics = [...new Set([
       ...activePrompts.map(p => p.topic),
-      ...suggestedPrompts.map(p => p.topic)
+      ...suggestedPrompts.map(p => p.topic),
+      ...inactivePrompts.map(p => p.topic)
     ].filter(Boolean))]
 
     return NextResponse.json({
       prompts: activePrompts,
-      suggested: suggestedPrompts.slice(0, 10),
+      suggested: suggestedPrompts.slice(0, 25),
       all_suggested: suggestedPrompts,
+      inactive: inactivePrompts,
       total: activePrompts.length,
       topics: allTopics
     })
