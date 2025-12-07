@@ -158,47 +158,34 @@ export async function GET(request: NextRequest) {
   const userBrand = searchParams.get('brand') // User's brand name for gap analysis
   const gapAnalysis = searchParams.get('gap') === 'true'
   const limit = parseInt(searchParams.get('limit') || '50')
+  const excludeUniversities = searchParams.get('exclude_universities') !== 'false' // Default true
 
   try {
-    // If dashboard_id provided, filter by user's selected prompts
+    // First get execution IDs for non-university prompts (if filtering)
     let executionIds: string[] | null = null
     
-    if (dashboardId) {
-      // Get user's selected prompts
-      const { data: dashboardPrompts } = await supabase
-        .from('dashboard_prompts')
-        .select('prompt_id')
-        .eq('dashboard_id', dashboardId)
+    if (excludeUniversities) {
+      const { data: executions } = await supabase
+        .from('prompt_executions')
+        .select(`
+          id,
+          seed_prompts!inner (topic)
+        `)
+        .neq('seed_prompts.topic', 'universities')
       
-      const selectedPromptIds = dashboardPrompts?.map(dp => dp.prompt_id) || []
+      executionIds = executions?.map((e: any) => e.id) || []
       
-      if (selectedPromptIds.length > 0) {
-        // Get executions for those prompts
-        const { data: executions } = await supabase
-          .from('prompt_executions')
-          .select('id')
-          .in('prompt_id', selectedPromptIds)
-        
-        executionIds = executions?.map(e => e.id) || []
-        
-        // If no executions, return empty
-        if (executionIds.length === 0) {
-          return NextResponse.json({
-            sources: [],
-            typeBreakdown: [],
-            totals: {
-              totalCitations: 0,
-              uniqueDomains: 0,
-              highAuthority: 0,
-              gapOpportunities: null
-            }
-          })
-        }
+      if (executionIds.length === 0) {
+        return NextResponse.json({
+          sources: [],
+          typeBreakdown: [],
+          totals: { totalCitations: 0, uniqueDomains: 0, highAuthority: 0, gapOpportunities: null }
+        })
       }
     }
 
-    // Get citations (filtered by execution_ids if dashboard specified)
-    let citationsQuery = supabase
+    // Get citations (filtered if needed)
+    let query = supabase
       .from('prompt_citations')
       .select(`
         id,
@@ -221,12 +208,11 @@ export async function GET(request: NextRequest) {
       .order('id', { ascending: false })
       .limit(1000)
     
-    // Filter by execution IDs if we have them
-    if (executionIds && executionIds.length > 0) {
-      citationsQuery = citationsQuery.in('execution_id', executionIds)
+    if (executionIds) {
+      query = query.in('execution_id', executionIds)
     }
 
-    const { data: citations, error } = await citationsQuery
+    const { data: citations, error } = await query
 
     if (error) throw error
 
