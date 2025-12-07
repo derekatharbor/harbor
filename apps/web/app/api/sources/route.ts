@@ -155,22 +155,19 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   
   const dashboardId = searchParams.get('dashboard_id')
-  const userBrand = searchParams.get('brand') // User's brand name for gap analysis
+  const userBrand = searchParams.get('brand')
   const gapAnalysis = searchParams.get('gap') === 'true'
   const limit = parseInt(searchParams.get('limit') || '50')
-  const excludeUniversities = searchParams.get('exclude_universities') !== 'false' // Default true
+  const excludeUniversities = searchParams.get('exclude_universities') !== 'false'
 
   try {
-    // First get execution IDs for non-university prompts (if filtering)
+    // Get execution IDs for non-university prompts
     let executionIds: string[] | null = null
     
     if (excludeUniversities) {
       const { data: executions } = await supabase
         .from('prompt_executions')
-        .select(`
-          id,
-          seed_prompts!inner (topic)
-        `)
+        .select('id, seed_prompts!inner(topic)')
         .neq('seed_prompts.topic', 'universities')
       
       executionIds = executions?.map((e: any) => e.id) || []
@@ -184,7 +181,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Get citations (filtered if needed)
+    // Get citations
     let query = supabase
       .from('prompt_citations')
       .select(`
@@ -208,7 +205,7 @@ export async function GET(request: NextRequest) {
       .order('id', { ascending: false })
       .limit(1000)
     
-    if (executionIds) {
+    if (executionIds && executionIds.length > 0) {
       query = query.in('execution_id', executionIds)
     }
 

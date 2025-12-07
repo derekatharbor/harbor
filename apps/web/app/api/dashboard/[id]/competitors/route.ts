@@ -1,5 +1,5 @@
 // app/api/dashboard/[id]/competitors/route.ts
-// Show user's brand + competitors + top industry brands (excluding universities)
+// Show user's brand + competitors + top SaaS brands (excluding universities)
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -14,14 +14,8 @@ function getSupabase() {
 }
 
 const COLORS = [
-  '#FF6B4A', // Coral (user's brand)
-  '#3B82F6', // Blue
-  '#22C55E', // Green
-  '#8B5CF6', // Purple
-  '#F59E0B', // Amber
-  '#EC4899', // Pink
-  '#06B6D4', // Cyan
-  '#EF4444', // Red
+  '#FF6B4A', '#3B82F6', '#22C55E', '#8B5CF6', 
+  '#F59E0B', '#EC4899', '#06B6D4', '#EF4444',
 ]
 
 export async function GET(
@@ -46,56 +40,61 @@ export async function GET(
       return NextResponse.json({ error: 'Dashboard not found' }, { status: 404 })
     }
 
-    // 2. Get user's selected competitors from ai_profiles
+    // 2. Get user's selected competitors
     const { data: dashboardCompetitors } = await supabase
       .from('dashboard_competitors')
       .select(`
         profile_id,
         ai_profiles:profile_id (
-          id,
-          brand_name,
-          domain,
-          logo_url,
-          visibility_score,
-          sentiment_score,
-          avg_position,
-          total_mentions
+          id, brand_name, domain, logo_url,
+          visibility_score, sentiment_score, avg_position, total_mentions
         )
       `)
       .eq('dashboard_id', dashboardId)
 
-    // 3. Get TOP BRANDS from actual prompt executions (excluding universities)
-    // This gives us real SaaS data
-    const { data: topMentions } = await supabase
+    // 3. Get execution IDs for non-university prompts
+    const { data: nonUniExecutions } = await supabase
+      .from('prompt_executions')
+      .select('id, seed_prompts!inner(topic)')
+      .neq('seed_prompts.topic', 'universities')
+
+    const executionIds = nonUniExecutions?.map((e: any) => e.id) || []
+
+    if (executionIds.length === 0) {
+      // No non-university data, return user + competitors only
+      const competitors: any[] = [{
+        rank: 0,
+        name: dashboard.brand_name,
+        domain: dashboard.domain,
+        logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
+        visibility: 0, visibilityDelta: null,
+        sentiment: 0, sentimentDelta: null,
+        position: 0, positionDelta: null,
+        mentions: 0, isUser: true, isTrackedCompetitor: false,
+        color: COLORS[0]
+      }]
+      return NextResponse.json({ competitors, total_brands_found: 0, user_rank: null })
+    }
+
+    // 4. Get brand mentions from those executions
+    const { data: mentions } = await supabase
       .from('prompt_brand_mentions')
-      .select(`
-        brand_name,
-        position,
-        sentiment,
-        prompt_executions!inner (
-          prompt_id,
-          seed_prompts!inner (
-            topic
-          )
-        )
-      `)
-      .neq('prompt_executions.seed_prompts.topic', 'universities')
-    
-    // Aggregate mentions by brand
+      .select('brand_name, position, sentiment')
+      .in('execution_id', executionIds)
+
+    // 5. Aggregate by brand
     const brandStats = new Map<string, {
       mentions: number
       positions: number[]
       sentiments: { pos: number, neu: number, neg: number }
     }>()
 
-    topMentions?.forEach((m: any) => {
+    mentions?.forEach((m: any) => {
       const name = m.brand_name?.trim()
       if (!name) return
       
       const existing = brandStats.get(name) || {
-        mentions: 0,
-        positions: [],
-        sentiments: { pos: 0, neu: 0, neg: 0 }
+        mentions: 0, positions: [], sentiments: { pos: 0, neu: 0, neg: 0 }
       }
       
       existing.mentions++
@@ -109,56 +108,44 @@ export async function GET(
       brandStats.set(name, existing)
     })
 
-    // Convert to sorted array
+    // 6. Convert to sorted array
     const topBrands = Array.from(brandStats.entries())
       .map(([name, stats]) => {
         const avgPos = stats.positions.length > 0
-          ? stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length
-          : 0
+          ? stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length : 0
         const total = stats.sentiments.pos + stats.sentiments.neu + stats.sentiments.neg
-        const sentimentScore = total > 0 
-          ? Math.round((stats.sentiments.pos / total) * 100)
-          : 50
-        
-        return {
-          name,
-          mentions: stats.mentions,
-          position: Math.round(avgPos * 10) / 10,
-          sentiment: sentimentScore
-        }
+        const sentimentScore = total > 0 ? Math.round((stats.sentiments.pos / total) * 100) : 50
+        return { name, mentions: stats.mentions, position: Math.round(avgPos * 10) / 10, sentiment: sentimentScore }
       })
       .sort((a, b) => b.mentions - a.mentions)
 
-    // Calculate max mentions for visibility percentage
     const maxMentions = topBrands.length > 0 ? topBrands[0].mentions : 1
 
-    // 4. Build final competitors list
+    // 7. Build competitors list
     const competitors: any[] = []
     const addedNames = new Set<string>()
     const userBrandLower = dashboard.brand_name.toLowerCase()
 
-    // Check if user's brand is in top brands
-    const userInTopBrands = topBrands.find(b => 
+    // Find user in top brands
+    const userInTop = topBrands.find(b => 
       b.name.toLowerCase() === userBrandLower ||
       b.name.toLowerCase().includes(userBrandLower) ||
       userBrandLower.includes(b.name.toLowerCase())
     )
 
-    // Add user's brand first
+    // Add user first
     competitors.push({
-      rank: userInTopBrands ? topBrands.indexOf(userInTopBrands) + 1 : 0,
+      rank: userInTop ? topBrands.indexOf(userInTop) + 1 : 0,
       name: dashboard.brand_name,
       domain: dashboard.domain,
       logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
-      visibility: userInTopBrands 
-        ? Math.round((userInTopBrands.mentions / maxMentions) * 100)
-        : 0,
+      visibility: userInTop ? Math.round((userInTop.mentions / maxMentions) * 100) : 0,
       visibilityDelta: null,
-      sentiment: userInTopBrands?.sentiment || 0,
+      sentiment: userInTop?.sentiment || 0,
       sentimentDelta: null,
-      position: userInTopBrands?.position || 0,
+      position: userInTop?.position || 0,
       positionDelta: null,
-      mentions: userInTopBrands?.mentions || 0,
+      mentions: userInTop?.mentions || 0,
       isUser: true,
       isTrackedCompetitor: false,
       color: COLORS[0]
@@ -169,30 +156,22 @@ export async function GET(
     let colorIdx = 1
     dashboardCompetitors?.forEach((dc: any) => {
       if (dc.ai_profiles) {
-        const profile = dc.ai_profiles
-        const nameLower = profile.brand_name.toLowerCase()
-        
-        // Check if this competitor appears in our mention data
-        const inTopBrands = topBrands.find(b => 
-          b.name.toLowerCase() === nameLower ||
-          b.name.toLowerCase().includes(nameLower) ||
-          nameLower.includes(b.name.toLowerCase())
-        )
+        const p = dc.ai_profiles
+        const nameLower = p.brand_name.toLowerCase()
+        const inTop = topBrands.find(b => b.name.toLowerCase() === nameLower)
 
         competitors.push({
-          rank: inTopBrands ? topBrands.indexOf(inTopBrands) + 1 : 0,
-          name: profile.brand_name,
-          domain: profile.domain,
-          logo: profile.logo_url || `https://cdn.brandfetch.io/${profile.domain}?c=1id1Fyz-h7an5-5KR_y`,
-          visibility: inTopBrands 
-            ? Math.round((inTopBrands.mentions / maxMentions) * 100)
-            : (profile.visibility_score || 0),
+          rank: inTop ? topBrands.indexOf(inTop) + 1 : 0,
+          name: p.brand_name,
+          domain: p.domain,
+          logo: p.logo_url || `https://cdn.brandfetch.io/${p.domain}?c=1id1Fyz-h7an5-5KR_y`,
+          visibility: inTop ? Math.round((inTop.mentions / maxMentions) * 100) : 0,
           visibilityDelta: null,
-          sentiment: inTopBrands?.sentiment || (profile.sentiment_score || 0),
+          sentiment: inTop?.sentiment || 0,
           sentimentDelta: null,
-          position: inTopBrands?.position || (profile.avg_position || 0),
+          position: inTop?.position || 0,
           positionDelta: null,
-          mentions: inTopBrands?.mentions || (profile.total_mentions || 0),
+          mentions: inTop?.mentions || 0,
           isUser: false,
           isTrackedCompetitor: true,
           color: COLORS[colorIdx % COLORS.length]
@@ -202,7 +181,7 @@ export async function GET(
       }
     })
 
-    // Fill remaining slots with top industry brands
+    // Fill with top SaaS brands
     for (const brand of topBrands) {
       if (competitors.length >= limit) break
       if (addedNames.has(brand.name.toLowerCase())) continue
@@ -237,14 +216,11 @@ export async function GET(
     return NextResponse.json({
       competitors,
       total_brands_found: topBrands.length,
-      user_rank: userInTopBrands ? topBrands.indexOf(userInTopBrands) + 1 : null
+      user_rank: userInTop ? topBrands.indexOf(userInTop) + 1 : null
     })
 
   } catch (error) {
     console.error('Error in competitors API:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
