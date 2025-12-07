@@ -1,5 +1,5 @@
 // app/api/dashboard/[id]/competitors/route.ts
-// Show user's brand + competitors + top SaaS brands (excluding universities)
+// Show user's brand + competitors + top SaaS brands
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -52,37 +52,45 @@ export async function GET(
       `)
       .eq('dashboard_id', dashboardId)
 
-    // 3. Get execution IDs for non-university prompts
-    const { data: nonUniExecutions } = await supabase
-      .from('prompt_executions')
-      .select('id, seed_prompts!inner(topic)')
-      .neq('seed_prompts.topic', 'universities')
+    // 3. Get non-university prompt IDs first
+    const { data: nonUniPrompts } = await supabase
+      .from('seed_prompts')
+      .select('id')
+      .neq('topic', 'universities')
+    
+    const promptIds = nonUniPrompts?.map(p => p.id) || []
 
-    const executionIds = nonUniExecutions?.map((e: any) => e.id) || []
-
-    if (executionIds.length === 0) {
-      // No non-university data, return user + competitors only
-      const competitors: any[] = [{
-        rank: 0,
-        name: dashboard.brand_name,
-        domain: dashboard.domain,
-        logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
-        visibility: 0, visibilityDelta: null,
-        sentiment: 0, sentimentDelta: null,
-        position: 0, positionDelta: null,
-        mentions: 0, isUser: true, isTrackedCompetitor: false,
-        color: COLORS[0]
-      }]
-      return NextResponse.json({ competitors, total_brands_found: 0, user_rank: null })
+    if (promptIds.length === 0) {
+      return NextResponse.json({ 
+        competitors: [buildUserEntry(dashboard, null, 0)], 
+        total_brands_found: 0, 
+        user_rank: null 
+      })
     }
 
-    // 4. Get brand mentions from those executions
+    // 4. Get executions for those prompts
+    const { data: executions } = await supabase
+      .from('prompt_executions')
+      .select('id')
+      .in('prompt_id', promptIds)
+
+    const executionIds = executions?.map(e => e.id) || []
+
+    if (executionIds.length === 0) {
+      return NextResponse.json({ 
+        competitors: [buildUserEntry(dashboard, null, 0)], 
+        total_brands_found: 0, 
+        user_rank: null 
+      })
+    }
+
+    // 5. Get brand mentions from those executions
     const { data: mentions } = await supabase
       .from('prompt_brand_mentions')
       .select('brand_name, position, sentiment')
       .in('execution_id', executionIds)
 
-    // 5. Aggregate by brand
+    // 6. Aggregate by brand
     const brandStats = new Map<string, {
       mentions: number
       positions: number[]
@@ -108,7 +116,7 @@ export async function GET(
       brandStats.set(name, existing)
     })
 
-    // 6. Convert to sorted array
+    // 7. Convert to sorted array
     const topBrands = Array.from(brandStats.entries())
       .map(([name, stats]) => {
         const avgPos = stats.positions.length > 0
@@ -121,7 +129,7 @@ export async function GET(
 
     const maxMentions = topBrands.length > 0 ? topBrands[0].mentions : 1
 
-    // 7. Build competitors list
+    // 8. Build competitors list
     const competitors: any[] = []
     const addedNames = new Set<string>()
     const userBrandLower = dashboard.brand_name.toLowerCase()
@@ -134,22 +142,7 @@ export async function GET(
     )
 
     // Add user first
-    competitors.push({
-      rank: userInTop ? topBrands.indexOf(userInTop) + 1 : 0,
-      name: dashboard.brand_name,
-      domain: dashboard.domain,
-      logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
-      visibility: userInTop ? Math.round((userInTop.mentions / maxMentions) * 100) : 0,
-      visibilityDelta: null,
-      sentiment: userInTop?.sentiment || 0,
-      sentimentDelta: null,
-      position: userInTop?.position || 0,
-      positionDelta: null,
-      mentions: userInTop?.mentions || 0,
-      isUser: true,
-      isTrackedCompetitor: false,
-      color: COLORS[0]
-    })
+    competitors.push(buildUserEntry(dashboard, userInTop, maxMentions))
     addedNames.add(userBrandLower)
 
     // Add selected competitors
@@ -222,5 +215,24 @@ export async function GET(
   } catch (error) {
     console.error('Error in competitors API:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+function buildUserEntry(dashboard: any, userInTop: any, maxMentions: number) {
+  return {
+    rank: userInTop ? 0 : 0,
+    name: dashboard.brand_name,
+    domain: dashboard.domain,
+    logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
+    visibility: userInTop ? Math.round((userInTop.mentions / maxMentions) * 100) : 0,
+    visibilityDelta: null,
+    sentiment: userInTop?.sentiment || 0,
+    sentimentDelta: null,
+    position: userInTop?.position || 0,
+    positionDelta: null,
+    mentions: userInTop?.mentions || 0,
+    isUser: true,
+    isTrackedCompetitor: false,
+    color: COLORS[0]
   }
 }

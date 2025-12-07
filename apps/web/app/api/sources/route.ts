@@ -161,16 +161,32 @@ export async function GET(request: NextRequest) {
   const excludeUniversities = searchParams.get('exclude_universities') !== 'false'
 
   try {
-    // Get execution IDs for non-university prompts
     let executionIds: string[] | null = null
     
     if (excludeUniversities) {
+      // Step 1: Get non-university prompt IDs
+      const { data: nonUniPrompts } = await supabase
+        .from('seed_prompts')
+        .select('id')
+        .neq('topic', 'universities')
+      
+      const promptIds = nonUniPrompts?.map(p => p.id) || []
+      
+      if (promptIds.length === 0) {
+        return NextResponse.json({
+          sources: [],
+          typeBreakdown: [],
+          totals: { totalCitations: 0, uniqueDomains: 0, highAuthority: 0, gapOpportunities: null }
+        })
+      }
+
+      // Step 2: Get executions for those prompts
       const { data: executions } = await supabase
         .from('prompt_executions')
-        .select('id, seed_prompts!inner(topic)')
-        .neq('seed_prompts.topic', 'universities')
+        .select('id')
+        .in('prompt_id', promptIds)
       
-      executionIds = executions?.map((e: any) => e.id) || []
+      executionIds = executions?.map(e => e.id) || []
       
       if (executionIds.length === 0) {
         return NextResponse.json({
