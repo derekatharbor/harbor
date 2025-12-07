@@ -54,7 +54,7 @@ export default function OnboardingPage() {
   
   // Step 2: Prompts
   const [availablePrompts, setAvailablePrompts] = useState<Prompt[]>([])
-  const [selectedPrompts, setSelectedPrompts] = useState<Set<string>>(new Set())
+  const [selectedPrompts, setSelectedPrompts] = useState<Set<string>>(new Set<string>())
   const [loadingPrompts, setLoadingPrompts] = useState(false)
   const [promptSearch, setPromptSearch] = useState('')
   
@@ -92,7 +92,7 @@ export default function OnboardingPage() {
           setAvailablePrompts(data.prompts || [])
           
           // Pre-select first 8 prompts
-          const initialSelection = new Set(
+          const initialSelection = new Set<string>(
             data.prompts.slice(0, 8).map((p: Prompt) => p.id)
           )
           setSelectedPrompts(initialSelection)
@@ -113,7 +113,7 @@ export default function OnboardingPage() {
   }
 
   const togglePrompt = (promptId: string) => {
-    const newSelected = new Set(selectedPrompts)
+    const newSelected = new Set<string>(selectedPrompts)
     if (newSelected.has(promptId)) {
       newSelected.delete(promptId)
     } else {
@@ -123,11 +123,11 @@ export default function OnboardingPage() {
   }
 
   const selectAll = () => {
-    setSelectedPrompts(new Set(filteredPrompts.map(p => p.id)))
+    setSelectedPrompts(new Set<string>(filteredPrompts.map(p => p.id)))
   }
 
   const deselectAll = () => {
-    setSelectedPrompts(new Set())
+    setSelectedPrompts(new Set<string>())
   }
 
   const handleFinalSubmit = async () => {
