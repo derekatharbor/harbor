@@ -441,14 +441,14 @@ export default function OverviewPage() {
           <div className="flex items-center justify-between p-4 border-b border-border">
             <h3 className="font-semibold text-primary text-sm flex items-center gap-2">
               <MessageCircle className="w-4 h-4" />
-              Recent Chats
+              Recent Prompts
             </h3>
             
             {currentDashboard?.brand_name && (
               <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
                 <div 
                   className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer ${
-                    brandMentionedOnly ? 'bg-accent' : 'bg-gray-300'
+                    brandMentionedOnly ? 'bg-accent' : 'bg-hover'
                   }`}
                   onClick={() => setBrandMentionedOnly(!brandMentionedOnly)}
                 >
@@ -463,11 +463,11 @@ export default function OverviewPage() {
             )}
           </div>
 
-          <div className="p-4" style={{ backgroundColor: '#FAFAFA' }}>
+          <div className="p-4 bg-secondary">
             {promptsLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse bg-gray-200 rounded-lg h-36" />
+                  <div key={i} className="animate-pulse bg-hover rounded-lg h-36" />
                 ))}
               </div>
             ) : recentPrompts.length === 0 ? (
@@ -484,7 +484,7 @@ export default function OverviewPage() {
                   <div 
                     key={prompt.id}
                     onClick={() => setSelectedPrompt(prompt)}
-                    className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-all cursor-pointer shadow-sm"
+                    className="bg-card border border-border rounded-lg p-4 hover:bg-hover transition-all cursor-pointer shadow-sm"
                   >
                     {/* Header: Model logo + prompt */}
                     <div className="flex items-start gap-3 mb-3">
@@ -496,13 +496,13 @@ export default function OverviewPage() {
                           (e.target as HTMLImageElement).src = 'https://via.placeholder.com/24'
                         }}
                       />
-                      <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
+                      <h4 className="text-sm font-medium text-primary line-clamp-2">
                         {prompt.prompt}
                       </h4>
                     </div>
 
                     {/* Response preview */}
-                    <p className="text-sm text-gray-500 line-clamp-3 mb-4">
+                    <p className="text-sm text-muted line-clamp-3 mb-4">
                       {prompt.responsePreview}
                     </p>
 
@@ -521,12 +521,12 @@ export default function OverviewPage() {
                           />
                         ))}
                         {prompt.citationsCount > 3 && (
-                          <span className="text-xs text-gray-400 ml-1">
+                          <span className="text-xs text-muted ml-1">
                             +{prompt.citationsCount - 3}
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-gray-400">{prompt.timeAgo}</span>
+                      <span className="text-xs text-muted">{prompt.timeAgo}</span>
                     </div>
                   </div>
                 ))}
@@ -628,9 +628,9 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
       />
       
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-gray-200">
+      <div className="relative bg-card rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-border">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-secondary">
           <div className="flex items-center gap-3">
             <img 
               src={prompt.modelLogo} 
@@ -638,17 +638,17 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
               className="w-8 h-8 rounded-lg"
             />
             <div>
-              <span className="text-sm font-medium text-gray-900">{prompt.modelName}</span>
-              <span className="mx-2 text-gray-400">•</span>
-              <span className="text-sm text-gray-500">{prompt.topic}</span>
+              <span className="text-sm font-medium text-primary">{prompt.modelName}</span>
+              <span className="mx-2 text-muted">•</span>
+              <span className="text-sm text-muted">{prompt.topic}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+              className="p-2 hover:bg-hover rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-gray-500" />
+              <X className="w-5 h-5 text-muted" />
             </button>
           </div>
         </div>
@@ -656,14 +656,14 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
         {/* Content area */}
         <div className="flex flex-1 overflow-hidden">
           {/* Main content */}
-          <div className="flex-1 overflow-y-auto p-6 bg-white">
+          <div className="flex-1 overflow-y-auto p-6 bg-card">
             {/* User query */}
             <div className="flex items-start gap-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-hover flex items-center justify-center flex-shrink-0">
                 <span className="text-sm">👤</span>
               </div>
-              <div className="bg-gray-100 rounded-2xl px-4 py-3 max-w-lg">
-                <p className="text-gray-900">{prompt.prompt}</p>
+              <div className="bg-hover rounded-2xl px-4 py-3 max-w-lg">
+                <p className="text-primary">{prompt.prompt}</p>
               </div>
             </div>
 
@@ -681,15 +681,15 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
           </div>
 
           {/* Sidebar */}
-          <div className="w-72 border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto">
+          <div className="w-72 border-l border-border bg-secondary p-4 overflow-y-auto">
             {/* Brands section */}
             <div className="mb-6">
-              <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
+              <h4 className="text-sm font-medium text-primary mb-2 flex items-center gap-2">
                 <Tag className="w-4 h-4" />
                 Brands
               </h4>
               {prompt.brands.length === 0 ? (
-                <p className="text-sm text-gray-500 flex items-center gap-2">
+                <p className="text-sm text-muted flex items-center gap-2">
                   <span className="opacity-50">∅</span> No Brands
                 </p>
               ) : (
@@ -697,7 +697,7 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
                   {prompt.brands.map((brand, i) => (
                     <span 
                       key={i}
-                      className="text-xs bg-white border border-gray-200 rounded-full px-2.5 py-1 text-gray-700"
+                      className="text-xs bg-card border border-border rounded-full px-2.5 py-1 text-secondary"
                     >
                       {brand}
                     </span>
@@ -708,12 +708,12 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
 
             {/* Sources section */}
             <div>
-              <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
+              <h4 className="text-sm font-medium text-primary mb-2 flex items-center gap-2">
                 <Globe className="w-4 h-4" />
                 Sources
               </h4>
               {prompt.citationDomains.length === 0 ? (
-                <p className="text-sm text-gray-500">No sources cited</p>
+                <p className="text-sm text-muted">No sources cited</p>
               ) : (
                 <div className="space-y-2">
                   {prompt.citationDomains.map((domain, i) => (
@@ -722,7 +722,7 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
                       href={`https://${domain}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition-colors"
+                      className="flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors"
                     >
                       <img 
                         src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
@@ -763,7 +763,7 @@ function FormattedResponse({ text }: { text: string }) {
           
           // Regular text - format it
           return (
-            <p key={idx} className="text-gray-700 text-sm leading-relaxed">
+            <p key={idx} className="text-secondary text-sm leading-relaxed">
               {formatTextContent(section)}
             </p>
           )
@@ -775,13 +775,13 @@ function FormattedResponse({ text }: { text: string }) {
   // No table - just format text
   return (
     <div 
-      className="text-gray-700 text-sm leading-relaxed space-y-3"
+      className="text-secondary text-sm leading-relaxed space-y-3"
       dangerouslySetInnerHTML={{ 
         __html: text
-          .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-primary">$1</strong>')
           .replace(/\n\n/g, '</p><p class="mt-3">')
           .replace(/\n/g, '<br />')
-          .replace(/\[(\d+)\]/g, '<sup class="text-xs text-blue-500">$1</sup>')
+          .replace(/\[(\d+)\]/g, '<sup class="text-xs text-accent">$1</sup>')
       }}
     />
   )
@@ -791,7 +791,7 @@ function FormattedResponse({ text }: { text: string }) {
 function MarkdownTable({ content }: { content: string }) {
   const lines = content.trim().split('\n').filter(line => line.trim())
   
-  if (lines.length < 2) return <p className="text-sm text-gray-700">{content}</p>
+  if (lines.length < 2) return <p className="text-sm text-secondary">{content}</p>
   
   // Parse header
   const headerCells = lines[0].split('|').map(cell => cell.trim()).filter(Boolean)
@@ -804,11 +804,11 @@ function MarkdownTable({ content }: { content: string }) {
 
   return (
     <div className="overflow-x-auto my-4">
-      <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-        <thead className="bg-gray-50">
+      <table className="min-w-full text-sm border border-border rounded-lg overflow-hidden">
+        <thead className="bg-secondary">
           <tr>
             {headerCells.map((cell, i) => (
-              <th key={i} className="px-3 py-2 text-left font-medium text-gray-900 border-b border-gray-200">
+              <th key={i} className="px-3 py-2 text-left font-medium text-primary border-b border-border">
                 {cell.replace(/\*\*/g, '')}
               </th>
             ))}
@@ -816,9 +816,9 @@ function MarkdownTable({ content }: { content: string }) {
         </thead>
         <tbody>
           {bodyRows.map((row, rowIdx) => (
-            <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+            <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-card' : 'bg-secondary'}>
               {row.map((cell, cellIdx) => (
-                <td key={cellIdx} className="px-3 py-2 text-gray-700 border-b border-gray-100">
+                <td key={cellIdx} className="px-3 py-2 text-secondary border-b border-border">
                   {cell.replace(/\*\*/g, '')}
                 </td>
               ))}
@@ -836,10 +836,10 @@ function formatTextContent(text: string): React.ReactNode {
   
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="font-semibold text-gray-900">{part.slice(2, -2)}</strong>
+      return <strong key={i} className="font-semibold text-primary">{part.slice(2, -2)}</strong>
     }
     if (/^\[\d+\]$/.test(part)) {
-      return <sup key={i} className="text-xs text-blue-500">{part}</sup>
+      return <sup key={i} className="text-xs text-accent">{part}</sup>
     }
     return part
   })
