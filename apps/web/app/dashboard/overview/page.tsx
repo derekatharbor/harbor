@@ -21,6 +21,7 @@ import {
   MessageCircle,
   X
 } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -319,48 +320,48 @@ export default function OverviewPage() {
           {/* Chart */}
           <div className="lg:col-span-2 card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <div className="pill-group">
-                <button 
-                  className={`pill flex items-center gap-1.5 ${activeMetric === 'visibility' ? 'active' : ''}`}
-                  onClick={() => setActiveMetric('visibility')}
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  Visibility
-                </button>
-                <button 
-                  className={`pill flex items-center gap-1.5 ${activeMetric === 'sentiment' ? 'active' : ''}`}
-                  onClick={() => setActiveMetric('sentiment')}
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  Sentiment
-                </button>
-                <button 
-                  className={`pill flex items-center gap-1.5 ${activeMetric === 'position' ? 'active' : ''}`}
-                  onClick={() => setActiveMetric('position')}
-                >
-                  <Target className="w-3.5 h-3.5" />
-                  Position
-                </button>
+              <div className="flex items-center gap-2">
+                <div className="pill-group">
+                  <button 
+                    className={`pill flex items-center gap-1.5 ${activeMetric === 'visibility' ? 'active' : ''}`}
+                    onClick={() => setActiveMetric('visibility')}
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Visibility
+                  </button>
+                  <button 
+                    className={`pill flex items-center gap-1.5 ${activeMetric === 'sentiment' ? 'active' : ''}`}
+                    onClick={() => setActiveMetric('sentiment')}
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    Sentiment
+                  </button>
+                  <button 
+                    className={`pill flex items-center gap-1.5 ${activeMetric === 'position' ? 'active' : ''}`}
+                    onClick={() => setActiveMetric('position')}
+                  >
+                    <Target className="w-3.5 h-3.5" />
+                    Position
+                  </button>
+                </div>
+                <span className="text-xs text-muted ml-2">
+                  · {activeMetric === 'visibility' ? 'Percentage of chats mentioning each brand' : 
+                     activeMetric === 'sentiment' ? 'Positive sentiment percentage' : 
+                     'Average ranking position'}
+                </span>
               </div>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-secondary border border-border rounded-lg hover:bg-secondary transition-colors">
+                <Download className="w-3.5 h-3.5" />
+                Export
+              </button>
             </div>
 
             <div className="p-4 h-[360px]">
-              {competitors.length > 1 ? (
-                <div className="flex items-center justify-center h-full text-center">
-                  <div>
-                    <BarChart3 className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
-                    <p className="text-sm text-muted">Historical trend data coming soon</p>
-                    <p className="text-xs text-muted mt-1">We need more data points to show trends</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-full text-center">
-                  <div>
-                    <BarChart3 className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
-                    <p className="text-sm text-muted">Run more prompts to see trends</p>
-                  </div>
-                </div>
-              )}
+              <VisibilityChart 
+                brandName={brandName}
+                competitors={competitors}
+                metric={activeMetric}
+              />
             </div>
           </div>
 
@@ -448,7 +449,7 @@ export default function OverviewPage() {
               <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
                 <div 
                   className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer ${
-                    brandMentionedOnly ? 'bg-accent' : 'bg-hover'
+                    brandMentionedOnly ? 'bg-accent' : 'bg-[#D1D5DB] dark:bg-[#4B5563]'
                   }`}
                   onClick={() => setBrandMentionedOnly(!brandMentionedOnly)}
                 >
@@ -611,6 +612,100 @@ export default function OverviewPage() {
         />
       )}
     </div>
+  )
+}
+
+// ============================================================================
+// VISIBILITY CHART COMPONENT
+// ============================================================================
+
+function VisibilityChart({ 
+  brandName, 
+  competitors,
+  metric 
+}: { 
+  brandName: string
+  competitors: CompetitorData[]
+  metric: 'visibility' | 'sentiment' | 'position'
+}) {
+  // Generate last 5 days of dates
+  const generateDates = () => {
+    const dates = []
+    for (let i = 4; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      dates.push({
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        fullDate: date
+      })
+    }
+    return dates
+  }
+
+  const dates = generateDates()
+  
+  // Find user's brand in competitors
+  const userBrand = competitors.find(c => c.isUser)
+  const userValue = userBrand ? 
+    (metric === 'visibility' ? userBrand.visibility : 
+     metric === 'sentiment' ? userBrand.sentiment : 
+     userBrand.position) : 0
+
+  // Generate chart data - flatline at current value (or 0 if no data)
+  const chartData = dates.map(d => ({
+    date: d.date,
+    [brandName]: userValue
+  }))
+
+  const chartColor = '#EF4444' // Red/coral for user's brand
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+        <CartesianGrid 
+          strokeDasharray="3 3" 
+          vertical={true}
+          stroke="rgba(156, 163, 175, 0.2)"
+        />
+        <XAxis 
+          dataKey="date" 
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+          dy={10}
+        />
+        <YAxis 
+          axisLine={false}
+          tickLine={false}
+          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+          domain={metric === 'position' ? [0, 10] : [0, 100]}
+          tickFormatter={(value) => metric === 'position' ? value : `${value}%`}
+          dx={-10}
+        />
+        <Tooltip 
+          contentStyle={{ 
+            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+            border: 'none',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          }}
+          labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
+          itemStyle={{ color: '#fff', padding: '2px 0' }}
+          formatter={(value: number) => [
+            metric === 'position' ? value.toFixed(1) : `${value}%`,
+            brandName
+          ]}
+        />
+        <Line
+          type="monotone"
+          dataKey={brandName}
+          stroke={chartColor}
+          strokeWidth={2}
+          dot={false}
+          activeDot={{ r: 4, fill: chartColor }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
   )
 }
 
