@@ -177,8 +177,8 @@ export default function PromptsPage() {
           <span className="text-sm text-muted">· {prompts.length} / {limit} Prompts</span>
         </div>
         <div className="flex items-center gap-2">
-          <button className="btn-secondary text-sm h-9">Add Topic</button>
-          <button onClick={() => setShowModal(true)} className="btn-primary text-sm h-9">
+          <button className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-secondary transition-colors">Add Topic</button>
+          <button onClick={() => setShowModal(true)} className="px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors flex items-center gap-1.5">
             <Plus className="w-4 h-4" /> Add Prompt
           </button>
         </div>
@@ -209,7 +209,7 @@ export default function PromptsPage() {
               <span className="font-medium text-primary">Suggested prompts.</span>
               <span className="text-secondary">Expand your brand's presence with suggested prompts.</span>
             </div>
-            <button className="text-sm text-muted hover:text-primary">Suggest more</button>
+            <button className="px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-secondary transition-colors">Suggest more</button>
           </div>
         )}
 
@@ -248,7 +248,7 @@ export default function PromptsPage() {
               {tab === 'active' ? 'Track prompts to monitor your brand visibility.' : 'Check back later.'}
             </p>
             {tab === 'active' && (
-              <button onClick={() => setShowModal(true)} className="btn-primary text-sm">
+              <button onClick={() => setShowModal(true)} className="px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors flex items-center gap-1.5">
                 <Plus className="w-4 h-4" /> Add Prompt
               </button>
             )}
@@ -363,8 +363,8 @@ export default function PromptsPage() {
               </div>
             </div>
             <div className="flex justify-end gap-2 px-5 py-4 bg-secondary/50 border-t border-border">
-              <button onClick={() => setShowModal(false)} className="btn-secondary text-sm">Cancel</button>
-              <button onClick={addPrompt} disabled={!newPrompt.trim() || actionLoading === 'add'} className="btn-primary text-sm">
+              <button onClick={() => setShowModal(false)} className="px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-secondary transition-colors">Cancel</button>
+              <button onClick={addPrompt} disabled={!newPrompt.trim() || actionLoading === 'add'} className="px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors disabled:opacity-50">
                 {actionLoading === 'add' ? 'Adding...' : 'Add Prompt'}
               </button>
             </div>
