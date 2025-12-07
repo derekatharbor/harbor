@@ -484,7 +484,7 @@ export default function OverviewPage() {
                   <div 
                     key={prompt.id}
                     onClick={() => setSelectedPrompt(prompt)}
-                    className="bg-card border border-border rounded-lg p-4 hover:bg-hover transition-all cursor-pointer shadow-sm"
+                    className="bg-card border border-border rounded-lg p-4 transition-all cursor-pointer shadow-sm hover:shadow-md hover:border-muted hover:-translate-y-0.5"
                   >
                     {/* Header: Model logo + prompt */}
                     <div className="flex items-start gap-3 mb-3">
