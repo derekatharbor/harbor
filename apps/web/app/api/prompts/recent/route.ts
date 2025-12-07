@@ -15,19 +15,19 @@ function getSupabase() {
 
 const MODEL_LOGOS: Record<string, { logo: string; name: string }> = {
   chatgpt: { 
-    logo: 'https://cdn.brandfetch.io/idR3duQxYl/w/400/h/400/theme/dark/icon.png', 
+    logo: 'https://cdn.brandfetch.io/openai.com/w/400/h/400', 
     name: 'ChatGPT' 
   },
   claude: { 
-    logo: 'https://cdn.brandfetch.io/idtDuTgr6r/w/400/h/400/theme/dark/icon.png', 
+    logo: 'https://cdn.brandfetch.io/claude.ai/w/400/h/400', 
     name: 'Claude' 
   },
   perplexity: { 
-    logo: 'https://cdn.brandfetch.io/id6eZ0cPwH/w/400/h/400/theme/dark/icon.png', 
+    logo: 'https://cdn.brandfetch.io/perplexity.ai/w/400/h/400', 
     name: 'Perplexity' 
   },
   gemini: { 
-    logo: 'https://cdn.brandfetch.io/idnJWn3UHI/w/400/h/400/theme/dark/icon.png', 
+    logo: 'https://cdn.brandfetch.io/google.com/w/400/h/400', 
     name: 'Gemini' 
   }
 }
