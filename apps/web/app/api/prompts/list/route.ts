@@ -145,8 +145,9 @@ export async function GET(request: NextRequest) {
         .in('prompt_id', allIds)
         .is('error', null)
 
-      (execs || []).forEach(e => {
-        const cur = execMap.get(e.prompt_id) || { count: 0, last: null }
+      const execList = execs as Array<{ prompt_id: string; executed_at: string }> | null
+      (execList || []).forEach(e => {
+        const cur = execMap.get(e.prompt_id) || { count: 0, last: null as string | null }
         cur.count++
         if (!cur.last || e.executed_at > cur.last) cur.last = e.executed_at
         execMap.set(e.prompt_id, cur)
