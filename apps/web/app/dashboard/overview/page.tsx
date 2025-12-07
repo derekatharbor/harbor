@@ -17,7 +17,9 @@ import {
   Tag,
   BarChart3,
   Target,
-  AlertCircle
+  AlertCircle,
+  MessageCircle,
+  X
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -46,6 +48,24 @@ interface SourceData {
   logo: string
   type: string
   citations: number
+}
+
+interface PromptExecution {
+  id: string
+  prompt: string
+  topic: string
+  model: string
+  modelName: string
+  modelLogo: string
+  responsePreview: string
+  responseText: string
+  executedAt: string
+  timeAgo: string
+  brandsCount: number
+  brands: string[]
+  citationsCount: number
+  citationDomains: string[]
+  citationFavicons: string[]
 }
 
 // ============================================================================
@@ -77,6 +97,12 @@ export default function OverviewPage() {
   const [userRank, setUserRank] = useState<number | null>(null)
   const [totalBrands, setTotalBrands] = useState(0)
   
+  // Recent prompts state
+  const [recentPrompts, setRecentPrompts] = useState<PromptExecution[]>([])
+  const [promptsLoading, setPromptsLoading] = useState(true)
+  const [brandMentionedOnly, setBrandMentionedOnly] = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptExecution | null>(null)
+  
   // Filters
   const [selectedModel, setSelectedModel] = useState('all')
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false)
@@ -87,7 +113,7 @@ export default function OverviewPage() {
   // Chart toggle
   const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
 
-  // Fetch data
+  // Fetch main data
   useEffect(() => {
     async function fetchData() {
       if (!currentDashboard?.id) {
@@ -120,6 +146,31 @@ export default function OverviewPage() {
 
     fetchData()
   }, [currentDashboard?.id])
+
+  // Fetch recent prompts
+  useEffect(() => {
+    async function fetchPrompts() {
+      setPromptsLoading(true)
+      try {
+        const params = new URLSearchParams({ limit: '12' })
+        if (brandMentionedOnly && currentDashboard?.brand_name) {
+          params.set('brand', currentDashboard.brand_name)
+        }
+
+        const res = await fetch(`/api/prompts/recent?${params}`)
+        if (res.ok) {
+          const data = await res.json()
+          setRecentPrompts(data.prompts || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch prompts:', error)
+      } finally {
+        setPromptsLoading(false)
+      }
+    }
+
+    fetchPrompts()
+  }, [brandMentionedOnly, currentDashboard?.brand_name])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -204,64 +255,51 @@ export default function OverviewPage() {
 
           {/* Models */}
           <div className="relative" ref={modelDropdownRef}>
-            <button className="dropdown-trigger" onClick={() => setModelDropdownOpen(!modelDropdownOpen)}>
+            <button 
+              className="dropdown-trigger"
+              onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
+            >
               <Globe className="w-4 h-4 text-muted" />
               <span>{MODEL_NAMES[selectedModel]}</span>
               <ChevronDown className={`w-4 h-4 text-muted transition-transform ${modelDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
-
+            
             {modelDropdownOpen && (
-              <div className="dropdown-menu">
-                {Object.entries(MODEL_NAMES).map(([key, name]) => (
-                  <div
+              <div className="absolute top-full left-0 mt-1 bg-card border border-border rounded-lg shadow-lg py-1 z-50 min-w-40">
+                {Object.entries(MODEL_NAMES).map(([key, label]) => (
+                  <button
                     key={key}
-                    className={`dropdown-item ${selectedModel === key ? 'active' : ''}`}
+                    className="w-full px-3 py-2 text-left text-sm hover:bg-hover flex items-center justify-between"
                     onClick={() => { setSelectedModel(key); setModelDropdownOpen(false) }}
                   >
-                    <span className="flex-1">{name}</span>
-                    {selectedModel === key && <Check className="w-4 h-4" />}
-                  </div>
+                    <span className={selectedModel === key ? 'text-primary' : 'text-secondary'}>{label}</span>
+                    {selectedModel === key && <Check className="w-4 h-4 text-accent" />}
+                  </button>
                 ))}
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button className="dropdown-trigger">
-            <Download className="w-4 h-4" />
-            <span>Export</span>
-          </button>
-        </div>
+        <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-secondary hover:text-primary transition-colors">
+          <Download className="w-4 h-4" />
+          <span>Export</span>
+        </button>
       </div>
 
-      {/* Status Banner */}
-      <div className="status-banner">
-        <div className="status-banner-text flex items-center gap-2">
-          <Eye className="w-4 h-4" />
-          <span className="font-medium text-primary">Overview</span>
-          <span className="mx-1">•</span>
-          {hasData ? (
-            <span>
-              {userRank ? `${brandName} is ranked #${userRank} of ${totalBrands} brands` : `${totalBrands} brands found in AI responses`}
-            </span>
-          ) : (
-            <span>Run prompts to see your brand's visibility</span>
-          )}
-        </div>
-        {hasData && userRank && (
-          <div className="status-banner-metrics">
-            <span>Rank: <strong className="text-primary">#{userRank}/{totalBrands}</strong></span>
-          </div>
-        )}
+      {/* Page Title */}
+      <div className="px-6 pt-4 pb-2 flex items-center gap-2">
+        <Eye className="w-4 h-4 text-muted" />
+        <h1 className="text-sm font-medium text-secondary">Overview</h1>
+        <span className="text-muted">•</span>
+        <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
-      {/* Main Content */}
       {!hasData ? (
         <div className="p-6">
           <div className="card p-12 text-center">
             <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
-            <h2 className="text-xl font-semibold text-primary mb-2">No Data Yet</h2>
+            <h2 className="text-lg font-semibold text-primary mb-2">No data yet</h2>
             <p className="text-sm text-muted mb-6">
               Run prompts to see how AI models mention your brand and competitors.
             </p>
@@ -398,6 +436,105 @@ export default function OverviewPage() {
           </div>
         </div>
 
+        {/* Recent Prompts Section */}
+        <div className="card p-0 overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <h3 className="font-semibold text-primary text-sm flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" />
+              Recent Chats
+            </h3>
+            
+            {currentDashboard?.brand_name && (
+              <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                <div 
+                  className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer ${
+                    brandMentionedOnly ? 'bg-accent' : 'bg-hover'
+                  }`}
+                  onClick={() => setBrandMentionedOnly(!brandMentionedOnly)}
+                >
+                  <div 
+                    className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                      brandMentionedOnly ? 'translate-x-4' : 'translate-x-0.5'
+                    }`}
+                  />
+                </div>
+                <span>{currentDashboard.brand_name} mentioned</span>
+              </label>
+            )}
+          </div>
+
+          <div className="p-4">
+            {promptsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse bg-hover rounded-lg h-36" />
+                ))}
+              </div>
+            ) : recentPrompts.length === 0 ? (
+              <div className="text-center py-12 text-muted">
+                <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                <p>No recent prompts found</p>
+                {brandMentionedOnly && (
+                  <p className="text-sm mt-1">Try turning off the brand filter</p>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentPrompts.map((prompt) => (
+                  <div 
+                    key={prompt.id}
+                    onClick={() => setSelectedPrompt(prompt)}
+                    className="bg-secondary border border-border rounded-lg p-4 hover:border-muted hover:shadow-sm transition-all cursor-pointer group"
+                  >
+                    {/* Header: Model logo + prompt */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <img 
+                        src={prompt.modelLogo} 
+                        alt={prompt.modelName}
+                        className="w-6 h-6 rounded-md flex-shrink-0"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/24'
+                        }}
+                      />
+                      <h4 className="text-sm font-medium text-primary line-clamp-2 group-hover:text-accent transition-colors">
+                        {prompt.prompt}
+                      </h4>
+                    </div>
+
+                    {/* Response preview */}
+                    <p className="text-sm text-muted line-clamp-3 mb-4">
+                      {prompt.responsePreview}
+                    </p>
+
+                    {/* Footer: Citations + time */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {prompt.citationFavicons.slice(0, 3).map((favicon, i) => (
+                          <img 
+                            key={i}
+                            src={favicon}
+                            alt=""
+                            className="w-4 h-4 rounded-sm"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none'
+                            }}
+                          />
+                        ))}
+                        {prompt.citationsCount > 3 && (
+                          <span className="text-xs text-muted ml-1">
+                            +{prompt.citationsCount - 3}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted">{prompt.timeAgo}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Sources + Donut */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 card p-0 overflow-hidden">
@@ -465,6 +602,149 @@ export default function OverviewPage() {
         </div>
       </div>
       )}
+
+      {/* Prompt Detail Modal */}
+      {selectedPrompt && (
+        <PromptModal 
+          prompt={selectedPrompt} 
+          onClose={() => setSelectedPrompt(null)} 
+        />
+      )}
+    </div>
+  )
+}
+
+// ============================================================================
+// PROMPT MODAL COMPONENT
+// ============================================================================
+
+function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-card rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col border border-border">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div className="flex items-center gap-3">
+            <img 
+              src={prompt.modelLogo} 
+              alt={prompt.modelName}
+              className="w-8 h-8 rounded-lg"
+            />
+            <div>
+              <span className="text-sm font-medium text-primary">{prompt.modelName}</span>
+              <span className="mx-2 text-muted">•</span>
+              <span className="text-sm text-muted">{prompt.topic}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={onClose}
+              className="p-2 hover:bg-hover rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-muted" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content area */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Main content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            {/* User query */}
+            <div className="flex items-start gap-3 mb-6">
+              <div className="w-8 h-8 rounded-full bg-hover flex items-center justify-center flex-shrink-0">
+                <span className="text-sm">👤</span>
+              </div>
+              <div className="bg-hover rounded-2xl px-4 py-3 max-w-lg">
+                <p className="text-primary">{prompt.prompt}</p>
+              </div>
+            </div>
+
+            {/* AI response */}
+            <div className="flex items-start gap-3">
+              <img 
+                src={prompt.modelLogo} 
+                alt={prompt.modelName}
+                className="w-8 h-8 rounded-lg flex-shrink-0"
+              />
+              <div className="flex-1">
+                <div 
+                  className="text-secondary text-sm whitespace-pre-wrap leading-relaxed"
+                  dangerouslySetInnerHTML={{ 
+                    __html: prompt.responseText
+                      ?.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>')
+                      .replace(/\n/g, '<br />') || ''
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="w-72 border-l border-border bg-secondary p-4 overflow-y-auto">
+            {/* Brands section */}
+            <div className="mb-6">
+              <h4 className="text-sm font-medium text-primary mb-2 flex items-center gap-2">
+                <Tag className="w-4 h-4" />
+                Brands
+              </h4>
+              {prompt.brands.length === 0 ? (
+                <p className="text-sm text-muted flex items-center gap-2">
+                  <span className="opacity-50">∅</span> No Brands
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-1.5">
+                  {prompt.brands.map((brand, i) => (
+                    <span 
+                      key={i}
+                      className="text-xs bg-card border border-border rounded-full px-2.5 py-1 text-secondary"
+                    >
+                      {brand}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Sources section */}
+            <div>
+              <h4 className="text-sm font-medium text-primary mb-2 flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                Sources
+              </h4>
+              {prompt.citationDomains.length === 0 ? (
+                <p className="text-sm text-muted">No sources cited</p>
+              ) : (
+                <div className="space-y-2">
+                  {prompt.citationDomains.map((domain, i) => (
+                    <a 
+                      key={i}
+                      href={`https://${domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors"
+                    >
+                      <img 
+                        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+                        alt=""
+                        className="w-4 h-4 rounded-sm"
+                      />
+                      <span className="truncate">{domain}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
