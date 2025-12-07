@@ -160,8 +160,45 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get('limit') || '50')
 
   try {
-    // Get all citations with execution data
-    const { data: citations, error } = await supabase
+    // If dashboard_id provided, filter by user's selected prompts
+    let executionIds: string[] | null = null
+    
+    if (dashboardId) {
+      // Get user's selected prompts
+      const { data: dashboardPrompts } = await supabase
+        .from('dashboard_prompts')
+        .select('prompt_id')
+        .eq('dashboard_id', dashboardId)
+      
+      const selectedPromptIds = dashboardPrompts?.map(dp => dp.prompt_id) || []
+      
+      if (selectedPromptIds.length > 0) {
+        // Get executions for those prompts
+        const { data: executions } = await supabase
+          .from('prompt_executions')
+          .select('id')
+          .in('prompt_id', selectedPromptIds)
+        
+        executionIds = executions?.map(e => e.id) || []
+        
+        // If no executions, return empty
+        if (executionIds.length === 0) {
+          return NextResponse.json({
+            sources: [],
+            typeBreakdown: [],
+            totals: {
+              totalCitations: 0,
+              uniqueDomains: 0,
+              highAuthority: 0,
+              gapOpportunities: null
+            }
+          })
+        }
+      }
+    }
+
+    // Get citations (filtered by execution_ids if dashboard specified)
+    let citationsQuery = supabase
       .from('prompt_citations')
       .select(`
         id,
@@ -183,6 +220,13 @@ export async function GET(request: NextRequest) {
       `)
       .order('id', { ascending: false })
       .limit(1000)
+    
+    // Filter by execution IDs if we have them
+    if (executionIds && executionIds.length > 0) {
+      citationsQuery = citationsQuery.in('execution_id', executionIds)
+    }
+
+    const { data: citations, error } = await citationsQuery
 
     if (error) throw error
 

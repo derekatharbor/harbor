@@ -105,8 +105,8 @@ export default function OverviewPage() {
           setTotalBrands(data.total_brands_found || 0)
         }
 
-        // Fetch sources
-        const sourcesRes = await fetch(`/api/sources?limit=5`)
+        // Fetch sources (filtered by dashboard's prompts)
+        const sourcesRes = await fetch(`/api/sources?dashboard_id=${currentDashboard.id}&limit=5`)
         if (sourcesRes.ok) {
           const data = await sourcesRes.json()
           setSources(data.sources || [])
