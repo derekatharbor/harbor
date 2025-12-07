@@ -1,5 +1,5 @@
 // app/api/dashboard/[id]/competitors/route.ts
-// Show user's brand + competitors + top SaaS brands
+// Uses RPC to avoid URL length issues
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -52,96 +52,36 @@ export async function GET(
       `)
       .eq('dashboard_id', dashboardId)
 
-    // 3. Get non-university prompt IDs first
-    const { data: nonUniPrompts } = await supabase
-      .from('seed_prompts')
-      .select('id')
-      .neq('topic', 'universities')
-    
-    const promptIds = nonUniPrompts?.map(p => p.id) || []
+    // 3. Get top brands via raw SQL (avoids URL length issues)
+    const { data: topBrandsRaw, error: sqlError } = await supabase.rpc('get_top_saas_brands')
 
-    if (promptIds.length === 0) {
-      return NextResponse.json({ 
-        competitors: [buildUserEntry(dashboard, null, 0)], 
-        total_brands_found: 0, 
-        user_rank: null 
-      })
+    if (sqlError) {
+      console.error('RPC error, falling back:', sqlError)
+      // Fallback: return just user + competitors
+      const competitors = [buildUserEntry(dashboard, null, 1)]
+      return NextResponse.json({ competitors, total_brands_found: 0, user_rank: null })
     }
 
-    // 4. Get executions for those prompts
-    const { data: executions } = await supabase
-      .from('prompt_executions')
-      .select('id')
-      .in('prompt_id', promptIds)
-
-    const executionIds = executions?.map(e => e.id) || []
-
-    if (executionIds.length === 0) {
-      return NextResponse.json({ 
-        competitors: [buildUserEntry(dashboard, null, 0)], 
-        total_brands_found: 0, 
-        user_rank: null 
-      })
-    }
-
-    // 5. Get brand mentions from those executions
-    const { data: mentions } = await supabase
-      .from('prompt_brand_mentions')
-      .select('brand_name, position, sentiment')
-      .in('execution_id', executionIds)
-
-    // 6. Aggregate by brand
-    const brandStats = new Map<string, {
-      mentions: number
-      positions: number[]
-      sentiments: { pos: number, neu: number, neg: number }
-    }>()
-
-    mentions?.forEach((m: any) => {
-      const name = m.brand_name?.trim()
-      if (!name) return
-      
-      const existing = brandStats.get(name) || {
-        mentions: 0, positions: [], sentiments: { pos: 0, neu: 0, neg: 0 }
-      }
-      
-      existing.mentions++
-      if (m.position) existing.positions.push(m.position)
-      
-      const sent = (m.sentiment || 'neutral').toLowerCase()
-      if (sent === 'positive' || sent === 'pos') existing.sentiments.pos++
-      else if (sent === 'negative' || sent === 'neg') existing.sentiments.neg++
-      else existing.sentiments.neu++
-      
-      brandStats.set(name, existing)
-    })
-
-    // 7. Convert to sorted array
-    const topBrands = Array.from(brandStats.entries())
-      .map(([name, stats]) => {
-        const avgPos = stats.positions.length > 0
-          ? stats.positions.reduce((a, b) => a + b, 0) / stats.positions.length : 0
-        const total = stats.sentiments.pos + stats.sentiments.neu + stats.sentiments.neg
-        const sentimentScore = total > 0 ? Math.round((stats.sentiments.pos / total) * 100) : 50
-        return { name, mentions: stats.mentions, position: Math.round(avgPos * 10) / 10, sentiment: sentimentScore }
-      })
-      .sort((a, b) => b.mentions - a.mentions)
+    const topBrands = (topBrandsRaw || []).map((b: any) => ({
+      name: b.brand_name,
+      mentions: b.mentions,
+      position: parseFloat(b.avg_position) || 0,
+      sentiment: parseInt(b.sentiment) || 50
+    }))
 
     const maxMentions = topBrands.length > 0 ? topBrands[0].mentions : 1
 
-    // 8. Build competitors list
+    // 4. Build competitors list
     const competitors: any[] = []
     const addedNames = new Set<string>()
     const userBrandLower = dashboard.brand_name.toLowerCase()
 
-    // Find user in top brands
-    const userInTop = topBrands.find(b => 
+    const userInTop = topBrands.find((b: any) => 
       b.name.toLowerCase() === userBrandLower ||
       b.name.toLowerCase().includes(userBrandLower) ||
       userBrandLower.includes(b.name.toLowerCase())
     )
 
-    // Add user first
     competitors.push(buildUserEntry(dashboard, userInTop, maxMentions))
     addedNames.add(userBrandLower)
 
@@ -151,7 +91,7 @@ export async function GET(
       if (dc.ai_profiles) {
         const p = dc.ai_profiles
         const nameLower = p.brand_name.toLowerCase()
-        const inTop = topBrands.find(b => b.name.toLowerCase() === nameLower)
+        const inTop = topBrands.find((b: any) => b.name.toLowerCase() === nameLower)
 
         competitors.push({
           rank: inTop ? topBrands.indexOf(inTop) + 1 : 0,
@@ -199,7 +139,6 @@ export async function GET(
       colorIdx++
     }
 
-    // Sort: user first, then by visibility
     competitors.sort((a, b) => {
       if (a.isUser) return -1
       if (b.isUser) return 1
