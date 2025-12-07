@@ -15,19 +15,19 @@ function getSupabase() {
 
 const MODEL_LOGOS: Record<string, { logo: string; name: string }> = {
   chatgpt: { 
-    logo: 'https://cdn.brandfetch.io/idR3duQxYl/w/512/h/512/theme/dark/icon.png?c=1id1Fyz-h7an5-5KR_y', 
+    logo: 'https://cdn.brandfetch.io/idR3duQxYl/w/400/h/400/theme/dark/icon.png', 
     name: 'ChatGPT' 
   },
   claude: { 
-    logo: 'https://cdn.brandfetch.io/idtDuTgr6r/w/512/h/512/theme/dark/icon.png?c=1id1Fyz-h7an5-5KR_y', 
+    logo: 'https://cdn.brandfetch.io/idtDuTgr6r/w/400/h/400/theme/dark/icon.png', 
     name: 'Claude' 
   },
   perplexity: { 
-    logo: 'https://cdn.brandfetch.io/id6eZ0cPwH/w/512/h/512/theme/dark/icon.png?c=1id1Fyz-h7an5-5KR_y', 
+    logo: 'https://cdn.brandfetch.io/id6eZ0cPwH/w/400/h/400/theme/dark/icon.png', 
     name: 'Perplexity' 
   },
   gemini: { 
-    logo: 'https://cdn.brandfetch.io/idXPSxKVRO/w/512/h/512/theme/dark/icon.png?c=1id1Fyz-h7an5-5KR_y', 
+    logo: 'https://cdn.brandfetch.io/idnJWn3UHI/w/400/h/400/theme/dark/icon.png', 
     name: 'Gemini' 
   }
 }
@@ -104,8 +104,16 @@ export async function GET(request: NextRequest) {
       citationsByExecution.set(c.execution_id, existing)
     })
 
-    // Build response
-    let results = executionsWithPrompts?.map((exec: any) => {
+    // Build response - dedupe by prompt text (show latest execution per prompt)
+    const seenPrompts = new Set<string>()
+    let results = executionsWithPrompts
+      ?.filter((exec: any) => {
+        const promptText = exec.seed_prompts?.prompt_text || ''
+        if (seenPrompts.has(promptText)) return false
+        seenPrompts.add(promptText)
+        return true
+      })
+      ?.map((exec: any) => {
       const execMentions = mentionsByExecution.get(exec.id) || []
       const execCitations = citationsByExecution.get(exec.id) || []
       
