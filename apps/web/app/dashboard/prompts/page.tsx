@@ -32,7 +32,14 @@ function VolumeBar({ value }: { value: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: bars }).map((_, i) => (
-        <div key={i} className={`w-1 h-3.5 rounded-sm ${i < filled ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'}`} />
+        <div 
+          key={i} 
+          className={`w-1 h-3.5 rounded-sm ${
+            i < filled 
+              ? 'bg-emerald-600 dark:bg-emerald-500' 
+              : 'bg-gray-200 dark:bg-[#2a2a2a]'
+          }`} 
+        />
       ))}
     </div>
   )
@@ -217,7 +224,7 @@ export default function PromptsPage() {
         {tab === 'suggested' ? (
           <div className="grid grid-cols-[1fr,100px,100px,150px] gap-4 px-4 py-2.5 border-b border-border text-xs font-medium text-muted uppercase tracking-wide">
             <div className="flex items-center gap-1 cursor-pointer hover:text-primary">Suggested Prompt <ChevronDown className="w-3 h-3" /></div>
-            <div className="flex items-center gap-1 cursor-pointer hover:text-primary">Volume <span className="text-[10px] text-accent bg-accent/10 px-1.5 py-0.5 rounded normal-case font-normal ml-1">Beta</span></div>
+            <div className="flex items-center gap-1 cursor-pointer hover:text-primary">Volume <span className="text-[10px] text-muted bg-secondary px-1.5 py-0.5 rounded normal-case font-normal ml-1">Beta</span></div>
             <div className="flex items-center gap-1 cursor-pointer hover:text-primary">Suggested At <ChevronDown className="w-3 h-3" /></div>
             <div></div>
           </div>
@@ -228,14 +235,14 @@ export default function PromptsPage() {
             <div>Sentiment</div>
             <div>Position</div>
             <div>Mentions</div>
-            <div className="flex items-center gap-1">Volume <span className="text-[10px] text-accent bg-accent/10 px-1.5 py-0.5 rounded normal-case font-normal ml-1">Beta</span></div>
+            <div className="flex items-center gap-1">Volume <span className="text-[10px] text-muted bg-secondary px-1.5 py-0.5 rounded normal-case font-normal ml-1">Beta</span></div>
           </div>
         )}
 
         {/* Content */}
         {loading ? (
           <div className="p-12 text-center">
-            <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <div className="w-6 h-6 border-2 border-gray-300 dark:border-gray-600 border-t-gray-600 dark:border-t-gray-300 rounded-full animate-spin mx-auto mb-3" />
             <p className="text-sm text-muted">Loading prompts...</p>
           </div>
         ) : current.length === 0 ? (
@@ -248,7 +255,7 @@ export default function PromptsPage() {
               {tab === 'active' ? 'Track prompts to monitor your brand visibility.' : 'Check back later.'}
             </p>
             {tab === 'active' && (
-              <button onClick={() => setShowModal(true)} className="px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors flex items-center gap-1.5">
+              <button onClick={() => setShowModal(true)} className="mx-auto px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors flex items-center gap-1.5">
                 <Plus className="w-4 h-4" /> Add Prompt
               </button>
             )}
