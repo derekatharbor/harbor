@@ -1,4 +1,5 @@
-// apps/web/app/api/onboarding/create-dashboard/route.ts
+// app/api/onboarding/create-dashboard/route.ts
+// Updated to handle new onboarding flow with AI-generated topics and prompts
 import { createClient } from '@supabase/supabase-js'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
@@ -6,7 +7,16 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { brandName, domain, industry, selectedPromptIds, competitorProfileIds } = await request.json()
+    const { 
+      brandName, 
+      domain, 
+      accountType,      // 'agency' | 'inhouse' - new
+      topics,           // string[] - selected topic names
+      prompts,          // { topic: string, text: string }[] - AI-generated prompts
+      industry,         // Legacy support
+      selectedPromptIds,// Legacy support - existing seed_prompt IDs
+      competitorProfileIds 
+    } = await request.json()
 
     if (!brandName || !domain) {
       return NextResponse.json(
@@ -62,6 +72,7 @@ export async function POST(request: Request) {
     if (existingDashboards && existingDashboards.length > 0) {
       return NextResponse.json({
         success: true,
+        dashboardId: existingDashboards[0].id,
         dashboard: existingDashboards[0],
         existing: true
       })
@@ -82,25 +93,24 @@ export async function POST(request: Request) {
       .single()
 
     if (existingDomainDashboard) {
-      // If it's this user's org, return it as existing
       if (existingDomainDashboard.org_id === userRole.org_id) {
         return NextResponse.json({
           success: true,
+          dashboardId: existingDomainDashboard.id,
           dashboard: existingDomainDashboard,
           existing: true
         })
       }
-      // Different org owns this domain
       return NextResponse.json(
         { 
-          error: `This domain is already claimed. If this is your brand, please contact support or sign in with the account that owns it.`,
+          error: `This domain is already claimed. If this is your brand, please contact support.`,
           code: 'DOMAIN_CLAIMED'
         },
         { status: 409 }
       )
     }
 
-    // Create dashboard with industry in metadata
+    // Create dashboard with new metadata structure
     const { data: dashboard, error: dashboardError } = await supabaseAdmin
       .from('dashboards')
       .insert({
@@ -109,8 +119,11 @@ export async function POST(request: Request) {
         domain: cleanDomain,
         plan: 'solo',
         metadata: {
+          accountType: accountType || 'inhouse',
+          topics: topics || [],
           category: industry || null,
-          categorySource: industry ? 'user' : null,
+          categorySource: industry ? 'user' : (topics?.length ? 'ai-generated' : null),
+          onboardingVersion: 2
         }
       })
       .select()
@@ -124,7 +137,28 @@ export async function POST(request: Request) {
       )
     }
 
-    // Save selected prompts to dashboard_prompts
+    // Handle AI-generated prompts (new flow)
+    if (prompts && Array.isArray(prompts) && prompts.length > 0) {
+      const promptInserts = prompts.map((p: { topic: string; text: string }) => ({
+        dashboard_id: dashboard.id,
+        prompt_text: p.text,
+        topic: p.topic,
+        source: 'ai-generated',
+        is_active: true,
+        created_at: new Date().toISOString()
+      }))
+
+      const { error: userPromptsError } = await supabaseAdmin
+        .from('user_prompts')
+        .insert(promptInserts)
+
+      if (userPromptsError) {
+        console.error('Error saving user prompts:', userPromptsError)
+        // Don't fail the whole request
+      }
+    }
+
+    // Handle legacy seed_prompt IDs
     if (selectedPromptIds && selectedPromptIds.length > 0) {
       const promptInserts = selectedPromptIds.map((promptId: string) => ({
         dashboard_id: dashboard.id,
@@ -137,11 +171,10 @@ export async function POST(request: Request) {
 
       if (promptsError) {
         console.error('Error saving dashboard prompts:', promptsError)
-        // Don't fail the whole request, just log it
       }
     }
 
-    // Save selected competitors to dashboard_competitors
+    // Save selected competitors
     if (competitorProfileIds && competitorProfileIds.length > 0) {
       const competitorInserts = competitorProfileIds.map((profileId: string) => ({
         dashboard_id: dashboard.id,
@@ -154,12 +187,12 @@ export async function POST(request: Request) {
 
       if (competitorsError) {
         console.error('Error saving dashboard competitors:', competitorsError)
-        // Don't fail the whole request, just log it
       }
     }
 
     return NextResponse.json({
       success: true,
+      dashboardId: dashboard.id,
       dashboard,
       existing: false
     })

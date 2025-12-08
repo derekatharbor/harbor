@@ -1,414 +1,395 @@
-// apps/web/app/onboarding/analyzing/page.tsx
-// Live execution transition - shows real-time AI analysis
-
+// app/onboarding/analyzing/page.tsx
 'use client'
 
-import { useState, useEffect, useRef, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Check, Loader2, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Loader2, ArrowRight, Check, X } from 'lucide-react'
 
-interface ModelStatus {
+// ============================================================================
+// TYPES
+// ============================================================================
+
+interface ModelResult {
   model: string
   status: 'pending' | 'running' | 'complete' | 'error'
-  response_text?: string
-  brands_found?: string[]
-  citations?: { url: string; domain: string }[]
-  duration_ms?: number
-  error?: string
-}
-
-interface Summary {
-  successful: number
-  failed: number
-  total_tokens: number
-  estimated_cost_usd: number
-  unique_brands: number
+  mentioned: boolean
   brands: string[]
+  snippet?: string
 }
 
-const MODEL_INFO: Record<string, { name: string; logo: string; color: string }> = {
-  chatgpt: { 
+// ============================================================================
+// MODEL CONFIG
+// ============================================================================
+
+const MODELS = [
+  { 
+    id: 'chatgpt', 
     name: 'ChatGPT', 
-    logo: '/models/openai.svg',
-    color: 'bg-emerald-500'
+    logo: '/models/chatgpt-logo.png',
+    angle: 0 // Top
   },
-  claude: { 
+  { 
+    id: 'claude', 
     name: 'Claude', 
-    logo: '/models/anthropic.svg',
-    color: 'bg-orange-500'
+    logo: '/models/claude-logo.png',
+    angle: 120 // Bottom-left
   },
-  gemini: { 
-    name: 'Gemini', 
-    logo: '/models/google.svg',
-    color: 'bg-blue-500'
-  },
-  perplexity: { 
+  { 
+    id: 'perplexity', 
     name: 'Perplexity', 
-    logo: '/models/perplexity.svg',
-    color: 'bg-purple-500'
+    logo: '/models/perplexity-logo.png',
+    angle: 240 // Bottom-right
   }
-}
+]
 
-function ModelCard({ status, brandName }: { status: ModelStatus; brandName: string }) {
-  const info = MODEL_INFO[status.model] || { name: status.model, logo: '', color: 'bg-gray-500' }
-  const isMentioned = status.brands_found?.some(
-    b => b.toLowerCase().includes(brandName.toLowerCase()) || 
-         brandName.toLowerCase().includes(b.toLowerCase())
-  )
-
-  return (
-    <div className={`
-      p-4 rounded-xl border transition-all duration-300
-      ${status.status === 'complete' 
-        ? 'bg-card border-border' 
-        : status.status === 'running'
-        ? 'bg-card border-accent/30 shadow-lg shadow-accent/5'
-        : status.status === 'error'
-        ? 'bg-card border-red-500/30'
-        : 'bg-secondary/50 border-border opacity-60'
-      }
-    `}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-            status.status === 'pending' ? 'bg-secondary' : 'bg-white dark:bg-gray-800'
-          }`}>
-            <img 
-              src={info.logo} 
-              alt={info.name}
-              className="w-5 h-5 object-contain"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none'
-              }}
-            />
-          </div>
-          <span className="font-medium text-primary">{info.name}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          {status.status === 'pending' && (
-            <span className="text-xs text-muted">Waiting...</span>
-          )}
-          {status.status === 'running' && (
-            <Loader2 className="w-4 h-4 text-accent animate-spin" />
-          )}
-          {status.status === 'complete' && (
-            <div className="flex items-center gap-1.5">
-              <Check className="w-4 h-4 text-emerald-500" />
-              <span className="text-xs text-muted">{status.duration_ms}ms</span>
-            </div>
-          )}
-          {status.status === 'error' && (
-            <AlertCircle className="w-4 h-4 text-red-400" />
-          )}
-        </div>
-      </div>
-
-      {status.status === 'complete' && (
-        <div className="space-y-2">
-          {/* Mention status */}
-          <div className={`
-            inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium
-            ${isMentioned 
-              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
-              : 'bg-secondary text-muted'
-            }
-          `}>
-            {isMentioned ? (
-              <>
-                <Check className="w-3 h-3" />
-                Your brand was mentioned
-              </>
-            ) : (
-              'Not mentioned in this response'
-            )}
-          </div>
-
-          {/* Brands found */}
-          {status.brands_found && status.brands_found.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {status.brands_found.slice(0, 5).map((brand, i) => (
-                <span 
-                  key={i}
-                  className={`
-                    text-xs px-2 py-0.5 rounded
-                    ${brand.toLowerCase().includes(brandName.toLowerCase())
-                      ? 'bg-accent/20 text-accent font-medium'
-                      : 'bg-secondary text-muted'
-                    }
-                  `}
-                >
-                  {brand}
-                </span>
-              ))}
-              {status.brands_found.length > 5 && (
-                <span className="text-xs text-muted">
-                  +{status.brands_found.length - 5} more
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Response preview */}
-          {status.response_text && (
-            <p className="text-xs text-muted line-clamp-2 mt-2">
-              {status.response_text.slice(0, 150)}...
-            </p>
-          )}
-        </div>
-      )}
-
-      {status.status === 'error' && (
-        <p className="text-xs text-red-400">{status.error}</p>
-      )}
-    </div>
-  )
-}
-
-export default function AnalyzingPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
-      </div>
-    }>
-      <AnalyzingContent />
-    </Suspense>
-  )
-}
+// ============================================================================
+// ANALYZING CONTENT
+// ============================================================================
 
 function AnalyzingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  const [models, setModels] = useState<Record<string, ModelStatus>>({})
-  const [summary, setSummary] = useState<Summary | null>(null)
-  const [isComplete, setIsComplete] = useState(false)
-  const [canSkip, setCanSkip] = useState(false)
-  const eventSourceRef = useRef<EventSource | null>(null)
-
-  const brandName = searchParams.get('brand') || 'Your brand'
-  const promptText = searchParams.get('prompt')
-  const promptId = searchParams.get('prompt_id') || ''
+  const brand = searchParams.get('brand') || ''
+  const prompt = searchParams.get('prompt') || ''
   const dashboardId = searchParams.get('dashboard_id') || ''
   
-  // Track if params have been checked (to avoid redirect on initial hydration)
+  const [phase, setPhase] = useState<'retrieving' | 'analyzing' | 'complete'>('retrieving')
+  const [progress, setProgress] = useState(0)
+  const [rotation, setRotation] = useState(0)
+  const [results, setResults] = useState<ModelResult[]>(
+    MODELS.map(m => ({ 
+      model: m.id, 
+      status: 'pending', 
+      mentioned: false, 
+      brands: [] 
+    }))
+  )
+  const [canSkip, setCanSkip] = useState(false)
   const [paramsChecked, setParamsChecked] = useState(false)
 
+  // Check params after hydration
   useEffect(() => {
-    // Wait a tick for searchParams to hydrate
     const timer = setTimeout(() => setParamsChecked(true), 100)
     return () => clearTimeout(timer)
   }, [])
 
+  // Redirect if no params
   useEffect(() => {
-    // Don't do anything until params have been checked
-    if (!paramsChecked) return
-    
-    // Allow skip after 3 seconds
-    const skipTimer = setTimeout(() => setCanSkip(true), 3000)
+    if (paramsChecked && (!brand || !prompt)) {
+      router.push('/dashboard')
+    }
+  }, [paramsChecked, brand, prompt, router])
 
-    // Start the execution stream
-    const startExecution = async () => {
+  // Enable skip after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setCanSkip(true), 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Rotation animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRotation(prev => (prev + 0.5) % 360)
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
+
+  // Execute prompts
+  useEffect(() => {
+    if (!paramsChecked || !brand || !prompt) return
+    
+    const executePrompts = async () => {
       try {
+        // Phase 1: Retrieving
+        setPhase('retrieving')
+        
         const response = await fetch('/api/prompts/execute-stream', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt_id: promptId,
-            prompt_text: promptText,
-            dashboard_id: dashboardId
-          })
+          body: JSON.stringify({ prompt, brand })
         })
 
-        const reader = response.body?.getReader()
-        const decoder = new TextDecoder()
+        if (!response.ok) {
+          throw new Error('Failed to execute')
+        }
 
-        if (!reader) return
+        setPhase('analyzing')
+
+        const reader = response.body?.getReader()
+        if (!reader) throw new Error('No reader')
+
+        const decoder = new TextDecoder()
+        let completedModels = 0
 
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
 
-          const text = decoder.decode(value)
-          const lines = text.split('\n').filter(line => line.startsWith('data: '))
+          const chunk = decoder.decode(value)
+          const lines = chunk.split('\n').filter(l => l.startsWith('data: '))
 
           for (const line of lines) {
             try {
-              const data = JSON.parse(line.slice(6))
+              const data = JSON.parse(line.replace('data: ', ''))
               
-              if (data.type === 'init') {
-                setModels(data.models)
-              } else if (data.type === 'update') {
-                setModels(prev => ({
-                  ...prev,
-                  [data.model]: data
+              if (data.model) {
+                setResults(prev => prev.map(r => {
+                  if (r.model === data.model) {
+                    return {
+                      ...r,
+                      status: data.status || r.status,
+                      mentioned: data.mentioned ?? r.mentioned,
+                      brands: data.brands || r.brands,
+                      snippet: data.snippet || r.snippet
+                    }
+                  }
+                  return r
                 }))
-              } else if (data.type === 'complete') {
-                setSummary(data.summary)
-                setIsComplete(true)
+
+                if (data.status === 'complete' || data.status === 'error') {
+                  completedModels++
+                  setProgress(Math.round((completedModels / MODELS.length) * 100))
+                }
+              }
+
+              if (data.complete) {
+                setPhase('complete')
               }
             } catch (e) {
-              // Ignore parse errors
+              // Skip invalid JSON
             }
           }
         }
+
+        setPhase('complete')
+        setProgress(100)
+
       } catch (error) {
-        console.error('Execution stream error:', error)
-        setIsComplete(true)
+        console.error('Execution error:', error)
+        setPhase('complete')
+        setProgress(100)
       }
     }
 
-    if (promptText) {
-      startExecution()
-    } else {
-      // No prompt - redirect to dashboard
-      router.push('/dashboard')
-    }
-
-    return () => {
-      clearTimeout(skipTimer)
-      eventSourceRef.current?.close()
-    }
-  }, [promptText, promptId, dashboardId, router, paramsChecked])
+    executePrompts()
+  }, [paramsChecked, brand, prompt])
 
   const handleContinue = () => {
     router.push('/dashboard/prompts')
   }
 
-  const completedCount = Object.values(models).filter(m => m.status === 'complete').length
-  const progress = (completedCount / 4) * 100
+  const handleSkip = () => {
+    router.push('/dashboard')
+  }
+
+  // Calculate position on orbit
+  const getOrbitPosition = (baseAngle: number, orbitRadius: number) => {
+    const angle = ((baseAngle + rotation) * Math.PI) / 180
+    return {
+      x: Math.cos(angle) * orbitRadius,
+      y: Math.sin(angle) * orbitRadius
+    }
+  }
+
+  const isComplete = phase === 'complete'
+  const mentionedCount = results.filter(r => r.mentioned).length
 
   return (
-    <div className="min-h-screen bg-page flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 text-accent rounded-full text-sm font-medium mb-4">
-            <Sparkles className="w-4 h-4" />
-            Analyzing visibility
+    <div className="min-h-screen bg-[#0B0B0C] flex flex-col">
+      {/* Nav */}
+      <nav className="p-6 flex items-center justify-between border-b border-white/5">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/images/Harbor_White_Logo.png"
+            alt="Harbor"
+            width={28}
+            height={28}
+            className="h-7 w-auto"
+          />
+          <span className="text-lg font-semibold text-white font-['Space_Grotesk']">Harbor</span>
+        </Link>
+        
+        {canSkip && !isComplete && (
+          <button
+            onClick={handleSkip}
+            className="text-sm text-white/40 hover:text-white/60 transition-colors font-['Source_Code_Pro']"
+          >
+            Skip for now
+          </button>
+        )}
+      </nav>
+
+      {/* Content */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6">
+        
+        {/* Orbit visualization */}
+        <div className="relative w-72 h-72 mb-8">
+          {/* Orbit ring */}
+          <div className="absolute inset-8 rounded-full border border-white/5" />
+          <div className="absolute inset-16 rounded-full border border-white/5" />
+          
+          {/* Center */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+              {isComplete ? (
+                <Check className="w-6 h-6 text-white/60" />
+              ) : (
+                <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
+              )}
+            </div>
           </div>
+
+          {/* Orbiting model logos */}
+          {MODELS.map((model, i) => {
+            const result = results.find(r => r.model === model.id)
+            const pos = getOrbitPosition(model.angle, 100)
+            const isRunning = result?.status === 'running'
+            const isDone = result?.status === 'complete'
+            const hasError = result?.status === 'error'
+            
+            return (
+              <div
+                key={model.id}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-100"
+                style={{
+                  transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`
+                }}
+              >
+                <div className={`
+                  w-12 h-12 rounded-full bg-[#161718] border flex items-center justify-center
+                  transition-all duration-300
+                  ${isRunning ? 'border-white/30 shadow-lg shadow-white/5' : ''}
+                  ${isDone ? 'border-white/20' : 'border-white/5'}
+                  ${hasError ? 'border-red-500/30' : ''}
+                `}>
+                  <Image
+                    src={model.logo}
+                    alt={model.name}
+                    width={24}
+                    height={24}
+                    className={`w-6 h-6 object-contain ${isDone || hasError ? 'opacity-100' : 'opacity-60'}`}
+                  />
+                  
+                  {/* Status indicator */}
+                  {isDone && result?.mentioned && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 text-white" />
+                    </div>
+                  )}
+                  {isDone && !result?.mentioned && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-white/20 flex items-center justify-center">
+                      <X className="w-2.5 h-2.5 text-white/60" />
+                    </div>
+                  )}
+                  {hasError && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-red-500/50 flex items-center justify-center">
+                      <X className="w-2.5 h-2.5 text-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Status text */}
+        <div className="text-center mb-8">
+          <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+            {phase === 'retrieving' && 'Retrieving sources'}
+            {phase === 'analyzing' && 'Analyzing responses'}
+            {phase === 'complete' && 'Analysis complete'}
+          </h2>
           
-          <h1 className="text-2xl font-semibold text-primary mb-2">
-            {isComplete ? 'Analysis Complete' : 'Analyzing your brand visibility...'}
-          </h1>
+          {!isComplete && (
+            <p className="text-white/40 text-sm font-['Source_Code_Pro']">
+              Checking how AI models respond to your prompts
+            </p>
+          )}
           
-          <p className="text-secondary max-w-md mx-auto">
-            {isComplete 
-              ? `Found ${summary?.unique_brands || 0} brands mentioned across ${summary?.successful || 0} AI models`
-              : 'Running your prompt across ChatGPT, Claude, Gemini, and Perplexity'
-            }
-          </p>
+          {isComplete && (
+            <p className="text-white/50 text-sm font-['Source_Code_Pro']">
+              {mentionedCount > 0 
+                ? `${brand} was mentioned in ${mentionedCount} of ${MODELS.length} models`
+                : `${brand} was not mentioned in any responses`
+              }
+            </p>
+          )}
         </div>
 
         {/* Progress bar */}
-        <div className="mb-8">
-          <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+        <div className="w-64 mb-8">
+          <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-accent transition-all duration-500 ease-out"
+              className="h-full bg-white/60 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
-        {/* Prompt being analyzed */}
-        {promptText && (
-          <div className="bg-secondary/50 rounded-lg p-4 mb-6">
-            <p className="text-xs text-muted uppercase tracking-wide mb-1">Prompt</p>
-            <p className="text-primary">{promptText}</p>
-          </div>
-        )}
-
-        {/* Model cards */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          {['chatgpt', 'claude', 'gemini', 'perplexity'].map(model => (
-            <ModelCard 
-              key={model}
-              status={models[model] || { model, status: 'pending' }}
-              brandName={brandName}
-            />
-          ))}
-        </div>
-
-        {/* Summary (when complete) */}
-        {isComplete && summary && (
-          <div className="bg-card border border-border rounded-xl p-6 mb-6">
-            <h3 className="font-medium text-primary mb-4">Quick Insights</h3>
-            
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-2xl font-semibold text-primary">{summary.successful}/4</p>
-                <p className="text-sm text-muted">Models analyzed</p>
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-primary">{summary.unique_brands}</p>
-                <p className="text-sm text-muted">Brands found</p>
-              </div>
-              <div>
-                <p className="text-2xl font-semibold text-primary">
-                  {summary.brands.some(b => 
-                    b.toLowerCase().includes(brandName.toLowerCase())
-                  ) ? (
-                    <span className="text-emerald-500">Yes</span>
-                  ) : (
-                    <span className="text-muted">No</span>
-                  )}
-                </p>
-                <p className="text-sm text-muted">You're mentioned</p>
-              </div>
-            </div>
-
-            {summary.brands.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-border">
-                <p className="text-sm text-muted mb-2">Top competitors mentioned:</p>
-                <div className="flex flex-wrap gap-2">
-                  {summary.brands.slice(0, 8).map((brand, i) => (
-                    <span 
-                      key={i}
-                      className={`
-                        text-sm px-2.5 py-1 rounded-md
-                        ${brand.toLowerCase().includes(brandName.toLowerCase())
-                          ? 'bg-accent/20 text-accent font-medium'
-                          : 'bg-secondary text-secondary'
-                        }
-                      `}
-                    >
-                      {brand}
+        {/* Results summary (when complete) */}
+        {isComplete && (
+          <div className="w-full max-w-md mb-8">
+            <div className="bg-[#111213] border border-white/5 rounded-xl p-4 space-y-3">
+              {results.map((result) => {
+                const model = MODELS.find(m => m.id === result.model)
+                if (!model) return null
+                
+                return (
+                  <div key={result.model} className="flex items-center gap-3">
+                    <Image
+                      src={model.logo}
+                      alt={model.name}
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 object-contain"
+                    />
+                    <span className="text-sm text-white/70 font-['Source_Code_Pro'] flex-1">
+                      {model.name}
                     </span>
-                  ))}
-                </div>
-              </div>
-            )}
+                    {result.status === 'error' ? (
+                      <span className="text-xs text-white/30 font-['Source_Code_Pro']">Error</span>
+                    ) : result.mentioned ? (
+                      <span className="text-xs text-emerald-400 font-['Source_Code_Pro']">Mentioned</span>
+                    ) : (
+                      <span className="text-xs text-white/30 font-['Source_Code_Pro']">Not mentioned</span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex items-center justify-center gap-4">
-          {canSkip && !isComplete && (
-            <button
-              onClick={handleContinue}
-              className="px-4 py-2 text-sm text-muted hover:text-primary transition-colors"
-            >
-              Skip for now
-            </button>
-          )}
-          
+        {/* Continue button */}
+        {isComplete && (
           <button
             onClick={handleContinue}
-            disabled={!isComplete && !canSkip}
-            className={`
-              flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all
-              ${isComplete
-                ? 'bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] hover:opacity-90'
-                : 'bg-secondary text-muted cursor-not-allowed'
-              }
-            `}
+            className="px-8 py-3 bg-white text-[#0B0B0C] rounded-lg font-medium hover:bg-white/90 transition-all flex items-center gap-2 text-sm font-['Space_Grotesk']"
           >
             Continue to Dashboard
             <ArrowRight className="w-4 h-4" />
           </button>
-        </div>
+        )}
       </div>
     </div>
+  )
+}
+
+// ============================================================================
+// EXPORT WITH SUSPENSE
+// ============================================================================
+
+export default function AnalyzingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0B0B0C] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
+      </div>
+    }>
+      <AnalyzingContent />
+    </Suspense>
   )
 }

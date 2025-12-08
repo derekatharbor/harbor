@@ -1,11 +1,11 @@
-// apps/web/app/api/prompts/execute-stream/route.ts
+// app/api/prompts/execute-stream/route.ts
 // Stream execution results in real-time using Server-Sent Events
+// Supports 3 models: ChatGPT, Claude, Perplexity (no Gemini)
 
 import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 
 function getSupabase() {
   return createClient(
@@ -19,10 +19,12 @@ interface ModelResult {
   status: 'pending' | 'running' | 'complete' | 'error'
   response_text?: string
   brands_found?: string[]
+  mentioned?: boolean
   citations?: { url: string; domain: string }[]
   tokens_used?: number
   error?: string
   duration_ms?: number
+  snippet?: string
 }
 
 // Execute against individual models
@@ -59,19 +61,6 @@ async function executeClaude(promptText: string): Promise<{ text: string; tokens
   return { text, tokens: response.usage.input_tokens + response.usage.output_tokens }
 }
 
-async function executeGemini(promptText: string): Promise<{ text: string; tokens: number }> {
-  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '')
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-  
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: promptText }] }],
-    generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
-  })
-
-  const text = result.response.text()
-  return { text, tokens: Math.ceil((promptText.length + text.length) / 4) }
-}
-
 async function executePerplexity(promptText: string): Promise<{ text: string; tokens: number; citations: string[] }> {
   const response = await fetch('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
@@ -98,12 +87,11 @@ async function executePerplexity(promptText: string): Promise<{ text: string; to
   }
 }
 
-// Extract brand names from response text (simple extraction)
+// Extract brand names from response text
 function extractBrands(text: string): string[] {
-  // Common brand patterns - can be enhanced with the unified extraction system
   const brandPatterns = [
-    /\*\*([A-Z][a-zA-Z0-9.]+(?:\s+[A-Z][a-zA-Z0-9.]+)?)\*\*/g,  // **Brand Name**
-    /^(?:\d+\.\s*)?([A-Z][a-zA-Z0-9.]+(?:\s+[A-Z][a-zA-Z0-9.]+)?)\s*[-–:]/gm,  // 1. Brand Name:
+    /\*\*([A-Z][a-zA-Z0-9.]+(?:\s+[A-Z][a-zA-Z0-9.]+)?)\*\*/g,
+    /^(?:\d+\.\s*)?([A-Z][a-zA-Z0-9.]+(?:\s+[A-Z][a-zA-Z0-9.]+)?)\s*[-–:]/gm,
   ]
   
   const brands = new Set<string>()
@@ -120,12 +108,61 @@ function extractBrands(text: string): string[] {
   return Array.from(brands).slice(0, 10)
 }
 
+// Check if brand is mentioned in text
+function checkBrandMentioned(text: string, brandName: string): boolean {
+  if (!brandName) return false
+  const lowerText = text.toLowerCase()
+  const lowerBrand = brandName.toLowerCase()
+  
+  // Check for exact match or common variations
+  const variations = [
+    lowerBrand,
+    lowerBrand.replace(/\s+/g, ''),
+    lowerBrand.replace(/\s+/g, '-'),
+    lowerBrand.replace(/\s+/g, '_'),
+  ]
+  
+  return variations.some(v => lowerText.includes(v))
+}
+
+// Get snippet around brand mention
+function getSnippet(text: string, brandName: string, maxLength: number = 150): string {
+  if (!brandName) return text.slice(0, maxLength)
+  
+  const lowerText = text.toLowerCase()
+  const lowerBrand = brandName.toLowerCase()
+  const index = lowerText.indexOf(lowerBrand)
+  
+  if (index === -1) return text.slice(0, maxLength)
+  
+  const start = Math.max(0, index - 50)
+  const end = Math.min(text.length, index + brandName.length + 100)
+  
+  let snippet = text.slice(start, end)
+  if (start > 0) snippet = '...' + snippet
+  if (end < text.length) snippet = snippet + '...'
+  
+  return snippet
+}
+
 export async function POST(request: NextRequest) {
   const encoder = new TextEncoder()
-  const { prompt_id, prompt_text, dashboard_id } = await request.json()
+  
+  let body
+  try {
+    body = await request.json()
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
 
-  if (!prompt_text) {
-    return new Response(JSON.stringify({ error: 'prompt_text is required' }), {
+  const { prompt, prompt_text, brand, prompt_id, dashboard_id } = body
+  const actualPromptText = prompt || prompt_text
+
+  if (!actualPromptText) {
+    return new Response(JSON.stringify({ error: 'prompt or prompt_text is required' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' }
     })
@@ -138,40 +175,41 @@ export async function POST(request: NextRequest) {
       }
 
       const supabase = getSupabase()
-      const models = ['chatgpt', 'claude', 'gemini', 'perplexity'] as const
+      // Only 3 models - no Gemini
+      const models = ['chatgpt', 'claude', 'perplexity'] as const
       const results: Record<string, ModelResult> = {}
       
       // Initialize all as pending
       for (const model of models) {
         results[model] = { model, status: 'pending' }
+        send({ model, status: 'pending' })
       }
-      send({ type: 'init', models: results })
 
-      // Execute all models in parallel, streaming updates as each completes
+      // Execute all models in parallel
       const executions = models.map(async (model) => {
         const startTime = Date.now()
         results[model] = { model, status: 'running' }
-        send({ type: 'update', model, status: 'running' })
+        send({ model, status: 'running' })
 
         try {
           let response: { text: string; tokens: number; citations?: string[] }
 
           switch (model) {
             case 'chatgpt':
-              response = await executeChatGPT(prompt_text)
+              response = await executeChatGPT(actualPromptText)
               break
             case 'claude':
-              response = await executeClaude(prompt_text)
-              break
-            case 'gemini':
-              response = await executeGemini(prompt_text)
+              response = await executeClaude(actualPromptText)
               break
             case 'perplexity':
-              response = await executePerplexity(prompt_text)
+              response = await executePerplexity(actualPromptText)
               break
           }
 
           const brands = extractBrands(response.text)
+          const mentioned = brand ? checkBrandMentioned(response.text, brand) : false
+          const snippet = getSnippet(response.text, brand || '')
+          
           const citations = model === 'perplexity' && response.citations
             ? response.citations.map(url => {
                 try {
@@ -187,14 +225,24 @@ export async function POST(request: NextRequest) {
             status: 'complete',
             response_text: response.text,
             brands_found: brands,
+            brands,
+            mentioned,
+            snippet,
             citations,
             tokens_used: response.tokens,
             duration_ms: Date.now() - startTime
           }
 
-          send({ type: 'update', ...results[model] })
+          send({
+            model,
+            status: 'complete',
+            mentioned,
+            brands,
+            snippet,
+            duration_ms: results[model].duration_ms
+          })
 
-          // Store in database
+          // Store in database if prompt_id provided
           if (prompt_id) {
             const { data: execution } = await supabase
               .from('prompt_executions')
@@ -209,7 +257,6 @@ export async function POST(request: NextRequest) {
               .single()
 
             if (execution) {
-              // Store brand mentions
               for (let i = 0; i < brands.length; i++) {
                 await supabase.from('prompt_brand_mentions').insert({
                   execution_id: execution.id,
@@ -219,7 +266,6 @@ export async function POST(request: NextRequest) {
                 })
               }
 
-              // Store citations
               for (const citation of citations) {
                 await supabase.from('prompt_citations').insert({
                   execution_id: execution.id,
@@ -238,29 +284,26 @@ export async function POST(request: NextRequest) {
             error: error instanceof Error ? error.message : 'Unknown error',
             duration_ms: Date.now() - startTime
           }
-          send({ type: 'update', ...results[model] })
+          send({ model, status: 'error', error: results[model].error })
         }
       })
 
       // Wait for all to complete
       await Promise.allSettled(executions)
 
-      // Send final summary
+      // Send final completion signal
       const successful = Object.values(results).filter(r => r.status === 'complete').length
+      const mentionedCount = Object.values(results).filter(r => r.mentioned).length
       const allBrands = [...new Set(
-        Object.values(results)
-          .flatMap(r => r.brands_found || [])
+        Object.values(results).flatMap(r => r.brands_found || [])
       )]
-      const totalTokens = Object.values(results)
-        .reduce((sum, r) => sum + (r.tokens_used || 0), 0)
 
       send({
-        type: 'complete',
+        complete: true,
         summary: {
           successful,
-          failed: 4 - successful,
-          total_tokens: totalTokens,
-          estimated_cost_usd: (totalTokens / 1000000) * 10,
+          failed: models.length - successful,
+          mentioned_count: mentionedCount,
           unique_brands: allBrands.length,
           brands: allBrands
         }
