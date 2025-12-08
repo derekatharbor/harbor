@@ -23,6 +23,11 @@ export async function middleware(req: NextRequest) {
 
     const path = req.nextUrl.pathname
 
+    // Always allow analyzing page through (post-signup analysis)
+    if (path.startsWith('/onboarding/analyzing')) {
+      return res
+    }
+
     // Public routes - allow without session
     if (path.startsWith('/auth/')) {
       if (session) {
@@ -35,11 +40,6 @@ export async function middleware(req: NextRequest) {
     if (path.startsWith('/dashboard') || path.startsWith('/onboarding')) {
       if (!session) {
         return NextResponse.redirect(new URL('/login', req.url))
-      }
-
-      // Allow /onboarding/analyzing to pass through (post-signup analysis)
-      if (path === '/onboarding/analyzing') {
-        return res
       }
 
       // Check if user has completed onboarding
