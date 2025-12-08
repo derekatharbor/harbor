@@ -3,7 +3,7 @@
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Check, Loader2, AlertCircle, ArrowRight, Sparkles } from 'lucide-react'
 
@@ -166,6 +166,18 @@ function ModelCard({ status, brandName }: { status: ModelStatus; brandName: stri
 }
 
 export default function AnalyzingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-white/50 animate-spin" />
+      </div>
+    }>
+      <AnalyzingContent />
+    </Suspense>
+  )
+}
+
+function AnalyzingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -176,11 +188,23 @@ export default function AnalyzingPage() {
   const eventSourceRef = useRef<EventSource | null>(null)
 
   const brandName = searchParams.get('brand') || 'Your brand'
-  const promptText = searchParams.get('prompt') || ''
+  const promptText = searchParams.get('prompt')
   const promptId = searchParams.get('prompt_id') || ''
   const dashboardId = searchParams.get('dashboard_id') || ''
+  
+  // Track if params have been checked (to avoid redirect on initial hydration)
+  const [paramsChecked, setParamsChecked] = useState(false)
 
   useEffect(() => {
+    // Wait a tick for searchParams to hydrate
+    const timer = setTimeout(() => setParamsChecked(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    // Don't do anything until params have been checked
+    if (!paramsChecked) return
+    
     // Allow skip after 3 seconds
     const skipTimer = setTimeout(() => setCanSkip(true), 3000)
 
@@ -246,7 +270,7 @@ export default function AnalyzingPage() {
       clearTimeout(skipTimer)
       eventSourceRef.current?.close()
     }
-  }, [promptText, promptId, dashboardId, router])
+  }, [promptText, promptId, dashboardId, router, paramsChecked])
 
   const handleContinue = () => {
     router.push('/dashboard/prompts')
