@@ -270,7 +270,7 @@ function AnalyzingContent() {
                   transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`
                 }}
               >
-                {/* Logo container - circular with logo filling */}
+                {/* Logo container - circular, logo fills entirely */}
                 <div className={`
                   relative w-14 h-14 rounded-full overflow-hidden
                   transition-all duration-300
@@ -279,21 +279,16 @@ function AnalyzingContent() {
                   ${hasError ? 'ring-2 ring-red-500/30 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
                   ${!isDone && !isRunning && !hasError ? 'ring-1 ring-white/10' : ''}
                 `}>
-                  {/* Background */}
-                  <div className="absolute inset-0 bg-[#161718]" />
-                  
-                  {/* Logo - fills container */}
-                  <div className="absolute inset-2 flex items-center justify-center">
-                    <Image
-                      src={model.logo}
-                      alt={model.name}
-                      width={40}
-                      height={40}
-                      className={`w-full h-full object-contain transition-opacity ${
-                        isDone || isRunning ? 'opacity-100' : 'opacity-50'
-                      }`}
-                    />
-                  </div>
+                  {/* Logo fills entire circle */}
+                  <Image
+                    src={model.logo}
+                    alt={model.name}
+                    width={56}
+                    height={56}
+                    className={`w-full h-full object-cover transition-opacity ${
+                      isDone || isRunning ? 'opacity-100' : 'opacity-50'
+                    }`}
+                  />
                 </div>
                 
                 {/* Status indicator - green check when complete */}
@@ -400,13 +395,13 @@ function AnalyzingContent() {
                 
                 return (
                   <div key={result.model} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-[#161718] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                       <Image
                         src={model.logo}
                         alt={model.name}
-                        width={20}
-                        height={20}
-                        className="w-5 h-5 object-contain"
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <span className="text-sm text-white/70 font-['Source_Code_Pro'] flex-1">
