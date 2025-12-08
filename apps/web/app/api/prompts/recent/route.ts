@@ -1,5 +1,5 @@
 // app/api/prompts/recent/route.ts
-// Get recent prompt executions for the dashboard
+// Get recent prompt executions - supports BOTH old (seed_prompts) and new (user_prompts) flows
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -15,19 +15,19 @@ function getSupabase() {
 
 const MODEL_LOGOS: Record<string, { logo: string; name: string }> = {
   chatgpt: { 
-    logo: 'https://cdn.brandfetch.io/openai.com/w/400/h/400', 
+    logo: '/models/chatgpt-logo.png', 
     name: 'ChatGPT' 
   },
   claude: { 
-    logo: 'https://cdn.brandfetch.io/claude.ai/w/400/h/400', 
+    logo: '/models/claude-logo.png', 
     name: 'Claude' 
   },
   perplexity: { 
-    logo: 'https://cdn.brandfetch.io/perplexity.ai/w/400/h/400', 
+    logo: '/models/perplexity-logo.png', 
     name: 'Perplexity' 
   },
   gemini: { 
-    logo: 'https://cdn.brandfetch.io/google.com/w/400/h/400', 
+    logo: '/models/gemini-logo.png', 
     name: 'Gemini' 
   }
 }
@@ -37,24 +37,77 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   
   const limit = parseInt(searchParams.get('limit') || '12')
-  const brandFilter = searchParams.get('brand') // Filter to show only prompts mentioning this brand
+  const brandFilter = searchParams.get('brand')
   const dashboardId = searchParams.get('dashboard_id')
 
   try {
-    // Step 1: Get non-university prompt IDs
-    const { data: nonUniPrompts } = await supabase
+    // =========================================================================
+    // STEP 1: Get prompts from BOTH sources
+    // =========================================================================
+    
+    // Map to store all prompts: id -> { prompt_text, topic, source }
+    const promptMap = new Map<string, { prompt_text: string; topic: string; source: string }>()
+    
+    // 1a. Get seed_prompts (old flow - global prompts)
+    const { data: seedPrompts } = await supabase
       .from('seed_prompts')
       .select('id, prompt_text, topic')
       .neq('topic', 'universities')
     
-    const promptMap = new Map(nonUniPrompts?.map(p => [p.id, p]) || [])
+    seedPrompts?.forEach(p => {
+      promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'General', source: 'seed' })
+    })
+    
+    // 1b. Get user_prompts (new flow - dashboard-specific)
+    let userPromptsQuery = supabase
+      .from('user_prompts')
+      .select('id, prompt_text, topic, dashboard_id')
+      .eq('is_active', true)
+    
+    // If dashboard_id provided, filter to that dashboard's prompts
+    if (dashboardId) {
+      userPromptsQuery = userPromptsQuery.eq('dashboard_id', dashboardId)
+    }
+    
+    const { data: userPrompts } = await userPromptsQuery
+    
+    userPrompts?.forEach(p => {
+      promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'Custom', source: 'user' })
+    })
+
     const promptIds = Array.from(promptMap.keys())
 
     if (promptIds.length === 0) {
+      // Return user prompts even if no executions yet
+      if (userPrompts && userPrompts.length > 0) {
+        const results = userPrompts.slice(0, limit).map(p => ({
+          id: p.id,
+          prompt: p.prompt_text,
+          topic: p.topic || 'Custom',
+          model: null,
+          modelName: 'Not yet scanned',
+          modelLogo: null,
+          responsePreview: 'This prompt has not been executed yet.',
+          responseText: null,
+          executedAt: null,
+          timeAgo: 'Pending',
+          brandsCount: 0,
+          brands: [],
+          citationsCount: 0,
+          citationDomains: [],
+          citationFavicons: [],
+          source: 'user',
+          status: 'pending'
+        }))
+        return NextResponse.json({ prompts: results, total: results.length })
+      }
       return NextResponse.json({ prompts: [], total: 0 })
     }
 
-    // Step 2: Get executions for those prompts
+    // =========================================================================
+    // STEP 2: Get executions for those prompts
+    // =========================================================================
+    
     const { data: executions, error } = await supabase
       .from('prompt_executions')
       .select('id, model, response_text, executed_at, prompt_id')
@@ -65,70 +118,68 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    // Merge prompt data
-    const executionsWithPrompts = executions?.map(e => ({
-      ...e,
-      seed_prompts: promptMap.get(e.prompt_id)
-    })) || []
-
-    // Get brand mentions and citations for each execution
-    const executionIds = executionsWithPrompts?.map(e => e.id) || []
+    // =========================================================================
+    // STEP 3: Get brand mentions and citations
+    // =========================================================================
     
-    if (executionIds.length === 0) {
-      return NextResponse.json({ prompts: [], total: 0 })
-    }
+    const executionIds = executions?.map(e => e.id) || []
     
-    const { data: mentions } = await supabase
-      .from('prompt_brand_mentions')
-      .select('execution_id, brand_name, position, sentiment')
-      .in('execution_id', executionIds)
+    let mentionsByExecution = new Map<string, any[]>()
+    let citationsByExecution = new Map<string, any[]>()
 
-    const { data: citations } = await supabase
-      .from('prompt_citations')
-      .select('execution_id, domain, url')
-      .in('execution_id', executionIds)
+    if (executionIds.length > 0) {
+      const { data: mentions } = await supabase
+        .from('prompt_brand_mentions')
+        .select('execution_id, brand_name, position, sentiment')
+        .in('execution_id', executionIds)
 
-    // Group mentions and citations by execution
-    const mentionsByExecution = new Map<string, any[]>()
-    const citationsByExecution = new Map<string, any[]>()
+      const { data: citations } = await supabase
+        .from('prompt_citations')
+        .select('execution_id, domain, url')
+        .in('execution_id', executionIds)
 
-    mentions?.forEach(m => {
-      const existing = mentionsByExecution.get(m.execution_id) || []
-      existing.push(m)
-      mentionsByExecution.set(m.execution_id, existing)
-    })
-
-    citations?.forEach(c => {
-      const existing = citationsByExecution.get(c.execution_id) || []
-      existing.push(c)
-      citationsByExecution.set(c.execution_id, existing)
-    })
-
-    // Build response - dedupe by prompt text (show latest execution per prompt)
-    const seenPrompts = new Set<string>()
-    let results = executionsWithPrompts
-      ?.filter((exec: any) => {
-        const promptText = exec.seed_prompts?.prompt_text || ''
-        if (seenPrompts.has(promptText)) return false
-        seenPrompts.add(promptText)
-        return true
+      mentions?.forEach(m => {
+        const existing = mentionsByExecution.get(m.execution_id) || []
+        existing.push(m)
+        mentionsByExecution.set(m.execution_id, existing)
       })
-      ?.map((exec: any) => {
+
+      citations?.forEach(c => {
+        const existing = citationsByExecution.get(c.execution_id) || []
+        existing.push(c)
+        citationsByExecution.set(c.execution_id, existing)
+      })
+    }
+
+    // =========================================================================
+    // STEP 4: Build results - merge prompts with their latest execution
+    // =========================================================================
+    
+    const seenPrompts = new Set<string>()
+    let results: any[] = []
+
+    // First, add prompts that have executions
+    executions?.forEach((exec: any) => {
+      const promptData = promptMap.get(exec.prompt_id)
+      if (!promptData) return
+      
+      const promptText = promptData.prompt_text
+      if (seenPrompts.has(promptText)) return
+      seenPrompts.add(promptText)
+
       const execMentions = mentionsByExecution.get(exec.id) || []
       const execCitations = citationsByExecution.get(exec.id) || []
       
-      // Get unique domains for favicons
       const uniqueDomains = [...new Set(execCitations.map(c => c.domain).filter(Boolean))].slice(0, 4)
-      
-      // Get unique brands mentioned
       const uniqueBrands = [...new Set(execMentions.map(m => m.brand_name).filter(Boolean))]
 
       const modelInfo = MODEL_LOGOS[exec.model] || { logo: '', name: exec.model }
 
-      return {
+      results.push({
         id: exec.id,
-        prompt: exec.seed_prompts?.prompt_text || 'Unknown prompt',
-        topic: exec.seed_prompts?.topic || 'Unknown',
+        prompt_id: exec.prompt_id,
+        prompt: promptText,
+        topic: promptData.topic,
         model: exec.model,
         modelName: modelInfo.name,
         modelLogo: modelInfo.logo,
@@ -140,10 +191,43 @@ export async function GET(request: NextRequest) {
         brands: uniqueBrands,
         citationsCount: execCitations.length,
         citationDomains: uniqueDomains,
-        citationFavicons: uniqueDomains.map(d => `https://www.google.com/s2/favicons?domain=${d}&sz=32`)
-      }
-    }) || []
+        citationFavicons: uniqueDomains.map(d => `https://www.google.com/s2/favicons?domain=${d}&sz=32`),
+        source: promptData.source,
+        status: 'executed'
+      })
+    })
 
+    // Then, add user prompts that haven't been executed yet
+    userPrompts?.forEach(p => {
+      if (seenPrompts.has(p.prompt_text)) return
+      seenPrompts.add(p.prompt_text)
+
+      results.push({
+        id: p.id,
+        prompt_id: p.id,
+        prompt: p.prompt_text,
+        topic: p.topic || 'Custom',
+        model: null,
+        modelName: 'Pending',
+        modelLogo: null,
+        responsePreview: 'Awaiting first scan...',
+        responseText: null,
+        executedAt: null,
+        timeAgo: 'Pending',
+        brandsCount: 0,
+        brands: [],
+        citationsCount: 0,
+        citationDomains: [],
+        citationFavicons: [],
+        source: 'user',
+        status: 'pending'
+      })
+    })
+
+    // =========================================================================
+    // STEP 5: Filter and limit
+    // =========================================================================
+    
     // Filter by brand if specified
     if (brandFilter) {
       const brandLower = brandFilter.toLowerCase()
@@ -152,7 +236,16 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Limit results
+    // Sort: executed first (by date), then pending
+    results.sort((a, b) => {
+      if (a.status === 'pending' && b.status !== 'pending') return 1
+      if (a.status !== 'pending' && b.status === 'pending') return -1
+      if (a.executedAt && b.executedAt) {
+        return new Date(b.executedAt).getTime() - new Date(a.executedAt).getTime()
+      }
+      return 0
+    })
+
     results = results.slice(0, limit)
 
     return NextResponse.json({
