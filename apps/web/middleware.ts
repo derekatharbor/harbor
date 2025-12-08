@@ -34,7 +34,12 @@ export async function middleware(req: NextRequest) {
     // Protected routes - require session
     if (path.startsWith('/dashboard') || path.startsWith('/onboarding')) {
       if (!session) {
-        return NextResponse.redirect(new URL('/auth/login', req.url))
+        return NextResponse.redirect(new URL('/login', req.url))
+      }
+
+      // Allow /onboarding/analyzing to pass through (post-signup analysis)
+      if (path === '/onboarding/analyzing') {
+        return res
       }
 
       // Check if user has completed onboarding
