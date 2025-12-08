@@ -233,6 +233,10 @@ export default function OnboardingPage() {
       const firstPromptId = Array.from(selectedPrompts)[0]
       const firstPrompt = availablePrompts.find(p => p.id === firstPromptId)
       
+      console.log('DEBUG - firstPromptId:', firstPromptId)
+      console.log('DEBUG - firstPrompt:', firstPrompt)
+      console.log('DEBUG - availablePrompts count:', availablePrompts.length)
+      
       if (firstPrompt) {
         // Redirect to analyzing page with prompt details for live execution
         const params = new URLSearchParams({
@@ -241,13 +245,13 @@ export default function OnboardingPage() {
           prompt_id: firstPromptId,
           dashboard_id: data.dashboardId || ''
         })
+        console.log('DEBUG - redirecting to:', `/onboarding/analyzing?${params.toString()}`)
         router.push(`/onboarding/analyzing?${params.toString()}`)
       } else {
-        // No prompts selected, go directly to dashboard
+        // No prompts selected, going to dashboard
+        console.log('DEBUG - no firstPrompt found, going to dashboard')
         router.push('/dashboard')
       }
-      
-      router.refresh()
       
     } catch (err: any) {
       console.error('Onboarding error:', err)
