@@ -15,6 +15,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showRequirements, setShowRequirements] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -146,6 +147,8 @@ export default function SignupPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setShowRequirements(true)}
+                  onBlur={() => setTimeout(() => setShowRequirements(false), 150)}
                   placeholder="Create a strong password"
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/20 text-white placeholder-white/30 pr-10"
                   required
@@ -159,21 +162,23 @@ export default function SignupPage() {
                 </button>
               </div>
               
-              {/* Password requirements */}
-              <div className="mt-3 space-y-1.5">
-                <div className={`flex items-center gap-2 text-xs ${hasMinLength ? 'text-emerald-400' : 'text-white/30'}`}>
-                  <Check className={`w-3 h-3 ${hasMinLength ? 'opacity-100' : 'opacity-40'}`} />
-                  At least 8 characters
+              {/* Password requirements - inline, shown on focus */}
+              {showRequirements && (
+                <div className="flex items-center gap-4 mt-2">
+                  <div className={`flex items-center gap-1.5 text-xs ${hasMinLength ? 'text-emerald-400' : 'text-white/30'}`}>
+                    <Check className="w-3 h-3" />
+                    <span>8+ chars</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 text-xs ${hasUppercase ? 'text-emerald-400' : 'text-white/30'}`}>
+                    <Check className="w-3 h-3" />
+                    <span>Uppercase</span>
+                  </div>
+                  <div className={`flex items-center gap-1.5 text-xs ${hasNumber ? 'text-emerald-400' : 'text-white/30'}`}>
+                    <Check className="w-3 h-3" />
+                    <span>Number</span>
+                  </div>
                 </div>
-                <div className={`flex items-center gap-2 text-xs ${hasUppercase ? 'text-emerald-400' : 'text-white/30'}`}>
-                  <Check className={`w-3 h-3 ${hasUppercase ? 'opacity-100' : 'opacity-40'}`} />
-                  One uppercase letter
-                </div>
-                <div className={`flex items-center gap-2 text-xs ${hasNumber ? 'text-emerald-400' : 'text-white/30'}`}>
-                  <Check className={`w-3 h-3 ${hasNumber ? 'opacity-100' : 'opacity-40'}`} />
-                  One number
-                </div>
-              </div>
+              )}
             </div>
 
             {error && (
