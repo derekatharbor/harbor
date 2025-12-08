@@ -63,14 +63,15 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="mb-8">
-            <Link href="/">
+            <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/images/Harbor_White_Logo.png"
                 alt="Harbor"
-                width={120}
+                width={32}
                 height={32}
                 className="h-8 w-auto"
               />
+              <span className="text-xl font-semibold text-white">Harbor</span>
             </Link>
           </div>
 
