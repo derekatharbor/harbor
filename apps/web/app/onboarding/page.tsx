@@ -89,6 +89,9 @@ function OnboardingContent() {
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set())
   const [generatingPrompts, setGeneratingPrompts] = useState<Set<string>>(new Set())
   
+  // Animated progress bar for topic generation
+  const [topicGenProgress, setTopicGenProgress] = useState(0)
+  
   // Step 5: Competitors (optional)
   const [competitorSearch, setCompetitorSearch] = useState('')
   const [competitorResults, setCompetitorResults] = useState<Competitor[]>([])
@@ -116,6 +119,25 @@ function OnboardingContent() {
     }
     checkAuth()
   }, [supabase, router])
+
+  // Animate progress bar during topic generation
+  useEffect(() => {
+    if (!generatingTopics) {
+      setTopicGenProgress(0)
+      return
+    }
+    
+    // Animate from 0 to ~85% over ~3 seconds, then slow down
+    const startTime = Date.now()
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime
+      // Ease-out curve that approaches but never reaches 100%
+      const progress = Math.min(92, (1 - Math.exp(-elapsed / 1500)) * 95)
+      setTopicGenProgress(progress)
+    }, 50)
+    
+    return () => clearInterval(interval)
+  }, [generatingTopics])
 
   // ============================================================================
   // TOPIC GENERATION
@@ -333,6 +355,15 @@ function OnboardingContent() {
         }
       })
 
+      console.log('[Onboarding] Submitting with:', {
+        brandName: brandName.trim(),
+        domain: domain.trim(),
+        accountType,
+        topicsCount: topics.filter(t => t.selected).length,
+        promptsCount: selectedPromptData.length,
+        prompts: selectedPromptData.slice(0, 3) // Log first 3 for debug
+      })
+
       const response = await fetch('/api/onboarding/create-dashboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -347,6 +378,7 @@ function OnboardingContent() {
       })
 
       const data = await response.json()
+      console.log('[Onboarding] Response:', data)
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to create dashboard')
@@ -363,7 +395,7 @@ function OnboardingContent() {
         })
         router.push(`/onboarding/analyzing?${params.toString()}`)
       } else {
-        router.push('/dashboard')
+        router.push('/dashboard/overview')
       }
       
     } catch (err: any) {
@@ -623,7 +655,10 @@ function OnboardingContent() {
               </div>
               <p className="text-white/60 font-['Source_Code_Pro']">Generating topics...</p>
               <div className="w-48 h-1 bg-white/10 rounded-full mt-4 mx-auto overflow-hidden">
-                <div className="h-full bg-white/40 rounded-full animate-pulse" style={{ width: '60%' }} />
+                <div 
+                  className="h-full bg-white/40 rounded-full transition-all duration-150 ease-out" 
+                  style={{ width: `${topicGenProgress}%` }} 
+                />
               </div>
             </div>
           </div>
