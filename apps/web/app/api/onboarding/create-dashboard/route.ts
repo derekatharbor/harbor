@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
+    const body = await request.json()
     const { 
       brandName, 
       domain, 
@@ -16,7 +17,19 @@ export async function POST(request: Request) {
       industry,         // Legacy support
       selectedPromptIds,// Legacy support - existing seed_prompt IDs
       competitorProfileIds 
-    } = await request.json()
+    } = body
+
+    // Debug logging
+    console.log('[create-dashboard] Received:', {
+      brandName,
+      domain,
+      accountType,
+      topicsCount: topics?.length || 0,
+      promptsCount: prompts?.length || 0,
+      promptsIsArray: Array.isArray(prompts),
+      firstPrompt: prompts?.[0] || null,
+      competitorsCount: competitorProfileIds?.length || 0
+    })
 
     if (!brandName || !domain) {
       return NextResponse.json(
@@ -143,18 +156,22 @@ export async function POST(request: Request) {
         dashboard_id: dashboard.id,
         prompt_text: p.text,
         topic: p.topic,
-        source: 'ai-generated',
+        status: 'active',
         is_active: true,
         created_at: new Date().toISOString()
       }))
 
-      const { error: userPromptsError } = await supabaseAdmin
+      const { data: insertedPrompts, error: userPromptsError } = await supabaseAdmin
         .from('user_prompts')
         .insert(promptInserts)
+        .select()
 
       if (userPromptsError) {
         console.error('Error saving user prompts:', userPromptsError)
-        // Don't fail the whole request
+        // Log more details but don't fail the request
+        console.error('Insert attempted:', JSON.stringify(promptInserts[0]))
+      } else {
+        console.log(`Successfully inserted ${insertedPrompts?.length || 0} user prompts`)
       }
     }
 
