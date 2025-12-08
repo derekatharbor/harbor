@@ -270,21 +270,20 @@ function AnalyzingContent() {
                   transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`
                 }}
               >
-                {/* Logo container - circular, logo fills entirely */}
+                {/* Logo container - rounded square, cleaner for square logos */}
                 <div className={`
-                  relative w-14 h-14 rounded-full overflow-hidden
+                  relative w-12 h-12 rounded-xl overflow-hidden
                   transition-all duration-300
-                  ${isRunning ? 'ring-2 ring-white/20 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
+                  ${isRunning ? 'ring-2 ring-white/30 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
                   ${isDone ? 'ring-2 ring-emerald-500/50 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
                   ${hasError ? 'ring-2 ring-red-500/30 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
                   ${!isDone && !isRunning && !hasError ? 'ring-1 ring-white/10' : ''}
                 `}>
-                  {/* Logo fills entire circle */}
                   <Image
                     src={model.logo}
                     alt={model.name}
-                    width={56}
-                    height={56}
+                    width={48}
+                    height={48}
                     className={`w-full h-full object-cover transition-opacity ${
                       isDone || isRunning ? 'opacity-100' : 'opacity-50'
                     }`}
@@ -395,12 +394,12 @@ function AnalyzingContent() {
                 
                 return (
                   <div key={result.model} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                    <div className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0">
                       <Image
                         src={model.logo}
                         alt={model.name}
-                        width={32}
-                        height={32}
+                        width={28}
+                        height={28}
                         className="w-full h-full object-cover"
                       />
                     </div>
