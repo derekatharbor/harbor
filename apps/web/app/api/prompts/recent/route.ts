@@ -42,65 +42,48 @@ export async function GET(request: NextRequest) {
 
   try {
     // =========================================================================
-    // STEP 1: Get prompts from BOTH sources
+    // STEP 1: Get prompts based on context
     // =========================================================================
     
     // Map to store all prompts: id -> { prompt_text, topic, source }
     const promptMap = new Map<string, { prompt_text: string; topic: string; source: string }>()
     
-    // 1a. Get seed_prompts (old flow - global prompts)
-    const { data: seedPrompts } = await supabase
-      .from('seed_prompts')
-      .select('id, prompt_text, topic')
-      .neq('topic', 'universities')
-    
-    seedPrompts?.forEach(p => {
-      promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'General', source: 'seed' })
-    })
-    
-    // 1b. Get user_prompts (new flow - dashboard-specific)
-    let userPromptsQuery = supabase
-      .from('user_prompts')
-      .select('id, prompt_text, topic, dashboard_id')
-      .eq('is_active', true)
-    
-    // If dashboard_id provided, filter to that dashboard's prompts
+    // If dashboard_id provided, ONLY get that dashboard's user_prompts
+    // (Don't mix in global seed_prompts - those are suggestions, not tracked)
     if (dashboardId) {
-      userPromptsQuery = userPromptsQuery.eq('dashboard_id', dashboardId)
+      const { data: userPrompts } = await supabase
+        .from('user_prompts')
+        .select('id, prompt_text, topic, dashboard_id')
+        .eq('dashboard_id', dashboardId)
+        .eq('is_active', true)
+      
+      userPrompts?.forEach(p => {
+        promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'Custom', source: 'user' })
+      })
+
+      // If no user prompts, return empty with helpful message
+      if (promptMap.size === 0) {
+        return NextResponse.json({ 
+          prompts: [], 
+          total: 0,
+          message: 'No prompts found for this dashboard'
+        })
+      }
+    } else {
+      // No dashboard_id - return global seed_prompts (legacy behavior)
+      const { data: seedPrompts } = await supabase
+        .from('seed_prompts')
+        .select('id, prompt_text, topic')
+        .neq('topic', 'universities')
+      
+      seedPrompts?.forEach(p => {
+        promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'General', source: 'seed' })
+      })
     }
-    
-    const { data: userPrompts } = await userPromptsQuery
-    
-    userPrompts?.forEach(p => {
-      promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'Custom', source: 'user' })
-    })
 
     const promptIds = Array.from(promptMap.keys())
 
     if (promptIds.length === 0) {
-      // Return user prompts even if no executions yet
-      if (userPrompts && userPrompts.length > 0) {
-        const results = userPrompts.slice(0, limit).map(p => ({
-          id: p.id,
-          prompt: p.prompt_text,
-          topic: p.topic || 'Custom',
-          model: null,
-          modelName: 'Not yet scanned',
-          modelLogo: null,
-          responsePreview: 'This prompt has not been executed yet.',
-          responseText: null,
-          executedAt: null,
-          timeAgo: 'Pending',
-          brandsCount: 0,
-          brands: [],
-          citationsCount: 0,
-          citationDomains: [],
-          citationFavicons: [],
-          source: 'user',
-          status: 'pending'
-        }))
-        return NextResponse.json({ prompts: results, total: results.length })
-      }
       return NextResponse.json({ prompts: [], total: 0 })
     }
 
@@ -197,16 +180,16 @@ export async function GET(request: NextRequest) {
       })
     })
 
-    // Then, add user prompts that haven't been executed yet
-    userPrompts?.forEach(p => {
-      if (seenPrompts.has(p.prompt_text)) return
-      seenPrompts.add(p.prompt_text)
+    // Then, add prompts that haven't been executed yet (from promptMap)
+    promptMap.forEach((promptData, promptId) => {
+      if (seenPrompts.has(promptData.prompt_text)) return
+      seenPrompts.add(promptData.prompt_text)
 
       results.push({
-        id: p.id,
-        prompt_id: p.id,
-        prompt: p.prompt_text,
-        topic: p.topic || 'Custom',
+        id: promptId,
+        prompt_id: promptId,
+        prompt: promptData.prompt_text,
+        topic: promptData.topic,
         model: null,
         modelName: 'Pending',
         modelLogo: null,
@@ -219,7 +202,7 @@ export async function GET(request: NextRequest) {
         citationsCount: 0,
         citationDomains: [],
         citationFavicons: [],
-        source: 'user',
+        source: promptData.source,
         status: 'pending'
       })
     })
