@@ -225,7 +225,6 @@ export async function POST(request: NextRequest) {
             status: 'complete',
             response_text: response.text,
             brands_found: brands,
-            brands,
             mentioned,
             snippet,
             citations,
