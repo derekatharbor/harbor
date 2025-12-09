@@ -147,13 +147,17 @@ export default function SourceDetailPage() {
   }, [])
 
   useEffect(() => {
-    fetchSourceDetail()
-  }, [domain])
+    if (currentDashboard?.id) {
+      fetchSourceDetail()
+    }
+  }, [domain, currentDashboard?.id])
 
   const fetchSourceDetail = async () => {
+    if (!currentDashboard?.id) return
+    
     setLoading(true)
     try {
-      const res = await fetch(`/api/sources/${encodeURIComponent(domain)}`)
+      const res = await fetch(`/api/sources/${encodeURIComponent(domain)}?dashboard_id=${currentDashboard.id}`)
       if (res.ok) {
         const data = await res.json()
         setUrls(data.urls || [])
@@ -169,12 +173,15 @@ export default function SourceDetailPage() {
 
   const isDark = theme === 'dark'
   const colors = {
-    bg: isDark ? '#0F0F0F' : '#FAFBFC',
-    card: isDark ? '#171717' : '#FFFFFF',
-    text: isDark ? '#F9FAFB' : '#111827',
-    muted: isDark ? '#6B7280' : '#9CA3AF',
-    border: isDark ? 'rgba(255,255,255,0.08)' : '#E5E7EB',
-    hover: isDark ? 'rgba(255,255,255,0.05)' : '#F3F4F6',
+    // Surface colors per Harbor Design Spec 1.1 and A1
+    bg: isDark ? '#0B0B0C' : '#F7F7F8',
+    card: isDark ? '#111213' : '#EFEFF0',
+    // Text colors - dark mode max 94-96% brightness, light mode per A3
+    text: isDark ? '#F0F0F0' : '#1C1C1E',
+    muted: isDark ? '#6B7280' : '#6B7280',
+    // Border per spec 1.2: rgba(255,255,255,0.06)
+    border: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    hover: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
   }
 
   // Generate pitch template
@@ -299,7 +306,7 @@ Best,
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 transition-colors"
                 style={{ 
-                  backgroundColor: colors.hover,
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                   color: colors.text,
                   border: `1px solid ${colors.border}`
                 }}
@@ -325,7 +332,7 @@ Best,
         <div className="px-6 flex gap-1">
           <button
             onClick={() => setActiveTab('urls')}
-            className="px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
+            className="px-4 py-4 text-sm font-medium border-b-2 transition-colors cursor-pointer"
             style={{ 
               color: activeTab === 'urls' ? colors.text : colors.muted,
               borderColor: activeTab === 'urls' ? (isDark ? '#F9FAFB' : '#111827') : 'transparent'
@@ -338,7 +345,7 @@ Best,
           </button>
           <button
             onClick={() => setActiveTab('chats')}
-            className="px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
+            className="px-4 py-4 text-sm font-medium border-b-2 transition-colors cursor-pointer"
             style={{ 
               color: activeTab === 'chats' ? colors.text : colors.muted,
               borderColor: activeTab === 'chats' ? (isDark ? '#F9FAFB' : '#111827') : 'transparent'
@@ -363,9 +370,9 @@ Best,
             <table className="w-full">
               <thead>
                 <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>URL</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Type</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>
+                  <th className="text-left px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>URL</th>
+                  <th className="text-left px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Type</th>
+                  <th className="text-left px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>
                     <div className="flex items-center gap-1">
                       {currentDashboard?.domain && (
                         <img 
@@ -377,8 +384,8 @@ Best,
                       Mentioned
                     </div>
                   </th>
-                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Used Total</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Avg Citations</th>
+                  <th className="text-right px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Used Total</th>
+                  <th className="text-right px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Avg Citations</th>
                 </tr>
               </thead>
               <tbody>
@@ -394,7 +401,7 @@ Best,
                       key={i}
                       style={{ borderBottom: `1px solid ${colors.border}` }}
                     >
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <a
                           href={url.url}
                           target="_blank"
@@ -419,16 +426,16 @@ Best,
                           </div>
                         </a>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <UrlTypeBadge type={url.urlType} />
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <BrandMentionedBadge mentioned={url.brandMentioned} />
                       </td>
-                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
+                      <td className="px-4 py-4 text-right text-sm" style={{ color: colors.text }}>
                         {url.usedTotal}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
+                      <td className="px-4 py-4 text-right text-sm" style={{ color: colors.text }}>
                         {url.avgCitations.toFixed(1)}
                       </td>
                     </tr>
@@ -446,11 +453,11 @@ Best,
             <table className="w-full">
               <thead>
                 <tr style={{ borderBottom: `1px solid ${colors.border}` }}>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Chat</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Citations</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Mentions</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Sources</th>
-                  <th className="text-right px-4 py-3 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Created</th>
+                  <th className="text-left px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Chat</th>
+                  <th className="text-right px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Citations</th>
+                  <th className="text-right px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Mentions</th>
+                  <th className="text-left px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Sources</th>
+                  <th className="text-right px-4 py-4 text-xs font-medium uppercase tracking-wider" style={{ color: colors.muted }}>Created</th>
                 </tr>
               </thead>
               <tbody>
@@ -470,7 +477,7 @@ Best,
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.hover}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <div className="flex items-start gap-3">
                           <ModelLogo model={chat.model} />
                           <div className="min-w-0">
@@ -483,13 +490,13 @@ Best,
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
+                      <td className="px-4 py-4 text-right text-sm" style={{ color: colors.text }}>
                         {chat.citations}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.text }}>
+                      <td className="px-4 py-4 text-right text-sm" style={{ color: colors.text }}>
                         {chat.mentions}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-4">
                         <div className="flex items-center gap-1">
                           {chat.sources.slice(0, 4).map((src, i) => (
                             <img 
@@ -510,7 +517,7 @@ Best,
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right text-sm" style={{ color: colors.muted }}>
+                      <td className="px-4 py-4 text-right text-sm" style={{ color: colors.muted }}>
                         {new Date(chat.executed_at).toLocaleDateString()}
                       </td>
                     </tr>
@@ -524,13 +531,13 @@ Best,
 
       {/* Pitch Modal */}
       {showPitchModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
           <div 
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/60"
             onClick={() => setShowPitchModal(false)}
           />
           <div 
-            className="relative rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
+            className="relative rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
             style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}
           >
             <div 
@@ -561,7 +568,7 @@ Best,
               <textarea
                 className="w-full h-64 p-4 rounded-lg text-sm font-mono resize-none outline-none"
                 style={{ 
-                  backgroundColor: colors.hover,
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                   color: colors.text,
                   border: `1px solid ${colors.border}`
                 }}
@@ -575,7 +582,7 @@ Best,
                   }}
                   className="px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-colors cursor-pointer"
                   style={{ 
-                    backgroundColor: colors.hover,
+                    backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                     color: colors.text,
                     border: `1px solid ${colors.border}`
                   }}

@@ -1,5 +1,6 @@
 // app/api/sources/[domain]/route.ts
 // Source detail API - URLs and Chats for a specific domain
+// Supports dashboard_id query param to filter by user's prompts
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -76,14 +77,60 @@ function classifySourceType(domain: string): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { domain: string } }
+  { params }: { params: Promise<{ domain: string }> }
 ) {
   const supabase = getSupabase()
-  const domain = decodeURIComponent(params.domain).toLowerCase().replace('www.', '')
+  const { domain: domainParam } = await params
+  const domain = decodeURIComponent(domainParam).toLowerCase().replace('www.', '')
+  
+  // Get optional dashboard_id to filter by user's prompts
+  const { searchParams } = new URL(request.url)
+  const dashboardId = searchParams.get('dashboard_id')
 
   try {
-    // Get all citations for this domain with execution data
-    const { data: citations, error } = await supabase
+    // If dashboard_id provided, first get valid execution IDs for that dashboard
+    let validExecutionIds: string[] | null = null
+    
+    if (dashboardId) {
+      // Get user_prompts for this dashboard
+      const { data: prompts } = await supabase
+        .from('user_prompts')
+        .select('id')
+        .eq('dashboard_id', dashboardId)
+      
+      if (prompts && prompts.length > 0) {
+        const promptIds = prompts.map(p => p.id)
+        
+        // Get executions for these prompts
+        const { data: executions } = await supabase
+          .from('prompt_executions')
+          .select('id')
+          .in('prompt_id', promptIds)
+        
+        if (executions) {
+          validExecutionIds = executions.map(e => e.id)
+        }
+      }
+      
+      // If no valid executions found for this dashboard, return empty
+      if (!validExecutionIds || validExecutionIds.length === 0) {
+        return NextResponse.json({
+          domain,
+          stats: {
+            totalCitations: 0,
+            uniqueUrls: 0,
+            brandMentioned: false,
+            sourceType: classifySourceType(domain),
+            authority: AUTHORITY_SCORES[domain] || 'low'
+          },
+          urls: [],
+          chats: []
+        })
+      }
+    }
+
+    // Build the citations query
+    let citationsQuery = supabase
       .from('prompt_citations')
       .select(`
         id,
@@ -96,7 +143,7 @@ export async function GET(
           model,
           response_text,
           executed_at,
-          seed_prompts (
+          user_prompts (
             prompt_text,
             topic
           ),
@@ -110,6 +157,13 @@ export async function GET(
       .ilike('domain', `%${domain}%`)
       .order('id', { ascending: false })
       .limit(500)
+    
+    // Filter by valid execution IDs if dashboard-scoped
+    if (validExecutionIds) {
+      citationsQuery = citationsQuery.in('execution_id', validExecutionIds)
+    }
+
+    const { data: citations, error } = await citationsQuery
 
     if (error) throw error
 
@@ -165,7 +219,7 @@ export async function GET(
       // Track chat/prompt stats
       if (exec && exec.id) {
         if (!chatMap[exec.id]) {
-          const promptText = exec.seed_prompts?.prompt_text || 'Unknown prompt'
+          const promptText = exec.user_prompts?.prompt_text || 'Unknown prompt'
           const responseText = exec.response_text || ''
           
           chatMap[exec.id] = {
