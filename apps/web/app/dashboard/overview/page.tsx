@@ -564,11 +564,18 @@ export default function OverviewPage() {
         </div>
 
         {/* Sources + Donut */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           <div className="lg:col-span-2 card p-0 overflow-hidden">
-            <div className="flex items-center gap-4 px-4 pt-4">
-              <button className="pb-2 text-sm font-medium text-primary border-b-2 border-primary">Domains</button>
-              <button className="pb-2 text-sm font-medium text-muted hover:text-secondary">URLs</button>
+            <div className="flex items-center justify-between px-4 pt-4">
+              <div className="flex items-center gap-4">
+                <button className="pb-2 text-sm font-medium text-primary border-b-2 border-primary">Domains</button>
+                <button className="pb-2 text-sm font-medium text-muted hover:text-secondary">URLs</button>
+              </div>
+              {sources.length > 5 && (
+                <Link href="/dashboard/sources" className="text-xs text-muted hover:text-primary transition-colors">
+                  See all →
+                </Link>
+              )}
             </div>
 
             <table className="data-table">
@@ -581,7 +588,7 @@ export default function OverviewPage() {
                 </tr>
               </thead>
               <tbody>
-                {sources.length > 0 ? sources.map((source, idx) => (
+                {sources.length > 0 ? sources.slice(0, 5).map((source, idx) => (
                   <tr key={source.domain}>
                     <td className="text-muted">{idx + 1}</td>
                     <td>
