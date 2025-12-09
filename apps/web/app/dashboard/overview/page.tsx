@@ -21,7 +21,7 @@ import {
   MessageCircle,
   X
 } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -50,6 +50,14 @@ interface SourceData {
   logo: string
   type: string
   citations: number
+  color: string
+}
+
+interface SourceDistribution {
+  type: string
+  count: number
+  color: string
+  percentage: number
 }
 
 interface PromptExecution {
@@ -96,6 +104,8 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true)
   const [competitors, setCompetitors] = useState<CompetitorData[]>([])
   const [sources, setSources] = useState<SourceData[]>([])
+  const [sourceDistribution, setSourceDistribution] = useState<SourceDistribution[]>([])
+  const [totalCitations, setTotalCitations] = useState(0)
   const [userRank, setUserRank] = useState<number | null>(null)
   const [totalBrands, setTotalBrands] = useState(0)
   
@@ -134,10 +144,12 @@ export default function OverviewPage() {
         }
 
         // Fetch sources (filtered by dashboard's prompts)
-        const sourcesRes = await fetch(`/api/sources?dashboard_id=${currentDashboard.id}&limit=5`)
+        const sourcesRes = await fetch(`/api/dashboard/${currentDashboard.id}/sources`)
         if (sourcesRes.ok) {
           const data = await sourcesRes.json()
-          setSources(data.sources || [])
+          setSources(data.domains || [])
+          setSourceDistribution(data.distribution || [])
+          setTotalCitations(data.total || 0)
         }
       } catch (err) {
         console.error('Error fetching overview data:', err)
@@ -200,11 +212,12 @@ export default function OverviewPage() {
 
   const getSourceTypeColor = (type: string) => {
     switch (type?.toLowerCase()) {
-      case 'corporate': return '#F59E0B'
-      case 'editorial': return '#3B82F6'
-      case 'ugc': return '#22C55E'
-      case 'review': return '#EC4899'
-      default: return '#71717A'
+      case 'corporate': return '#FF8C42'    // Orange
+      case 'editorial': return '#3B82F6'    // Blue
+      case 'ugc': return '#22D3EE'          // Cyan
+      case 'institutional': return '#4ADE80' // Green
+      case 'reference': return '#A855F7'    // Purple
+      default: return '#9CA3AF'             // Gray (Other)
     }
   }
 
@@ -606,13 +619,50 @@ export default function OverviewPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="font-semibold text-primary text-sm">Source Distribution</h3>
-                <p className="text-xs text-muted mt-0.5">Coming soon</p>
+                <p className="text-xs text-muted mt-0.5">By domain type</p>
               </div>
             </div>
 
-            <div className="flex items-center justify-center py-12">
-              <p className="text-sm text-muted">Run more prompts to see source analysis</p>
-            </div>
+            {sourceDistribution.length > 0 ? (
+              <div className="flex flex-col items-center">
+                <div className="relative w-48 h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={sourceDistribution}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={75}
+                        paddingAngle={2}
+                        dataKey="count"
+                      >
+                        {sourceDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-semibold text-primary">{totalCitations}</span>
+                    <span className="text-xs text-muted">Citations</span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap justify-center gap-3 mt-4">
+                  {sourceDistribution.map((item) => (
+                    <div key={item.type} className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
+                      <span className="text-xs text-secondary">{item.type}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-12">
+                <p className="text-sm text-muted">Run more prompts to see source analysis</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
