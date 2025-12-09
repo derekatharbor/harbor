@@ -109,6 +109,16 @@ export default function OverviewPage() {
   const [userRank, setUserRank] = useState<number | null>(null)
   const [totalBrands, setTotalBrands] = useState(0)
   
+  // Visibility history for chart
+  const [visibilityHistory, setVisibilityHistory] = useState<{
+    date: string
+    displayDate: string
+    visibility: number | null
+    position: number | null
+    sentiment: number | null
+  }[]>([])
+  const [hasHistoricalData, setHasHistoricalData] = useState(false)
+  
   // Recent prompts state
   const [recentPrompts, setRecentPrompts] = useState<PromptExecution[]>([])
   const [promptsLoading, setPromptsLoading] = useState(true)
@@ -150,6 +160,14 @@ export default function OverviewPage() {
           setSources(data.domains || [])
           setSourceDistribution(data.distribution || [])
           setTotalCitations(data.total || 0)
+        }
+        
+        // Fetch visibility history for chart
+        const historyRes = await fetch(`/api/dashboard/${currentDashboard.id}/visibility-history?days=7`)
+        if (historyRes.ok) {
+          const data = await historyRes.json()
+          setVisibilityHistory(data.history || [])
+          setHasHistoricalData(data.has_data || false)
         }
       } catch (err) {
         console.error('Error fetching overview data:', err)
@@ -386,6 +404,8 @@ export default function OverviewPage() {
                 brandName={brandName}
                 competitors={competitors}
                 metric={activeMetric}
+                history={visibilityHistory}
+                hasHistoricalData={hasHistoricalData}
               />
             </div>
           </div>
@@ -693,28 +713,16 @@ export default function OverviewPage() {
 function VisibilityChart({ 
   brandName, 
   competitors,
-  metric 
+  metric,
+  history,
+  hasHistoricalData
 }: { 
   brandName: string
   competitors: CompetitorData[]
   metric: 'visibility' | 'sentiment' | 'position'
+  history: { date: string; displayDate: string; visibility: number | null; position: number | null; sentiment: number | null }[]
+  hasHistoricalData: boolean
 }) {
-  // Generate last 5 days of dates
-  const generateDates = () => {
-    const dates = []
-    for (let i = 4; i >= 0; i--) {
-      const date = new Date()
-      date.setDate(date.getDate() - i)
-      dates.push({
-        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        fullDate: date
-      })
-    }
-    return dates
-  }
-
-  const dates = generateDates()
-  
   // Convert sentiment to numeric for chart
   const sentimentToNumber = (s: string) => {
     if (s === 'positive') return 100
@@ -733,18 +741,47 @@ function VisibilityChart({
   const topCompetitors = competitors.filter(c => !c.isUser).slice(0, 4)
   const charted = [userBrand, ...topCompetitors].filter(Boolean) as CompetitorData[]
 
-  // Generate chart data - flatline at current values (historical data would come from DB)
-  const chartData = dates.map(d => {
-    const point: Record<string, string | number> = { date: d.date }
+  // Generate chart data using real history for user brand, flatline for competitors
+  const chartData = history.map(h => {
+    const point: Record<string, string | number | null> = { date: h.displayDate }
+    
     charted.forEach(comp => {
-      point[comp.name] = getValue(comp)
+      if (comp.isUser && hasHistoricalData) {
+        // Use real historical data for user's brand
+        if (metric === 'visibility') point[comp.name] = h.visibility
+        else if (metric === 'sentiment') point[comp.name] = h.sentiment
+        else point[comp.name] = h.position
+      } else {
+        // Flatline competitors at current value (no historical data for them yet)
+        point[comp.name] = getValue(comp)
+      }
     })
+    
     return point
   })
+  
+  // Fallback if no history data - generate last 7 days
+  const fallbackData = () => {
+    const dates = []
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const point: Record<string, string | number> = { 
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) 
+      }
+      charted.forEach(comp => {
+        point[comp.name] = getValue(comp)
+      })
+      dates.push(point)
+    }
+    return dates
+  }
+  
+  const finalChartData = chartData.length > 0 ? chartData : fallbackData()
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+      <LineChart data={finalChartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
         <CartesianGrid 
           strokeDasharray="3 3" 
           vertical={true}
@@ -774,8 +811,8 @@ function VisibilityChart({
           }}
           labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
           itemStyle={{ padding: '2px 0' }}
-          formatter={(value: number, name: string) => [
-            metric === 'position' ? value.toFixed(1) : `${value}%`,
+          formatter={(value: any, name: string) => [
+            value === null ? 'No data' : (metric === 'position' ? Number(value).toFixed(1) : `${value}%`),
             name
           ]}
         />
@@ -796,6 +833,7 @@ function VisibilityChart({
             strokeDasharray={comp.isUser ? undefined : '4 4'}
             dot={false}
             activeDot={{ r: 3, fill: comp.color }}
+            connectNulls={false}
           />
         ))}
       </LineChart>
