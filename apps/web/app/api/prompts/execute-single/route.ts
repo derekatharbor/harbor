@@ -113,9 +113,18 @@ function checkBrandMentioned(text: string, brandName: string): { mentioned: bool
 // ============================================================================
 
 async function extractBrands(text: string, userBrand: string): Promise<string[]> {
+  console.log('[extractBrands] Starting extraction, text length:', text?.length || 0)
+  
+  if (!text || text.length < 50) {
+    console.log('[extractBrands] Text too short, skipping')
+    return []
+  }
+  
   // Use Claude to extract brand/company/website names mentioned
   try {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    
+    console.log('[extractBrands] Calling Claude...')
     
     const response = await anthropic.messages.create({
       model: 'claude-3-5-haiku-20241022',
@@ -132,6 +141,7 @@ JSON array:`
     })
     
     const content = response.content[0]?.type === 'text' ? response.content[0].text : '[]'
+    console.log('[extractBrands] Claude response:', content.slice(0, 200))
     
     // Parse the JSON array
     const cleaned = content.trim().replace(/```json\n?|\n?```/g, '')
@@ -139,8 +149,8 @@ JSON array:`
     
     if (Array.isArray(brands)) {
       // Filter out the user's own brand and duplicates
-      const userBrandLower = userBrand.toLowerCase()
-      return [...new Set(brands)]
+      const userBrandLower = (userBrand || '').toLowerCase()
+      const filtered = [...new Set(brands)]
         .filter((b): b is string => 
           typeof b === 'string' && 
           b.length > 1 && 
@@ -148,11 +158,15 @@ JSON array:`
           !b.toLowerCase().includes(userBrandLower)
         )
         .slice(0, 15)
+      
+      console.log('[extractBrands] Extracted brands:', filtered)
+      return filtered
     }
     
+    console.log('[extractBrands] Response was not an array')
     return []
   } catch (err) {
-    console.error('Brand extraction error:', err)
+    console.error('[extractBrands] Error:', err)
     return []
   }
 }
@@ -231,15 +245,18 @@ export async function POST(request: NextRequest) {
       const mentionInserts = brandsFound.map((brandName, idx) => ({
         execution_id: execution.id,
         brand_name: brandName,
-        position: idx + 1,
-        sentiment: 50 // Neutral default
+        position: idx + 1
+        // Don't set sentiment - let it use default or null
       }))
+      
+      console.log('[execute-single] Saving brand mentions:', mentionInserts.length)
       
       await supabase
         .from('prompt_brand_mentions')
         .insert(mentionInserts)
         .then(({ error }) => {
           if (error) console.error('Error saving brand mentions:', error)
+          else console.log('[execute-single] Brand mentions saved successfully')
         })
     }
     
