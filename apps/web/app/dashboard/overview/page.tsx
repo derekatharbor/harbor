@@ -148,7 +148,7 @@ export default function OverviewPage() {
     fetchData()
   }, [currentDashboard?.id])
 
-  // Fetch recent prompts - using same API as Prompts page
+  // Fetch recent prompts - using prompts/recent which joins with executions
   useEffect(() => {
     async function fetchPrompts() {
       if (!currentDashboard?.id) {
@@ -160,43 +160,19 @@ export default function OverviewPage() {
       setPromptsLoading(true)
       
       try {
-        const res = await fetch(`/api/prompts/list?dashboard_id=${currentDashboard.id}`)
+        const params = new URLSearchParams({ 
+          limit: '12',
+          dashboard_id: currentDashboard.id
+        })
+        if (brandMentionedOnly && currentDashboard?.brand_name) {
+          params.set('brand', currentDashboard.brand_name)
+        }
+
+        const res = await fetch(`/api/prompts/recent?${params}`)
         if (res.ok) {
           const data = await res.json()
           console.log('[Overview] Prompts response:', data)
-          
-          // Combine active prompts and format for display
-          const allPrompts = (data.prompts || []).map((p: any) => ({
-            id: p.id,
-            prompt: p.prompt_text,
-            topic: p.topic || 'General',
-            model: null,
-            modelName: p.last_executed_at ? 'Executed' : 'Pending',
-            modelLogo: null,
-            responsePreview: p.last_executed_at ? 'View details →' : 'Awaiting first scan...',
-            responseText: null,
-            executedAt: p.last_executed_at,
-            timeAgo: p.last_executed_at ? getTimeAgo(new Date(p.last_executed_at)) : 'Pending',
-            brandsCount: 0,
-            brands: [],
-            citationsCount: 0,
-            citationDomains: [],
-            citationFavicons: [],
-            source: p.source,
-            status: p.last_executed_at ? 'executed' : 'pending'
-          }))
-          
-          // Filter by brand if toggle is on
-          let filtered = allPrompts
-          if (brandMentionedOnly && currentDashboard?.brand_name) {
-            filtered = allPrompts.filter((p: any) => 
-              p.brands?.some((b: string) => 
-                b.toLowerCase().includes(currentDashboard.brand_name.toLowerCase())
-              )
-            )
-          }
-          
-          setRecentPrompts(filtered.slice(0, 12))
+          setRecentPrompts(data.prompts || [])
         }
       } catch (error) {
         console.error('Failed to fetch prompts:', error)
@@ -207,19 +183,6 @@ export default function OverviewPage() {
 
     fetchPrompts()
   }, [brandMentionedOnly, currentDashboard?.id, currentDashboard?.brand_name])
-
-  // Helper for time ago
-  function getTimeAgo(date: Date): string {
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    const diffDays = Math.floor(diffHours / 24)
-    if (diffHours < 1) return 'Just now'
-    if (diffHours < 24) return `${diffHours} hr. ago`
-    if (diffDays === 1) return '1 day ago'
-    if (diffDays < 7) return `${diffDays} days ago`
-    return date.toLocaleDateString()
-  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

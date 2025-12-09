@@ -1,5 +1,5 @@
 // app/api/prompts/recent/route.ts
-// Get recent prompt executions - supports BOTH old (seed_prompts) and new (user_prompts) flows
+// Get recent prompt executions for a dashboard's user_prompts
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -32,6 +32,19 @@ const MODEL_LOGOS: Record<string, { logo: string; name: string }> = {
   }
 }
 
+function getTimeAgo(date: Date): string {
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+  const diffDays = Math.floor(diffHours / 24)
+
+  if (diffHours < 1) return 'Just now'
+  if (diffHours < 24) return `${diffHours} hr. ago`
+  if (diffDays === 1) return '1 day ago'
+  if (diffDays < 7) return `${diffDays} days ago`
+  return date.toLocaleDateString()
+}
+
 export async function GET(request: NextRequest) {
   const supabase = getSupabase()
   const { searchParams } = new URL(request.url)
@@ -40,71 +53,41 @@ export async function GET(request: NextRequest) {
   const brandFilter = searchParams.get('brand')
   const dashboardId = searchParams.get('dashboard_id')
 
+  console.log('[prompts/recent] Request:', { dashboardId, limit, brandFilter })
+
   try {
-    // =========================================================================
-    // STEP 1: Get prompts based on context
-    // =========================================================================
-    
-    // Map to store all prompts: id -> { prompt_text, topic, source }
-    const promptMap = new Map<string, { prompt_text: string; topic: string; source: string }>()
-    
-    // If dashboard_id provided, ONLY get that dashboard's user_prompts
-    // (Don't mix in global seed_prompts - those are suggestions, not tracked)
-    if (dashboardId) {
-      const { data: userPrompts } = await supabase
-        .from('user_prompts')
-        .select('id, prompt_text, topic, dashboard_id')
-        .eq('dashboard_id', dashboardId)
-        .eq('is_active', true)
-      
-      userPrompts?.forEach(p => {
-        promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'Custom', source: 'user' })
-      })
-
-      // If no user prompts, return empty with helpful message
-      if (promptMap.size === 0) {
-        return NextResponse.json({ 
-          prompts: [], 
-          total: 0,
-          message: 'No prompts found for this dashboard'
-        })
-      }
-    } else {
-      // No dashboard_id - return global seed_prompts (legacy behavior)
-      const { data: seedPrompts } = await supabase
-        .from('seed_prompts')
-        .select('id, prompt_text, topic')
-        .neq('topic', 'universities')
-      
-      seedPrompts?.forEach(p => {
-        promptMap.set(p.id, { prompt_text: p.prompt_text, topic: p.topic || 'General', source: 'seed' })
-      })
-    }
-
-    const promptIds = Array.from(promptMap.keys())
-
-    if (promptIds.length === 0) {
+    if (!dashboardId) {
+      console.log('[prompts/recent] No dashboard_id provided')
       return NextResponse.json({ prompts: [], total: 0 })
     }
 
-    // =========================================================================
-    // STEP 2: Get executions for those prompts
-    // =========================================================================
+    // Step 1: Get user_prompts for this dashboard
+    const { data: userPrompts, error: upError } = await supabase
+      .from('user_prompts')
+      .select('id, prompt_text, topic')
+      .eq('dashboard_id', dashboardId)
+      .eq('is_active', true)
     
-    const { data: executions, error } = await supabase
+    console.log('[prompts/recent] user_prompts:', userPrompts?.length || 0, upError?.message || 'ok')
+
+    if (!userPrompts || userPrompts.length === 0) {
+      return NextResponse.json({ prompts: [], total: 0 })
+    }
+
+    const promptIds = userPrompts.map(p => p.id)
+    const promptMap = new Map(userPrompts.map(p => [p.id, p]))
+
+    // Step 2: Get executions for these prompts
+    const { data: executions, error: execError } = await supabase
       .from('prompt_executions')
-      .select('id, model, response_text, executed_at, prompt_id')
+      .select('id, prompt_id, model, response_text, executed_at')
       .in('prompt_id', promptIds)
       .not('response_text', 'is', null)
       .order('executed_at', { ascending: false })
-      .limit(100)
 
-    if (error) throw error
+    console.log('[prompts/recent] executions:', executions?.length || 0, execError?.message || 'ok')
 
-    // =========================================================================
-    // STEP 3: Get brand mentions and citations
-    // =========================================================================
-    
+    // Step 3: Get brand mentions and citations for executions
     const executionIds = executions?.map(e => e.id) || []
     
     let mentionsByExecution = new Map<string, any[]>()
@@ -113,7 +96,7 @@ export async function GET(request: NextRequest) {
     if (executionIds.length > 0) {
       const { data: mentions } = await supabase
         .from('prompt_brand_mentions')
-        .select('execution_id, brand_name, position, sentiment')
+        .select('execution_id, brand_name, position')
         .in('execution_id', executionIds)
 
       const { data: citations } = await supabase
@@ -134,21 +117,19 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // =========================================================================
-    // STEP 4: Build results - merge prompts with their latest execution
-    // =========================================================================
-    
+    // Step 4: Build results
+    // Group executions by prompt, show latest execution per prompt
     const seenPrompts = new Set<string>()
     let results: any[] = []
 
-    // First, add prompts that have executions
-    executions?.forEach((exec: any) => {
-      const promptData = promptMap.get(exec.prompt_id)
-      if (!promptData) return
+    // First, add prompts that have executions (with full data)
+    executions?.forEach((exec) => {
+      const prompt = promptMap.get(exec.prompt_id)
+      if (!prompt) return
       
-      const promptText = promptData.prompt_text
-      if (seenPrompts.has(promptText)) return
-      seenPrompts.add(promptText)
+      // Only show one execution per prompt (latest)
+      if (seenPrompts.has(exec.prompt_id)) return
+      seenPrompts.add(exec.prompt_id)
 
       const execMentions = mentionsByExecution.get(exec.id) || []
       const execCitations = citationsByExecution.get(exec.id) || []
@@ -156,13 +137,13 @@ export async function GET(request: NextRequest) {
       const uniqueDomains = [...new Set(execCitations.map(c => c.domain).filter(Boolean))].slice(0, 4)
       const uniqueBrands = [...new Set(execMentions.map(m => m.brand_name).filter(Boolean))]
 
-      const modelInfo = MODEL_LOGOS[exec.model] || { logo: '', name: exec.model }
+      const modelInfo = MODEL_LOGOS[exec.model] || { logo: '/models/chatgpt-logo.png', name: exec.model }
 
       results.push({
         id: exec.id,
         prompt_id: exec.prompt_id,
-        prompt: promptText,
-        topic: promptData.topic,
+        prompt: prompt.prompt_text,
+        topic: prompt.topic || 'General',
         model: exec.model,
         modelName: modelInfo.name,
         modelLogo: modelInfo.logo,
@@ -175,21 +156,19 @@ export async function GET(request: NextRequest) {
         citationsCount: execCitations.length,
         citationDomains: uniqueDomains,
         citationFavicons: uniqueDomains.map(d => `https://www.google.com/s2/favicons?domain=${d}&sz=32`),
-        source: promptData.source,
         status: 'executed'
       })
     })
 
-    // Then, add prompts that haven't been executed yet (from promptMap)
-    promptMap.forEach((promptData, promptId) => {
-      if (seenPrompts.has(promptData.prompt_text)) return
-      seenPrompts.add(promptData.prompt_text)
-
+    // Then, add prompts that haven't been executed yet
+    userPrompts.forEach(prompt => {
+      if (seenPrompts.has(prompt.id)) return
+      
       results.push({
-        id: promptId,
-        prompt_id: promptId,
-        prompt: promptData.prompt_text,
-        topic: promptData.topic,
+        id: prompt.id,
+        prompt_id: prompt.id,
+        prompt: prompt.prompt_text,
+        topic: prompt.topic || 'General',
         model: null,
         modelName: 'Pending',
         modelLogo: null,
@@ -202,15 +181,10 @@ export async function GET(request: NextRequest) {
         citationsCount: 0,
         citationDomains: [],
         citationFavicons: [],
-        source: promptData.source,
         status: 'pending'
       })
     })
 
-    // =========================================================================
-    // STEP 5: Filter and limit
-    // =========================================================================
-    
     // Filter by brand if specified
     if (brandFilter) {
       const brandLower = brandFilter.toLowerCase()
@@ -231,26 +205,15 @@ export async function GET(request: NextRequest) {
 
     results = results.slice(0, limit)
 
+    console.log('[prompts/recent] Returning:', results.length, 'prompts')
+
     return NextResponse.json({
       prompts: results,
       total: results.length
     })
 
   } catch (error) {
-    console.error('Recent prompts API error:', error)
+    console.error('[prompts/recent] Error:', error)
     return NextResponse.json({ error: 'Failed to fetch prompts' }, { status: 500 })
   }
-}
-
-function getTimeAgo(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffHours / 24)
-
-  if (diffHours < 1) return 'Just now'
-  if (diffHours < 24) return `${diffHours} hr. ago`
-  if (diffDays === 1) return '1 day ago'
-  if (diffDays < 7) return `${diffDays} days ago`
-  return date.toLocaleDateString()
 }
