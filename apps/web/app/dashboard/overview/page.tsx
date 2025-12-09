@@ -33,11 +33,12 @@ interface CompetitorData {
   rank: number
   name: string
   logo: string
+  fallbackLogo?: string
   visibility: number
   visibilityDelta: number | null
-  sentiment: number
+  sentiment: 'positive' | 'neutral' | 'negative'
   sentimentDelta: number | null
-  position: number
+  position: number | null
   positionDelta: number | null
   mentions: number
   isUser: boolean
@@ -357,7 +358,7 @@ export default function OverviewPage() {
                 </div>
                 <span className="text-xs text-muted ml-2">
                   · {activeMetric === 'visibility' ? 'Percentage of chats mentioning each brand' : 
-                     activeMetric === 'sentiment' ? 'Positive sentiment percentage' : 
+                     activeMetric === 'sentiment' ? 'How brands are portrayed in responses' : 
                      'Average ranking position'}
                 </span>
               </div>
@@ -407,10 +408,18 @@ export default function OverviewPage() {
                     <span className="text-muted text-sm w-4">{comp.rank}</span>
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: comp.color }} />
                     <img 
-                      src={`https://cdn.brandfetch.io/${comp.name.toLowerCase().replace(/\s+/g, '').replace(/\.com$/i, '')}.com/w/400/h/400`} 
+                      src={comp.logo} 
                       alt="" 
                       className="w-5 h-5 rounded" 
-                      onError={(e) => { e.currentTarget.style.display = 'none' }} 
+                      onError={(e) => { 
+                        // Fallback to UI Avatars if Brandfetch fails
+                        const target = e.currentTarget
+                        if (comp.fallbackLogo && target.src !== comp.fallbackLogo) {
+                          target.src = comp.fallbackLogo
+                        } else {
+                          target.style.display = 'none'
+                        }
+                      }} 
                     />
                     <span className="text-sm font-medium text-primary truncate">{comp.name}</span>
                     {comp.isUser && <span className="text-xs text-muted">(you)</span>}
@@ -426,16 +435,22 @@ export default function OverviewPage() {
                   </div>
                   
                   <div className="col-span-2 text-sm text-center">
-                    <span className="text-secondary">{comp.sentiment}%</span>
-                    {comp.sentimentDelta !== null && (
-                      <span className={`ml-1 text-xs ${comp.sentimentDelta > 0 ? 'text-positive' : 'text-negative'}`}>
-                        {comp.sentimentDelta > 0 ? '↑' : '↓'} {Math.abs(comp.sentimentDelta)}
-                      </span>
-                    )}
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                      comp.sentiment === 'positive' 
+                        ? 'bg-emerald-500/20 text-emerald-400' 
+                        : comp.sentiment === 'negative'
+                        ? 'bg-red-500/20 text-red-400'
+                        : 'bg-white/10 text-white/50'
+                    }`}>
+                      {comp.sentiment === 'positive' && '↑'}
+                      {comp.sentiment === 'negative' && '↓'}
+                      {comp.sentiment === 'neutral' && '–'}
+                      <span className="ml-1 capitalize">{comp.sentiment}</span>
+                    </span>
                   </div>
                   
                   <div className="col-span-3 text-sm text-right">
-                    <span className="text-secondary">{comp.position}</span>
+                    <span className="text-secondary">{comp.position ?? '—'}</span>
                     {comp.positionDelta !== null && (
                       <span className={`ml-1 text-xs ${comp.positionDelta < 0 ? 'text-positive' : 'text-negative'}`}>
                         {comp.positionDelta < 0 ? '↑' : '↓'} {Math.abs(comp.positionDelta)}
@@ -655,12 +670,19 @@ function VisibilityChart({
 
   const dates = generateDates()
   
+  // Convert sentiment to numeric for chart
+  const sentimentToNumber = (s: string) => {
+    if (s === 'positive') return 100
+    if (s === 'negative') return 0
+    return 50 // neutral
+  }
+  
   // Find user's brand in competitors
   const userBrand = competitors.find(c => c.isUser)
   const userValue = userBrand ? 
     (metric === 'visibility' ? userBrand.visibility : 
-     metric === 'sentiment' ? userBrand.sentiment : 
-     userBrand.position) : 0
+     metric === 'sentiment' ? sentimentToNumber(userBrand.sentiment) : 
+     userBrand.position || 0) : 0
 
   // Generate chart data - flatline at current value (or 0 if no data)
   const chartData = dates.map(d => ({

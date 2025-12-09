@@ -101,30 +101,59 @@ export async function GET(
       .in('execution_id', executionIds)
 
     // 5. Aggregate by brand name
-    const brandCounts = new Map<string, { mentions: number; avgPosition: number; sentiment: number }>()
+    const brandCounts = new Map<string, { 
+      mentions: number
+      totalPosition: number
+      sentiments: { positive: number; neutral: number; negative: number }
+    }>()
     
     mentions?.forEach(m => {
       const name = m.brand_name?.trim()
       if (!name) return
       
-      const existing = brandCounts.get(name) || { mentions: 0, avgPosition: 0, sentiment: 0 }
+      const existing = brandCounts.get(name) || { 
+        mentions: 0, 
+        totalPosition: 0, 
+        sentiments: { positive: 0, neutral: 0, negative: 0 }
+      }
       existing.mentions++
-      existing.avgPosition += (m.position || 5)
-      existing.sentiment += (m.sentiment || 50)
+      existing.totalPosition += (m.position || 5)
+      
+      // Count sentiment occurrences
+      const sentiment = m.sentiment as 'positive' | 'neutral' | 'negative'
+      if (sentiment && existing.sentiments[sentiment] !== undefined) {
+        existing.sentiments[sentiment]++
+      } else {
+        existing.sentiments.neutral++
+      }
+      
       brandCounts.set(name, existing)
     })
+
+    // Helper to get dominant sentiment
+    const getDominantSentiment = (sentiments: { positive: number; neutral: number; negative: number }) => {
+      if (sentiments.positive >= sentiments.neutral && sentiments.positive >= sentiments.negative) {
+        return 'positive'
+      }
+      if (sentiments.negative > sentiments.positive && sentiments.negative >= sentiments.neutral) {
+        return 'negative'
+      }
+      return 'neutral'
+    }
 
     // 6. Check if user's brand was mentioned
     const userBrandLower = dashboard.brand_name.toLowerCase()
     let userMentions = 0
     let userPosition = 0
+    let userSentiment = 'neutral'
     
     // Look for variations of user's brand name
     brandCounts.forEach((data, name) => {
       if (name.toLowerCase().includes(userBrandLower) || 
           userBrandLower.includes(name.toLowerCase())) {
         userMentions += data.mentions
-        userPosition = data.avgPosition / data.mentions
+        userPosition = Math.round((data.totalPosition / data.mentions) * 10) / 10
+        userSentiment = getDominantSentiment(data.sentiments)
         brandCounts.delete(name) // Remove so we don't double-count
       }
     })
@@ -134,8 +163,8 @@ export async function GET(
       .map(([name, data]) => ({
         name,
         mentions: data.mentions,
-        avgPosition: data.avgPosition / data.mentions,
-        sentiment: Math.round(data.sentiment / data.mentions)
+        avgPosition: Math.round((data.totalPosition / data.mentions) * 10) / 10,
+        sentiment: getDominantSentiment(data.sentiments)
       }))
       .sort((a, b) => b.mentions - a.mentions)
       .slice(0, limit - 1) // Leave room for user's brand
@@ -145,6 +174,18 @@ export async function GET(
       sortedBrands[0]?.mentions || 1
     )
 
+    // Helper to get logo with fallback
+    const getLogo = (brandName: string, domain: string) => {
+      // Try Brandfetch first, with fallback to UI Avatars
+      return `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
+    }
+    
+    const getFallbackLogo = (brandName: string) => {
+      // UI Avatars as fallback
+      const initials = brandName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=1a1a1a&color=ffffff&size=64`
+    }
+
     // 8. Build response - user first, then competitors by mention count
     const competitors: any[] = []
 
@@ -153,12 +194,13 @@ export async function GET(
       rank: 1,
       name: dashboard.brand_name,
       domain: dashboard.domain,
-      logo: `https://cdn.brandfetch.io/${dashboard.domain}?c=1id1Fyz-h7an5-5KR_y`,
+      logo: getLogo(dashboard.brand_name, dashboard.domain),
+      fallbackLogo: getFallbackLogo(dashboard.brand_name),
       visibility: maxMentions > 0 ? Math.round((userMentions / maxMentions) * 100) : 0,
       visibilityDelta: null,
-      sentiment: 50,
+      sentiment: userSentiment,
       sentimentDelta: null,
-      position: userPosition || 0,
+      position: userPosition || null,
       positionDelta: null,
       mentions: userMentions,
       isUser: true,
@@ -176,7 +218,8 @@ export async function GET(
         rank: idx + 2,
         name: brand.name,
         domain: guessedDomain,
-        logo: `https://cdn.brandfetch.io/${guessedDomain}?c=1id1Fyz-h7an5-5KR_y`,
+        logo: getLogo(brand.name, guessedDomain),
+        fallbackLogo: getFallbackLogo(brand.name),
         visibility: Math.round((brand.mentions / maxMentions) * 100),
         visibilityDelta: null,
         sentiment: brand.sentiment,

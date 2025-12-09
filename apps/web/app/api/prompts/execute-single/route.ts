@@ -109,10 +109,15 @@ function checkBrandMentioned(text: string, brandName: string): { mentioned: bool
 }
 
 // ============================================================================
-// EXTRACT BRANDS FROM RESPONSE - Uses Claude for accuracy
+// EXTRACT BRANDS FROM RESPONSE - Uses Claude for accuracy + sentiment
 // ============================================================================
 
-async function extractBrands(text: string, userBrand: string): Promise<string[]> {
+interface ExtractedBrand {
+  name: string
+  sentiment: 'positive' | 'neutral' | 'negative'
+}
+
+async function extractBrands(text: string, userBrand: string): Promise<ExtractedBrand[]> {
   console.log('[extractBrands] Starting extraction, text length:', text?.length || 0)
   
   if (!text || text.length < 50) {
@@ -120,7 +125,7 @@ async function extractBrands(text: string, userBrand: string): Promise<string[]>
     return []
   }
   
-  // Use Claude to extract brand/company/website names mentioned
+  // Use Claude to extract brand/company/website names with sentiment
   try {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
     
@@ -128,10 +133,18 @@ async function extractBrands(text: string, userBrand: string): Promise<string[]>
     
     const response = await anthropic.messages.create({
       model: 'claude-3-5-haiku-20241022',
-      max_tokens: 500,
+      max_tokens: 800,
       messages: [{
         role: 'user',
-        content: `Extract all brand names, company names, product names, and website names mentioned in this text. Return ONLY a JSON array of strings, nothing else. If none found, return [].
+        content: `Extract all brand names, company names, product names, and website names mentioned in this text. For each, determine the sentiment based on how it's portrayed:
+- "positive": recommended, praised, highlighted as good/best, featured favorably
+- "neutral": just mentioned factually, listed without opinion
+- "negative": criticized, mentioned as inferior, compared unfavorably
+
+Return ONLY a JSON array of objects with "name" and "sentiment" fields. Example:
+[{"name": "Notion", "sentiment": "positive"}, {"name": "Trello", "sentiment": "neutral"}]
+
+If no brands found, return [].
 
 Text:
 ${text.slice(0, 2000)}
@@ -141,7 +154,7 @@ JSON array:`
     })
     
     const content = response.content[0]?.type === 'text' ? response.content[0].text : '[]'
-    console.log('[extractBrands] Claude response:', content.slice(0, 200))
+    console.log('[extractBrands] Claude response:', content.slice(0, 300))
     
     // Parse the JSON array
     const cleaned = content.trim().replace(/```json\n?|\n?```/g, '')
@@ -150,13 +163,28 @@ JSON array:`
     if (Array.isArray(brands)) {
       // Filter out the user's own brand and duplicates
       const userBrandLower = (userBrand || '').toLowerCase()
-      const filtered = [...new Set(brands)]
-        .filter((b): b is string => 
-          typeof b === 'string' && 
-          b.length > 1 && 
-          b.length < 50 &&
-          !b.toLowerCase().includes(userBrandLower)
+      const seen = new Set<string>()
+      
+      const filtered = brands
+        .filter((b): b is { name: string; sentiment: string } => 
+          typeof b === 'object' &&
+          typeof b.name === 'string' && 
+          b.name.length > 1 && 
+          b.name.length < 50 &&
+          !b.name.toLowerCase().includes(userBrandLower)
         )
+        .filter(b => {
+          const lower = b.name.toLowerCase()
+          if (seen.has(lower)) return false
+          seen.add(lower)
+          return true
+        })
+        .map(b => ({
+          name: b.name,
+          sentiment: (['positive', 'neutral', 'negative'].includes(b.sentiment) 
+            ? b.sentiment 
+            : 'neutral') as 'positive' | 'neutral' | 'negative'
+        }))
         .slice(0, 15)
       
       console.log('[extractBrands] Extracted brands:', filtered)
@@ -242,11 +270,11 @@ export async function POST(request: NextRequest) {
     
     // Save brand mentions if we found any
     if (execution && brandsFound.length > 0) {
-      const mentionInserts = brandsFound.map((brandName, idx) => ({
+      const mentionInserts = brandsFound.map((brand, idx) => ({
         execution_id: execution.id,
-        brand_name: brandName,
-        position: idx + 1
-        // Don't set sentiment - let it use default or null
+        brand_name: brand.name,
+        position: idx + 1,
+        sentiment: brand.sentiment
       }))
       
       console.log('[execute-single] Saving brand mentions:', mentionInserts.length)
