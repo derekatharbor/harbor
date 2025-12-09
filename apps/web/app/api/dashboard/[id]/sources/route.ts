@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@supabase/supabase-js'
+
+export const dynamic = 'force-dynamic'
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Domain type classification
 const DOMAIN_TYPES: Record<string, string[]> = {
@@ -64,11 +73,11 @@ const TYPE_COLORS: Record<string, string> = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient()
-    const dashboardId = params.id
+    const { id: dashboardId } = await params
+    const supabase = getSupabase()
 
     // Get all user_prompts for this dashboard
     const { data: prompts, error: promptsError } = await supabase
