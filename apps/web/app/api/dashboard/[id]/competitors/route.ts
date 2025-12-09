@@ -14,14 +14,14 @@ function getSupabase() {
 }
 
 const COLORS = [
-  '#6B8AFD', // Soft blue (user's brand)
-  '#8B8B9E', // Muted lavender-gray
-  '#7A9E9A', // Muted teal
-  '#A89080', // Muted taupe
-  '#9A8BA3', // Muted mauve
-  '#7D8A7D', // Muted sage
-  '#A3908B', // Muted rose-gray
-  '#8A8FA3', // Muted slate
+  '#FF8C42', // Orange (user's brand - stands out)
+  '#3B82F6', // Blue
+  '#22D3EE', // Cyan
+  '#4ADE80', // Green
+  '#A855F7', // Purple
+  '#9CA3AF', // Gray
+  '#F472B6', // Pink
+  '#FBBF24', // Yellow
 ]
 
 export async function GET(
