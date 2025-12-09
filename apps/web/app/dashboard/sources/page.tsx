@@ -101,7 +101,7 @@ function DonutChart({
 
   const hoveredData = hoveredType ? data.find(d => d.type === hoveredType) : null
   // Colors per Harbor Design Spec
-  const centerBg = isDark ? '#111213' : '#EFEFF0'
+  const centerBg = isDark ? '#111213' : '#FFFFFF'
   const textColor = isDark ? '#F0F0F0' : '#1C1C1E'
   const mutedColor = isDark ? '#6B7280' : '#6B7280'
 
@@ -193,7 +193,7 @@ function ChartViewToggle({
         onClick={() => onChange('historical')}
         className="px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer"
         style={{ 
-          backgroundColor: view === 'historical' ? (isDark ? '#161718' : '#E6E6E7') : 'transparent',
+          backgroundColor: view === 'historical' ? (isDark ? '#161718' : '#FFFFFF') : 'transparent',
           color: view === 'historical' ? (isDark ? '#F0F0F0' : '#1C1C1E') : '#6B7280',
         }}
       >
@@ -203,7 +203,7 @@ function ChartViewToggle({
         onClick={() => onChange('total')}
         className="px-3 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer"
         style={{ 
-          backgroundColor: view === 'total' ? (isDark ? '#161718' : '#E6E6E7') : 'transparent',
+          backgroundColor: view === 'total' ? (isDark ? '#161718' : '#FFFFFF') : 'transparent',
           color: view === 'total' ? (isDark ? '#F0F0F0' : '#1C1C1E') : '#6B7280',
         }}
       >
@@ -276,10 +276,10 @@ export default function SourcesPage() {
 
   const isDark = theme === 'dark'
   const colors = {
-    // Surface colors per Harbor Design Spec 1.1 and A1
-    bg: isDark ? '#0B0B0C' : '#F7F7F8',
-    card: isDark ? '#111213' : '#EFEFF0',
-    // Text colors - dark mode max 94-96% brightness, light mode per A3
+    // Surface colors per Harbor Design Spec 1.1, light mode matches Overview
+    bg: isDark ? '#0B0B0C' : '#FAFBFC',
+    card: isDark ? '#111213' : '#FFFFFF',
+    // Text colors - dark mode max 94-96% brightness
     text: isDark ? '#F0F0F0' : '#1C1C1E',
     muted: isDark ? '#6B7280' : '#6B7280',
     // Border per spec 1.2: rgba(255,255,255,0.06)
@@ -464,7 +464,7 @@ export default function SourcesPage() {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: isDark ? '#161718' : '#E6E6E7',
+                        backgroundColor: isDark ? '#161718' : '#FFFFFF',
                         border: `1px solid ${colors.border}`,
                         borderRadius: '8px',
                         fontSize: '12px'
