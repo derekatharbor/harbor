@@ -193,7 +193,6 @@ export async function POST(request: NextRequest) {
         model,
         response_text: response.text,
         tokens_used: response.tokens,
-        duration_ms: duration,
         executed_at: new Date().toISOString()
       })
       .select()
