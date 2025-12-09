@@ -434,10 +434,10 @@ export default function OverviewPage() {
                   <div className="col-span-3 flex justify-center">
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                       comp.sentiment === 'positive' 
-                        ? 'bg-emerald-500/20 text-emerald-400' 
+                        ? 'bg-[#6B8AFD]/15 text-[#6B8AFD]' 
                         : comp.sentiment === 'negative'
-                        ? 'bg-red-500/20 text-red-400'
-                        : 'bg-white/10 text-white/50'
+                        ? 'bg-[#F6C177]/15 text-[#F6C177]'
+                        : 'bg-white/5 text-white/40'
                     }`}>
                       {comp.sentiment === 'positive' && '↑'}
                       {comp.sentiment === 'negative' && '↓'}
@@ -691,31 +691,31 @@ function VisibilityChart({
         <CartesianGrid 
           strokeDasharray="3 3" 
           vertical={true}
-          stroke="rgba(156, 163, 175, 0.2)"
+          stroke="rgba(255,255,255,0.05)"
         />
         <XAxis 
           dataKey="date" 
           axisLine={false}
           tickLine={false}
-          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+          tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }}
           dy={10}
         />
         <YAxis 
           axisLine={false}
           tickLine={false}
-          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+          tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }}
           domain={metric === 'position' ? [0, 10] : [0, 100]}
           tickFormatter={(value) => metric === 'position' ? value : `${value}%`}
           dx={-10}
         />
         <Tooltip 
           contentStyle={{ 
-            backgroundColor: 'rgba(17, 24, 39, 0.95)',
-            border: 'none',
+            backgroundColor: '#111213',
+            border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: '8px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.22)',
           }}
-          labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
+          labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
           itemStyle={{ padding: '2px 0' }}
           formatter={(value: number, name: string) => [
             metric === 'position' ? value.toFixed(1) : `${value}%`,
@@ -727,7 +727,7 @@ function VisibilityChart({
           height={36}
           iconType="line"
           iconSize={10}
-          wrapperStyle={{ fontSize: '12px' }}
+          wrapperStyle={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}
         />
         {charted.map((comp) => (
           <Line
@@ -735,10 +735,10 @@ function VisibilityChart({
             type="monotone"
             dataKey={comp.name}
             stroke={comp.color}
-            strokeWidth={comp.isUser ? 2.5 : 1.5}
-            strokeDasharray={comp.isUser ? undefined : '5 5'}
+            strokeWidth={comp.isUser ? 2 : 1.5}
+            strokeDasharray={comp.isUser ? undefined : '4 4'}
             dot={false}
-            activeDot={{ r: 4, fill: comp.color }}
+            activeDot={{ r: 3, fill: comp.color }}
           />
         ))}
       </LineChart>

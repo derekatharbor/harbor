@@ -14,9 +14,14 @@ function getSupabase() {
 }
 
 const COLORS = [
-  '#10B981', // Emerald (user's brand)
-  '#3B82F6', '#8B5CF6', '#F59E0B', 
-  '#EC4899', '#06B6D4', '#EF4444', '#84CC16'
+  '#6B8AFD', // Soft blue (user's brand - completions color)
+  '#4B5563', // Gray-600 - desaturated
+  '#6B7280', // Gray-500
+  '#9CA3AF', // Gray-400
+  '#374151', // Gray-700
+  '#D1D5DB', // Gray-300
+  '#1F2937', // Gray-800
+  '#E5E7EB', // Gray-200
 ]
 
 export async function GET(
