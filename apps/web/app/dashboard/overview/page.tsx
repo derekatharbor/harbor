@@ -21,7 +21,7 @@ import {
   MessageCircle,
   X
 } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -328,9 +328,9 @@ export default function OverviewPage() {
       ) : (
       <div className="p-6 space-y-6">
         {/* Chart + Competitors */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Chart */}
-          <div className="lg:col-span-2 card p-0 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Chart - 7 columns */}
+          <div className="lg:col-span-7 card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div className="flex items-center gap-2">
                 <div className="pill-group">
@@ -377,8 +377,8 @@ export default function OverviewPage() {
             </div>
           </div>
 
-          {/* Competitors Table */}
-          <div className="card p-0 overflow-hidden">
+          {/* Competitors Table - 5 columns */}
+          <div className="lg:col-span-5 card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div>
                 <h3 className="font-semibold text-primary text-sm">Top Brands in AI Responses</h3>
@@ -389,30 +389,30 @@ export default function OverviewPage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-12 gap-1 px-4 py-2 text-xs text-muted border-b border-border bg-secondary">
-              <div className="col-span-5 flex items-center gap-1">Visibility <ChevronDown className="w-3 h-3" /></div>
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs text-muted border-b border-border bg-secondary">
+              <div className="col-span-6">Brand</div>
+              <div className="col-span-3 text-center">Visibility</div>
               <div className="col-span-3 text-center">Sentiment</div>
-              <div className="col-span-4 text-right">Position</div>
             </div>
 
             <div className="max-h-[320px] overflow-y-auto">
               {competitors.map((comp, idx) => (
                 <div 
                   key={comp.name}
-                  className={`grid grid-cols-12 gap-1 px-4 py-3 items-center hover:bg-hover ${comp.isUser ? 'bg-secondary/50' : ''}`}
+                  className={`grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-hover ${comp.isUser ? 'bg-secondary/50' : ''}`}
                   style={{ 
                     borderTop: idx > 0 ? '1px solid rgba(255,255,255,0.06)' : 'none'
                   }}
                 >
-                  <div className="col-span-5 flex items-center gap-2">
-                    <span className="text-muted text-sm w-4">{comp.rank}</span>
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: comp.color }} />
+                  {/* Brand - 6 cols */}
+                  <div className="col-span-6 flex items-center gap-2 min-w-0">
+                    <span className="text-muted text-xs w-4 flex-shrink-0">{comp.rank}</span>
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: comp.color }} />
                     <img 
                       src={comp.logo} 
                       alt="" 
-                      className="w-5 h-5 rounded" 
+                      className="w-5 h-5 rounded flex-shrink-0" 
                       onError={(e) => { 
-                        // Fallback to UI Avatars if Brandfetch fails
                         const target = e.currentTarget
                         if (comp.fallbackLogo && target.src !== comp.fallbackLogo) {
                           target.src = comp.fallbackLogo
@@ -422,20 +422,17 @@ export default function OverviewPage() {
                       }} 
                     />
                     <span className="text-sm font-medium text-primary truncate">{comp.name}</span>
-                    {comp.isUser && <span className="text-xs text-muted">(you)</span>}
+                    {comp.isUser && <span className="text-xs text-muted flex-shrink-0">(you)</span>}
                   </div>
                   
-                  <div className="col-span-2 text-sm">
-                    <span className="text-secondary">{comp.visibility}%</span>
-                    {comp.visibilityDelta !== null && (
-                      <span className={`ml-1 text-xs ${comp.visibilityDelta > 0 ? 'text-positive' : 'text-negative'}`}>
-                        {comp.visibilityDelta > 0 ? '↑' : '↓'} {Math.abs(comp.visibilityDelta)}
-                      </span>
-                    )}
+                  {/* Visibility - 3 cols */}
+                  <div className="col-span-3 text-center">
+                    <span className="text-sm text-secondary">{comp.visibility}%</span>
                   </div>
                   
-                  <div className="col-span-2 text-sm text-center">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                  {/* Sentiment - 3 cols */}
+                  <div className="col-span-3 flex justify-center">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                       comp.sentiment === 'positive' 
                         ? 'bg-emerald-500/20 text-emerald-400' 
                         : comp.sentiment === 'negative'
@@ -445,17 +442,8 @@ export default function OverviewPage() {
                       {comp.sentiment === 'positive' && '↑'}
                       {comp.sentiment === 'negative' && '↓'}
                       {comp.sentiment === 'neutral' && '–'}
-                      <span className="ml-1 capitalize">{comp.sentiment}</span>
+                      <span className="capitalize">{comp.sentiment}</span>
                     </span>
-                  </div>
-                  
-                  <div className="col-span-3 text-sm text-right">
-                    <span className="text-secondary">{comp.position ?? '—'}</span>
-                    {comp.positionDelta !== null && (
-                      <span className={`ml-1 text-xs ${comp.positionDelta < 0 ? 'text-positive' : 'text-negative'}`}>
-                        {comp.positionDelta < 0 ? '↑' : '↓'} {Math.abs(comp.positionDelta)}
-                      </span>
-                    )}
                   </div>
                 </div>
               ))}
@@ -677,20 +665,25 @@ function VisibilityChart({
     return 50 // neutral
   }
   
-  // Find user's brand in competitors
+  const getValue = (comp: CompetitorData) => {
+    if (metric === 'visibility') return comp.visibility
+    if (metric === 'sentiment') return sentimentToNumber(comp.sentiment)
+    return comp.position || 0
+  }
+  
+  // Get user's brand and top 4 competitors
   const userBrand = competitors.find(c => c.isUser)
-  const userValue = userBrand ? 
-    (metric === 'visibility' ? userBrand.visibility : 
-     metric === 'sentiment' ? sentimentToNumber(userBrand.sentiment) : 
-     userBrand.position || 0) : 0
+  const topCompetitors = competitors.filter(c => !c.isUser).slice(0, 4)
+  const charted = [userBrand, ...topCompetitors].filter(Boolean) as CompetitorData[]
 
-  // Generate chart data - flatline at current value (or 0 if no data)
-  const chartData = dates.map(d => ({
-    date: d.date,
-    [brandName]: userValue
-  }))
-
-  const chartColor = '#EF4444' // Red/coral for user's brand
+  // Generate chart data - flatline at current values (historical data would come from DB)
+  const chartData = dates.map(d => {
+    const point: Record<string, string | number> = { date: d.date }
+    charted.forEach(comp => {
+      point[comp.name] = getValue(comp)
+    })
+    return point
+  })
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -723,20 +716,31 @@ function VisibilityChart({
             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
           }}
           labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
-          itemStyle={{ color: '#fff', padding: '2px 0' }}
-          formatter={(value: number) => [
+          itemStyle={{ padding: '2px 0' }}
+          formatter={(value: number, name: string) => [
             metric === 'position' ? value.toFixed(1) : `${value}%`,
-            brandName
+            name
           ]}
         />
-        <Line
-          type="monotone"
-          dataKey={brandName}
-          stroke={chartColor}
-          strokeWidth={2}
-          dot={false}
-          activeDot={{ r: 4, fill: chartColor }}
+        <Legend 
+          verticalAlign="top" 
+          height={36}
+          iconType="line"
+          iconSize={10}
+          wrapperStyle={{ fontSize: '12px' }}
         />
+        {charted.map((comp) => (
+          <Line
+            key={comp.name}
+            type="monotone"
+            dataKey={comp.name}
+            stroke={comp.color}
+            strokeWidth={comp.isUser ? 2.5 : 1.5}
+            strokeDasharray={comp.isUser ? undefined : '5 5'}
+            dot={false}
+            activeDot={{ r: 4, fill: comp.color }}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   )
