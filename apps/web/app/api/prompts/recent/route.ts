@@ -117,19 +117,13 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Step 4: Build results
-    // Group executions by prompt, show latest execution per prompt
-    const seenPrompts = new Set<string>()
+    // Step 4: Build results - show all executions (each model gets its own card)
     let results: any[] = []
 
-    // First, add prompts that have executions (with full data)
+    // Add all executions with full data
     executions?.forEach((exec) => {
       const prompt = promptMap.get(exec.prompt_id)
       if (!prompt) return
-      
-      // Only show one execution per prompt (latest)
-      if (seenPrompts.has(exec.prompt_id)) return
-      seenPrompts.add(exec.prompt_id)
 
       const execMentions = mentionsByExecution.get(exec.id) || []
       const execCitations = citationsByExecution.get(exec.id) || []
@@ -160,9 +154,10 @@ export async function GET(request: NextRequest) {
       })
     })
 
-    // Then, add prompts that haven't been executed yet
+    // Add prompts that haven't been executed yet
+    const executedPromptIds = new Set(executions?.map(e => e.prompt_id) || [])
     userPrompts.forEach(prompt => {
-      if (seenPrompts.has(prompt.id)) return
+      if (executedPromptIds.has(prompt.id)) return
       
       results.push({
         id: prompt.id,
