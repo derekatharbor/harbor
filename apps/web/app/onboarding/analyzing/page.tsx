@@ -5,18 +5,26 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Loader2, ArrowRight, Check, TrendingUp, Sparkles, Target } from 'lucide-react'
+import { Loader2, ArrowRight, Check, Target } from 'lucide-react'
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-interface ModelResult {
+interface PromptResult {
+  prompt_id: string
+  prompt_text: string
   model: string
   status: 'pending' | 'running' | 'complete' | 'error'
   mentioned: boolean
-  brands: string[]
-  snippet?: string
+}
+
+interface ModelStatus {
+  model: string
+  status: 'pending' | 'running' | 'complete'
+  promptsComplete: number
+  promptsTotal: number
+  mentionedCount: number
 }
 
 // ============================================================================
@@ -28,19 +36,19 @@ const MODELS = [
     id: 'chatgpt', 
     name: 'ChatGPT', 
     logo: '/models/chatgpt-logo.png',
-    angle: 270 // Top
+    angle: 270
   },
   { 
     id: 'claude', 
     name: 'Claude', 
     logo: '/models/claude-logo.png',
-    angle: 30 // Bottom-right
+    angle: 30
   },
   { 
     id: 'perplexity', 
     name: 'Perplexity', 
     logo: '/models/perplexity-logo.png',
-    angle: 150 // Bottom-left
+    angle: 150
   }
 ]
 
@@ -52,23 +60,25 @@ function AnalyzingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  const brand = searchParams.get('brand') || ''
-  const prompt = searchParams.get('prompt') || ''
   const dashboardId = searchParams.get('dashboard_id') || ''
+  const brand = searchParams.get('brand') || ''
   
-  const [phase, setPhase] = useState<'retrieving' | 'analyzing' | 'complete'>('retrieving')
-  const [progress, setProgress] = useState(0)
-  const [rotation, setRotation] = useState(0)
-  const [results, setResults] = useState<ModelResult[]>(
+  const [phase, setPhase] = useState<'loading' | 'executing' | 'complete'>('loading')
+  const [prompts, setPrompts] = useState<{ id: string; prompt_text: string }[]>([])
+  const [modelStatus, setModelStatus] = useState<ModelStatus[]>(
     MODELS.map(m => ({ 
       model: m.id, 
       status: 'pending', 
-      mentioned: false, 
-      brands: [] 
+      promptsComplete: 0, 
+      promptsTotal: 0,
+      mentionedCount: 0
     }))
   )
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0)
+  const [rotation, setRotation] = useState(0)
   const [canSkip, setCanSkip] = useState(false)
   const [paramsChecked, setParamsChecked] = useState(false)
+  const [totalMentioned, setTotalMentioned] = useState(0)
 
   // Check params after hydration
   useEffect(() => {
@@ -76,20 +86,20 @@ function AnalyzingContent() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Redirect if no params
+  // Redirect if no dashboard_id
   useEffect(() => {
-    if (paramsChecked && (!brand || !prompt)) {
+    if (paramsChecked && !dashboardId) {
       router.push('/dashboard/overview')
     }
-  }, [paramsChecked, brand, prompt, router])
+  }, [paramsChecked, dashboardId, router])
 
-  // Enable skip after 3 seconds
+  // Enable skip after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setCanSkip(true), 3000)
+    const timer = setTimeout(() => setCanSkip(true), 5000)
     return () => clearTimeout(timer)
   }, [])
 
-  // Rotation animation (slower, smoother)
+  // Rotation animation
   useEffect(() => {
     const interval = setInterval(() => {
       setRotation(prev => (prev + 0.3) % 360)
@@ -97,85 +107,104 @@ function AnalyzingContent() {
     return () => clearInterval(interval)
   }, [])
 
-  // Execute prompts
+  // Fetch prompts and execute them
   useEffect(() => {
-    if (!paramsChecked || !brand || !prompt) return
+    if (!paramsChecked || !dashboardId) return
     
-    const executePrompts = async () => {
+    async function fetchAndExecute() {
       try {
-        // Phase 1: Retrieving
-        setPhase('retrieving')
+        // Step 1: Fetch all user_prompts for this dashboard
+        setPhase('loading')
         
-        const response = await fetch('/api/prompts/execute-stream', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt, brand })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to execute')
+        const promptsRes = await fetch(`/api/prompts/list?dashboard_id=${dashboardId}`)
+        if (!promptsRes.ok) throw new Error('Failed to fetch prompts')
+        
+        const promptsData = await promptsRes.json()
+        const userPrompts = (promptsData.prompts || []).map((p: any) => ({
+          id: p.id,
+          prompt_text: p.prompt_text
+        }))
+        
+        if (userPrompts.length === 0) {
+          // No prompts to execute, go to dashboard
+          router.push('/dashboard/overview')
+          return
         }
-
-        setPhase('analyzing')
-
-        const reader = response.body?.getReader()
-        if (!reader) throw new Error('No reader')
-
-        const decoder = new TextDecoder()
-        let completedModels = 0
-
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-
-          const chunk = decoder.decode(value)
-          const lines = chunk.split('\n').filter(l => l.startsWith('data: '))
-
-          for (const line of lines) {
+        
+        setPrompts(userPrompts)
+        setModelStatus(prev => prev.map(m => ({ ...m, promptsTotal: userPrompts.length })))
+        setPhase('executing')
+        
+        // Step 2: Execute all prompts
+        // We'll execute model by model for better UX (each logo lights up when done)
+        for (const model of MODELS) {
+          // Mark model as running
+          setModelStatus(prev => prev.map(m => 
+            m.model === model.id ? { ...m, status: 'running' } : m
+          ))
+          
+          let mentionedForModel = 0
+          
+          // Execute all prompts for this model in parallel
+          const execPromises = userPrompts.map(async (prompt: any, idx: number) => {
             try {
-              const data = JSON.parse(line.replace('data: ', ''))
+              const res = await fetch('/api/prompts/execute-single', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  prompt_id: prompt.id,
+                  prompt_text: prompt.prompt_text,
+                  model: model.id,
+                  brand,
+                  dashboard_id: dashboardId
+                })
+              })
               
-              if (data.model) {
-                setResults(prev => prev.map(r => {
-                  if (r.model === data.model) {
-                    return {
-                      ...r,
-                      status: data.status || r.status,
-                      mentioned: data.mentioned ?? r.mentioned,
-                      brands: data.brands || r.brands,
-                      snippet: data.snippet || r.snippet
-                    }
-                  }
-                  return r
-                }))
-
-                if (data.status === 'complete' || data.status === 'error') {
-                  completedModels++
-                  setProgress(Math.round((completedModels / MODELS.length) * 100))
-                }
+              if (res.ok) {
+                const data = await res.json()
+                if (data.mentioned) mentionedForModel++
+                
+                // Update progress
+                setModelStatus(prev => prev.map(m => 
+                  m.model === model.id 
+                    ? { ...m, promptsComplete: m.promptsComplete + 1 }
+                    : m
+                ))
               }
-
-              if (data.complete) {
-                setPhase('complete')
-              }
-            } catch (e) {
-              // Skip invalid JSON
+            } catch (err) {
+              console.error(`Error executing prompt ${prompt.id} on ${model.id}:`, err)
+              // Still increment to show progress
+              setModelStatus(prev => prev.map(m => 
+                m.model === model.id 
+                  ? { ...m, promptsComplete: m.promptsComplete + 1 }
+                  : m
+              ))
             }
-          }
+          })
+          
+          // Wait for all prompts to complete for this model
+          await Promise.all(execPromises)
+          
+          // Mark model as complete
+          setModelStatus(prev => prev.map(m => 
+            m.model === model.id 
+              ? { ...m, status: 'complete', mentionedCount: mentionedForModel }
+              : m
+          ))
+          
+          setTotalMentioned(prev => prev + mentionedForModel)
         }
-
+        
         setPhase('complete')
-        setProgress(100)
-
+        
       } catch (error) {
         console.error('Execution error:', error)
         setPhase('complete')
-        setProgress(100)
       }
     }
 
-    executePrompts()
-  }, [paramsChecked, brand, prompt])
+    fetchAndExecute()
+  }, [paramsChecked, dashboardId, brand, router])
 
   const handleContinue = () => {
     router.push('/dashboard/overview')
@@ -195,17 +224,10 @@ function AnalyzingContent() {
   }
 
   const isComplete = phase === 'complete'
-  const mentionedCount = results.filter(r => r.mentioned).length
-  const completedCount = results.filter(r => r.status === 'complete').length
-  
-  // Calculate opportunity score (higher = more opportunity)
-  // If not mentioned, there's opportunity. If mentioned, less opportunity needed.
-  const opportunityScore = Math.round(((MODELS.length - mentionedCount) / MODELS.length) * 100)
-  
-  // Get all brands mentioned by competitors (for opportunity framing)
-  const competitorBrands = [...new Set(results.flatMap(r => r.brands))].filter(b => 
-    b.toLowerCase() !== brand.toLowerCase()
-  ).slice(0, 5)
+  const totalPrompts = prompts.length
+  const totalExecutions = totalPrompts * MODELS.length
+  const completedExecutions = modelStatus.reduce((sum, m) => sum + m.promptsComplete, 0)
+  const progress = totalExecutions > 0 ? Math.round((completedExecutions / totalExecutions) * 100) : 0
 
   return (
     <div className="min-h-screen bg-[#0B0B0C] flex flex-col">
@@ -256,11 +278,10 @@ function AnalyzingContent() {
 
           {/* Orbiting model logos */}
           {MODELS.map((model) => {
-            const result = results.find(r => r.model === model.id)
+            const status = modelStatus.find(m => m.model === model.id)
             const pos = getOrbitPosition(model.angle, 110)
-            const isRunning = result?.status === 'running'
-            const isDone = result?.status === 'complete'
-            const hasError = result?.status === 'error'
+            const isRunning = status?.status === 'running'
+            const isDone = status?.status === 'complete'
             
             return (
               <div
@@ -270,14 +291,13 @@ function AnalyzingContent() {
                   transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`
                 }}
               >
-                {/* Logo container - rounded square, cleaner for square logos */}
+                {/* Logo container - rounded square */}
                 <div className={`
                   relative w-12 h-12 rounded-xl overflow-hidden
                   transition-all duration-300
                   ${isRunning ? 'ring-2 ring-white/30 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
                   ${isDone ? 'ring-2 ring-emerald-500/50 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
-                  ${hasError ? 'ring-2 ring-red-500/30 ring-offset-2 ring-offset-[#0B0B0C]' : ''}
-                  ${!isDone && !isRunning && !hasError ? 'ring-1 ring-white/10' : ''}
+                  ${!isDone && !isRunning ? 'ring-1 ring-white/10' : ''}
                 `}>
                   <Image
                     src={model.logo}
@@ -290,15 +310,17 @@ function AnalyzingContent() {
                   />
                 </div>
                 
-                {/* Status indicator - green check when complete */}
+                {/* Status indicator */}
                 {isDone && (
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
                     <Check className="w-3 h-3 text-white" strokeWidth={3} />
                   </div>
                 )}
-                {hasError && (
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
-                    <span className="text-white/60 text-xs">!</span>
+                
+                {/* Progress for running model */}
+                {isRunning && status && (
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] text-white font-medium">
+                    {status.promptsComplete}/{status.promptsTotal}
                   </div>
                 )}
               </div>
@@ -308,13 +330,19 @@ function AnalyzingContent() {
 
         {/* Status text */}
         <div className="text-center mb-6">
-          {!isComplete ? (
+          {phase === 'loading' ? (
             <>
               <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
-                {phase === 'retrieving' ? 'Retrieving sources' : 'Analyzing responses'}
+                Loading prompts...
+              </h2>
+            </>
+          ) : !isComplete ? (
+            <>
+              <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+                Analyzing AI visibility
               </h2>
               <p className="text-white/40 text-sm font-['Source_Code_Pro']">
-                Checking AI visibility across {MODELS.length} models
+                Running {totalPrompts} prompts across {MODELS.length} models
               </p>
             </>
           ) : (
@@ -322,21 +350,12 @@ function AnalyzingContent() {
               <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
                 Analysis complete
               </h2>
-              
-              {/* Opportunity-focused messaging */}
-              {mentionedCount === 0 ? (
-                <p className="text-white/50 text-sm font-['Source_Code_Pro'] max-w-md">
-                  We've identified visibility opportunities for {brand} across all {MODELS.length} AI models
-                </p>
-              ) : mentionedCount === MODELS.length ? (
-                <p className="text-emerald-400/80 text-sm font-['Source_Code_Pro'] max-w-md">
-                  {brand} is visible across all {MODELS.length} AI models
-                </p>
-              ) : (
-                <p className="text-white/50 text-sm font-['Source_Code_Pro'] max-w-md">
-                  {brand} appeared in {mentionedCount} of {MODELS.length} models — opportunities identified
-                </p>
-              )}
+              <p className="text-white/50 text-sm font-['Source_Code_Pro'] max-w-md">
+                {totalMentioned > 0 
+                  ? `${brand} was mentioned ${totalMentioned} times across ${totalPrompts * MODELS.length} queries`
+                  : `We've identified visibility opportunities for ${brand}`
+                }
+              </p>
             </>
           )}
         </div>
@@ -345,55 +364,30 @@ function AnalyzingContent() {
         <div className="w-64 mb-8">
           <div className="h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className={`h-full rounded-full transition-all duration-500 ease-out ${
+              className={`h-full rounded-full transition-all duration-300 ease-out ${
                 isComplete ? 'bg-emerald-500/60' : 'bg-white/40'
               }`}
               style={{ width: `${progress}%` }}
             />
           </div>
+          {!isComplete && (
+            <p className="text-center text-xs text-white/30 mt-2 font-['Source_Code_Pro']">
+              {completedExecutions} / {totalExecutions} queries complete
+            </p>
+          )}
         </div>
 
         {/* Results when complete */}
         {isComplete && (
           <div className="w-full max-w-md space-y-4 mb-8">
-            
-            {/* Opportunity Score Card */}
-            {mentionedCount < MODELS.length && (
-              <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                    <Target className="w-4 h-4 text-emerald-400" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-white font-['Space_Grotesk']">
-                      Opportunity Score
-                    </div>
-                    <div className="text-xs text-white/40 font-['Source_Code_Pro']">
-                      Room for visibility improvement
-                    </div>
-                  </div>
-                  <div className="ml-auto text-2xl font-semibold text-emerald-400 font-['Space_Grotesk']">
-                    {opportunityScore}%
-                  </div>
-                </div>
-                
-                {competitorBrands.length > 0 && (
-                  <p className="text-xs text-white/40 font-['Source_Code_Pro'] mt-3 pt-3 border-t border-white/5">
-                    Competitors appearing: {competitorBrands.slice(0, 3).join(', ')}
-                    {competitorBrands.length > 3 && ` +${competitorBrands.length - 3} more`}
-                  </p>
-                )}
-              </div>
-            )}
-
             {/* Model Results */}
             <div className="bg-[#111213] border border-white/5 rounded-xl p-4 space-y-3">
-              {results.map((result) => {
-                const model = MODELS.find(m => m.id === result.model)
+              {modelStatus.map((status) => {
+                const model = MODELS.find(m => m.id === status.model)
                 if (!model) return null
                 
                 return (
-                  <div key={result.model} className="flex items-center gap-3">
+                  <div key={status.model} className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0">
                       <Image
                         src={model.logo}
@@ -406,27 +400,22 @@ function AnalyzingContent() {
                     <span className="text-sm text-white/70 font-['Source_Code_Pro'] flex-1">
                       {model.name}
                     </span>
-                    {result.status === 'error' ? (
-                      <span className="text-xs text-white/30 font-['Source_Code_Pro']">Error</span>
-                    ) : result.mentioned ? (
-                      <span className="text-xs text-emerald-400 font-['Source_Code_Pro'] flex items-center gap-1">
-                        <Check className="w-3 h-3" />
-                        Visible
-                      </span>
-                    ) : (
-                      <span className="text-xs text-white/30 font-['Source_Code_Pro']">Opportunity</span>
-                    )}
+                    <span className="text-xs text-white/40 font-['Source_Code_Pro']">
+                      {status.mentionedCount > 0 ? (
+                        <span className="text-emerald-400">
+                          {status.mentionedCount} mention{status.mentionedCount !== 1 ? 's' : ''}
+                        </span>
+                      ) : (
+                        'Opportunities found'
+                      )}
+                    </span>
                   </div>
                 )
               })}
             </div>
 
-            {/* Insight message */}
             <p className="text-center text-xs text-white/30 font-['Source_Code_Pro']">
-              {mentionedCount < MODELS.length 
-                ? "Your dashboard shows specific actions to improve AI visibility"
-                : "Track your visibility over time from your dashboard"
-              }
+              View detailed results in your dashboard
             </p>
           </div>
         )}

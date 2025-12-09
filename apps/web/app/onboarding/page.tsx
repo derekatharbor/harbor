@@ -384,14 +384,11 @@ function OnboardingContent() {
         throw new Error(data.error || 'Failed to create dashboard')
       }
 
-      // Get first prompt for analyzing page
-      const firstPrompt = selectedPromptData[0]
-      
-      if (firstPrompt) {
+      // Go to analyzing page with dashboard_id - it will execute ALL prompts
+      if (data.dashboardId) {
         const params = new URLSearchParams({
-          brand: brandName.trim(),
-          prompt: firstPrompt.text,
-          dashboard_id: data.dashboardId || ''
+          dashboard_id: data.dashboardId,
+          brand: brandName.trim()
         })
         router.push(`/onboarding/analyzing?${params.toString()}`)
       } else {
