@@ -109,29 +109,52 @@ function checkBrandMentioned(text: string, brandName: string): { mentioned: bool
 }
 
 // ============================================================================
-// EXTRACT BRANDS FROM RESPONSE
+// EXTRACT BRANDS FROM RESPONSE - Uses Claude for accuracy
 // ============================================================================
 
-function extractBrands(text: string): string[] {
-  // Common patterns for brand mentions
-  const patterns = [
-    /\*\*([A-Z][A-Za-z0-9\s&\-\.]+?)\*\*/g,  // **Brand Name**
-    /(?:^|\n)\d+\.\s+\*?\*?([A-Z][A-Za-z0-9\s&\-\.]+?)\*?\*?(?:\s*[-–:]|\s*\()/gm,  // 1. Brand Name - or 1. Brand Name (
-  ]
-  
-  const brands = new Set<string>()
-  
-  for (const pattern of patterns) {
-    let match
-    while ((match = pattern.exec(text)) !== null) {
-      const brand = match[1].trim()
-      if (brand.length > 1 && brand.length < 50) {
-        brands.add(brand)
-      }
+async function extractBrands(text: string, userBrand: string): Promise<string[]> {
+  // Use Claude to extract brand/company/website names mentioned
+  try {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    
+    const response = await anthropic.messages.create({
+      model: 'claude-3-5-haiku-20241022',
+      max_tokens: 500,
+      messages: [{
+        role: 'user',
+        content: `Extract all brand names, company names, product names, and website names mentioned in this text. Return ONLY a JSON array of strings, nothing else. If none found, return [].
+
+Text:
+${text.slice(0, 2000)}
+
+JSON array:`
+      }]
+    })
+    
+    const content = response.content[0]?.type === 'text' ? response.content[0].text : '[]'
+    
+    // Parse the JSON array
+    const cleaned = content.trim().replace(/```json\n?|\n?```/g, '')
+    const brands = JSON.parse(cleaned)
+    
+    if (Array.isArray(brands)) {
+      // Filter out the user's own brand and duplicates
+      const userBrandLower = userBrand.toLowerCase()
+      return [...new Set(brands)]
+        .filter((b): b is string => 
+          typeof b === 'string' && 
+          b.length > 1 && 
+          b.length < 50 &&
+          !b.toLowerCase().includes(userBrandLower)
+        )
+        .slice(0, 15)
     }
+    
+    return []
+  } catch (err) {
+    console.error('Brand extraction error:', err)
+    return []
   }
-  
-  return Array.from(brands).slice(0, 20)
 }
 
 // ============================================================================
@@ -182,8 +205,8 @@ export async function POST(request: NextRequest) {
       ? checkBrandMentioned(response.text, brand)
       : { mentioned: false, snippet: null }
     
-    // Extract brands from response
-    const brandsFound = extractBrands(response.text)
+    // Extract brands from response (uses Claude)
+    const brandsFound = await extractBrands(response.text, brand || '')
     
     // Save to prompt_executions
     const { data: execution, error: execError } = await supabase

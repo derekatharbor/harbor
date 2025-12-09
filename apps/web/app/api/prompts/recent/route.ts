@@ -188,17 +188,45 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Sort: executed first (by date), then pending
+    // Sort: mix models together (group by prompt, interleave models)
+    // This creates a more varied visual than row-by-row
     results.sort((a, b) => {
+      // First by execution time (newest first)
+      if (a.executedAt && b.executedAt) {
+        const timeDiff = new Date(b.executedAt).getTime() - new Date(a.executedAt).getTime()
+        // If within same second, vary by model to interleave
+        if (Math.abs(timeDiff) < 1000) {
+          const modelOrder: Record<string, number> = { chatgpt: 0, claude: 1, perplexity: 2 }
+          return (modelOrder[a.model] || 0) - (modelOrder[b.model] || 0)
+        }
+        return timeDiff
+      }
+      // Pending items last
       if (a.status === 'pending' && b.status !== 'pending') return 1
       if (a.status !== 'pending' && b.status === 'pending') return -1
-      if (a.executedAt && b.executedAt) {
-        return new Date(b.executedAt).getTime() - new Date(a.executedAt).getTime()
-      }
       return 0
     })
 
-    results = results.slice(0, limit)
+    // Interleave by prompt to avoid same-prompt clustering
+    const byPrompt = new Map<string, any[]>()
+    results.forEach(r => {
+      const list = byPrompt.get(r.prompt_id) || []
+      list.push(r)
+      byPrompt.set(r.prompt_id, list)
+    })
+    
+    // Round-robin through prompts
+    const interleaved: any[] = []
+    const promptLists = Array.from(byPrompt.values())
+    const maxLen = Math.max(...promptLists.map(l => l.length))
+    
+    for (let i = 0; i < maxLen; i++) {
+      for (const list of promptLists) {
+        if (list[i]) interleaved.push(list[i])
+      }
+    }
+    
+    results = interleaved.slice(0, limit)
 
     console.log('[prompts/recent] Returning:', results.length, 'prompts')
 
