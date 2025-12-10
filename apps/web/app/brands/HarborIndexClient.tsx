@@ -1,13 +1,14 @@
 // Path: /apps/web/app/brands/HarborIndexClient.tsx
+// Brand Index - Profound-style design with Harbor aesthetics
 
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { Menu, Search, ArrowRight, X, Loader2, Plus } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { Search, ArrowRight, ChevronDown, X, Loader2, Plus, ArrowUpRight, Info } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import FullscreenMenu from '@/components/landing/FullscreenMenu'
+import Nav from '@/components/landing-new/Nav'
+import Footer from '@/components/landing-new/Footer'
 
 interface Brand {
   id: string
@@ -25,17 +26,76 @@ interface Props {
   brands: Brand[]
 }
 
+// Industry categories
+const INDUSTRIES = [
+  { value: 'all', label: 'All Industries' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'streaming', label: 'Streaming' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'retail', label: 'Retail' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'automotive', label: 'Automotive' },
+  { value: 'food', label: 'Food & Beverage' },
+  { value: 'travel', label: 'Travel' },
+  { value: 'education', label: 'Education' },
+]
+
+// AI Models
+const AI_MODELS = [
+  { value: 'all', label: 'All Models' },
+  { value: 'chatgpt', label: 'ChatGPT' },
+  { value: 'claude', label: 'Claude' },
+  { value: 'perplexity', label: 'Perplexity' },
+  { value: 'gemini', label: 'Gemini' },
+]
+
+// Sample prompts by industry
+const SAMPLE_PROMPTS: Record<string, string[]> = {
+  all: [
+    'What are the best companies in this industry?',
+    'Which brands are most recommended?',
+    'Top companies for quality and value',
+    'Most trusted brands in this category',
+    'Best options for enterprise customers',
+  ],
+  technology: [
+    'Best enterprise software companies',
+    'Top cloud infrastructure providers',
+    'Most innovative tech companies',
+    'Best B2B SaaS platforms',
+    'Leading AI companies to watch',
+  ],
+  streaming: [
+    'Best streaming services for movies',
+    'Top platforms for TV shows',
+    'Most affordable streaming options',
+    'Best streaming for live sports',
+    'Top ad-free streaming services',
+  ],
+  finance: [
+    'Best banks for small business',
+    'Top credit cards for rewards',
+    'Most trusted investment platforms',
+    'Best fintech apps for budgeting',
+    'Leading payment processors',
+  ],
+  retail: [
+    'Best online shopping platforms',
+    'Top retailers for electronics',
+    'Most sustainable fashion brands',
+    'Best home goods stores',
+    'Leading e-commerce marketplaces',
+  ],
+}
+
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
-  const searchParams = useSearchParams()
-  const initialQuery = searchParams.get('q') || ''
-  
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
-  const [filteredBrands, setFilteredBrands] = useState<Brand[]>(initialBrands.slice(0, 50))
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(initialBrands.length === 0)
-  const [searchQuery, setSearchQuery] = useState(initialQuery)
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Brand[]>([])
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [selectedIndustry, setSelectedIndustry] = useState('all')
+  const [selectedModel, setSelectedModel] = useState('all')
 
   // Fetch brands if not provided
   useEffect(() => {
@@ -44,7 +104,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         .then(res => res.json())
         .then(data => {
           setBrands(data)
-          setFilteredBrands(data.slice(0, 50))
           setLoading(false)
         })
         .catch(err => {
@@ -54,14 +113,31 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [initialBrands])
 
-  // Handle search with dropdown
+  // Filter brands by industry
+  const filteredBrands = useMemo(() => {
+    if (selectedIndustry === 'all') return brands
+    return brands.filter(b => 
+      b.industry?.toLowerCase().includes(selectedIndustry.toLowerCase())
+    )
+  }, [brands, selectedIndustry])
+
+  // Top 3 for podium
+  const topThree = useMemo(() => {
+    return filteredBrands.slice(0, 3)
+  }, [filteredBrands])
+
+  // Rest for table (4-50)
+  const tableBrands = useMemo(() => {
+    return filteredBrands.slice(0, 50)
+  }, [filteredBrands])
+
+  // Handle search
   useEffect(() => {
     if (searchQuery.trim()) {
       const results = brands.filter(brand =>
         brand.brand_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         brand.domain.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5) // Show top 5 results
-      
+      ).slice(0, 5)
       setSearchResults(results)
       setShowSearchDropdown(true)
     } else {
@@ -70,254 +146,346 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [searchQuery, brands])
 
-  const totalBrands = brands.length
-  const displayedBrands = filteredBrands.length
+  // Mock delta (would come from real data in production)
+  const getDelta = (brand: Brand) => {
+    const hash = brand.brand_name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
+    return ((hash % 50) - 25) / 10 // Returns -2.5 to +2.5
+  }
+
+  const currentIndustryLabel = INDUSTRIES.find(i => i.value === selectedIndustry)?.label || 'All Industries'
+  const prompts = SAMPLE_PROMPTS[selectedIndustry] || SAMPLE_PROMPTS.all
 
   return (
-    <div className="min-h-screen bg-[#101A31] relative">
-      {/* Frosted Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px] overflow-visible">
-        <div 
-          className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
-          style={{ backdropFilter: 'blur(12px)' }}
-        >
-          <div className="px-4 md:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-14 md:h-16">
-              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
-                <Image 
-                  src="/logo-icon.png" 
-                  alt="Harbor" 
-                  width={32} 
-                  height={32}
-                  className="w-7 h-7 md:w-8 md:h-8"
-                />
-                <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
-              </Link>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <Nav />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-8 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6">
+            <span className="text-white/60 text-sm font-medium tracking-wide uppercase">
+              Harbor Index
+            </span>
+          </div>
 
-              <div className="flex items-center space-x-2 md:space-x-4">
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+            See who is winning AI Search
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-lg text-white/50 max-w-2xl mx-auto mb-8">
+            Explore the brands leading AI search visibility, powered by analysis of millions of real AI conversations.
+          </p>
+
+          {/* Search Box */}
+          <div className="max-w-xl mx-auto relative">
+            <div className="relative flex items-center bg-white/[0.03] rounded-xl border border-white/[0.08] overflow-hidden">
+              <Search className="w-5 h-5 text-white/40 ml-4" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery && setShowSearchDropdown(true)}
+                onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
+                placeholder="Search brands..."
+                className="flex-1 px-4 py-3.5 bg-transparent text-white placeholder-white/40 focus:outline-none text-sm"
+              />
+              {searchQuery && (
                 <button
-                  onClick={() => setIsMenuOpen(true)}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                  aria-label="Menu"
+                  onClick={() => {
+                    setSearchQuery('')
+                    setShowSearchDropdown(false)
+                  }}
+                  className="mr-4 text-white/40 hover:text-white transition-colors"
                 >
-                  <Menu className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  <X className="w-4 h-4" />
                 </button>
-                
+              )}
+            </div>
+
+            {/* Search Dropdown */}
+            {showSearchDropdown && searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden z-50">
+                {searchResults.map((brand) => {
+                  const delta = getDelta(brand)
+                  const isPositive = delta > 0
+
+                  return (
+                    <Link
+                      key={brand.id}
+                      href={`/brands/${brand.slug}`}
+                      className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-white/[0.05] overflow-hidden flex-shrink-0">
+                        <Image
+                          src={brand.logo_url}
+                          alt={brand.brand_name}
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-white font-medium text-sm truncate">{brand.brand_name}</div>
+                        <div className="text-white/40 text-xs truncate">{brand.domain}</div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-medium text-sm">{brand.visibility_score?.toFixed(1)}%</span>
+                        <span className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                        </span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-white/30" />
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* No Results */}
+            {showSearchDropdown && searchQuery && searchResults.length === 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-2xl p-6 text-center z-50">
+                <p className="text-white/50 text-sm mb-4">No brands found for "{searchQuery}"</p>
                 <Link
-                  href="/dashboard/overview"
-                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
+                  href={`/auth/signup?brand=${encodeURIComponent(searchQuery)}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.05] text-white border border-white/[0.1] text-sm font-medium hover:bg-white/[0.08] transition-all"
                 >
-                  Dashboard
+                  <Plus className="w-4 h-4" />
+                  Add "{searchQuery}" to the Index
                 </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Industry Pills */}
+      <section className="pb-6 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {INDUSTRIES.map((industry) => (
+              <button
+                key={industry.value}
+                onClick={() => setSelectedIndustry(industry.value)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+                  selectedIndustry === industry.value
+                    ? 'bg-white text-black'
+                    : 'bg-white/[0.03] text-white/70 border border-white/[0.08] hover:bg-white/[0.06]'
+                }`}
+              >
+                {industry.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Top Section Header with Filters */}
+      <section className="pb-6 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <h2 className="text-xl text-white">
+              Top <span className="font-semibold">{currentIndustryLabel}</span> brands this week
+            </h2>
+            
+            <div className="flex items-center gap-3">
+              {/* Model Filter */}
+              <div className="relative">
+                <select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  className="appearance-none px-4 py-2 pr-10 bg-white/[0.03] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-white/20 cursor-pointer"
+                >
+                  {AI_MODELS.map(model => (
+                    <option key={model.value} value={model.value} className="bg-[#111213]">
+                      {model.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+              </div>
+
+              {/* Time Filter */}
+              <div className="relative">
+                <select
+                  className="appearance-none px-4 py-2 pr-10 bg-white/[0.03] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-white/20 cursor-pointer"
+                  defaultValue="week"
+                >
+                  <option value="week" className="bg-[#111213]">This Week</option>
+                  <option value="month" className="bg-[#111213]">This Month</option>
+                  <option value="quarter" className="bg-[#111213]">This Quarter</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
               </div>
             </div>
           </div>
         </div>
-      </nav>
+      </section>
 
-      {/* Hero Container - Starts below navbar */}
-      <div className="relative pt-12 md:pt-16">
-        {/* Hero Section */}
-        <section className="relative min-h-[400px] md:min-h-[500px] pt-8 md:pt-16 pb-4 md:pb-6 z-[1]">
-
-          {/* Hero Content */}
-          <div className="relative max-w-5xl mx-auto px-4 md:px-6 text-center z-10 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px]">
-            {/* Animated Frosted Glass Pill */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-4 animate-glow-pulse">
-              <span className="text-white/90 text-sm font-medium tracking-wide uppercase">
-                HARBOR INDEX
-              </span>
+      {/* Top 3 Podium Cards */}
+      <section className="pb-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 text-white/30 animate-spin" />
             </div>
-
-            {/* Animated Gradient Title */}
-            <h1 
-              className="text-4xl md:text-5xl lg:text-7xl font-bold mb-3 md:mb-4 bg-clip-text text-transparent animate-gradient-shift"
-              style={{
-                backgroundImage: 'linear-gradient(90deg, #fff, #a5f3fc, #60a5fa, #a5f3fc, #fff)',
-                backgroundSize: '200% 100%',
-              }}
-            >
-              The AI Visibility Index
-            </h1>
-
-            {/* Explainer */}
-            <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-3xl mx-auto mb-6 md:mb-8 px-4">
-              The global leaderboard for how AI models interpret and surface the world's brands.
-            </p>
-
-            {/* Search Box with Dropdown */}
-                <div className="w-full max-w-2xl relative">
-              <div className="relative flex items-center bg-[#0C1422] rounded-2xl border border-[#2A2F38] p-2 shadow-lg">
-                <Search className="w-5 h-5 text-white/40 ml-4" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => searchQuery && setShowSearchDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                  placeholder="Search brands..."
-                  className="flex-1 px-4 py-3 bg-transparent text-white placeholder-white/40 focus:outline-none"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => {
-                      setSearchQuery('')
-                      setShowSearchDropdown(false)
-                    }}
-                    className="mr-4 text-white/40 hover:text-white transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Search Dropdown */}
-              {showSearchDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl overflow-hidden z-50">
-              {searchResults.map((brand) => {
-                const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {topThree.map((brand, index) => {
+                const delta = getDelta(brand)
                 const isPositive = delta > 0
+                const rankNumber = index + 1
 
                 return (
                   <Link
                     key={brand.id}
                     href={`/brands/${brand.slug}`}
-                    className="flex items-center gap-4 px-6 py-4 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                    className="relative bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 pt-8 pb-8 overflow-hidden hover:bg-white/[0.03] transition-colors group"
                   >
-                    {/* Logo */}
-                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                      <Image
-                        src={brand.logo_url}
-                        alt={brand.brand_name}
-                        width={40}
-                        height={40}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none'
-                        }}
-                      />
+                    {/* Giant Rank Watermark */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[180px] font-bold text-white/[0.03] pointer-events-none select-none leading-none">
+                      {rankNumber}
                     </div>
 
-                    {/* Brand Info */}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-white font-medium truncate">{brand.brand_name}</div>
-                      <div className="text-white/40 text-sm truncate">{brand.domain}</div>
+                    {/* Content */}
+                    <div className="relative z-10">
+                      {/* Visibility Score */}
+                      <div className="mb-16">
+                        <div className="flex items-center gap-1.5 text-white/50 text-xs mb-1">
+                          <Info className="w-3 h-3" />
+                          Visibility Score
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-3xl font-bold text-white">
+                            {brand.visibility_score?.toFixed(1)}%
+                          </span>
+                          <span className={`text-sm font-medium px-1.5 py-0.5 rounded ${
+                            isPositive 
+                              ? 'text-emerald-400 bg-emerald-400/10' 
+                              : 'text-red-400 bg-red-400/10'
+                          }`}>
+                            {isPositive ? '+' : ''}{delta.toFixed(1)}%
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Brand */}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                          <Image
+                            src={brand.logo_url}
+                            alt={brand.brand_name}
+                            width={40}
+                            height={40}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none'
+                            }}
+                          />
+                        </div>
+                        <span className="text-2xl font-semibold text-white">
+                          {brand.brand_name}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Rank */}
-                    <div className="text-white/60 text-sm font-mono">#{brand.rank_global}</div>
-
-                    {/* Score */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-white font-semibold">{brand.visibility_score.toFixed(1)}%</span>
-                      <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
-                        {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                      </span>
+                    {/* Hover Arrow */}
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArrowUpRight className="w-5 h-5 text-white/50" />
                     </div>
-
-                    {/* Arrow */}
-                    <ArrowRight className="w-4 h-4 text-white/40" />
                   </Link>
                 )
               })}
-
-              {/* View All Results */}
-              {searchResults.length === 5 && (
-                <div className="px-6 py-3 bg-white/5 border-t border-white/10">
-                  <Link
-                    href={`/brands/search?q=${encodeURIComponent(searchQuery)}`}
-                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-                  >
-                    View all results for "{searchQuery}"
-                  </Link>
-                </div>
-              )}
             </div>
           )}
+        </div>
+      </section>
 
-              {/* No Results */}
-              {showSearchDropdown && searchQuery && searchResults.length === 0 && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0C1422] rounded-xl border border-white/10 shadow-2xl p-6 text-center z-50">
-                  <p className="text-white/60 text-sm mb-4">No brands found for "{searchQuery}"</p>
-                  <Link
-                    href={`/auth/signup?brand=${encodeURIComponent(searchQuery)}`}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-sm font-medium hover:bg-cyan-500/30 transition-all"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add "{searchQuery}" to the Index
-                  </Link>
+      {/* Trend Chart Placeholder */}
+      <section className="pb-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+            <div className="h-64 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-white/30 text-sm mb-2">Visibility Trend</div>
+                <div className="flex items-end justify-center gap-1 h-32">
+                  {/* Simple bar chart visualization */}
+                  {[35, 42, 38, 45, 48, 44, 52].map((height, i) => (
+                    <div key={i} className="flex flex-col items-center gap-1">
+                      <div 
+                        className="w-12 md:w-16 bg-gradient-to-t from-emerald-500/20 to-emerald-500/5 rounded-t"
+                        style={{ height: `${height * 2}px` }}
+                      />
+                      <span className="text-xs text-white/30">
+                        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
-      {/* Table Section - No wireframe */}
-      <section className="relative max-w-7xl mx-auto px-3 md:px-4 lg:px-6 pb-12 md:pb-20">
-        
-        {/* Brand Table */}
-        <div className="bg-[#0C1422]/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden">
-          <div className="overflow-x-auto">
+      {/* Full Rankings Table */}
+      <section className="pb-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Rank</th>
-                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Brand</th>
-                  <th className="text-left text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">Industry</th>
-                  <th className="text-right text-white/50 text-xs md:text-sm font-medium px-3 md:px-6 py-3 md:py-4">Score</th>
+                <tr className="border-b border-white/[0.06]">
+                  <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4 w-16">Rank</th>
+                  <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Company</th>
+                  <th className="text-right text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Visibility Score</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-20 text-center">
-                      <div className="flex flex-col items-center justify-center gap-4">
-                        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-                        <span className="text-white/60 text-sm">Loading brands...</span>
-                      </div>
+                    <td colSpan={3} className="px-6 py-20 text-center">
+                      <Loader2 className="w-6 h-6 text-white/30 animate-spin mx-auto" />
                     </td>
                   </tr>
-                ) : filteredBrands.map((brand, index) => {
-                  const delta = brand.rank_global <= 10 ? 5.8 : -1.2
+                ) : tableBrands.map((brand, index) => {
+                  const delta = getDelta(brand)
                   const isPositive = delta > 0
 
                   return (
-                    <tr 
+                    <tr
                       key={brand.id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer"
                       onClick={() => window.location.href = `/brands/${brand.slug}`}
                     >
-                      <td className="px-3 md:px-6 py-3 md:py-4">
-                        <span className="text-white/60 font-mono text-xs md:text-sm">#{brand.rank_global}</span>
+                      <td className="px-6 py-4">
+                        <span className="text-white/50 font-mono text-sm">{index + 1}</span>
                       </td>
-                      <td className="px-3 md:px-6 py-3 md:py-4">
-                        <div className="flex items-center gap-2 md:gap-3">
-                          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-white/[0.05] overflow-hidden flex-shrink-0">
                             <Image
                               src={brand.logo_url}
                               alt={brand.brand_name}
-                              width={40}
-                              height={40}
+                              width={32}
+                              height={32}
                               className="w-full h-full object-cover"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).style.display = 'none'
                               }}
                             />
                           </div>
-                          <div>
-                            <div className="text-white font-medium text-sm md:text-base">{brand.brand_name}</div>
-                            <div className="text-white/40 text-xs md:text-sm">{brand.domain}</div>
-                          </div>
+                          <span className="text-white font-medium">{brand.brand_name}</span>
                         </div>
                       </td>
-                      <td className="px-3 md:px-6 py-3 md:py-4 hidden sm:table-cell">
-                        <span className="text-white/60 text-xs md:text-sm">{brand.industry}</span>
-                      </td>
-                      <td className="px-3 md:px-6 py-3 md:py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 md:gap-2">
-                          <span className="text-white font-bold text-sm md:text-base">{brand.visibility_score.toFixed(1)}%</span>
-                          <span className={`text-xs font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-white font-medium">{brand.visibility_score?.toFixed(1)}%</span>
+                          <span className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
                             {isPositive ? '+' : ''}{delta.toFixed(1)}%
                           </span>
                         </div>
@@ -327,58 +495,103 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                 })}
               </tbody>
             </table>
+
+            {/* Your Company Row */}
+            <div className="border-t border-white/[0.06] px-6 py-4 bg-white/[0.01]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-white/30 font-mono text-sm">?</span>
+                  <div className="w-8 h-8 rounded-lg border border-dashed border-white/20 flex items-center justify-center">
+                    <Plus className="w-4 h-4 text-white/30" />
+                  </div>
+                  <span className="text-white/50">Your company</span>
+                </div>
+                <Link
+                  href="/auth/signup"
+                  className="text-sm text-white/50 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  Track your AI Visibility
+                  <ArrowUpRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
           </div>
 
-          {/* View All Button */}
-          {!loading && displayedBrands < totalBrands && (
-            <div className="border-t border-white/10 p-6 text-center">
+          {/* View All */}
+          {filteredBrands.length > 50 && (
+            <div className="mt-6 text-center">
               <Link
                 href="/brands/all"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-medium hover:bg-cyan-500/30 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/[0.08] text-white font-medium rounded-xl hover:bg-white/[0.06] transition-colors"
               >
-                View all {totalBrands.toLocaleString()} brands
+                View all {filteredBrands.length.toLocaleString()} brands
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           )}
         </div>
+      </section>
 
-        {/* Stats Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-white/40 text-sm">
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Loading index...
-              </span>
-            ) : (
-              `Showing ${displayedBrands.toLocaleString()} of ${totalBrands.toLocaleString()} brands • Updated daily`
-            )}
-          </p>
-        </div>
-
-        {/* Don't see your brand CTA */}
-        {!loading && (
-          <div className="mt-12 text-center">
-            <div className="inline-block bg-[#0C1422]/60 backdrop-blur-sm rounded-2xl border border-white/10 px-8 py-6">
-              <h3 className="text-white font-semibold text-lg mb-2">Don't see your brand?</h3>
-              <p className="text-white/50 text-sm mb-4 max-w-md">
-                Add your brand to the Harbor Index and see how AI models perceive you.
-              </p>
+      {/* Sample Prompts Section */}
+      <section className="pb-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+            <h3 className="text-white/40 text-sm font-medium mb-4">
+              Sample prompts we track for {currentIndustryLabel}
+            </h3>
+            <div className="space-y-3">
+              {prompts.map((prompt, i) => (
+                <div key={i} className="text-white/70 text-sm py-2 border-b border-white/[0.04] last:border-0">
+                  {prompt}
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 pt-4 border-t border-white/[0.06] text-right">
               <Link
                 href="/auth/signup"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-[#101A31] font-medium hover:bg-white/90 transition-all"
+                className="text-sm text-white/50 hover:text-white transition-colors inline-flex items-center gap-1"
               >
-                <Plus className="w-4 h-4" />
-                Submit your brand
+                Start tracking your prompts
+                <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
-        )}
+        </div>
       </section>
 
-      {/* Fullscreen Menu */}
-      <FullscreenMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      {/* CTA Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6">
+            <span className="text-white/50 text-xs font-medium uppercase tracking-wide">Get Started</span>
+          </div>
+          
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Start tracking your<br />AI visibility today
+          </h2>
+          
+          <p className="text-white/50 mb-8 max-w-xl mx-auto">
+            Reach millions of consumers who are using AI to discover new products and brands.
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/pricing"
+              className="px-6 py-3 bg-white/[0.03] border border-white/[0.08] text-white font-medium rounded-xl hover:bg-white/[0.06] transition-colors"
+            >
+              View Pricing
+            </Link>
+            <Link
+              href="/auth/signup"
+              className="px-6 py-3 bg-white text-black font-medium rounded-xl hover:bg-white/90 transition-colors"
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   )
 }
