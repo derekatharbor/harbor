@@ -1,10 +1,10 @@
 // Path: /apps/web/app/brands/HarborIndexClient.tsx
-// Brand Index - Profound-style design with Harbor aesthetics
+// Brand Index - Harbor's public directory of AI brand visibility
 
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Search, ArrowRight, ChevronDown, X, Loader2, Plus, ArrowUpRight, Info } from 'lucide-react'
+import { Search, ArrowRight, ChevronDown, X, Loader2, Plus, ArrowUpRight, Info, MessageSquare, Filter, Layers, BarChart3, Shield } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
@@ -20,6 +20,7 @@ interface Brand {
   industry: string
   rank_global: number
   claimed: boolean
+  delta_7d?: number // Real delta from DB when available
 }
 
 interface Props {
@@ -30,7 +31,7 @@ interface Props {
 const INDUSTRIES = [
   { value: 'all', label: 'All Industries' },
   { value: 'technology', label: 'Technology' },
-  { value: 'streaming', label: 'Streaming' },
+  { value: 'software', label: 'Software' },
   { value: 'finance', label: 'Finance' },
   { value: 'retail', label: 'Retail' },
   { value: 'healthcare', label: 'Healthcare' },
@@ -65,12 +66,12 @@ const SAMPLE_PROMPTS: Record<string, string[]> = {
     'Best B2B SaaS platforms',
     'Leading AI companies to watch',
   ],
-  streaming: [
-    'Best streaming services for movies',
-    'Top platforms for TV shows',
-    'Most affordable streaming options',
-    'Best streaming for live sports',
-    'Top ad-free streaming services',
+  software: [
+    'Best project management software',
+    'Top CRM platforms for startups',
+    'Most user-friendly design tools',
+    'Best collaboration software for teams',
+    'Leading developer tools',
   ],
   finance: [
     'Best banks for small business',
@@ -88,8 +89,37 @@ const SAMPLE_PROMPTS: Record<string, string[]> = {
   ],
 }
 
+// Methodology cards
+const METHODOLOGY = [
+  {
+    icon: MessageSquare,
+    title: 'Real Conversations',
+    description: 'We analyze real questions people ask AI assistants like ChatGPT, Claude, and Gemini daily.',
+    color: 'text-cyan-400',
+  },
+  {
+    icon: Filter,
+    title: 'AI-Powered Filtering',
+    description: 'We use semantic analysis to filter for commercially relevant conversations, eliminating noise.',
+    color: 'text-blue-400',
+  },
+  {
+    icon: Layers,
+    title: 'Intelligent Clustering',
+    description: 'We use vector embeddings and ML clustering to identify real user topics and generate authentic question variations.',
+    color: 'text-pink-400',
+  },
+  {
+    icon: BarChart3,
+    title: 'Ranked by Impact',
+    description: 'We run prompts through AI models daily, scoring visibility with the same method used for all Harbor customers.',
+    color: 'text-amber-400',
+  },
+]
+
 export default function HarborIndexClient({ brands: initialBrands }: Props) {
   const [brands, setBrands] = useState<Brand[]>(initialBrands)
+  const [totalIndexed, setTotalIndexed] = useState<number>(initialBrands.length)
   const [loading, setLoading] = useState(initialBrands.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Brand[]>([])
@@ -103,7 +133,14 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
       fetch('/api/index/brands')
         .then(res => res.json())
         .then(data => {
-          setBrands(data)
+          // Handle both old format (array) and new format (object with brands)
+          if (Array.isArray(data)) {
+            setBrands(data)
+            setTotalIndexed(data.length)
+          } else {
+            setBrands(data.brands || [])
+            setTotalIndexed(data.totalIndexed || data.brands?.length || 0)
+          }
           setLoading(false)
         })
         .catch(err => {
@@ -126,9 +163,9 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     return filteredBrands.slice(0, 3)
   }, [filteredBrands])
 
-  // Rest for table (4-50)
+  // Table brands (limit to 15)
   const tableBrands = useMemo(() => {
-    return filteredBrands.slice(0, 50)
+    return filteredBrands.slice(0, 15)
   }, [filteredBrands])
 
   // Handle search
@@ -146,14 +183,17 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
     }
   }, [searchQuery, brands])
 
-  // Mock delta (would come from real data in production)
-  const getDelta = (brand: Brand) => {
-    const hash = brand.brand_name.split('').reduce((a, b) => a + b.charCodeAt(0), 0)
-    return ((hash % 50) - 25) / 10 // Returns -2.5 to +2.5
+  // Get delta - use real data if available, otherwise null (don't show fake data)
+  const getDelta = (brand: Brand): number | null => {
+    if (brand.delta_7d !== undefined && brand.delta_7d !== null) {
+      return brand.delta_7d
+    }
+    return null // Don't show fake deltas
   }
 
   const currentIndustryLabel = INDUSTRIES.find(i => i.value === selectedIndustry)?.label || 'All Industries'
   const prompts = SAMPLE_PROMPTS[selectedIndustry] || SAMPLE_PROMPTS.all
+  const totalBrandsScored = brands.length
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -171,12 +211,12 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-            See who is winning AI Search
+            How AI Sees Every Brand
           </h1>
 
           {/* Subtitle */}
           <p className="text-lg text-white/50 max-w-2xl mx-auto mb-8">
-            Explore the brands leading AI search visibility, powered by analysis of millions of real AI conversations.
+            The open directory of AI brand visibility. Search {totalIndexed.toLocaleString()}+ companies to see how ChatGPT, Claude, and Perplexity describe them.
           </p>
 
           {/* Search Box */}
@@ -210,7 +250,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden z-50">
                 {searchResults.map((brand) => {
                   const delta = getDelta(brand)
-                  const isPositive = delta > 0
 
                   return (
                     <Link
@@ -236,9 +275,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-white font-medium text-sm">{brand.visibility_score?.toFixed(1)}%</span>
-                        <span className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
-                          {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                        </span>
+                        {delta !== null && (
+                          <span className={`text-xs font-medium ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
+                          </span>
+                        )}
                       </div>
                       <ArrowRight className="w-4 h-4 text-white/30" />
                     </Link>
@@ -338,14 +379,13 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {topThree.map((brand, index) => {
                 const delta = getDelta(brand)
-                const isPositive = delta > 0
                 const rankNumber = index + 1
 
                 return (
                   <Link
                     key={brand.id}
                     href={`/brands/${brand.slug}`}
-                    className="relative bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 pt-8 pb-8 overflow-hidden hover:bg-white/[0.03] transition-colors group"
+                    className="relative bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 pt-8 pb-8 overflow-hidden hover:bg-white/[0.04] hover:border-white/[0.1] transition-all group"
                   >
                     {/* Giant Rank Watermark */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[180px] font-bold text-white/[0.03] pointer-events-none select-none leading-none">
@@ -364,13 +404,15 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                           <span className="text-3xl font-bold text-white">
                             {brand.visibility_score?.toFixed(1)}%
                           </span>
-                          <span className={`text-sm font-medium px-1.5 py-0.5 rounded ${
-                            isPositive 
-                              ? 'text-emerald-400 bg-emerald-400/10' 
-                              : 'text-red-400 bg-red-400/10'
-                          }`}>
-                            {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                          </span>
+                          {delta !== null && (
+                            <span className={`text-sm font-medium px-1.5 py-0.5 rounded ${
+                              delta > 0 
+                                ? 'text-emerald-400 bg-emerald-400/10' 
+                                : 'text-red-400 bg-red-400/10'
+                            }`}>
+                              {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -406,33 +448,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </section>
 
-      {/* Trend Chart Placeholder */}
-      <section className="pb-8 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
-            <div className="h-64 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-white/30 text-sm mb-2">Visibility Trend</div>
-                <div className="flex items-end justify-center gap-1 h-32">
-                  {/* Simple bar chart visualization */}
-                  {[35, 42, 38, 45, 48, 44, 52].map((height, i) => (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <div 
-                        className="w-12 md:w-16 bg-gradient-to-t from-emerald-500/20 to-emerald-500/5 rounded-t"
-                        style={{ height: `${height * 2}px` }}
-                      />
-                      <span className="text-xs text-white/30">
-                        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Full Rankings Table */}
       <section className="pb-8 px-6">
         <div className="max-w-6xl mx-auto">
@@ -454,7 +469,6 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   </tr>
                 ) : tableBrands.map((brand, index) => {
                   const delta = getDelta(brand)
-                  const isPositive = delta > 0
 
                   return (
                     <tr
@@ -485,9 +499,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <span className="text-white font-medium">{brand.visibility_score?.toFixed(1)}%</span>
-                          <span className={`text-xs font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                          </span>
+                          {delta !== null && (
+                            <span className={`text-xs font-medium ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                              {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -496,8 +512,11 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
               </tbody>
             </table>
 
-            {/* Your Company Row */}
-            <div className="border-t border-white/[0.06] px-6 py-4 bg-white/[0.01]">
+            {/* Your Company Row - Fully Clickable */}
+            <Link
+              href="/auth/signup"
+              className="block border-t border-white/[0.06] px-6 py-4 bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-white/30 font-mono text-sm">?</span>
@@ -506,29 +525,152 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                   </div>
                   <span className="text-white/50">Your company</span>
                 </div>
-                <Link
-                  href="/auth/signup"
-                  className="text-sm text-white/50 hover:text-white transition-colors flex items-center gap-1"
-                >
+                <span className="text-sm text-white/50 flex items-center gap-1">
                   Track your AI Visibility
                   <ArrowUpRight className="w-4 h-4" />
-                </Link>
+                </span>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* View All */}
-          {filteredBrands.length > 50 && (
+          {totalBrandsScored > 15 && (
             <div className="mt-6 text-center">
               <Link
                 href="/brands/all"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/[0.08] text-white font-medium rounded-xl hover:bg-white/[0.06] transition-colors"
               >
-                View all {filteredBrands.length.toLocaleString()} brands
+                View all {totalIndexed.toLocaleString()} brands
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Methodology Section - How We Build The Index */}
+      <section className="py-16 px-6 border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              How We Build The Index
+            </h2>
+            <p className="text-white/50 max-w-xl">
+              Every insight from the Harbor ecosystem feeds into our brand visibility rankings.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
+            {METHODOLOGY.map((item, index) => {
+              const Icon = item.icon
+              return (
+                <div key={index} className="bg-[#0a0a0a] p-6">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-4 ${item.color}`}>
+                    {/* Placeholder for custom icon - will be replaced */}
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2">{item.title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed">{item.description}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Harbor-Unique: What AI Says About Brands - Interactive Preview */}
+      <section className="py-16 px-6 border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: Content */}
+            <div>
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-4">
+                <span className="text-cyan-400 text-xs font-medium">What makes Harbor different</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                See exactly how AI describes every brand
+              </h2>
+              <p className="text-white/50 mb-6">
+                Unlike traditional SEO tools, Harbor shows you the actual words AI uses to describe companies. 
+                Search any brand to see their AI perception across ChatGPT, Claude, Perplexity, and more.
+              </p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Shield className="w-3 h-3 text-emerald-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">See if AI recommends your brand in buying decisions</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Shield className="w-3 h-3 text-emerald-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">Compare how different models perceive you vs competitors</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Shield className="w-3 h-3 text-emerald-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">Track changes over time as AI knowledge updates</span>
+                </li>
+              </ul>
+              <Link
+                href="/brands"
+                className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors font-medium"
+              >
+                Browse all {totalIndexed.toLocaleString()}+ brands
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Right: Mock AI Response Card */}
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 relative">
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                <span className="text-xs text-white/30">Powered by</span>
+                <span className="text-xs text-white/50 font-medium">GPT-4</span>
+              </div>
+              
+              <div className="mb-4">
+                <span className="text-white/40 text-xs">What AI says about</span>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-purple-600"></div>
+                  <span className="text-white font-semibold">Linear</span>
+                </div>
+              </div>
+
+              <div className="space-y-4 text-sm">
+                <p className="text-white/70 leading-relaxed">
+                  <span className="text-white">"Linear is a project management tool</span> designed for modern software teams. 
+                  It's known for its speed, keyboard-first design, and clean interface..."
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-white/[0.05] rounded text-white/50 text-xs">Project Management</span>
+                  <span className="px-2 py-1 bg-white/[0.05] rounded text-white/50 text-xs">B2B SaaS</span>
+                  <span className="px-2 py-1 bg-emerald-500/20 rounded text-emerald-400 text-xs">Recommended</span>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="text-center">
+                    <div className="text-white font-bold">92%</div>
+                    <div className="text-white/40 text-xs">Visibility</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-white font-bold">#3</div>
+                    <div className="text-white/40 text-xs">In Category</div>
+                  </div>
+                </div>
+                <Link
+                  href="/brands/linear"
+                  className="text-xs text-white/50 hover:text-white transition-colors flex items-center gap-1"
+                >
+                  View full profile
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -559,33 +701,47 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-6">
+      {/* CTA Section - Product Focused */}
+      <section className="py-20 px-6 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6">
-            <span className="text-white/50 text-xs font-medium uppercase tracking-wide">Get Started</span>
+          {/* Live Stats */}
+          <div className="flex items-center justify-center gap-8 mb-12">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">{totalIndexed.toLocaleString()}+</div>
+              <div className="text-white/40 text-sm">Brands Indexed</div>
+            </div>
+            <div className="w-px h-12 bg-white/[0.08]"></div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">4</div>
+              <div className="text-white/40 text-sm">AI Models Tracked</div>
+            </div>
+            <div className="w-px h-12 bg-white/[0.08]"></div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">Daily</div>
+              <div className="text-white/40 text-sm">Updates</div>
+            </div>
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Start tracking your<br />AI visibility today
+            The Yelp for AI visibility
           </h2>
           
           <p className="text-white/50 mb-8 max-w-xl mx-auto">
-            Reach millions of consumers who are using AI to discover new products and brands.
+            Search any company to see how AI models describe them. Claim your brand to track visibility, monitor competitors, and improve how AI represents you.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/pricing"
+              href="/brands/all"
               className="px-6 py-3 bg-white/[0.03] border border-white/[0.08] text-white font-medium rounded-xl hover:bg-white/[0.06] transition-colors"
             >
-              View Pricing
+              Browse All Brands
             </Link>
             <Link
               href="/auth/signup"
               className="px-6 py-3 bg-white text-black font-medium rounded-xl hover:bg-white/90 transition-colors"
             >
-              Get Started
+              Claim Your Brand
             </Link>
           </div>
         </div>

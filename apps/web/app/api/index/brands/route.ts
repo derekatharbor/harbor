@@ -14,7 +14,12 @@ export async function GET() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // Fetch all brands in batches (Supabase has 1000 row limit per query)
+    // Get total count from brand_list (all indexed brands)
+    const { count: totalIndexed } = await supabase
+      .from('brand_list')
+      .select('*', { count: 'exact', head: true })
+
+    // Fetch all brands with visibility scores in batches (Supabase has 1000 row limit per query)
     let allBrands: any[] = []
     let from = 0
     const batchSize = 1000
@@ -46,8 +51,13 @@ export async function GET() {
     }
 
     console.log(`📊 Fetched ${allBrands.length} brands from public_index (in ${Math.ceil(allBrands.length / batchSize)} batches)`)
+    console.log(`📊 Total indexed in brand_list: ${totalIndexed}`)
 
-    return NextResponse.json(allBrands, {
+    return NextResponse.json({
+      brands: allBrands,
+      totalIndexed: totalIndexed || allBrands.length,
+      totalScored: allBrands.length
+    }, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',
       }
