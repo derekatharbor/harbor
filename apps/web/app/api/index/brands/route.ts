@@ -14,12 +14,7 @@ export async function GET() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // Get total count from brand_list (all indexed brands)
-    const { count: totalIndexed } = await supabase
-      .from('brand_list')
-      .select('*', { count: 'exact', head: true })
-
-    // Fetch all brands with visibility scores in batches (Supabase has 1000 row limit per query)
+    // Fetch all brands from ai_profiles in batches (Supabase has 1000 row limit per query)
     let allBrands: any[] = []
     let from = 0
     const batchSize = 1000
@@ -27,10 +22,10 @@ export async function GET() {
 
     while (hasMore) {
       const { data: batch, error } = await supabase
-        .from('public_index')
-        .select('*')
+        .from('ai_profiles')
+        .select('id, brand_name, slug, domain, logo_url, visibility_score, industry, category')
         .gt('visibility_score', 0)
-        .order('rank_global', { ascending: true })
+        .order('visibility_score', { ascending: false })
         .range(from, from + batchSize - 1)
 
       if (error) {
@@ -50,14 +45,9 @@ export async function GET() {
       }
     }
 
-    console.log(`📊 Fetched ${allBrands.length} brands from public_index (in ${Math.ceil(allBrands.length / batchSize)} batches)`)
-    console.log(`📊 Total indexed in brand_list: ${totalIndexed}`)
+    console.log(`📊 Fetched ${allBrands.length} brands from ai_profiles`)
 
-    return NextResponse.json({
-      brands: allBrands,
-      totalIndexed: totalIndexed || allBrands.length,
-      totalScored: allBrands.length
-    }, {
+    return NextResponse.json(allBrands, {
       headers: {
         'Cache-Control': 'no-store, max-age=0',
       }
