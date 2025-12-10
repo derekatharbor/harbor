@@ -8,9 +8,9 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-// Brandfetch logo URL helper
+// Brandfetch logo URL helper - request larger size for quality
 function getBrandfetchLogo(domain: string): string {
-  return `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
+  return `https://cdn.brandfetch.io/${domain}/w/400/h/400?c=1id1Fyz-h7an5-5KR_y`
 }
 
 export async function GET() {
@@ -80,7 +80,9 @@ export async function GET() {
         const snapData = snapshotMap[profile.id]
         const latestScore = snapData?.latest?.visibility_score || 0
         const previousScore = snapData?.previous?.visibility_score || null
-        const delta = previousScore !== null ? latestScore - previousScore : null
+        const delta = previousScore !== null 
+          ? Math.round((latestScore - previousScore) * 10) / 10 
+          : null
 
         return {
           id: profile.id,
