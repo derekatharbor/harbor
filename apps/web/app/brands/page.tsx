@@ -9,8 +9,8 @@ export const revalidate = 0
 
 // SEO Metadata
 export const metadata: Metadata = {
-  title: 'AI Visibility Index - How AI Sees 20,000+ Brands | Harbor',
-  description: 'The definitive leaderboard showing how ChatGPT, Claude, Gemini, and Perplexity understand and represent brands. Search, compare, and claim your brand profile.',
+  title: 'AI Visibility Index - How AI Sees Every Brand | Harbor',
+  description: 'Search any company to see how ChatGPT, Claude, and Perplexity describe them. The definitive AI visibility index for brands.',
   keywords: [
     'AI visibility',
     'brand intelligence',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     'brand leaderboard',
   ],
   openGraph: {
-    title: 'AI Visibility Index - How AI Sees Brands',
-    description: 'See how 20,000+ brands rank across ChatGPT, Claude, Gemini, and Perplexity. The definitive AI visibility leaderboard.',
+    title: 'AI Visibility Index - How AI Sees Every Brand',
+    description: 'Search any company to see how ChatGPT, Claude, and Perplexity describe them.',
     url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'}/brands`,
     siteName: 'Harbor',
     type: 'website',
@@ -30,14 +30,13 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'AI Visibility Index | Harbor',
-    description: 'How do AI models see your brand? Check the leaderboard.',
+    description: 'How do AI models see your brand? Search the index.',
   },
   alternates: {
     canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'}/brands`,
   },
 }
 
-// Empty - will fetch on client side or at runtime
 export default function BrandsPage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
   
@@ -46,7 +45,7 @@ export default function BrandsPage() {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     'name': 'Harbor AI Visibility Index',
-    'description': 'The definitive leaderboard showing how AI models understand and represent brands',
+    'description': 'Search any company to see how AI models understand and represent them',
     'url': `${siteUrl}/brands`,
     'publisher': {
       '@type': 'Organization',
@@ -57,8 +56,7 @@ export default function BrandsPage() {
     'mainEntity': {
       '@type': 'ItemList',
       'name': 'Brand AI Visibility Rankings',
-      'description': 'Rankings of brands by their AI visibility scores across ChatGPT, Claude, Gemini, and Perplexity',
-      'numberOfItems': '20000+'
+      'description': 'Rankings of brands by their AI visibility scores across ChatGPT and Perplexity'
     }
   }
 
@@ -72,7 +70,7 @@ export default function BrandsPage() {
         }}
       />
       
-      <HarborIndexClient brands={[]} />
+      <HarborIndexClient />
     </>
   )
 }

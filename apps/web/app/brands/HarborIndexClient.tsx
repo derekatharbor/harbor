@@ -4,107 +4,68 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Search, ArrowRight, ChevronDown, X, Loader2, Plus, ArrowUpRight, Info } from 'lucide-react'
+import { Search, ArrowRight, Loader2, Plus, ArrowUpRight, TrendingUp, TrendingDown } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
 import Footer from '@/components/landing-new/Footer'
 
-interface Brand {
+interface LeaderboardBrand {
   id: string
   brand_name: string
   slug: string
   domain: string
   logo_url: string
-  visibility_score: number
   industry: string
-  rank_global: number
-  claimed: boolean
-  delta_7d?: number // Real delta from DB when available
+  visibility_score: number
+  total_mentions: number
+  avg_position: number | null
+  delta_7d: number | null
+  featured: boolean
+}
+
+interface DirectoryBrand {
+  id: string
+  brand_name: string
+  slug: string
+  domain: string
+  logo_url: string
+  industry: string
 }
 
 interface Props {
-  brands: Brand[]
+  initialLeaderboard?: LeaderboardBrand[]
+  initialDirectory?: DirectoryBrand[]
 }
 
-// Industry categories
+// Industry categories (matching our featured_brands industries)
 const INDUSTRIES = [
   { value: 'all', label: 'All Industries' },
   { value: 'technology', label: 'Technology' },
-  { value: 'software', label: 'Software' },
   { value: 'finance', label: 'Finance' },
-  { value: 'retail', label: 'Retail' },
+  { value: 'retail', label: 'E-commerce' },
+  { value: 'marketing', label: 'Marketing' },
   { value: 'healthcare', label: 'Healthcare' },
-  { value: 'automotive', label: 'Automotive' },
-  { value: 'food', label: 'Food & Beverage' },
-  { value: 'travel', label: 'Travel' },
-  { value: 'education', label: 'Education' },
 ]
 
-// AI Models
-const AI_MODELS = [
-  { value: 'all', label: 'All Models' },
-  { value: 'chatgpt', label: 'ChatGPT' },
-  { value: 'claude', label: 'Claude' },
-  { value: 'perplexity', label: 'Perplexity' },
-  { value: 'gemini', label: 'Gemini' },
-]
-
-// Sample prompts by industry
-const SAMPLE_PROMPTS: Record<string, string[]> = {
-  all: [
-    'What are the best companies in this industry?',
-    'Which brands are most recommended?',
-    'Top companies for quality and value',
-    'Most trusted brands in this category',
-    'Best options for enterprise customers',
-  ],
-  technology: [
-    'Best enterprise software companies',
-    'Top cloud infrastructure providers',
-    'Most innovative tech companies',
-    'Best B2B SaaS platforms',
-    'Leading AI companies to watch',
-  ],
-  software: [
-    'Best project management software',
-    'Top CRM platforms for startups',
-    'Most user-friendly design tools',
-    'Best collaboration software for teams',
-    'Leading developer tools',
-  ],
-  finance: [
-    'Best banks for small business',
-    'Top credit cards for rewards',
-    'Most trusted investment platforms',
-    'Best fintech apps for budgeting',
-    'Leading payment processors',
-  ],
-  retail: [
-    'Best online shopping platforms',
-    'Top retailers for electronics',
-    'Most sustainable fashion brands',
-    'Best home goods stores',
-    'Leading e-commerce marketplaces',
-  ],
-}
-
-export default function HarborIndexClient({ brands: initialBrands }: Props) {
-  const [brands, setBrands] = useState<Brand[]>(initialBrands)
-  const [loading, setLoading] = useState(initialBrands.length === 0)
+export default function HarborIndexClient({ initialLeaderboard = [], initialDirectory = [] }: Props) {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardBrand[]>(initialLeaderboard)
+  const [directory, setDirectory] = useState<DirectoryBrand[]>(initialDirectory)
+  const [loading, setLoading] = useState(initialLeaderboard.length === 0)
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<Brand[]>([])
+  const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [selectedIndustry, setSelectedIndustry] = useState('all')
-  const [selectedModel, setSelectedModel] = useState('all')
+  const [selectedModel, setSelectedModel] = useState<'all' | 'chatgpt' | 'perplexity'>('all')
 
-  // Fetch brands if not provided
+  // Fetch data on mount
   useEffect(() => {
-    if (initialBrands.length === 0) {
+    if (initialLeaderboard.length === 0) {
       fetch('/api/index/brands')
         .then(res => res.json())
         .then(data => {
-          setBrands(Array.isArray(data) ? data : [])
+          if (data.leaderboard) setLeaderboard(data.leaderboard)
+          if (data.directory) setDirectory(data.directory)
           setLoading(false)
         })
         .catch(err => {
@@ -112,67 +73,49 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           setLoading(false)
         })
     }
-  }, [initialBrands])
+  }, [initialLeaderboard.length])
 
-  // Filter brands by industry
-  const filteredBrands = useMemo(() => {
-    if (selectedIndustry === 'all') return brands
-    return brands.filter(b => 
-      b.industry?.toLowerCase().includes(selectedIndustry.toLowerCase())
-    )
-  }, [brands, selectedIndustry])
+  // Filter leaderboard by industry
+  const filteredLeaderboard = useMemo(() => {
+    if (selectedIndustry === 'all') return leaderboard
+    return leaderboard.filter(b => b.industry === selectedIndustry)
+  }, [leaderboard, selectedIndustry])
 
   // Top 3 for podium
   const topThree = useMemo(() => {
-    return filteredBrands.slice(0, 3)
-  }, [filteredBrands])
+    return filteredLeaderboard.slice(0, 3)
+  }, [filteredLeaderboard])
 
-  // Table brands (limit to 15)
+  // Table brands (4-15)
   const tableBrands = useMemo(() => {
-    return filteredBrands.slice(0, 15)
-  }, [filteredBrands])
+    return filteredLeaderboard.slice(3, 15)
+  }, [filteredLeaderboard])
 
-  // Handle search
+  // Handle search (searches directory)
   useEffect(() => {
-    if (searchQuery.trim()) {
-      const results = brands.filter(brand =>
-        brand.brand_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        brand.domain.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5)
+    if (searchQuery.trim().length >= 2) {
+      const query = searchQuery.toLowerCase()
+      const results = directory.filter(brand =>
+        brand.brand_name.toLowerCase().includes(query) ||
+        brand.domain.toLowerCase().includes(query)
+      ).slice(0, 8)
       setSearchResults(results)
       setShowSearchDropdown(true)
     } else {
       setSearchResults([])
       setShowSearchDropdown(false)
     }
-  }, [searchQuery, brands])
-
-  // Get delta - use real data if available, otherwise null (don't show fake data)
-  const getDelta = (brand: Brand): number | null => {
-    if (brand.delta_7d !== undefined && brand.delta_7d !== null) {
-      return brand.delta_7d
-    }
-    return null // Don't show fake deltas
-  }
+  }, [searchQuery, directory])
 
   const currentIndustryLabel = INDUSTRIES.find(i => i.value === selectedIndustry)?.label || 'All Industries'
-  const prompts = SAMPLE_PROMPTS[selectedIndustry] || SAMPLE_PROMPTS.all
-  const totalBrandsScored = brands.length
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Nav />
-      
-      {/* Hero Section */}
-      <section className="pt-32 pb-8 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] mb-6">
-            <span className="text-white/60 text-sm font-medium tracking-wide uppercase">
-              Harbor Index
-            </span>
-          </div>
 
+      {/* Hero Section */}
+      <section className="pt-32 pb-12 px-6">
+        <div className="max-w-4xl mx-auto text-center">
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             How AI Sees Every Brand
@@ -184,76 +127,53 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
           </p>
 
           {/* Search Box */}
-          <div className="max-w-xl mx-auto relative">
-            <div className="relative flex items-center bg-white/[0.03] rounded-xl border border-white/[0.08] overflow-hidden">
-              <Search className="w-5 h-5 text-white/40 ml-4" />
+          <div className="relative max-w-xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
                 type="text"
+                placeholder="Search any brand..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchQuery && setShowSearchDropdown(true)}
+                onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                placeholder="Search brands..."
-                className="flex-1 px-4 py-3.5 bg-transparent text-white placeholder-white/40 focus:outline-none text-sm"
+                className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:bg-white/[0.05] transition-all"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => {
-                    setSearchQuery('')
-                    setShowSearchDropdown(false)
-                  }}
-                  className="mr-4 text-white/40 hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
             </div>
 
             {/* Search Dropdown */}
             {showSearchDropdown && searchResults.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-2xl overflow-hidden z-50">
-                {searchResults.map((brand) => {
-                  const delta = getDelta(brand)
-
-                  return (
-                    <Link
-                      key={brand.id}
-                      href={`/brands/${brand.slug}`}
-                      className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-white/[0.05] overflow-hidden flex-shrink-0">
-                        <Image
-                          src={brand.logo_url}
-                          alt={brand.brand_name}
-                          width={40}
-                          height={40}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none'
-                          }}
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-white font-medium text-sm truncate">{brand.brand_name}</div>
-                        <div className="text-white/40 text-xs truncate">{brand.domain}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-white font-medium text-sm">{brand.visibility_score?.toFixed(1)}%</span>
-                        {delta !== null && (
-                          <span className={`text-xs font-medium ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                            {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
-                          </span>
-                        )}
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-white/30" />
-                    </Link>
-                  )
-                })}
+                {searchResults.map((brand) => (
+                  <Link
+                    key={brand.id}
+                    href={`/brands/${brand.slug}`}
+                    className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                      <Image
+                        src={brand.logo_url}
+                        alt={brand.brand_name}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium text-sm truncate">{brand.brand_name}</div>
+                      <div className="text-white/40 text-xs truncate">{brand.domain}</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-white/30" />
+                  </Link>
+                ))}
               </div>
             )}
 
             {/* No Results */}
-            {showSearchDropdown && searchQuery && searchResults.length === 0 && (
+            {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-2xl p-6 text-center z-50">
                 <p className="text-white/50 text-sm mb-4">No brands found for "{searchQuery}"</p>
                 <Link
@@ -290,43 +210,53 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </section>
 
-      {/* Top Section Header with Filters */}
+      {/* Leaderboard Header */}
       <section className="pb-6 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-xl text-white">
-              Top <span className="font-semibold">{currentIndustryLabel}</span> brands this week
-            </h2>
+            <div>
+              <h2 className="text-xl text-white">
+                Top <span className="font-semibold">{currentIndustryLabel}</span> brands
+              </h2>
+              <p className="text-white/40 text-sm mt-1">
+                Based on AI recommendation frequency across models
+              </p>
+            </div>
             
-            <div className="flex items-center gap-3">
-              {/* Model Filter */}
-              <div className="relative">
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="appearance-none px-4 py-2 pr-10 bg-white/[0.03] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-white/20 cursor-pointer"
-                >
-                  {AI_MODELS.map(model => (
-                    <option key={model.value} value={model.value} className="bg-[#111213]">
-                      {model.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
-              </div>
-
-              {/* Time Filter */}
-              <div className="relative">
-                <select
-                  className="appearance-none px-4 py-2 pr-10 bg-white/[0.03] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-white/20 cursor-pointer"
-                  defaultValue="week"
-                >
-                  <option value="week" className="bg-[#111213]">This Week</option>
-                  <option value="month" className="bg-[#111213]">This Month</option>
-                  <option value="quarter" className="bg-[#111213]">This Quarter</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
-              </div>
+            {/* Model Toggle */}
+            <div className="flex items-center gap-1 p-1 bg-white/[0.03] rounded-lg border border-white/[0.08]">
+              <button
+                onClick={() => setSelectedModel('all')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  selectedModel === 'all'
+                    ? 'bg-white/[0.1] text-white'
+                    : 'text-white/50 hover:text-white/70'
+                }`}
+              >
+                All Models
+              </button>
+              <button
+                onClick={() => setSelectedModel('chatgpt')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  selectedModel === 'chatgpt'
+                    ? 'bg-white/[0.1] text-white'
+                    : 'text-white/50 hover:text-white/70'
+                }`}
+              >
+                <span className="w-4 h-4 rounded-sm bg-[#10a37f] flex items-center justify-center text-[10px] text-white font-bold">G</span>
+                ChatGPT
+              </button>
+              <button
+                onClick={() => setSelectedModel('perplexity')}
+                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  selectedModel === 'perplexity'
+                    ? 'bg-white/[0.1] text-white'
+                    : 'text-white/50 hover:text-white/70'
+                }`}
+              >
+                <span className="w-4 h-4 rounded-sm bg-[#1a1a2e] border border-white/20 flex items-center justify-center text-[10px] text-white font-bold">P</span>
+                Perplexity
+              </button>
             </div>
           </div>
         </div>
@@ -339,10 +269,14 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-8 h-8 text-white/30 animate-spin" />
             </div>
+          ) : filteredLeaderboard.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-white/50">No visibility data yet for {currentIndustryLabel}</p>
+              <p className="text-white/30 text-sm mt-2">Check back after the next weekly scan</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {topThree.map((brand, index) => {
-                const delta = getDelta(brand)
                 const rankNumber = index + 1
 
                 return (
@@ -359,22 +293,24 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                     {/* Content */}
                     <div className="relative z-10">
                       {/* Visibility Score */}
-                      <div className="mb-16">
-                        <div className="flex items-center gap-1.5 text-white/50 text-xs mb-1">
-                          <Info className="w-3 h-3" />
-                          Visibility Score
-                        </div>
+                      <div className="mb-12">
+                        <div className="text-white/40 text-xs mb-1">AI Visibility</div>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-3xl font-bold text-white">
-                            {brand.visibility_score?.toFixed(1)}%
+                          <span className="text-4xl font-bold text-white">
+                            {brand.visibility_score}%
                           </span>
-                          {delta !== null && (
-                            <span className={`text-sm font-medium px-1.5 py-0.5 rounded ${
-                              delta > 0 
-                                ? 'text-emerald-400 bg-emerald-400/10' 
-                                : 'text-red-400 bg-red-400/10'
+                          {brand.delta_7d !== null && brand.delta_7d !== 0 && (
+                            <span className={`text-sm font-medium flex items-center gap-0.5 ${
+                              brand.delta_7d > 0 
+                                ? 'text-emerald-400' 
+                                : 'text-red-400'
                             }`}>
-                              {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
+                              {brand.delta_7d > 0 ? (
+                                <TrendingUp className="w-3 h-3" />
+                              ) : (
+                                <TrendingDown className="w-3 h-3" />
+                              )}
+                              {brand.delta_7d > 0 ? '+' : ''}{brand.delta_7d}%
                             </span>
                           )}
                         </div>
@@ -382,21 +318,26 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
 
                       {/* Brand */}
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-white overflow-hidden flex-shrink-0 p-1">
                           <Image
                             src={brand.logo_url}
                             alt={brand.brand_name}
-                            width={40}
-                            height={40}
-                            className="w-full h-full object-cover"
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-contain"
                             onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none'
+                              (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
                             }}
                           />
                         </div>
-                        <span className="text-2xl font-semibold text-white">
-                          {brand.brand_name}
-                        </span>
+                        <div>
+                          <div className="text-xl font-semibold text-white">
+                            {brand.brand_name}
+                          </div>
+                          <div className="text-white/40 text-sm">
+                            {brand.total_mentions} mentions
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -412,48 +353,41 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
         </div>
       </section>
 
-      {/* Full Rankings Table */}
-      <section className="pb-8 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4 w-16">Rank</th>
-                  <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Company</th>
-                  <th className="text-right text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Visibility Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={3} className="px-6 py-20 text-center">
-                      <Loader2 className="w-6 h-6 text-white/30 animate-spin mx-auto" />
-                    </td>
+      {/* Rankings Table (4-15) */}
+      {tableBrands.length > 0 && (
+        <section className="pb-8 px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/[0.06]">
+                    <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4 w-16">Rank</th>
+                    <th className="text-left text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Company</th>
+                    <th className="text-right text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4">Visibility</th>
+                    <th className="text-right text-white/40 text-xs font-medium uppercase tracking-wider px-6 py-4 hidden sm:table-cell">Trend</th>
                   </tr>
-                ) : tableBrands.map((brand, index) => {
-                  const delta = getDelta(brand)
-
-                  return (
+                </thead>
+                <tbody>
+                  {tableBrands.map((brand, index) => (
                     <tr
                       key={brand.id}
                       className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer"
                       onClick={() => window.location.href = `/brands/${brand.slug}`}
                     >
                       <td className="px-6 py-4">
-                        <span className="text-white/50 font-mono text-sm">{index + 1}</span>
+                        <span className="text-white/50 font-mono text-sm">{index + 4}</span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white/[0.05] overflow-hidden flex-shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-white overflow-hidden flex-shrink-0 p-0.5">
                             <Image
                               src={brand.logo_url}
                               alt={brand.brand_name}
                               width={32}
                               height={32}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                               onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none'
+                                (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
                               }}
                             />
                           </div>
@@ -461,83 +395,52 @@ export default function HarborIndexClient({ brands: initialBrands }: Props) {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <span className="text-white font-medium">{brand.visibility_score?.toFixed(1)}%</span>
-                          {delta !== null && (
-                            <span className={`text-xs font-medium ${delta > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                              {delta > 0 ? '+' : ''}{delta.toFixed(1)}%
-                            </span>
-                          )}
-                        </div>
+                        <span className="text-white font-medium">{brand.visibility_score}%</span>
+                      </td>
+                      <td className="px-6 py-4 text-right hidden sm:table-cell">
+                        {brand.delta_7d !== null && brand.delta_7d !== 0 ? (
+                          <span className={`text-sm font-medium flex items-center justify-end gap-0.5 ${
+                            brand.delta_7d > 0 ? 'text-emerald-400' : 'text-red-400'
+                          }`}>
+                            {brand.delta_7d > 0 ? (
+                              <TrendingUp className="w-3 h-3" />
+                            ) : (
+                              <TrendingDown className="w-3 h-3" />
+                            )}
+                            {brand.delta_7d > 0 ? '+' : ''}{brand.delta_7d}%
+                          </span>
+                        ) : (
+                          <span className="text-white/30 text-sm">—</span>
+                        )}
                       </td>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
 
-            {/* Your Company Row - Fully Clickable */}
-            <Link
-              href="/auth/signup"
-              className="block border-t border-white/[0.06] px-6 py-4 bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-white/30 font-mono text-sm">?</span>
-                  <div className="w-8 h-8 rounded-lg border border-dashed border-white/20 flex items-center justify-center">
-                    <Plus className="w-4 h-4 text-white/30" />
-                  </div>
-                  <span className="text-white/50">Your company</span>
-                </div>
-                <span className="text-sm text-white/50 flex items-center gap-1">
-                  Track your AI Visibility
-                  <ArrowUpRight className="w-4 h-4" />
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          {/* View All */}
-          {totalBrandsScored > 15 && (
-            <div className="mt-6 text-center">
-              <Link
-                href="/brands/all"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white/[0.03] border border-white/[0.08] text-white font-medium rounded-xl hover:bg-white/[0.06] transition-colors"
-              >
-                View all brands
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Sample Prompts Section */}
-      <section className="py-12 px-6 border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
-            <h3 className="text-white/40 text-sm font-medium mb-4">
-              Sample prompts we track for {currentIndustryLabel}
-            </h3>
-            <div className="space-y-3">
-              {prompts.map((prompt, i) => (
-                <div key={i} className="text-white/70 text-sm py-2 border-b border-white/[0.04] last:border-0">
-                  {prompt}
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t border-white/[0.06] text-right">
+              {/* Your Company Row */}
               <Link
                 href="/auth/signup"
-                className="text-sm text-white/50 hover:text-white transition-colors inline-flex items-center gap-1"
+                className="block border-t border-white/[0.06] px-6 py-4 bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
               >
-                Start tracking your prompts
-                <ArrowUpRight className="w-4 h-4" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-white/30 font-mono text-sm w-8">?</span>
+                    <div className="w-8 h-8 rounded-lg border border-dashed border-white/20 flex items-center justify-center">
+                      <Plus className="w-4 h-4 text-white/30" />
+                    </div>
+                    <span className="text-white/50">Your company</span>
+                  </div>
+                  <span className="text-sm text-white/50 flex items-center gap-1">
+                    Get tracked
+                    <ArrowUpRight className="w-4 h-4" />
+                  </span>
+                </div>
               </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-20 px-6 border-t border-white/[0.06]">
