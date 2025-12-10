@@ -1,25 +1,25 @@
-import FrostedNav from '@/components/landing/FrostedNav'
-import NewHeroSection from '@/components/landing/NewHeroSection'
-import TheShiftSection from '@/components/landing/TheShiftSection'
-import HarborIndexSection from '@/components/landing/HarborIndexSection'
-import HowHarborWorksSection from '@/components/landing/HowHarborWorksSection'
-import FinalCTASection from '@/components/landing/FinalCTASection'
-import Footer from '@/components/landing/Footer'
+import Nav from '@/components/landing-new/Nav'
+import HeroSection from '@/components/landing-new/HeroSection'
+import FeatureCards from '@/components/landing-new/FeatureCards'
+import ProductShowcase from '@/components/landing-new/ProductShowcase'
+import PromptTrackingSection from '@/components/landing-new/PromptTrackingSection'
+import IndexShowcase from '@/components/landing-new/IndexShowcase'
+import PromptsMarqueeSection from '@/components/landing-new/PromptsMarqueeSection'
+import CTASection from '@/components/landing-new/CTASection'
+import Footer from '@/components/landing-new/Footer'
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-[#101A31]">
-      <FrostedNav />
-      
-      <main>
-        <NewHeroSection />
-        <TheShiftSection />
-        <HarborIndexSection />
-        <HowHarborWorksSection />
-        <FinalCTASection />
-      </main>
-      
+    <main className="bg-[#0a0a0a] min-h-screen">
+      <Nav />
+      <HeroSection />
+      <FeatureCards />
+      <ProductShowcase />
+      <PromptTrackingSection />
+      <IndexShowcase />
+      <PromptsMarqueeSection />
+      <CTASection />
       <Footer />
-    </div>
+    </main>
   )
 }

@@ -5,17 +5,42 @@ import { useState, useEffect } from 'react'
 import { ChevronDown, Menu, X, BarChart3, Globe, Users, FileText, BookOpen, Code, GraduationCap, Building2, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        setIsLoggedIn(!!session?.user)
+      } catch {
+        setIsLoggedIn(false)
+      } finally {
+        setCheckingAuth(false)
+      }
+    }
+    checkAuth()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [supabase.auth])
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -245,15 +270,28 @@ export default function Nav() {
 
           {/* Right Side */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/auth/login" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
-              Log in
-            </Link>
-            <Link 
-              href="/auth/signup" 
-              className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
-            >
-              Get Started
-            </Link>
+            {checkingAuth ? (
+              <div className="w-24 h-9 bg-white/10 rounded-lg animate-pulse" />
+            ) : isLoggedIn ? (
+              <Link 
+                href="/dashboard/overview" 
+                className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link href="/auth/login" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+                  Log in
+                </Link>
+                <Link 
+                  href="/auth/signup" 
+                  className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -290,10 +328,18 @@ export default function Nav() {
             <Link href="/docs" className="block py-2 text-white/70 hover:text-white pl-2">Documentation</Link>
             
             <div className="pt-4 border-t border-white/10 space-y-3 mt-4">
-              <Link href="/auth/login" className="block py-2 text-white/70 hover:text-white">Log in</Link>
-              <Link href="/auth/signup" className="block py-3 bg-white text-black text-center font-semibold rounded-lg">
-                Get Started
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard/overview" className="block py-3 bg-white text-black text-center font-semibold rounded-lg">
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/login" className="block py-2 text-white/70 hover:text-white">Log in</Link>
+                  <Link href="/auth/signup" className="block py-3 bg-white text-black text-center font-semibold rounded-lg">
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
