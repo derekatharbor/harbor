@@ -150,13 +150,13 @@ export default function HarborIndexClient({ initialLeaderboard = [], initialDire
                     href={`/brands/${brand.slug}`}
                     className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.03] transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 p-1">
                       <Image
                         src={brand.logo_url}
                         alt={brand.brand_name}
                         width={80}
                         height={80}
-                        className="w-full h-full object-contain p-1"
+                        className="w-full h-full object-contain"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
                         }}
@@ -318,13 +318,13 @@ export default function HarborIndexClient({ initialLeaderboard = [], initialDire
 
                       {/* Brand */}
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-white overflow-hidden flex-shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-white overflow-hidden flex-shrink-0 p-1">
                           <Image
                             src={brand.logo_url}
                             alt={brand.brand_name}
                             width={96}
                             height={96}
-                            className="w-full h-full object-contain p-1.5"
+                            className="w-full h-full object-contain"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
                             }}
@@ -379,13 +379,13 @@ export default function HarborIndexClient({ initialLeaderboard = [], initialDire
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-white overflow-hidden flex-shrink-0 p-0.5">
                             <Image
                               src={brand.logo_url}
                               alt={brand.brand_name}
                               width={64}
                               height={64}
-                              className="w-full h-full object-contain p-1"
+                              className="w-full h-full object-contain"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
                               }}
