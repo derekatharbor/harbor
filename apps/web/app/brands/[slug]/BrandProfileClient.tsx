@@ -9,6 +9,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import CompleteSignupModal from '@/components/auth/CompleteSignupModal'
 import LoginModal from '@/components/auth/LoginModal'
+import Nav from '@/components/landing-new/Nav'
+import Footer from '@/components/landing-new/Footer'
 
 interface Brand {
   id: string
@@ -188,54 +190,17 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
   const isPositive = delta > 0
 
   return (
-    <div className="min-h-screen bg-[#101A31]">
-      {/* Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-3rem)] max-w-[1400px]">
-        <div 
-          className="backdrop-blur-xl bg-white/15 rounded-2xl shadow-2xl border border-white/10"
-          style={{ backdropFilter: 'blur(12px)' }}
-        >
-          <div className="px-4 md:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-14 md:h-16">
-              <Link href="/" className="flex items-center space-x-2 md:space-x-3">
-                <Image 
-                  src="/logo-icon.png" 
-                  alt="Harbor" 
-                  width={32} 
-                  height={32}
-                  className="w-7 h-7 md:w-8 md:h-8"
-                />
-                <span className="text-lg md:text-xl font-bold text-white">Harbor</span>
-              </Link>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <Nav />
 
-              <div className="flex items-center space-x-2 md:space-x-4">
-                <Link 
-                  href="/brands" 
-                  className="text-white/70 text-sm md:text-base hover:text-white transition-colors duration-200"
-                >
-                  ← Back to Index
-                </Link>
-                
-                <Link
-                  href="/dashboard/overview"
-                  className="inline-flex items-center px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-white text-black text-sm md:text-base font-medium hover:bg-white/90 transition-all duration-200"
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Spacer */}
-      <div className="h-28" />
+      {/* Spacer for fixed nav */}
+      <div className="h-20" />
 
       {/* Profile Content */}
       <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 relative z-10">
         
         {/* Header Card */}
-        <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+        <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
             {/* Logo */}
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
@@ -283,7 +248,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
           {/* Visibility Score */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white/5 rounded-xl p-6">
+            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
               <div className="flex items-center gap-2 text-white/50 text-sm mb-2">
                 <div className="w-3 h-3 rounded-full bg-white/20" />
                 Visibility Score
@@ -292,13 +257,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <span className="text-4xl font-bold text-white">
                   {brand.visibility_score.toFixed(1)}%
                 </span>
-                <span className={`text-lg font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                <span className={`text-lg font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
                   {isPositive ? '+' : ''}{delta.toFixed(1)}%
                 </span>
               </div>
             </div>
 
-            <div className="bg-white/5 rounded-xl p-6">
+            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
               <div className="text-white/50 text-sm mb-2">Global Rank</div>
               <div className="text-4xl font-bold text-white">
                 #{brand.rank_global}
@@ -308,15 +273,15 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
           {/* AI Description Hero Block - NEW */}
           {feedData.short_description && (
-            <div className="bg-gradient-to-br from-[#FF6B4A]/10 to-transparent border border-[#FF6B4A]/20 rounded-xl p-6 mb-8">
+            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-6 mb-8">
               <h2 className="text-lg font-bold text-white mb-4">
                 How AI Describes {brand.brand_name} Today
               </h2>
-              <p className="text-white/80 text-sm leading-relaxed mb-4">
+              <p className="text-white/70 text-sm leading-relaxed mb-4">
                 "{feedData.short_description}"
               </p>
               {scoring.score_rationale && (
-                <p className="text-white/50 text-xs font-mono">
+                <p className="text-white/40 text-xs font-mono">
                   {scoring.score_rationale}
                 </p>
               )}
@@ -325,7 +290,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
           {/* Visibility Gaps - NEW */}
           {gaps.length > 0 && (
-            <div className="bg-white/5 rounded-xl p-6">
+            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1">
@@ -344,16 +309,16 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 {gaps.map((gap, idx) => (
                   <div 
                     key={idx}
-                    className={`flex items-center justify-between p-4 rounded-lg ${brand.claimed ? 'bg-white/5' : 'bg-white/5 opacity-60'}`}
+                    className={`flex items-center justify-between p-4 rounded-lg ${brand.claimed ? 'bg-white/[0.03]' : 'bg-white/[0.03] opacity-60'}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-[#FF6B4A]" />
+                      <div className="w-2 h-2 rounded-full bg-amber-400" />
                       <span className="text-white font-medium">{gap.issue}</span>
                     </div>
                     <span className={`text-xs font-medium px-2 py-1 rounded ${
                       gap.priority === 'high' 
-                        ? 'bg-[#FF6B4A]/20 text-[#FF6B4A]' 
-                        : 'bg-cyan-500/20 text-cyan-400'
+                        ? 'bg-amber-400/10 text-amber-400' 
+                        : 'bg-blue-400/10 text-blue-400'
                     }`}>
                       {gap.priority === 'high' ? 'High impact' : 'Medium impact'}
                     </span>
@@ -362,8 +327,8 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
 
               {!brand.claimed && (
-                <div className="mt-4 p-3 bg-[#FF6B4A]/5 rounded-lg border border-[#FF6B4A]/20">
-                  <p className="text-white/70 text-sm">
+                <div className="mt-4 p-3 bg-white/[0.02] rounded-lg border border-white/[0.06]">
+                  <p className="text-white/60 text-sm">
                     <Lock className="w-4 h-4 inline mr-1" />
                     Claim this profile to see detailed recommendations and fix these issues
                   </p>
@@ -376,19 +341,19 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
         {/* Claim Status CTA */}
         {!brand.claimed ? (
           // UNCLAIMED: Show claim CTA
-          <div className="mb-8 p-6 bg-[#FF6B4A]/10 border border-[#FF6B4A]/20 rounded-xl">
+          <div className="mb-8 p-6 bg-amber-400/5 border border-amber-400/10 rounded-xl">
             <div className="flex items-start gap-4">
-              <AlertCircle className="w-6 h-6 text-[#FF6B4A] flex-shrink-0 mt-1" />
+              <AlertCircle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-white mb-2">
                   This profile is unclaimed
                 </h3>
-                <p className="text-white/70 text-sm mb-4">
+                <p className="text-white/60 text-sm mb-4">
                   Are you from {brand.brand_name}? Claim this profile for free to manage how AI models understand your brand.
                 </p>
                 <button
                   onClick={() => setShowClaimModal(true)}
-                  className="px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all"
+                  className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all"
                 >
                   Claim this profile — it's free
                 </button>
@@ -397,19 +362,19 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         ) : (
           // CLAIMED: Show sign-in CTA
-          <div className="mb-8 p-6 bg-[#2979FF]/10 border border-[#2979FF]/20 rounded-xl">
+          <div className="mb-8 p-6 bg-emerald-400/5 border border-emerald-400/10 rounded-xl">
             <div className="flex items-start gap-4">
-              <Shield className="w-6 h-6 text-[#2979FF] flex-shrink-0 mt-1" />
+              <Shield className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-white mb-2">
                   Brand claimed
                 </h3>
-                <p className="text-white/70 text-sm mb-4">
+                <p className="text-white/60 text-sm mb-4">
                   This profile is verified and managed by {brand.brand_name}. Are you from this company?
                 </p>
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="px-6 py-3 rounded-lg bg-[#2979FF] text-white font-medium hover:bg-[#2979FF]/90 transition-all"
+                  className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all"
                 >
                   Sign in to manage
                 </button>
@@ -420,16 +385,16 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
         {/* Offerings - NEW: Display actual data */}
         {feedData.offerings && feedData.offerings.length > 0 && (
-          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
             <h2 className="text-2xl font-bold text-white mb-6">Products & Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {feedData.offerings.map((offering: any, idx: number) => (
-                <div key={idx} className="bg-white/5 rounded-lg p-4 border border-white/5">
+                <div key={idx} className="bg-white/[0.03] rounded-lg p-4 border border-white/[0.06]">
                   <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 rounded-full bg-[#2979FF] mt-2 flex-shrink-0" />
+                    <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0" />
                     <div>
                       <h3 className="text-white font-medium mb-1">{offering.name}</h3>
-                      <p className="text-white/60 text-sm">{offering.description}</p>
+                      <p className="text-white/50 text-sm">{offering.description}</p>
                     </div>
                   </div>
                 </div>
@@ -440,13 +405,13 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
         {/* FAQs - NEW: Display actual data */}
         {feedData.faqs && feedData.faqs.length > 0 && (
-          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12 mb-8">
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
             <h2 className="text-2xl font-bold text-white mb-6">Common Questions</h2>
             <div className="space-y-4">
               {feedData.faqs.map((faq: any, idx: number) => (
-                <div key={idx} className="bg-white/5 rounded-lg p-5 border border-white/5">
+                <div key={idx} className="bg-white/[0.03] rounded-lg p-5 border border-white/[0.06]">
                   <h3 className="text-white font-medium mb-2">{faq.question}</h3>
-                  <p className="text-white/60 text-sm leading-relaxed">{faq.answer}</p>
+                  <p className="text-white/50 text-sm leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -455,33 +420,33 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
         {/* Company Info - NEW: Display actual data */}
         {feedData.company_info && (
-          <div className="bg-[#0C1422] rounded-2xl border border-white/5 p-8 md:p-12">
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
             <h2 className="text-2xl font-bold text-white mb-6">Company Information</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {feedData.company_info.founded_year && (
                 <div>
-                  <div className="text-white/50 text-sm mb-1">Founded</div>
+                  <div className="text-white/40 text-sm mb-1">Founded</div>
                   <div className="text-white font-medium">{feedData.company_info.founded_year}</div>
                 </div>
               )}
               {feedData.company_info.hq_location && (
                 <div>
-                  <div className="text-white/50 text-sm mb-1">Headquarters</div>
+                  <div className="text-white/40 text-sm mb-1">Headquarters</div>
                   <div className="text-white font-medium">{feedData.company_info.hq_location}</div>
                 </div>
               )}
               {feedData.company_info.employee_band && (
                 <div>
-                  <div className="text-white/50 text-sm mb-1">Employees</div>
+                  <div className="text-white/40 text-sm mb-1">Employees</div>
                   <div className="text-white font-medium">{feedData.company_info.employee_band}</div>
                 </div>
               )}
               {feedData.company_info.industry_tags && feedData.company_info.industry_tags.length > 0 && (
                 <div>
-                  <div className="text-white/50 text-sm mb-1">Industries</div>
+                  <div className="text-white/40 text-sm mb-1">Industries</div>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {feedData.company_info.industry_tags.map((tag: string, idx: number) => (
-                      <span key={idx} className="px-2 py-1 rounded bg-white/5 text-white text-xs">
+                      <span key={idx} className="px-2 py-1 rounded bg-white/[0.05] text-white text-xs">
                         {tag}
                       </span>
                     ))}
@@ -490,12 +455,12 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               )}
             </div>
 
-            <div className="mt-6 pt-6 border-t border-white/5">
+            <div className="mt-6 pt-6 border-t border-white/[0.06]">
               <a
                 href={`https://${brand.domain}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[#2979FF] hover:text-[#2979FF]/80 transition-colors"
+                className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
               >
                 Visit {brand.brand_name}
                 <ExternalLink className="w-4 h-4" />
@@ -504,6 +469,9 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         )}
       </div>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Claim Modal */}
       {showClaimModal && (
@@ -515,7 +483,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           />
 
           {/* Modal */}
-          <div className="relative bg-[#0C1422] rounded-2xl border border-white/10 w-full max-w-md p-8">
+          <div className="relative bg-[#111213] rounded-2xl border border-white/[0.08] w-full max-w-md p-8">
             {/* Close button */}
             <button
               onClick={() => setShowClaimModal(false)}
@@ -530,7 +498,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <h2 className="text-2xl font-bold text-white mb-2">
                   {brand.claimed ? 'Sign in to manage' : 'Claim this Profile'}
                 </h2>
-                <p className="text-white/60 text-sm mb-6">
+                <p className="text-white/50 text-sm mb-6">
                   {brand.claimed 
                     ? 'Enter your company email to access the management dashboard:'
                     : 'To verify ownership, enter an email with this domain:'
@@ -538,7 +506,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 </p>
 
                 <div className="mb-4">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 mb-4">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.03] border border-white/[0.08] mb-4">
                     <span className="text-white/40">@</span>
                     <span className="text-white font-mono">{brand.domain}</span>
                   </div>
@@ -548,7 +516,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={`you@${brand.domain}`}
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-[#FF6B4A] transition-colors"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
                     disabled={claimLoading}
                   />
                 </div>
@@ -562,7 +530,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleSendCode}
                   disabled={claimLoading || !email}
-                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50"
+                  className="w-full px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all disabled:opacity-50"
                 >
                   {claimLoading ? 'Sending...' : 'Send verification code'}
                 </button>
@@ -575,7 +543,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <h2 className="text-2xl font-bold text-white mb-2">
                   Verify your email
                 </h2>
-                <p className="text-white/60 text-sm mb-6">
+                <p className="text-white/50 text-sm mb-6">
                   We sent a 6-digit code to <span className="text-white font-mono">{email}</span>
                 </p>
 
@@ -585,7 +553,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                     value={code}
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="000000"
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white text-center text-2xl tracking-widest placeholder-white/40 focus:outline-none focus:border-[#FF6B4A] transition-colors font-mono"
+                    className="w-full px-4 py-3 rounded-lg bg-white/[0.03] border border-white/[0.08] text-white text-center text-2xl tracking-widest placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors font-mono"
                     maxLength={6}
                     disabled={claimLoading}
                   />
@@ -600,7 +568,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleVerifyCode}
                   disabled={claimLoading || code.length !== 6}
-                  className="w-full px-6 py-3 rounded-lg bg-[#FF6B4A] text-white font-medium hover:bg-[#FF6B4A]/90 transition-all disabled:opacity-50 mb-3"
+                  className="w-full px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all disabled:opacity-50 mb-3"
                 >
                   {claimLoading ? 'Verifying...' : 'Verify'}
                 </button>
