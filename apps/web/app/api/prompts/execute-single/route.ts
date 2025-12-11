@@ -161,8 +161,7 @@ JSON array:`
     const brands = JSON.parse(cleaned)
     
     if (Array.isArray(brands)) {
-      // Filter out the user's own brand and duplicates
-      const userBrandLower = (userBrand || '').toLowerCase()
+      // Remove duplicates but KEEP the user's brand (we need it for visibility tracking)
       const seen = new Set<string>()
       
       const filtered = brands
@@ -170,8 +169,7 @@ JSON array:`
           typeof b === 'object' &&
           typeof b.name === 'string' && 
           b.name.length > 1 && 
-          b.name.length < 50 &&
-          !b.name.toLowerCase().includes(userBrandLower)
+          b.name.length < 50
         )
         .filter(b => {
           const lower = b.name.toLowerCase()

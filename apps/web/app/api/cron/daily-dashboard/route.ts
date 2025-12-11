@@ -1,3 +1,4 @@
+// app/api/cron/daily-dashboard/route.ts
 // Daily dashboard cron - re-executes user prompts and stores visibility snapshots
 // Run daily via Vercel cron or external scheduler
 // 
@@ -7,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
-export const maxDuration = 300 // 5 minutes max
+export const maxDuration = 600 // 10 minutes max (running 3 models per prompt)
 
 function getSupabase() {
   return createClient(
@@ -112,32 +113,40 @@ export async function POST(request: NextRequest) {
         
         // Execute prompts if not skipping
         if (!skipExecution) {
+          const models = ['chatgpt', 'claude', 'perplexity']
+          
           for (const prompt of prompts) {
-            try {
-              // Call the single prompt execution endpoint
-              const execResponse = await fetch(
-                `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/prompts/execute-single`,
-                {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    prompt_id: prompt.id,
-                    prompt_text: prompt.prompt_text,
-                    dashboard_id: dashboard.id,
-                    brand_name: dashboard.brand_name
-                  })
+            for (const model of models) {
+              try {
+                // Call the single prompt execution endpoint for each model
+                const execResponse = await fetch(
+                  `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/prompts/execute-single`,
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      prompt_id: prompt.id,
+                      prompt_text: prompt.prompt_text,
+                      model: model,
+                      brand: dashboard.brand_name,
+                      dashboard_id: dashboard.id
+                    })
+                  }
+                )
+                
+                if (execResponse.ok) {
+                  results.prompts_executed++
+                } else {
+                  const errData = await execResponse.json().catch(() => ({}))
+                  results.errors.push(`Prompt ${prompt.id} (${model}): ${errData.error || execResponse.status}`)
                 }
-              )
-              
-              if (execResponse.ok) {
-                results.prompts_executed++
+                
+                // Small delay to avoid rate limits
+                await new Promise(r => setTimeout(r, 500))
+                
+              } catch (e) {
+                results.errors.push(`Prompt ${prompt.id} (${model}): ${e instanceof Error ? e.message : 'Failed'}`)
               }
-              
-              // Small delay to avoid rate limits
-              await new Promise(r => setTimeout(r, 1000))
-              
-            } catch (e) {
-              results.errors.push(`Prompt ${prompt.id}: ${e instanceof Error ? e.message : 'Failed'}`)
             }
           }
         }
@@ -161,11 +170,19 @@ export async function POST(request: NextRequest) {
         let sentimentSum = 0
         let sentimentCount = 0
         
+        const brandNameLower = dashboard.brand_name?.toLowerCase() || ''
+        
         for (const exec of executions || []) {
           const mentions = exec.prompt_brand_mentions as any[] || []
-          const brandMention = mentions.find(
-            m => m.brand_name?.toLowerCase() === dashboard.brand_name?.toLowerCase()
-          )
+          
+          // Find brand mention with flexible matching (contains or equals)
+          const brandMention = mentions.find(m => {
+            const mentionLower = m.brand_name?.toLowerCase() || ''
+            // Match if: exact match, brand contains mention, or mention contains brand
+            return mentionLower === brandNameLower ||
+                   brandNameLower.includes(mentionLower) ||
+                   mentionLower.includes(brandNameLower)
+          })
           
           if (brandMention) {
             mentionCount++
