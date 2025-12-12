@@ -10,13 +10,10 @@ import Link from 'next/link'
 import { 
   ArrowLeft, 
   ExternalLink, 
-  Check,
-  AlertCircle,
   Eye,
   Building2,
   Package,
   HelpCircle,
-  Bot,
   Plus,
   X,
   Save,
@@ -28,7 +25,6 @@ import {
   CheckCircle2,
   Upload,
   Camera,
-  Sparkles,
   Zap
 } from 'lucide-react'
 
@@ -119,12 +115,12 @@ export default function ManageBrandPage() {
   const [offerings, setOfferings] = useState<NonNullable<FeedData['offerings']>>([])
   const [faqs, setFaqs] = useState<NonNullable<FeedData['faqs']>>([])
 
-  // Bot visits
+  // Bot visits - using Brandfetch for high-quality logos
   const [botVisits] = useState<BotVisit[]>([
-    { bot_name: 'GPTBot', bot_label: 'ChatGPT', logo: '/logos/chatgpt-dark.svg', visit_count: 0, last_visit: null },
-    { bot_name: 'anthropic-ai', bot_label: 'Claude', logo: '/logos/claude-dark.svg', visit_count: 0, last_visit: null },
-    { bot_name: 'PerplexityBot', bot_label: 'Perplexity', logo: '/logos/perplexity-dark.svg', visit_count: 0, last_visit: null },
-    { bot_name: 'Google-Extended', bot_label: 'Gemini', logo: '/logos/gemini.svg', visit_count: 0, last_visit: null },
+    { bot_name: 'GPTBot', bot_label: 'ChatGPT', logo: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
+    { bot_name: 'anthropic-ai', bot_label: 'Claude', logo: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
+    { bot_name: 'PerplexityBot', bot_label: 'Perplexity', logo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
+    { bot_name: 'Google-Extended', bot_label: 'Gemini', logo: 'https://cdn.brandfetch.io/google.com?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
   ])
 
   // Feed URL copy state
@@ -321,9 +317,9 @@ export default function ManageBrandPage() {
 
   // Progress calculation
   const steps = [
-    { id: 1, label: 'Add brand info', description: 'Name, description, and category', done: description?.length > 20 && oneLiner?.length > 10 },
-    { id: 2, label: 'Add products', description: 'What you offer', done: offerings?.length > 0 },
-    { id: 3, label: 'Add FAQs', description: 'Common questions', done: faqs?.length > 0 },
+    { id: 1, label: 'Add brand info', description: 'Name, description, and category', done: description?.length > 20 && oneLiner?.length > 10, icon: '/icons/step-brand.png' },
+    { id: 2, label: 'Add products', description: 'What you offer', done: offerings?.length > 0, icon: '/icons/step-products.png' },
+    { id: 3, label: 'Add FAQs', description: 'Common questions', done: faqs?.length > 0, icon: '/icons/step-faqs.png' },
   ]
   const completedSteps = steps.filter(s => s.done).length
 
@@ -401,30 +397,6 @@ export default function ManageBrandPage() {
             )
           })}
         </nav>
-
-        {/* Save Button */}
-        <div className="p-4 border-t border-white/[0.06]">
-          {message && (
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs mb-3 ${
-              message.type === 'success' ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'
-            }`}>
-              {message.type === 'success' ? <Check className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-              {message.text}
-            </div>
-          )}
-          <button
-            onClick={handleSave}
-            disabled={saving || !hasChanges}
-            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${
-              hasChanges 
-                ? 'bg-white text-black hover:bg-white/90' 
-                : 'bg-white/5 text-white/40 cursor-not-allowed'
-            }`}
-          >
-            <Save className="w-4 h-4" />
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </div>
       </aside>
 
       {/* Main Content */}
@@ -445,20 +417,34 @@ export default function ManageBrandPage() {
                 <button
                   key={step.id}
                   onClick={() => setActiveNav(idx === 0 ? 'brand' : idx === 1 ? 'products' : 'faqs')}
-                  className={`p-4 rounded-xl border text-left transition-all ${
+                  className={`p-5 rounded-xl border text-left transition-all ${
                     step.done 
-                      ? 'bg-green-400/5 border-green-400/20 hover:border-green-400/30' 
+                      ? 'bg-[#111213] border-blue-500/20 hover:border-blue-500/30' 
                       : 'bg-[#111213] border-white/[0.06] hover:border-white/[0.12]'
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-xs font-medium ${step.done ? 'text-green-400' : 'text-white/40'}`}>
+                  {/* Icon placeholder - upload 48x48 PNGs to /public/icons/ */}
+                  <div className="w-12 h-12 rounded-xl bg-[#161718] border border-white/[0.06] mb-4 flex items-center justify-center overflow-hidden">
+                    <Image
+                      src={step.icon}
+                      alt=""
+                      width={48}
+                      height={48}
+                      className={`w-full h-full object-contain ${step.done ? '' : 'opacity-40'}`}
+                      onError={(e) => {
+                        // Fallback if icon not found
+                        (e.target as HTMLImageElement).style.display = 'none'
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-xs font-medium ${step.done ? 'text-blue-400' : 'text-white/40'}`}>
                       Step {step.id}
                     </span>
-                    {step.done && <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />}
+                    {step.done && <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />}
                   </div>
-                  <p className={`font-medium text-sm ${step.done ? 'text-green-400' : 'text-white'}`}>
-                    {step.done ? 'Complete!' : step.label}
+                  <p className={`font-medium text-sm ${step.done ? 'text-white' : 'text-white/80'}`}>
+                    {step.label}
                   </p>
                   <p className="text-white/40 text-xs mt-1">{step.description}</p>
                 </button>
@@ -469,36 +455,61 @@ export default function ManageBrandPage() {
           {/* Overview Section */}
           {activeNav === 'overview' && (
             <div className="space-y-6">
-              {/* Bot Activity */}
+              {/* AI Visits */}
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Bot className="w-5 h-5 text-white/50" strokeWidth={1.5} />
-                  <h3 className="text-white font-semibold font-heading">AI Bot Activity</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-white font-semibold font-heading">AI Visits</h3>
+                  <span className="text-white/30 text-xs">Last 30 days</span>
                 </div>
-                <p className="text-white/50 text-sm mb-4">Track when AI crawlers visit your profile</p>
+                
+                {/* Simple flatline chart */}
+                <div className="h-24 mb-6 relative">
+                  <div className="absolute inset-0 flex items-end">
+                    <svg className="w-full h-full" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.1)" />
+                          <stop offset="100%" stopColor="rgba(99, 102, 241, 0)" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 0 80 L 50 78 L 100 82 L 150 79 L 200 81 L 250 80 L 300 78 L 350 80 L 400 79"
+                        fill="none"
+                        stroke="rgba(99, 102, 241, 0.5)"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M 0 80 L 50 78 L 100 82 L 150 79 L 200 81 L 250 80 L 300 78 L 350 80 L 400 79 L 400 96 L 0 96 Z"
+                        fill="url(#chartGradient)"
+                      />
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-px bg-white/[0.06]" />
+                </div>
 
-                <div className="space-y-3">
+                <div className="grid grid-cols-4 gap-3">
                   {botVisits.map((bot) => (
-                    <div key={bot.bot_name} className="flex items-center justify-between py-2">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                          bot.visit_count > 0 ? 'bg-green-400/10' : 'bg-[#161718]'
-                        }`}>
-                          <Image
-                            src={bot.logo}
-                            alt={bot.bot_label}
-                            width={18}
-                            height={18}
-                            className={bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}
-                          />
-                        </div>
-                        <div>
-                          <p className="text-white text-sm">{bot.bot_label}</p>
-                          <p className="text-white/30 text-xs">{bot.bot_name}</p>
-                        </div>
+                    <div 
+                      key={bot.bot_name} 
+                      className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
+                        bot.visit_count > 0 
+                          ? 'bg-[#161718] border-white/[0.08]' 
+                          : 'bg-[#0B0B0C] border-white/[0.04]'
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-lg overflow-hidden mb-2 ${
+                        bot.visit_count === 0 ? 'opacity-30 grayscale' : ''
+                      }`}>
+                        <Image
+                          src={bot.logo}
+                          alt={bot.bot_label}
+                          width={32}
+                          height={32}
+                          className="w-full h-full object-contain"
+                        />
                       </div>
-                      <span className="text-white/50 text-sm">
-                        {bot.visit_count > 0 ? `${bot.visit_count} visits` : 'No visits yet'}
+                      <span className={`text-xs ${bot.visit_count > 0 ? 'text-white/70' : 'text-white/30'}`}>
+                        {bot.visit_count}
                       </span>
                     </div>
                   ))}
@@ -506,15 +517,15 @@ export default function ManageBrandPage() {
               </div>
 
               {/* Upgrade CTA */}
-              <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent rounded-xl border border-blue-500/20 p-6">
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-blue-400" />
+                  <div className="w-10 h-10 rounded-lg bg-[#161718] flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-white/50" strokeWidth={1.5} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-white font-semibold font-heading mb-1">Want to track AI mentions?</h3>
+                    <h3 className="text-white font-semibold font-heading mb-1">Track AI mentions</h3>
                     <p className="text-white/50 text-sm mb-4">
-                      See exactly when and where AI recommends your brand. Monitor competitors. Get actionable insights.
+                      See where AI recommends your brand. Monitor competitors. Get insights.
                     </p>
                     <div className="flex items-center gap-3">
                       <Link
@@ -523,8 +534,8 @@ export default function ManageBrandPage() {
                       >
                         Start Free
                       </Link>
-                      <Link href="/pricing" className="text-white/50 text-sm hover:text-white/70">
-                        View plans →
+                      <Link href="/pricing" className="text-white/40 text-sm hover:text-white/60">
+                        View plans
                       </Link>
                     </div>
                   </div>
@@ -819,120 +830,106 @@ export default function ManageBrandPage() {
             </div>
           )}
         </div>
+
+        {/* Floating Save Bar */}
+        {hasChanges && (
+          <div className="sticky bottom-0 left-0 right-0 p-4 bg-[#0B0B0C]/95 backdrop-blur border-t border-white/[0.06]">
+            <div className="max-w-4xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {message && (
+                  <span className={`text-sm ${message.type === 'success' ? 'text-blue-400' : 'text-red-400'}`}>
+                    {message.text}
+                  </span>
+                )}
+                {!message && <span className="text-white/40 text-sm">Unsaved changes</span>}
+              </div>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                {saving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
-      {/* Right Sidebar - AI Profile Preview */}
-      <aside className="w-[320px] border-l border-white/[0.06] flex flex-col">
-        <div className="p-4 border-b border-white/[0.06]">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <h2 className="text-white font-semibold text-sm">What AI Sees</h2>
+      {/* Right Sidebar - The Actual JSON Feed */}
+      <aside className="w-[360px] border-l border-white/[0.06] flex flex-col bg-[#0B0B0C]">
+        <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+          <div>
+            <h2 className="text-white font-semibold text-sm font-heading">Your AI Profile</h2>
+            <p className="text-white/40 text-xs mt-0.5">The schema AI models read</p>
           </div>
-          <p className="text-white/40 text-xs mt-1">Live preview of your AI profile</p>
+          <button
+            onClick={copyFeedUrl}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] text-white/50 text-xs transition-colors"
+          >
+            {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? 'Copied' : 'Copy URL'}
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-          {/* Brand Card Preview */}
-          <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-4 mb-4">
-            <div className="flex items-center gap-3 mb-3">
-              <Image
-                src={brand.logo_url}
-                alt={brand.brand_name}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-lg"
-              />
-              <div>
-                <p className="text-white font-medium text-sm">{brand.brand_name}</p>
-                <p className="text-white/40 text-xs">{category || 'Uncategorized'}</p>
-              </div>
-            </div>
-            {oneLiner && (
-              <p className="text-white/70 text-sm mb-2">{oneLiner}</p>
-            )}
-            {description && (
-              <p className="text-white/50 text-xs line-clamp-3">{description}</p>
-            )}
-          </div>
-
-          {/* Products Preview */}
-          {offerings.length > 0 && (
-            <div className="mb-4">
-              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">Products ({offerings.filter(o => o.status !== 'discontinued').length})</p>
-              <div className="space-y-2">
-                {offerings.filter(o => o.status !== 'discontinued').slice(0, 3).map((p, i) => (
-                  <div key={i} className="bg-[#111213] rounded-lg border border-white/[0.06] p-3">
-                    <div className="flex justify-between items-start">
-                      <p className="text-white text-sm">{p.name || 'Untitled'}</p>
-                      {p.price && <span className="text-white/50 text-xs">{p.price}</span>}
-                    </div>
-                    {p.description && (
-                      <p className="text-white/40 text-xs mt-1 line-clamp-2">{p.description}</p>
-                    )}
-                  </div>
-                ))}
-                {offerings.filter(o => o.status !== 'discontinued').length > 3 && (
-                  <p className="text-white/30 text-xs">+{offerings.filter(o => o.status !== 'discontinued').length - 3} more</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* FAQs Preview */}
-          {faqs.length > 0 && (
-            <div className="mb-4">
-              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">FAQs ({faqs.length})</p>
-              <div className="space-y-2">
-                {faqs.slice(0, 2).map((f, i) => (
-                  <div key={i} className="bg-[#111213] rounded-lg border border-white/[0.06] p-3">
-                    <p className="text-white text-sm">{f.question || 'Question?'}</p>
-                    {f.answer && (
-                      <p className="text-white/40 text-xs mt-1 line-clamp-2">{f.answer}</p>
-                    )}
-                  </div>
-                ))}
-                {faqs.length > 2 && (
-                  <p className="text-white/30 text-xs">+{faqs.length - 2} more</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Company Info Preview */}
-          {(companyInfo?.hq_location || companyInfo?.founded_year || companyInfo?.employee_band) && (
-            <div className="mb-4">
-              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">Company</p>
-              <div className="bg-[#111213] rounded-lg border border-white/[0.06] p-3 space-y-1">
-                {companyInfo.hq_location && (
-                  <p className="text-white/50 text-xs">📍 {companyInfo.hq_location}</p>
-                )}
-                {companyInfo.founded_year && (
-                  <p className="text-white/50 text-xs">📅 Founded {companyInfo.founded_year}</p>
-                )}
-                {companyInfo.employee_band && (
-                  <p className="text-white/50 text-xs">👥 {companyInfo.employee_band} employees</p>
-                )}
-              </div>
-            </div>
-          )}
+          <pre className="text-xs font-mono leading-relaxed text-white/70 whitespace-pre-wrap break-words">
+            <code>{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: brand.brand_name,
+  url: `https://${brand.domain}`,
+  description: description || undefined,
+  slogan: oneLiner || undefined,
+  ...(companyInfo?.founded_year && { foundingDate: String(companyInfo.founded_year) }),
+  ...(companyInfo?.hq_location && {
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: companyInfo.hq_location
+    }
+  }),
+  ...(companyInfo?.employee_band && {
+    numberOfEmployees: {
+      "@type": "QuantitativeValue",
+      value: companyInfo.employee_band
+    }
+  }),
+  ...(category && { industry: category }),
+  ...(icp && { audience: icp }),
+  ...(offerings.length > 0 && {
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      itemListElement: offerings
+        .filter(o => o.status !== 'discontinued')
+        .map(o => ({
+          "@type": "Offer",
+          name: o.name,
+          description: o.description,
+          ...(o.price && { price: o.price })
+        }))
+    }
+  }),
+  ...(faqs.length > 0 && {
+    mainEntity: {
+      "@type": "FAQPage",
+      mainEntity: faqs.map(f => ({
+        "@type": "Question",
+        name: f.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: f.answer
+        }
+      }))
+    }
+  })
+}, null, 2)}</code>
+          </pre>
         </div>
 
-        {/* Feed URL */}
         <div className="p-4 border-t border-white/[0.06]">
-          <p className="text-white/40 text-xs mb-2">AI Feed URL</p>
-          <button
-            onClick={copyFeedUrl}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
-          >
-            <span className="text-white/50 text-xs truncate font-mono">
-              /brands/{brand.slug}/harbor.json
-            </span>
-            {copied ? (
-              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-            ) : (
-              <Copy className="w-4 h-4 text-white/40 flex-shrink-0" />
-            )}
-          </button>
+          <p className="text-white/30 text-xs">
+            Available at <span className="font-mono text-white/50">/brands/{brand.slug}/harbor.json</span>
+          </p>
         </div>
       </aside>
 
