@@ -16,12 +16,10 @@ import {
   Building2,
   Package,
   HelpCircle,
-  Rss,
   Bot,
   Plus,
   X,
   Save,
-  ChevronRight,
   Globe,
   Calendar,
   Users,
@@ -29,7 +27,9 @@ import {
   Copy,
   CheckCircle2,
   Upload,
-  Camera
+  Camera,
+  Sparkles,
+  Zap
 } from 'lucide-react'
 
 // Types
@@ -87,26 +87,26 @@ interface BotVisit {
   last_visit: string | null
 }
 
-// Tab definitions
-const TABS = [
+// Nav sections
+const NAV_ITEMS = [
   { id: 'overview', label: 'Overview', icon: Eye },
   { id: 'brand', label: 'Brand Info', icon: Building2 },
   { id: 'products', label: 'Products', icon: Package },
   { id: 'faqs', label: 'FAQs', icon: HelpCircle },
-  { id: 'feed', label: 'AI Feed', icon: Rss },
 ] as const
 
-type TabId = typeof TABS[number]['id']
+type NavId = typeof NAV_ITEMS[number]['id']
 
 export default function ManageBrandPage() {
   const router = useRouter()
   const params = useParams()
   const slug = params?.slug as string
 
+  // Core state
   const [brand, setBrand] = useState<Brand | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeNav, setActiveNav] = useState<NavId>('overview')
   const [saving, setSaving] = useState(false)
-  const [activeTab, setActiveTab] = useState<TabId>('overview')
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [hasChanges, setHasChanges] = useState(false)
 
@@ -119,53 +119,60 @@ export default function ManageBrandPage() {
   const [offerings, setOfferings] = useState<NonNullable<FeedData['offerings']>>([])
   const [faqs, setFaqs] = useState<NonNullable<FeedData['faqs']>>([])
 
-  // Bot visits (mock for now - will be real data)
-  const [botVisits, setBotVisits] = useState<BotVisit[]>([
+  // Bot visits
+  const [botVisits] = useState<BotVisit[]>([
     { bot_name: 'GPTBot', bot_label: 'ChatGPT', logo: '/logos/chatgpt-dark.svg', visit_count: 0, last_visit: null },
     { bot_name: 'anthropic-ai', bot_label: 'Claude', logo: '/logos/claude-dark.svg', visit_count: 0, last_visit: null },
     { bot_name: 'PerplexityBot', bot_label: 'Perplexity', logo: '/logos/perplexity-dark.svg', visit_count: 0, last_visit: null },
     { bot_name: 'Google-Extended', bot_label: 'Gemini', logo: '/logos/gemini.svg', visit_count: 0, last_visit: null },
   ])
 
-  // Copied state for feed URL
+  // Feed URL copy state
   const [copied, setCopied] = useState(false)
 
+  // CSV Import state
+  const [csvPreview, setCsvPreview] = useState<{
+    rows: Array<Record<string, string>>
+    columns: string[]
+    mapping: { name: string; price: string; description: string; status: string }
+  } | null>(null)
+
+  // Load brand data
   useEffect(() => {
-    if (slug) loadBrand()
-  }, [slug])
-
-  async function loadBrand() {
-    try {
-      const res = await fetch(`/api/brands/${slug}`)
-      if (!res.ok) throw new Error('Failed to load brand')
-      
-      const data = await res.json()
-      
-      if (!data.claimed) {
-        router.push(`/brands/${slug}`)
-        return
+    async function loadBrand() {
+      try {
+        const res = await fetch(`/api/brands/${slug}`)
+        if (!res.ok) throw new Error('Brand not found')
+        const data = await res.json()
+        
+        if (!data.claimed) {
+          router.push(`/brands/${slug}`)
+          return
+        }
+        
+        setBrand(data)
+        
+        // Initialize editable state from feed_data
+        if (data.feed_data) {
+          setDescription(data.feed_data.short_description || '')
+          setOneLiner(data.feed_data.one_line_summary || '')
+          setCategory(data.feed_data.category || '')
+          setIcp(data.feed_data.icp || '')
+          setCompanyInfo(data.feed_data.company_info || {})
+          setOfferings(data.feed_data.offerings || [])
+          setFaqs(data.feed_data.faqs || [])
+        }
+      } catch (error) {
+        console.error('Failed to load brand:', error)
+      } finally {
+        setLoading(false)
       }
-      
-      setBrand(data)
-      
-      // Initialize editable state from feed_data
-      const feed = data.feed_data || {}
-      setDescription(feed.short_description || '')
-      setOneLiner(feed.one_line_summary || '')
-      setCategory(feed.category || '')
-      setIcp(feed.icp || '')
-      setCompanyInfo(feed.company_info || {})
-      setOfferings(feed.offerings || [])
-      setFaqs(feed.faqs || [])
-      
-    } catch (error) {
-      console.error('Failed to load brand:', error)
-      setMessage({ type: 'error', text: 'Failed to load brand' })
-    } finally {
-      setLoading(false)
     }
-  }
+    
+    if (slug) loadBrand()
+  }, [slug, router])
 
+  // Save handler
   async function handleSave() {
     if (!brand) return
     setSaving(true)
@@ -194,10 +201,10 @@ export default function ManageBrandPage() {
       
       setBrand({ ...brand, feed_data: updatedFeedData })
       setHasChanges(false)
-      setMessage({ type: 'success', text: 'Changes saved' })
+      setMessage({ type: 'success', text: 'Saved!' })
       setTimeout(() => setMessage(null), 3000)
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to save changes' })
+      setMessage({ type: 'error', text: 'Failed to save' })
     } finally {
       setSaving(false)
     }
@@ -243,14 +250,7 @@ export default function ManageBrandPage() {
     markChanged()
   }
 
-  // CSV Import state
-  const [csvPreview, setCsvPreview] = useState<{
-    rows: Array<Record<string, string>>
-    columns: string[]
-    mapping: { name: string; price: string; description: string; status: string }
-  } | null>(null)
-
-  // Common column name variations
+  // CSV handlers
   const COLUMN_ALIASES = {
     name: ['name', 'product_name', 'product', 'title', 'item', 'service'],
     price: ['price', 'pricing', 'cost', 'amount', 'rate', 'fee'],
@@ -258,7 +258,7 @@ export default function ManageBrandPage() {
     status: ['status', 'state', 'active', 'enabled', 'available']
   }
 
-  function detectColumnMapping(columns: string[]): { name: string; price: string; description: string; status: string } {
+  function detectColumnMapping(columns: string[]) {
     const lowerColumns = columns.map(c => c.toLowerCase().trim())
     const mapping = { name: '', price: '', description: '', status: '' }
     
@@ -277,41 +277,31 @@ export default function ManageBrandPage() {
       const text = e.target?.result as string
       const lines = text.split('\n').filter(line => line.trim())
       if (lines.length < 2) {
-        setMessage({ type: 'error', text: 'CSV must have a header row and at least one data row' })
+        setMessage({ type: 'error', text: 'CSV must have header and data rows' })
         return
       }
-
-      // Parse header
       const columns = lines[0].split(',').map(c => c.trim().replace(/^"|"$/g, ''))
-      
-      // Parse rows (simple CSV parsing - handles basic cases)
       const rows = lines.slice(1).map(line => {
         const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''))
         const row: Record<string, string> = {}
-        columns.forEach((col, i) => {
-          row[col] = values[i] || ''
-        })
+        columns.forEach((col, i) => { row[col] = values[i] || '' })
         return row
-      }).filter(row => Object.values(row).some(v => v)) // Remove empty rows
+      }).filter(row => Object.values(row).some(v => v))
 
-      const mapping = detectColumnMapping(columns)
-      setCsvPreview({ rows, columns, mapping })
+      setCsvPreview({ rows, columns, mapping: detectColumnMapping(columns) })
     }
     reader.readAsText(file)
   }
 
   function importCsvProducts() {
     if (!csvPreview) return
-    
     const { rows, mapping } = csvPreview
     const newProducts = rows.map(row => ({
       name: row[mapping.name] || '',
       price: row[mapping.price] || '',
       description: row[mapping.description] || '',
-      status: (row[mapping.status]?.toLowerCase() === 'inactive' || row[mapping.status]?.toLowerCase() === 'discontinued') 
-        ? row[mapping.status].toLowerCase() as 'active' | 'inactive' | 'discontinued'
-        : 'active' as const
-    })).filter(p => p.name) // Only import rows with a name
+      status: 'active' as const
+    })).filter(p => p.name)
 
     setOfferings([...offerings, ...newProducts])
     setCsvPreview(null)
@@ -329,19 +319,13 @@ export default function ManageBrandPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  // Calculate completeness
-  function getCompleteness() {
-    let score = 0
-    let total = 5
-    if (description?.length > 20) score++
-    if (oneLiner?.length > 10) score++
-    if (offerings?.length > 0) score++
-    if (faqs?.length > 0) score++
-    if (companyInfo?.hq_location || companyInfo?.founded_year) score++
-    return { score, total, percentage: Math.round((score / total) * 100) }
-  }
-
-  const completeness = getCompleteness()
+  // Progress calculation
+  const steps = [
+    { id: 1, label: 'Add brand info', description: 'Name, description, and category', done: description?.length > 20 && oneLiner?.length > 10 },
+    { id: 2, label: 'Add products', description: 'What you offer', done: offerings?.length > 0 },
+    { id: 3, label: 'Add FAQs', description: 'Common questions', done: faqs?.length > 0 },
+  ]
+  const completedSteps = steps.filter(s => s.done).length
 
   if (loading) {
     return (
@@ -360,765 +344,611 @@ export default function ManageBrandPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0B0C]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0B0B0C]/95 backdrop-blur border-b border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Link 
-                href={`/brands/${brand.slug}`}
-                className="p-2 -ml-2 rounded-lg hover:bg-white/5 transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 text-white/50" />
-              </Link>
-              
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg overflow-hidden bg-white/5">
-                  <Image
-                    src={brand.logo_url}
-                    alt={brand.brand_name}
-                    width={32}
-                    height={32}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none'
-                    }}
-                  />
-                </div>
-                <div>
-                  <h1 className="text-white font-semibold font-heading text-sm">{brand.brand_name}</h1>
-                  <p className="text-white/40 text-xs">Manage Profile</p>
-                </div>
+    <div className="min-h-screen bg-[#0B0B0C] flex">
+      {/* Left Sidebar */}
+      <aside className="w-[220px] border-r border-white/[0.06] flex flex-col">
+        {/* Brand Header */}
+        <div className="p-4 border-b border-white/[0.06]">
+          <Link
+            href={`/brands/${brand.slug}`}
+            className="flex items-center gap-2 text-white/50 hover:text-white/70 text-sm mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to profile
+          </Link>
+          
+          <div className="flex items-center gap-3">
+            <div className="relative group">
+              <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5">
+                <Image
+                  src={brand.logo_url}
+                  alt={brand.brand_name}
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover"
+                />
               </div>
+              <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-lg">
+                <Camera className="w-4 h-4 text-white" />
+                <input type="file" accept="image/*" className="hidden" />
+              </label>
             </div>
-
-            <div className="flex items-center gap-3">
-              {message && (
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                  message.type === 'success' 
-                    ? 'bg-green-400/10 text-green-400' 
-                    : 'bg-red-400/10 text-red-400'
-                }`}>
-                  {message.type === 'success' ? (
-                    <Check className="w-4 h-4" />
-                  ) : (
-                    <AlertCircle className="w-4 h-4" />
-                  )}
-                  {message.text}
-                </div>
-              )}
-              
-              <button
-                onClick={handleSave}
-                disabled={saving || !hasChanges}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                  hasChanges 
-                    ? 'bg-white text-black hover:bg-white/90' 
-                    : 'bg-white/5 text-white/40 cursor-not-allowed'
-                }`}
-              >
-                <Save className="w-4 h-4" />
-                {saving ? 'Saving...' : 'Save'}
-              </button>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-white font-semibold text-sm truncate">{brand.brand_name}</h1>
+              <p className="text-white/40 text-xs truncate">{brand.domain}</p>
             </div>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex gap-1 -mb-px overflow-x-auto">
-            {TABS.map((tab) => {
-              const Icon = tab.icon
-              const isActive = activeTab === tab.id
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                    isActive 
-                      ? 'border-white text-white' 
-                      : 'border-transparent text-white/50 hover:text-white/70'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              )
-            })}
           </div>
         </div>
-      </header>
 
-      {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 md:px-6 py-8">
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="space-y-6">
-            {/* Preview Card */}
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <h2 className="text-white font-semibold font-heading mb-4">How AI sees your brand</h2>
-              
-              <div className="bg-[#161718] rounded-lg border border-white/[0.06] p-5">
-                <div className="flex items-start gap-4">
-                  {/* Editable Logo */}
-                  <div className="relative group flex-shrink-0">
-                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-white/5">
-                      <Image
-                        src={brand.logo_url}
-                        alt={brand.brand_name}
-                        width={56}
-                        height={56}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-lg">
-                      <Camera className="w-5 h-5 text-white" />
-                      <input 
-                        type="file" 
-                        accept="image/*"
-                        className="hidden"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0]
-                          if (file) {
-                            // TODO: Upload to storage and update brand.logo_url
-                            console.log('Logo file selected:', file.name)
-                            setMessage({ type: 'success', text: 'Logo upload coming soon' })
-                            setTimeout(() => setMessage(null), 2000)
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-semibold font-heading">{brand.brand_name}</h3>
-                    <p className="text-white/50 text-sm">{brand.domain} · {category || 'Uncategorized'}</p>
-                    <p className="text-white/70 text-sm mt-2 line-clamp-2">
-                      {oneLiner || description || 'No description added yet'}
-                    </p>
-                  </div>
-                </div>
+        {/* Navigation */}
+        <nav className="flex-1 p-2">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon
+            const isActive = activeNav === item.id
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveNav(item.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                  isActive 
+                    ? 'bg-white/[0.08] text-white' 
+                    : 'text-white/60 hover:text-white/80 hover:bg-white/[0.04]'
+                }`}
+              >
+                <Icon className="w-4 h-4" strokeWidth={1.5} />
+                {item.label}
+              </button>
+            )
+          })}
+        </nav>
 
-                {/* AI Platform Visibility */}
-                <div className="mt-5 pt-5 border-t border-white/[0.06]">
-                  <p className="text-white/40 text-xs uppercase tracking-wide mb-3">AI Platform Visibility</p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {botVisits.map((bot) => (
-                      <div 
-                        key={bot.bot_name}
-                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[#111213] border border-white/[0.06]"
-                      >
-                        <Image
-                          src={bot.logo}
-                          alt={bot.bot_label}
-                          width={20}
-                          height={20}
-                          className={`w-5 h-5 ${bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}`}
-                        />
-                        <span className="text-white/70 text-sm">{bot.bot_label}</span>
-                        <div className={`w-2 h-2 rounded-full ml-auto ${
-                          bot.visit_count > 0 ? 'bg-green-400' : 'bg-white/20'
-                        }`} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+        {/* Save Button */}
+        <div className="p-4 border-t border-white/[0.06]">
+          {message && (
+            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs mb-3 ${
+              message.type === 'success' ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'
+            }`}>
+              {message.type === 'success' ? <Check className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+              {message.text}
             </div>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving || !hasChanges}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${
+              hasChanges 
+                ? 'bg-white text-black hover:bg-white/90' 
+                : 'bg-white/5 text-white/40 cursor-not-allowed'
+            }`}
+          >
+            <Save className="w-4 h-4" />
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+        </div>
+      </aside>
 
-            {/* Completeness Checklist */}
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-white font-semibold font-heading">Strengthen your AI presence</h2>
-                <span className="text-white/50 text-sm">{completeness.percentage}% complete</span>
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto p-8">
+          {/* Progress Steps */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-white font-semibold font-heading text-lg">Build your AI profile</h2>
+                <p className="text-white/50 text-sm">Help AI understand and recommend your brand</p>
               </div>
-
-              <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden mb-6">
-                <div 
-                  className="h-full bg-blue-500 transition-all duration-500"
-                  style={{ width: `${completeness.percentage}%` }}
-                />
-              </div>
-
-              <div className="space-y-3">
-                <ChecklistItem 
-                  done={description?.length > 20}
-                  label="Add a description"
-                  onClick={() => setActiveTab('brand')}
-                />
-                <ChecklistItem 
-                  done={oneLiner?.length > 10}
-                  label="Write a one-liner"
-                  onClick={() => setActiveTab('brand')}
-                />
-                <ChecklistItem 
-                  done={offerings?.length > 0}
-                  label="Add your products"
-                  onClick={() => setActiveTab('products')}
-                />
-                <ChecklistItem 
-                  done={faqs?.length > 0}
-                  label="Add FAQs"
-                  onClick={() => setActiveTab('faqs')}
-                />
-                <ChecklistItem 
-                  done={!!(companyInfo?.hq_location || companyInfo?.founded_year)}
-                  label="Complete company info"
-                  onClick={() => setActiveTab('brand')}
-                />
-              </div>
+              <span className="text-white/40 text-sm">{completedSteps}/3 complete</span>
             </div>
-
-            {/* Bot Activity */}
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Bot className="w-5 h-5 text-white/50" />
-                <h2 className="text-white font-semibold font-heading">AI Bot Activity</h2>
-              </div>
-              <p className="text-white/50 text-sm mb-4">
-                Track when AI crawlers visit your Harbor profile
-              </p>
-
-              <div className="space-y-3">
-                {botVisits.map((bot) => (
-                  <div 
-                    key={bot.bot_name}
-                    className="flex items-center justify-between py-3 border-b border-white/[0.04] last:border-0"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                        bot.visit_count > 0 ? 'bg-green-400/10' : 'bg-[#161718]'
-                      }`}>
-                        <Image
-                          src={bot.logo}
-                          alt={bot.bot_label}
-                          width={20}
-                          height={20}
-                          className={`w-5 h-5 ${bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}`}
-                        />
-                      </div>
-                      <div>
-                        <p className="text-white text-sm font-medium">{bot.bot_label}</p>
-                        <p className="text-white/40 text-xs">{bot.bot_name}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-white/70 text-sm">
-                        {bot.visit_count > 0 ? `${bot.visit_count} visits` : 'No visits yet'}
-                      </p>
-                      {bot.last_visit && (
-                        <p className="text-white/40 text-xs">Last: {bot.last_visit}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <p className="text-white/30 text-xs mt-4">
-                Bot visits are tracked from your Harbor profile page
-              </p>
-            </div>
-
-            {/* Upgrade CTA */}
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-white font-semibold font-heading mb-1">Ready for deeper insights?</h3>
-                  <p className="text-white/60 text-sm mb-4">
-                    Track prompts across AI platforms, monitor competitors, and see exactly where you're being recommended.
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <Link
-                      href="/signup"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors"
-                    >
-                      Start Free
-                    </Link>
-                    <Link
-                      href="/pricing"
-                      className="text-white/50 text-sm hover:text-white/70 transition-colors"
-                    >
-                      View plans →
-                    </Link>
-                  </div>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-white/40 text-xs">Free tier includes</p>
-                  <p className="text-white text-sm">10 prompts/month</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Brand Info Tab */}
-        {activeTab === 'brand' && (
-          <div className="space-y-6">
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <h2 className="text-white font-semibold font-heading mb-6">Brand Information</h2>
-              
-              <div className="space-y-5">
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">One-liner</label>
-                  <input
-                    type="text"
-                    value={oneLiner}
-                    onChange={(e) => { setOneLiner(e.target.value); markChanged() }}
-                    placeholder="A brief tagline for your brand"
-                    className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">Description</label>
-                  <textarea
-                    value={description}
-                    onChange={(e) => { setDescription(e.target.value); markChanged() }}
-                    placeholder="Describe what your company does..."
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors resize-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-white/70 text-sm mb-2">Category</label>
-                    <input
-                      type="text"
-                      value={category}
-                      onChange={(e) => { setCategory(e.target.value); markChanged() }}
-                      placeholder="e.g., SaaS, E-commerce, Agency"
-                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-white/70 text-sm mb-2">Ideal Customer</label>
-                    <input
-                      type="text"
-                      value={icp}
-                      onChange={(e) => { setIcp(e.target.value); markChanged() }}
-                      placeholder="Who is your target customer?"
-                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <h2 className="text-white font-semibold font-heading mb-6">Company Details</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">
-                    <MapPin className="w-4 h-4 inline mr-1" />
-                    Headquarters
-                  </label>
-                  <input
-                    type="text"
-                    value={companyInfo?.hq_location || ''}
-                    onChange={(e) => { setCompanyInfo({...companyInfo, hq_location: e.target.value}); markChanged() }}
-                    placeholder="e.g., San Francisco, CA"
-                    className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">
-                    <Calendar className="w-4 h-4 inline mr-1" />
-                    Founded Year
-                  </label>
-                  <input
-                    type="number"
-                    value={companyInfo?.founded_year || ''}
-                    onChange={(e) => { setCompanyInfo({...companyInfo, founded_year: parseInt(e.target.value) || null}); markChanged() }}
-                    placeholder="e.g., 2020"
-                    min="1800"
-                    max={new Date().getFullYear()}
-                    className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">
-                    <Users className="w-4 h-4 inline mr-1" />
-                    Company Size
-                  </label>
-                  <select
-                    value={companyInfo?.employee_band || ''}
-                    onChange={(e) => { setCompanyInfo({...companyInfo, employee_band: e.target.value}); markChanged() }}
-                    className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white focus:outline-none focus:border-white/20 transition-colors"
-                  >
-                    <option value="">Select size</option>
-                    <option value="1-10">1-10 employees</option>
-                    <option value="11-50">11-50 employees</option>
-                    <option value="51-200">51-200 employees</option>
-                    <option value="201-500">201-500 employees</option>
-                    <option value="501-1000">501-1000 employees</option>
-                    <option value="1000+">1000+ employees</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-white/70 text-sm mb-2">
-                    <Globe className="w-4 h-4 inline mr-1" />
-                    Website
-                  </label>
-                  <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-[#111213] border border-white/[0.06]">
-                    <span className="text-white/50">{brand.domain}</span>
-                    <a
-                      href={`https://${brand.domain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-auto text-white/30 hover:text-white/60"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Products Tab */}
-        {activeTab === 'products' && (
-          <div className="space-y-6">
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-white font-semibold font-heading">Products & Services</h2>
-                  <p className="text-white/50 text-sm mt-1">Add what you offer so AI can recommend you accurately</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#161718] border border-white/[0.06] hover:border-white/[0.12] text-white/70 text-sm transition-colors cursor-pointer">
-                    <Upload className="w-4 h-4" />
-                    Import CSV
-                    <input 
-                      type="file" 
-                      accept=".csv"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0]
-                        if (file) {
-                          handleCsvFile(file)
-                        }
-                        e.target.value = '' // Reset so same file can be selected again
-                      }}
-                    />
-                  </label>
-                  <button
-                    onClick={addProduct}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Product
-                  </button>
-                </div>
-              </div>
-
-              {offerings.length === 0 ? (
-                <div 
-                  className="relative text-center py-12 border-2 border-dashed border-white/[0.12] rounded-lg transition-colors hover:border-white/[0.2]"
-                  onDragOver={(e) => {
-                    e.preventDefault()
-                    e.currentTarget.classList.add('border-blue-500/50', 'bg-blue-500/5')
-                  }}
-                  onDragLeave={(e) => {
-                    e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5')
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault()
-                    e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5')
-                    const file = e.dataTransfer.files[0]
-                    if (file && file.name.endsWith('.csv')) {
-                      handleCsvFile(file)
-                    }
-                  }}
+            
+            <div className="grid grid-cols-3 gap-4">
+              {steps.map((step, idx) => (
+                <button
+                  key={step.id}
+                  onClick={() => setActiveNav(idx === 0 ? 'brand' : idx === 1 ? 'products' : 'faqs')}
+                  className={`p-4 rounded-xl border text-left transition-all ${
+                    step.done 
+                      ? 'bg-green-400/5 border-green-400/20 hover:border-green-400/30' 
+                      : 'bg-[#111213] border-white/[0.06] hover:border-white/[0.12]'
+                  }`}
                 >
-                  <Package className="w-10 h-10 text-white/40 mx-auto mb-3" strokeWidth={1.5} />
-                  <p className="text-white/50 text-sm mb-1">No products added yet</p>
-                  <p className="text-white/30 text-xs mb-4">Drag a CSV here, or add products manually</p>
-                  <button
-                    onClick={addProduct}
-                    className="text-blue-400 text-sm hover:text-blue-300"
-                  >
-                    Add your first product →
-                  </button>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`text-xs font-medium ${step.done ? 'text-green-400' : 'text-white/40'}`}>
+                      Step {step.id}
+                    </span>
+                    {step.done && <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />}
+                  </div>
+                  <p className={`font-medium text-sm ${step.done ? 'text-green-400' : 'text-white'}`}>
+                    {step.done ? 'Complete!' : step.label}
+                  </p>
+                  <p className="text-white/40 text-xs mt-1">{step.description}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Overview Section */}
+          {activeNav === 'overview' && (
+            <div className="space-y-6">
+              {/* Bot Activity */}
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Bot className="w-5 h-5 text-white/50" strokeWidth={1.5} />
+                  <h3 className="text-white font-semibold font-heading">AI Bot Activity</h3>
                 </div>
-              ) : (
+                <p className="text-white/50 text-sm mb-4">Track when AI crawlers visit your profile</p>
+
+                <div className="space-y-3">
+                  {botVisits.map((bot) => (
+                    <div key={bot.bot_name} className="flex items-center justify-between py-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          bot.visit_count > 0 ? 'bg-green-400/10' : 'bg-[#161718]'
+                        }`}>
+                          <Image
+                            src={bot.logo}
+                            alt={bot.bot_label}
+                            width={18}
+                            height={18}
+                            className={bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}
+                          />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm">{bot.bot_label}</p>
+                          <p className="text-white/30 text-xs">{bot.bot_name}</p>
+                        </div>
+                      </div>
+                      <span className="text-white/50 text-sm">
+                        {bot.visit_count > 0 ? `${bot.visit_count} visits` : 'No visits yet'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Upgrade CTA */}
+              <div className="bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent rounded-xl border border-blue-500/20 p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold font-heading mb-1">Want to track AI mentions?</h3>
+                    <p className="text-white/50 text-sm mb-4">
+                      See exactly when and where AI recommends your brand. Monitor competitors. Get actionable insights.
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href="/signup"
+                        className="px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors"
+                      >
+                        Start Free
+                      </Link>
+                      <Link href="/pricing" className="text-white/50 text-sm hover:text-white/70">
+                        View plans →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Brand Info Section */}
+          {activeNav === 'brand' && (
+            <div className="space-y-6">
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                <h3 className="text-white font-semibold font-heading mb-6">Brand Information</h3>
+                
                 <div className="space-y-4">
-                  {offerings.map((product, idx) => (
-                    <div 
-                      key={idx}
-                      className="p-5 rounded-lg bg-[#0B0B0C] border border-white/[0.06]"
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">One-liner</label>
+                    <input
+                      type="text"
+                      value={oneLiner}
+                      onChange={(e) => { setOneLiner(e.target.value); markChanged() }}
+                      placeholder="A single sentence describing what you do"
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">Description</label>
+                    <textarea
+                      value={description}
+                      onChange={(e) => { setDescription(e.target.value); markChanged() }}
+                      placeholder="Tell AI more about your company..."
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors resize-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-white/70 text-sm mb-2">Category</label>
+                      <input
+                        type="text"
+                        value={category}
+                        onChange={(e) => { setCategory(e.target.value); markChanged() }}
+                        placeholder="e.g., SaaS, E-commerce"
+                        className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white/70 text-sm mb-2">Ideal Customer</label>
+                      <input
+                        type="text"
+                        value={icp}
+                        onChange={(e) => { setIcp(e.target.value); markChanged() }}
+                        placeholder="Who do you serve?"
+                        className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                <h3 className="text-white font-semibold font-heading mb-6">Company Details</h3>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">
+                      <MapPin className="w-4 h-4 inline mr-1" />
+                      Headquarters
+                    </label>
+                    <input
+                      type="text"
+                      value={companyInfo?.hq_location || ''}
+                      onChange={(e) => { setCompanyInfo({...companyInfo, hq_location: e.target.value}); markChanged() }}
+                      placeholder="e.g., San Francisco, CA"
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">
+                      <Calendar className="w-4 h-4 inline mr-1" />
+                      Founded Year
+                    </label>
+                    <input
+                      type="number"
+                      value={companyInfo?.founded_year || ''}
+                      onChange={(e) => { setCompanyInfo({...companyInfo, founded_year: parseInt(e.target.value) || null}); markChanged() }}
+                      placeholder="e.g., 2020"
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">
+                      <Users className="w-4 h-4 inline mr-1" />
+                      Company Size
+                    </label>
+                    <select
+                      value={companyInfo?.employee_band || ''}
+                      onChange={(e) => { setCompanyInfo({...companyInfo, employee_band: e.target.value}); markChanged() }}
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white focus:outline-none focus:border-white/20 transition-colors"
                     >
-                      <div className="flex items-start justify-between gap-4 mb-4">
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div>
-                            <label className="block text-white/50 text-xs mb-1.5">Name</label>
+                      <option value="">Select size</option>
+                      <option value="1-10">1-10 employees</option>
+                      <option value="11-50">11-50 employees</option>
+                      <option value="51-200">51-200 employees</option>
+                      <option value="201-500">201-500 employees</option>
+                      <option value="501-1000">501-1000 employees</option>
+                      <option value="1000+">1000+ employees</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">
+                      <Globe className="w-4 h-4 inline mr-1" />
+                      Website
+                    </label>
+                    <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-[#0B0B0C] border border-white/[0.06]">
+                      <span className="text-white/50">{brand.domain}</span>
+                      <a href={`https://${brand.domain}`} target="_blank" rel="noopener noreferrer" className="ml-auto text-white/30 hover:text-white/60">
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Products Section */}
+          {activeNav === 'products' && (
+            <div className="space-y-6">
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-white font-semibold font-heading">Products & Services</h3>
+                    <p className="text-white/50 text-sm mt-1">What you offer</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white/60 text-sm cursor-pointer hover:border-white/[0.12]">
+                      <Upload className="w-4 h-4" />
+                      CSV
+                      <input type="file" accept=".csv" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleCsvFile(file)
+                        e.target.value = ''
+                      }} />
+                    </label>
+                    <button
+                      onClick={addProduct}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-white text-sm hover:bg-white/15"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {offerings.length === 0 ? (
+                  <div 
+                    className="text-center py-16 border-2 border-dashed border-white/[0.1] rounded-xl"
+                    onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-blue-500/50', 'bg-blue-500/5') }}
+                    onDragLeave={(e) => { e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5') }}
+                    onDrop={(e) => {
+                      e.preventDefault()
+                      e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5')
+                      const file = e.dataTransfer.files[0]
+                      if (file?.name.endsWith('.csv')) handleCsvFile(file)
+                    }}
+                  >
+                    <Package className="w-12 h-12 text-white/30 mx-auto mb-3" strokeWidth={1} />
+                    <p className="text-white/50 mb-1">No products yet</p>
+                    <p className="text-white/30 text-sm mb-4">Drag a CSV here or add manually</p>
+                    <button onClick={addProduct} className="text-blue-400 text-sm hover:text-blue-300">
+                      Add your first product →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {offerings.map((product, idx) => (
+                      <div key={idx} className="p-4 rounded-lg bg-[#0B0B0C] border border-white/[0.06]">
+                        <div className="flex gap-4">
+                          <div className="flex-1 grid grid-cols-3 gap-3">
                             <input
                               type="text"
                               value={product.name}
                               onChange={(e) => updateProduct(idx, 'name', e.target.value)}
                               placeholder="Product name"
-                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                              className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20"
                             />
-                          </div>
-                          <div>
-                            <label className="block text-white/50 text-xs mb-1.5">Price</label>
                             <input
                               type="text"
                               value={product.price || ''}
                               onChange={(e) => updateProduct(idx, 'price', e.target.value)}
-                              placeholder="e.g., $99/mo, Free, Contact us"
-                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                              placeholder="Price"
+                              className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20"
                             />
-                          </div>
-                          <div>
-                            <label className="block text-white/50 text-xs mb-1.5">Status</label>
                             <select
                               value={product.status || 'active'}
                               onChange={(e) => updateProduct(idx, 'status', e.target.value)}
-                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
+                              className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
                             >
                               <option value="active">Active</option>
                               <option value="inactive">Inactive</option>
                               <option value="discontinued">Discontinued</option>
                             </select>
                           </div>
+                          <button
+                            onClick={() => removeProduct(idx)}
+                            className="p-2 text-white/30 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
-                        <button
-                          onClick={() => removeProduct(idx)}
-                          className="p-2 rounded-lg hover:bg-red-400/10 text-white/30 hover:text-red-400 transition-colors flex-shrink-0"
-                          title="Remove product"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      <div>
-                        <label className="block text-white/50 text-xs mb-1.5">Description</label>
                         <textarea
                           value={product.description}
                           onChange={(e) => updateProduct(idx, 'description', e.target.value)}
-                          placeholder="Brief description of this product..."
+                          placeholder="Brief description..."
                           rows={2}
-                          className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
+                          className="w-full mt-3 px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20 resize-none"
                         />
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Save button for products */}
-              {offerings.length > 0 && hasChanges && (
-                <div className="mt-6 pt-6 border-t border-white/[0.06] flex justify-end">
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
-                  >
-                    <Save className="w-4 h-4" />
-                    {saving ? 'Saving...' : 'Save Products'}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* FAQs Tab */}
-        {activeTab === 'faqs' && (
-          <div className="space-y-6">
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-white font-semibold font-heading">Frequently Asked Questions</h2>
-                  <p className="text-white/50 text-sm mt-1">Help AI answer questions about your brand accurately</p>
-                </div>
-                <button
-                  onClick={addFaq}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add FAQ
-                </button>
+                    ))}
+                  </div>
+                )}
               </div>
+            </div>
+          )}
 
-              {faqs.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-white/[0.12] rounded-lg">
-                  <HelpCircle className="w-10 h-10 text-white/40 mx-auto mb-3" strokeWidth={1.5} />
-                  <p className="text-white/50 text-sm mb-1">No FAQs added yet</p>
-                  <p className="text-white/30 text-xs mb-4">Add common questions your customers ask</p>
+          {/* FAQs Section */}
+          {activeNav === 'faqs' && (
+            <div className="space-y-6">
+              <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-white font-semibold font-heading">FAQs</h3>
+                    <p className="text-white/50 text-sm mt-1">Help AI answer questions accurately</p>
+                  </div>
                   <button
                     onClick={addFaq}
-                    className="text-blue-400 text-sm hover:text-blue-300"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 text-white text-sm hover:bg-white/15"
                   >
-                    Add your first FAQ →
+                    <Plus className="w-4 h-4" />
+                    Add
                   </button>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {faqs.map((faq, idx) => (
-                    <div 
-                      key={idx}
-                      className="p-5 rounded-lg bg-[#0B0B0C] border border-white/[0.06]"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 space-y-3">
-                          <div>
-                            <label className="block text-white/50 text-xs mb-1.5">Question</label>
+
+                {faqs.length === 0 ? (
+                  <div className="text-center py-16 border-2 border-dashed border-white/[0.1] rounded-xl">
+                    <HelpCircle className="w-12 h-12 text-white/30 mx-auto mb-3" strokeWidth={1} />
+                    <p className="text-white/50 mb-1">No FAQs yet</p>
+                    <p className="text-white/30 text-sm mb-4">Add common questions about your brand</p>
+                    <button onClick={addFaq} className="text-blue-400 text-sm hover:text-blue-300">
+                      Add your first FAQ →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {faqs.map((faq, idx) => (
+                      <div key={idx} className="p-4 rounded-lg bg-[#0B0B0C] border border-white/[0.06]">
+                        <div className="flex gap-4">
+                          <div className="flex-1 space-y-3">
                             <input
                               type="text"
                               value={faq.question}
                               onChange={(e) => updateFaq(idx, 'question', e.target.value)}
-                              placeholder="What do customers commonly ask?"
-                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                              placeholder="Question"
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20"
                             />
-                          </div>
-                          <div>
-                            <label className="block text-white/50 text-xs mb-1.5">Answer</label>
                             <textarea
                               value={faq.answer}
                               onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
-                              placeholder="The answer you want AI to give..."
-                              rows={3}
-                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
+                              placeholder="Answer"
+                              rows={2}
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20 resize-none"
                             />
                           </div>
+                          <button
+                            onClick={() => removeFaq(idx)}
+                            className="p-2 h-fit text-white/30 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
-                        <button
-                          onClick={() => removeFaq(idx)}
-                          className="p-2 rounded-lg hover:bg-red-400/10 text-white/30 hover:text-red-400 transition-colors flex-shrink-0"
-                          title="Remove FAQ"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Save button for FAQs */}
-              {faqs.length > 0 && hasChanges && (
-                <div className="mt-6 pt-6 border-t border-white/[0.06] flex justify-end">
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
-                  >
-                    <Save className="w-4 h-4" />
-                    {saving ? 'Saving...' : 'Save FAQs'}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* AI Feed Tab */}
-        {activeTab === 'feed' && (
-          <div className="space-y-6">
-            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-              <h2 className="text-white font-semibold font-heading mb-2">Your AI Feed</h2>
-              <p className="text-white/50 text-sm mb-6">
-                This structured data is what AI models see when they visit your Harbor profile
-              </p>
-
-              {/* Feed URL */}
-              <div className="mb-6">
-                <label className="block text-white/70 text-sm mb-2">Feed URL</label>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] font-mono text-sm text-white/70 truncate">
-                    https://useharbor.io/brands/{brand.slug}/harbor.json
+                    ))}
                   </div>
-                  <button
-                    onClick={copyFeedUrl}
-                    className="p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    {copied ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-400" />
-                    ) : (
-                      <Copy className="w-5 h-5 text-white/50" />
-                    )}
-                  </button>
-                </div>
+                )}
               </div>
-
-              {/* Feed Preview */}
-              <div>
-                <label className="block text-white/70 text-sm mb-2">Preview</label>
-                <div className="bg-[#161718] rounded-lg border border-white/[0.06] p-4 overflow-x-auto">
-                  <pre className="text-xs font-mono text-white/70 whitespace-pre-wrap">
-{JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: brand.brand_name,
-  description: description || undefined,
-  url: `https://${brand.domain}`,
-  slogan: oneLiner || undefined,
-  foundingDate: companyInfo?.founded_year || undefined,
-  address: companyInfo?.hq_location ? {
-    "@type": "PostalAddress",
-    addressLocality: companyInfo.hq_location
-  } : undefined,
-  numberOfEmployees: companyInfo?.employee_band ? {
-    "@type": "QuantitativeValue",
-    value: companyInfo.employee_band
-  } : undefined,
-  hasOfferCatalog: offerings?.length > 0 ? {
-    "@type": "OfferCatalog",
-    itemListElement: offerings.filter(o => o.status !== 'discontinued').map(o => ({
-      "@type": "Offer",
-      name: o.name,
-      description: o.description,
-      price: o.price
-    }))
-  } : undefined,
-  mainEntity: faqs?.length > 0 ? {
-    "@type": "FAQPage",
-    mainEntity: faqs.map(f => ({
-      "@type": "Question",
-      name: f.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: f.answer
-      }
-    }))
-  } : undefined
-}, null, 2)}
-                  </pre>
-                </div>
-              </div>
-
-              <p className="text-white/30 text-xs mt-4">
-                This schema.org structured data is automatically generated from your profile
-              </p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
+
+      {/* Right Sidebar - AI Profile Preview */}
+      <aside className="w-[320px] border-l border-white/[0.06] flex flex-col">
+        <div className="p-4 border-b border-white/[0.06]">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <h2 className="text-white font-semibold text-sm">What AI Sees</h2>
+          </div>
+          <p className="text-white/40 text-xs mt-1">Live preview of your AI profile</p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4">
+          {/* Brand Card Preview */}
+          <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-4 mb-4">
+            <div className="flex items-center gap-3 mb-3">
+              <Image
+                src={brand.logo_url}
+                alt={brand.brand_name}
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded-lg"
+              />
+              <div>
+                <p className="text-white font-medium text-sm">{brand.brand_name}</p>
+                <p className="text-white/40 text-xs">{category || 'Uncategorized'}</p>
+              </div>
+            </div>
+            {oneLiner && (
+              <p className="text-white/70 text-sm mb-2">{oneLiner}</p>
+            )}
+            {description && (
+              <p className="text-white/50 text-xs line-clamp-3">{description}</p>
+            )}
+          </div>
+
+          {/* Products Preview */}
+          {offerings.length > 0 && (
+            <div className="mb-4">
+              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">Products ({offerings.filter(o => o.status !== 'discontinued').length})</p>
+              <div className="space-y-2">
+                {offerings.filter(o => o.status !== 'discontinued').slice(0, 3).map((p, i) => (
+                  <div key={i} className="bg-[#111213] rounded-lg border border-white/[0.06] p-3">
+                    <div className="flex justify-between items-start">
+                      <p className="text-white text-sm">{p.name || 'Untitled'}</p>
+                      {p.price && <span className="text-white/50 text-xs">{p.price}</span>}
+                    </div>
+                    {p.description && (
+                      <p className="text-white/40 text-xs mt-1 line-clamp-2">{p.description}</p>
+                    )}
+                  </div>
+                ))}
+                {offerings.filter(o => o.status !== 'discontinued').length > 3 && (
+                  <p className="text-white/30 text-xs">+{offerings.filter(o => o.status !== 'discontinued').length - 3} more</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* FAQs Preview */}
+          {faqs.length > 0 && (
+            <div className="mb-4">
+              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">FAQs ({faqs.length})</p>
+              <div className="space-y-2">
+                {faqs.slice(0, 2).map((f, i) => (
+                  <div key={i} className="bg-[#111213] rounded-lg border border-white/[0.06] p-3">
+                    <p className="text-white text-sm">{f.question || 'Question?'}</p>
+                    {f.answer && (
+                      <p className="text-white/40 text-xs mt-1 line-clamp-2">{f.answer}</p>
+                    )}
+                  </div>
+                ))}
+                {faqs.length > 2 && (
+                  <p className="text-white/30 text-xs">+{faqs.length - 2} more</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Company Info Preview */}
+          {(companyInfo?.hq_location || companyInfo?.founded_year || companyInfo?.employee_band) && (
+            <div className="mb-4">
+              <p className="text-white/40 text-xs uppercase tracking-wide mb-2">Company</p>
+              <div className="bg-[#111213] rounded-lg border border-white/[0.06] p-3 space-y-1">
+                {companyInfo.hq_location && (
+                  <p className="text-white/50 text-xs">📍 {companyInfo.hq_location}</p>
+                )}
+                {companyInfo.founded_year && (
+                  <p className="text-white/50 text-xs">📅 Founded {companyInfo.founded_year}</p>
+                )}
+                {companyInfo.employee_band && (
+                  <p className="text-white/50 text-xs">👥 {companyInfo.employee_band} employees</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Feed URL */}
+        <div className="p-4 border-t border-white/[0.06]">
+          <p className="text-white/40 text-xs mb-2">AI Feed URL</p>
+          <button
+            onClick={copyFeedUrl}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
+          >
+            <span className="text-white/50 text-xs truncate font-mono">
+              /brands/{brand.slug}/harbor.json
+            </span>
+            {copied ? (
+              <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+            ) : (
+              <Copy className="w-4 h-4 text-white/40 flex-shrink-0" />
+            )}
+          </button>
+        </div>
+      </aside>
 
       {/* CSV Preview Modal */}
       {csvPreview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div 
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setCsvPreview(null)}
-          />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setCsvPreview(null)} />
           <div className="relative bg-[#111213] rounded-xl border border-white/[0.06] w-full max-w-2xl max-h-[80vh] overflow-hidden">
             <div className="p-6 border-b border-white/[0.06]">
-              <h3 className="text-white font-semibold font-heading">Import Products from CSV</h3>
-              <p className="text-white/50 text-sm mt-1">
-                {csvPreview.rows.length} products found. Review the column mapping below.
-              </p>
+              <h3 className="text-white font-semibold">Import Products</h3>
+              <p className="text-white/50 text-sm mt-1">{csvPreview.rows.length} products found</p>
             </div>
 
-            {/* Column Mapping */}
             <div className="p-6 border-b border-white/[0.06]">
-              <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Column Mapping</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <p className="text-white/40 text-xs uppercase mb-3">Column Mapping</p>
+              <div className="grid grid-cols-4 gap-3">
                 {(['name', 'price', 'description', 'status'] as const).map((field) => (
                   <div key={field}>
                     <label className="block text-white/50 text-xs mb-1 capitalize">{field}</label>
@@ -1128,9 +958,9 @@ export default function ManageBrandPage() {
                         ...csvPreview,
                         mapping: { ...csvPreview.mapping, [field]: e.target.value }
                       })}
-                      className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
+                      className="w-full px-2 py-1.5 rounded bg-[#161718] border border-white/[0.06] text-white text-sm"
                     >
-                      <option value="">-- Skip --</option>
+                      <option value="">Skip</option>
                       {csvPreview.columns.map(col => (
                         <option key={col} value={col}>{col}</option>
                       ))}
@@ -1140,46 +970,26 @@ export default function ManageBrandPage() {
               </div>
             </div>
 
-            {/* Preview Table */}
-            <div className="p-6 overflow-x-auto max-h-[300px] overflow-y-auto">
-              <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Preview (first 5 rows)</p>
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-left text-white/50 border-b border-white/[0.06]">
-                    <th className="pb-2 pr-4">Name</th>
-                    <th className="pb-2 pr-4">Price</th>
-                    <th className="pb-2 pr-4">Description</th>
-                    <th className="pb-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {csvPreview.rows.slice(0, 5).map((row, i) => (
-                    <tr key={i} className="border-b border-white/[0.04]">
-                      <td className="py-2 pr-4 text-white">{row[csvPreview.mapping.name] || '-'}</td>
-                      <td className="py-2 pr-4 text-white/70">{row[csvPreview.mapping.price] || '-'}</td>
-                      <td className="py-2 pr-4 text-white/50 truncate max-w-[200px]">{row[csvPreview.mapping.description] || '-'}</td>
-                      <td className="py-2 text-white/50">{row[csvPreview.mapping.status] || 'active'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {csvPreview.rows.length > 5 && (
-                <p className="text-white/30 text-xs mt-2">...and {csvPreview.rows.length - 5} more</p>
-              )}
+            <div className="p-6 max-h-[200px] overflow-y-auto">
+              <p className="text-white/40 text-xs uppercase mb-3">Preview</p>
+              <div className="space-y-2">
+                {csvPreview.rows.slice(0, 5).map((row, i) => (
+                  <div key={i} className="flex gap-4 text-sm">
+                    <span className="text-white truncate flex-1">{row[csvPreview.mapping.name] || '-'}</span>
+                    <span className="text-white/50 w-20">{row[csvPreview.mapping.price] || '-'}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Actions */}
             <div className="p-6 border-t border-white/[0.06] flex justify-end gap-3">
-              <button
-                onClick={() => setCsvPreview(null)}
-                className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors"
-              >
+              <button onClick={() => setCsvPreview(null)} className="px-4 py-2 text-white/60 text-sm hover:text-white">
                 Cancel
               </button>
               <button
                 onClick={importCsvProducts}
                 disabled={!csvPreview.mapping.name}
-                className="px-4 py-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 disabled:opacity-50"
               >
                 Import {csvPreview.rows.filter(r => r[csvPreview.mapping.name]).length} Products
               </button>
@@ -1188,33 +998,5 @@ export default function ManageBrandPage() {
         </div>
       )}
     </div>
-  )
-}
-
-// Checklist Item Component
-function ChecklistItem({ 
-  done, 
-  label, 
-  onClick 
-}: { 
-  done: boolean
-  label: string
-  onClick: () => void 
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-colors group text-left"
-    >
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-        done ? 'bg-green-400/20' : 'border border-white/20'
-      }`}>
-        {done && <Check className="w-3 h-3 text-green-400" />}
-      </div>
-      <span className={`flex-1 text-sm ${done ? 'text-white/50 line-through' : 'text-white/80'}`}>
-        {label}
-      </span>
-      <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white/50 transition-colors" />
-    </button>
   )
 }
