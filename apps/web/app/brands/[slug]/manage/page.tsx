@@ -22,7 +22,6 @@ import {
   Calendar,
   Users,
   MapPin,
-  Copy,
   CheckCircle2,
   Upload,
   Camera,
@@ -133,9 +132,6 @@ export default function ManageBrandPage() {
     { bot_name: 'PerplexityBot', bot_label: 'Perplexity', logo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
     { bot_name: 'Google-Extended', bot_label: 'Gemini', logo: 'https://cdn.brandfetch.io/google.com?c=1id1Fyz-h7an5-5KR_y', visit_count: 0, last_visit: null },
   ])
-
-  // Feed URL copy state
-  const [copied, setCopied] = useState(false)
 
   // CSV Import state
   const [csvPreview, setCsvPreview] = useState<{
@@ -317,15 +313,6 @@ export default function ManageBrandPage() {
     setTimeout(() => setMessage(null), 3000)
   }
 
-  // Copy feed URL
-  function copyFeedUrl() {
-    if (!brand) return
-    const url = `https://useharbor.io/brands/${brand.slug}/harbor.json`
-    navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   // Progress calculation
   const steps = [
     { id: 1, label: 'Add brand info', description: 'Name, description, and category', done: description?.length > 20 && oneLiner?.length > 10, icon: '/icons/step-brand.png' },
@@ -441,59 +428,162 @@ export default function ManageBrandPage() {
       {/* Main Content - Scrollable */}
       <main className="flex-1 overflow-y-auto h-screen">
         <div className="max-w-4xl mx-auto p-8">
-          {/* Progress Steps */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-white font-semibold font-heading text-lg">Build your AI profile</h2>
-                <p className="text-white/50 text-sm">Help AI understand and recommend your brand</p>
+
+          {/* Getting Started Section */}
+          {activeNav === 'getting-started' && (
+            <div className="space-y-8">
+              {/* Hero */}
+              <div className="text-center py-8">
+                <h2 className="text-white font-semibold font-heading text-2xl mb-3">Welcome to your AI Profile</h2>
+                <p className="text-white/60 text-lg max-w-xl mx-auto">
+                  This is where you tell AI what your brand is about. When ChatGPT, Claude, or Perplexity 
+                  need to recommend or describe your company, this is where they look.
+                </p>
               </div>
-              <span className="text-white/40 text-sm">{completedSteps}/3 complete</span>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-4">
-              {steps.map((step, idx) => (
+
+              {/* Q&A Cards */}
+              <div className="space-y-4">
+                {/* Where does this go? */}
+                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Image placeholder */}
+                    <div className="w-24 h-24 rounded-lg bg-[#161718] border border-white/[0.04] flex-shrink-0 flex items-center justify-center">
+                      <Globe className="w-10 h-10 text-white/20" strokeWidth={1} />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold font-heading text-lg mb-2">Where does this information go?</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">
+                        Everything you add here becomes part of your public AI profile - a structured data file that AI platforms can read. 
+                        Think of it like a resume for AI. It's not hidden or private - it's designed to be found and used by AI systems 
+                        when they need accurate information about your brand.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* When will AI see this? */}
+                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Image placeholder */}
+                    <div className="w-24 h-24 rounded-lg bg-[#161718] border border-white/[0.04] flex-shrink-0 flex items-center justify-center">
+                      <Eye className="w-10 h-10 text-white/20" strokeWidth={1} />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold font-heading text-lg mb-2">When will AI see this?</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">
+                        Your profile is live immediately after you save. AI platforms regularly crawl the web looking for information. 
+                        When they find your Harbor profile, they index it. The "AI Visits" section shows you when this happens. 
+                        More complete profiles get visited more often because they're more useful to AI.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* What should I add? */}
+                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Image placeholder */}
+                    <div className="w-24 h-24 rounded-lg bg-[#161718] border border-white/[0.04] flex-shrink-0 flex items-center justify-center">
+                      <Package className="w-10 h-10 text-white/20" strokeWidth={1} />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold font-heading text-lg mb-2">What should I add?</h3>
+                      <p className="text-white/60 text-sm leading-relaxed mb-3">
+                        Start with the basics: a short description and what you do. Then add your products or services - 
+                        these help AI recommend you for specific needs. FAQs are powerful because they let you answer 
+                        questions before AI has to guess.
+                      </p>
+                      <p className="text-white/40 text-xs">
+                        The more specific and accurate your information, the better AI can represent your brand.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Why does this matter? */}
+                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                  <div className="flex items-start gap-4">
+                    {/* Image placeholder */}
+                    <div className="w-24 h-24 rounded-lg bg-[#161718] border border-white/[0.04] flex-shrink-0 flex items-center justify-center">
+                      <Zap className="w-10 h-10 text-white/20" strokeWidth={1} />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold font-heading text-lg mb-2">Why does this matter?</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">
+                        More people are using AI to find products, compare options, and make decisions. When someone 
+                        asks ChatGPT "what's the best [thing you sell]?", you want to be in that answer. Your Harbor 
+                        profile gives AI the information it needs to include and recommend you accurately.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center py-6">
                 <button
-                  key={step.id}
-                  onClick={() => setActiveNav(idx === 0 ? 'brand' : idx === 1 ? 'products' : 'faqs')}
-                  className={`p-5 rounded-xl border text-left transition-all ${
-                    step.done 
-                      ? 'bg-[#111213] border-blue-500/20 hover:border-blue-500/30' 
-                      : 'bg-[#111213] border-white/[0.06] hover:border-white/[0.12]'
-                  }`}
+                  onClick={() => setActiveNav('brand')}
+                  className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-colors"
                 >
-                  {/* Icon placeholder - upload 48x48 PNGs to /public/icons/ */}
-                  <div className="w-12 h-12 rounded-xl bg-[#161718] border border-white/[0.06] mb-4 flex items-center justify-center overflow-hidden">
-                    <Image
-                      src={step.icon}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className={`w-full h-full object-contain ${step.done ? '' : 'opacity-40'}`}
-                      onError={(e) => {
-                        // Fallback if icon not found
-                        (e.target as HTMLImageElement).style.display = 'none'
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-xs font-medium ${step.done ? 'text-blue-400' : 'text-white/40'}`}>
-                      Step {step.id}
-                    </span>
-                    {step.done && <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />}
-                  </div>
-                  <p className={`font-medium text-sm ${step.done ? 'text-white' : 'text-white/80'}`}>
-                    {step.label}
-                  </p>
-                  <p className="text-white/40 text-xs mt-1">{step.description}</p>
+                  Start building your profile
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Overview Section */}
           {activeNav === 'overview' && (
             <div className="space-y-6">
+              {/* Progress Steps */}
+              <div className="mb-2">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-white font-semibold font-heading text-lg">Build your AI profile</h2>
+                    <p className="text-white/50 text-sm">Help AI understand and recommend your brand</p>
+                  </div>
+                  <span className="text-white/40 text-sm">{completedSteps}/3 complete</span>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-4">
+                  {steps.map((step, idx) => (
+                    <button
+                      key={step.id}
+                      onClick={() => setActiveNav(idx === 0 ? 'brand' : idx === 1 ? 'products' : 'faqs')}
+                      className={`p-5 rounded-xl border text-left transition-all ${
+                        step.done 
+                          ? 'bg-[#111213] border-blue-500/20 hover:border-blue-500/30' 
+                          : 'bg-[#111213] border-white/[0.06] hover:border-white/[0.12]'
+                      }`}
+                    >
+                      {/* Icon placeholder - upload 48x48 PNGs to /public/icons/ */}
+                      <div className="w-12 h-12 rounded-xl bg-[#161718] border border-white/[0.06] mb-4 flex items-center justify-center overflow-hidden">
+                        <Image
+                          src={step.icon}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className={`w-full h-full object-contain ${step.done ? '' : 'opacity-40'}`}
+                          onError={(e) => {
+                            // Fallback if icon not found
+                            (e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-xs font-medium ${step.done ? 'text-blue-400' : 'text-white/40'}`}>
+                          Step {step.id}
+                        </span>
+                        {step.done && <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />}
+                      </div>
+                      <p className={`font-medium text-sm ${step.done ? 'text-white' : 'text-white/80'}`}>
+                        {step.label}
+                      </p>
+                      <p className="text-white/40 text-xs mt-1">{step.description}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* AI Visits */}
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
                 {/* Explainer */}
@@ -502,7 +592,7 @@ export default function ManageBrandPage() {
                   <div>
                     <p className="text-white/70 text-sm">
                       When AI platforms like ChatGPT or Perplexity read your profile, their visits show up here. 
-                      More visits = more opportunities to be recommended.
+                      More visits means more chances to get recommended.
                     </p>
                   </div>
                 </div>
@@ -512,8 +602,8 @@ export default function ManageBrandPage() {
                   <span className="text-white/30 text-xs">Last 30 days</span>
                 </div>
                 
-                {/* Interactive chart with hover tooltip */}
-                <div className="h-32 mb-4 relative group">
+                {/* Interactive chart */}
+                <div className="h-32 mb-4 relative overflow-hidden">
                   {/* X-axis labels */}
                   <div className="absolute bottom-0 left-0 right-0 flex justify-between text-white/30 text-[10px] pb-1">
                     <span>30d ago</span>
@@ -551,7 +641,7 @@ export default function ManageBrandPage() {
                     </svg>
                   </div>
                   
-                  {/* Hover tooltip area - covers chart */}
+                  {/* Hover tooltip area */}
                   <div 
                     className="absolute inset-0 bottom-5 cursor-crosshair"
                     onMouseMove={(e) => {
@@ -559,7 +649,9 @@ export default function ManageBrandPage() {
                       const x = e.clientX - rect.left
                       const tooltip = e.currentTarget.querySelector('.chart-tooltip') as HTMLElement
                       if (tooltip) {
-                        tooltip.style.left = `${x}px`
+                        const tooltipWidth = 150
+                        const clampedX = Math.max(tooltipWidth/2 + 8, Math.min(x, rect.width - tooltipWidth/2 - 8))
+                        tooltip.style.left = `${clampedX}px`
                         tooltip.style.opacity = '1'
                       }
                     }}
@@ -569,8 +661,8 @@ export default function ManageBrandPage() {
                     }}
                   >
                     {/* Tooltip */}
-                    <div className="chart-tooltip absolute top-0 opacity-0 transition-opacity pointer-events-none -translate-x-1/2">
-                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-lg min-w-[140px]">
+                    <div className="chart-tooltip absolute bottom-full mb-2 opacity-0 transition-opacity pointer-events-none -translate-x-1/2">
+                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[140px]">
                         <p className="text-white/50 text-[10px] mb-2">Dec 12, 2025</p>
                         <div className="space-y-1.5">
                           {botVisits.map((bot) => (
@@ -582,8 +674,6 @@ export default function ManageBrandPage() {
                           ))}
                         </div>
                       </div>
-                      {/* Vertical line */}
-                      <div className="absolute top-full left-1/2 w-px h-20 bg-white/20" />
                     </div>
                   </div>
                   
@@ -885,6 +975,18 @@ export default function ManageBrandPage() {
           {/* FAQs Section */}
           {activeNav === 'faqs' && (
             <div className="space-y-6">
+              {/* Explainer */}
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-[#111213] border border-white/[0.06]">
+                <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-white/70 text-sm mb-1">
+                    <span className="text-white font-medium">Why add FAQs?</span> AI models use these to answer specific questions about your brand. 
+                    Without FAQs, AI might guess or say "I don't know" when asked about your policies, features, or processes.
+                  </p>
+                  <p className="text-white/40 text-xs">Think about what customers commonly ask you. Those are your FAQs.</p>
+                </div>
+              </div>
+
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -906,7 +1008,7 @@ export default function ManageBrandPage() {
                     <p className="text-white/50 mb-1">No FAQs yet</p>
                     <p className="text-white/30 text-sm mb-4">Add common questions about your brand</p>
                     <button onClick={addFaq} className="text-blue-400 text-sm hover:text-blue-300">
-                      Add your first FAQ →
+                      Add your first FAQ
                     </button>
                   </div>
                 ) : (
@@ -988,7 +1090,8 @@ export default function ManageBrandPage() {
           </Link>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
           <pre className="text-xs font-mono leading-relaxed text-white/70 whitespace-pre-wrap break-words">
             <code>{JSON.stringify({
   "@context": "https://schema.org",
