@@ -140,6 +140,9 @@ export default function ManageBrandPage() {
     mapping: { name: string; price: string; description: string; status: string }
   } | null>(null)
 
+  // Chart hover state
+  const [chartHover, setChartHover] = useState<{ x: number; visible: boolean }>({ x: 0, visible: false })
+
   // Load brand data
   useEffect(() => {
     async function loadBrand() {
@@ -436,8 +439,7 @@ export default function ManageBrandPage() {
               <div className="text-center py-8">
                 <h2 className="text-white font-semibold font-heading text-2xl mb-3">Welcome to your AI Profile</h2>
                 <p className="text-white/60 text-lg max-w-xl mx-auto">
-                  This is where you tell AI what your brand is about. When ChatGPT, Claude, or Perplexity 
-                  need to recommend or describe your company, this is where they look.
+                  Create a clean, structured profile that AI platforms can read when they crawl your Harbor page.
                 </p>
               </div>
 
@@ -453,9 +455,9 @@ export default function ManageBrandPage() {
                     <div>
                       <h3 className="text-white font-semibold font-heading text-lg mb-2">Where does this information go?</h3>
                       <p className="text-white/60 text-sm leading-relaxed">
-                        Everything you add here becomes part of your public AI profile - a structured data file that AI platforms can read. 
-                        Think of it like a resume for AI. It's not hidden or private - it's designed to be found and used by AI systems 
-                        when they need accurate information about your brand.
+                        Everything you add here becomes a public, structured data file on your Harbor profile page. 
+                        It uses schema.org formatting - the same standard Google uses for rich search results. 
+                        When AI crawlers visit your page, they can read this clean data instead of parsing messy HTML.
                       </p>
                     </div>
                   </div>
@@ -471,9 +473,9 @@ export default function ManageBrandPage() {
                     <div>
                       <h3 className="text-white font-semibold font-heading text-lg mb-2">When will AI see this?</h3>
                       <p className="text-white/60 text-sm leading-relaxed">
-                        Your profile is live immediately after you save. AI platforms regularly crawl the web looking for information. 
-                        When they find your Harbor profile, they index it. The "AI Visits" section shows you when this happens. 
-                        More complete profiles get visited more often because they're more useful to AI.
+                        Your profile is live immediately after you save. AI platforms crawl the web regularly, and 
+                        when they visit your Harbor page, they'll find structured data ready to index. The "AI Visits" 
+                        section tracks when crawlers like GPTBot or PerplexityBot hit your page.
                       </p>
                     </div>
                   </div>
@@ -489,12 +491,11 @@ export default function ManageBrandPage() {
                     <div>
                       <h3 className="text-white font-semibold font-heading text-lg mb-2">What should I add?</h3>
                       <p className="text-white/60 text-sm leading-relaxed mb-3">
-                        Start with the basics: a short description and what you do. Then add your products or services - 
-                        these help AI recommend you for specific needs. FAQs are powerful because they let you answer 
-                        questions before AI has to guess.
+                        Start with the basics: a clear description and category. Then add your products or services. 
+                        FAQs are useful because they give AI specific answers to common questions instead of making it guess.
                       </p>
                       <p className="text-white/40 text-xs">
-                        The more specific and accurate your information, the better AI can represent your brand.
+                        Focus on accuracy over marketing speak. AI does better with factual, specific information.
                       </p>
                     </div>
                   </div>
@@ -510,9 +511,9 @@ export default function ManageBrandPage() {
                     <div>
                       <h3 className="text-white font-semibold font-heading text-lg mb-2">Why does this matter?</h3>
                       <p className="text-white/60 text-sm leading-relaxed">
-                        More people are using AI to find products, compare options, and make decisions. When someone 
-                        asks ChatGPT "what's the best [thing you sell]?", you want to be in that answer. Your Harbor 
-                        profile gives AI the information it needs to include and recommend you accurately.
+                        AI models are increasingly used for product discovery and recommendations. Having clean, 
+                        structured data available makes it easier for these systems to accurately represent your 
+                        brand when users ask about your category or compare options.
                       </p>
                     </div>
                   </div>
@@ -603,7 +604,30 @@ export default function ManageBrandPage() {
                 </div>
                 
                 {/* Interactive chart */}
-                <div className="h-32 mb-4 relative overflow-hidden">
+                <div className="h-32 mb-4 relative">
+                  {/* Tooltip - rendered above chart, controlled by state */}
+                  {chartHover.visible && (
+                    <div 
+                      className="absolute top-0 z-10 pointer-events-none transition-opacity"
+                      style={{ left: chartHover.x, transform: 'translateX(-50%)' }}
+                    >
+                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[140px]">
+                        <p className="text-white/50 text-[10px] mb-2">Dec 12, 2025</p>
+                        <div className="space-y-1.5">
+                          {botVisits.map((bot) => (
+                            <div key={bot.bot_name} className="flex items-center gap-2">
+                              <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
+                              <span className="text-white/70 text-xs">{bot.bot_label}</span>
+                              <span className="text-white/40 text-xs ml-auto">{bot.visit_count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Vertical line */}
+                      <div className="absolute top-full left-1/2 w-px h-16 bg-white/20 -translate-x-1/2" />
+                    </div>
+                  )}
+
                   {/* X-axis labels */}
                   <div className="absolute bottom-0 left-0 right-0 flex justify-between text-white/30 text-[10px] pb-1">
                     <span>30d ago</span>
@@ -612,8 +636,17 @@ export default function ManageBrandPage() {
                     <span>Today</span>
                   </div>
                   
-                  {/* Chart area */}
-                  <div className="absolute inset-0 bottom-5">
+                  {/* Chart area with hover detection */}
+                  <div 
+                    className="absolute inset-0 bottom-5 cursor-crosshair"
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect()
+                      const x = e.clientX - rect.left
+                      const clampedX = Math.max(80, Math.min(x, rect.width - 80))
+                      setChartHover({ x: clampedX, visible: true })
+                    }}
+                    onMouseLeave={() => setChartHover({ x: 0, visible: false })}
+                  >
                     <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 80">
                       <defs>
                         <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
@@ -631,7 +664,6 @@ export default function ManageBrandPage() {
                         fill="none"
                         stroke="rgba(99, 102, 241, 0.6)"
                         strokeWidth="2"
-                        className="transition-all"
                       />
                       {/* Area fill */}
                       <path
@@ -639,42 +671,6 @@ export default function ManageBrandPage() {
                         fill="url(#chartGradient)"
                       />
                     </svg>
-                  </div>
-                  
-                  {/* Hover tooltip area */}
-                  <div 
-                    className="absolute inset-0 bottom-5 cursor-crosshair"
-                    onMouseMove={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect()
-                      const x = e.clientX - rect.left
-                      const tooltip = e.currentTarget.querySelector('.chart-tooltip') as HTMLElement
-                      if (tooltip) {
-                        const tooltipWidth = 150
-                        const clampedX = Math.max(tooltipWidth/2 + 8, Math.min(x, rect.width - tooltipWidth/2 - 8))
-                        tooltip.style.left = `${clampedX}px`
-                        tooltip.style.opacity = '1'
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      const tooltip = e.currentTarget.querySelector('.chart-tooltip') as HTMLElement
-                      if (tooltip) tooltip.style.opacity = '0'
-                    }}
-                  >
-                    {/* Tooltip */}
-                    <div className="chart-tooltip absolute bottom-full mb-2 opacity-0 transition-opacity pointer-events-none -translate-x-1/2">
-                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[140px]">
-                        <p className="text-white/50 text-[10px] mb-2">Dec 12, 2025</p>
-                        <div className="space-y-1.5">
-                          {botVisits.map((bot) => (
-                            <div key={bot.bot_name} className="flex items-center gap-2">
-                              <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
-                              <span className="text-white/70 text-xs">{bot.bot_label}</span>
-                              <span className="text-white/40 text-xs ml-auto">{bot.visit_count}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   
                   <div className="absolute bottom-5 left-0 right-0 h-px bg-white/[0.06]" />
@@ -868,10 +864,10 @@ export default function ManageBrandPage() {
                 <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-white/70 text-sm mb-1">
-                    <span className="text-white font-medium">Why add products?</span> When someone asks AI "what does [your brand] offer?", 
-                    this is where the answer comes from. AI can recommend specific products to users looking for solutions you provide.
+                    <span className="text-white font-medium">Why add offerings?</span> When AI is asked what you offer, 
+                    this data helps it give specific, accurate answers instead of vague descriptions.
                   </p>
-                  <p className="text-white/40 text-xs">Tip: Include pricing even if approximate. AI often factors price into recommendations.</p>
+                  <p className="text-white/40 text-xs">For services, pricing can be a range or "Contact for quote" - AI handles natural language.</p>
                 </div>
               </div>
 
@@ -914,10 +910,10 @@ export default function ManageBrandPage() {
                     }}
                   >
                     <Package className="w-12 h-12 text-white/30 mx-auto mb-3" strokeWidth={1} />
-                    <p className="text-white/50 mb-1">No products yet</p>
-                    <p className="text-white/30 text-sm mb-4">Drag a CSV here or add manually</p>
+                    <p className="text-white/50 mb-1">No offerings yet</p>
+                    <p className="text-white/30 text-sm mb-4">Add products, services, or both</p>
                     <button onClick={addProduct} className="text-blue-400 text-sm hover:text-blue-300">
-                      Add your first product
+                      Add your first offering
                     </button>
                   </div>
                 ) : (
@@ -925,19 +921,28 @@ export default function ManageBrandPage() {
                     {offerings.map((product, idx) => (
                       <div key={idx} className="p-4 rounded-lg bg-[#0B0B0C] border border-white/[0.06]">
                         <div className="flex gap-4">
-                          <div className="flex-1 grid grid-cols-3 gap-3">
+                          <div className="flex-1 grid grid-cols-4 gap-3">
                             <input
                               type="text"
                               value={product.name}
                               onChange={(e) => updateProduct(idx, 'name', e.target.value)}
-                              placeholder="Product name"
+                              placeholder="Name"
                               className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20"
                             />
+                            <select
+                              value={product.type || 'product'}
+                              onChange={(e) => updateProduct(idx, 'type', e.target.value)}
+                              className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
+                            >
+                              <option value="product">Product</option>
+                              <option value="service">Service</option>
+                              <option value="subscription">Subscription</option>
+                            </select>
                             <input
                               type="text"
                               value={product.price || ''}
                               onChange={(e) => updateProduct(idx, 'price', e.target.value)}
-                              placeholder="Price"
+                              placeholder={product.type === 'service' ? 'e.g. From $500 or Contact us' : 'Price'}
                               className="px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm placeholder-white/30 focus:outline-none focus:border-white/20"
                             />
                             <select
@@ -1048,8 +1053,8 @@ export default function ManageBrandPage() {
           )}
         </div>
 
-        {/* Floating Save Bar */}
-        {hasChanges && (
+        {/* Floating Save Bar - only on editable sections */}
+        {hasChanges && (activeNav === 'brand' || activeNav === 'products' || activeNav === 'faqs') && (
           <div className="sticky bottom-0 left-0 right-0 p-4 bg-[#0B0B0C]/95 backdrop-blur border-t border-white/[0.06]">
             <div className="max-w-4xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-2">
