@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { 
   ArrowLeft, 
   ExternalLink, 
@@ -25,7 +26,10 @@ import {
   CheckCircle2,
   Upload,
   Camera,
-  Zap
+  Zap,
+  LogOut,
+  BookOpen,
+  Info
 } from 'lucide-react'
 
 // Types
@@ -91,12 +95,19 @@ const NAV_ITEMS = [
   { id: 'faqs', label: 'FAQs', icon: HelpCircle },
 ] as const
 
-type NavId = typeof NAV_ITEMS[number]['id']
+type NavId = typeof NAV_ITEMS[number]['id'] | 'getting-started'
 
 export default function ManageBrandPage() {
   const router = useRouter()
   const params = useParams()
   const slug = params?.slug as string
+  const supabase = createClientComponentClient()
+
+  // Sign out handler
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push('/auth/login')
+  }
 
   // Core state
   const [brand, setBrand] = useState<Brand | null>(null)
@@ -340,9 +351,9 @@ export default function ManageBrandPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0B0C] flex">
-      {/* Left Sidebar */}
-      <aside className="w-[220px] border-r border-white/[0.06] flex flex-col">
+    <div className="h-screen bg-[#0B0B0C] flex overflow-hidden">
+      {/* Left Sidebar - Fixed */}
+      <aside className="w-[220px] border-r border-white/[0.06] flex flex-col flex-shrink-0 h-screen overflow-hidden">
         {/* Brand Header */}
         <div className="p-4 border-b border-white/[0.06]">
           <Link
@@ -377,7 +388,24 @@ export default function ManageBrandPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-2">
+        <nav className="flex-1 p-2 overflow-y-auto">
+          {/* Getting Started - Separate section */}
+          <button
+            onClick={() => setActiveNav('getting-started')}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-2 ${
+              activeNav === 'getting-started' 
+                ? 'bg-white/[0.08] text-white' 
+                : 'text-white/60 hover:text-white/80 hover:bg-white/[0.04]'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" strokeWidth={1.5} />
+            Getting Started
+          </button>
+
+          {/* Divider */}
+          <div className="h-px bg-white/[0.06] my-2" />
+
+          {/* Main Nav */}
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon
             const isActive = activeNav === item.id
@@ -397,10 +425,21 @@ export default function ManageBrandPage() {
             )
           })}
         </nav>
+
+        {/* Sign Out */}
+        <div className="p-2 border-t border-white/[0.06]">
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 transition-colors hover:bg-red-500/10 hover:text-red-400"
+          >
+            <LogOut className="w-4 h-4" strokeWidth={1.5} />
+            Sign Out
+          </button>
+        </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
+      {/* Main Content - Scrollable */}
+      <main className="flex-1 overflow-y-auto h-screen">
         <div className="max-w-4xl mx-auto p-8">
           {/* Progress Steps */}
           <div className="mb-8">
@@ -457,34 +496,98 @@ export default function ManageBrandPage() {
             <div className="space-y-6">
               {/* AI Visits */}
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+                {/* Explainer */}
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-[#161718]/50 border border-white/[0.04] mb-6">
+                  <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-white/70 text-sm">
+                      When AI platforms like ChatGPT or Perplexity read your profile, their visits show up here. 
+                      More visits = more opportunities to be recommended.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-white font-semibold font-heading">AI Visits</h3>
                   <span className="text-white/30 text-xs">Last 30 days</span>
                 </div>
                 
-                {/* Simple flatline chart */}
-                <div className="h-24 mb-6 relative">
-                  <div className="absolute inset-0 flex items-end">
-                    <svg className="w-full h-full" preserveAspectRatio="none">
+                {/* Interactive chart with hover tooltip */}
+                <div className="h-32 mb-4 relative group">
+                  {/* X-axis labels */}
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-between text-white/30 text-[10px] pb-1">
+                    <span>30d ago</span>
+                    <span>20d</span>
+                    <span>10d</span>
+                    <span>Today</span>
+                  </div>
+                  
+                  {/* Chart area */}
+                  <div className="absolute inset-0 bottom-5">
+                    <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 80">
                       <defs>
                         <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.1)" />
+                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.15)" />
                           <stop offset="100%" stopColor="rgba(99, 102, 241, 0)" />
                         </linearGradient>
                       </defs>
+                      {/* Grid lines */}
+                      <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                      <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                      <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                      {/* Line */}
                       <path
-                        d="M 0 80 L 50 78 L 100 82 L 150 79 L 200 81 L 250 80 L 300 78 L 350 80 L 400 79"
+                        d="M 0 70 L 40 68 L 80 72 L 120 67 L 160 71 L 200 68 L 240 72 L 280 66 L 320 70 L 360 65 L 400 68"
                         fill="none"
-                        stroke="rgba(99, 102, 241, 0.5)"
-                        strokeWidth="1.5"
+                        stroke="rgba(99, 102, 241, 0.6)"
+                        strokeWidth="2"
+                        className="transition-all"
                       />
+                      {/* Area fill */}
                       <path
-                        d="M 0 80 L 50 78 L 100 82 L 150 79 L 200 81 L 250 80 L 300 78 L 350 80 L 400 79 L 400 96 L 0 96 Z"
+                        d="M 0 70 L 40 68 L 80 72 L 120 67 L 160 71 L 200 68 L 240 72 L 280 66 L 320 70 L 360 65 L 400 68 L 400 80 L 0 80 Z"
                         fill="url(#chartGradient)"
                       />
                     </svg>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 h-px bg-white/[0.06]" />
+                  
+                  {/* Hover tooltip area - covers chart */}
+                  <div 
+                    className="absolute inset-0 bottom-5 cursor-crosshair"
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect()
+                      const x = e.clientX - rect.left
+                      const tooltip = e.currentTarget.querySelector('.chart-tooltip') as HTMLElement
+                      if (tooltip) {
+                        tooltip.style.left = `${x}px`
+                        tooltip.style.opacity = '1'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const tooltip = e.currentTarget.querySelector('.chart-tooltip') as HTMLElement
+                      if (tooltip) tooltip.style.opacity = '0'
+                    }}
+                  >
+                    {/* Tooltip */}
+                    <div className="chart-tooltip absolute top-0 opacity-0 transition-opacity pointer-events-none -translate-x-1/2">
+                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-lg min-w-[140px]">
+                        <p className="text-white/50 text-[10px] mb-2">Dec 12, 2025</p>
+                        <div className="space-y-1.5">
+                          {botVisits.map((bot) => (
+                            <div key={bot.bot_name} className="flex items-center gap-2">
+                              <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
+                              <span className="text-white/70 text-xs">{bot.bot_label}</span>
+                              <span className="text-white/40 text-xs ml-auto">{bot.visit_count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      {/* Vertical line */}
+                      <div className="absolute top-full left-1/2 w-px h-20 bg-white/20" />
+                    </div>
+                  </div>
+                  
+                  <div className="absolute bottom-5 left-0 right-0 h-px bg-white/[0.06]" />
                 </div>
 
                 <div className="grid grid-cols-4 gap-3">
@@ -670,6 +773,18 @@ export default function ManageBrandPage() {
           {/* Products Section */}
           {activeNav === 'products' && (
             <div className="space-y-6">
+              {/* Explainer */}
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-[#111213] border border-white/[0.06]">
+                <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-white/70 text-sm mb-1">
+                    <span className="text-white font-medium">Why add products?</span> When someone asks AI "what does [your brand] offer?", 
+                    this is where the answer comes from. AI can recommend specific products to users looking for solutions you provide.
+                  </p>
+                  <p className="text-white/40 text-xs">Tip: Include pricing even if approximate. AI often factors price into recommendations.</p>
+                </div>
+              </div>
+
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -712,7 +827,7 @@ export default function ManageBrandPage() {
                     <p className="text-white/50 mb-1">No products yet</p>
                     <p className="text-white/30 text-sm mb-4">Drag a CSV here or add manually</p>
                     <button onClick={addProduct} className="text-blue-400 text-sm hover:text-blue-300">
-                      Add your first product →
+                      Add your first product
                     </button>
                   </div>
                 ) : (
@@ -856,20 +971,21 @@ export default function ManageBrandPage() {
         )}
       </main>
 
-      {/* Right Sidebar - The Actual JSON Feed */}
-      <aside className="w-[360px] border-l border-white/[0.06] flex flex-col bg-[#0B0B0C]">
+      {/* Right Sidebar - The Actual JSON Feed - Fixed */}
+      <aside className="w-[360px] border-l border-white/[0.06] flex flex-col bg-[#0B0B0C] flex-shrink-0 h-screen overflow-hidden">
         <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
           <div>
             <h2 className="text-white font-semibold text-sm font-heading">Your AI Profile</h2>
             <p className="text-white/40 text-xs mt-0.5">The schema AI models read</p>
           </div>
-          <button
-            onClick={copyFeedUrl}
+          <Link
+            href={`/brands/${brand.slug}/harbor.json`}
+            target="_blank"
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] text-white/50 text-xs transition-colors"
           >
-            {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> : <Copy className="w-3.5 h-3.5" />}
-            {copied ? 'Copied' : 'Copy URL'}
-          </button>
+            <ExternalLink className="w-3.5 h-3.5" />
+            View Profile
+          </Link>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
