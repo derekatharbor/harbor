@@ -183,6 +183,34 @@ export default function ManageBrandPage() {
     setMessage(null)
 
     try {
+      // Send in format API expects
+      const res = await fetch(`/api/brands/${slug}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          description, // API maps this to short_description
+          offerings: offerings.map(o => ({
+            name: o.name,
+            type: o.type || 'product',
+            description: o.description,
+            price: o.price,
+            status: o.status || 'active'
+          })),
+          faqs,
+          companyInfo: {
+            ...companyInfo,
+            // Include one_liner, category, icp in company_info
+          },
+          // Additional fields the API supports
+          one_line_summary: oneLiner,
+          category,
+          icp,
+        })
+      })
+
+      if (!res.ok) throw new Error('Failed to save')
+      
+      // Update local state with new feed_data
       const updatedFeedData: FeedData = {
         ...(brand.feed_data || {}),
         brand_name: brand.brand_name,
@@ -194,14 +222,6 @@ export default function ManageBrandPage() {
         offerings,
         faqs,
       }
-
-      const res = await fetch(`/api/brands/${slug}/update`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feed_data: updatedFeedData })
-      })
-
-      if (!res.ok) throw new Error('Failed to save')
       
       setBrand({ ...brand, feed_data: updatedFeedData })
       setHasChanges(false)

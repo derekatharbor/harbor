@@ -15,6 +15,9 @@ export async function POST(
     const {
       // Core info
       description,
+      one_line_summary,
+      category,
+      icp,
       offerings,
       faqs,
       companyInfo,
@@ -80,6 +83,9 @@ export async function POST(
       
       // Core info
       short_description: description ?? currentFeedData.short_description,
+      one_line_summary: one_line_summary ?? currentFeedData.one_line_summary,
+      category: category ?? currentFeedData.category,
+      icp: icp ?? currentFeedData.icp,
       offerings: offerings ?? currentFeedData.offerings ?? [],
       faqs: faqs ?? currentFeedData.faqs ?? [],
       company_info: {
