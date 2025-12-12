@@ -170,8 +170,9 @@ export default function ManageBrandPage() {
     setMessage(null)
 
     try {
-      const updatedFeedData = {
-        ...brand.feed_data,
+      const updatedFeedData: FeedData = {
+        ...(brand.feed_data || {}),
+        brand_name: brand.brand_name,
         short_description: description,
         one_line_summary: oneLiner,
         category,
