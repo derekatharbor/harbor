@@ -243,6 +243,83 @@ export default function ManageBrandPage() {
     markChanged()
   }
 
+  // CSV Import state
+  const [csvPreview, setCsvPreview] = useState<{
+    rows: Array<Record<string, string>>
+    columns: string[]
+    mapping: { name: string; price: string; description: string; status: string }
+  } | null>(null)
+
+  // Common column name variations
+  const COLUMN_ALIASES = {
+    name: ['name', 'product_name', 'product', 'title', 'item', 'service'],
+    price: ['price', 'pricing', 'cost', 'amount', 'rate', 'fee'],
+    description: ['description', 'desc', 'details', 'summary', 'about', 'info'],
+    status: ['status', 'state', 'active', 'enabled', 'available']
+  }
+
+  function detectColumnMapping(columns: string[]): { name: string; price: string; description: string; status: string } {
+    const lowerColumns = columns.map(c => c.toLowerCase().trim())
+    const mapping = { name: '', price: '', description: '', status: '' }
+    
+    for (const [field, aliases] of Object.entries(COLUMN_ALIASES)) {
+      const match = lowerColumns.find(col => aliases.includes(col))
+      if (match) {
+        mapping[field as keyof typeof mapping] = columns[lowerColumns.indexOf(match)]
+      }
+    }
+    return mapping
+  }
+
+  function handleCsvFile(file: File) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result as string
+      const lines = text.split('\n').filter(line => line.trim())
+      if (lines.length < 2) {
+        setMessage({ type: 'error', text: 'CSV must have a header row and at least one data row' })
+        return
+      }
+
+      // Parse header
+      const columns = lines[0].split(',').map(c => c.trim().replace(/^"|"$/g, ''))
+      
+      // Parse rows (simple CSV parsing - handles basic cases)
+      const rows = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''))
+        const row: Record<string, string> = {}
+        columns.forEach((col, i) => {
+          row[col] = values[i] || ''
+        })
+        return row
+      }).filter(row => Object.values(row).some(v => v)) // Remove empty rows
+
+      const mapping = detectColumnMapping(columns)
+      setCsvPreview({ rows, columns, mapping })
+    }
+    reader.readAsText(file)
+  }
+
+  function importCsvProducts() {
+    if (!csvPreview) return
+    
+    const { rows, mapping } = csvPreview
+    const newProducts = rows.map(row => ({
+      name: row[mapping.name] || '',
+      price: row[mapping.price] || '',
+      description: row[mapping.description] || '',
+      status: (row[mapping.status]?.toLowerCase() === 'inactive' || row[mapping.status]?.toLowerCase() === 'discontinued') 
+        ? row[mapping.status].toLowerCase() as 'active' | 'inactive' | 'discontinued'
+        : 'active' as const
+    })).filter(p => p.name) // Only import rows with a name
+
+    setOfferings([...offerings, ...newProducts])
+    setCsvPreview(null)
+    markChanged()
+    setMessage({ type: 'success', text: `Imported ${newProducts.length} products` })
+    setTimeout(() => setMessage(null), 3000)
+  }
+
   // Copy feed URL
   function copyFeedUrl() {
     if (!brand) return
@@ -720,11 +797,11 @@ export default function ManageBrandPage() {
                       accept=".csv"
                       className="hidden"
                       onChange={(e) => {
-                        // TODO: Handle CSV import
                         const file = e.target.files?.[0]
                         if (file) {
-                          console.log('CSV file selected:', file.name)
+                          handleCsvFile(file)
                         }
+                        e.target.value = '' // Reset so same file can be selected again
                       }}
                     />
                   </label>
@@ -739,10 +816,27 @@ export default function ManageBrandPage() {
               </div>
 
               {offerings.length === 0 ? (
-                <div className="text-center py-12 border border-dashed border-white/[0.08] rounded-lg">
-                  <Package className="w-10 h-10 text-white/20 mx-auto mb-3" />
-                  <p className="text-white/40 text-sm mb-1">No products added yet</p>
-                  <p className="text-white/30 text-xs mb-4">Add products manually or import from CSV</p>
+                <div 
+                  className="relative text-center py-12 border-2 border-dashed border-white/[0.12] rounded-lg transition-colors hover:border-white/[0.2]"
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.classList.add('border-blue-500/50', 'bg-blue-500/5')
+                  }}
+                  onDragLeave={(e) => {
+                    e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5')
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    e.currentTarget.classList.remove('border-blue-500/50', 'bg-blue-500/5')
+                    const file = e.dataTransfer.files[0]
+                    if (file && file.name.endsWith('.csv')) {
+                      handleCsvFile(file)
+                    }
+                  }}
+                >
+                  <Package className="w-10 h-10 text-white/40 mx-auto mb-3" strokeWidth={1.5} />
+                  <p className="text-white/50 text-sm mb-1">No products added yet</p>
+                  <p className="text-white/30 text-xs mb-4">Drag a CSV here, or add products manually</p>
                   <button
                     onClick={addProduct}
                     className="text-blue-400 text-sm hover:text-blue-300"
@@ -852,9 +946,9 @@ export default function ManageBrandPage() {
               </div>
 
               {faqs.length === 0 ? (
-                <div className="text-center py-12 border border-dashed border-white/[0.08] rounded-lg">
-                  <HelpCircle className="w-10 h-10 text-white/20 mx-auto mb-3" />
-                  <p className="text-white/40 text-sm mb-1">No FAQs added yet</p>
+                <div className="text-center py-12 border-2 border-dashed border-white/[0.12] rounded-lg">
+                  <HelpCircle className="w-10 h-10 text-white/40 mx-auto mb-3" strokeWidth={1.5} />
+                  <p className="text-white/50 text-sm mb-1">No FAQs added yet</p>
                   <p className="text-white/30 text-xs mb-4">Add common questions your customers ask</p>
                   <button
                     onClick={addFaq}
@@ -1005,6 +1099,94 @@ export default function ManageBrandPage() {
           </div>
         )}
       </main>
+
+      {/* CSV Preview Modal */}
+      {csvPreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setCsvPreview(null)}
+          />
+          <div className="relative bg-[#111213] rounded-xl border border-white/[0.06] w-full max-w-2xl max-h-[80vh] overflow-hidden">
+            <div className="p-6 border-b border-white/[0.06]">
+              <h3 className="text-white font-semibold font-heading">Import Products from CSV</h3>
+              <p className="text-white/50 text-sm mt-1">
+                {csvPreview.rows.length} products found. Review the column mapping below.
+              </p>
+            </div>
+
+            {/* Column Mapping */}
+            <div className="p-6 border-b border-white/[0.06]">
+              <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Column Mapping</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {(['name', 'price', 'description', 'status'] as const).map((field) => (
+                  <div key={field}>
+                    <label className="block text-white/50 text-xs mb-1 capitalize">{field}</label>
+                    <select
+                      value={csvPreview.mapping[field]}
+                      onChange={(e) => setCsvPreview({
+                        ...csvPreview,
+                        mapping: { ...csvPreview.mapping, [field]: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
+                    >
+                      <option value="">-- Skip --</option>
+                      {csvPreview.columns.map(col => (
+                        <option key={col} value={col}>{col}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Preview Table */}
+            <div className="p-6 overflow-x-auto max-h-[300px] overflow-y-auto">
+              <p className="text-white/40 text-xs uppercase tracking-wide mb-3">Preview (first 5 rows)</p>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-white/50 border-b border-white/[0.06]">
+                    <th className="pb-2 pr-4">Name</th>
+                    <th className="pb-2 pr-4">Price</th>
+                    <th className="pb-2 pr-4">Description</th>
+                    <th className="pb-2">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {csvPreview.rows.slice(0, 5).map((row, i) => (
+                    <tr key={i} className="border-b border-white/[0.04]">
+                      <td className="py-2 pr-4 text-white">{row[csvPreview.mapping.name] || '-'}</td>
+                      <td className="py-2 pr-4 text-white/70">{row[csvPreview.mapping.price] || '-'}</td>
+                      <td className="py-2 pr-4 text-white/50 truncate max-w-[200px]">{row[csvPreview.mapping.description] || '-'}</td>
+                      <td className="py-2 text-white/50">{row[csvPreview.mapping.status] || 'active'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {csvPreview.rows.length > 5 && (
+                <p className="text-white/30 text-xs mt-2">...and {csvPreview.rows.length - 5} more</p>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="p-6 border-t border-white/[0.06] flex justify-end gap-3">
+              <button
+                onClick={() => setCsvPreview(null)}
+                className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={importCsvProducts}
+                disabled={!csvPreview.mapping.name}
+                className="px-4 py-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Import {csvPreview.rows.filter(r => r[csvPreview.mapping.name]).length} Products
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
