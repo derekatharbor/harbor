@@ -114,8 +114,8 @@ export default function ManageBrandPage() {
   const [category, setCategory] = useState('')
   const [icp, setIcp] = useState('')
   const [companyInfo, setCompanyInfo] = useState<FeedData['company_info']>({})
-  const [offerings, setOfferings] = useState<FeedData['offerings']>([])
-  const [faqs, setFaqs] = useState<FeedData['faqs']>([])
+  const [offerings, setOfferings] = useState<NonNullable<FeedData['offerings']>>([])
+  const [faqs, setFaqs] = useState<NonNullable<FeedData['faqs']>>([])
 
   // Bot visits (mock for now - will be real data)
   const [botVisits, setBotVisits] = useState<BotVisit[]>([
