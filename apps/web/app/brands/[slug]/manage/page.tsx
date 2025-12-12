@@ -385,7 +385,34 @@ export default function ManageBrandPage() {
               </div>
               <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-lg">
                 <Camera className="w-4 h-4 text-white" />
-                <input type="file" accept="image/*" className="hidden" />
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    
+                    const formData = new FormData()
+                    formData.append('file', file)
+                    
+                    try {
+                      const res = await fetch(`/api/brands/${slug}/logo`, {
+                        method: 'POST',
+                        body: formData,
+                      })
+                      
+                      if (res.ok) {
+                        const data = await res.json()
+                        setBrand(prev => prev ? { ...prev, logo_url: data.logoUrl } : null)
+                      } else {
+                        console.error('Logo upload failed')
+                      }
+                    } catch (err) {
+                      console.error('Logo upload error:', err)
+                    }
+                  }}
+                />
               </label>
             </div>
             <div className="flex-1 min-w-0">
