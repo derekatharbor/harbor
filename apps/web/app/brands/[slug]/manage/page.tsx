@@ -26,9 +26,10 @@ import {
   Calendar,
   Users,
   MapPin,
-  Sparkles,
   Copy,
-  CheckCircle2
+  CheckCircle2,
+  Upload,
+  Camera
 } from 'lucide-react'
 
 // Types
@@ -81,6 +82,7 @@ interface FeedData {
 interface BotVisit {
   bot_name: string
   bot_label: string
+  logo: string
   visit_count: number
   last_visit: string | null
 }
@@ -119,10 +121,10 @@ export default function ManageBrandPage() {
 
   // Bot visits (mock for now - will be real data)
   const [botVisits, setBotVisits] = useState<BotVisit[]>([
-    { bot_name: 'GPTBot', bot_label: 'ChatGPT', visit_count: 0, last_visit: null },
-    { bot_name: 'anthropic-ai', bot_label: 'Claude', visit_count: 0, last_visit: null },
-    { bot_name: 'PerplexityBot', bot_label: 'Perplexity', visit_count: 0, last_visit: null },
-    { bot_name: 'Google-Extended', bot_label: 'Gemini', visit_count: 0, last_visit: null },
+    { bot_name: 'GPTBot', bot_label: 'ChatGPT', logo: '/logos/chatgpt-dark.svg', visit_count: 0, last_visit: null },
+    { bot_name: 'anthropic-ai', bot_label: 'Claude', logo: '/logos/claude-dark.svg', visit_count: 0, last_visit: null },
+    { bot_name: 'PerplexityBot', bot_label: 'Perplexity', logo: '/logos/perplexity-dark.svg', visit_count: 0, last_visit: null },
+    { bot_name: 'Google-Extended', bot_label: 'Gemini', logo: '/logos/gemini.svg', visit_count: 0, last_visit: null },
   ])
 
   // Copied state for feed URL
@@ -380,14 +382,34 @@ export default function ManageBrandPage() {
               
               <div className="bg-[#161718] rounded-lg border border-white/[0.06] p-5">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
-                    <Image
-                      src={brand.logo_url}
-                      alt={brand.brand_name}
-                      width={48}
-                      height={48}
-                      className="w-full h-full object-cover"
-                    />
+                  {/* Editable Logo */}
+                  <div className="relative group flex-shrink-0">
+                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-white/5">
+                      <Image
+                        src={brand.logo_url}
+                        alt={brand.brand_name}
+                        width={56}
+                        height={56}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <label className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-lg">
+                      <Camera className="w-5 h-5 text-white" />
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            // TODO: Upload to storage and update brand.logo_url
+                            console.log('Logo file selected:', file.name)
+                            setMessage({ type: 'success', text: 'Logo upload coming soon' })
+                            setTimeout(() => setMessage(null), 2000)
+                          }
+                        }}
+                      />
+                    </label>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-white font-semibold font-heading">{brand.brand_name}</h3>
@@ -405,12 +427,19 @@ export default function ManageBrandPage() {
                     {botVisits.map((bot) => (
                       <div 
                         key={bot.bot_name}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#1A1F26]"
+                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-[#111213] border border-white/[0.06]"
                       >
-                        <div className={`w-2 h-2 rounded-full ${
+                        <Image
+                          src={bot.logo}
+                          alt={bot.bot_label}
+                          width={20}
+                          height={20}
+                          className={`w-5 h-5 ${bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}`}
+                        />
+                        <span className="text-white/70 text-sm">{bot.bot_label}</span>
+                        <div className={`w-2 h-2 rounded-full ml-auto ${
                           bot.visit_count > 0 ? 'bg-green-400' : 'bg-white/20'
                         }`} />
-                        <span className="text-white/70 text-sm">{bot.bot_label}</span>
                       </div>
                     ))}
                   </div>
@@ -478,12 +507,16 @@ export default function ManageBrandPage() {
                     className="flex items-center justify-between py-3 border-b border-white/[0.04] last:border-0"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        bot.visit_count > 0 ? 'bg-green-400/10' : 'bg-[#1A1F26]'
+                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                        bot.visit_count > 0 ? 'bg-green-400/10' : 'bg-[#161718]'
                       }`}>
-                        <Bot className={`w-4 h-4 ${
-                          bot.visit_count > 0 ? 'text-green-400' : 'text-white/30'
-                        }`} />
+                        <Image
+                          src={bot.logo}
+                          alt={bot.bot_label}
+                          width={20}
+                          height={20}
+                          className={`w-5 h-5 ${bot.visit_count === 0 ? 'opacity-40 grayscale' : ''}`}
+                        />
                       </div>
                       <div>
                         <p className="text-white text-sm font-medium">{bot.bot_label}</p>
@@ -508,24 +541,31 @@ export default function ManageBrandPage() {
             </div>
 
             {/* Upgrade CTA */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 p-6">
-              <div className="flex items-start justify-between">
+            <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-white font-semibold font-heading mb-1">Want deeper insights?</h3>
+                  <h3 className="text-white font-semibold font-heading mb-1">Ready for deeper insights?</h3>
                   <p className="text-white/60 text-sm mb-4">
-                    Track 50+ prompts, monitor competitors, and get actionable recommendations.
+                    Track prompts across AI platforms, monitor competitors, and see exactly where you're being recommended.
                   </p>
-                  <Link
-                    href="/pricing"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    Upgrade to Pro
-                  </Link>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href="/signup"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors"
+                    >
+                      Start Free
+                    </Link>
+                    <Link
+                      href="/pricing"
+                      className="text-white/50 text-sm hover:text-white/70 transition-colors"
+                    >
+                      View plans →
+                    </Link>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-white/40 text-xs">Starting at</p>
-                  <p className="text-white font-semibold">$79/mo</p>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-white/40 text-xs">Free tier includes</p>
+                  <p className="text-white text-sm">10 prompts/month</p>
                 </div>
               </div>
             </div>
@@ -671,22 +711,41 @@ export default function ManageBrandPage() {
                   <h2 className="text-white font-semibold font-heading">Products & Services</h2>
                   <p className="text-white/50 text-sm mt-1">Add what you offer so AI can recommend you accurately</p>
                 </div>
-                <button
-                  onClick={addProduct}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Product
-                </button>
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#161718] border border-white/[0.06] hover:border-white/[0.12] text-white/70 text-sm transition-colors cursor-pointer">
+                    <Upload className="w-4 h-4" />
+                    Import CSV
+                    <input 
+                      type="file" 
+                      accept=".csv"
+                      className="hidden"
+                      onChange={(e) => {
+                        // TODO: Handle CSV import
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          console.log('CSV file selected:', file.name)
+                        }
+                      }}
+                    />
+                  </label>
+                  <button
+                    onClick={addProduct}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Product
+                  </button>
+                </div>
               </div>
 
               {offerings.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-12 border border-dashed border-white/[0.08] rounded-lg">
                   <Package className="w-10 h-10 text-white/20 mx-auto mb-3" />
-                  <p className="text-white/40 text-sm">No products added yet</p>
+                  <p className="text-white/40 text-sm mb-1">No products added yet</p>
+                  <p className="text-white/30 text-xs mb-4">Add products manually or import from CSV</p>
                   <button
                     onClick={addProduct}
-                    className="mt-4 text-blue-400 text-sm hover:text-blue-300"
+                    className="text-blue-400 text-sm hover:text-blue-300"
                   >
                     Add your first product →
                   </button>
@@ -696,62 +755,78 @@ export default function ManageBrandPage() {
                   {offerings.map((product, idx) => (
                     <div 
                       key={idx}
-                      className="p-4 rounded-lg bg-[#1A1F26] border border-white/[0.06] group relative"
+                      className="p-5 rounded-lg bg-[#0B0B0C] border border-white/[0.06]"
                     >
-                      <button
-                        onClick={() => removeProduct(idx)}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-400/10 hover:bg-red-400/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-white/50 text-xs mb-1.5">Name</label>
-                          <input
-                            type="text"
-                            value={product.name}
-                            onChange={(e) => updateProduct(idx, 'name', e.target.value)}
-                            placeholder="Product name"
-                            className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
-                          />
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-white/50 text-xs mb-1.5">Name</label>
+                            <input
+                              type="text"
+                              value={product.name}
+                              onChange={(e) => updateProduct(idx, 'name', e.target.value)}
+                              placeholder="Product name"
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-white/50 text-xs mb-1.5">Price</label>
+                            <input
+                              type="text"
+                              value={product.price || ''}
+                              onChange={(e) => updateProduct(idx, 'price', e.target.value)}
+                              placeholder="e.g., $99/mo, Free, Contact us"
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-white/50 text-xs mb-1.5">Status</label>
+                            <select
+                              value={product.status || 'active'}
+                              onChange={(e) => updateProduct(idx, 'status', e.target.value)}
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
+                            >
+                              <option value="active">Active</option>
+                              <option value="inactive">Inactive</option>
+                              <option value="discontinued">Discontinued</option>
+                            </select>
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-white/50 text-xs mb-1.5">Price</label>
-                          <input
-                            type="text"
-                            value={product.price || ''}
-                            onChange={(e) => updateProduct(idx, 'price', e.target.value)}
-                            placeholder="e.g., $99/mo, Free, Contact us"
-                            className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-white/50 text-xs mb-1.5">Status</label>
-                          <select
-                            value={product.status || 'active'}
-                            onChange={(e) => updateProduct(idx, 'status', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white text-sm focus:outline-none focus:border-white/20"
-                          >
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="discontinued">Discontinued</option>
-                          </select>
-                        </div>
+                        <button
+                          onClick={() => removeProduct(idx)}
+                          className="p-2 rounded-lg hover:bg-red-400/10 text-white/30 hover:text-red-400 transition-colors flex-shrink-0"
+                          title="Remove product"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
 
-                      <div className="mt-3">
+                      <div>
                         <label className="block text-white/50 text-xs mb-1.5">Description</label>
                         <textarea
                           value={product.description}
                           onChange={(e) => updateProduct(idx, 'description', e.target.value)}
                           placeholder="Brief description of this product..."
                           rows={2}
-                          className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
+                          className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
                         />
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Save button for products */}
+              {offerings.length > 0 && hasChanges && (
+                <div className="mt-6 pt-6 border-t border-white/[0.06] flex justify-end">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
+                  >
+                    <Save className="w-4 h-4" />
+                    {saving ? 'Saving...' : 'Save Products'}
+                  </button>
                 </div>
               )}
             </div>
@@ -769,7 +844,7 @@ export default function ManageBrandPage() {
                 </div>
                 <button
                   onClick={addFaq}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Add FAQ
@@ -777,12 +852,13 @@ export default function ManageBrandPage() {
               </div>
 
               {faqs.length === 0 ? (
-                <div className="text-center py-12">
+                <div className="text-center py-12 border border-dashed border-white/[0.08] rounded-lg">
                   <HelpCircle className="w-10 h-10 text-white/20 mx-auto mb-3" />
-                  <p className="text-white/40 text-sm">No FAQs added yet</p>
+                  <p className="text-white/40 text-sm mb-1">No FAQs added yet</p>
+                  <p className="text-white/30 text-xs mb-4">Add common questions your customers ask</p>
                   <button
                     onClick={addFaq}
-                    className="mt-4 text-blue-400 text-sm hover:text-blue-300"
+                    className="text-blue-400 text-sm hover:text-blue-300"
                   >
                     Add your first FAQ →
                   </button>
@@ -792,39 +868,55 @@ export default function ManageBrandPage() {
                   {faqs.map((faq, idx) => (
                     <div 
                       key={idx}
-                      className="p-4 rounded-lg bg-[#1A1F26] border border-white/[0.06] group relative"
+                      className="p-5 rounded-lg bg-[#0B0B0C] border border-white/[0.06]"
                     >
-                      <button
-                        onClick={() => removeFaq(idx)}
-                        className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-400/10 hover:bg-red-400/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-white/50 text-xs mb-1.5">Question</label>
-                          <input
-                            type="text"
-                            value={faq.question}
-                            onChange={(e) => updateFaq(idx, 'question', e.target.value)}
-                            placeholder="What do customers commonly ask?"
-                            className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
-                          />
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 space-y-3">
+                          <div>
+                            <label className="block text-white/50 text-xs mb-1.5">Question</label>
+                            <input
+                              type="text"
+                              value={faq.question}
+                              onChange={(e) => updateFaq(idx, 'question', e.target.value)}
+                              placeholder="What do customers commonly ask?"
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-white/50 text-xs mb-1.5">Answer</label>
+                            <textarea
+                              value={faq.answer}
+                              onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
+                              placeholder="The answer you want AI to give..."
+                              rows={3}
+                              className="w-full px-3 py-2 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-white/50 text-xs mb-1.5">Answer</label>
-                          <textarea
-                            value={faq.answer}
-                            onChange={(e) => updateFaq(idx, 'answer', e.target.value)}
-                            placeholder="The answer you want AI to give..."
-                            rows={3}
-                            className="w-full px-3 py-2 rounded-lg bg-[#1A1F26] border border-white/[0.06] text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/20 resize-none"
-                          />
-                        </div>
+                        <button
+                          onClick={() => removeFaq(idx)}
+                          className="p-2 rounded-lg hover:bg-red-400/10 text-white/30 hover:text-red-400 transition-colors flex-shrink-0"
+                          title="Remove FAQ"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Save button for FAQs */}
+              {faqs.length > 0 && hasChanges && (
+                <div className="mt-6 pt-6 border-t border-white/[0.06] flex justify-end">
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-medium text-sm hover:bg-white/90 transition-colors disabled:opacity-50"
+                  >
+                    <Save className="w-4 h-4" />
+                    {saving ? 'Saving...' : 'Save FAQs'}
+                  </button>
                 </div>
               )}
             </div>
@@ -844,7 +936,7 @@ export default function ManageBrandPage() {
               <div className="mb-6">
                 <label className="block text-white/70 text-sm mb-2">Feed URL</label>
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 px-4 py-3 rounded-lg bg-[#1A1F26] border border-white/[0.06] font-mono text-sm text-white/70 truncate">
+                  <div className="flex-1 px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] font-mono text-sm text-white/70 truncate">
                     https://useharbor.io/brands/{brand.slug}/harbor.json
                   </div>
                   <button
@@ -930,7 +1022,7 @@ function ChecklistItem({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[#1A1F26] transition-colors group text-left"
+      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-colors group text-left"
     >
       <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
         done ? 'bg-green-400/20' : 'border border-white/20'
