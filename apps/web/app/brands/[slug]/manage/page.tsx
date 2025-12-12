@@ -3,11 +3,12 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { 
   ArrowLeft, 
   ExternalLink, 
@@ -139,9 +140,6 @@ export default function ManageBrandPage() {
     columns: string[]
     mapping: { name: string; price: string; description: string; status: string }
   } | null>(null)
-
-  // Chart hover state
-  const [chartHover, setChartHover] = useState<{ x: number; visible: boolean }>({ x: 0, visible: false })
 
   // Load brand data
   useEffect(() => {
@@ -602,80 +600,89 @@ export default function ManageBrandPage() {
                   <h3 className="text-white font-semibold font-heading">AI Visits</h3>
                   <span className="text-white/30 text-xs">Last 30 days</span>
                 </div>
-                
-                {/* Interactive chart */}
-                <div className="h-32 mb-4 relative">
-                  {/* Tooltip - rendered above chart, controlled by state */}
-                  {chartHover.visible && (
-                    <div 
-                      className="absolute top-0 z-10 pointer-events-none transition-opacity"
-                      style={{ left: chartHover.x, transform: 'translateX(-50%)' }}
-                    >
-                      <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[140px]">
-                        <p className="text-white/50 text-[10px] mb-2">Dec 12, 2025</p>
-                        <div className="space-y-1.5">
-                          {botVisits.map((bot) => (
-                            <div key={bot.bot_name} className="flex items-center gap-2">
-                              <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
-                              <span className="text-white/70 text-xs">{bot.bot_label}</span>
-                              <span className="text-white/40 text-xs ml-auto">{bot.visit_count}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      {/* Vertical line */}
-                      <div className="absolute top-full left-1/2 w-px h-16 bg-white/20 -translate-x-1/2" />
-                    </div>
-                  )}
 
-                  {/* X-axis labels */}
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-between text-white/30 text-[10px] pb-1">
-                    <span>30d ago</span>
-                    <span>20d</span>
-                    <span>10d</span>
-                    <span>Today</span>
-                  </div>
-                  
-                  {/* Chart area with hover detection */}
-                  <div 
-                    className="absolute inset-0 bottom-5 cursor-crosshair"
-                    onMouseMove={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect()
-                      const x = e.clientX - rect.left
-                      const clampedX = Math.max(80, Math.min(x, rect.width - 80))
-                      setChartHover({ x: clampedX, visible: true })
-                    }}
-                    onMouseLeave={() => setChartHover({ x: 0, visible: false })}
-                  >
-                    <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 400 80">
+                {/* Recharts Area Chart */}
+                <div className="h-32 mb-6">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart 
+                      data={(() => {
+                        // Generate last 30 days of data (zeros for now - will be wired to real data)
+                        const days = []
+                        for (let i = 29; i >= 0; i--) {
+                          const date = new Date()
+                          date.setDate(date.getDate() - i)
+                          days.push({
+                            date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                            fullDate: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                            total: 0,
+                            chatgpt: 0,
+                            claude: 0,
+                            perplexity: 0,
+                            gemini: 0
+                          })
+                        }
+                        return days
+                      })()}
+                      margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                    >
                       <defs>
-                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.15)" />
+                        <linearGradient id="visitGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.3)" />
                           <stop offset="100%" stopColor="rgba(99, 102, 241, 0)" />
                         </linearGradient>
                       </defs>
-                      {/* Grid lines */}
-                      <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                      <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                      <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                      {/* Line */}
-                      <path
-                        d="M 0 70 L 40 68 L 80 72 L 120 67 L 160 71 L 200 68 L 240 72 L 280 66 L 320 70 L 360 65 L 400 68"
-                        fill="none"
+                      <XAxis 
+                        dataKey="date" 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }}
+                        interval={9}
+                      />
+                      <YAxis 
+                        hide={true}
+                        domain={[0, 10]}
+                      />
+                      <Tooltip 
+                        content={({ active, payload, label }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0].payload
+                            return (
+                              <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[150px]">
+                                <p className="text-white/50 text-[10px] mb-2">{data.fullDate}</p>
+                                <div className="space-y-1.5">
+                                  {botVisits.map((bot) => {
+                                    const key = bot.bot_label.toLowerCase().replace(' ', '')
+                                    const count = data[key] || 0
+                                    return (
+                                      <div key={bot.bot_name} className="flex items-center gap-2">
+                                        <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
+                                        <span className="text-white/70 text-xs">{bot.bot_label}</span>
+                                        <span className="text-white/40 text-xs ml-auto">{count}</span>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              </div>
+                            )
+                          }
+                          return null
+                        }}
+                        cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="total"
                         stroke="rgba(99, 102, 241, 0.6)"
-                        strokeWidth="2"
+                        strokeWidth={2}
+                        fill="url(#visitGradient)"
+                        dot={false}
+                        activeDot={{ r: 4, fill: '#6366f1', stroke: '#1A1F26', strokeWidth: 2 }}
                       />
-                      {/* Area fill */}
-                      <path
-                        d="M 0 70 L 40 68 L 80 72 L 120 67 L 160 71 L 200 68 L 240 72 L 280 66 L 320 70 L 360 65 L 400 68 L 400 80 L 0 80 Z"
-                        fill="url(#chartGradient)"
-                      />
-                    </svg>
-                  </div>
-                  
-                  <div className="absolute bottom-5 left-0 right-0 h-px bg-white/[0.06]" />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
 
+                {/* Platform grid */}
                 <div className="grid grid-cols-4 gap-3">
                   {botVisits.map((bot) => (
                     <div 
