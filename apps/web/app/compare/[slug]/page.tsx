@@ -88,19 +88,19 @@ export async function generateMetadata({
   }
 
   const now = new Date()
-  const displayDate = now.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  })
+  const canonicalUrl = `https://useharbor.io/compare/${slug}`
 
   return {
-    title: `${brand1.brand_name} vs ${brand2.brand_name} (${displayDate}) | Harbor`,
+    title: `${brand1.brand_name} vs ${brand2.brand_name} | Harbor`,
     description: `Detailed comparison of ${brand1.brand_name} and ${brand2.brand_name}. Features, pricing, and integrations compared side-by-side.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: `${brand1.brand_name} vs ${brand2.brand_name}`,
       description: `Detailed comparison of ${brand1.brand_name} and ${brand2.brand_name}.`,
       type: 'article',
+      url: canonicalUrl,
       modifiedTime: now.toISOString(),
     },
   }

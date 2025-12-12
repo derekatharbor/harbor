@@ -109,19 +109,19 @@ export async function generateMetadata({
   }
 
   const now = new Date()
-  const displayDate = now.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  })
+  const canonicalUrl = `https://useharbor.io/alternatives/${slug}`
 
   return {
-    title: `Best ${brand.brand_name} Alternatives (${displayDate}) | Harbor`,
+    title: `Best ${brand.brand_name} Alternatives | Harbor`,
     description: `Top alternatives to ${brand.brand_name} for ${brand.category}. Compare features, pricing, and integrations.`,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: `Best ${brand.brand_name} Alternatives`,
       description: `Top alternatives to ${brand.brand_name} for ${brand.category}.`,
       type: 'article',
+      url: canonicalUrl,
       modifiedTime: now.toISOString(),
     },
   }
@@ -160,6 +160,12 @@ export default async function AlternativesPage({
         'description': `Top alternatives to ${brand.brand_name} for ${brand.category}. Compare features, pricing, and integrations.`,
         'datePublished': isoDate,
         'dateModified': isoDate,
+        'about': {
+          '@type': 'SoftwareApplication',
+          'name': brand.brand_name,
+          'url': `https://useharbor.io/brands/${brand.slug}`,
+          'applicationCategory': brand.category,
+        },
         'author': {
           '@type': 'Organization',
           'name': 'Harbor',

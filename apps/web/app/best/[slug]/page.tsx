@@ -150,19 +150,19 @@ export async function generateMetadata({
   }
 
   const now = new Date()
-  const displayDate = now.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  })
+  const canonicalUrl = `https://useharbor.io/best/${slug}`
 
   return {
-    title: `${config.title} (${displayDate}) | Harbor`,
+    title: `${config.title} | Harbor`,
     description: config.description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: config.title,
       description: config.description,
       type: 'article',
+      url: canonicalUrl,
       modifiedTime: now.toISOString(),
     },
   }
