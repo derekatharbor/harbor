@@ -575,13 +575,13 @@ export default function ManageBrandPage() {
                       }`}
                     >
                       {/* Icon placeholder - upload 48x48 PNGs to /public/icons/ */}
-                      <div className="w-12 h-12 rounded-xl bg-[#161718] border border-white/[0.06] mb-4 flex items-center justify-center overflow-hidden">
+                      <div className="w-14 h-14 rounded-xl bg-[#161718] border border-white/[0.06] mb-5 flex items-center justify-center overflow-hidden">
                         <Image
                           src={step.icon}
                           alt=""
                           width={48}
                           height={48}
-                          className={`w-full h-full object-contain ${step.done ? '' : 'opacity-40'}`}
+                          className="w-full h-full object-contain"
                           onError={(e) => {
                             // Fallback if icon not found
                             (e.target as HTMLImageElement).style.display = 'none'
