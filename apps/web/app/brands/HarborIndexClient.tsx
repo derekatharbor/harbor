@@ -456,28 +456,28 @@ export default function HarborIndexClient() {
       {/* ============================================
           SECTION C: Product Object Preview (Linear-style)
           ============================================ */}
-      <section className="py-20 bg-[#0a0a0a] overflow-hidden">
+      <section className="py-24 bg-[#0a0a0a] overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
             {/* Left: Text content */}
-            <div className="px-6 lg:pl-12">
+            <div className="px-6 lg:pl-12 lg:pr-0 lg:max-w-md">
               <h2 className="font-semibold text-3xl md:text-4xl text-white/90 mb-4 leading-tight">
                 A dashboard for your<br />AI presence
               </h2>
-              <p className="text-white/40 mb-10 leading-relaxed max-w-md">
+              <p className="text-white/40 mb-10 leading-relaxed">
                 Harbor gives you visibility into how AI models perceive and describe your brand across different contexts.
               </p>
 
               {/* Feature list */}
-              <div className="space-y-6 border-t border-white/[0.06] pt-8">
-                <div className="grid grid-cols-[180px_1fr] gap-4">
+              <div className="space-y-8 border-t border-white/[0.06] pt-8">
+                <div className="grid grid-cols-[140px_1fr] gap-4">
                   <h3 className="text-white/80 font-medium text-sm">Visibility index</h3>
                   <p className="text-white/40 text-sm leading-relaxed">
                     A composite score showing how prominently your brand appears across AI responses.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-[180px_1fr] gap-4">
+                <div className="grid grid-cols-[140px_1fr] gap-4">
                   <h3 className="text-white/80 font-medium text-sm flex items-center gap-2">
                     Model comparison
                     <ArrowRight className="w-3 h-3 text-white/30" />
@@ -487,7 +487,7 @@ export default function HarborIndexClient() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-[180px_1fr] gap-4">
+                <div className="grid grid-cols-[140px_1fr] gap-4">
                   <h3 className="text-white/80 font-medium text-sm">Change monitoring</h3>
                   <p className="text-white/40 text-sm leading-relaxed">
                     Track how AI descriptions evolve and get notified of significant shifts.
@@ -496,15 +496,15 @@ export default function HarborIndexClient() {
               </div>
             </div>
 
-            {/* Right: Dashboard image bleeding off edge */}
-            <div className="relative lg:h-[600px]">
-              <div className="lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 lg:w-[140%] rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl">
+            {/* Right: Dashboard image bleeding off edge - taller/narrower */}
+            <div className="relative min-h-[700px]">
+              <div className="lg:absolute lg:left-0 lg:top-0 lg:bottom-0 lg:w-[130%] rounded-l-2xl overflow-hidden border border-white/[0.06] border-r-0 shadow-2xl">
                 <Image
                   src="/images/dashboard-hero.png"
                   alt="Harbor brand visibility dashboard"
                   width={1400}
-                  height={788}
-                  className="w-full"
+                  height={900}
+                  className="w-full h-full object-cover object-left"
                   priority
                 />
               </div>
