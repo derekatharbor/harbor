@@ -62,6 +62,7 @@ function MarqueeRow({ domains, direction, speed = 35 }: { domains: string[], dir
 
 export default function HarborIndexClient({ initialDirectory = [] }: Props) {
   const [directory, setDirectory] = useState<DirectoryBrand[]>(initialDirectory)
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
@@ -72,34 +73,59 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
       fetch('/api/index/brands')
         .then(res => res.json())
         .then(data => {
+          console.log('Fetched brands:', data.directory?.length || 0)
           if (data.directory) setDirectory(data.directory)
+          setLoading(false)
         })
-        .catch(err => console.error('Failed to fetch brands:', err))
+        .catch(err => {
+          console.error('Failed to fetch brands:', err)
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
     }
   }, [initialDirectory.length])
 
   useEffect(() => {
-    if (searchQuery.trim().length >= 2) {
+    if (searchQuery.trim().length >= 2 && !loading) {
       const query = searchQuery.toLowerCase()
       const results = directory.filter(brand =>
         brand.brand_name.toLowerCase().includes(query) ||
         brand.domain.toLowerCase().includes(query)
       ).slice(0, 6)
+      console.log('Search results for', query, ':', results.length)
       setSearchResults(results)
       setShowSearchDropdown(true)
     } else {
       setSearchResults([])
       setShowSearchDropdown(false)
     }
-  }, [searchQuery, directory])
+  }, [searchQuery, directory, loading])
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
       <style jsx global>{`
-        @keyframes iridescent-shift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        @keyframes holographic-shift {
+          0% { 
+            background-position: 0% 50%;
+            filter: hue-rotate(0deg);
+          }
+          25% { 
+            background-position: 50% 0%;
+            filter: hue-rotate(15deg);
+          }
+          50% { 
+            background-position: 100% 50%;
+            filter: hue-rotate(0deg);
+          }
+          75% { 
+            background-position: 50% 100%;
+            filter: hue-rotate(-15deg);
+          }
+          100% { 
+            background-position: 0% 50%;
+            filter: hue-rotate(0deg);
+          }
         }
         
         @keyframes marquee-left {
@@ -128,19 +154,21 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
         .iridescent-hover::before {
           content: '';
           position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            135deg,
-            rgba(102, 126, 234, 0.9) 0%,
-            rgba(118, 75, 162, 0.9) 25%,
-            rgba(240, 147, 251, 0.9) 50%,
-            rgba(94, 231, 223, 0.9) 75%,
-            rgba(102, 126, 234, 0.9) 100%
+          inset: -2px;
+          background: radial-gradient(
+            ellipse at 30% 40%,
+            rgba(180, 220, 255, 0.95) 0%,
+            rgba(200, 180, 255, 0.9) 20%,
+            rgba(255, 180, 220, 0.9) 40%,
+            rgba(255, 200, 180, 0.85) 60%,
+            rgba(180, 255, 240, 0.9) 80%,
+            rgba(180, 220, 255, 0.95) 100%
           );
-          background-size: 300% 300%;
+          background-size: 200% 200%;
           opacity: 0;
-          transition: opacity 120ms ease-out;
-          animation: iridescent-shift 4s ease infinite;
+          transition: opacity 150ms ease-out;
+          animation: holographic-shift 3s ease-in-out infinite;
+          border-radius: inherit;
         }
         
         .iridescent-hover:hover::before {
@@ -149,12 +177,15 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
         
         .iridescent-hover:hover {
           transform: translateY(-1px);
-          box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
+          box-shadow: 
+            0 4px 20px rgba(180, 220, 255, 0.3),
+            0 8px 40px rgba(255, 180, 220, 0.2);
         }
         
         .iridescent-hover span {
           position: relative;
           z-index: 1;
+          mix-blend-mode: multiply;
         }
       `}</style>
 
@@ -181,12 +212,13 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
                 type="text"
-                placeholder="Search for your brand..."
+                placeholder={loading ? "Loading brands..." : "Search for your brand..."}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
-                onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base"
+                onFocus={() => searchQuery.length >= 2 && !loading && setShowSearchDropdown(true)}
+                onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
+                disabled={loading}
+                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base disabled:opacity-50"
               />
             </div>
 
@@ -248,9 +280,9 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
           </div>
 
           <div className="flex items-center justify-center gap-3 mt-6">
-            {/* Overlapping brand logos - diverse industries */}
+            {/* Overlapping brand logos */}
             <div className="flex -space-x-2">
-              {['nike.com', 'marriott.com', 'wholefoodsmarket.com', 'patagonia.com', 'allbirds.com'].map((domain, idx) => (
+              {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
                 <div 
                   key={domain}
                   className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#0B0B0C] bg-white"
