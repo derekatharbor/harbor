@@ -1,10 +1,11 @@
 // Path: /apps/web/app/brands/HarborIndexClient.tsx
 // Brand Index - Claim-focused landing with search-first UX
+// Design: Yelp's claim flow + Linear's calm confidence
 
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, ArrowRight, Plus, AlertTriangle, CheckCircle, XCircle, HelpCircle } from 'lucide-react'
+import { Search, ArrowRight, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
@@ -23,10 +24,10 @@ interface Props {
   initialDirectory?: DirectoryBrand[]
 }
 
-// Featured brand domains for marquee (brands monitoring visibility)
+// Featured brand domains for marquee
 const MARQUEE_BRANDS = [
   // Row 1 (moves left)
-  ['asana.com', 'hubspot.com', 'salesforce.com', 'stripe.com', 'notion.so', 'figma.com', 'linear.app', 'vercel.com', 'supabase.com', 'planetscale.com', 'railway.app', 'render.com'],
+  ['linear.app', 'vercel.com', 'supabase.com', 'stripe.com', 'notion.so', 'figma.com', 'asana.com', 'hubspot.com', 'salesforce.com', 'planetscale.com', 'railway.app', 'render.com'],
   // Row 2 (moves right)  
   ['shopify.com', 'squarespace.com', 'webflow.com', 'framer.com', 'canva.com', 'miro.com', 'loom.com', 'calendly.com', 'typeform.com', 'airtable.com', 'monday.com', 'clickup.com'],
 ]
@@ -44,12 +45,12 @@ function MarqueeRow({ domains, direction, speed = 35 }: { domains: string[], dir
         {duplicatedDomains.map((domain, idx) => (
           <div 
             key={`${domain}-${idx}`}
-            className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-colors"
+            className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden bg-white/[0.03] border border-white/[0.06]"
           >
             <img 
               src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
               alt={domain}
-              className="w-full h-full object-contain p-2"
+              className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.opacity = '0'
               }}
@@ -66,7 +67,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
 
   // Fetch directory on mount if not provided
   useEffect(() => {
@@ -83,7 +83,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
   // Handle search
   useEffect(() => {
     if (searchQuery.trim().length >= 2) {
-      setIsSearching(true)
       const query = searchQuery.toLowerCase()
       const results = directory.filter(brand =>
         brand.brand_name.toLowerCase().includes(query) ||
@@ -91,7 +90,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
       ).slice(0, 6)
       setSearchResults(results)
       setShowSearchDropdown(true)
-      setIsSearching(false)
     } else {
       setSearchResults([])
       setShowSearchDropdown(false)
@@ -100,7 +98,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
-      {/* Inject keyframes for iridescent effect */}
+      {/* Inject keyframes */}
       <style jsx global>{`
         @keyframes iridescent-shift {
           0% { background-position: 0% 50%; }
@@ -166,21 +164,21 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
       <Nav />
 
-      {/* Hero Section - Search Focused */}
-      <section className="pt-32 pb-16 px-6">
-        <div className="max-w-3xl mx-auto text-center">
+      {/* Hero Section - Search Dominates */}
+      <section className="pt-32 pb-20 px-6">
+        <div className="max-w-2xl mx-auto text-center">
           {/* Headline */}
-          <h1 className="font-semibold text-4xl md:text-5xl lg:text-[56px] text-white/[0.94] leading-[1.1] tracking-tight mb-5">
+          <h1 className="font-semibold text-4xl md:text-5xl lg:text-[52px] text-white/[0.94] leading-[1.1] tracking-tight mb-4">
             AI is already talking about your brand
           </h1>
 
-          {/* Subhead */}
-          <p className="text-lg text-white/50 max-w-xl mx-auto mb-10 font-normal">
-            See what ChatGPT, Claude, and Perplexity say about you—and claim your profile to correct it.
+          {/* Subhead - Operational, not abstract */}
+          <p className="text-lg text-white/40 mb-10">
+            Search the index. See what models say. Claim your brand.
           </p>
 
-          {/* Search Box */}
-          <div className="relative max-w-xl mx-auto">
+          {/* Search Box - The focal point */}
+          <div className="relative max-w-lg mx-auto mb-4">
             <div className="relative">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
@@ -190,7 +188,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 200)}
-                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/[0.16] transition-all duration-100 text-base"
+                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base"
               />
             </div>
 
@@ -227,237 +225,126 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
             {/* No Results State */}
             {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-xl p-6 text-center z-50">
-                <p className="text-white/50 text-sm mb-4">No brand found for "{searchQuery}"</p>
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-xl p-5 text-center z-50">
+                <p className="text-white/40 text-sm mb-3">Not in the index yet</p>
                 <Link
                   href={`/auth/signup?brand=${encodeURIComponent(searchQuery)}`}
-                  className="iridescent-hover inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black text-sm font-medium transition-all duration-100"
+                  className="iridescent-hover inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium transition-all duration-100"
                 >
                   <span className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
-                    Add "{searchQuery}" to the Index
+                    Add {searchQuery}
                   </span>
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Helper text */}
-          <p className="text-white/30 text-sm mt-4">
-            Can't find your brand? <Link href="/auth/signup" className="text-white/50 hover:text-white/70 underline underline-offset-2 transition-colors">Add it for free</Link>
+          {/* Trust reinforcement */}
+          <p className="text-white/20 text-sm">
+            50,000+ brands indexed across every industry
           </p>
         </div>
       </section>
 
-      {/* Problem Section - Why This Matters */}
-      <section className="py-16 px-6 border-t border-white/[0.04]">
-        <div className="max-w-5xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 mb-4">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-amber-400 text-xs font-medium">The Problem</span>
-            </div>
-            <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-3">
-              AI gets your brand wrong more than you think
-            </h2>
-            <p className="text-white/40 max-w-lg mx-auto">
-              We tested GPT-4o on SMB pricing queries. The results were alarming.
-            </p>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                  <XCircle className="w-5 h-5 text-red-400" />
-                </div>
-                <span className="text-3xl font-semibold text-white/90">30%</span>
-              </div>
-              <p className="text-white/40 text-sm">
-                Confidently wrong answers when AI provided specific pricing
-              </p>
-            </div>
-
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                  <HelpCircle className="w-5 h-5 text-amber-400" />
-                </div>
-                <span className="text-3xl font-semibold text-white/90">50%</span>
-              </div>
-              <p className="text-white/40 text-sm">
-                Of specific pricing answers were incorrect or misleading
-              </p>
-            </div>
-
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-400" />
-                </div>
-                <span className="text-3xl font-semibold text-white/90">20%</span>
-              </div>
-              <p className="text-white/40 text-sm">
-                Actually correct—the rest was wrong, vague, or refused
-              </p>
-            </div>
-          </div>
-
-          {/* Example Hallucinations */}
-          <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6">
-            <h3 className="text-white/70 text-sm font-medium mb-4">Real examples from our test:</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 pb-4 border-b border-white/[0.04]">
-                <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <XCircle className="w-4 h-4 text-red-400" />
-                </div>
-                <div>
-                  <p className="text-white/70 text-sm">
-                    <span className="text-white/90 font-medium">100Devs pricing:</span> GPT said "free coding bootcamp" — actual price is <span className="text-emerald-400">$200/month</span>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4 pb-4 border-b border-white/[0.04]">
-                <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <XCircle className="w-4 h-4 text-red-400" />
-                </div>
-                <div>
-                  <p className="text-white/70 text-sm">
-                    <span className="text-white/90 font-medium">ISSA certification:</span> GPT said "$600-1,200" — actual price is <span className="text-emerald-400">$49 down</span>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <XCircle className="w-4 h-4 text-red-400" />
-                </div>
-                <div>
-                  <p className="text-white/70 text-sm">
-                    <span className="text-white/90 font-medium">10 Fitness membership:</span> GPT said "$10-30/month" — actual price is <span className="text-emerald-400">$7.95 bi-weekly</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+      {/* Problem Section - Compressed to one stat + one line */}
+      <section className="py-12 px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-6 px-6 py-4 bg-[#111213] border border-white/[0.06] rounded-xl">
+            <span className="text-3xl font-semibold text-white/90">30%</span>
+            <span className="text-white/40 text-sm text-left max-w-xs">
+              of AI pricing answers are confidently wrong. Your customers are seeing bad data.
+            </span>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 px-6 border-t border-white/[0.04]">
-        <div className="max-w-5xl mx-auto">
+      {/* How It Works - Declarative, inevitable */}
+      <section className="py-16 px-6">
+        <div className="max-w-3xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-3">
+          <div className="text-center mb-10">
+            <h2 className="font-semibold text-2xl text-white/90">
               Claim your brand in 2 minutes
             </h2>
-            <p className="text-white/40 max-w-lg mx-auto">
-              See what AI says, correct what's wrong, and monitor your visibility.
-            </p>
           </div>
 
-          {/* Steps */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Steps - Horizontal flow, smaller icons */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6 text-center">
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl overflow-hidden">
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-brand.png"
                   alt="Search"
-                  width={80}
-                  height={80}
+                  width={56}
+                  height={56}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-white/30 text-xs font-medium mb-2">Step 1</div>
-              <h3 className="text-white/90 font-medium mb-2">Search your brand</h3>
-              <p className="text-white/40 text-sm">
-                Find your company in our index or add it if it's not listed yet.
-              </p>
+              <h3 className="text-white/80 font-medium text-sm mb-1">Search the index</h3>
+              <p className="text-white/30 text-xs">Find your brand</p>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6 text-center">
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl overflow-hidden">
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-products.png"
                   alt="Review"
-                  width={80}
-                  height={80}
+                  width={56}
+                  height={56}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-white/30 text-xs font-medium mb-2">Step 2</div>
-              <h3 className="text-white/90 font-medium mb-2">See what AI says</h3>
-              <p className="text-white/40 text-sm">
-                View how ChatGPT, Claude, and Perplexity describe your brand.
-              </p>
+              <h3 className="text-white/80 font-medium text-sm mb-1">See what AI says</h3>
+              <p className="text-white/30 text-xs">Review model outputs</p>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-6 text-center">
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl overflow-hidden">
+            <div className="text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-faqs.png"
                   alt="Claim"
-                  width={80}
-                  height={80}
+                  width={56}
+                  height={56}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-white/30 text-xs font-medium mb-2">Step 3</div>
-              <h3 className="text-white/90 font-medium mb-2">Claim & correct</h3>
-              <p className="text-white/40 text-sm">
-                Verify ownership and update your pricing, features, and info.
-              </p>
+              <h3 className="text-white/80 font-medium text-sm mb-1">Claim and correct</h3>
+              <p className="text-white/30 text-xs">Fix what's wrong</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof - Brand Marquee */}
-      <section className="py-16 px-6 border-t border-white/[0.04]">
+      {/* Brand Marquee - Changed copy */}
+      <section className="py-12 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8">
-            <p className="text-white/30 text-sm font-medium">
-              Brands monitoring their AI visibility
+          <div className="text-center mb-6">
+            <p className="text-white/20 text-sm">
+              Indexed across every industry
             </p>
           </div>
           
-          <div className="space-y-2 opacity-60">
+          <div className="space-y-3 opacity-50">
             <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={40} />
             <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={45} />
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 px-6 border-t border-white/[0.04]">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-4">
-            Don't let AI speak for you
-          </h2>
-          
-          <p className="text-white/40 mb-8 max-w-md mx-auto">
-            Claim your brand profile for free. See what AI says, correct what's wrong.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/auth/signup"
-              className="iridescent-hover px-6 py-3 bg-white text-black font-medium rounded-xl transition-all duration-100"
-            >
-              <span>Claim Your Brand</span>
-            </Link>
-            
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="px-6 py-3 bg-white/[0.04] border border-white/[0.08] text-white/70 font-medium rounded-xl hover:bg-white/[0.06] hover:text-white/90 transition-all duration-100"
-            >
-              Search the Index
-            </button>
-          </div>
+      {/* Final CTA - Single action */}
+      <section className="py-20 px-6">
+        <div className="max-w-xl mx-auto text-center">
+          <Link
+            href="/auth/signup"
+            className="iridescent-hover inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-medium rounded-xl transition-all duration-100"
+          >
+            <span>Claim Your Brand</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
 
