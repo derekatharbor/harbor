@@ -5,7 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, ArrowRight, Plus, BarChart3, GitCompare, Bell, X } from 'lucide-react'
+import { Search, ArrowRight, Plus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
@@ -454,127 +454,59 @@ export default function HarborIndexClient() {
       )}
 
       {/* ============================================
-          SECTION C: Product Object Preview
+          SECTION C: Product Object Preview (Linear-style)
           ============================================ */}
-      <section className="py-20 px-6 bg-[#0a0a0a]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-3">
-              A dashboard for your AI presence
-            </h2>
-            <p className="text-white/40 max-w-lg mx-auto">
-              Harbor gives you visibility into how AI models perceive and describe your brand across different contexts.
-            </p>
-          </div>
-
-          {/* Main product screenshot */}
-          <div className="rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl mb-12">
-            <Image
-              src="/previews/how-interpret.png"
-              alt="Harbor brand visibility dashboard"
-              width={1200}
-              height={675}
-              className="w-full"
-              priority
-            />
-          </div>
-
-          {/* Feature grid */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
-              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
-                <BarChart3 className="w-4.5 h-4.5 text-white/50" />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Visibility index</h3>
-              <p className="text-white/30 text-sm leading-relaxed">
-                A composite score showing how prominently your brand appears across AI model responses.
-              </p>
-            </div>
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
-              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
-                <GitCompare className="w-4.5 h-4.5 text-white/50" />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Model comparison</h3>
-              <p className="text-white/30 text-sm leading-relaxed">
-                See how descriptions differ between ChatGPT, Claude, Gemini, and Perplexity.
-              </p>
-            </div>
-            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
-              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
-                <Bell className="w-4.5 h-4.5 text-white/50" />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Change monitoring</h3>
-              <p className="text-white/30 text-sm leading-relaxed">
-                Track how AI descriptions evolve over time and get notified of significant shifts.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          SECTION D: What You Can Do After Claiming
-          ============================================ */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left: Screenshot */}
-            <div className="order-2 md:order-1 rounded-2xl overflow-hidden border border-white/[0.06]">
-              <Image
-                src="/previews/brand.png"
-                alt="Brand profile editing"
-                width={800}
-                height={600}
-                className="w-full"
-              />
-            </div>
-
-            {/* Right: Actions list */}
-            <div className="order-1 md:order-2">
-              <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-6">
-                After you claim
+      <section className="py-20 bg-[#0a0a0a] overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Text content */}
+            <div className="px-6 lg:pl-12">
+              <h2 className="font-semibold text-3xl md:text-4xl text-white/90 mb-4 leading-tight">
+                A dashboard for your<br />AI presence
               </h2>
-              
-              <div className="space-y-5">
-                <div className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white/40 text-xs font-medium">1</span>
-                  </div>
-                  <div>
-                    <div className="text-white/80 font-medium text-sm mb-1">Review AI descriptions</div>
-                    <div className="text-white/30 text-sm">See the exact language each model uses to describe your brand, products, and positioning.</div>
-                  </div>
+              <p className="text-white/40 mb-10 leading-relaxed max-w-md">
+                Harbor gives you visibility into how AI models perceive and describe your brand across different contexts.
+              </p>
+
+              {/* Feature list */}
+              <div className="space-y-6 border-t border-white/[0.06] pt-8">
+                <div className="grid grid-cols-[180px_1fr] gap-4">
+                  <h3 className="text-white/80 font-medium text-sm">Visibility index</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    A composite score showing how prominently your brand appears across AI responses.
+                  </p>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white/40 text-xs font-medium">2</span>
-                  </div>
-                  <div>
-                    <div className="text-white/80 font-medium text-sm mb-1">Update official data</div>
-                    <div className="text-white/30 text-sm">Edit your pricing, product lines, descriptions, and FAQs in a structured format.</div>
-                  </div>
+                <div className="grid grid-cols-[180px_1fr] gap-4">
+                  <h3 className="text-white/80 font-medium text-sm flex items-center gap-2">
+                    Model comparison
+                    <ArrowRight className="w-3 h-3 text-white/30" />
+                  </h3>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    See how descriptions differ between ChatGPT, Claude, Gemini, and Perplexity.
+                  </p>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white/40 text-xs font-medium">3</span>
-                  </div>
-                  <div>
-                    <div className="text-white/80 font-medium text-sm mb-1">Track changes over time</div>
-                    <div className="text-white/30 text-sm">Monitor how AI outputs evolve and whether your updates are reflected.</div>
-                  </div>
+                <div className="grid grid-cols-[180px_1fr] gap-4">
+                  <h3 className="text-white/80 font-medium text-sm">Change monitoring</h3>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    Track how AI descriptions evolve and get notified of significant shifts.
+                  </p>
                 </div>
+              </div>
+            </div>
 
-                <div className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white/40 text-xs font-medium">4</span>
-                  </div>
-                  <div>
-                    <div className="text-white/80 font-medium text-sm mb-1">See model disagreements</div>
-                    <div className="text-white/30 text-sm">Identify where different AI systems give conflicting information about you.</div>
-                  </div>
-                </div>
+            {/* Right: Dashboard image bleeding off edge */}
+            <div className="relative lg:h-[600px]">
+              <div className="lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 lg:w-[140%] rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl">
+                <Image
+                  src="/images/dashboard-hero.png"
+                  alt="Harbor brand visibility dashboard"
+                  width={1400}
+                  height={788}
+                  className="w-full"
+                  priority
+                />
               </div>
             </div>
           </div>
@@ -661,9 +593,16 @@ export default function HarborIndexClient() {
             </p>
           </div>
           
-          <div className="space-y-3 opacity-40">
-            <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={45} />
-            <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={50} />
+          <div className="relative">
+            {/* Left fade */}
+            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#0B0B0C] to-transparent z-10 pointer-events-none" />
+            {/* Right fade */}
+            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#0B0B0C] to-transparent z-10 pointer-events-none" />
+            
+            <div className="space-y-3 opacity-40">
+              <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={45} />
+              <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={50} />
+            </div>
           </div>
         </div>
       </section>
