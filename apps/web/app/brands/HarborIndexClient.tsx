@@ -294,7 +294,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  AI is the new search
+                  Conversations, not links
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -317,7 +317,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  Your brand might not<br />be in the results
+                  Invisible to AI
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -340,7 +340,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  If it is, AI might be using<br />outdated information
+                  Outdated information
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -367,7 +367,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-ai-search.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI is the new search</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">Conversations, not links</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
                     Instead of scrolling through links, people are asking ChatGPT, Perplexity, and Claude for direct answers. "What's the best CRM for startups?" now returns a conversational recommendation, not a list of ads.
                   </p>
@@ -383,7 +383,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-not-found.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">Your brand might not be in the results</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">Invisible to AI</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
                     AI models don't search the web in real-time. They rely on training data and indexed sources. If your brand doesn't have enough presence in the places these models pull from, you simply won't be mentioned.
                   </p>
@@ -399,7 +399,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-outdated.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI might be using outdated information</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">Outdated information</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
                     Even when AI does mention your brand, the information might be wrong. Pricing changes, product updates, and company pivots often aren't reflected in AI responses for months—or ever.
                   </p>
