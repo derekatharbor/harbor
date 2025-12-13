@@ -167,12 +167,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
         <div className="max-w-3xl mx-auto text-center">
           {/* Clear definition */}
           <h1 className="font-semibold text-4xl md:text-5xl text-white/[0.94] leading-[1.15] tracking-tight mb-4">
-            Your brand's AI profile
+            Claim your brand's AI profile
           </h1>
 
           {/* Supporting context - calm, not persuasive */}
           <p className="text-lg text-white/40 max-w-xl mx-auto mb-10">
-            Harbor maintains a structured, public profile that AI systems can reference. Search to find your brand, then claim it to manage your information.
+            Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
           {/* Search - Primary action */}
@@ -218,20 +218,29 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                     <ArrowRight className="w-4 h-4 text-white/30" />
                   </Link>
                 ))}
+                {/* Can't find it link */}
+                <div className="border-t border-white/[0.06] px-5 py-3">
+                  <Link
+                    href="/auth/signup"
+                    className="text-white/40 text-sm hover:text-white/60 transition-colors"
+                  >
+                    Can't find your brand? <span className="text-white/60 underline underline-offset-2">Create your free profile</span>
+                  </Link>
+                </div>
               </div>
             )}
 
             {/* No Results */}
             {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-xl p-5 text-center z-50">
-                <p className="text-white/40 text-sm mb-3">Not indexed yet</p>
+                <p className="text-white/40 text-sm mb-3">"{searchQuery}" isn't in the index yet</p>
                 <Link
                   href={`/auth/signup?brand=${encodeURIComponent(searchQuery)}`}
                   className="iridescent-hover inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium transition-all duration-100"
                 >
                   <span className="flex items-center gap-2">
                     <Plus className="w-4 h-4" />
-                    Add {searchQuery}
+                    Create free profile
                   </span>
                 </Link>
               </div>
@@ -239,9 +248,9 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
           </div>
 
           <div className="flex items-center justify-center gap-3 mt-6">
-            {/* Overlapping brand logos */}
+            {/* Overlapping brand logos - diverse industries */}
             <div className="flex -space-x-2">
-              {['stripe.com', 'notion.so', 'figma.com', 'linear.app', 'vercel.com'].map((domain, idx) => (
+              {['nike.com', 'marriott.com', 'wholefoodsmarket.com', 'patagonia.com', 'allbirds.com'].map((domain, idx) => (
                 <div 
                   key={domain}
                   className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#0B0B0C] bg-white"
@@ -256,7 +265,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               ))}
             </div>
             <p className="text-white/20 text-sm">
-              50,000+ brands indexed
+              Brands already being referenced by AI
             </p>
           </div>
         </div>
