@@ -5,7 +5,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, ArrowRight, Plus, Database, Eye, PenLine, BarChart3, GitCompare, Bell } from 'lucide-react'
+import { Search, ArrowRight, Plus, BarChart3, GitCompare, Bell, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
@@ -65,6 +65,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [activeModal, setActiveModal] = useState<string | null>(null)
 
   useEffect(() => {
     if (initialDirectory.length === 0) {
@@ -166,12 +167,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
         <div className="max-w-3xl mx-auto text-center">
           {/* Clear definition */}
           <h1 className="font-semibold text-4xl md:text-5xl text-white/[0.94] leading-[1.15] tracking-tight mb-4">
-            The canonical reference for how AI sees your brand
+            Your brand's profile for AI
           </h1>
 
           {/* Supporting context - calm, not persuasive */}
           <p className="text-lg text-white/40 max-w-xl mx-auto mb-10">
-            Harbor maintains a structured profile that AI systems can read. Search to see what models say about you, then claim your brand to update it.
+            Harbor maintains a structured, public profile that AI systems can reference. Search to find your brand, then claim it to manage your information.
           </p>
 
           {/* Search - Primary action */}
@@ -244,59 +245,163 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
       </section>
 
       {/* ============================================
-          SECTION B: What Harbor Tracks (Concept)
+          SECTION B: Why This Matters (Linear-style cards)
           ============================================ */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left: Explanation */}
-            <div>
-              <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-4">
-                AI assembles your brand from fragments
-              </h2>
-              <p className="text-white/40 mb-6 leading-relaxed">
-                When someone asks ChatGPT or Perplexity about your company, the model pulls from dozens of public sources—review sites, news articles, old blog posts, competitor comparisons. The result is often incomplete or outdated.
-              </p>
-              <p className="text-white/40 leading-relaxed">
-                Harbor maintains a single, structured reference for your brand. Pricing, products, positioning, FAQs—all in a format designed for machines to read. When you claim your profile, you control what that reference says.
-              </p>
-            </div>
+          {/* Header row */}
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-10">
+            <h2 className="font-semibold text-3xl md:text-4xl text-white/90 max-w-md">
+              AI is changing how people find brands
+            </h2>
+            <p className="text-white/40 max-w-sm text-sm leading-relaxed">
+              More people are asking AI for recommendations instead of searching Google. Harbor helps you understand and manage how you appear in those conversations.
+            </p>
+          </div>
 
-            {/* Right: Visual representation */}
-            <div className="bg-[#111213] border border-white/[0.06] rounded-2xl p-6">
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
-                    <Database className="w-5 h-5 text-white/40" />
-                  </div>
-                  <div>
-                    <div className="text-white/80 text-sm font-medium mb-1">Structured data</div>
-                    <div className="text-white/30 text-sm">Pricing, products, descriptions, links—formatted for AI consumption</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
-                    <Eye className="w-5 h-5 text-white/40" />
-                  </div>
-                  <div>
-                    <div className="text-white/80 text-sm font-medium mb-1">Model outputs</div>
-                    <div className="text-white/30 text-sm">See exactly how ChatGPT, Claude, and Perplexity describe you</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
-                    <PenLine className="w-5 h-5 text-white/40" />
-                  </div>
-                  <div>
-                    <div className="text-white/80 text-sm font-medium mb-1">Direct editing</div>
-                    <div className="text-white/30 text-sm">Update your canonical profile when information changes</div>
-                  </div>
+          {/* Three cards */}
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Card 1: AI is the new search */}
+            <button
+              onClick={() => setActiveModal('ai-search')}
+              className="group relative bg-[#111213] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+            >
+              <div className="aspect-[4/3] relative">
+                <Image
+                  src="/images/card-ai-search.png"
+                  alt="AI is the new search"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-5 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-sm leading-snug">
+                  AI is the new search
+                </h3>
+                <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
+                  <Plus className="w-4 h-4 text-white/40" />
                 </div>
               </div>
-            </div>
+            </button>
+
+            {/* Card 2: Your brand might not be in the results */}
+            <button
+              onClick={() => setActiveModal('not-found')}
+              className="group relative bg-[#111213] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+            >
+              <div className="aspect-[4/3] relative">
+                <Image
+                  src="/images/card-not-found.png"
+                  alt="Your brand might not appear"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-5 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-sm leading-snug">
+                  Your brand might not<br />be in the results
+                </h3>
+                <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
+                  <Plus className="w-4 h-4 text-white/40" />
+                </div>
+              </div>
+            </button>
+
+            {/* Card 3: AI might be using outdated information */}
+            <button
+              onClick={() => setActiveModal('outdated')}
+              className="group relative bg-[#111213] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+            >
+              <div className="aspect-[4/3] relative">
+                <Image
+                  src="/images/card-outdated.png"
+                  alt="Information might be outdated"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-5 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-sm leading-snug">
+                  If it is, AI might be using<br />outdated information
+                </h3>
+                <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors">
+                  <Plus className="w-4 h-4 text-white/40" />
+                </div>
+              </div>
+            </button>
           </div>
         </div>
       </section>
+
+      {/* Modals */}
+      {activeModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
+          onClick={() => setActiveModal(null)}
+        >
+          <div 
+            className="bg-[#111213] border border-white/[0.08] rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {activeModal === 'ai-search' && (
+              <>
+                <div className="aspect-video relative">
+                  <Image src="/images/card-ai-search.png" alt="" fill className="object-cover" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI is the new search</h3>
+                  <p className="text-white/40 text-sm leading-relaxed mb-4">
+                    Instead of scrolling through links, people are asking ChatGPT, Perplexity, and Claude for direct answers. "What's the best CRM for startups?" now returns a conversational recommendation, not a list of ads.
+                  </p>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    This shift means your SEO strategy alone won't determine whether you get recommended. AI models form opinions based on the data they've seen—and that data might not include you.
+                  </p>
+                </div>
+              </>
+            )}
+            {activeModal === 'not-found' && (
+              <>
+                <div className="aspect-video relative">
+                  <Image src="/images/card-not-found.png" alt="" fill className="object-cover" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">Your brand might not be in the results</h3>
+                  <p className="text-white/40 text-sm leading-relaxed mb-4">
+                    AI models don't search the web in real-time. They rely on training data and indexed sources. If your brand doesn't have enough presence in the places these models pull from, you simply won't be mentioned.
+                  </p>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    Smaller brands, newer companies, and niche products are especially vulnerable. You could have a great product and still be invisible to AI recommendations.
+                  </p>
+                </div>
+              </>
+            )}
+            {activeModal === 'outdated' && (
+              <>
+                <div className="aspect-video relative">
+                  <Image src="/images/card-outdated.png" alt="" fill className="object-cover" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI might be using outdated information</h3>
+                  <p className="text-white/40 text-sm leading-relaxed mb-4">
+                    Even when AI does mention your brand, the information might be wrong. Pricing changes, product updates, and company pivots often aren't reflected in AI responses for months—or ever.
+                  </p>
+                  <p className="text-white/40 text-sm leading-relaxed">
+                    AI assembles answers from scattered sources: old blog posts, competitor comparisons, review sites. The result is often a patchwork of half-truths that you never approved.
+                  </p>
+                </div>
+              </>
+            )}
+            <div className="px-6 pb-6">
+              <button 
+                onClick={() => setActiveModal(null)}
+                className="w-full py-3 bg-white/[0.06] hover:bg-white/[0.1] text-white/70 text-sm font-medium rounded-xl transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ============================================
           SECTION C: Product Object Preview
@@ -445,7 +550,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
-                  src="/icons/step-brand.png"
+                  src="/icons/claim-search.png"
                   alt="Search"
                   width={48}
                   height={48}
@@ -462,7 +567,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
-                  src="/icons/step-products.png"
+                  src="/icons/claim-verify.png"
                   alt="Verify"
                   width={48}
                   height={48}
@@ -479,7 +584,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
-                  src="/icons/step-faqs.png"
+                  src="/icons/claim-dashboard.png"
                   alt="Access"
                   width={48}
                   height={48}
