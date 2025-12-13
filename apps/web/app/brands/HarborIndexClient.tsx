@@ -1,11 +1,11 @@
 // Path: /apps/web/app/brands/HarborIndexClient.tsx
-// Brand Index - Claim-focused landing with search-first UX
-// Design: Yelp's claim flow + Linear's calm confidence
+// Brand Index - Comprehensive explanation page
+// Reference: Linear's landing page density + Yelp's claim clarity
 
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, ArrowRight, Plus } from 'lucide-react'
+import { Search, ArrowRight, Plus, Database, Eye, PenLine, BarChart3, GitCompare, Bell } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
@@ -26,9 +26,7 @@ interface Props {
 
 // Featured brand domains for marquee
 const MARQUEE_BRANDS = [
-  // Row 1 (moves left)
   ['linear.app', 'vercel.com', 'supabase.com', 'stripe.com', 'notion.so', 'figma.com', 'asana.com', 'hubspot.com', 'salesforce.com', 'planetscale.com', 'railway.app', 'render.com'],
-  // Row 2 (moves right)  
   ['shopify.com', 'squarespace.com', 'webflow.com', 'framer.com', 'canva.com', 'miro.com', 'loom.com', 'calendly.com', 'typeform.com', 'airtable.com', 'monday.com', 'clickup.com'],
 ]
 
@@ -45,7 +43,7 @@ function MarqueeRow({ domains, direction, speed = 35 }: { domains: string[], dir
         {duplicatedDomains.map((domain, idx) => (
           <div 
             key={`${domain}-${idx}`}
-            className="w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden bg-white/[0.03] border border-white/[0.06]"
+            className="w-11 h-11 rounded-xl flex-shrink-0 overflow-hidden bg-white/[0.03] border border-white/[0.06]"
           >
             <img 
               src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
@@ -68,7 +66,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
   const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
 
-  // Fetch directory on mount if not provided
   useEffect(() => {
     if (initialDirectory.length === 0) {
       fetch('/api/index/brands')
@@ -80,7 +77,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
     }
   }, [initialDirectory.length])
 
-  // Handle search
   useEffect(() => {
     if (searchQuery.trim().length >= 2) {
       const query = searchQuery.toLowerCase()
@@ -98,7 +94,6 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
-      {/* Inject keyframes */}
       <style jsx global>{`
         @keyframes iridescent-shift {
           0% { background-position: 0% 50%; }
@@ -164,21 +159,23 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
       <Nav />
 
-      {/* Hero Section - Search Dominates */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Headline */}
-          <h1 className="font-semibold text-4xl md:text-5xl lg:text-[52px] text-white/[0.94] leading-[1.1] tracking-tight mb-4">
-            AI is already talking about your brand
+      {/* ============================================
+          SECTION A: Hero - Orientation, Not Persuasion
+          ============================================ */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Clear definition */}
+          <h1 className="font-semibold text-4xl md:text-5xl text-white/[0.94] leading-[1.15] tracking-tight mb-4">
+            The canonical reference for how AI sees your brand
           </h1>
 
-          {/* Subhead - Operational, not abstract */}
-          <p className="text-lg text-white/40 mb-10">
-            Search the index. See what models say. Claim your brand.
+          {/* Supporting context - calm, not persuasive */}
+          <p className="text-lg text-white/40 max-w-xl mx-auto mb-10">
+            Harbor maintains a structured profile that AI systems can read. Search to see what models say about you, then claim your brand to update it.
           </p>
 
-          {/* Search Box - The focal point */}
-          <div className="relative max-w-lg mx-auto mb-4">
+          {/* Search - Primary action */}
+          <div className="relative max-w-lg mx-auto mb-3">
             <div className="relative">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
@@ -223,10 +220,10 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
             )}
 
-            {/* No Results State */}
+            {/* No Results */}
             {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-[#111213] rounded-xl border border-white/[0.08] shadow-xl p-5 text-center z-50">
-                <p className="text-white/40 text-sm mb-3">Not in the index yet</p>
+                <p className="text-white/40 text-sm mb-3">Not indexed yet</p>
                 <Link
                   href={`/auth/signup?brand=${encodeURIComponent(searchQuery)}`}
                   className="iridescent-hover inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium transition-all duration-100"
@@ -240,104 +237,294 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             )}
           </div>
 
-          {/* Trust reinforcement */}
           <p className="text-white/20 text-sm">
-            50,000+ brands indexed across every industry
+            50,000+ brands indexed
           </p>
         </div>
       </section>
 
-      {/* Problem Section - Compressed to one stat + one line */}
-      <section className="py-12 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex items-center gap-6 px-6 py-4 bg-[#111213] border border-white/[0.06] rounded-xl">
-            <span className="text-3xl font-semibold text-white/90">30%</span>
-            <span className="text-white/40 text-sm text-left max-w-xs">
-              of AI pricing answers are confidently wrong. Your customers are seeing bad data.
-            </span>
+      {/* ============================================
+          SECTION B: What Harbor Tracks (Concept)
+          ============================================ */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: Explanation */}
+            <div>
+              <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-4">
+                AI assembles your brand from fragments
+              </h2>
+              <p className="text-white/40 mb-6 leading-relaxed">
+                When someone asks ChatGPT or Perplexity about your company, the model pulls from dozens of public sources—review sites, news articles, old blog posts, competitor comparisons. The result is often incomplete or outdated.
+              </p>
+              <p className="text-white/40 leading-relaxed">
+                Harbor maintains a single, structured reference for your brand. Pricing, products, positioning, FAQs—all in a format designed for machines to read. When you claim your profile, you control what that reference says.
+              </p>
+            </div>
+
+            {/* Right: Visual representation */}
+            <div className="bg-[#111213] border border-white/[0.06] rounded-2xl p-6">
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
+                    <Database className="w-5 h-5 text-white/40" />
+                  </div>
+                  <div>
+                    <div className="text-white/80 text-sm font-medium mb-1">Structured data</div>
+                    <div className="text-white/30 text-sm">Pricing, products, descriptions, links—formatted for AI consumption</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
+                    <Eye className="w-5 h-5 text-white/40" />
+                  </div>
+                  <div>
+                    <div className="text-white/80 text-sm font-medium mb-1">Model outputs</div>
+                    <div className="text-white/30 text-sm">See exactly how ChatGPT, Claude, and Perplexity describe you</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0">
+                    <PenLine className="w-5 h-5 text-white/40" />
+                  </div>
+                  <div>
+                    <div className="text-white/80 text-sm font-medium mb-1">Direct editing</div>
+                    <div className="text-white/30 text-sm">Update your canonical profile when information changes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works - Declarative, inevitable */}
-      <section className="py-16 px-6">
-        <div className="max-w-3xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-10">
-            <h2 className="font-semibold text-2xl text-white/90">
-              Claim your brand in 2 minutes
+      {/* ============================================
+          SECTION C: Product Object Preview
+          ============================================ */}
+      <section className="py-20 px-6 bg-[#0a0a0a]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-3">
+              A dashboard for your AI presence
             </h2>
+            <p className="text-white/40 max-w-lg mx-auto">
+              Harbor gives you visibility into how AI models perceive and describe your brand across different contexts.
+            </p>
           </div>
 
-          {/* Steps - Horizontal flow, smaller icons */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Main product screenshot */}
+          <div className="rounded-2xl overflow-hidden border border-white/[0.06] shadow-2xl mb-12">
+            <Image
+              src="/previews/how-interpret.png"
+              alt="Harbor brand visibility dashboard"
+              width={1200}
+              height={675}
+              className="w-full"
+              priority
+            />
+          </div>
+
+          {/* Feature grid */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
+              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
+                <BarChart3 className="w-4.5 h-4.5 text-white/50" />
+              </div>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Visibility index</h3>
+              <p className="text-white/30 text-sm leading-relaxed">
+                A composite score showing how prominently your brand appears across AI model responses.
+              </p>
+            </div>
+            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
+              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
+                <GitCompare className="w-4.5 h-4.5 text-white/50" />
+              </div>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Model comparison</h3>
+              <p className="text-white/30 text-sm leading-relaxed">
+                See how descriptions differ between ChatGPT, Claude, Gemini, and Perplexity.
+              </p>
+            </div>
+            <div className="bg-[#111213] border border-white/[0.06] rounded-xl p-5">
+              <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center mb-4">
+                <Bell className="w-4.5 h-4.5 text-white/50" />
+              </div>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Change monitoring</h3>
+              <p className="text-white/30 text-sm leading-relaxed">
+                Track how AI descriptions evolve over time and get notified of significant shifts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION D: What You Can Do After Claiming
+          ============================================ */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: Screenshot */}
+            <div className="order-2 md:order-1 rounded-2xl overflow-hidden border border-white/[0.06]">
+              <Image
+                src="/previews/brand.png"
+                alt="Brand profile editing"
+                width={800}
+                height={600}
+                className="w-full"
+              />
+            </div>
+
+            {/* Right: Actions list */}
+            <div className="order-1 md:order-2">
+              <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-6">
+                After you claim
+              </h2>
+              
+              <div className="space-y-5">
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white/40 text-xs font-medium">1</span>
+                  </div>
+                  <div>
+                    <div className="text-white/80 font-medium text-sm mb-1">Review AI descriptions</div>
+                    <div className="text-white/30 text-sm">See the exact language each model uses to describe your brand, products, and positioning.</div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white/40 text-xs font-medium">2</span>
+                  </div>
+                  <div>
+                    <div className="text-white/80 font-medium text-sm mb-1">Update official data</div>
+                    <div className="text-white/30 text-sm">Edit your pricing, product lines, descriptions, and FAQs in a structured format.</div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white/40 text-xs font-medium">3</span>
+                  </div>
+                  <div>
+                    <div className="text-white/80 font-medium text-sm mb-1">Track changes over time</div>
+                    <div className="text-white/30 text-sm">Monitor how AI outputs evolve and whether your updates are reflected.</div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white/40 text-xs font-medium">4</span>
+                  </div>
+                  <div>
+                    <div className="text-white/80 font-medium text-sm mb-1">See model disagreements</div>
+                    <div className="text-white/30 text-sm">Identify where different AI systems give conflicting information about you.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          SECTION E: How Claiming Works (Process)
+          ============================================ */}
+      <section className="py-20 px-6 bg-[#0a0a0a]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-semibold text-2xl md:text-3xl text-white/90 mb-3">
+              Claim your brand in minutes
+            </h2>
+            <p className="text-white/40">
+              No credit card required. Start with visibility, upgrade when you need more.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
             {/* Step 1 */}
             <div className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-brand.png"
                   alt="Search"
-                  width={56}
-                  height={56}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-white/80 font-medium text-sm mb-1">Search the index</h3>
-              <p className="text-white/30 text-xs">Find your brand</p>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Find your brand</h3>
+              <p className="text-white/30 text-xs leading-relaxed">
+                Search the index to see if your brand is already being tracked. If not, add it.
+              </p>
             </div>
 
             {/* Step 2 */}
             <div className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-products.png"
-                  alt="Review"
-                  width={56}
-                  height={56}
+                  alt="Verify"
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-white/80 font-medium text-sm mb-1">See what AI says</h3>
-              <p className="text-white/30 text-xs">Review model outputs</p>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Verify ownership</h3>
+              <p className="text-white/30 text-xs leading-relaxed">
+                Confirm you represent the brand via email domain or DNS verification.
+              </p>
             </div>
 
             {/* Step 3 */}
             <div className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-xl overflow-hidden">
+              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
                 <Image
                   src="/icons/step-faqs.png"
-                  alt="Claim"
-                  width={56}
-                  height={56}
+                  alt="Access"
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-white/80 font-medium text-sm mb-1">Claim and correct</h3>
-              <p className="text-white/30 text-xs">Fix what's wrong</p>
+              <h3 className="text-white/80 font-medium text-sm mb-2">Access your dashboard</h3>
+              <p className="text-white/30 text-xs leading-relaxed">
+                Review AI outputs, edit your profile, and monitor changes going forward.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Brand Marquee - Changed copy */}
-      <section className="py-12 px-6">
+      {/* ============================================
+          SECTION F: Proof Without Overreach
+          ============================================ */}
+      <section className="py-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-6">
+          <div className="text-center mb-8">
             <p className="text-white/20 text-sm">
-              Indexed across every industry
+              Brands indexed across every industry
             </p>
           </div>
           
-          <div className="space-y-3 opacity-50">
-            <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={40} />
-            <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={45} />
+          <div className="space-y-3 opacity-40">
+            <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={45} />
+            <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={50} />
           </div>
         </div>
       </section>
 
-      {/* Final CTA - Single action */}
+      {/* ============================================
+          SECTION G: Final CTA (Reframed)
+          ============================================ */}
       <section className="py-20 px-6">
         <div className="max-w-xl mx-auto text-center">
+          <h2 className="font-semibold text-2xl text-white/90 mb-3">
+            Start seeing what AI sees
+          </h2>
+          <p className="text-white/40 text-sm mb-8">
+            Claim your brand to access visibility data and update your canonical profile.
+          </p>
+          
           <Link
             href="/auth/signup"
             className="iridescent-hover inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-medium rounded-xl transition-all duration-100"
