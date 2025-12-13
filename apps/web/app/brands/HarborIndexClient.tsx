@@ -163,11 +163,11 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
       {/* ============================================
           SECTION A: Hero - Orientation, Not Persuasion
           ============================================ */}
-      <section className="pt-32 pb-16 px-6">
+      <section className="pt-40 pb-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
           {/* Clear definition */}
           <h1 className="font-semibold text-4xl md:text-5xl text-white/[0.94] leading-[1.15] tracking-tight mb-4">
-            Your brand's profile for AI
+            Your brand's AI profile
           </h1>
 
           {/* Supporting context - calm, not persuasive */}
@@ -238,9 +238,27 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             )}
           </div>
 
-          <p className="text-white/20 text-sm">
-            50,000+ brands indexed
-          </p>
+          <div className="flex items-center justify-center gap-3">
+            {/* Overlapping brand logos */}
+            <div className="flex -space-x-2">
+              {['stripe.com', 'notion.so', 'figma.com', 'linear.app', 'vercel.com'].map((domain, idx) => (
+                <div 
+                  key={domain}
+                  className="w-7 h-7 rounded-full overflow-hidden border-2 border-[#0B0B0C] bg-white"
+                  style={{ zIndex: 5 - idx }}
+                >
+                  <img 
+                    src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`}
+                    alt={domain}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+            <p className="text-white/20 text-sm">
+              50,000+ brands indexed
+            </p>
+          </div>
         </div>
       </section>
 
@@ -260,13 +278,13 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
           </div>
 
           {/* Three cards */}
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-6">
             {/* Card 1: AI is the new search */}
             <button
               onClick={() => setActiveModal('ai-search')}
-              className="group relative bg-[#040910] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+              className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
             >
-              <div className="aspect-[4/3] relative m-4 mb-0 rounded-xl overflow-hidden">
+              <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-ai-search.png"
                   alt="AI is the new search"
@@ -274,12 +292,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   className="object-cover"
                 />
               </div>
-              <div className="p-6 pt-5 flex items-end justify-between">
-                <h3 className="text-white/90 font-medium text-base leading-snug">
+              <div className="p-7 pt-6 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-xl leading-snug">
                   AI is the new search
                 </h3>
-                <div className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
-                  <Plus className="w-4 h-4 text-white/40" />
+                <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
+                  <Plus className="w-5 h-5 text-white/40" />
                 </div>
               </div>
             </button>
@@ -287,9 +305,9 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             {/* Card 2: Your brand might not be in the results */}
             <button
               onClick={() => setActiveModal('not-found')}
-              className="group relative bg-[#040910] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+              className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
             >
-              <div className="aspect-[4/3] relative m-4 mb-0 rounded-xl overflow-hidden">
+              <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-not-found.png"
                   alt="Your brand might not appear"
@@ -297,12 +315,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   className="object-cover"
                 />
               </div>
-              <div className="p-6 pt-5 flex items-end justify-between">
-                <h3 className="text-white/90 font-medium text-base leading-snug">
+              <div className="p-7 pt-6 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-xl leading-snug">
                   Your brand might not<br />be in the results
                 </h3>
-                <div className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
-                  <Plus className="w-4 h-4 text-white/40" />
+                <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
+                  <Plus className="w-5 h-5 text-white/40" />
                 </div>
               </div>
             </button>
@@ -310,9 +328,9 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             {/* Card 3: AI might be using outdated information */}
             <button
               onClick={() => setActiveModal('outdated')}
-              className="group relative bg-[#040910] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
+              className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
             >
-              <div className="aspect-[4/3] relative m-4 mb-0 rounded-xl overflow-hidden">
+              <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-outdated.png"
                   alt="Information might be outdated"
@@ -320,12 +338,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   className="object-cover"
                 />
               </div>
-              <div className="p-6 pt-5 flex items-end justify-between">
-                <h3 className="text-white/90 font-medium text-base leading-snug">
+              <div className="p-7 pt-6 flex items-end justify-between">
+                <h3 className="text-white/90 font-medium text-xl leading-snug">
                   If it is, AI might be using<br />outdated information
                 </h3>
-                <div className="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
-                  <Plus className="w-4 h-4 text-white/40" />
+                <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
+                  <Plus className="w-5 h-5 text-white/40" />
                 </div>
               </div>
             </button>
