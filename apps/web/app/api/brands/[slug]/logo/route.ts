@@ -6,10 +6,10 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: { slug: string } }
 ) {
   try {
-    const { slug } = await params
+    const { slug } = params
     const formData = await request.formData()
     const file = formData.get('file') as File
 
