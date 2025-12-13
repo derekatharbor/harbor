@@ -238,13 +238,13 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3 mt-6">
             {/* Overlapping brand logos */}
             <div className="flex -space-x-2">
               {['stripe.com', 'notion.so', 'figma.com', 'linear.app', 'vercel.com'].map((domain, idx) => (
                 <div 
                   key={domain}
-                  className="w-7 h-7 rounded-full overflow-hidden border-2 border-[#0B0B0C] bg-white"
+                  className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#0B0B0C] bg-white"
                   style={{ zIndex: 5 - idx }}
                 >
                   <img 
@@ -279,7 +279,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
 
           {/* Three cards */}
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Card 1: AI is the new search */}
+            {/* Card 1 */}
             <button
               onClick={() => setActiveModal('ai-search')}
               className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
@@ -287,14 +287,14 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-ai-search.png"
-                  alt="AI is the new search"
+                  alt="People discover brands through AI"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  Conversations, not links
+                  People discover brands through AI answers now
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -302,7 +302,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
             </button>
 
-            {/* Card 2: Your brand might not be in the results */}
+            {/* Card 2 */}
             <button
               onClick={() => setActiveModal('not-found')}
               className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
@@ -310,14 +310,14 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-not-found.png"
-                  alt="Your brand might not appear"
+                  alt="AI doesn't understand most websites"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  Invisible to AI
+                  AI doesn't understand most brand websites
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -325,7 +325,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               </div>
             </button>
 
-            {/* Card 3: AI might be using outdated information */}
+            {/* Card 3 */}
             <button
               onClick={() => setActiveModal('outdated')}
               className="group relative bg-[#141516] border border-white/[0.06] rounded-2xl overflow-hidden text-left hover:border-white/[0.12] transition-colors duration-100"
@@ -333,14 +333,14 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               <div className="aspect-[4/3] relative m-5 mb-0 rounded-xl overflow-hidden">
                 <Image
                   src="/images/card-outdated.png"
-                  alt="Information might be outdated"
+                  alt="AI pulls from third-party sources"
                   fill
                   className="object-cover"
                 />
               </div>
               <div className="p-7 pt-6 flex items-end justify-between">
                 <h3 className="text-white/90 font-medium text-xl leading-snug">
-                  Outdated information
+                  AI pulls brand data from third-party sources
                 </h3>
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-white/[0.1] transition-colors flex-shrink-0 ml-4">
                   <Plus className="w-5 h-5 text-white/40" />
@@ -367,7 +367,7 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-ai-search.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">Conversations, not links</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">People discover brands through AI answers now</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
                     Instead of scrolling through links, people are asking ChatGPT, Perplexity, and Claude for direct answers. "What's the best CRM for startups?" now returns a conversational recommendation, not a list of ads.
                   </p>
@@ -383,12 +383,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-not-found.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">Invisible to AI</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI doesn't understand most brand websites</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
-                    AI models don't search the web in real-time. They rely on training data and indexed sources. If your brand doesn't have enough presence in the places these models pull from, you simply won't be mentioned.
+                    Most websites are built for humans, not machines. AI models struggle to extract structured information like pricing, product details, and company facts from typical marketing pages.
                   </p>
                   <p className="text-white/40 text-sm leading-relaxed">
-                    Smaller brands, newer companies, and niche products are especially vulnerable. You could have a great product and still be invisible to AI recommendations.
+                    Without clear, machine-readable data, AI either skips your brand entirely or makes assumptions based on incomplete information.
                   </p>
                 </div>
               </>
@@ -399,12 +399,12 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
                   <Image src="/images/card-outdated.png" alt="" fill className="object-cover" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-white/90 font-semibold text-lg mb-3">Outdated information</h3>
+                  <h3 className="text-white/90 font-semibold text-lg mb-3">AI pulls brand data from third-party sources</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
-                    Even when AI does mention your brand, the information might be wrong. Pricing changes, product updates, and company pivots often aren't reflected in AI responses for months—or ever.
+                    AI assembles answers from scattered sources: old blog posts, competitor comparisons, review sites, Wikipedia entries. The result is often a patchwork of information you never approved.
                   </p>
                   <p className="text-white/40 text-sm leading-relaxed">
-                    AI assembles answers from scattered sources: old blog posts, competitor comparisons, review sites. The result is often a patchwork of half-truths that you never approved.
+                    Pricing changes, product updates, and company pivots often aren't reflected in AI responses for months—or ever.
                   </p>
                 </div>
               </>
