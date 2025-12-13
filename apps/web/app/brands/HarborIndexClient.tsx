@@ -20,10 +20,6 @@ interface DirectoryBrand {
   industry: string
 }
 
-interface Props {
-  initialDirectory?: DirectoryBrand[]
-}
-
 // Featured brand domains for marquee
 const MARQUEE_BRANDS = [
   ['linear.app', 'vercel.com', 'supabase.com', 'stripe.com', 'notion.so', 'figma.com', 'asana.com', 'hubspot.com', 'salesforce.com', 'planetscale.com', 'railway.app', 'render.com'],
@@ -60,47 +56,38 @@ function MarqueeRow({ domains, direction, speed = 35 }: { domains: string[], dir
   )
 }
 
-export default function HarborIndexClient({ initialDirectory = [] }: Props) {
-  const [directory, setDirectory] = useState<DirectoryBrand[]>(initialDirectory)
-  const [loading, setLoading] = useState(true)
+export default function HarborIndexClient() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<DirectoryBrand[]>([])
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
+  const [searching, setSearching] = useState(false)
   const [activeModal, setActiveModal] = useState<string | null>(null)
 
+  // Server-side search with debounce
   useEffect(() => {
-    if (initialDirectory.length === 0) {
-      fetch('/api/index/brands')
-        .then(res => res.json())
-        .then(data => {
-          console.log('Fetched brands:', data.directory?.length || 0)
-          if (data.directory) setDirectory(data.directory)
-          setLoading(false)
-        })
-        .catch(err => {
-          console.error('Failed to fetch brands:', err)
-          setLoading(false)
-        })
-    } else {
-      setLoading(false)
-    }
-  }, [initialDirectory.length])
-
-  useEffect(() => {
-    if (searchQuery.trim().length >= 2 && !loading) {
-      const query = searchQuery.toLowerCase()
-      const results = directory.filter(brand =>
-        brand.brand_name.toLowerCase().includes(query) ||
-        brand.domain.toLowerCase().includes(query)
-      ).slice(0, 6)
-      console.log('Search results for', query, ':', results.length)
-      setSearchResults(results)
-      setShowSearchDropdown(true)
-    } else {
+    if (searchQuery.trim().length < 2) {
       setSearchResults([])
       setShowSearchDropdown(false)
+      return
     }
-  }, [searchQuery, directory, loading])
+
+    const debounceTimer = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const res = await fetch(`/api/index/brands/search?q=${encodeURIComponent(searchQuery)}`)
+        const data = await res.json()
+        console.log('Search results for', searchQuery, ':', data.results?.length || 0)
+        setSearchResults(data.results || [])
+        setShowSearchDropdown(true)
+      } catch (err) {
+        console.error('Search failed:', err)
+        setSearchResults([])
+      }
+      setSearching(false)
+    }, 150)
+
+    return () => clearTimeout(debounceTimer)
+  }, [searchQuery])
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
@@ -212,14 +199,18 @@ export default function HarborIndexClient({ initialDirectory = [] }: Props) {
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
               <input
                 type="text"
-                placeholder={loading ? "Loading brands..." : "Search for your brand..."}
+                placeholder="Search for your brand..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchQuery.length >= 2 && !loading && setShowSearchDropdown(true)}
+                onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
-                disabled={loading}
-                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base disabled:opacity-50"
+                className="w-full pl-14 pr-5 py-4 bg-[#111213] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base"
               />
+              {searching && (
+                <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+                </div>
+              )}
             </div>
 
             {/* Search Dropdown */}
