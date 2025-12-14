@@ -1,4 +1,5 @@
-// lib/stripe.ts
+// Path: lib/stripe.ts
+
 import Stripe from 'stripe'
 
 // Lazy-load Stripe to avoid build-time initialization
@@ -16,53 +17,99 @@ export function getStripe(): Stripe {
   return stripeInstance
 }
 
-// Price IDs - set these in Stripe Dashboard and add to env vars
+// Price IDs - create these in Stripe Dashboard and add to env vars
 export const PRICES = {
-  AGENCY_MONTHLY: process.env.STRIPE_PRICE_AGENCY_MONTHLY!,
-  AGENCY_YEARLY: process.env.STRIPE_PRICE_AGENCY_YEARLY!,
+  // Subscription plans
+  PRO_MONTHLY: process.env.STRIPE_PRICE_PRO_MONTHLY!,
+  PRO_YEARLY: process.env.STRIPE_PRICE_PRO_YEARLY!,
+  GROWTH_MONTHLY: process.env.STRIPE_PRICE_GROWTH_MONTHLY!,
+  GROWTH_YEARLY: process.env.STRIPE_PRICE_GROWTH_YEARLY!,
+  
+  // One-time purchases
   DEEP_SCAN: process.env.STRIPE_PRICE_DEEP_SCAN!, // One-time $7.99
 }
 
+// Plan configuration
 export const PLANS = {
   free: {
     name: 'Free',
-    dashboards: 1,
-    scansPerWeek: 1,
-    deepScans: 0,
+    price: 0,
+    prompts: 50,
+    competitors: 2,
+    platforms: 4,
     features: [
-      'AI visibility dashboard',
-      'Weekly scans across 4 AI models',
-      'Competitor visibility insights',
-      'Optimization recommendations',
-      'Public AI profile page',
+      '50 prompts tracked',
+      '4 AI platforms',
+      '2 competitors',
+      'Daily monitoring',
+      'Email support',
     ],
   },
-  agency: {
-    name: 'Agency',
-    priceMonthly: 199,
-    priceYearly: 1990, // ~2 months free
-    dashboards: 5,
-    scansPerMonth: 8,
-    deepScansIncluded: 5,
+  pro: {
+    name: 'Pro',
+    priceMonthly: 99,
+    priceYearly: 990, // 2 months free
+    prompts: 100,
+    competitors: 5,
+    platforms: 4,
     features: [
-      'Everything in Free',
-      'Up to 5 brands',
-      'Deep analysis scans',
+      '100 prompts tracked',
+      '4 AI platforms',
+      '5 competitors',
+      'Daily monitoring',
+      'Visibility trends',
+      'Source citations',
       'Priority support',
-      'API access (coming soon)',
-      'White-label reports (coming soon)',
+    ],
+  },
+  growth: {
+    name: 'Growth',
+    priceMonthly: 179,
+    priceYearly: 1790, // 2 months free
+    prompts: 200,
+    competitors: 10,
+    platforms: 4,
+    features: [
+      '200 prompts tracked',
+      '4 AI platforms',
+      '10 competitors',
+      'Daily monitoring',
+      'Advanced analytics',
+      'Team seats',
+      'API access',
+      'Slack alerts',
     ],
   },
   enterprise: {
     name: 'Enterprise',
-    dashboards: 999,
+    prompts: -1, // unlimited
+    competitors: 20,
+    platforms: 4,
     features: [
-      'Everything in Agency',
-      'Unlimited brands',
-      'SSO + team controls',
+      'Unlimited prompts',
+      '4 AI platforms',
+      '20+ competitors',
+      'Daily monitoring',
+      'SSO / SAML',
+      'Dedicated success manager',
       'Custom integrations',
-      'Dedicated account manager',
-      'SLA',
+      'SLA guarantee',
     ],
   },
+}
+
+// Helper to get price ID for a plan
+export function getPriceId(plan: 'pro' | 'growth', period: 'monthly' | 'yearly'): string {
+  const key = `${plan.toUpperCase()}_${period.toUpperCase()}` as keyof typeof PRICES
+  return PRICES[key]
+}
+
+// Helper to check plan limits
+export function getPlanLimits(plan: keyof typeof PLANS) {
+  const config = PLANS[plan]
+  return {
+    prompts: 'prompts' in config ? config.prompts : 50,
+    competitors: 'competitors' in config ? config.competitors : 2,
+    platforms: config.platforms,
+  }
 }

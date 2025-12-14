@@ -1,7 +1,8 @@
-// app/api/stripe/checkout/route.ts
+// Path: apps/web/app/api/stripe/checkout/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getStripe, PRICES } from '@/lib/stripe'
+import { getStripe, getPriceId, PLANS } from '@/lib/stripe'
 
 function getSupabase() {
   return createClient(
@@ -12,11 +13,19 @@ function getSupabase() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { priceId, userId, orgId, billingPeriod = 'monthly' } = await request.json()
+    const { plan, userId, orgId, billingPeriod = 'monthly' } = await request.json()
 
     if (!userId || !orgId) {
       return NextResponse.json(
         { error: 'User and org required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate plan
+    if (!plan || !['pro', 'growth'].includes(plan)) {
+      return NextResponse.json(
+        { error: 'Invalid plan. Must be "pro" or "growth"' },
         { status: 400 }
       )
     }
@@ -58,10 +67,15 @@ export async function POST(request: NextRequest) {
         .eq('id', orgId)
     }
 
-    // Determine price ID
-    const stripePriceId = billingPeriod === 'yearly' 
-      ? PRICES.AGENCY_YEARLY 
-      : PRICES.AGENCY_MONTHLY
+    // Get the correct price ID
+    const stripePriceId = getPriceId(plan as 'pro' | 'growth', billingPeriod as 'monthly' | 'yearly')
+
+    if (!stripePriceId) {
+      return NextResponse.json(
+        { error: `Price not configured for ${plan} ${billingPeriod}` },
+        { status: 500 }
+      )
+    }
 
     // Get app URL with fallback
     let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://useharbor.io'
@@ -80,18 +94,18 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${appUrl}/dashboard?upgraded=true`,
+      success_url: `${appUrl}/dashboard?upgraded=true&plan=${plan}`,
       cancel_url: `${appUrl}/pricing?canceled=true`,
       metadata: {
         orgId,
         userId,
-        plan: 'agency',
+        plan,
       },
       subscription_data: {
         metadata: {
           orgId,
           userId,
-          plan: 'agency',
+          plan,
         },
       },
       allow_promotion_codes: true,

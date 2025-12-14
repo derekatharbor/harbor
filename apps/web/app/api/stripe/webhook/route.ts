@@ -1,7 +1,8 @@
-// app/api/stripe/webhook/route.ts
+// Path: apps/web/app/api/stripe/webhook/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getStripe } from '@/lib/stripe'
+import { getStripe, PLANS } from '@/lib/stripe'
 import Stripe from 'stripe'
 
 function getSupabase() {
@@ -78,23 +79,33 @@ export async function POST(request: NextRequest) {
 
 async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   const orgId = session.metadata?.orgId
+  const plan = session.metadata?.plan || 'pro' // Default to pro if not specified
+  
   if (!orgId) return
+
+  // Get plan limits
+  const planConfig = PLANS[plan as keyof typeof PLANS]
+  const limits = {
+    prompts: 'prompts' in planConfig ? planConfig.prompts : 50,
+    competitors: 'competitors' in planConfig ? planConfig.competitors : 2,
+  }
 
   // Update org with subscription info
   await getSupabase()
     .from('orgs')
     .update({
       stripe_subscription_id: session.subscription as string,
-      plan: 'agency',
+      plan: plan,
       plan_status: 'active',
+      plan_limits: limits,
       updated_at: new Date().toISOString(),
     })
     .eq('id', orgId)
 
-  // Update all dashboards for this org to agency plan
+  // Update all dashboards for this org
   await getSupabase()
     .from('dashboards')
-    .update({ plan: 'agency' })
+    .update({ plan: plan })
     .eq('org_id', orgId)
 
   // Log the event
@@ -103,17 +114,18 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
     user_id: session.metadata?.userId,
     event: 'subscription_created',
     meta: {
-      plan: 'agency',
+      plan,
       subscription_id: session.subscription,
       customer_id: session.customer,
     },
   })
 
-  console.log(`✅ Org ${orgId} upgraded to Agency`)
+  console.log(`✅ Org ${orgId} upgraded to ${plan}`)
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const orgId = subscription.metadata?.orgId
+  
   if (!orgId) {
     // Try to find org by customer ID
     const { data: org } = await getSupabase()
@@ -132,7 +144,18 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
 async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscription) {
   const status = subscription.status
-  const plan = status === 'active' || status === 'trialing' ? 'agency' : 'solo'
+  const plan = subscription.metadata?.plan || 'pro'
+  
+  // Determine if subscription is active
+  const isActive = status === 'active' || status === 'trialing'
+  const effectivePlan = isActive ? plan : 'free'
+
+  // Get plan limits
+  const planConfig = PLANS[effectivePlan as keyof typeof PLANS]
+  const limits = {
+    prompts: 'prompts' in planConfig ? planConfig.prompts : 50,
+    competitors: 'competitors' in planConfig ? planConfig.competitors : 2,
+  }
 
   const periodEnd = (subscription as any).current_period_end 
     ? new Date((subscription as any).current_period_end * 1000).toISOString()
@@ -142,8 +165,9 @@ async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscri
     .from('orgs')
     .update({
       stripe_subscription_id: subscription.id,
-      plan: plan,
+      plan: effectivePlan,
       plan_status: status,
+      plan_limits: limits,
       plan_period_end: periodEnd,
       updated_at: new Date().toISOString(),
     })
@@ -152,10 +176,10 @@ async function updateOrgSubscription(orgId: string, subscription: Stripe.Subscri
   // Update dashboards plan
   await getSupabase()
     .from('dashboards')
-    .update({ plan })
+    .update({ plan: effectivePlan })
     .eq('org_id', orgId)
 
-  console.log(`📝 Org ${orgId} subscription updated: ${status}`)
+  console.log(`🔄 Org ${orgId} subscription updated: ${status} -> ${effectivePlan}`)
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
@@ -168,18 +192,21 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   if (!org) return
 
   // Downgrade to free
+  const freeLimits = { prompts: 50, competitors: 2 }
+  
   await getSupabase()
     .from('orgs')
     .update({
-      plan: 'solo',
+      plan: 'free',
       plan_status: 'canceled',
+      plan_limits: freeLimits,
       updated_at: new Date().toISOString(),
     })
     .eq('id', org.id)
 
   await getSupabase()
     .from('dashboards')
-    .update({ plan: 'solo' })
+    .update({ plan: 'free' })
     .eq('org_id', org.id)
 
   await getSupabase().from('audit_log').insert({
