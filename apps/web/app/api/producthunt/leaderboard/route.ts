@@ -27,7 +27,7 @@ interface ProductScore {
   category: string
   logo_url: string
   mention_count: number
-  avg_position: number
+  avg_position: number | null
   positive_mentions: number
   visibility_score: number
 }
