@@ -79,16 +79,21 @@ function extractDomain(url) {
 // Follow PH redirect to get real URL
 async function followRedirect(url) {
   try {
+    // Actually follow the redirect chain
     const response = await fetch(url, { 
-      method: 'HEAD',
-      redirect: 'manual'
+      method: 'GET',
+      redirect: 'follow',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; HarborBot/1.0)'
+      }
     })
-    const location = response.headers.get('location')
-    if (location) {
-      return extractDomain(location)
-    }
-    return null
-  } catch {
+    
+    // The final URL after redirects
+    const finalUrl = response.url
+    const domain = extractDomain(finalUrl)
+    
+    return domain
+  } catch (err) {
     return null
   }
 }
@@ -98,13 +103,15 @@ async function getProductDomain(product) {
   if (product.productLinks && product.productLinks.length > 0) {
     const websiteLink = product.productLinks.find(l => l.type === 'Website')
     if (websiteLink) {
-      return await followRedirect(websiteLink.url)
+      const domain = await followRedirect(websiteLink.url)
+      return domain
     }
   }
   
   // Fallback to website field
   if (product.website) {
-    return await followRedirect(product.website)
+    const domain = await followRedirect(product.website)
+    return domain
   }
   
   return null
@@ -114,42 +121,50 @@ async function main() {
   const allProducts = []
   let cursor
   const targetCount = 500
+  const fetchCount = 1200 // Over-fetch since ~50% will fail
 
-  console.log(`🚀 Pulling top ${targetCount} Product Hunt products...\n`)
+  console.log(`🚀 Pulling top ${fetchCount} Product Hunt products (targeting ${targetCount} resolved)...\n`)
 
-  while (allProducts.length < targetCount) {
-    const { products, nextCursor } = await fetchProducts(cursor)
-    
-    if (products.length === 0) break
-    
-    allProducts.push(...products)
-    console.log(`  Fetched ${allProducts.length} products...`)
-    
-    if (!nextCursor) break
-    cursor = nextCursor
-    
-    await new Promise(r => setTimeout(r, 200))
+  while (allProducts.length < fetchCount) {
+    try {
+      const { products, nextCursor } = await fetchProducts(cursor)
+      
+      if (products.length === 0) break
+      
+      allProducts.push(...products)
+      console.log(`  Fetched ${allProducts.length} products...`)
+      
+      if (!nextCursor) break
+      cursor = nextCursor
+      
+      await new Promise(r => setTimeout(r, 200))
+    } catch (err) {
+      if (err.message.includes('429')) {
+        console.log(`\n⚠️  Rate limited. Continuing with ${allProducts.length} products...\n`)
+        break
+      }
+      throw err
+    }
   }
 
-  // Debug: show first 3 raw products
-  console.log('\nDebug - first 3 raw products:')
-  allProducts.slice(0, 3).forEach(p => {
-    console.log(`  ${p.name}:`)
-    console.log(`    website: ${p.website}`)
-    console.log(`    productLinks: ${JSON.stringify(p.productLinks)}`)
-  })
-  console.log('')
-
   // Dedupe by domain - need to resolve redirects
-  console.log('Resolving product domains (this takes a minute)...')
+  console.log('Resolving product domains...')
   const seen = new Set()
   const processed = []
+  let failed = 0
   
-  for (const p of allProducts) {
+  for (let i = 0; i < allProducts.length; i++) {
     if (processed.length >= targetCount) break
     
+    const p = allProducts[i]
     const domain = await getProductDomain(p)
-    if (!domain || seen.has(domain)) continue
+    
+    if (!domain) {
+      failed++
+      continue
+    }
+    
+    if (seen.has(domain)) continue
     seen.add(domain)
     
     processed.push({
@@ -161,23 +176,41 @@ async function main() {
     })
     
     if (processed.length % 50 === 0) {
-      console.log(`  Resolved ${processed.length} products...`)
+      console.log(`  Resolved ${processed.length} products (${failed} failed)...`)
     }
   }
 
-  console.log(`\n✅ Got ${processed.length} unique products\n`)
+  console.log(`\n✅ Got ${processed.length} unique products (${failed} failed to resolve)\n`)
 
-  // SQL output
-  console.log('-- SQL to insert into ph_products (run in Supabase):')
-  console.log('INSERT INTO ph_products (name, domain, slug, category) VALUES')
+  // Build SQL with ON CONFLICT to handle existing products
+  const sqlLines = [
+    '-- Run this in Supabase SQL Editor',
+    '-- Products that already exist will be skipped',
+    '',
+    'INSERT INTO ph_products (name, domain, slug, category) VALUES'
+  ]
   
   const values = processed.map((p, i) => {
     const name = p.name.replace(/'/g, "''")
     const isLast = i === processed.length - 1
-    return `  ('${name}', '${p.domain}', '${p.slug}', 'Product Hunt')${isLast ? ';' : ','}`
+    return `  ('${name}', '${p.domain}', '${p.slug}', 'Product Hunt')${isLast ? '' : ','}`
   })
   
-  console.log(values.join('\n'))
+  sqlLines.push(...values)
+  sqlLines.push('ON CONFLICT (domain) DO NOTHING;')
+  
+  const sql = sqlLines.join('\n')
+  
+  // Write to file
+  const fs = require('fs')
+  fs.writeFileSync('ph_products_insert.sql', sql)
+  console.log(`📄 SQL written to ph_products_insert.sql`)
+  
+  // Also write first 20 to console for quick check
+  console.log('\nFirst 20 products:')
+  processed.slice(0, 20).forEach((p, i) => {
+    console.log(`  ${i + 1}. ${p.name} (${p.domain})`)
+  })
 }
 
 main().catch(console.error)
