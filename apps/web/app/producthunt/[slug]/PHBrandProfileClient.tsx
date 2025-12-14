@@ -3,7 +3,6 @@
 'use client'
 
 import { ExternalLink, TrendingUp, MessageSquare, Award } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/landing-new/Nav'
 import Footer from '@/components/landing-new/Footer'
@@ -16,8 +15,6 @@ interface PHProduct {
   slug: string
   domain: string
   category: string
-  logo_url: string
-  ph_url: string
 }
 
 interface PHStats {
@@ -37,6 +34,12 @@ export default function PHBrandProfileClient({ product, stats }: Props) {
   const mentionCount = stats?.mention_count || 0
   const avgPosition = stats?.avg_position
   const positiveMentions = stats?.positive_mentions || 0
+
+  // Construct PH URL from slug
+  const phUrl = `https://www.producthunt.com/products/${product.slug}`
+  
+  // Use Clearbit for logo
+  const logoUrl = `https://logo.clearbit.com/${product.domain}`
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
@@ -63,22 +66,15 @@ export default function PHBrandProfileClient({ product, stats }: Props) {
         <div className="flex flex-col sm:flex-row items-start gap-6 mb-10">
           {/* Logo */}
           <div className="w-20 h-20 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
-            {product.logo_url ? (
-              <Image
-                src={product.logo_url}
-                alt={product.name}
-                width={80}
-                height={80}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            ) : (
-              <span className="text-2xl font-bold text-white/30">
-                {product.name.charAt(0)}
-              </span>
-            )}
+            <img
+              src={logoUrl}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none'
+                e.currentTarget.parentElement!.innerHTML = `<span class="text-2xl font-bold text-white/30">${product.name.charAt(0)}</span>`
+              }}
+            />
           </div>
 
           {/* Brand Info */}
@@ -88,7 +84,7 @@ export default function PHBrandProfileClient({ product, stats }: Props) {
                 {product.name}
               </h1>
               <a
-                href={product.ph_url || `https://www.producthunt.com/products/${product.slug}`}
+                href={phUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-opacity hover:opacity-80"
@@ -225,7 +221,7 @@ export default function PHBrandProfileClient({ product, stats }: Props) {
               Get detailed insights
             </Link>
             <a
-              href={product.ph_url || `https://www.producthunt.com/products/${product.slug}`}
+              href={phUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium bg-white/[0.05] text-white hover:bg-white/[0.08] transition-colors"

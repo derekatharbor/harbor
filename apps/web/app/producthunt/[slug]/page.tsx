@@ -21,8 +21,6 @@ interface PHProduct {
   slug: string
   domain: string
   category: string
-  logo_url: string
-  ph_url: string
 }
 
 interface PHResult {
@@ -35,10 +33,10 @@ interface PHResult {
 async function fetchPHProduct(slug: string): Promise<{ product: PHProduct | null; stats: PHResult | null }> {
   const supabase = getSupabase()
   
-  // Get product
+  // Get product - only select columns that exist
   const { data: product, error } = await supabase
     .from('ph_products')
-    .select('id, name, slug, domain, category, logo_url, ph_url')
+    .select('id, name, slug, domain, category')
     .eq('slug', slug)
     .single()
 
