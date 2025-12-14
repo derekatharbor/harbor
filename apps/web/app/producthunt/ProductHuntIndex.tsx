@@ -84,7 +84,6 @@ export default function ProductHuntIndex() {
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             How AI sees{' '}
             <span style={{ color: PH_ORANGE }}>Product Hunt</span>
-            {' '}launches
           </h1>
           
           <p className="text-white/50 text-lg max-w-2xl mx-auto mb-8">
@@ -257,8 +256,8 @@ export default function ProductHuntIndex() {
       </section>
 
       {/* PH Founders Offer */}
-      <section className="pb-20 px-4 sm:px-6">
-        <div className="max-w-2xl mx-auto">
+      <section className="pb-8 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
           <div className="p-8 bg-gradient-to-b from-[#DA552F]/10 to-transparent rounded-2xl border border-[#DA552F]/20">
             <div className="text-center">
               <span className="inline-block px-3 py-1 bg-[#DA552F]/20 text-[#DA552F] text-sm font-medium rounded-full mb-4">
@@ -285,7 +284,7 @@ export default function ProductHuntIndex() {
 
       {/* Bottom CTA */}
       <section className="pb-20 px-4 sm:px-6">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <div className="p-8 bg-white/[0.02] rounded-2xl border border-white/[0.08]">
             <h2 className="text-2xl font-semibold text-white mb-3">
               Don't see your product?
