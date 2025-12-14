@@ -1,3 +1,5 @@
+// Path: apps/web/app/producthunt/ProductHuntIndex.tsx
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -172,7 +174,7 @@ export default function ProductHuntIndex() {
               {filteredProducts.map((product) => (
                 <Link
                   key={product.id}
-                  href={`/brands/${product.slug}?from=producthunt`}
+                  href={`/producthunt/${product.slug}`}
                   className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/[0.02] transition-colors group"
                 >
                   {/* Rank */}

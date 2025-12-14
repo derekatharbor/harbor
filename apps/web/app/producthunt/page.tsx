@@ -1,3 +1,5 @@
+// Path: apps/web/app/producthunt/page.tsx
+
 import ProductHuntIndex from './ProductHuntIndex'
 
 export const metadata = {
