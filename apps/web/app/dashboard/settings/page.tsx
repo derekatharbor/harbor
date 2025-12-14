@@ -2,9 +2,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Settings, Building2, CreditCard, ChevronDown, Check, Loader2, ExternalLink, LifeBuoy } from 'lucide-react'
+import { Settings, Building2, CreditCard, ChevronDown, Check, Loader2, LifeBuoy } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
+import UpgradeModal from '@/components/modals/UpgradeModal'
 
 // Standardized industry list - keep in sync with ai_profiles and onboarding
 const INDUSTRIES = [
@@ -31,6 +32,35 @@ const INDUSTRIES = [
   'Travel & Hospitality',
 ]
 
+// Plan display info
+const PLAN_INFO: Record<string, { label: string; description: string }> = {
+  free: {
+    label: 'Free',
+    description: '50 prompts • 2 competitors • Daily scans',
+  },
+  pro: {
+    label: 'Pro',
+    description: '100 prompts • 5 competitors • Daily scans',
+  },
+  growth: {
+    label: 'Growth',
+    description: '200 prompts • 10 competitors • Daily scans • Priority support',
+  },
+  enterprise: {
+    label: 'Enterprise',
+    description: 'Unlimited prompts • 20+ competitors • API access • Dedicated support',
+  },
+  // Legacy plan names (map to new ones)
+  solo: {
+    label: 'Free',
+    description: '50 prompts • 2 competitors • Daily scans',
+  },
+  agency: {
+    label: 'Pro',
+    description: '100 prompts • 5 competitors • Daily scans',
+  },
+}
+
 export default function ControlCenterPage() {
   const { currentDashboard, isLoading: brandLoading, refreshDashboards } = useBrand()
   
@@ -40,6 +70,7 @@ export default function ControlCenterPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   // Initialize form with current dashboard values
   useEffect(() => {
@@ -94,6 +125,13 @@ export default function ControlCenterPage() {
     }
   }
 
+  // Get current plan info (handle legacy names)
+  const currentPlan = currentDashboard?.plan || 'free'
+  const planInfo = PLAN_INFO[currentPlan] || PLAN_INFO.free
+  
+  // Normalize plan name for upgrade modal
+  const normalizedPlan = currentPlan === 'solo' ? 'free' : currentPlan === 'agency' ? 'pro' : currentPlan
+
   // Loading state
   if (brandLoading) {
     return (
@@ -121,6 +159,7 @@ export default function ControlCenterPage() {
   }
 
   const logoUrl = `https://cdn.brandfetch.io/${currentDashboard.domain}`
+  const canUpgrade = !['growth', 'enterprise'].includes(normalizedPlan)
 
   return (
     <>
@@ -281,28 +320,25 @@ export default function ControlCenterPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <span className="text-xl font-bold text-primary capitalize">
-                      {currentDashboard.plan}
+                    <span className="text-xl font-bold text-primary">
+                      {planInfo.label}
                     </span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
                       Active
                     </span>
                   </div>
                   <p className="text-sm text-secondary/60">
-                    {currentDashboard.plan === 'solo' && '1 brand • 5 competitors • Weekly scans'}
-                    {currentDashboard.plan === 'agency' && '5 brands • 10 competitors • Daily scans'}
-                    {currentDashboard.plan === 'enterprise' && 'Unlimited brands • Unlimited competitors • API access'}
+                    {planInfo.description}
                   </p>
                 </div>
                 
-                {currentDashboard.plan !== 'enterprise' && (
-                  <a
-                    href="/pricing"
-                    className="px-4 py-2 rounded-lg border border-border text-secondary/80 hover:text-primary hover:border-primary/20 transition-colors flex items-center gap-2 text-sm"
+                {canUpgrade && (
+                  <button
+                    onClick={() => setShowUpgradeModal(true)}
+                    className="px-4 py-2 rounded-lg bg-[#22D3EE] text-[#0B1521] hover:bg-[#22D3EE]/90 transition-colors text-sm font-medium"
                   >
                     Upgrade
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  </button>
                 )}
               </div>
             </div>
@@ -333,6 +369,13 @@ export default function ControlCenterPage() {
           </div>
         </div>
       </div>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        currentPlan={normalizedPlan}
+      />
     </>
   )
 }
