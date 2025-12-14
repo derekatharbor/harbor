@@ -62,6 +62,12 @@ export default function HarborIndexClient() {
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [searching, setSearching] = useState(false)
   const [activeModal, setActiveModal] = useState<string | null>(null)
+  
+  // Claim modal state
+  const [showClaimModal, setShowClaimModal] = useState(false)
+  const [claimSearchQuery, setClaimSearchQuery] = useState('')
+  const [claimSearchResults, setClaimSearchResults] = useState<DirectoryBrand[]>([])
+  const [claimSearching, setClaimSearching] = useState(false)
 
   // Server-side search with debounce
   useEffect(() => {
@@ -88,6 +94,37 @@ export default function HarborIndexClient() {
 
     return () => clearTimeout(debounceTimer)
   }, [searchQuery])
+
+  // Claim modal search with debounce
+  useEffect(() => {
+    if (claimSearchQuery.trim().length < 2) {
+      setClaimSearchResults([])
+      return
+    }
+
+    const debounceTimer = setTimeout(async () => {
+      setClaimSearching(true)
+      try {
+        const res = await fetch(`/api/index/brands/search?q=${encodeURIComponent(claimSearchQuery)}`)
+        const data = await res.json()
+        setClaimSearchResults(data.results || [])
+      } catch (err) {
+        console.error('Claim search failed:', err)
+        setClaimSearchResults([])
+      }
+      setClaimSearching(false)
+    }, 150)
+
+    return () => clearTimeout(debounceTimer)
+  }, [claimSearchQuery])
+
+  // Reset claim modal state when closed
+  useEffect(() => {
+    if (!showClaimModal) {
+      setClaimSearchQuery('')
+      setClaimSearchResults([])
+    }
+  }, [showClaimModal])
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
@@ -619,15 +656,138 @@ export default function HarborIndexClient() {
             Claim your brand to access visibility data and update your canonical profile.
           </p>
           
-          <Link
-            href="/auth/signup"
+          <button
+            onClick={() => setShowClaimModal(true)}
             className="iridescent-hover inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black font-medium rounded-xl transition-all duration-100"
           >
             <span>Claim Your Brand</span>
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </button>
         </div>
       </section>
+
+      {/* ============================================
+          Claim Modal
+          ============================================ */}
+      {showClaimModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm"
+          onClick={() => setShowClaimModal(false)}
+        >
+          <div 
+            className="bg-[#111213] border border-white/[0.08] rounded-2xl max-w-md w-full overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-6 pb-4">
+              <h3 className="text-white/90 font-semibold text-xl mb-2">
+                Find your brand
+              </h3>
+              <p className="text-white/40 text-sm">
+                Search for your brand to claim it and access your AI visibility dashboard.
+              </p>
+            </div>
+
+            {/* Search Input */}
+            <div className="px-6 pb-4">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+                <input
+                  type="text"
+                  placeholder="Search for your brand..."
+                  value={claimSearchQuery}
+                  onChange={(e) => setClaimSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full pl-12 pr-5 py-3 bg-[#0B0B0C] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base"
+                />
+                {claimSearching && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Search Results */}
+            <div className="px-6 pb-6">
+              {claimSearchQuery.length >= 2 && (
+                <div className="bg-[#0B0B0C] border border-white/[0.06] rounded-xl overflow-hidden">
+                  {claimSearchResults.length > 0 ? (
+                    <>
+                      {claimSearchResults.slice(0, 5).map((brand) => (
+                        <Link
+                          key={brand.id}
+                          href={`/brands/${brand.slug}?claim=true`}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.04] transition-colors duration-100 border-b border-white/[0.04] last:border-b-0"
+                        >
+                          <div className="w-9 h-9 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                            <Image
+                              src={brand.logo_url}
+                              alt={brand.brand_name}
+                              width={72}
+                              height={72}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/placeholder-logo.svg'
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-white/90 font-medium text-sm truncate">{brand.brand_name}</div>
+                            <div className="text-white/40 text-xs truncate">{brand.domain}</div>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-white/30 flex-shrink-0" />
+                        </Link>
+                      ))}
+                      {/* Create new option at bottom */}
+                      <Link
+                        href={`/auth/signup?brand=${encodeURIComponent(claimSearchQuery)}&intent=claim`}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.04] transition-colors duration-100 border-t border-white/[0.06]"
+                      >
+                        <div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
+                          <Plus className="w-4 h-4 text-white/40" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-white/70 text-sm">Don't see your brand?</div>
+                          <div className="text-white/40 text-xs">Create "{claimSearchQuery}"</div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-white/30 flex-shrink-0" />
+                      </Link>
+                    </>
+                  ) : !claimSearching ? (
+                    <div className="p-4 text-center">
+                      <p className="text-white/40 text-sm mb-3">No brands found for "{claimSearchQuery}"</p>
+                      <Link
+                        href={`/auth/signup?brand=${encodeURIComponent(claimSearchQuery)}&intent=claim`}
+                        className="iridescent-hover inline-flex items-center gap-2 px-4 py-2 bg-white text-black text-sm font-medium rounded-lg transition-all duration-100"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Create "{claimSearchQuery}"
+                      </Link>
+                    </div>
+                  ) : null}
+                </div>
+              )}
+
+              {claimSearchQuery.length < 2 && (
+                <p className="text-white/30 text-sm text-center py-4">
+                  Type at least 2 characters to search
+                </p>
+              )}
+            </div>
+
+            {/* Close button */}
+            <div className="px-6 pb-6">
+              <button 
+                onClick={() => setShowClaimModal(false)}
+                className="w-full py-3 bg-white/[0.04] hover:bg-white/[0.08] text-white/50 text-sm font-medium rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
