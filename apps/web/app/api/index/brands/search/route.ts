@@ -14,7 +14,7 @@ function getBrandfetchLogo(domain: string): string {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
-    const query = searchParams.get('q')?.trim().toLowerCase()
+    const query = searchParams.get('q')?.trim()
 
     if (!query || query.length < 2) {
       return NextResponse.json({ results: [] })
@@ -25,12 +25,24 @@ export async function GET(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // Search by brand_name or domain using ilike
-    const { data: brands, error } = await supabase
+    // First try exact prefix match (fast - uses index)
+    let { data: brands, error } = await supabase
       .from('ai_profiles')
       .select('id, brand_name, slug, domain, industry')
-      .or(`brand_name.ilike.%${query}%,domain.ilike.%${query}%`)
+      .or(`brand_name.ilike.${query}%,domain.ilike.${query}%`)
       .limit(10)
+
+    // If no results, try contains match (slower but catches more)
+    if (!error && (!brands || brands.length === 0)) {
+      const containsResult = await supabase
+        .from('ai_profiles')
+        .select('id, brand_name, slug, domain, industry')
+        .or(`brand_name.ilike.%${query}%,domain.ilike.%${query}%`)
+        .limit(10)
+      
+      brands = containsResult.data
+      error = containsResult.error
+    }
 
     if (error) {
       console.error('Search error:', error)

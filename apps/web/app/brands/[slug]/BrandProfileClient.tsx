@@ -174,6 +174,17 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       {/* Profile Content */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative z-10">
         
+        {/* Back button */}
+        <Link 
+          href="/brands"
+          className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm mb-8 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to index
+        </Link>
+        
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start gap-6 mb-10">
           {/* Logo */}
@@ -231,37 +242,30 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           )}
         </div>
 
-        {/* What's Missing - The hook */}
-        {missingItems.length > 0 && !brand.claimed && (
-          <div className="bg-amber-400/[0.03] rounded-2xl border border-amber-400/10 p-6 md:p-8 mb-6">
-            <h2 className="text-sm font-medium text-amber-400/80 uppercase tracking-wide mb-4">
-              Not in this profile yet
-            </h2>
-            <div className="space-y-4">
-              {missingItems.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 mt-2 flex-shrink-0" />
-                  <div>
-                    <div className="text-white font-medium">{item.label}</div>
-                    <div className="text-white/40 text-sm">{item.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Claim CTA */}
+        {/* What's Missing + Claim CTA - Combined */}
         {!brand.claimed ? (
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-1">
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold text-white mb-2">
                   Is this your brand?
                 </h3>
-                <p className="text-white/50 text-sm">
-                  Claim this profile to add pricing, products, and keep your information accurate.
+                <p className="text-white/50 text-sm mb-4">
+                  Claim this profile to keep your information accurate and add what's missing.
                 </p>
+                
+                {missingItems.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-white/30 text-xs uppercase tracking-wide">Not in this profile yet:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {missingItems.map((item, idx) => (
+                        <span key={idx} className="px-3 py-1.5 rounded-lg bg-amber-400/10 text-amber-400/80 text-sm">
+                          {item.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => setShowClaimModal(true)}
@@ -272,7 +276,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             </div>
           </div>
         ) : (
-          <div className="bg-emerald-400/[0.03] rounded-2xl border border-emerald-400/10 p-6 md:p-8 mb-8">
+          <div className="bg-emerald-400/[0.03] rounded-2xl border border-emerald-400/10 p-6 md:p-8 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Shield className="w-5 h-5 text-emerald-400" />
