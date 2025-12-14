@@ -111,6 +111,71 @@ export default function PricingClient() {
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
+      {/* Holographic button styles */}
+      <style jsx global>{`
+        @keyframes holographic-shift {
+          0% { 
+            background-position: 0% 50%;
+            filter: hue-rotate(0deg);
+          }
+          25% { 
+            background-position: 50% 0%;
+            filter: hue-rotate(15deg);
+          }
+          50% { 
+            background-position: 100% 50%;
+            filter: hue-rotate(0deg);
+          }
+          75% { 
+            background-position: 50% 100%;
+            filter: hue-rotate(-15deg);
+          }
+          100% { 
+            background-position: 0% 50%;
+            filter: hue-rotate(0deg);
+          }
+        }
+        
+        .iridescent-hover {
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .iridescent-hover::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          background: radial-gradient(
+            ellipse at 30% 40%,
+            rgba(180, 220, 255, 0.95) 0%,
+            rgba(200, 180, 255, 0.9) 20%,
+            rgba(255, 180, 220, 0.9) 40%,
+            rgba(255, 200, 180, 0.85) 60%,
+            rgba(180, 255, 240, 0.9) 80%,
+            rgba(180, 220, 255, 0.95) 100%
+          );
+          background-size: 200% 200%;
+          opacity: 0;
+          transition: opacity 150ms ease-out;
+          animation: holographic-shift 3s ease-in-out infinite;
+          border-radius: inherit;
+        }
+        
+        .iridescent-hover:hover::before {
+          opacity: 1;
+        }
+        
+        .iridescent-hover:hover {
+          color: #000 !important;
+        }
+        
+        .iridescent-hover span,
+        .iridescent-hover svg {
+          position: relative;
+          z-index: 1;
+        }
+      `}</style>
+
       <Nav />
 
       {/* Hero */}
@@ -182,11 +247,11 @@ export default function PricingClient() {
                   href={plan.href}
                   className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-medium transition-all ${
                     plan.highlight
-                      ? 'bg-white text-black hover:bg-white/90'
+                      ? 'iridescent-hover bg-white text-black'
                       : 'bg-white/[0.06] text-white hover:bg-white/[0.1]'
                   }`}
                 >
-                  {plan.cta}
+                  <span>{plan.cta}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -276,9 +341,9 @@ export default function PricingClient() {
           </p>
           <Link
             href="/auth/signup"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-medium hover:bg-white/90 transition-colors"
+            className="iridescent-hover inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-medium transition-colors"
           >
-            Get Started
+            <span>Get Started</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
