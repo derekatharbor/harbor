@@ -1,7 +1,14 @@
 // API Route: /api/producthunt/setup
-// Sets up Product Hunt products for crawling
+// Sets up Product Hunt products in SEPARATE tables (not polluting main ai_profiles)
+// 
+// Tables needed (run migration first):
+//   - ph_products: id, name, domain, slug, category, created_at
+//   - ph_prompts: id, prompt_text, intent, enabled, created_at
+//   - ph_results: id, product_id, prompt_id, model, response_text, position, sentiment, executed_at
+//
 // GET - Check status
-// POST - Run setup and optionally trigger crawl
+// POST - Run setup
+// POST {"crawl": true} - Setup + crawl (may timeout, use /api/producthunt/crawl instead)
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -16,7 +23,7 @@ function getSupabase() {
   )
 }
 
-// Top Product Hunt launches - recognizable names
+// Top Product Hunt launches
 const PRODUCT_HUNT_PRODUCTS = [
   // Design & Productivity
   { name: 'Notion', domain: 'notion.so', category: 'Productivity' },
@@ -39,6 +46,8 @@ const PRODUCT_HUNT_PRODUCTS = [
   { name: 'Raycast', domain: 'raycast.com', category: 'Developer Tools' },
   { name: 'GitBook', domain: 'gitbook.com', category: 'Documentation' },
   { name: 'Readme', domain: 'readme.com', category: 'Documentation' },
+  { name: 'Render', domain: 'render.com', category: 'Developer Tools' },
+  { name: 'Fly.io', domain: 'fly.io', category: 'Developer Tools' },
   
   // AI Tools
   { name: 'Jasper', domain: 'jasper.ai', category: 'AI Writing' },
@@ -49,6 +58,8 @@ const PRODUCT_HUNT_PRODUCTS = [
   { name: 'Perplexity', domain: 'perplexity.ai', category: 'AI Search' },
   { name: 'Gamma', domain: 'gamma.app', category: 'AI Presentations' },
   { name: 'Tome', domain: 'tome.app', category: 'AI Presentations' },
+  { name: 'ElevenLabs', domain: 'elevenlabs.io', category: 'AI Audio' },
+  { name: 'Cursor', domain: 'cursor.com', category: 'AI Coding' },
   
   // Communication & Collaboration
   { name: 'Slack', domain: 'slack.com', category: 'Communication' },
@@ -56,6 +67,7 @@ const PRODUCT_HUNT_PRODUCTS = [
   { name: 'Calendly', domain: 'calendly.com', category: 'Scheduling' },
   { name: 'Cal.com', domain: 'cal.com', category: 'Scheduling' },
   { name: 'Whereby', domain: 'whereby.com', category: 'Video Conferencing' },
+  { name: 'Grain', domain: 'grain.com', category: 'Meeting Notes' },
   
   // Marketing & Sales
   { name: 'Webflow', domain: 'webflow.com', category: 'Website Builder' },
@@ -75,15 +87,17 @@ const PRODUCT_HUNT_PRODUCTS = [
   { name: 'PostHog', domain: 'posthog.com', category: 'Analytics' },
   { name: 'Hotjar', domain: 'hotjar.com', category: 'Analytics' },
   { name: 'Plausible', domain: 'plausible.io', category: 'Analytics' },
+  { name: 'June', domain: 'june.so', category: 'Analytics' },
   
   // Finance & Payments
   { name: 'Stripe', domain: 'stripe.com', category: 'Payments' },
   { name: 'Paddle', domain: 'paddle.com', category: 'Payments' },
   { name: 'Mercury', domain: 'mercury.com', category: 'Banking' },
   { name: 'Brex', domain: 'brex.com', category: 'Banking' },
+  { name: 'Ramp', domain: 'ramp.com', category: 'Banking' },
   
   // More recent PH favorites
-  { name: 'Arc Browser', domain: 'arc.net', category: 'Browser' },
+  { name: 'Arc', domain: 'arc.net', category: 'Browser' },
   { name: 'Superhuman', domain: 'superhuman.com', category: 'Email' },
   { name: 'Height', domain: 'height.app', category: 'Project Management' },
   { name: 'Craft', domain: 'craft.do', category: 'Notes' },
@@ -91,29 +105,41 @@ const PRODUCT_HUNT_PRODUCTS = [
   { name: 'Tally', domain: 'tally.so', category: 'Forms' },
   { name: 'Typeform', domain: 'typeform.com', category: 'Forms' },
   { name: 'Luma', domain: 'lu.ma', category: 'Events' },
+  { name: 'Resend', domain: 'resend.com', category: 'Email API' },
+  { name: 'Loops', domain: 'loops.so', category: 'Email Marketing' },
 ]
 
 const PH_PROMPTS = [
+  // Discovery
   { text: 'What are the most successful products that launched on Product Hunt?', intent: 'discovery' },
   { text: 'Best productivity tools from Product Hunt', intent: 'discovery' },
   { text: 'Top AI tools that launched on Product Hunt', intent: 'discovery' },
   { text: 'What are the best Product Hunt launches of all time?', intent: 'discovery' },
+  { text: 'What tools do YC startups use?', intent: 'discovery' },
+  { text: 'Best tech stack for a new startup', intent: 'discovery' },
+  
+  // Category comparisons
   { text: 'What project management tools are popular among startups?', intent: 'comparison' },
-  { text: 'Best design tools for startups in 2024', intent: 'comparison' },
+  { text: 'Best design tools for startups', intent: 'comparison' },
   { text: 'What are the best developer tools for building SaaS?', intent: 'comparison' },
   { text: 'What note-taking apps do founders use?', intent: 'comparison' },
   { text: 'Best email marketing tools for small businesses', intent: 'comparison' },
   { text: 'What analytics tools should startups use?', intent: 'comparison' },
-  { text: 'How much does Notion cost?', intent: 'pricing' },
-  { text: 'What is Linear pricing?', intent: 'pricing' },
+  { text: 'Best website builders for startups', intent: 'comparison' },
+  { text: 'What payment processing tools do startups use?', intent: 'comparison' },
+  
+  // Head-to-head
   { text: 'Figma vs Canva for design', intent: 'comparison' },
   { text: 'Is Supabase better than Firebase?', intent: 'comparison' },
-  { text: 'What is Vercel used for?', intent: 'informational' },
-  { text: 'Best alternatives to Slack', intent: 'alternatives' },
   { text: 'Notion vs Coda vs Airtable comparison', intent: 'comparison' },
-  { text: 'What tools do YC startups use?', intent: 'discovery' },
-  { text: 'Best tech stack for a new startup', intent: 'discovery' },
-  { text: 'What software should a new startup use?', intent: 'discovery' },
+  { text: 'Linear vs Jira for project management', intent: 'comparison' },
+  { text: 'Best alternatives to Slack', intent: 'alternatives' },
+  
+  // Pricing
+  { text: 'How much does Notion cost?', intent: 'pricing' },
+  { text: 'What is Linear pricing?', intent: 'pricing' },
+  { text: 'Figma pricing plans', intent: 'pricing' },
+  { text: 'Is Vercel free?', intent: 'pricing' },
 ]
 
 function slugify(name: string): string {
@@ -127,148 +153,139 @@ function slugify(name: string): string {
 export async function GET() {
   const supabase = getSupabase()
   
-  // Count PH products in ai_profiles
-  const { count: profileCount } = await supabase
-    .from('ai_profiles')
+  // Check if tables exist and get counts
+  const { count: productCount, error: productError } = await supabase
+    .from('ph_products')
     .select('*', { count: 'exact', head: true })
-    .in('domain', PRODUCT_HUNT_PRODUCTS.map(p => p.domain))
   
-  // Count PH featured brands
-  const { count: featuredCount } = await supabase
-    .from('featured_brands')
+  const { count: promptCount, error: promptError } = await supabase
+    .from('ph_prompts')
     .select('*', { count: 'exact', head: true })
-    .eq('industry', 'producthunt')
   
-  // Count PH prompts
-  const { count: promptCount } = await supabase
-    .from('index_prompts')
+  const { count: resultCount, error: resultError } = await supabase
+    .from('ph_results')
     .select('*', { count: 'exact', head: true })
-    .eq('industry', 'producthunt')
   
-  // Last execution
-  const { data: lastExec } = await supabase
-    .from('prompt_executions')
-    .select('executed_at, prompt:index_prompts(industry)')
+  const tablesExist = !productError && !promptError && !resultError
+  
+  // Get last result
+  const { data: lastResult } = tablesExist ? await supabase
+    .from('ph_results')
+    .select('executed_at')
     .order('executed_at', { ascending: false })
     .limit(1)
-    .single()
+    .single() : { data: null }
   
   return NextResponse.json({
-    status: 'ok',
+    status: tablesExist ? 'ok' : 'tables_missing',
+    tables_exist: tablesExist,
+    migration_needed: !tablesExist,
     products_to_add: PRODUCT_HUNT_PRODUCTS.length,
-    profiles_in_db: profileCount || 0,
-    featured_brands: featuredCount || 0,
-    prompts: promptCount || 0,
     prompts_to_add: PH_PROMPTS.length,
-    last_execution: lastExec?.executed_at || 'never',
-    hint: 'POST to run setup, POST with {"crawl": true} to also trigger crawl'
+    products_in_db: productCount || 0,
+    prompts_in_db: promptCount || 0,
+    results_in_db: resultCount || 0,
+    last_crawl: lastResult?.executed_at || 'never',
+    hint: tablesExist 
+      ? 'POST to populate tables, then use /api/producthunt/crawl to run AI queries'
+      : 'Run migration first - see migration SQL below',
+    migration_sql: `
+-- Run this in Supabase SQL Editor:
+
+CREATE TABLE IF NOT EXISTS ph_products (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  domain TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  category TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ph_prompts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  prompt_text TEXT NOT NULL UNIQUE,
+  intent TEXT,
+  enabled BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ph_results (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  prompt_id UUID REFERENCES ph_prompts(id),
+  model TEXT NOT NULL,
+  response_text TEXT,
+  brands_mentioned JSONB DEFAULT '[]',
+  executed_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_ph_results_prompt ON ph_results(prompt_id);
+CREATE INDEX idx_ph_results_executed ON ph_results(executed_at DESC);
+    `
   })
 }
 
-// POST - Run setup
+// POST - Populate tables
 export async function POST(request: NextRequest) {
   const supabase = getSupabase()
-  const body = await request.json().catch(() => ({}))
-  const shouldCrawl = body.crawl === true
   
   const results = {
-    profiles_created: 0,
-    profiles_existing: 0,
-    featured_added: 0,
+    products_added: 0,
+    products_existing: 0,
     prompts_added: 0,
-    crawl_triggered: false,
+    prompts_existing: 0,
     errors: [] as string[]
   }
   
-  console.log('🚀 Setting up Product Hunt products...')
+  console.log('🚀 Setting up Product Hunt tables...')
   
-  // 1. Add products to ai_profiles
+  // 1. Add products
   for (const product of PRODUCT_HUNT_PRODUCTS) {
     const slug = slugify(product.name)
     
     const { data: existing } = await supabase
-      .from('ai_profiles')
+      .from('ph_products')
       .select('id')
       .eq('slug', slug)
       .single()
     
     if (existing) {
-      results.profiles_existing++
+      results.products_existing++
       continue
     }
     
     const { error } = await supabase
-      .from('ai_profiles')
+      .from('ph_products')
       .insert({
-        brand_name: product.name,
-        slug,
+        name: product.name,
         domain: product.domain,
-        industry: 'Technology',
-        category: product.category,
-        visibility_score: 0,
-        rank_global: 99999,
-        claimed: false
+        slug,
+        category: product.category
       })
     
     if (error) {
-      results.errors.push(`profile/${product.name}: ${error.message}`)
+      results.errors.push(`product/${product.name}: ${error.message}`)
     } else {
-      results.profiles_created++
+      results.products_added++
     }
   }
   
-  // 2. Add to featured_brands
-  for (const product of PRODUCT_HUNT_PRODUCTS) {
-    const slug = slugify(product.name)
-    
-    const { data: profile } = await supabase
-      .from('ai_profiles')
-      .select('id')
-      .eq('slug', slug)
-      .single()
-    
-    if (!profile) continue
-    
-    const { data: existingFeatured } = await supabase
-      .from('featured_brands')
-      .select('id')
-      .eq('profile_id', profile.id)
-      .eq('industry', 'producthunt')
-      .single()
-    
-    if (existingFeatured) continue
-    
-    const { error } = await supabase
-      .from('featured_brands')
-      .insert({
-        profile_id: profile.id,
-        industry: 'producthunt',
-        priority: 50,
-        enabled: true
-      })
-    
-    if (error) {
-      results.errors.push(`featured/${product.name}: ${error.message}`)
-    } else {
-      results.featured_added++
-    }
-  }
-  
-  // 3. Add prompts
+  // 2. Add prompts
   for (const prompt of PH_PROMPTS) {
     const { data: existing } = await supabase
-      .from('index_prompts')
+      .from('ph_prompts')
       .select('id')
       .eq('prompt_text', prompt.text)
       .single()
     
-    if (existing) continue
+    if (existing) {
+      results.prompts_existing++
+      continue
+    }
     
     const { error } = await supabase
-      .from('index_prompts')
+      .from('ph_prompts')
       .insert({
         prompt_text: prompt.text,
-        industry: 'producthunt',
         intent: prompt.intent,
         enabled: true
       })
@@ -280,30 +297,11 @@ export async function POST(request: NextRequest) {
     }
   }
   
-  // 4. Optionally trigger crawl
-  if (shouldCrawl) {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-      const crawlResponse = await fetch(`${baseUrl}/api/cron/weekly-index?manual=true`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ industry: 'producthunt', limit: 50 })
-      })
-      
-      if (crawlResponse.ok) {
-        results.crawl_triggered = true
-      } else {
-        results.errors.push(`crawl: ${crawlResponse.status}`)
-      }
-    } catch (err: any) {
-      results.errors.push(`crawl: ${err.message}`)
-    }
-  }
-  
   console.log('✅ Setup complete:', results)
   
   return NextResponse.json({
-    success: true,
-    results
+    success: results.errors.length === 0,
+    results,
+    next_step: 'Run POST /api/producthunt/crawl to execute AI queries'
   })
 }
