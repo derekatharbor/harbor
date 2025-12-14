@@ -3,7 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Check, AlertCircle, TrendingUp, TrendingDown, Shield, Lock, ExternalLink } from 'lucide-react'
+import { X, Shield, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -140,54 +140,29 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
 
   // Parse feed data
   const feedData = brand.feed_data || {}
-  const scoring = feedData.visibility_scoring || {}
   
-  // Check if we have real scoring data (at least one subscore > 0)
-  const hasRealScoring = scoring.brand_clarity_0_25 > 0 || 
-                         scoring.offerings_clarity_0_25 > 0 || 
-                         scoring.trust_and_basics_0_20 > 0 ||
-                         scoring.structure_for_ai_0_20 > 0 ||
-                         scoring.breadth_of_coverage_0_10 > 0
-  
-  // Calculate visibility gaps with priority levels (only if we have real data)
-  const gaps = hasRealScoring ? [
-    { 
-      issue: 'Brand clarity',
-      current: scoring.brand_clarity_0_25 || 0,
-      max: 25,
-      priority: (25 - (scoring.brand_clarity_0_25 || 0)) >= 15 ? 'high' : 'medium'
-    },
-    {
-      issue: 'Offerings clarity', 
-      current: scoring.offerings_clarity_0_25 || 0,
-      max: 25,
-      priority: (25 - (scoring.offerings_clarity_0_25 || 0)) >= 15 ? 'high' : 'medium'
-    },
-    {
-      issue: 'Trust & basics',
-      current: scoring.trust_and_basics_0_20 || 0,
-      max: 20,
-      priority: (20 - (scoring.trust_and_basics_0_20 || 0)) >= 12 ? 'high' : 'medium'
-    },
-    {
-      issue: 'Structure for AI',
-      current: scoring.structure_for_ai_0_20 || 0,
-      max: 20,
-      priority: (20 - (scoring.structure_for_ai_0_20 || 0)) >= 12 ? 'high' : 'medium'
-    },
-    {
-      issue: 'Breadth of coverage',
-      current: scoring.breadth_of_coverage_0_10 || 0,
-      max: 10,
-      priority: (10 - (scoring.breadth_of_coverage_0_10 || 0)) >= 6 ? 'high' : 'medium'
-    }
-  ].filter(gap => gap.current < gap.max * 0.8) // Show gaps where score is below 80% of max
-   .sort((a, b) => (b.max - b.current) - (a.max - a.current))
-   .slice(0, 3) : []
+  // Calculate what's missing (the real hook)
+  const missingItems = []
+  if (!feedData.pricing || feedData.pricing.length === 0) {
+    missingItems.push({ label: 'Pricing', description: 'AI models may guess or pull outdated pricing from third-party sites' })
+  }
+  if (!feedData.offerings || feedData.offerings.length === 0) {
+    missingItems.push({ label: 'Products & Services', description: 'Without this, AI gives generic descriptions of what you offer' })
+  }
+  if (!feedData.faqs || feedData.faqs.length === 0) {
+    missingItems.push({ label: 'FAQs', description: 'Common questions go unanswered or get filled in from forums' })
+  }
+  if (!feedData.company_info?.founded_year) {
+    missingItems.push({ label: 'Company details', description: 'Founding date, location, size—AI often gets these wrong' })
+  }
 
-  // Mock delta calculation
-  const delta = brand.rank_global <= 10 ? 5.8 : -1.2
-  const isPositive = delta > 0
+  // Check for ?claim=true query param
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('claim') === 'true' && !brand.claimed) {
+      setShowClaimModal(true)
+    }
+  }, [brand.claimed])
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -197,205 +172,78 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       <div className="h-20" />
 
       {/* Profile Content */}
-      <div className="max-w-5xl mx-auto px-4 md:px-6 py-12 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative z-10">
         
-        {/* Header Card */}
-        <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 mb-8">
-            {/* Logo */}
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
-              <Image
-                src={brand.logo_url}
-                alt={brand.brand_name}
-                width={96}
-                height={96}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            </div>
-
-            {/* Brand Info */}
-            <div className="flex-1">
-              {/* Profile Type Label */}
-              <div className="inline-flex items-center px-3 py-1 rounded-full backdrop-blur-md bg-white/10 border border-white/20 mb-3">
-                <span className="text-white/90 text-xs font-medium tracking-wide uppercase">
-                  AI Visibility Profile
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-4xl md:text-5xl font-bold text-white">
-                  {brand.brand_name}
-                </h1>
-                {brand.claimed && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-400/10 text-green-400 text-sm font-medium">
-                    <Shield className="w-4 h-4" />
-                    Verified
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center gap-4 text-white/50 text-sm md:text-base">
-                <span>{brand.domain}</span>
-                <span>•</span>
-                <span>{brand.industry}</span>
-                <span>•</span>
-                <span>Rank #{brand.rank_global}</span>
-              </div>
-            </div>
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start gap-6 mb-10">
+          {/* Logo */}
+          <div className="w-20 h-20 rounded-xl overflow-hidden bg-white/5 flex items-center justify-center flex-shrink-0">
+            <Image
+              src={brand.logo_url}
+              alt={brand.brand_name}
+              width={80}
+              height={80}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none'
+              }}
+            />
           </div>
 
-          {/* Visibility Score */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
-              <div className="flex items-center gap-2 text-white/50 text-sm mb-2">
-                <div className="w-3 h-3 rounded-full bg-white/20" />
-                Visibility Score
-              </div>
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-white">
-                  {brand.visibility_score.toFixed(1)}%
-                </span>
-                <span className={`text-lg font-medium ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {isPositive ? '+' : ''}{delta.toFixed(1)}%
-                </span>
-              </div>
-            </div>
-
-            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
-              <div className="text-white/50 text-sm mb-2">Global Rank</div>
-              <div className="text-4xl font-bold text-white">
-                #{brand.rank_global}
-              </div>
-            </div>
-          </div>
-
-          {/* AI Description Hero Block - NEW */}
-          {feedData.short_description && (
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-6 mb-8">
-              <h2 className="text-lg font-bold text-white mb-4">
-                How AI Describes {brand.brand_name} Today
-              </h2>
-              <p className="text-white/70 text-sm leading-relaxed mb-4">
-                "{feedData.short_description}"
-              </p>
-              {scoring.score_rationale && (
-                <p className="text-white/40 text-xs font-mono">
-                  {scoring.score_rationale}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Visibility Gaps - NEW */}
-          {gaps.length > 0 && (
-            <div className="bg-white/[0.03] rounded-xl p-6 border border-white/[0.06]">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Visibility Opportunities
-                  </h3>
-                  <p className="text-white/50 text-sm">
-                    Areas where AI models may be missing critical information about {brand.brand_name}
-                  </p>
-                </div>
-                {!brand.claimed && (
-                  <Lock className="w-5 h-5 text-white/30" />
-                )}
-              </div>
-              
-              <div className="space-y-3">
-                {gaps.map((gap, idx) => (
-                  <div 
-                    key={idx}
-                    className={`flex items-center justify-between p-4 rounded-lg ${brand.claimed ? 'bg-white/[0.03]' : 'bg-white/[0.03] opacity-60'}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-amber-400" />
-                      <span className="text-white font-medium">{gap.issue}</span>
-                    </div>
-                    <span className={`text-xs font-medium px-2 py-1 rounded ${
-                      gap.priority === 'high' 
-                        ? 'bg-amber-400/10 text-amber-400' 
-                        : 'bg-blue-400/10 text-blue-400'
-                    }`}>
-                      {gap.priority === 'high' ? 'High impact' : 'Medium impact'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {!brand.claimed && (
-                <div className="mt-4 p-3 bg-white/[0.02] rounded-lg border border-white/[0.06]">
-                  <p className="text-white/60 text-sm">
-                    <Lock className="w-4 h-4 inline mr-1" />
-                    Claim this profile to see detailed recommendations and fix these issues
-                  </p>
+          {/* Brand Info */}
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
+                {brand.brand_name}
+              </h1>
+              {brand.claimed && (
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-400/10 text-emerald-400 text-xs font-medium">
+                  <Shield className="w-3.5 h-3.5" />
+                  Claimed
                 </div>
               )}
             </div>
+            <div className="flex items-center gap-3 text-white/40 text-sm">
+              <span>{brand.domain}</span>
+              {brand.industry && (
+                <>
+                  <span>•</span>
+                  <span>{brand.industry}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* What AI Says - The main content block */}
+        <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+          <h2 className="text-sm font-medium text-white/40 uppercase tracking-wide mb-4">
+            What AI says about {brand.brand_name}
+          </h2>
+          {feedData.short_description ? (
+            <p className="text-white/80 text-lg leading-relaxed">
+              {feedData.short_description}
+            </p>
+          ) : (
+            <p className="text-white/40 text-lg italic">
+              No description available. AI models are forming their own interpretation.
+            </p>
           )}
         </div>
 
-        {/* Claim Status CTA */}
-        {!brand.claimed ? (
-          // UNCLAIMED: Show claim CTA
-          <div className="mb-8 p-6 bg-amber-400/5 border border-amber-400/10 rounded-xl">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-white mb-2">
-                  This profile is unclaimed
-                </h3>
-                <p className="text-white/60 text-sm mb-4">
-                  Are you from {brand.brand_name}? Claim this profile for free to manage how AI models understand your brand.
-                </p>
-                <button
-                  onClick={() => setShowClaimModal(true)}
-                  className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all"
-                >
-                  Claim this profile — it's free
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          // CLAIMED: Show sign-in CTA
-          <div className="mb-8 p-6 bg-emerald-400/5 border border-emerald-400/10 rounded-xl">
-            <div className="flex items-start gap-4">
-              <Shield className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-white mb-2">
-                  Brand claimed
-                </h3>
-                <p className="text-white/60 text-sm mb-4">
-                  This profile is verified and managed by {brand.brand_name}. Are you from this company?
-                </p>
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="px-6 py-3 rounded-lg bg-white text-black font-medium hover:bg-white/90 transition-all"
-                >
-                  Sign in to manage
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Offerings - NEW: Display actual data */}
-        {feedData.offerings && feedData.offerings.length > 0 && (
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Products & Services</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {feedData.offerings.map((offering: any, idx: number) => (
-                <div key={idx} className="bg-white/[0.03] rounded-lg p-4 border border-white/[0.06]">
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0" />
-                    <div>
-                      <h3 className="text-white font-medium mb-1">{offering.name}</h3>
-                      <p className="text-white/50 text-sm">{offering.description}</p>
-                    </div>
+        {/* What's Missing - The hook */}
+        {missingItems.length > 0 && !brand.claimed && (
+          <div className="bg-amber-400/[0.03] rounded-2xl border border-amber-400/10 p-6 md:p-8 mb-6">
+            <h2 className="text-sm font-medium text-amber-400/80 uppercase tracking-wide mb-4">
+              Not in this profile yet
+            </h2>
+            <div className="space-y-4">
+              {missingItems.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400/60 mt-2 flex-shrink-0" />
+                  <div>
+                    <div className="text-white font-medium">{item.label}</div>
+                    <div className="text-white/40 text-sm">{item.description}</div>
                   </div>
                 </div>
               ))}
@@ -403,14 +251,101 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         )}
 
-        {/* FAQs - NEW: Display actual data */}
+        {/* Claim CTA */}
+        {!brand.claimed ? (
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-1">
+                  Is this your brand?
+                </h3>
+                <p className="text-white/50 text-sm">
+                  Claim this profile to add pricing, products, and keep your information accurate.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowClaimModal(true)}
+                className="px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 transition-all flex-shrink-0"
+              >
+                Claim profile
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-emerald-400/[0.03] rounded-2xl border border-emerald-400/10 p-6 md:p-8 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Shield className="w-5 h-5 text-emerald-400" />
+                <div>
+                  <h3 className="text-white font-medium">
+                    This profile is claimed
+                  </h3>
+                  <p className="text-white/50 text-sm">
+                    Managed by {brand.brand_name}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowClaimModal(true)}
+                className="px-6 py-3 rounded-xl bg-white/[0.06] text-white font-medium hover:bg-white/[0.1] transition-all flex-shrink-0"
+              >
+                Sign in to manage
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Pricing - Show if available */}
+        {feedData.pricing && feedData.pricing.length > 0 && (
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+            <h2 className="text-sm font-medium text-white/40 uppercase tracking-wide mb-4">
+              Pricing
+            </h2>
+            <div className="space-y-3">
+              {feedData.pricing.map((tier: any, idx: number) => (
+                <div key={idx} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-lg border border-white/[0.06]">
+                  <div>
+                    <div className="text-white font-medium">{tier.name || tier.tier}</div>
+                    {tier.description && (
+                      <div className="text-white/40 text-sm">{tier.description}</div>
+                    )}
+                  </div>
+                  <div className="text-white font-medium">
+                    {tier.price || 'Contact'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Offerings */}
+        {feedData.offerings && feedData.offerings.length > 0 && (
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+            <h2 className="text-sm font-medium text-white/40 uppercase tracking-wide mb-4">
+              Products & Services
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {feedData.offerings.map((offering: any, idx: number) => (
+                <div key={idx} className="bg-white/[0.03] rounded-lg p-4 border border-white/[0.06]">
+                  <h3 className="text-white font-medium mb-1">{offering.name}</h3>
+                  <p className="text-white/50 text-sm">{offering.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* FAQs */}
         {feedData.faqs && feedData.faqs.length > 0 && (
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Common Questions</h2>
-            <div className="space-y-4">
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+            <h2 className="text-sm font-medium text-white/40 uppercase tracking-wide mb-4">
+              Common Questions
+            </h2>
+            <div className="space-y-3">
               {feedData.faqs.map((faq: any, idx: number) => (
-                <div key={idx} className="bg-white/[0.03] rounded-lg p-5 border border-white/[0.06]">
-                  <h3 className="text-white font-medium mb-2">{faq.question}</h3>
+                <div key={idx} className="bg-white/[0.03] rounded-lg p-4 border border-white/[0.06]">
+                  <h3 className="text-white font-medium mb-1">{faq.question}</h3>
                   <p className="text-white/50 text-sm leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
@@ -418,10 +353,12 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           </div>
         )}
 
-        {/* Company Info - NEW: Display actual data */}
+        {/* Company Info */}
         {feedData.company_info && (
-          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-8 md:p-12 mb-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Company Information</h2>
+          <div className="bg-white/[0.02] rounded-2xl border border-white/[0.08] p-6 md:p-8 mb-6">
+            <h2 className="text-sm font-medium text-white/40 uppercase tracking-wide mb-4">
+              Company Information
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {feedData.company_info.founded_year && (
                 <div>
@@ -460,7 +397,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 href={`https://${brand.domain}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
               >
                 Visit {brand.brand_name}
                 <ExternalLink className="w-4 h-4" />
