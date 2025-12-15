@@ -220,9 +220,9 @@ export default function HarborIndexClient() {
           ============================================ */}
       <section className="pt-28 sm:pt-32 lg:pt-40 pb-12 lg:pb-16 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Clear definition */}
+          {/* Clear definition - UPDATED HERO */}
           <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl text-white/[0.94] leading-[1.15] tracking-tight mb-4">
-            Claim your brand's AI profile
+            Your brand has an AI profile. Claim it.
           </h1>
 
           {/* Supporting context - calm, not persuasive */}
@@ -325,7 +325,7 @@ export default function HarborIndexClient() {
               ))}
             </div>
             <p className="text-white/20 text-xs sm:text-sm">
-              Brands already being referenced by AI
+              100,000+ brands indexed
             </p>
           </div>
         </div>
@@ -454,10 +454,10 @@ export default function HarborIndexClient() {
                 <div className="p-6">
                   <h3 className="text-white/90 font-semibold text-lg mb-3">AI doesn't understand most brand websites</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
-                    Most websites are built for humans, not machines. AI models struggle to extract structured information like pricing, product details, and company facts from typical marketing pages.
+                    Your website was built for humans—with animations, carousels, and marketing copy. AI crawlers parse text, not experiences. They often leave with incomplete or confusing data.
                   </p>
                   <p className="text-white/40 text-sm leading-relaxed">
-                    Without clear, machine-readable data, AI either skips your brand entirely or makes assumptions based on incomplete information.
+                    Harbor gives you a clean, structured profile that AI can actually read. Schema-formatted, consistently updated, and designed specifically for machine understanding.
                   </p>
                 </div>
               </>
@@ -470,101 +470,96 @@ export default function HarborIndexClient() {
                 <div className="p-6">
                   <h3 className="text-white/90 font-semibold text-lg mb-3">AI pulls brand data from third-party sources</h3>
                   <p className="text-white/40 text-sm leading-relaxed mb-4">
-                    AI assembles answers from scattered sources: old blog posts, competitor comparisons, review sites, Wikipedia entries. The result is often a patchwork of information you never approved.
+                    When AI answers questions about your company, it often cites third-party sources—review sites, directories, articles—rather than your own website.
                   </p>
                   <p className="text-white/40 text-sm leading-relaxed">
-                    Pricing changes, product updates, and company pivots often aren't reflected in AI responses for months—or ever.
+                    Harbor becomes that third-party source, but one you actually control. Your profile is structured data that AI models can reference with confidence.
                   </p>
                 </div>
               </>
             )}
-            <div className="px-6 pb-6">
-              <button 
-                onClick={() => setActiveModal(null)}
-                className="w-full py-3 bg-white/[0.06] hover:bg-white/[0.1] text-white/70 text-sm font-medium rounded-xl transition-colors"
-              >
-                Close
-              </button>
-            </div>
+            <button 
+              onClick={() => setActiveModal(null)}
+              className="w-full py-4 text-white/50 text-sm font-medium hover:text-white/70 transition-colors border-t border-white/[0.06]"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
 
       {/* ============================================
-          SECTION C: Product Object Preview (Linear-style)
+          SECTION C: What You Get
           ============================================ */}
-      <section className="py-16 lg:py-24 bg-[#0a0a0a] overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
-            {/* Left: Text content */}
-            <div className="px-6 lg:pl-12 lg:pr-0 lg:max-w-md">
-              <h2 className="font-semibold text-2xl md:text-3xl lg:text-4xl text-white/90 mb-4 leading-tight">
-                A dashboard for your<br className="hidden sm:block" />AI presence
-              </h2>
-              <p className="text-white/40 mb-8 lg:mb-10 leading-relaxed text-sm lg:text-base">
-                Harbor gives you visibility into how AI models perceive and describe your brand across different contexts.
-              </p>
+      <section className="py-12 lg:py-20 px-4 sm:px-6 border-t border-white/[0.04]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10 lg:mb-14">
+            <h2 className="font-semibold text-2xl sm:text-3xl text-white/90 mb-3">
+              What claiming gets you
+            </h2>
+            <p className="text-white/40 text-sm max-w-md mx-auto">
+              A structured profile for AI, plus tools to see how you're being represented.
+            </p>
+          </div>
 
-              {/* Feature list - stacks on mobile */}
-              <div className="space-y-6 lg:space-y-8 border-t border-white/[0.06] pt-6 lg:pt-8">
-                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4">
-                  <h3 className="text-white/80 font-medium text-sm">Visibility index</h3>
-                  <p className="text-white/40 text-sm leading-relaxed">
-                    A composite score showing how prominently your brand appears across AI responses.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4">
-                  <h3 className="text-white/80 font-medium text-sm flex items-center gap-2">
-                    Model comparison
-                    <ArrowRight className="w-3 h-3 text-white/30" />
-                  </h3>
-                  <p className="text-white/40 text-sm leading-relaxed">
-                    See how descriptions differ between ChatGPT, Claude, Gemini, and Perplexity.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-1 sm:gap-4">
-                  <h3 className="text-white/80 font-medium text-sm">Change monitoring</h3>
-                  <p className="text-white/40 text-sm leading-relaxed">
-                    Track how AI descriptions evolve and get notified of significant shifts.
-                  </p>
-                </div>
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            {/* Left: AI Profile */}
+            <div className="bg-[#111213] rounded-2xl border border-white/[0.06] p-6 sm:p-8">
+              <div className="w-12 h-12 rounded-xl bg-white/[0.04] flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
               </div>
+              <h3 className="text-white/90 font-semibold text-lg mb-2">AI-Readable Profile</h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-5">
+                A schema.org formatted profile with your brand info, products, pricing, and FAQs. Designed for AI crawlers to parse accurately.
+              </p>
+              <ul className="space-y-2">
+                {['Brand description & positioning', 'Products and services', 'Pricing information', 'FAQs in structured format'].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-white/50 text-sm">
+                    <div className="w-1 h-1 rounded-full bg-white/30" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Right: Dashboard image - HIDDEN on mobile */}
-            <div className="relative min-h-[700px] hidden lg:block">
-              <div className="absolute left-0 top-0 bottom-0 w-[130%] rounded-l-2xl overflow-hidden border border-white/[0.06] border-r-0 shadow-2xl">
-                <Image
-                  src="/images/dashboard-hero.png"
-                  alt="Harbor brand visibility dashboard"
-                  width={1400}
-                  height={900}
-                  className="w-full h-full object-cover object-left"
-                  priority
-                />
+            {/* Right: Visibility Dashboard */}
+            <div className="bg-[#111213] rounded-2xl border border-white/[0.06] p-6 sm:p-8">
+              <div className="w-12 h-12 rounded-xl bg-white/[0.04] flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                </svg>
               </div>
+              <h3 className="text-white/90 font-semibold text-lg mb-2">Visibility Analytics</h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-5">
+                See how AI models describe your brand. Track mentions, compare to competitors, and monitor changes over time.
+              </p>
+              <ul className="space-y-2">
+                {['AI model responses about your brand', 'Citation source tracking', 'Competitor comparison', 'Historical visibility trends'].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-white/50 text-sm">
+                    <div className="w-1 h-1 rounded-full bg-white/30" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       {/* ============================================
-          SECTION E: How Claiming Works (Process)
+          SECTION E: How It Works (Minimal)
           ============================================ */}
-      <section className="py-12 lg:py-20 px-4 sm:px-6 bg-[#0a0a0a]">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8 lg:mb-12">
-            <h2 className="font-semibold text-xl sm:text-2xl md:text-3xl text-white/90 mb-3">
-              Claim your brand in minutes
+      <section className="py-12 lg:py-16 px-4 sm:px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-8 lg:mb-10">
+            <h2 className="font-semibold text-xl sm:text-2xl text-white/90">
+              Three steps to claim
             </h2>
-            <p className="text-white/40 text-sm sm:text-base">
-              No credit card required. Start with visibility, upgrade when you need more.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
             {/* Step 1 */}
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
@@ -578,7 +573,7 @@ export default function HarborIndexClient() {
               </div>
               <h3 className="text-white/80 font-medium text-sm mb-2">Find your brand</h3>
               <p className="text-white/30 text-xs leading-relaxed max-w-[200px] mx-auto">
-                Search the index to see if your brand is already being tracked. If not, add it.
+                Search the index to see if your brand profile already exists.
               </p>
             </div>
 
@@ -650,10 +645,10 @@ export default function HarborIndexClient() {
       <section className="py-12 lg:py-20 px-4 sm:px-6">
         <div className="max-w-xl mx-auto text-center">
           <h2 className="font-semibold text-xl sm:text-2xl text-white/90 mb-3">
-            Start seeing what AI sees
+            Find your brand
           </h2>
           <p className="text-white/40 text-sm mb-6 sm:mb-8">
-            Claim your brand to access visibility data and update your canonical profile.
+            Search the index to see your profile and claim it.
           </p>
           
           <button
