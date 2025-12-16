@@ -1,14 +1,10 @@
 // components/landing-new/Footer.tsx
+// Simplified for launch - only links to pages that exist
+
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Footer() {
-  const links = {
-    Product: ['Features', 'Pricing', 'Directory', 'API'],
-    Resources: ['Documentation', 'Blog', 'Changelog', 'Status'],
-    Company: ['About', 'Careers', 'Contact', 'Legal'],
-  }
-
   return (
     <footer className="bg-[#0a0a0a] border-t border-white/10 py-16">
       <div className="max-w-6xl mx-auto px-6">
@@ -29,21 +25,61 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Links */}
-          {Object.entries(links).map(([category, items]) => (
-            <div key={category}>
-              <h4 className="text-white font-semibold mb-4">{category}</h4>
-              <ul className="space-y-3">
-                {items.map((item) => (
-                  <li key={item}>
-                    <Link href="#" className="text-white/40 hover:text-white text-sm transition-colors">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Product */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Product</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/brands" className="text-white/40 hover:text-white text-sm transition-colors">
+                  Brand Index
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className="text-white/40 hover:text-white text-sm transition-colors">
+                  Pricing
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/contact" className="text-white/40 hover:text-white text-sm transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Connect */}
+          <div>
+            <h4 className="text-white font-semibold mb-4">Connect</h4>
+            <ul className="space-y-3">
+              <li>
+                <a 
+                  href="https://linkedin.com/company/useharbor" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-white text-sm transition-colors"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://x.com/useharbor" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white/40 hover:text-white text-sm transition-colors"
+                >
+                  X (Twitter)
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between pt-8 border-t border-white/10">

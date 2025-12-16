@@ -1,57 +1,39 @@
 // components/landing-new/Nav.tsx
+// Simplified for launch - focus on brand claiming
+
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronDown, Menu, X, BarChart3, Globe, Users, FileText, BookOpen, Code } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
+import Image from 'next/image'
+import { Menu, X } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [checkingAuth, setCheckingAuth] = useState(true)
-
   const supabase = createClientComponentClient()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        setIsLoggedIn(!!session?.user)
-      } catch {
-        setIsLoggedIn(false)
-      } finally {
-        setCheckingAuth(false)
-      }
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setIsLoggedIn(!!session)
     }
     checkAuth()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session?.user)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsLoggedIn(!!session)
     })
 
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? 'bg-black/80 backdrop-blur-xl border-b border-white/10' 
-        : 'bg-transparent'
-    }`}>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src="/images/harbor-logo-white.svg"
               alt="Harbor"
@@ -63,148 +45,23 @@ export default function Nav() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {/* Product Dropdown - Dashboard/Analytics features */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('product')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button className={`px-4 py-2 text-sm font-medium flex items-center gap-1 transition-colors rounded-full ${
-                activeDropdown === 'product' ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white'
-              }`}>
-                Product
-                <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === 'product' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {activeDropdown === 'product' && (
-                <div className="absolute top-full left-0 pt-2">
-                  <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-2 min-w-[320px] shadow-2xl">
-                    <div className="px-3 py-2">
-                      <span className="text-xs font-medium text-white/40 uppercase tracking-wider">Analytics</span>
-                    </div>
-                    
-                    <Link href="/product" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <BarChart3 className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <span className="text-white font-medium text-sm block">Brand Visibility</span>
-                        <span className="text-white/40 text-xs mt-0.5 block">Track how AI models describe your brand</span>
-                      </div>
-                    </Link>
-                    
-                    <Link href="/product/sources" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <Globe className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <span className="text-white font-medium text-sm block">Citation Sources</span>
-                        <span className="text-white/40 text-xs mt-0.5 block">See which sites AI pulls from</span>
-                      </div>
-                    </Link>
-                    
-                    <Link href="/product/competitors" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <Users className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <span className="text-white font-medium text-sm block">Competitor Intel</span>
-                        <span className="text-white/40 text-xs mt-0.5 block">Benchmark against your rivals</span>
-                      </div>
-                    </Link>
-                    
-                    <Link href="/product/website" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <FileText className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <span className="text-white font-medium text-sm block">Website Analysis</span>
-                        <span className="text-white/40 text-xs mt-0.5 block">AI readability audit for your site</span>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Universities - Simple link */}
-            <Link href="/universities" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
-              Universities
+            {/* Brand Index */}
+            <Link href="/brands" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+              Brand Index
             </Link>
 
             {/* Pricing */}
             <Link href="/pricing" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
               Pricing
             </Link>
-
-            {/* Resources Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setActiveDropdown('resources')}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <button className={`px-4 py-2 text-sm font-medium flex items-center gap-1 transition-colors rounded-full ${
-                activeDropdown === 'resources' ? 'bg-white/10 text-white' : 'text-white/70 hover:text-white'
-              }`}>
-                Resources
-                <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === 'resources' ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {activeDropdown === 'resources' && (
-                <div className="absolute top-full right-0 pt-2">
-                  <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-2 min-w-[260px] shadow-2xl">
-                    <Link href="/docs" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <BookOpen className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-medium text-sm">Documentation</span>
-                          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-white/10 text-white/60 rounded">Soon</span>
-                        </div>
-                        <span className="text-white/40 text-xs mt-0.5 block">Learn how Harbor works</span>
-                      </div>
-                    </Link>
-                    
-                    <Link href="/blog" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <FileText className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-medium text-sm">Blog</span>
-                          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-white/10 text-white/60 rounded">Soon</span>
-                        </div>
-                        <span className="text-white/40 text-xs mt-0.5 block">GEO insights & updates</span>
-                      </div>
-                    </Link>
-                    
-                    <Link href="/api" className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-white/5 transition-colors group">
-                      <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                        <Code className="w-5 h-5 text-white/70" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-medium text-sm">API</span>
-                          <span className="px-1.5 py-0.5 text-[10px] font-medium bg-white/10 text-white/60 rounded">Soon</span>
-                        </div>
-                        <span className="text-white/40 text-xs mt-0.5 block">Build integrations</span>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Right Side */}
+          {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
-            {checkingAuth ? (
-              <div className="w-24 h-9 bg-white/10 rounded-lg animate-pulse" />
-            ) : isLoggedIn ? (
+            {isLoggedIn ? (
               <Link 
                 href="/dashboard/overview" 
-                className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
+                className="px-5 py-2 bg-white text-black font-semibold text-sm rounded-full hover:bg-white/90 transition-colors"
               >
                 Dashboard
               </Link>
@@ -214,8 +71,8 @@ export default function Nav() {
                   Log in
                 </Link>
                 <Link 
-                  href="/auth/signup" 
-                  className="px-4 py-2 bg-white text-black text-sm font-semibold rounded-lg hover:bg-white/90 transition-colors"
+                  href="/brands" 
+                  className="px-5 py-2 bg-white text-black font-semibold text-sm rounded-full hover:bg-white/90 transition-colors"
                 >
                   Claim Your Brand
                 </Link>
@@ -224,9 +81,9 @@ export default function Nav() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-white/70 hover:text-white"
+            className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -237,23 +94,8 @@ export default function Nav() {
       {mobileOpen && (
         <div className="md:hidden bg-[#0a0a0a] border-t border-white/10">
           <div className="px-6 py-4 space-y-1">
-            <div className="py-2">
-              <span className="text-xs font-medium text-white/40 uppercase tracking-wider">Product</span>
-            </div>
-            <Link href="/product" className="block py-2 text-white/70 hover:text-white pl-2">Brand Visibility</Link>
-            <Link href="/product/sources" className="block py-2 text-white/70 hover:text-white pl-2">Citation Sources</Link>
-            <Link href="/product/competitors" className="block py-2 text-white/70 hover:text-white pl-2">Competitor Intel</Link>
-            
-            <div className="py-2 pt-4">
-              <span className="text-xs font-medium text-white/40 uppercase tracking-wider">Browse</span>
-            </div>
-            <Link href="/universities" className="block py-2 text-white/70 hover:text-white pl-2">University Index</Link>
-            
-            <div className="py-2 pt-4">
-              <span className="text-xs font-medium text-white/40 uppercase tracking-wider">More</span>
-            </div>
-            <Link href="/pricing" className="block py-2 text-white/70 hover:text-white pl-2">Pricing</Link>
-            <Link href="/docs" className="block py-2 text-white/70 hover:text-white pl-2">Documentation</Link>
+            <Link href="/brands" className="block py-2 text-white/70 hover:text-white">Brand Index</Link>
+            <Link href="/pricing" className="block py-2 text-white/70 hover:text-white">Pricing</Link>
             
             <div className="pt-4 border-t border-white/10 space-y-3 mt-4">
               {isLoggedIn ? (
@@ -263,7 +105,7 @@ export default function Nav() {
               ) : (
                 <>
                   <Link href="/auth/login" className="block py-2 text-white/70 hover:text-white">Log in</Link>
-                  <Link href="/auth/signup" className="block py-3 bg-white text-black text-center font-semibold rounded-lg">
+                  <Link href="/brands" className="block py-3 bg-white text-black text-center font-semibold rounded-lg">
                     Claim Your Brand
                   </Link>
                 </>
