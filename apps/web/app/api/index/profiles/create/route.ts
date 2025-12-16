@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     const domainRegex = /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,}$/
     if (!domainRegex.test(normalizedDomain)) {
       return NextResponse.json(
-        { error: 'Invalid domain format' },
+        { error: 'Please enter a valid domain (e.g., acme.com)' },
         { status: 400 }
       )
     }
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Please enter a valid email address' },
         { status: 400 }
       )
     }
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
     const emailDomain = email.split('@')[1].toLowerCase()
     if (emailDomain !== normalizedDomain) {
       return NextResponse.json(
-        { error: `Email must be from @${normalizedDomain}` },
+        { error: `Your email must end with @${normalizedDomain}` },
         { status: 400 }
       )
     }
@@ -106,10 +106,24 @@ export async function POST(request: Request) {
       .single()
 
     if (existing) {
-      // Profile exists - redirect them to claim it instead
+      // Profile exists - check if claimed and give specific message
+      if (existing.claimed) {
+        return NextResponse.json(
+          { 
+            error: `This brand is already claimed. If you work at ${normalizedDomain}, search for it and sign in to manage.`,
+            existingProfile: {
+              id: existing.id,
+              brandName: existing.brand_name,
+              claimed: existing.claimed
+            }
+          },
+          { status: 409 }
+        )
+      }
+      // Profile exists but unclaimed - redirect them to claim it
       return NextResponse.json(
         { 
-          error: 'Profile already exists',
+          error: `A profile for ${existing.brand_name} already exists. Search for it to claim.`,
           existingProfile: {
             id: existing.id,
             brandName: existing.brand_name,

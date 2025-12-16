@@ -186,11 +186,8 @@ export default function HarborIndexClient() {
       const data = await res.json()
 
       if (!res.ok) {
-        if (res.status === 409 && data.existingProfile) {
-          setCreateError(`A profile for ${data.existingProfile.brandName} already exists. Search for it to claim.`)
-        } else {
-          setCreateError(data.error || 'Failed to create profile')
-        }
+        // Show the specific error from API
+        setCreateError(data.error || 'Failed to create profile')
         setCreateLoading(false)
         return
       }
@@ -642,8 +639,11 @@ export default function HarborIndexClient() {
                   {claimSearchQuery.length < 2 && <p className="text-white/30 text-sm text-center py-4">Type at least 2 characters to search</p>}
                 </div>
 
-                <div className="px-6 pb-6">
+                <div className="px-6 pb-6 space-y-3">
                   <button onClick={() => setShowClaimModal(false)} className="w-full py-3 bg-white/[0.04] hover:bg-white/[0.08] text-white/50 text-sm font-medium rounded-xl transition-colors">Cancel</button>
+                  <p className="text-white/30 text-xs text-center">
+                    Need help? <a href="mailto:hello@useharbor.io" className="text-white/50 underline hover:text-white/70">Contact us</a>
+                  </p>
                 </div>
               </>
             )}
@@ -678,6 +678,10 @@ export default function HarborIndexClient() {
                   </button>
 
                   <button onClick={() => setShowClaimModal(false)} className="w-full py-3 bg-white/[0.04] hover:bg-white/[0.08] text-white/50 text-sm font-medium rounded-xl transition-colors">Cancel</button>
+                  
+                  <p className="text-white/30 text-xs text-center">
+                    Need help? <a href="mailto:hello@useharbor.io" className="text-white/50 underline hover:text-white/70">Contact us</a>
+                  </p>
                 </div>
               </>
             )}
@@ -704,6 +708,10 @@ export default function HarborIndexClient() {
 
                   <p className="text-white/30 text-xs text-center">
                     Didn't receive it? Check spam or <button onClick={() => setModalStep('create')} className="text-white/50 underline hover:text-white/70">try again</button>
+                  </p>
+                  
+                  <p className="text-white/30 text-xs text-center">
+                    Need help? <a href="mailto:hello@useharbor.io" className="text-white/50 underline hover:text-white/70">Contact us</a>
                   </p>
                 </div>
               </>
