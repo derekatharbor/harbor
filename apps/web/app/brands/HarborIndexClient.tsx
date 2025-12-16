@@ -75,6 +75,7 @@ export default function HarborIndexClient() {
   const [claimSearching, setClaimSearching] = useState(false)
   
   // Create profile state
+  const [createCompanyName, setCreateCompanyName] = useState('')
   const [createDomain, setCreateDomain] = useState('')
   const [createEmail, setCreateEmail] = useState('')
   const [createLoading, setCreateLoading] = useState(false)
@@ -146,6 +147,7 @@ export default function HarborIndexClient() {
         setModalStep('search')
         setClaimSearchQuery('')
         setClaimSearchResults([])
+        setCreateCompanyName('')
         setCreateDomain('')
         setCreateEmail('')
         setCreateError('')
@@ -163,7 +165,12 @@ export default function HarborIndexClient() {
   const handleStartCreate = (searchTerm: string) => {
     const term = searchTerm.trim().toLowerCase()
     if (term.includes('.')) {
-      setCreateDomain(term.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0])
+      // Looks like a domain - extract and set
+      const domainPart = term.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]
+      setCreateDomain(domainPart)
+    } else {
+      // Looks like a company name - pre-fill that instead
+      setCreateCompanyName(searchTerm.trim())
     }
     setModalStep('create')
   }
@@ -178,6 +185,7 @@ export default function HarborIndexClient() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          companyName: createCompanyName,
           domain: createDomain,
           email: createEmail,
         }),
@@ -656,15 +664,23 @@ export default function HarborIndexClient() {
                     <ArrowLeft className="w-4 h-4" />Back
                   </button>
                   <h3 className="text-white/90 font-semibold text-xl mb-2">Create your profile</h3>
-                  <p className="text-white/40 text-sm">Enter your company domain and work email to get started.</p>
+                  <p className="text-white/40 text-sm">Enter your company details to get started.</p>
                 </div>
 
                 <div className="px-6 pb-6 space-y-4">
+                  {/* Company name input */}
+                  <div>
+                    <label className="block text-white/50 text-sm mb-2">Company name</label>
+                    <input type="text" placeholder="Acme Inc" value={createCompanyName} onChange={(e) => setCreateCompanyName(e.target.value)} className="w-full px-4 py-3 bg-[#0B0B0C] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base" />
+                  </div>
+
+                  {/* Domain input */}
                   <div>
                     <label className="block text-white/50 text-sm mb-2">Company domain</label>
                     <input type="text" placeholder="acme.com" value={createDomain} onChange={(e) => setCreateDomain(e.target.value.toLowerCase().trim())} className="w-full px-4 py-3 bg-[#0B0B0C] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base" />
                   </div>
 
+                  {/* Email input */}
                   <div>
                     <label className="block text-white/50 text-sm mb-2">Work email</label>
                     <input type="email" placeholder={emailDomainHint ? `you${emailDomainHint}` : 'you@company.com'} value={createEmail} onChange={(e) => setCreateEmail(e.target.value.toLowerCase().trim())} className="w-full px-4 py-3 bg-[#0B0B0C] border border-white/[0.08] rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all duration-100 text-base" />
@@ -673,7 +689,7 @@ export default function HarborIndexClient() {
 
                   {createError && <div className="p-3 rounded-lg bg-red-400/10 border border-red-400/20 text-red-400 text-sm">{createError}</div>}
 
-                  <button onClick={handleCreateProfile} disabled={createLoading || !createDomain || !createEmail} className="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                  <button onClick={handleCreateProfile} disabled={createLoading || !createCompanyName || !createDomain || !createEmail} className="w-full py-3 bg-white text-black font-medium rounded-xl hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                     {createLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Creating...</> : 'Continue'}
                   </button>
 

@@ -29,7 +29,9 @@ import {
   Zap,
   LogOut,
   BookOpen,
-  Info
+  Info,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 
 // Types
@@ -116,6 +118,19 @@ export default function ManageBrandPage() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [hasChanges, setHasChanges] = useState(false)
+  
+  // Profile panel state (collapsed by default)
+  const [profilePanelOpen, setProfilePanelOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('harbor-profile-panel-open') === 'true'
+    }
+    return false
+  })
+  
+  // Persist profile panel state
+  useEffect(() => {
+    localStorage.setItem('harbor-profile-panel-open', String(profilePanelOpen))
+  }, [profilePanelOpen])
 
   // Editable state
   const [description, setDescription] = useState('')
@@ -1128,27 +1143,86 @@ export default function ManageBrandPage() {
         )}
       </main>
 
-      {/* Right Sidebar - The Actual JSON Feed - Fixed */}
-      <aside className="w-[360px] border-l border-white/[0.06] flex flex-col bg-[#0B0B0C] flex-shrink-0 h-screen overflow-hidden">
-        <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
-          <div>
-            <h2 className="text-white font-semibold text-sm font-heading">Your AI Profile</h2>
-            <p className="text-white/40 text-xs mt-0.5">The schema AI models read</p>
+      {/* Right Sidebar - Collapsible AI Profile Panel */}
+      <aside 
+        className={`
+          border-l border-white/[0.06] flex flex-col bg-[#0B0B0C] flex-shrink-0 h-screen overflow-hidden
+          transition-all duration-300
+          ${profilePanelOpen ? 'w-[360px]' : 'w-16'}
+        `}
+      >
+        {/* Collapsed State */}
+        {!profilePanelOpen && (
+          <div className="flex flex-col items-center py-4 h-full">
+            {/* Expand Button */}
+            <button
+              onClick={() => setProfilePanelOpen(true)}
+              className="w-10 h-10 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center transition-colors group"
+              title="View AI Profile"
+            >
+              <ChevronLeft className="w-4 h-4 text-white/50 group-hover:text-white/80" />
+            </button>
+            
+            {/* Status Pill - Vertical */}
+            <div className="mt-4 flex flex-col items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-[10px] text-white/40 [writing-mode:vertical-lr] rotate-180">Published</span>
+            </div>
+            
+            {/* Spacer */}
+            <div className="flex-1" />
+            
+            {/* View Profile Link */}
+            <Link
+              href={`/brands/${brand.slug}/harbor.json`}
+              target="_blank"
+              className="w-10 h-10 rounded-lg hover:bg-white/[0.04] flex items-center justify-center transition-colors group"
+              title="Open harbor.json"
+            >
+              <ExternalLink className="w-4 h-4 text-white/30 group-hover:text-white/60" />
+            </Link>
           </div>
-          <Link
-            href={`/brands/${brand.slug}/harbor.json`}
-            target="_blank"
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] text-white/50 text-xs transition-colors"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            View Profile
-          </Link>
-        </div>
+        )}
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
-          <pre className="text-xs font-mono leading-relaxed text-white/70 whitespace-pre-wrap break-words">
-            <code>{JSON.stringify({
+        {/* Expanded State */}
+        {profilePanelOpen && (
+          <>
+            {/* Header */}
+            <div className="p-4 border-b border-white/[0.06] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setProfilePanelOpen(false)}
+                  className="w-8 h-8 rounded-lg hover:bg-white/[0.06] flex items-center justify-center transition-colors"
+                  title="Collapse panel"
+                >
+                  <ChevronRight className="w-4 h-4 text-white/50" />
+                </button>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-white font-semibold text-sm font-heading">Your AI Profile</h2>
+                    {/* Published Pill */}
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-400/10 border border-emerald-400/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span className="text-emerald-400 text-[10px] font-medium">Published</span>
+                    </span>
+                  </div>
+                  <p className="text-white/40 text-xs mt-0.5">The schema AI models read</p>
+                </div>
+              </div>
+              <Link
+                href={`/brands/${brand.slug}/harbor.json`}
+                target="_blank"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#111213] border border-white/[0.06] hover:border-white/[0.12] text-white/50 text-xs transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                View
+              </Link>
+            </div>
+
+            {/* Scrollable JSON content */}
+            <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
+              <pre className="text-xs font-mono leading-relaxed text-white/70 whitespace-pre-wrap break-words">
+                <code>{JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Organization",
   name: brand.brand_name,
@@ -1197,14 +1271,17 @@ export default function ManageBrandPage() {
     }
   })
 }, null, 2)}</code>
-          </pre>
-        </div>
+              </pre>
+            </div>
 
-        <div className="p-4 border-t border-white/[0.06]">
-          <p className="text-white/30 text-xs">
-            Available at <span className="font-mono text-white/50">/brands/{brand.slug}/harbor.json</span>
-          </p>
-        </div>
+            {/* Footer */}
+            <div className="p-3 border-t border-white/[0.06]">
+              <p className="text-white/30 text-[10px] text-center">
+                Available at /brands/{brand.slug}/harbor.json
+              </p>
+            </div>
+          </>
+        )}
       </aside>
 
       {/* CSV Preview Modal */}

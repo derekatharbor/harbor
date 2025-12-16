@@ -40,7 +40,7 @@ function slugFromDomain(domain: string): string {
 
 export async function POST(request: Request) {
   try {
-    const { domain, email } = await request.json()
+    const { companyName, domain, email } = await request.json()
 
     // Validate inputs
     if (!domain || !email) {
@@ -135,7 +135,8 @@ export async function POST(request: Request) {
     }
 
     // Generate brand name and slug
-    const brandName = brandNameFromDomain(normalizedDomain)
+    // Use provided company name, or fall back to domain-based name
+    const brandName = companyName?.trim() || brandNameFromDomain(normalizedDomain)
     const baseSlug = slugFromDomain(normalizedDomain)
     
     // Ensure unique slug
