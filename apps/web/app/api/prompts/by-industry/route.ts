@@ -1,8 +1,9 @@
 // app/api/prompts/by-industry/route.ts
-export const dynamic = 'force-dynamic'
+
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 
 // Map user-friendly industry names to actual seed_prompts topics
 const INDUSTRY_TO_TOPIC_MAP: Record<string, string[]> = {

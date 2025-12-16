@@ -2,7 +2,8 @@
 // Add a new user prompt
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'\
+export const dynamic = 'force-dynamic'
 
 function getSupabase() {
   return createClient(
