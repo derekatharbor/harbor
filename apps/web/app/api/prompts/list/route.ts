@@ -1,6 +1,8 @@
 // app/api/prompts/list/route.ts
 // Fetch prompts - filters suggested by user's industry
 
+export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
