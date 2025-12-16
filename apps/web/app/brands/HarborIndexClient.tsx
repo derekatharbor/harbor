@@ -421,7 +421,7 @@ export default function HarborIndexClient() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               { key: 'ai-search', img: '/images/card-ai-search.png', title: 'People discover brands through AI answers now' },
-              { key: 'not-found', img: '/images/card-not-found.png', title: 'AI doesn't understand most brand websites' },
+              { key: 'not-found', img: '/images/card-not-found.png', title: "AI doesn't understand most brand websites" },
               { key: 'outdated', img: '/images/card-outdated.png', title: 'AI pulls brand data from third-party sources' },
             ].map((card, i) => (
               <button
