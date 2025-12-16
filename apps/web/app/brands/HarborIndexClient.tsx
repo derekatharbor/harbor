@@ -548,71 +548,71 @@ export default function HarborIndexClient() {
         </div>
       </section>
 
-      {/* ============================================
-          SECTION E: How It Works (Minimal)
-          ============================================ */}
-      <section className="py-12 lg:py-16 px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-8 lg:mb-10">
-            <h2 className="font-semibold text-xl sm:text-2xl text-white/90">
-              Three steps to claim
-            </h2>
-          </div>
+     {/* ============================================
+    SECTION E: How It Works (Minimal)
+    ============================================ */}
+<section className="py-16 lg:py-20 px-4 sm:px-6">
+  <div className="max-w-4xl mx-auto">
+    <div className="text-center mb-10 lg:mb-12">
+      <h2 className="font-semibold text-2xl sm:text-3xl text-white/90">
+        Three steps to claim
+      </h2>
+    </div>
 
-          <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src="/icons/claim-search.png"
-                  alt="Search"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Find your brand</h3>
-              <p className="text-white/30 text-xs leading-relaxed max-w-[200px] mx-auto">
-                Search the index to see if your brand profile already exists.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src="/icons/claim-verify.png"
-                  alt="Verify"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Verify ownership</h3>
-              <p className="text-white/30 text-xs leading-relaxed max-w-[200px] mx-auto">
-                Confirm you represent the brand via email domain or DNS verification.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src="/icons/claim-dashboard.png"
-                  alt="Access"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-white/80 font-medium text-sm mb-2">Access your dashboard</h3>
-              <p className="text-white/30 text-xs leading-relaxed max-w-[200px] mx-auto">
-                Review AI outputs, edit your profile, and monitor changes going forward.
-              </p>
-            </div>
-          </div>
+    <div className="grid sm:grid-cols-3 gap-10 sm:gap-8">
+      {/* Step 1 */}
+      <div className="text-center">
+        <div className="w-14 h-14 mx-auto mb-5 rounded-xl overflow-hidden">
+          <Image
+            src="/icons/claim-search.png"
+            alt="Search"
+            width={56}
+            height={56}
+            className="w-full h-full object-cover"
+          />
         </div>
-      </section>
+        <h3 className="text-white/80 font-medium text-base mb-2">Find your brand</h3>
+        <p className="text-white/30 text-sm leading-relaxed max-w-[240px] mx-auto">
+          Search the index to see if your brand profile already exists.
+        </p>
+      </div>
+
+      {/* Step 2 */}
+      <div className="text-center">
+        <div className="w-14 h-14 mx-auto mb-5 rounded-xl overflow-hidden">
+          <Image
+            src="/icons/claim-verify.png"
+            alt="Verify"
+            width={56}
+            height={56}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h3 className="text-white/80 font-medium text-base mb-2">Verify ownership</h3>
+        <p className="text-white/30 text-sm leading-relaxed max-w-[240px] mx-auto">
+          Confirm you represent the brand via email domain or DNS verification.
+        </p>
+      </div>
+
+      {/* Step 3 */}
+      <div className="text-center">
+        <div className="w-14 h-14 mx-auto mb-5 rounded-xl overflow-hidden">
+          <Image
+            src="/icons/claim-dashboard.png"
+            alt="Access"
+            width={56}
+            height={56}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h3 className="text-white/80 font-medium text-base mb-2">Access your dashboard</h3>
+        <p className="text-white/30 text-sm leading-relaxed max-w-[240px] mx-auto">
+          Review AI outputs, edit your profile, and monitor changes going forward.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* ============================================
           SECTION F: Proof Without Overreach
