@@ -160,9 +160,9 @@ export async function POST(request: Request) {
         brand_name: brandName,
         domain: normalizedDomain,
         slug,
-        status: 'pending', // Not indexed until verified
         claimed: false,
         logo_url: `https://cdn.brandfetch.io/${normalizedDomain}?c=1id1Fyz-h7an5-5KR_y`,
+        feed_data: {}, // Required field - empty for now, can be enriched later
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
