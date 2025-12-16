@@ -1164,9 +1164,9 @@ export default function ManageBrandPage() {
             </button>
             
             {/* Status Pill - Vertical */}
-            <div className="mt-4 flex flex-col items-center gap-1">
+            <div className="mt-4 flex flex-col items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="text-[10px] text-white/40 [writing-mode:vertical-lr] rotate-180">Published</span>
+              <span className="text-xs text-white/50 font-medium [writing-mode:vertical-lr] rotate-180 tracking-wide">Published</span>
             </div>
             
             {/* Spacer */}
