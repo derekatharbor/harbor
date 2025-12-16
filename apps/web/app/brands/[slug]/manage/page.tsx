@@ -133,6 +133,7 @@ export default function ManageBrandPage() {
   }, [profilePanelOpen])
 
   // Editable state
+  const [brandName, setBrandName] = useState('')
   const [description, setDescription] = useState('')
   const [oneLiner, setOneLiner] = useState('')
   const [category, setCategory] = useState('')
@@ -171,6 +172,9 @@ export default function ManageBrandPage() {
         
         setBrand(data)
         
+        // Initialize brand name from profile
+        setBrandName(data.brand_name || '')
+        
         // Initialize editable state from feed_data
         if (data.feed_data) {
           setDescription(data.feed_data.short_description || '')
@@ -203,6 +207,7 @@ export default function ManageBrandPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          brand_name: brandName, // Allow updating brand name
           description, // API maps this to short_description
           offerings: offerings.map(o => ({
             name: o.name,
@@ -214,9 +219,7 @@ export default function ManageBrandPage() {
           faqs,
           companyInfo: {
             ...companyInfo,
-            // Include one_liner, category, icp in company_info
           },
-          // Additional fields the API supports
           one_line_summary: oneLiner,
           category,
           icp,
@@ -228,7 +231,7 @@ export default function ManageBrandPage() {
       // Update local state with new feed_data
       const updatedFeedData: FeedData = {
         ...(brand.feed_data || {}),
-        brand_name: brand.brand_name,
+        brand_name: brandName,
         short_description: description,
         one_line_summary: oneLiner,
         category,
@@ -238,7 +241,7 @@ export default function ManageBrandPage() {
         faqs,
       }
       
-      setBrand({ ...brand, feed_data: updatedFeedData })
+      setBrand({ ...brand, brand_name: brandName, feed_data: updatedFeedData })
       setHasChanges(false)
       setMessage({ type: 'success', text: 'Saved!' })
       setTimeout(() => setMessage(null), 3000)
@@ -643,131 +646,209 @@ export default function ManageBrandPage() {
 
               {/* AI Visits */}
               <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6">
-                {/* Explainer */}
-                <div className="flex items-start gap-3 p-4 rounded-lg bg-[#161718]/50 border border-white/[0.04] mb-6">
-                  <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-white/70 text-sm">
-                      When AI platforms like ChatGPT or Perplexity read your profile, their visits show up here. 
-                      More visits means more chances to get recommended.
-                    </p>
-                  </div>
-                </div>
+                {(() => {
+                  const totalVisits = botVisits.reduce((sum, bot) => sum + bot.visit_count, 0)
+                  
+                  // No visits yet - show encouraging "Profile Published" state
+                  if (totalVisits === 0) {
+                    return (
+                      <>
+                        {/* Published Status */}
+                        <div className="text-center py-8">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-400/10 flex items-center justify-center">
+                            <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                          </div>
+                          <h3 className="text-white font-semibold font-heading text-lg mb-2">Your profile is live</h3>
+                          <p className="text-white/50 text-sm max-w-md mx-auto mb-6">
+                            AI platforms can now discover and read your structured profile. 
+                            New profiles are typically crawled within 2-4 weeks.
+                          </p>
+                          
+                          {/* View Profile Link */}
+                          <Link
+                            href={`/brands/${brand.slug}/harbor.json`}
+                            target="_blank"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-white/70 text-sm transition-colors"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            View your harbor.json
+                          </Link>
+                        </div>
 
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-white font-semibold font-heading">AI Visits</h3>
-                  <span className="text-white/30 text-xs">Last 30 days</span>
-                </div>
+                        {/* Tips */}
+                        <div className="mt-6 pt-6 border-t border-white/[0.06]">
+                          <p className="text-white/40 text-xs uppercase tracking-wider mb-3">While you wait</p>
+                          <ul className="space-y-2">
+                            <li className="flex items-start gap-2 text-white/50 text-sm">
+                              <span className="text-emerald-400 mt-0.5">✓</span>
+                              Complete your profile to improve AI recommendations
+                            </li>
+                            <li className="flex items-start gap-2 text-white/50 text-sm">
+                              <span className="text-emerald-400 mt-0.5">✓</span>
+                              Add products and FAQs for better context
+                            </li>
+                            <li className="flex items-start gap-2 text-white/50 text-sm">
+                              <span className="text-emerald-400 mt-0.5">✓</span>
+                              Link your harbor.json from your website
+                            </li>
+                          </ul>
+                        </div>
 
-                {/* Recharts Area Chart */}
-                <div className="h-32 mb-6">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart 
-                      data={(() => {
-                        // Generate last 30 days of data (zeros for now - will be wired to real data)
-                        const days = []
-                        for (let i = 29; i >= 0; i--) {
-                          const date = new Date()
-                          date.setDate(date.getDate() - i)
-                          days.push({
-                            date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                            fullDate: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-                            total: 0,
-                            chatgpt: 0,
-                            claude: 0,
-                            perplexity: 0,
-                            gemini: 0
-                          })
-                        }
-                        return days
-                      })()}
-                      margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                    >
-                      <defs>
-                        <linearGradient id="visitGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="rgba(99, 102, 241, 0.3)" />
-                          <stop offset="100%" stopColor="rgba(99, 102, 241, 0)" />
-                        </linearGradient>
-                      </defs>
-                      <XAxis 
-                        dataKey="date" 
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }}
-                        interval={9}
-                      />
-                      <YAxis 
-                        hide={true}
-                        domain={[0, 10]}
-                      />
-                      <Tooltip 
-                        content={({ active, payload, label }) => {
-                          if (active && payload && payload.length) {
-                            const data = payload[0].payload
-                            return (
-                              <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[150px]">
-                                <p className="text-white/50 text-[10px] mb-2">{data.fullDate}</p>
-                                <div className="space-y-1.5">
-                                  {botVisits.map((bot) => {
-                                    const key = bot.bot_label.toLowerCase().replace(' ', '')
-                                    const count = data[key] || 0
-                                    return (
-                                      <div key={bot.bot_name} className="flex items-center gap-2">
-                                        <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
-                                        <span className="text-white/70 text-xs">{bot.bot_label}</span>
-                                        <span className="text-white/40 text-xs ml-auto">{count}</span>
-                                      </div>
-                                    )
-                                  })}
-                                </div>
+                        {/* Platform logos - coming soon */}
+                        <div className="mt-6 pt-6 border-t border-white/[0.06]">
+                          <p className="text-white/30 text-xs text-center mb-4">Waiting for visits from</p>
+                          <div className="flex justify-center gap-4">
+                            {botVisits.map((bot) => (
+                              <div 
+                                key={bot.bot_name}
+                                className="w-10 h-10 rounded-lg overflow-hidden opacity-30 grayscale"
+                                title={bot.bot_label}
+                              >
+                                <Image
+                                  src={bot.logo}
+                                  alt={bot.bot_label}
+                                  width={40}
+                                  height={40}
+                                  className="w-full h-full object-contain"
+                                />
                               </div>
-                            )
-                          }
-                          return null
-                        }}
-                        cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="total"
-                        stroke="rgba(99, 102, 241, 0.6)"
-                        strokeWidth={2}
-                        fill="url(#visitGradient)"
-                        dot={false}
-                        activeDot={{ r: 4, fill: '#6366f1', stroke: '#1A1F26', strokeWidth: 2 }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )
+                  }
 
-                {/* Platform grid */}
-                <div className="grid grid-cols-4 gap-3">
-                  {botVisits.map((bot) => (
-                    <div 
-                      key={bot.bot_name} 
-                      className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
-                        bot.visit_count > 0 
-                          ? 'bg-[#161718] border-white/[0.08]' 
-                          : 'bg-[#0B0B0C] border-white/[0.04]'
-                      }`}
-                    >
-                      <div className={`w-8 h-8 rounded-lg overflow-hidden mb-2 ${
-                        bot.visit_count === 0 ? 'opacity-30 grayscale' : ''
-                      }`}>
-                        <Image
-                          src={bot.logo}
-                          alt={bot.bot_label}
-                          width={32}
-                          height={32}
-                          className="w-full h-full object-contain"
-                        />
+                  // Has visits - show the chart
+                  return (
+                    <>
+                      {/* Explainer */}
+                      <div className="flex items-start gap-3 p-4 rounded-lg bg-[#161718]/50 border border-white/[0.04] mb-6">
+                        <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-white/70 text-sm">
+                            When AI platforms like ChatGPT or Perplexity read your profile, their visits show up here. 
+                            More visits means more chances to get recommended.
+                          </p>
+                        </div>
                       </div>
-                      <span className={`text-xs ${bot.visit_count > 0 ? 'text-white/70' : 'text-white/30'}`}>
-                        {bot.visit_count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-white font-semibold font-heading">AI Visits</h3>
+                        <span className="text-white/30 text-xs">Last 30 days</span>
+                      </div>
+
+                      {/* Recharts Area Chart */}
+                      <div className="h-32 mb-6">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart 
+                            data={(() => {
+                              const days = []
+                              for (let i = 29; i >= 0; i--) {
+                                const date = new Date()
+                                date.setDate(date.getDate() - i)
+                                days.push({
+                                  date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+                                  fullDate: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                                  total: 0,
+                                  chatgpt: 0,
+                                  claude: 0,
+                                  perplexity: 0,
+                                  gemini: 0
+                                })
+                              }
+                              return days
+                            })()}
+                            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                          >
+                            <defs>
+                              <linearGradient id="visitGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="rgba(99, 102, 241, 0.3)" />
+                                <stop offset="100%" stopColor="rgba(99, 102, 241, 0)" />
+                              </linearGradient>
+                            </defs>
+                            <XAxis 
+                              dataKey="date" 
+                              axisLine={false}
+                              tickLine={false}
+                              tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }}
+                              interval={9}
+                            />
+                            <YAxis 
+                              hide={true}
+                              domain={[0, 10]}
+                            />
+                            <Tooltip 
+                              content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                  const data = payload[0].payload
+                                  return (
+                                    <div className="bg-[#1A1F26] border border-white/[0.1] rounded-lg p-3 shadow-xl min-w-[150px]">
+                                      <p className="text-white/50 text-[10px] mb-2">{data.fullDate}</p>
+                                      <div className="space-y-1.5">
+                                        {botVisits.map((bot) => {
+                                          const key = bot.bot_label.toLowerCase().replace(' ', '')
+                                          const count = data[key] || 0
+                                          return (
+                                            <div key={bot.bot_name} className="flex items-center gap-2">
+                                              <Image src={bot.logo} alt="" width={14} height={14} className="rounded" />
+                                              <span className="text-white/70 text-xs">{bot.bot_label}</span>
+                                              <span className="text-white/40 text-xs ml-auto">{count}</span>
+                                            </div>
+                                          )
+                                        })}
+                                      </div>
+                                    </div>
+                                  )
+                                }
+                                return null
+                              }}
+                              cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="total"
+                              stroke="rgba(99, 102, 241, 0.6)"
+                              strokeWidth={2}
+                              fill="url(#visitGradient)"
+                              dot={false}
+                              activeDot={{ r: 4, fill: '#6366f1', stroke: '#1A1F26', strokeWidth: 2 }}
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+
+                      {/* Platform grid */}
+                      <div className="grid grid-cols-4 gap-3">
+                        {botVisits.map((bot) => (
+                          <div 
+                            key={bot.bot_name} 
+                            className={`flex flex-col items-center p-3 rounded-lg border transition-colors ${
+                              bot.visit_count > 0 
+                                ? 'bg-[#161718] border-white/[0.08]' 
+                                : 'bg-[#0B0B0C] border-white/[0.04]'
+                            }`}
+                          >
+                            <div className={`w-8 h-8 rounded-lg overflow-hidden mb-2 ${
+                              bot.visit_count === 0 ? 'opacity-30 grayscale' : ''
+                            }`}>
+                              <Image
+                                src={bot.logo}
+                                alt={bot.bot_label}
+                                width={32}
+                                height={32}
+                                className="w-full h-full object-contain"
+                              />
+                            </div>
+                            <span className={`text-xs ${bot.visit_count > 0 ? 'text-white/70' : 'text-white/30'}`}>
+                              {bot.visit_count}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )
+                })()}
               </div>
 
               {/* Upgrade CTA */}
@@ -805,6 +886,17 @@ export default function ManageBrandPage() {
                 <h3 className="text-white font-semibold font-heading mb-6">Brand Information</h3>
                 
                 <div className="space-y-4">
+                  <div>
+                    <label className="block text-white/70 text-sm mb-2">Brand Name</label>
+                    <input
+                      type="text"
+                      value={brandName}
+                      onChange={(e) => { setBrandName(e.target.value); markChanged() }}
+                      placeholder="Your company name"
+                      className="w-full px-4 py-3 rounded-lg bg-[#161718] border border-white/[0.06] text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition-colors"
+                    />
+                  </div>
+
                   <div>
                     <label className="block text-white/70 text-sm mb-2">One-liner</label>
                     <input
@@ -1225,7 +1317,7 @@ export default function ManageBrandPage() {
                 <code>{JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: brand.brand_name,
+  name: brandName || brand.brand_name,
   url: `https://${brand.domain}`,
   description: description || undefined,
   slogan: oneLiner || undefined,
