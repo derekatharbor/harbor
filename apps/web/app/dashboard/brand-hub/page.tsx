@@ -273,23 +273,23 @@ export default function BrandHubPage() {
   // RENDER
   // ============================================================================
 
-  // Input classes - white bg in light mode, dark in dark mode
-  const inputClass = "w-full px-4 py-3 rounded-lg bg-white dark:bg-[#161718] border border-border text-primary placeholder:text-muted focus:outline-none focus:border-primary/30 transition-colors"
+  // Input classes - use standard input class
+  const inputClass = "input w-full"
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-primary" data-page="brand-hub">
+      <div className="min-h-screen bg-page pb-12" data-page="brand-hub">
         <MobileHeader />
-        <div className="p-6">
+        <div className="px-6 pt-6 pb-4">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-card rounded w-48"></div>
             <div className="h-4 bg-card rounded w-96"></div>
-            <div className="space-y-4 mt-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-20 bg-card rounded-lg"></div>
-              ))}
-            </div>
           </div>
+        </div>
+        <div className="mx-6 space-y-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-20 bg-card rounded-lg animate-pulse"></div>
+          ))}
         </div>
       </div>
     )
@@ -298,9 +298,18 @@ export default function BrandHubPage() {
   // No profile linked
   if (!profile) {
     return (
-      <div className="min-h-screen bg-primary" data-page="brand-hub">
+      <div className="min-h-screen bg-page pb-12" data-page="brand-hub">
         <MobileHeader />
-        <div className="p-6">
+        <div className="px-6 pt-6 pb-4">
+          <div className="flex items-center gap-3">
+            <Layers className="w-5 h-5 text-muted" strokeWidth={1.5} />
+            <div>
+              <h1 className="text-lg font-semibold text-primary">Brand Hub</h1>
+              <p className="text-sm text-muted">Manage your AI profile</p>
+            </div>
+          </div>
+        </div>
+        <div className="mx-6">
           <div className="card p-12 text-center">
             <Sparkles className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
             <h2 className="text-lg font-semibold text-primary mb-2">Claim Your Brand Profile</h2>
@@ -321,11 +330,11 @@ export default function BrandHubPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary" data-page="brand-hub">
+    <div className="min-h-screen bg-page pb-12" data-page="brand-hub">
       <MobileHeader />
       
-      {/* Page Header Bar */}
-      <div className="page-header-bar">
+      {/* Header */}
+      <div className="px-6 pt-6 pb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Layers className="w-5 h-5 text-muted" strokeWidth={1.5} />
           <div>
@@ -359,7 +368,7 @@ export default function BrandHubPage() {
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
+      <div className="mx-6 space-y-4">
         
         {/* Brand Information */}
         <SectionCard title="Brand Information" icon={Building2} defaultOpen={true}>
@@ -643,7 +652,7 @@ export default function BrandHubPage() {
 
       {/* Floating Save Bar */}
       {hasChanges && (
-        <div className="fixed bottom-0 left-0 right-0 lg:left-64 bg-card border-t border-border p-4 z-40">
+        <div className="fixed bottom-0 left-0 right-0 lg:left-64 bg-card border-t border-border px-6 py-4 z-40">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {message && (
@@ -656,7 +665,7 @@ export default function BrandHubPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#1a1a1a] text-white dark:bg-white dark:text-[#1a1a1a] rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}
