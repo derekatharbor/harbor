@@ -394,7 +394,7 @@ export default function BrandHubPage() {
         </div>
       </div>
 
-      <div className="p-6 space-y-4">
+      <div className="p-6 space-y-4 max-w-5xl">
         
         {/* Brand Identity Section */}
         <SectionCard
@@ -691,10 +691,10 @@ export default function BrandHubPage() {
         </div>
       </div>
 
-      {/* Floating Save Bar */}
+      {/* Floating Save Bar - positioned within content flow */}
       {hasChanges && (
-        <div className="fixed bottom-0 left-0 right-0 lg:left-64 bg-card border-t border-border p-4 z-40">
-          <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+        <div className="sticky bottom-0 bg-card border-t border-border p-4 -mx-6 mt-6">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {message && (
                 <span className={`text-sm ${message.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
