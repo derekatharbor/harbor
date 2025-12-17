@@ -60,7 +60,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a 
-                  href="https://linkedin.com/company/useharbor" 
+                  href="https://linkedin.com/company/joinharbor" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-white/40 hover:text-white text-sm transition-colors"
@@ -70,7 +70,7 @@ export default function Footer() {
               </li>
               <li>
                 <a 
-                  href="https://x.com/useharbor" 
+                  href="https://x.com/tryharbor" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-white/40 hover:text-white text-sm transition-colors"

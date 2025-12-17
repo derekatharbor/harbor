@@ -32,7 +32,7 @@ interface CompetitorData {
   visibilityDelta: number | null
   sentiment: number
   sentimentDelta: number | null
-  position: number
+  position: number | null  // Changed to allow null
   positionDelta: number | null
   mentions: number
   isUser: boolean
@@ -127,7 +127,7 @@ export default function CompetitorsPage() {
     visibilityDelta: null,
     sentiment: 0,
     sentimentDelta: null,
-    position: 0,
+    position: null,  // Changed from 0 to null
     positionDelta: null,
     mentions: 0,
     isUser: true,
@@ -229,8 +229,8 @@ export default function CompetitorsPage() {
         <div className="status-banner-metrics">
           {foundUserData ? (
             <>
-              <span>Your visibility: <strong className="text-primary">{userData.visibility}%</strong></span>
-              <span>Sentiment: <strong className="text-primary">{userData.sentiment}%</strong></span>
+              <span>Your visibility: <strong className="text-primary">{userData.visibility ?? 0}%</strong></span>
+              <span>Sentiment: <strong className="text-primary">{userData.sentiment ?? 0}%</strong></span>
             </>
           ) : (
             <span className="text-muted">Your brand not detected in responses</span>
@@ -243,22 +243,22 @@ export default function CompetitorsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Visibility</div>
-            <div className="metric-value">{userData.visibility}%</div>
+            <div className="metric-value">{userData.visibility ?? 0}%</div>
             <div className="text-xs text-muted mt-1">relative to top brand</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Your Mentions</div>
-            <div className="metric-value">{userData.mentions}</div>
+            <div className="metric-value">{userData.mentions ?? 0}</div>
             <div className="text-xs text-muted mt-1">in AI responses</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Avg Position</div>
-            <div className="metric-value">{userData.position > 0 ? userData.position.toFixed(1) : '--'}</div>
+            <div className="metric-value">{userData.position != null && userData.position > 0 ? userData.position.toFixed(1) : '—'}</div>
             <div className="text-xs text-muted mt-1">when mentioned (1 = first)</div>
           </div>
           <div className="card p-4">
             <div className="text-xs text-muted uppercase tracking-wide mb-2">Sentiment</div>
-            <div className="metric-value">{userData.sentiment}%</div>
+            <div className="metric-value">{userData.sentiment ?? 0}%</div>
             <div className="text-xs text-muted mt-1">positive mentions</div>
           </div>
         </div>
@@ -333,14 +333,14 @@ export default function CompetitorsPage() {
                         className="w-5 h-5 rounded object-contain"
                         onError={(e) => { e.currentTarget.style.display = 'none' }}
                       />
-                      <span className="font-medium text-primary text-sm">{competitors[0]?.name || '--'}</span>
+                      <span className="font-medium text-primary text-sm">{competitors[0]?.name || '—'}</span>
                     </div>
-                    <div className="text-xs text-muted mt-0.5">{competitors[0]?.mentions || 0} mentions</div>
+                    <div className="text-xs text-muted mt-0.5">{competitors[0]?.mentions ?? 0} mentions</div>
                   </div>
 
                   {/* Best Sentiment */}
                   {(() => {
-                    const bestSentiment = [...competitors].sort((a, b) => b.sentiment - a.sentiment)[0]
+                    const bestSentiment = [...competitors].sort((a, b) => (b.sentiment ?? 0) - (a.sentiment ?? 0))[0]
                     return (
                       <div className="px-4 py-3">
                         <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Sentiment</div>
@@ -351,16 +351,16 @@ export default function CompetitorsPage() {
                             className="w-5 h-5 rounded object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
-                          <span className="font-medium text-primary text-sm">{bestSentiment?.name || '--'}</span>
+                          <span className="font-medium text-primary text-sm">{bestSentiment?.name || '—'}</span>
                         </div>
-                        <div className="text-xs text-muted mt-0.5">{bestSentiment?.sentiment || 0}% positive</div>
+                        <div className="text-xs text-muted mt-0.5">{bestSentiment?.sentiment ?? 0}% positive</div>
                       </div>
                     )
                   })()}
 
                   {/* Best Position */}
                   {(() => {
-                    const bestPosition = [...competitors].filter(c => c.position > 0).sort((a, b) => a.position - b.position)[0]
+                    const bestPosition = [...competitors].filter(c => c.position != null && c.position > 0).sort((a, b) => (a.position ?? 999) - (b.position ?? 999))[0]
                     return (
                       <div className="px-4 py-3">
                         <div className="text-[10px] text-muted uppercase tracking-wide mb-1.5">Best Avg Position</div>
@@ -371,9 +371,9 @@ export default function CompetitorsPage() {
                             className="w-5 h-5 rounded object-contain"
                             onError={(e) => { e.currentTarget.style.display = 'none' }}
                           />
-                          <span className="font-medium text-primary text-sm">{bestPosition?.name || '--'}</span>
+                          <span className="font-medium text-primary text-sm">{bestPosition?.name || '—'}</span>
                         </div>
-                        <div className="text-xs text-muted mt-0.5">Position {bestPosition?.position.toFixed(1) || '--'} avg</div>
+                        <div className="text-xs text-muted mt-0.5">Position {bestPosition?.position?.toFixed(1) ?? '—'} avg</div>
                       </div>
                     )
                   })()}
@@ -384,14 +384,14 @@ export default function CompetitorsPage() {
                     {foundUserData ? (
                       <>
                         <div className="text-xl font-semibold text-primary">
-                          {competitors[0]?.mentions - userData.mentions}
+                          {(competitors[0]?.mentions ?? 0) - (userData.mentions ?? 0)}
                         </div>
                         <div className="text-xs text-muted">mentions behind {competitors[0]?.name}</div>
                       </>
                     ) : (
                       <>
                         <div className="text-xl font-semibold text-primary">
-                          {competitors[0]?.mentions || 0}
+                          {competitors[0]?.mentions ?? 0}
                         </div>
                         <div className="text-xs text-muted">mentions to match {competitors[0]?.name}</div>
                       </>
@@ -400,8 +400,8 @@ export default function CompetitorsPage() {
 
                   {/* Market Concentration */}
                   {(() => {
-                    const totalMentions = competitors.reduce((sum, c) => sum + c.mentions, 0)
-                    const top3Mentions = competitors.slice(0, 3).reduce((sum, c) => sum + c.mentions, 0)
+                    const totalMentions = competitors.reduce((sum, c) => sum + (c.mentions ?? 0), 0)
+                    const top3Mentions = competitors.slice(0, 3).reduce((sum, c) => sum + (c.mentions ?? 0), 0)
                     const concentration = totalMentions > 0 ? Math.round((top3Mentions / totalMentions) * 100) : 0
                     return (
                       <div className="px-4 py-3">
@@ -480,25 +480,25 @@ export default function CompetitorsPage() {
                             <div 
                               className="h-full rounded-full"
                               style={{ 
-                                width: `${comp.visibility}%`,
+                                width: `${comp.visibility ?? 0}%`,
                                 backgroundColor: comp.isUser ? USER_COLOR : BAR_COLOR,
                                 opacity: comp.isUser ? 1 : 0.6
                               }}
                             />
                           </div>
-                          <span className="text-sm tabular-nums text-secondary">{comp.visibility}%</span>
+                          <span className="text-sm tabular-nums text-secondary">{comp.visibility ?? 0}%</span>
                         </div>
                       </td>
-                      <td className="tabular-nums">{comp.mentions}</td>
+                      <td className="tabular-nums">{comp.mentions ?? 0}</td>
                       <td>
                         <span className={`text-sm tabular-nums ${
-                          comp.sentiment >= 60 ? 'text-primary' : 
-                          comp.sentiment >= 40 ? 'text-secondary' : 'text-muted'
+                          (comp.sentiment ?? 0) >= 60 ? 'text-primary' : 
+                          (comp.sentiment ?? 0) >= 40 ? 'text-secondary' : 'text-muted'
                         }`}>
-                          {comp.sentiment}%
+                          {comp.sentiment ?? 0}%
                         </span>
                       </td>
-                      <td className="tabular-nums">{comp.position.toFixed(1)}</td>
+                      <td className="tabular-nums">{comp.position?.toFixed(1) ?? '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -587,12 +587,12 @@ export default function CompetitorsPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        {userData.visibility > selectedCompetitor.visibility ? (
+                        {(userData.visibility ?? 0) > (selectedCompetitor.visibility ?? 0) ? (
                           <div className="text-primary">
                             <TrendingUp className="w-5 h-5 inline mr-1 opacity-60" />
                             <span className="text-sm font-medium">You lead</span>
                           </div>
-                        ) : userData.visibility < selectedCompetitor.visibility ? (
+                        ) : (userData.visibility ?? 0) < (selectedCompetitor.visibility ?? 0) ? (
                           <div className="text-secondary">
                             <TrendingDown className="w-5 h-5 inline mr-1 opacity-60" />
                             <span className="text-sm font-medium">They lead</span>
@@ -609,10 +609,10 @@ export default function CompetitorsPage() {
                     {/* Comparison Bars */}
                     <div className="space-y-4">
                       {[
-                        { label: 'Visibility', userVal: userData.visibility, compVal: selectedCompetitor.visibility, suffix: '%' },
-                        { label: 'Mentions', userVal: userData.mentions, compVal: selectedCompetitor.mentions, suffix: '' },
-                        { label: 'Sentiment', userVal: userData.sentiment, compVal: selectedCompetitor.sentiment, suffix: '%' },
-                        { label: 'Avg Position', userVal: userData.position, compVal: selectedCompetitor.position, suffix: '', inverse: true }
+                        { label: 'Visibility', userVal: userData.visibility ?? 0, compVal: selectedCompetitor.visibility ?? 0, suffix: '%' },
+                        { label: 'Mentions', userVal: userData.mentions ?? 0, compVal: selectedCompetitor.mentions ?? 0, suffix: '' },
+                        { label: 'Sentiment', userVal: userData.sentiment ?? 0, compVal: selectedCompetitor.sentiment ?? 0, suffix: '%' },
+                        { label: 'Avg Position', userVal: userData.position ?? 0, compVal: selectedCompetitor.position ?? 0, suffix: '', inverse: true }
                       ].map(metric => {
                         const userWins = metric.inverse 
                           ? metric.userVal < metric.compVal 
@@ -627,14 +627,20 @@ export default function CompetitorsPage() {
                               <span className="text-muted">{metric.label}</span>
                               <div className="flex gap-4">
                                 <span className={userWins ? 'text-primary font-medium' : 'text-secondary'}>
-                                  {typeof metric.userVal === 'number' && metric.suffix !== '%' 
-                                    ? metric.userVal.toLocaleString() 
-                                    : metric.userVal?.toFixed?.(1) || metric.userVal}{metric.suffix}
+                                  {metric.suffix === '%' 
+                                    ? `${metric.userVal}${metric.suffix}`
+                                    : metric.label === 'Avg Position'
+                                      ? (metric.userVal > 0 ? metric.userVal.toFixed(1) : '—')
+                                      : metric.userVal.toLocaleString()
+                                  }
                                 </span>
                                 <span className={!userWins && metric.userVal !== metric.compVal ? 'text-primary font-medium' : 'text-secondary'}>
-                                  {typeof metric.compVal === 'number' && metric.suffix !== '%' 
-                                    ? metric.compVal.toLocaleString() 
-                                    : metric.compVal?.toFixed?.(1) || metric.compVal}{metric.suffix}
+                                  {metric.suffix === '%' 
+                                    ? `${metric.compVal}${metric.suffix}`
+                                    : metric.label === 'Avg Position'
+                                      ? (metric.compVal > 0 ? metric.compVal.toFixed(1) : '—')
+                                      : metric.compVal.toLocaleString()
+                                  }
                                 </span>
                               </div>
                             </div>
@@ -658,20 +664,20 @@ export default function CompetitorsPage() {
                   <div className="card p-6">
                     <h4 className="font-medium text-primary mb-3">Summary</h4>
                     <div className="text-sm text-secondary leading-relaxed">
-                      {userData.visibility > selectedCompetitor.visibility ? (
+                      {(userData.visibility ?? 0) > (selectedCompetitor.visibility ?? 0) ? (
                         <p>
                           <strong className="text-primary">{brandName}</strong> has higher visibility than <strong className="text-primary">{selectedCompetitor.name}</strong> in AI responses. 
-                          You appear in {userData.mentions} responses vs their {selectedCompetitor.mentions}. 
-                          {userData.sentiment > selectedCompetitor.sentiment 
+                          You appear in {userData.mentions ?? 0} responses vs their {selectedCompetitor.mentions ?? 0}. 
+                          {(userData.sentiment ?? 0) > (selectedCompetitor.sentiment ?? 0) 
                             ? ' Your sentiment is also stronger.'
-                            : userData.sentiment < selectedCompetitor.sentiment 
+                            : (userData.sentiment ?? 0) < (selectedCompetitor.sentiment ?? 0) 
                               ? ' However, they have better sentiment scores.'
                               : ''}
                         </p>
-                      ) : userData.visibility < selectedCompetitor.visibility ? (
+                      ) : (userData.visibility ?? 0) < (selectedCompetitor.visibility ?? 0) ? (
                         <p>
                           <strong className="text-primary">{selectedCompetitor.name}</strong> currently has higher visibility than <strong className="text-primary">{brandName}</strong>. 
-                          They appear in {selectedCompetitor.mentions} responses vs your {userData.mentions}. 
+                          They appear in {selectedCompetitor.mentions ?? 0} responses vs your {userData.mentions ?? 0}. 
                           Consider running more prompts in your category to identify opportunities.
                         </p>
                       ) : (
