@@ -88,19 +88,25 @@ function SectionCard({
   icon: any
   children: React.ReactNode
   defaultOpen?: boolean
-  badge?: { label: string; color: string }
+  badge?: { label: string; variant: 'success' | 'warning' | 'neutral' }
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   
+  const badgeStyles = {
+    success: 'bg-green-500/10 text-green-600 dark:text-green-400',
+    warning: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+    neutral: 'bg-gray-500/10 text-gray-500'
+  }
+  
   return (
-    <div className="card overflow-hidden">
+    <div className="bg-card border border-border rounded-xl overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-hover transition-colors"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
       >
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-chart-1/10 flex items-center justify-center">
-            <Icon className="w-4.5 h-4.5 text-chart-1" />
+          <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
+            <Icon className="w-4.5 h-4.5 text-muted" strokeWidth={1.5} />
           </div>
           <div className="text-left">
             <h3 className="font-medium text-primary">{title}</h3>
@@ -109,7 +115,7 @@ function SectionCard({
         </div>
         <div className="flex items-center gap-3">
           {badge && (
-            <span className={`text-xs px-2 py-1 rounded-full ${badge.color}`}>
+            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${badgeStyles[badge.variant]}`}>
               {badge.label}
             </span>
           )}
@@ -293,9 +299,9 @@ export default function BrandHubPage() {
     return Math.round((score / total) * 100)
   })()
 
-  const getBadge = (count: number) => {
-    if (count === 0) return { label: 'Not started', color: 'bg-gray-400/10 text-gray-400' }
-    return { label: `${count} items`, color: 'bg-green-400/10 text-green-400' }
+  const getBadge = (count: number): { label: string; variant: 'success' | 'warning' | 'neutral' } => {
+    if (count === 0) return { label: 'Not started', variant: 'neutral' }
+    return { label: `${count} items`, variant: 'success' }
   }
 
   // ============================================================================
@@ -305,7 +311,7 @@ export default function BrandHubPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     )
   }
@@ -317,14 +323,14 @@ export default function BrandHubPage() {
         <MobileHeader />
         <div className="page-header-bar">
           <div className="flex items-center gap-3">
-            <Layers className="w-5 h-5 text-muted" />
+            <Layers className="w-5 h-5 text-muted" strokeWidth={1.5} />
             <h1 className="text-lg font-semibold text-primary">Brand Hub</h1>
           </div>
         </div>
         <div className="p-6">
-          <div className="card p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-chart-1/10 flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-chart-1" />
+          <div className="bg-card border border-border rounded-xl p-12 text-center">
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-muted" />
             </div>
             <h2 className="text-xl font-semibold text-primary mb-2">Claim Your Brand Profile</h2>
             <p className="text-sm text-muted mb-6 max-w-md mx-auto">
@@ -332,7 +338,7 @@ export default function BrandHubPage() {
             </p>
             <Link 
               href={`/brands?search=${encodeURIComponent(currentDashboard?.brand_name || '')}`}
-              className="btn-primary inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] font-medium rounded-lg hover:opacity-90 transition-opacity"
             >
               Find & Claim Profile
               <ExternalLink className="w-4 h-4" />
@@ -350,7 +356,7 @@ export default function BrandHubPage() {
       {/* Header */}
       <div className="page-header-bar">
         <div className="flex items-center gap-3">
-          <Layers className="w-5 h-5 text-muted" />
+          <Layers className="w-5 h-5 text-muted" strokeWidth={1.5} />
           <div>
             <h1 className="text-lg font-semibold text-primary">Brand Hub</h1>
             <p className="text-sm text-muted">Manage your AI profile</p>
@@ -394,7 +400,7 @@ export default function BrandHubPage() {
         </div>
       </div>
 
-      <div className="p-6 space-y-4 max-w-5xl">
+      <div className="p-6 space-y-4">
         
         {/* Brand Identity Section */}
         <SectionCard
@@ -402,7 +408,7 @@ export default function BrandHubPage() {
           description="Core information about your brand"
           icon={Building2}
           defaultOpen={true}
-          badge={description || oneLiner ? { label: 'Complete', color: 'bg-green-400/10 text-green-400' } : { label: 'Incomplete', color: 'bg-amber-400/10 text-amber-400' }}
+          badge={description || oneLiner ? { label: 'Complete', variant: 'success' } : { label: 'Incomplete', variant: 'warning' }}
         >
           <div className="space-y-4">
             {/* One-liner */}
@@ -415,7 +421,7 @@ export default function BrandHubPage() {
                 value={oneLiner}
                 onChange={(e) => { setOneLiner(e.target.value); markChanged() }}
                 placeholder="A concise tagline for your brand"
-                className="input w-full"
+                className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                 maxLength={150}
               />
               <p className="text-xs text-muted mt-1">{oneLiner.length}/150 characters</p>
@@ -430,7 +436,7 @@ export default function BrandHubPage() {
                 value={description}
                 onChange={(e) => { setDescription(e.target.value); markChanged() }}
                 placeholder="What does your company do? Who do you serve?"
-                className="input w-full min-h-[100px] resize-y"
+                className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all min-h-[100px] resize-y"
                 maxLength={500}
               />
               <p className="text-xs text-muted mt-1">{description.length}/500 characters</p>
@@ -447,7 +453,7 @@ export default function BrandHubPage() {
                   value={category}
                   onChange={(e) => { setCategory(e.target.value); markChanged() }}
                   placeholder="e.g., SaaS, E-commerce, Fintech"
-                  className="input w-full"
+                  className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                 />
               </div>
               <div>
@@ -459,7 +465,7 @@ export default function BrandHubPage() {
                   value={icp}
                   onChange={(e) => { setIcp(e.target.value); markChanged() }}
                   placeholder="e.g., B2B startups, Enterprise marketing teams"
-                  className="input w-full"
+                  className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                 />
               </div>
             </div>
@@ -475,7 +481,7 @@ export default function BrandHubPage() {
                   value={companyInfo.hq_location || ''}
                   onChange={(e) => { setCompanyInfo({ ...companyInfo, hq_location: e.target.value }); markChanged() }}
                   placeholder="e.g., San Francisco, CA"
-                  className="input w-full"
+                  className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                 />
               </div>
               <div>
@@ -487,7 +493,7 @@ export default function BrandHubPage() {
                   value={companyInfo.founded_year || ''}
                   onChange={(e) => { setCompanyInfo({ ...companyInfo, founded_year: e.target.value ? parseInt(e.target.value) : null }); markChanged() }}
                   placeholder="e.g., 2020"
-                  className="input w-full"
+                  className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                   min={1900}
                   max={new Date().getFullYear()}
                 />
@@ -499,7 +505,7 @@ export default function BrandHubPage() {
                 <select
                   value={companyInfo.employee_band || ''}
                   onChange={(e) => { setCompanyInfo({ ...companyInfo, employee_band: e.target.value }); markChanged() }}
-                  className="input w-full"
+                  className="w-full px-4 py-2.5 bg-secondary border border-border rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                 >
                   <option value="">Select size</option>
                   <option value="1-10">1-10 employees</option>
@@ -523,28 +529,31 @@ export default function BrandHubPage() {
           <div className="space-y-4">
             {offerings.length === 0 ? (
               <div className="text-center py-8 border border-dashed border-border rounded-lg">
-                <Package className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" />
+                <Package className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
                 <p className="text-sm text-muted mb-3">No products added yet</p>
-                <button onClick={addProduct} className="btn-secondary text-sm">
-                  <Plus className="w-4 h-4 mr-1.5" />
+                <button 
+                  onClick={addProduct} 
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
                   Add Product
                 </button>
               </div>
             ) : (
               <>
                 {offerings.map((product, index) => (
-                  <div key={index} className="p-4 bg-secondary/30 rounded-lg space-y-3">
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <input
                         type="text"
                         value={product.name}
                         onChange={(e) => updateProduct(index, 'name', e.target.value)}
                         placeholder="Product name"
-                        className="input flex-1 font-medium"
+                        className="flex-1 px-3 py-2 bg-primary border border-border rounded-lg text-primary placeholder:text-muted font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                       />
                       <button
                         onClick={() => removeProduct(index)}
-                        className="p-2 text-muted hover:text-red-500 transition-colors"
+                        className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -553,7 +562,7 @@ export default function BrandHubPage() {
                       value={product.description}
                       onChange={(e) => updateProduct(index, 'description', e.target.value)}
                       placeholder="Describe this product or service..."
-                      className="input w-full min-h-[80px] resize-y text-sm"
+                      className="w-full px-3 py-2 bg-primary border border-border rounded-lg text-primary placeholder:text-muted text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all min-h-[80px] resize-y"
                     />
                     <div className="grid grid-cols-2 gap-3">
                       <input
@@ -561,12 +570,12 @@ export default function BrandHubPage() {
                         value={product.price || ''}
                         onChange={(e) => updateProduct(index, 'price', e.target.value)}
                         placeholder="Price (e.g., $99/mo)"
-                        className="input text-sm"
+                        className="px-3 py-2 bg-primary border border-border rounded-lg text-primary placeholder:text-muted text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                       />
                       <select
                         value={product.status || 'active'}
                         onChange={(e) => updateProduct(index, 'status', e.target.value)}
-                        className="input text-sm"
+                        className="px-3 py-2 bg-primary border border-border rounded-lg text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                       >
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -575,8 +584,11 @@ export default function BrandHubPage() {
                     </div>
                   </div>
                 ))}
-                <button onClick={addProduct} className="btn-secondary text-sm w-full">
-                  <Plus className="w-4 h-4 mr-1.5" />
+                <button 
+                  onClick={addProduct} 
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
                   Add Another Product
                 </button>
               </>
@@ -594,28 +606,31 @@ export default function BrandHubPage() {
           <div className="space-y-4">
             {faqs.length === 0 ? (
               <div className="text-center py-8 border border-dashed border-border rounded-lg">
-                <FileText className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" />
+                <FileText className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
                 <p className="text-sm text-muted mb-3">No FAQs added yet</p>
-                <button onClick={addFaq} className="btn-secondary text-sm">
-                  <Plus className="w-4 h-4 mr-1.5" />
+                <button 
+                  onClick={addFaq} 
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
                   Add FAQ
                 </button>
               </div>
             ) : (
               <>
                 {faqs.map((faq, index) => (
-                  <div key={index} className="p-4 bg-secondary/30 rounded-lg space-y-3">
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <input
                         type="text"
                         value={faq.question}
                         onChange={(e) => updateFaq(index, 'question', e.target.value)}
                         placeholder="Question"
-                        className="input flex-1 font-medium"
+                        className="flex-1 px-3 py-2 bg-primary border border-border rounded-lg text-primary placeholder:text-muted font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                       />
                       <button
                         onClick={() => removeFaq(index)}
-                        className="p-2 text-muted hover:text-red-500 transition-colors"
+                        className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -624,12 +639,15 @@ export default function BrandHubPage() {
                       value={faq.answer}
                       onChange={(e) => updateFaq(index, 'answer', e.target.value)}
                       placeholder="Answer"
-                      className="input w-full min-h-[80px] resize-y text-sm"
+                      className="w-full px-3 py-2 bg-primary border border-border rounded-lg text-primary placeholder:text-muted text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all min-h-[80px] resize-y"
                     />
                   </div>
                 ))}
-                <button onClick={addFaq} className="btn-secondary text-sm w-full">
-                  <Plus className="w-4 h-4 mr-1.5" />
+                <button 
+                  onClick={addFaq} 
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
                   Add Another FAQ
                 </button>
               </>
@@ -638,7 +656,7 @@ export default function BrandHubPage() {
         </SectionCard>
 
         {/* JSON Preview */}
-        <div className="card p-6">
+        <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-primary">Your AI Profile</h3>
@@ -648,13 +666,13 @@ export default function BrandHubPage() {
               <Link
                 href={`/brands/${profile.slug}/harbor.json`}
                 target="_blank"
-                className="text-sm text-chart-1 hover:underline flex items-center gap-1"
+                className="text-sm text-muted hover:text-primary flex items-center gap-1 transition-colors"
               >
                 View JSON <ExternalLink className="w-3 h-3" />
               </Link>
             )}
           </div>
-          <div className="bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 overflow-x-auto max-h-64 overflow-y-auto">
+          <div className="bg-[#0a0a0a] dark:bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 overflow-x-auto max-h-64 overflow-y-auto">
             <pre>{JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
@@ -691,9 +709,9 @@ export default function BrandHubPage() {
         </div>
       </div>
 
-      {/* Floating Save Bar - positioned within content flow */}
+      {/* Floating Save Bar */}
       {hasChanges && (
-        <div className="sticky bottom-0 bg-card border-t border-border p-4 -mx-6 mt-6">
+        <div className="sticky bottom-0 bg-card border-t border-border p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {message && (
@@ -706,7 +724,7 @@ export default function BrandHubPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="btn-primary flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}
