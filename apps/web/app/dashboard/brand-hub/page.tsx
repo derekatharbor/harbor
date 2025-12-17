@@ -112,7 +112,7 @@ function SectionCard({
         </div>
       </button>
       {isOpen && (
-        <div className="px-5 pb-5 border-t border-border">
+        <div className="px-5 pb-5 border-t border-border overflow-hidden">
           <div className="pt-5">
             {children}
           </div>
@@ -368,7 +368,7 @@ export default function BrandHubPage() {
       </div>
 
       {/* Content */}
-      <div className="mx-6 space-y-4">
+      <div className="mx-6 space-y-4 overflow-hidden">
         
         {/* Brand Information */}
         <SectionCard title="Brand Information" icon={Building2} defaultOpen={true}>
@@ -400,7 +400,7 @@ export default function BrandHubPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+              <div className="min-w-0">
                 <label className="block text-sm font-medium text-primary mb-2">Category</label>
                 <input
                   type="text"
@@ -410,7 +410,7 @@ export default function BrandHubPage() {
                   className={inputClass}
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <label className="block text-sm font-medium text-primary mb-2">Ideal Customer</label>
                 <input
                   type="text"
@@ -427,7 +427,7 @@ export default function BrandHubPage() {
         {/* Company Details */}
         <SectionCard title="Company Details" icon={Building2}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-primary mb-2">Headquarters</label>
               <input
                 type="text"
@@ -437,7 +437,7 @@ export default function BrandHubPage() {
                 className={inputClass}
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-primary mb-2">Founded</label>
               <input
                 type="number"
@@ -449,7 +449,7 @@ export default function BrandHubPage() {
                 max={new Date().getFullYear()}
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-primary mb-2">Company Size</label>
               <select
                 value={companyInfo.employee_band || ''}
@@ -485,15 +485,17 @@ export default function BrandHubPage() {
             ) : (
               <>
                 {offerings.map((product, index) => (
-                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3 overflow-hidden">
                     <div className="flex items-start justify-between gap-3">
-                      <input
-                        type="text"
-                        value={product.name}
-                        onChange={(e) => updateProduct(index, 'name', e.target.value)}
-                        placeholder="Product name"
-                        className={`${inputClass} font-medium`}
-                      />
+                      <div className="flex-1 min-w-0">
+                        <input
+                          type="text"
+                          value={product.name}
+                          onChange={(e) => updateProduct(index, 'name', e.target.value)}
+                          placeholder="Product name"
+                          className={`${inputClass} font-medium`}
+                        />
+                      </div>
                       <button
                         onClick={() => removeProduct(index)}
                         className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
@@ -509,22 +511,26 @@ export default function BrandHubPage() {
                       className={`${inputClass} resize-none`}
                     />
                     <div className="grid grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        value={product.price || ''}
-                        onChange={(e) => updateProduct(index, 'price', e.target.value)}
-                        placeholder="Price (e.g., $99/mo)"
-                        className={inputClass}
-                      />
-                      <select
-                        value={product.status || 'active'}
-                        onChange={(e) => updateProduct(index, 'status', e.target.value)}
-                        className={inputClass}
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="discontinued">Discontinued</option>
-                      </select>
+                      <div className="min-w-0">
+                        <input
+                          type="text"
+                          value={product.price || ''}
+                          onChange={(e) => updateProduct(index, 'price', e.target.value)}
+                          placeholder="Price (e.g., $99/mo)"
+                          className={inputClass}
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <select
+                          value={product.status || 'active'}
+                          onChange={(e) => updateProduct(index, 'status', e.target.value)}
+                          className={inputClass}
+                        >
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                          <option value="discontinued">Discontinued</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -558,15 +564,17 @@ export default function BrandHubPage() {
             ) : (
               <>
                 {faqs.map((faq, index) => (
-                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3 overflow-hidden">
                     <div className="flex items-start justify-between gap-3">
-                      <input
-                        type="text"
-                        value={faq.question}
-                        onChange={(e) => updateFaq(index, 'question', e.target.value)}
-                        placeholder="Question"
-                        className={`${inputClass} font-medium`}
-                      />
+                      <div className="flex-1 min-w-0">
+                        <input
+                          type="text"
+                          value={faq.question}
+                          onChange={(e) => updateFaq(index, 'question', e.target.value)}
+                          placeholder="Question"
+                          className={`${inputClass} font-medium`}
+                        />
+                      </div>
                       <button
                         onClick={() => removeFaq(index)}
                         className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
@@ -596,7 +604,7 @@ export default function BrandHubPage() {
         </SectionCard>
 
         {/* AI Profile Preview */}
-        <div className="card p-5">
+        <div className="card p-5 overflow-hidden">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-primary">Your AI Profile</h3>
