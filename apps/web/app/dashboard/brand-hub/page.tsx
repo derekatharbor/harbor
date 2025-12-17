@@ -77,14 +77,12 @@ interface ProfileData {
 
 function SectionCard({ 
   title, 
-  description, 
   icon: Icon, 
   children, 
   defaultOpen = false,
   count
 }: { 
   title: string
-  description: string
   icon: any
   children: React.ReactNode
   defaultOpen?: boolean
@@ -93,34 +91,29 @@ function SectionCard({
   const [isOpen, setIsOpen] = useState(defaultOpen)
   
   return (
-    <div className="rounded-xl border border-border overflow-hidden bg-card">
+    <div className="card overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-5 flex items-center justify-between hover:bg-hover/50 transition-colors cursor-pointer"
+        className="w-full px-5 py-4 flex items-center justify-between hover:bg-hover transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-            <Icon className="w-5 h-5 text-muted" strokeWidth={1.5} />
-          </div>
-          <div className="text-left">
-            <h3 className="font-semibold text-primary">{title}</h3>
-            <p className="text-sm text-muted">{description}</p>
-          </div>
+        <div className="flex items-center gap-3">
+          <Icon className="w-4 h-4 text-muted" strokeWidth={1.5} />
+          <span className="font-semibold text-primary">{title}</span>
         </div>
         <div className="flex items-center gap-3">
-          {count !== undefined && (
-            <span className="text-sm text-muted">{count} items</span>
+          {count !== undefined && count > 0 && (
+            <span className="text-xs text-muted">{count} items</span>
           )}
           {isOpen ? (
-            <ChevronUp className="w-5 h-5 text-muted" />
+            <ChevronUp className="w-4 h-4 text-muted" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-muted" />
+            <ChevronDown className="w-4 h-4 text-muted" />
           )}
         </div>
       </button>
       {isOpen && (
-        <div className="px-6 pb-6 border-t border-border">
-          <div className="pt-6">
+        <div className="px-5 pb-5 border-t border-border">
+          <div className="pt-5">
             {children}
           </div>
         </div>
@@ -280,389 +273,370 @@ export default function BrandHubPage() {
   // RENDER
   // ============================================================================
 
-  // Input classes - white bg in light mode, dark bg in dark mode
-  const inputClass = "w-full px-4 py-3 rounded-lg bg-white dark:bg-[#161718] border border-border text-primary placeholder:text-muted focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
-  const textareaClass = "w-full px-4 py-3 rounded-lg bg-white dark:bg-[#161718] border border-border text-primary placeholder:text-muted focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all resize-none"
+  // Input classes - white bg in light mode, dark in dark mode
+  const inputClass = "w-full px-4 py-3 rounded-lg bg-white dark:bg-[#161718] border border-border text-primary placeholder:text-muted focus:outline-none focus:border-primary/30 transition-colors"
 
   if (loading) {
     return (
-      <>
+      <div className="min-h-screen bg-primary" data-page="brand-hub">
         <MobileHeader />
-        <div className="max-w-4xl mx-auto p-8 pt-20 lg:pt-8 animate-pulse space-y-6">
-          <div className="h-32 rounded-xl bg-secondary" />
-          <div className="h-64 rounded-xl bg-secondary" />
+        <div className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-card rounded w-48"></div>
+            <div className="h-4 bg-card rounded w-96"></div>
+            <div className="space-y-4 mt-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-20 bg-card rounded-lg"></div>
+              ))}
+            </div>
+          </div>
         </div>
-      </>
+      </div>
     )
   }
 
-  // No profile linked - prompt to claim
+  // No profile linked
   if (!profile) {
     return (
-      <>
+      <div className="min-h-screen bg-primary" data-page="brand-hub">
         <MobileHeader />
-        <div className="max-w-4xl mx-auto p-8 pt-20 lg:pt-8">
-          <div className="rounded-xl border border-border bg-card p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-muted" />
-            </div>
-            <h2 className="text-xl font-semibold text-primary mb-2">Claim Your Brand Profile</h2>
+        <div className="p-6">
+          <div className="card p-12 text-center">
+            <Sparkles className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
+            <h2 className="text-lg font-semibold text-primary mb-2">Claim Your Brand Profile</h2>
             <p className="text-sm text-muted mb-6 max-w-md mx-auto">
               Your brand doesn't have an AI profile yet. Claim it to control how AI models describe your company.
             </p>
             <Link 
               href={`/brands?search=${encodeURIComponent(currentDashboard?.brand_name || '')}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:opacity-90 transition-opacity"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
             >
               Find & Claim Profile
               <ExternalLink className="w-4 h-4" />
             </Link>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-primary" data-page="brand-hub">
       <MobileHeader />
-      <div className="max-w-4xl mx-auto p-8 pt-20 lg:pt-8 pb-32">
+      
+      {/* Page Header Bar */}
+      <div className="page-header-bar">
+        <div className="flex items-center gap-3">
+          <Layers className="w-5 h-5 text-muted" strokeWidth={1.5} />
+          <div>
+            <h1 className="text-lg font-semibold text-primary">Brand Hub</h1>
+            <p className="text-sm text-muted">Manage your AI profile</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {profile.claimed ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-xs font-medium">
+              <Check className="w-3 h-3" />
+              Claimed
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-medium">
+              <AlertCircle className="w-3 h-3" />
+              Unclaimed
+            </span>
+          )}
+          {profile.slug && (
+            <Link
+              href={`/brands/${profile.slug}`}
+              target="_blank"
+              className="text-sm text-muted hover:text-primary flex items-center gap-1.5 transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+              View Profile
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6 space-y-4">
         
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
-              <Layers className="w-6 h-6 text-muted" strokeWidth={1.5} />
-            </div>
+        {/* Brand Information */}
+        <SectionCard title="Brand Information" icon={Building2} defaultOpen={true}>
+          <div className="space-y-4">
             <div>
-              <h1 className="text-2xl font-semibold text-primary">Brand Hub</h1>
-              <p className="text-sm text-muted">Manage your AI profile</p>
+              <label className="block text-sm font-medium text-primary mb-2">One-liner</label>
+              <input
+                type="text"
+                value={oneLiner}
+                onChange={(e) => { setOneLiner(e.target.value); markChanged() }}
+                placeholder="A single sentence describing what you do"
+                className={inputClass}
+                maxLength={150}
+              />
+              <p className="text-xs text-muted mt-1.5">{oneLiner.length}/150 characters</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-primary mb-2">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => { setDescription(e.target.value); markChanged() }}
+                placeholder="Tell AI more about your company..."
+                rows={4}
+                className={`${inputClass} resize-none`}
+                maxLength={500}
+              />
+              <p className="text-xs text-muted mt-1.5">{description.length}/500 characters</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-primary mb-2">Category</label>
+                <input
+                  type="text"
+                  value={category}
+                  onChange={(e) => { setCategory(e.target.value); markChanged() }}
+                  placeholder="e.g., SaaS, E-commerce"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-primary mb-2">Ideal Customer</label>
+                <input
+                  type="text"
+                  value={icp}
+                  onChange={(e) => { setIcp(e.target.value); markChanged() }}
+                  placeholder="Who do you serve?"
+                  className={inputClass}
+                />
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {profile.claimed ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-sm font-medium">
-                <Check className="w-3.5 h-3.5" />
-                Claimed
-              </span>
+        </SectionCard>
+
+        {/* Company Details */}
+        <SectionCard title="Company Details" icon={Building2}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-primary mb-2">Headquarters</label>
+              <input
+                type="text"
+                value={companyInfo.hq_location || ''}
+                onChange={(e) => { setCompanyInfo({ ...companyInfo, hq_location: e.target.value }); markChanged() }}
+                placeholder="e.g., San Francisco"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-primary mb-2">Founded</label>
+              <input
+                type="number"
+                value={companyInfo.founded_year || ''}
+                onChange={(e) => { setCompanyInfo({ ...companyInfo, founded_year: e.target.value ? parseInt(e.target.value) : null }); markChanged() }}
+                placeholder="e.g., 2020"
+                className={inputClass}
+                min={1900}
+                max={new Date().getFullYear()}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-primary mb-2">Company Size</label>
+              <select
+                value={companyInfo.employee_band || ''}
+                onChange={(e) => { setCompanyInfo({ ...companyInfo, employee_band: e.target.value }); markChanged() }}
+                className={inputClass}
+              >
+                <option value="">Select size</option>
+                <option value="1-10">1-10</option>
+                <option value="11-50">11-50</option>
+                <option value="51-200">51-200</option>
+                <option value="201-1000">201-1000</option>
+                <option value="1000+">1000+</option>
+              </select>
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* Products */}
+        <SectionCard title="Products & Services" icon={Package} count={offerings.length}>
+          <div className="space-y-4">
+            {offerings.length === 0 ? (
+              <div className="text-center py-8 border border-dashed border-border rounded-lg">
+                <Package className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
+                <p className="text-sm text-muted mb-3">No products added yet</p>
+                <button 
+                  onClick={addProduct} 
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Product
+                </button>
+              </div>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-sm font-medium">
-                <AlertCircle className="w-3.5 h-3.5" />
-                Unclaimed
-              </span>
+              <>
+                {offerings.map((product, index) => (
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <input
+                        type="text"
+                        value={product.name}
+                        onChange={(e) => updateProduct(index, 'name', e.target.value)}
+                        placeholder="Product name"
+                        className={`${inputClass} font-medium`}
+                      />
+                      <button
+                        onClick={() => removeProduct(index)}
+                        className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <textarea
+                      value={product.description}
+                      onChange={(e) => updateProduct(index, 'description', e.target.value)}
+                      placeholder="Describe this product or service..."
+                      rows={2}
+                      className={`${inputClass} resize-none`}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        value={product.price || ''}
+                        onChange={(e) => updateProduct(index, 'price', e.target.value)}
+                        placeholder="Price (e.g., $99/mo)"
+                        className={inputClass}
+                      />
+                      <select
+                        value={product.status || 'active'}
+                        onChange={(e) => updateProduct(index, 'status', e.target.value)}
+                        className={inputClass}
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="discontinued">Discontinued</option>
+                      </select>
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  onClick={addProduct} 
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Another Product
+                </button>
+              </>
             )}
+          </div>
+        </SectionCard>
+
+        {/* FAQs */}
+        <SectionCard title="FAQs" icon={FileText} count={faqs.length}>
+          <div className="space-y-4">
+            {faqs.length === 0 ? (
+              <div className="text-center py-8 border border-dashed border-border rounded-lg">
+                <FileText className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
+                <p className="text-sm text-muted mb-3">No FAQs added yet</p>
+                <button 
+                  onClick={addFaq} 
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add FAQ
+                </button>
+              </div>
+            ) : (
+              <>
+                {faqs.map((faq, index) => (
+                  <div key={index} className="p-4 bg-secondary rounded-lg space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <input
+                        type="text"
+                        value={faq.question}
+                        onChange={(e) => updateFaq(index, 'question', e.target.value)}
+                        placeholder="Question"
+                        className={`${inputClass} font-medium`}
+                      />
+                      <button
+                        onClick={() => removeFaq(index)}
+                        className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <textarea
+                      value={faq.answer}
+                      onChange={(e) => updateFaq(index, 'answer', e.target.value)}
+                      placeholder="Answer"
+                      rows={3}
+                      className={`${inputClass} resize-none`}
+                    />
+                  </div>
+                ))}
+                <button 
+                  onClick={addFaq} 
+                  className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover rounded-lg transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Another FAQ
+                </button>
+              </>
+            )}
+          </div>
+        </SectionCard>
+
+        {/* AI Profile Preview */}
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-semibold text-primary">Your AI Profile</h3>
+              <p className="text-sm text-muted">The structured data AI models read</p>
+            </div>
             {profile.slug && (
               <Link
                 href={`/brands/${profile.slug}`}
                 target="_blank"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted hover:text-primary hover:border-primary/30 transition-colors"
+                className="text-sm text-muted hover:text-primary flex items-center gap-1.5 transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 View Profile
               </Link>
             )}
           </div>
-        </div>
-
-        {/* Sections */}
-        <div className="space-y-4">
-          
-          {/* Brand Identity */}
-          <SectionCard
-            title="Brand Information"
-            description="Core details about your brand"
-            icon={Building2}
-            defaultOpen={true}
-          >
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">One-liner</label>
-                <input
-                  type="text"
-                  value={oneLiner}
-                  onChange={(e) => { setOneLiner(e.target.value); markChanged() }}
-                  placeholder="A single sentence describing what you do"
-                  className={inputClass}
-                  maxLength={150}
-                />
-                <p className="text-xs text-muted mt-1.5">{oneLiner.length}/150 characters</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">Description</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => { setDescription(e.target.value); markChanged() }}
-                  placeholder="Tell AI more about your company..."
-                  rows={4}
-                  className={textareaClass}
-                  maxLength={500}
-                />
-                <p className="text-xs text-muted mt-1.5">{description.length}/500 characters</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-primary mb-2">Category</label>
-                  <input
-                    type="text"
-                    value={category}
-                    onChange={(e) => { setCategory(e.target.value); markChanged() }}
-                    placeholder="e.g., SaaS, E-commerce"
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-primary mb-2">Ideal Customer</label>
-                  <input
-                    type="text"
-                    value={icp}
-                    onChange={(e) => { setIcp(e.target.value); markChanged() }}
-                    placeholder="Who do you serve?"
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-            </div>
-          </SectionCard>
-
-          {/* Company Details */}
-          <SectionCard
-            title="Company Details"
-            description="Location, founding date, and size"
-            icon={Building2}
-          >
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">Headquarters</label>
-                <input
-                  type="text"
-                  value={companyInfo.hq_location || ''}
-                  onChange={(e) => { setCompanyInfo({ ...companyInfo, hq_location: e.target.value }); markChanged() }}
-                  placeholder="e.g., San Francisco"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">Founded</label>
-                <input
-                  type="number"
-                  value={companyInfo.founded_year || ''}
-                  onChange={(e) => { setCompanyInfo({ ...companyInfo, founded_year: e.target.value ? parseInt(e.target.value) : null }); markChanged() }}
-                  placeholder="e.g., 2020"
-                  className={inputClass}
-                  min={1900}
-                  max={new Date().getFullYear()}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-primary mb-2">Company Size</label>
-                <select
-                  value={companyInfo.employee_band || ''}
-                  onChange={(e) => { setCompanyInfo({ ...companyInfo, employee_band: e.target.value }); markChanged() }}
-                  className={inputClass}
-                >
-                  <option value="">Select size</option>
-                  <option value="1-10">1-10</option>
-                  <option value="11-50">11-50</option>
-                  <option value="51-200">51-200</option>
-                  <option value="201-1000">201-1000</option>
-                  <option value="1000+">1000+</option>
-                </select>
-              </div>
-            </div>
-          </SectionCard>
-
-          {/* Products */}
-          <SectionCard
-            title="Products & Services"
-            description="What you offer to customers"
-            icon={Package}
-            count={offerings.length}
-          >
-            <div className="space-y-4">
-              {offerings.length === 0 ? (
-                <div className="text-center py-8 border border-dashed border-border rounded-lg">
-                  <Package className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
-                  <p className="text-sm text-muted mb-3">No products added yet</p>
-                  <button 
-                    onClick={addProduct} 
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Product
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {offerings.map((product, index) => (
-                    <div key={index} className="p-4 bg-secondary/50 dark:bg-[#161718] rounded-lg space-y-3 border border-border/50">
-                      <div className="flex items-start justify-between gap-3">
-                        <input
-                          type="text"
-                          value={product.name}
-                          onChange={(e) => updateProduct(index, 'name', e.target.value)}
-                          placeholder="Product name"
-                          className={`${inputClass} font-medium`}
-                        />
-                        <button
-                          onClick={() => removeProduct(index)}
-                          className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <textarea
-                        value={product.description}
-                        onChange={(e) => updateProduct(index, 'description', e.target.value)}
-                        placeholder="Describe this product or service..."
-                        rows={2}
-                        className={textareaClass}
-                      />
-                      <div className="grid grid-cols-2 gap-3">
-                        <input
-                          type="text"
-                          value={product.price || ''}
-                          onChange={(e) => updateProduct(index, 'price', e.target.value)}
-                          placeholder="Price (e.g., $99/mo)"
-                          className={inputClass}
-                        />
-                        <select
-                          value={product.status || 'active'}
-                          onChange={(e) => updateProduct(index, 'status', e.target.value)}
-                          className={inputClass}
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                          <option value="discontinued">Discontinued</option>
-                        </select>
-                      </div>
-                    </div>
-                  ))}
-                  <button 
-                    onClick={addProduct} 
-                    className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Another Product
-                  </button>
-                </>
-              )}
-            </div>
-          </SectionCard>
-
-          {/* FAQs */}
-          <SectionCard
-            title="FAQs"
-            description="Canonical answers AI should use"
-            icon={FileText}
-            count={faqs.length}
-          >
-            <div className="space-y-4">
-              {faqs.length === 0 ? (
-                <div className="text-center py-8 border border-dashed border-border rounded-lg">
-                  <FileText className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" strokeWidth={1.5} />
-                  <p className="text-sm text-muted mb-3">No FAQs added yet</p>
-                  <button 
-                    onClick={addFaq} 
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add FAQ
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {faqs.map((faq, index) => (
-                    <div key={index} className="p-4 bg-secondary/50 dark:bg-[#161718] rounded-lg space-y-3 border border-border/50">
-                      <div className="flex items-start justify-between gap-3">
-                        <input
-                          type="text"
-                          value={faq.question}
-                          onChange={(e) => updateFaq(index, 'question', e.target.value)}
-                          placeholder="Question"
-                          className={`${inputClass} font-medium`}
-                        />
-                        <button
-                          onClick={() => removeFaq(index)}
-                          className="p-2 text-muted hover:text-red-500 transition-colors cursor-pointer flex-shrink-0"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <textarea
-                        value={faq.answer}
-                        onChange={(e) => updateFaq(index, 'answer', e.target.value)}
-                        placeholder="Answer"
-                        rows={3}
-                        className={textareaClass}
-                      />
-                    </div>
-                  ))}
-                  <button 
-                    onClick={addFaq} 
-                    className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-medium text-primary bg-secondary hover:bg-hover border border-border rounded-lg transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Another FAQ
-                  </button>
-                </>
-              )}
-            </div>
-          </SectionCard>
-
-          {/* AI Profile Preview */}
-          <div className="rounded-xl border border-border bg-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="font-semibold text-primary">Your AI Profile</h3>
-                <p className="text-sm text-muted">The structured data AI models read</p>
-              </div>
-              {profile.slug && (
-                <Link
-                  href={`/brands/${profile.slug}`}
-                  target="_blank"
-                  className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-primary transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  View Profile
-                </Link>
-              )}
-            </div>
-            <div className="bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 overflow-x-auto max-h-64 overflow-y-auto">
-              <pre>{JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                name: profile.brand_name,
-                url: `https://${profile.domain}`,
-                description: description || undefined,
-                slogan: oneLiner || undefined,
-                ...(category && { industry: category }),
-                ...(icp && { audience: icp }),
-                ...(companyInfo.founded_year && { foundingDate: String(companyInfo.founded_year) }),
-                ...(companyInfo.hq_location && { 
-                  address: { "@type": "PostalAddress", addressLocality: companyInfo.hq_location }
-                }),
-                ...(offerings.length > 0 && {
-                  hasOfferCatalog: {
-                    "@type": "OfferCatalog",
-                    itemListElement: offerings.filter(o => o.name).map(o => ({
-                      "@type": "Offer",
-                      name: o.name,
-                      description: o.description,
-                      ...(o.price && { price: o.price })
-                    }))
-                  }
-                }),
-                ...(faqs.length > 0 && {
-                  mainEntity: faqs.filter(f => f.question && f.answer).map(f => ({
-                    "@type": "Question",
-                    name: f.question,
-                    acceptedAnswer: { "@type": "Answer", text: f.answer }
+          <div className="bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 overflow-x-auto max-h-64 overflow-y-auto">
+            <pre>{JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: profile.brand_name,
+              url: `https://${profile.domain}`,
+              description: description || undefined,
+              slogan: oneLiner || undefined,
+              ...(category && { industry: category }),
+              ...(icp && { audience: icp }),
+              ...(companyInfo.founded_year && { foundingDate: String(companyInfo.founded_year) }),
+              ...(companyInfo.hq_location && { 
+                address: { "@type": "PostalAddress", addressLocality: companyInfo.hq_location }
+              }),
+              ...(offerings.length > 0 && {
+                hasOfferCatalog: {
+                  "@type": "OfferCatalog",
+                  itemListElement: offerings.filter(o => o.name).map(o => ({
+                    "@type": "Offer",
+                    name: o.name,
+                    description: o.description,
+                    ...(o.price && { price: o.price })
                   }))
-                })
-              }, null, 2)}</pre>
-            </div>
+                }
+              }),
+              ...(faqs.length > 0 && {
+                mainEntity: faqs.filter(f => f.question && f.answer).map(f => ({
+                  "@type": "Question",
+                  name: f.question,
+                  acceptedAnswer: { "@type": "Answer", text: f.answer }
+                }))
+              })
+            }, null, 2)}</pre>
           </div>
         </div>
       </div>
@@ -670,7 +644,7 @@ export default function BrandHubPage() {
       {/* Floating Save Bar */}
       {hasChanges && (
         <div className="fixed bottom-0 left-0 right-0 lg:left-64 bg-card border-t border-border p-4 z-40">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {message && (
                 <span className={`text-sm ${message.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
@@ -682,7 +656,7 @@ export default function BrandHubPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Changes'}
@@ -690,6 +664,6 @@ export default function BrandHubPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
