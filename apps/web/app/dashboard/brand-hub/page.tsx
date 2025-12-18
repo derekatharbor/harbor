@@ -330,7 +330,7 @@ export default function BrandHubPage() {
   }
 
   return (
-    <div className="min-h-screen bg-page pb-12" data-page="brand-hub">
+    <div className="min-h-screen bg-page pb-12 overflow-x-hidden" data-page="brand-hub">
       <MobileHeader />
       
       {/* Header */}
@@ -621,8 +621,8 @@ export default function BrandHubPage() {
               </Link>
             )}
           </div>
-          <div className="bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 overflow-x-auto max-h-64 overflow-y-auto">
-            <pre>{JSON.stringify({
+          <div className="bg-[#0a0a0a] rounded-lg p-4 font-mono text-xs text-gray-400 max-h-64 overflow-auto max-w-full">
+            <pre className="whitespace-pre-wrap break-all">{JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: profile.brand_name,
