@@ -1,0 +1,63 @@
+name: Daily User Dashboard Scans
+
+on:
+  schedule:
+    # Runs at 8am UTC daily
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      dashboard_id:
+        description: 'Specific dashboard ID (optional)'
+        required: false
+      skip_execution:
+        description: 'Skip prompt execution, just snapshot'
+        required: false
+        default: 'false'
+
+jobs:
+  run-dashboard-scans:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Execute User Dashboard Scans
+        run: |
+          # Build request body
+          body='{
+            "limit": 50,
+            "skip_execution": ${{ github.event.inputs.skip_execution || false }}
+          }'
+          
+          # Add dashboard_id if provided
+          if [ -n "${{ github.event.inputs.dashboard_id }}" ]; then
+            body='{ "dashboard_id": "${{ github.event.inputs.dashboard_id }}", "skip_execution": ${{ github.event.inputs.skip_execution || false }} }'
+          fi
+          
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://useharbor.io/api/cron/daily-dashboard" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d "$body")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::API returned status $http_code"
+            exit 1
+          fi
+          
+          # Parse results
+          dashboards=$(echo "$body" | jq -r '.results.dashboards_processed // 0')
+          prompts=$(echo "$body" | jq -r '.results.prompts_executed // 0')
+          snapshots=$(echo "$body" | jq -r '.results.snapshots_created // 0')
+          
+          echo "::notice::Processed $dashboards dashboards, $prompts prompts, $snapshots snapshots"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Daily dashboard scan failed - check Harbor API logs"

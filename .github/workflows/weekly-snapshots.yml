@@ -1,0 +1,42 @@
+name: Weekly Snapshots
+
+on:
+  schedule:
+    # Runs Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  capture-snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Capture Weekly Snapshots
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://useharbor.io/api/cron/weekly-snapshot" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::API returned status $http_code"
+            exit 1
+          fi
+          
+          # Parse results
+          brands=$(echo "$body" | jq -r '.results.brands.count // 0')
+          universities=$(echo "$body" | jq -r '.results.universities.count // 0')
+          
+          echo "::notice::Snapshotted $brands brands, $universities universities"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Weekly snapshot failed - check Harbor API logs"
