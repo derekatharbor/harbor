@@ -1,0 +1,36 @@
+name: Weekly Index Rebuild
+
+on:
+  schedule:
+    # Runs Monday at 7am UTC
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+jobs:
+  rebuild-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Rebuild Weekly Index
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://useharbor.io/api/cron/weekly-index" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::API returned status $http_code"
+            exit 1
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Weekly index rebuild failed - check Harbor API logs"

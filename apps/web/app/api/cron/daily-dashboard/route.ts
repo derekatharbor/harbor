@@ -1,14 +1,15 @@
 // app/api/cron/daily-dashboard/route.ts
 // Daily dashboard cron - re-executes user prompts and stores visibility snapshots
-// Run daily via Vercel cron or external scheduler
+// Run daily via GitHub Actions
 // 
-// Creates historical trend data for the Overview chart
+// IMPORTANT: Only runs for PAID users and ACTIVE TRIALS
+// Does NOT run for free users or expired trials
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
-export const maxDuration = 600 // 10 minutes max (running 3 models per prompt)
+export const maxDuration = 600 // 10 minutes max
 
 function getSupabase() {
   return createClient(
@@ -23,10 +24,47 @@ function verifyCronSecret(request: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET
   
   const { searchParams } = new URL(request.url)
-  if (searchParams.get('manual') === 'true') return true
+  if (searchParams.get('manual') === 'true' && process.env.NODE_ENV === 'development') {
+    return true
+  }
   
-  if (!cronSecret) return true // Allow in dev
+  if (!cronSecret) {
+    console.warn('CRON_SECRET not set - rejecting request')
+    return false
+  }
   return authHeader === `Bearer ${cronSecret}`
+}
+
+// Check if user should get scans (paid or active trial)
+function isEligibleForScans(dashboard: {
+  plan?: string | null
+  trial_ends_at?: string | null
+  created_at?: string | null
+}): boolean {
+  // Paid plans always eligible
+  const paidPlans = ['pro', 'growth', 'enterprise', 'solo', 'agency']
+  if (dashboard.plan && paidPlans.includes(dashboard.plan.toLowerCase())) {
+    return true
+  }
+  
+  // Check trial status
+  if (dashboard.trial_ends_at) {
+    const trialEnd = new Date(dashboard.trial_ends_at)
+    if (trialEnd > new Date()) {
+      return true // Active trial
+    }
+  }
+  
+  // Fallback: 7-day trial from account creation if no explicit trial_ends_at
+  if (dashboard.created_at && !dashboard.plan) {
+    const createdAt = new Date(dashboard.created_at)
+    const trialEnd = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000)
+    if (trialEnd > new Date()) {
+      return true // Within implicit 7-day trial
+    }
+  }
+  
+  return false
 }
 
 export async function GET(request: NextRequest) {
@@ -35,8 +73,12 @@ export async function GET(request: NextRequest) {
   // Get stats on dashboards and their prompts
   const { data: dashboards } = await supabase
     .from('dashboards')
-    .select('id, brand_name')
+    .select('id, brand_name, plan, trial_ends_at, created_at')
     .not('brand_name', 'is', null)
+  
+  // Filter to eligible dashboards
+  const eligibleDashboards = dashboards?.filter(isEligibleForScans) || []
+  const ineligibleCount = (dashboards?.length || 0) - eligibleDashboards.length
   
   const { data: lastSnapshot } = await supabase
     .from('dashboard_visibility_snapshots')
@@ -45,20 +87,22 @@ export async function GET(request: NextRequest) {
     .limit(1)
     .single()
   
-  // Count prompts per dashboard
-  const dashboardIds = dashboards?.map(d => d.id) || []
+  // Count prompts for eligible dashboards only
+  const eligibleIds = eligibleDashboards.map(d => d.id)
   const { count: totalPrompts } = await supabase
     .from('user_prompts')
     .select('*', { count: 'exact', head: true })
-    .in('dashboard_id', dashboardIds)
+    .in('dashboard_id', eligibleIds)
     .eq('is_active', true)
   
   return NextResponse.json({
     status: 'ok',
-    dashboards_count: dashboards?.length || 0,
+    total_dashboards: dashboards?.length || 0,
+    eligible_dashboards: eligibleDashboards.length,
+    ineligible_skipped: ineligibleCount,
     total_active_prompts: totalPrompts || 0,
     last_snapshot: lastSnapshot?.snapshot_date || 'never',
-    hint: 'POST to execute prompts and create snapshots'
+    hint: 'POST to execute prompts and create snapshots (paid/trial users only)'
   })
 }
 
@@ -77,29 +121,39 @@ export async function POST(request: NextRequest) {
   
   const results = {
     dashboards_processed: 0,
+    dashboards_skipped_not_eligible: 0,
     prompts_executed: 0,
     snapshots_created: 0,
     errors: [] as string[]
   }
   
   try {
-    // Get dashboards to process
+    // Get dashboards to process - include plan and trial info
     let dashboardQuery = supabase
       .from('dashboards')
-      .select('id, brand_name, domain')
+      .select('id, brand_name, domain, plan, trial_ends_at, created_at')
       .not('brand_name', 'is', null)
     
     if (dashboardId) {
       dashboardQuery = dashboardQuery.eq('id', dashboardId)
     }
     
-    const { data: dashboards, error: dbError } = await dashboardQuery.limit(limit)
+    const { data: dashboards, error: dbError } = await dashboardQuery.limit(limit * 2) // Fetch more since some will be filtered
     
     if (dbError || !dashboards) {
       throw new Error('Failed to fetch dashboards: ' + dbError?.message)
     }
     
     for (const dashboard of dashboards) {
+      // CHECK ELIGIBILITY - skip free/expired users
+      if (!isEligibleForScans(dashboard)) {
+        results.dashboards_skipped_not_eligible++
+        continue
+      }
+      
+      // Stop if we've hit our limit
+      if (results.dashboards_processed >= limit) break
+      
       try {
         // Get active prompts for this dashboard
         const { data: prompts } = await supabase
@@ -118,9 +172,8 @@ export async function POST(request: NextRequest) {
           for (const prompt of prompts) {
             for (const model of models) {
               try {
-                // Call the single prompt execution endpoint for each model
                 const execResponse = await fetch(
-                  `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/prompts/execute-single`,
+                  `${process.env.NEXT_PUBLIC_APP_URL || 'https://useharbor.io'}/api/prompts/execute-single`,
                   {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -175,10 +228,8 @@ export async function POST(request: NextRequest) {
         for (const exec of executions || []) {
           const mentions = exec.prompt_brand_mentions as any[] || []
           
-          // Find brand mention with flexible matching (contains or equals)
           const brandMention = mentions.find(m => {
             const mentionLower = m.brand_name?.toLowerCase() || ''
-            // Match if: exact match, brand contains mention, or mention contains brand
             return mentionLower === brandNameLower ||
                    brandNameLower.includes(mentionLower) ||
                    mentionLower.includes(brandNameLower)
@@ -196,7 +247,6 @@ export async function POST(request: NextRequest) {
               sentimentCount++
               if (brandMention.sentiment === 'positive') sentimentSum += 100
               else if (brandMention.sentiment === 'neutral') sentimentSum += 50
-              // negative = 0
             }
           }
         }
