@@ -16,7 +16,8 @@ function getSupabase() {
 // Plan limits for competitor tracking
 const PLAN_LIMITS: Record<string, number> = {
   free: 3,
-  solo: 5,
+  solo: 5,    // legacy/trial tier
+  pro: 5,
   growth: 10,
   agency: 25,
   enterprise: 50

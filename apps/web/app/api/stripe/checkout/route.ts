@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       appUrl = `https://${appUrl}`
     }
 
-    // Create checkout session with 7-day trial
+    // Create checkout session
     const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -102,7 +102,6 @@ export async function POST(request: NextRequest) {
         plan,
       },
       subscription_data: {
-        trial_period_days: 7,
         metadata: {
           orgId,
           userId,

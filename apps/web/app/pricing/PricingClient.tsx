@@ -104,10 +104,6 @@ const faqs = [
     answer: 'Yes. Upgrade instantly, downgrade at the end of your billing cycle. No long-term contracts.',
   },
   {
-    question: 'Do you offer a free trial?',
-    answer: 'Yes. All plans include a 7-day free trial. No credit card required to start.',
-  },
-  {
     question: 'What\'s the difference between monthly and yearly?',
     answer: 'Yearly billing saves you roughly 2 months compared to paying monthly. You can switch between billing periods at any time.',
   },
@@ -210,7 +206,7 @@ export default function PricingClient() {
             Simple, transparent pricing
           </h1>
           <p className="text-lg text-white/50 leading-relaxed max-w-xl mx-auto mb-10">
-            Start with a 7-day free trial. No credit card required.
+            Upgrade when you need more prompts, competitors, or team features.
           </p>
 
           {/* Billing Toggle */}
@@ -393,13 +389,13 @@ export default function PricingClient() {
             Ready to see how AI sees you?
           </h2>
           <p className="text-white/50 mb-8">
-            Start your 7-day free trial. No credit card required.
+            Get started in minutes. No credit card required to sign up.
           </p>
           <Link
             href="/auth/signup"
             className="iridescent-hover inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-medium transition-colors"
           >
-            <span>Start Free Trial</span>
+            <span>Get Started</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

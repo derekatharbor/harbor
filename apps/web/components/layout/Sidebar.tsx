@@ -19,7 +19,8 @@ import {
   Layers,
   LogOut,
   Users,
-  Link2
+  Link2,
+  Sparkles
 } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import BrandSwitcher from './BrandSwitcher'
@@ -400,6 +401,55 @@ export default function Sidebar() {
               </Link>
             )
           })}
+        </div>
+
+        {/* Upgrade Section - subtle, not obnoxious */}
+        <div 
+          className="px-4 py-3 border-t"
+          style={{ borderColor: colors.border }}
+        >
+          <Link
+            href="/pricing"
+            className={`
+              flex items-center rounded-lg
+              transition-all cursor-pointer relative group
+              ${isCollapsed ? 'py-3 justify-center' : 'gap-3 py-2.5 px-3'}
+            `}
+            style={{ 
+              color: colors.muted,
+              background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'
+              e.currentTarget.style.color = colors.text
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'
+              e.currentTarget.style.color = colors.muted
+            }}
+          >
+            <Sparkles className="w-5 h-5 flex-shrink-0" strokeWidth={1.5} />
+            {!isCollapsed && (
+              <div className="flex flex-col">
+                <span className="text-sm font-body">Upgrade</span>
+                <span className="text-xs opacity-60">Unlock more features</span>
+              </div>
+            )}
+            
+            {/* Tooltip - only shows when collapsed */}
+            {isCollapsed && (
+              <div 
+                className="absolute left-full ml-2 px-3 py-1.5 text-xs font-medium rounded whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-[200] shadow-lg"
+                style={{
+                  backgroundColor: colors.bg,
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`,
+                }}
+              >
+                Upgrade Plan
+              </div>
+            )}
+          </Link>
         </div>
 
         {/* Theme Toggle - scrolls with content */}
