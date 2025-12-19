@@ -26,20 +26,27 @@ import MobileHeader from '@/components/layout/MobileHeader'
 
 interface Competitor {
   id: string
+  profile_id: string
   brand_name: string
-  domain: string | null
-  logo_url: string | null
-  status: string
+  domain: string
+  logo_url: string
+  added_at: string
+  mentions: number
+  visibility: number
+  sentiment: string
+  avg_position: number | null
   tracked_names?: string[]
-  mention_count?: number
 }
 
 interface SuggestedBrand {
+  rank: number
   brand_name: string
   domain: string
-  logo_url: string | null
-  visibility_score: number
-  mention_count?: number
+  logo_url: string
+  mentions: number
+  visibility: number
+  sentiment: string
+  profile_id: string | null
 }
 
 interface SearchResult {
@@ -99,7 +106,7 @@ function QuickCompare({
   brand: SuggestedBrand
   userScore: number 
 }) {
-  const diff = userScore - brand.visibility_score
+  const diff = userScore - brand.visibility
   const isAhead = diff > 0
   const isTied = Math.abs(diff) < 1
   
@@ -116,7 +123,7 @@ function QuickCompare({
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">Their visibility</span>
-          <span className="font-medium text-primary">{Math.round(brand.visibility_score)}%</span>
+          <span className="font-medium text-primary">{Math.round(brand.visibility)}%</span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">Your visibility</span>
@@ -335,7 +342,8 @@ export default function CompetitorManagePage() {
         const res = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`)
         if (res.ok) {
           const data = await res.json()
-          setCompetitors(data.competitors || [])
+          // Use 'tracked' for actually tracked competitors, not 'competitors' (the leaderboard)
+          setCompetitors(data.tracked || [])
           setSuggested(data.suggested || [])
         }
         
@@ -547,7 +555,7 @@ export default function CompetitorManagePage() {
                         
                         <h3 className="font-medium text-primary mt-3 mb-1">{brand.brand_name}</h3>
                         <p className="text-sm text-muted mb-4">
-                          {brand.mention_count || Math.floor(Math.random() * 10) + 1} Mentions
+                          {brand.mentions || 0} Mentions
                         </p>
                         
                         <div className="flex items-center gap-2">
