@@ -123,6 +123,34 @@ export async function GET(
       (trackedData || []).map(t => ((t.ai_profiles as any)?.brand_name || '').toLowerCase())
     )
 
+    // Build tracked array early (needed for early return)
+    const tracked: {
+      id: string
+      profile_id: string
+      brand_name: string
+      domain: string
+      logo_url: string
+      added_at: string
+      mentions: number
+      visibility: number
+      sentiment: string
+      avg_position: number | null
+    }[] = (trackedData || []).map(t => {
+      const brandName = (t.ai_profiles as any)?.brand_name || 'Unknown'
+      return {
+        id: t.id,
+        profile_id: t.profile_id,
+        brand_name: brandName,
+        domain: (t.ai_profiles as any)?.domain || guessDomain(brandName),
+        logo_url: (t.ai_profiles as any)?.logo_url || getBrandLogo(brandName),
+        added_at: t.added_at,
+        mentions: 0,
+        visibility: 0,
+        sentiment: 'neutral' as string,
+        avg_position: null as number | null
+      }
+    })
+
     // 3. Get brand mentions from USER'S OWN prompts first
     // Join: user_prompts -> prompt_executions -> prompt_brand_mentions
     const { data: userPrompts } = await supabase
@@ -297,22 +325,14 @@ export async function GET(
     competitors.splice(userRankCalc - 1, 0, userEntry)
     competitors.forEach((c, i) => { c.rank = i + 1 })
 
-    // 9. Build tracked array (for Competitors page)
-    const tracked = (trackedData || []).map(t => {
-      const brandName = (t.ai_profiles as any)?.brand_name || 'Unknown'
-      const matchedComp = competitors.find(c => c.name.toLowerCase() === brandName.toLowerCase())
-      
-      return {
-        id: t.id,
-        profile_id: t.profile_id,
-        brand_name: brandName,
-        domain: (t.ai_profiles as any)?.domain || guessDomain(brandName),
-        logo_url: (t.ai_profiles as any)?.logo_url || getBrandLogo(brandName),
-        added_at: t.added_at,
-        mentions: matchedComp?.mentions || 0,
-        visibility: matchedComp?.visibility || 0,
-        sentiment: matchedComp?.sentiment || 'neutral',
-        avg_position: matchedComp?.position || null
+    // 9. Update tracked array with mention data from competitors
+    tracked.forEach(t => {
+      const matchedComp = competitors.find(c => c.name.toLowerCase() === t.brand_name.toLowerCase())
+      if (matchedComp) {
+        t.mentions = matchedComp.mentions
+        t.visibility = matchedComp.visibility
+        t.sentiment = matchedComp.sentiment
+        t.avg_position = matchedComp.position
       }
     })
 
