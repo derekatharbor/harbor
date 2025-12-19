@@ -2,14 +2,14 @@ name: Daily Seed Prompts
 
 on:
   schedule:
-    # Runs at 6am and 6pm UTC daily
-    - cron: '0 6,18 * * *'
+    # Every 2 hours
+    - cron: '0 */2 * * *'
   workflow_dispatch:
     inputs:
       batch_size:
         description: 'Number of prompts to run'
         required: false
-        default: '25'
+        default: '5'
       force:
         description: 'Force run regardless of freshness'
         required: false
@@ -18,7 +18,7 @@ on:
 jobs:
   run-prompts:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     
     steps:
       - name: Execute Seed Prompts
@@ -28,7 +28,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             -d '{
-              "batch_size": ${{ github.event.inputs.batch_size || 25 }},
+              "batch_size": ${{ github.event.inputs.batch_size || 5 }},
               "batch_type": "scheduled",
               "force": ${{ github.event.inputs.force || false }}
             }')

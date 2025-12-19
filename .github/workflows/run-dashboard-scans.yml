@@ -2,7 +2,7 @@ name: Daily User Dashboard Scans
 
 on:
   schedule:
-    # Runs at 8am UTC daily
+    # Daily at 8am UTC
     - cron: '0 8 * * *'
   workflow_dispatch:
     inputs:
@@ -13,24 +13,24 @@ on:
         description: 'Skip prompt execution, just snapshot'
         required: false
         default: 'false'
+      limit:
+        description: 'Max dashboards to process'
+        required: false
+        default: '5'
 
 jobs:
   run-dashboard-scans:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     
     steps:
       - name: Execute User Dashboard Scans
         run: |
           # Build request body
-          body='{
-            "limit": 50,
-            "skip_execution": ${{ github.event.inputs.skip_execution || false }}
-          }'
-          
-          # Add dashboard_id if provided
           if [ -n "${{ github.event.inputs.dashboard_id }}" ]; then
-            body='{ "dashboard_id": "${{ github.event.inputs.dashboard_id }}", "skip_execution": ${{ github.event.inputs.skip_execution || false }} }'
+            body='{"dashboard_id": "${{ github.event.inputs.dashboard_id }}", "limit": ${{ github.event.inputs.limit || 5 }}, "skip_execution": ${{ github.event.inputs.skip_execution || false }}}'
+          else
+            body='{"limit": ${{ github.event.inputs.limit || 5 }}, "skip_execution": ${{ github.event.inputs.skip_execution || false }}}'
           fi
           
           response=$(curl -s -w "\n%{http_code}" -X POST \
@@ -49,13 +49,6 @@ jobs:
             echo "::error::API returned status $http_code"
             exit 1
           fi
-          
-          # Parse results
-          dashboards=$(echo "$body" | jq -r '.results.dashboards_processed // 0')
-          prompts=$(echo "$body" | jq -r '.results.prompts_executed // 0')
-          snapshots=$(echo "$body" | jq -r '.results.snapshots_created // 0')
-          
-          echo "::notice::Processed $dashboards dashboards, $prompts prompts, $snapshots snapshots"
 
       - name: Notify on failure
         if: failure()

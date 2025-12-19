@@ -2,14 +2,14 @@ name: Weekly Snapshots
 
 on:
   schedule:
-    # Runs Sunday at midnight UTC
+    # Sunday at midnight UTC
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
 jobs:
   capture-snapshots:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     
     steps:
       - name: Capture Weekly Snapshots
@@ -29,12 +29,6 @@ jobs:
             echo "::error::API returned status $http_code"
             exit 1
           fi
-          
-          # Parse results
-          brands=$(echo "$body" | jq -r '.results.brands.count // 0')
-          universities=$(echo "$body" | jq -r '.results.universities.count // 0')
-          
-          echo "::notice::Snapshotted $brands brands, $universities universities"
 
       - name: Notify on failure
         if: failure()
