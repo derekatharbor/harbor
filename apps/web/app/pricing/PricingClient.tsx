@@ -10,25 +10,9 @@ import Footer from '@/components/landing-new/Footer'
 
 const plans = [
   {
-    name: 'Free',
-    price: '$0',
-    period: '',
-    description: 'See how AI talks about your brand across all major platforms.',
-    features: [
-      '50 prompts tracked',
-      '4 AI platforms',
-      '2 competitors',
-      'Daily monitoring',
-      'Email support',
-    ],
-    cta: 'Get Started',
-    href: '/auth/signup',
-    highlight: false,
-  },
-  {
     name: 'Pro',
-    price: '$99',
-    period: '/month',
+    monthlyPrice: 99,
+    yearlyPrice: 990,
     description: 'For brands serious about understanding and improving their AI visibility.',
     features: [
       '100 prompts tracked',
@@ -40,13 +24,13 @@ const plans = [
       'Priority support',
     ],
     cta: 'Start Pro',
-    href: '/auth/signup?plan=pro',
-    highlight: true,
+    planId: 'pro',
+    highlight: false,
   },
   {
     name: 'Growth',
-    price: '$179',
-    period: '/month',
+    monthlyPrice: 179,
+    yearlyPrice: 1790,
     description: 'For teams managing multiple brands or tracking competitive markets.',
     features: [
       '200 prompts tracked',
@@ -59,18 +43,37 @@ const plans = [
       'Slack alerts',
     ],
     cta: 'Start Growth',
-    href: '/auth/signup?plan=growth',
+    planId: 'growth',
+    highlight: true,
+  },
+  {
+    name: 'Agency',
+    monthlyPrice: 199,
+    yearlyPrice: 1990,
+    description: 'For agencies managing AI visibility across multiple client brands.',
+    features: [
+      '500 prompts tracked',
+      '4 AI platforms',
+      '25 competitors',
+      'Daily monitoring',
+      'White-label reports',
+      'Multi-brand dashboards',
+      'Client seat management',
+      'Priority support',
+    ],
+    cta: 'Start Agency',
+    planId: 'agency',
     highlight: false,
   },
   {
     name: 'Enterprise',
-    price: 'Custom',
-    period: '',
+    monthlyPrice: null,
+    yearlyPrice: null,
     description: 'For organizations requiring scale, security, and dedicated support.',
     features: [
       'Unlimited prompts',
       '4 AI platforms',
-      '20+ competitors',
+      '50+ competitors',
       'Daily monitoring',
       'SSO / SAML',
       'Dedicated success manager',
@@ -78,7 +81,7 @@ const plans = [
       'SLA guarantee',
     ],
     cta: 'Contact Sales',
-    href: '/contact?inquiry=enterprise',
+    planId: 'enterprise',
     highlight: false,
   },
 ]
@@ -101,13 +104,35 @@ const faqs = [
     answer: 'Yes. Upgrade instantly, downgrade at the end of your billing cycle. No long-term contracts.',
   },
   {
-    question: 'Do you offer annual billing?',
-    answer: 'Yes. Contact us for annual pricing with 2 months free.',
+    question: 'Do you offer a free trial?',
+    answer: 'Yes. All plans include a 7-day free trial. No credit card required to start.',
+  },
+  {
+    question: 'What\'s the difference between monthly and yearly?',
+    answer: 'Yearly billing saves you roughly 2 months compared to paying monthly. You can switch between billing periods at any time.',
   },
 ]
 
 export default function PricingClient() {
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+
+  const getPrice = (plan: typeof plans[0]) => {
+    if (plan.monthlyPrice === null) return 'Custom'
+    return billingPeriod === 'monthly' 
+      ? `$${plan.monthlyPrice}` 
+      : `$${plan.yearlyPrice}`
+  }
+
+  const getPeriod = (plan: typeof plans[0]) => {
+    if (plan.monthlyPrice === null) return ''
+    return billingPeriod === 'monthly' ? '/month' : '/year'
+  }
+
+  const getHref = (plan: typeof plans[0]) => {
+    if (plan.planId === 'enterprise') return '/contact?inquiry=enterprise'
+    return `/auth/signup?plan=${plan.planId}&billing=${billingPeriod}`
+  }
 
   return (
     <div className="min-h-screen bg-[#0B0B0C]">
@@ -179,14 +204,45 @@ export default function PricingClient() {
       <Nav />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20 px-6">
+      <section className="pt-32 pb-12 md:pt-40 md:pb-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight mb-6 font-['Space_Grotesk']">
             Simple, transparent pricing
           </h1>
-          <p className="text-lg text-white/50 leading-relaxed max-w-xl mx-auto">
-            Start free. Upgrade when you need more prompts, competitors, or team features.
+          <p className="text-lg text-white/50 leading-relaxed max-w-xl mx-auto mb-10">
+            Start with a 7-day free trial. No credit card required.
           </p>
+
+          {/* Billing Toggle */}
+          <div className="inline-flex items-center gap-1 p-1 bg-white/[0.06] rounded-lg">
+            <button
+              onClick={() => setBillingPeriod('monthly')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                billingPeriod === 'monthly'
+                  ? 'bg-white text-black'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingPeriod('yearly')}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
+                billingPeriod === 'yearly'
+                  ? 'bg-white text-black'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Yearly
+              <span className={`text-xs px-1.5 py-0.5 rounded ${
+                billingPeriod === 'yearly' 
+                  ? 'bg-black/10 text-black/70' 
+                  : 'bg-white/10 text-white/50'
+              }`}>
+                Save 2 months
+              </span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -219,10 +275,10 @@ export default function PricingClient() {
                   </div>
                   <div className="flex items-baseline gap-1 mb-3">
                     <span className="text-3xl font-semibold text-white font-['Space_Grotesk']">
-                      {plan.price}
+                      {getPrice(plan)}
                     </span>
-                    {plan.period && (
-                      <span className="text-white/40 text-sm">{plan.period}</span>
+                    {getPeriod(plan) && (
+                      <span className="text-white/40 text-sm">{getPeriod(plan)}</span>
                     )}
                   </div>
                   <p className="text-white/40 text-sm leading-relaxed min-h-[48px]">
@@ -244,7 +300,7 @@ export default function PricingClient() {
 
                 {/* CTA */}
                 <Link
-                  href={plan.href}
+                  href={getHref(plan)}
                   className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-medium transition-all ${
                     plan.highlight
                       ? 'iridescent-hover bg-white text-black'
@@ -282,8 +338,8 @@ export default function PricingClient() {
             </h3>
             <p className="text-white/50 text-sm leading-relaxed mb-4">
               Harbor tracks 4 AI platforms with daily monitoring on all plans. 
-              Competitors charge $200+ for 100 prompts and often limit you to 3 platforms 
-              with weekly updates. Our free tier alone offers more than most paid entry plans.
+              Competitors charge $300+ for similar coverage and often limit you to 2-3 platforms 
+              with weekly updates. Our Pro plan delivers enterprise-grade monitoring at a fraction of the cost.
             </p>
             <p className="text-white/30 text-sm">
               We believe AI visibility monitoring should be accessible, not gated behind enterprise contracts.
@@ -337,13 +393,13 @@ export default function PricingClient() {
             Ready to see how AI sees you?
           </h2>
           <p className="text-white/50 mb-8">
-            Start free. No credit card required.
+            Start your 7-day free trial. No credit card required.
           </p>
           <Link
             href="/auth/signup"
             className="iridescent-hover inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-medium transition-colors"
           >
-            <span>Get Started</span>
+            <span>Start Free Trial</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

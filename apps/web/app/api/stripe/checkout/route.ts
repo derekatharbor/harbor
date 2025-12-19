@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate plan
-    if (!plan || !['pro', 'growth'].includes(plan)) {
+    // Validate plan - now includes agency
+    if (!plan || !['pro', 'growth', 'agency'].includes(plan)) {
       return NextResponse.json(
-        { error: 'Invalid plan. Must be "pro" or "growth"' },
+        { error: 'Invalid plan. Must be "pro", "growth", or "agency"' },
         { status: 400 }
       )
     }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the correct price ID
-    const stripePriceId = getPriceId(plan as 'pro' | 'growth', billingPeriod as 'monthly' | 'yearly')
+    const stripePriceId = getPriceId(plan as 'pro' | 'growth' | 'agency', billingPeriod as 'monthly' | 'yearly')
 
     if (!stripePriceId) {
       return NextResponse.json(
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       appUrl = `https://${appUrl}`
     }
 
-    // Create checkout session
+    // Create checkout session with 7-day trial
     const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -102,6 +102,7 @@ export async function POST(request: NextRequest) {
         plan,
       },
       subscription_data: {
+        trial_period_days: 7,
         metadata: {
           orgId,
           userId,

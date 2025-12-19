@@ -17,13 +17,19 @@ export function getStripe(): Stripe {
   return stripeInstance
 }
 
-// Price IDs - create these in Stripe Dashboard and add to env vars
+// Price IDs from Stripe Dashboard
 export const PRICES = {
-  // Subscription plans
-  PRO_MONTHLY: process.env.STRIPE_PRICE_PRO_MONTHLY!,
-  PRO_YEARLY: process.env.STRIPE_PRICE_PRO_YEARLY!,
-  GROWTH_MONTHLY: process.env.STRIPE_PRICE_GROWTH_MONTHLY!,
-  GROWTH_YEARLY: process.env.STRIPE_PRICE_GROWTH_YEARLY!,
+  // Pro plan
+  PRO_MONTHLY: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_1SeMlEPyuUdZfszdinzPf7yQ',
+  PRO_YEARLY: process.env.STRIPE_PRICE_PRO_YEARLY || 'price_1SeMlmPyuUdZfszdj8MDRHA9',
+  
+  // Growth plan
+  GROWTH_MONTHLY: process.env.STRIPE_PRICE_GROWTH_MONTHLY || 'price_1SeMmaPyuUdZfszdkLKWn9B2',
+  GROWTH_YEARLY: process.env.STRIPE_PRICE_GROWTH_YEARLY || 'price_1SeMn2PyuUdZfszdLlhWkNak',
+  
+  // Agency plan
+  AGENCY_MONTHLY: process.env.STRIPE_PRICE_AGENCY_MONTHLY || 'price_1SYYedPyuUdZfszdkZWcXl4r',
+  AGENCY_YEARLY: process.env.STRIPE_PRICE_AGENCY_YEARLY || 'price_1SYYewPyuUdZfszdbn0kQDra',
   
   // One-time purchases
   DEEP_SCAN: process.env.STRIPE_PRICE_DEEP_SCAN!, // One-time $7.99
@@ -31,24 +37,10 @@ export const PRICES = {
 
 // Plan configuration
 export const PLANS = {
-  free: {
-    name: 'Free',
-    price: 0,
-    prompts: 50,
-    competitors: 2,
-    platforms: 4,
-    features: [
-      '50 prompts tracked',
-      '4 AI platforms',
-      '2 competitors',
-      'Daily monitoring',
-      'Email support',
-    ],
-  },
   pro: {
     name: 'Pro',
     priceMonthly: 99,
-    priceYearly: 990, // 2 months free
+    priceYearly: 990,
     prompts: 100,
     competitors: 5,
     platforms: 4,
@@ -65,7 +57,7 @@ export const PLANS = {
   growth: {
     name: 'Growth',
     priceMonthly: 179,
-    priceYearly: 1790, // 2 months free
+    priceYearly: 1790,
     prompts: 200,
     competitors: 10,
     platforms: 4,
@@ -80,15 +72,35 @@ export const PLANS = {
       'Slack alerts',
     ],
   },
+  agency: {
+    name: 'Agency',
+    priceMonthly: 199,
+    priceYearly: 1990,
+    prompts: 500,
+    competitors: 25,
+    platforms: 4,
+    features: [
+      '500 prompts tracked',
+      '4 AI platforms',
+      '25 competitors',
+      'Daily monitoring',
+      'White-label reports',
+      'Multi-brand dashboards',
+      'Client seat management',
+      'Priority support',
+    ],
+  },
   enterprise: {
     name: 'Enterprise',
+    priceMonthly: null,
+    priceYearly: null,
     prompts: -1, // unlimited
-    competitors: 20,
+    competitors: 50,
     platforms: 4,
     features: [
       'Unlimited prompts',
       '4 AI platforms',
-      '20+ competitors',
+      '50+ competitors',
       'Daily monitoring',
       'SSO / SAML',
       'Dedicated success manager',
@@ -99,7 +111,7 @@ export const PLANS = {
 }
 
 // Helper to get price ID for a plan
-export function getPriceId(plan: 'pro' | 'growth', period: 'monthly' | 'yearly'): string {
+export function getPriceId(plan: 'pro' | 'growth' | 'agency', period: 'monthly' | 'yearly'): string {
   const key = `${plan.toUpperCase()}_${period.toUpperCase()}` as keyof typeof PRICES
   return PRICES[key]
 }
@@ -108,8 +120,16 @@ export function getPriceId(plan: 'pro' | 'growth', period: 'monthly' | 'yearly')
 export function getPlanLimits(plan: keyof typeof PLANS) {
   const config = PLANS[plan]
   return {
-    prompts: 'prompts' in config ? config.prompts : 50,
-    competitors: 'competitors' in config ? config.competitors : 2,
+    prompts: config.prompts,
+    competitors: config.competitors,
     platforms: config.platforms,
   }
+}
+
+// Helper to get plan by price ID (for webhook processing)
+export function getPlanByPriceId(priceId: string): keyof typeof PLANS | null {
+  if (priceId === PRICES.PRO_MONTHLY || priceId === PRICES.PRO_YEARLY) return 'pro'
+  if (priceId === PRICES.GROWTH_MONTHLY || priceId === PRICES.GROWTH_YEARLY) return 'growth'
+  if (priceId === PRICES.AGENCY_MONTHLY || priceId === PRICES.AGENCY_YEARLY) return 'agency'
+  return null
 }
