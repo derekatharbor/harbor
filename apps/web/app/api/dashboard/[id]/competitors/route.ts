@@ -103,31 +103,40 @@ export async function GET(
     const userBrandName = dashboard.brand_name || ''
     const userBrandLower = userBrandName.toLowerCase()
 
-    // 2. Get tracked competitors
+    // 2. Get tracked competitors (two queries since FK relationship not set up)
     const { data: trackedData, error: trackedError } = await supabase
       .from('dashboard_competitors')
-      .select(`
-        id,
-        profile_id,
-        added_at,
-        ai_profiles (
-          brand_name,
-          domain,
-          logo_url
-        )
-      `)
+      .select('id, profile_id, added_at')
       .eq('dashboard_id', dashboardId)
       .limit(maxCompetitors)
 
     console.log('[Competitors GET] Dashboard:', dashboardId)
     console.log('[Competitors GET] trackedData count:', trackedData?.length || 0)
-    console.log('[Competitors GET] trackedError:', trackedError)
-    if (trackedData && trackedData.length > 0) {
-      console.log('[Competitors GET] First tracked item:', JSON.stringify(trackedData[0]))
+    if (trackedError) {
+      console.log('[Competitors GET] trackedError:', trackedError)
+    }
+
+    // Get profile details for tracked competitors
+    const profileIds = (trackedData || []).map(t => t.profile_id).filter(Boolean)
+    let profilesMap = new Map<string, { brand_name: string; domain: string; logo_url: string }>()
+    
+    if (profileIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('ai_profiles')
+        .select('id, brand_name, domain, logo_url')
+        .in('id', profileIds)
+      
+      profiles?.forEach(p => {
+        profilesMap.set(p.id, { 
+          brand_name: p.brand_name, 
+          domain: p.domain, 
+          logo_url: p.logo_url 
+        })
+      })
     }
 
     const trackedNames = new Set(
-      (trackedData || []).map(t => ((t.ai_profiles as any)?.brand_name || '').toLowerCase())
+      Array.from(profilesMap.values()).map(p => (p.brand_name || '').toLowerCase())
     )
 
     // Build tracked array early (needed for early return)
@@ -136,20 +145,21 @@ export async function GET(
       profile_id: string
       brand_name: string
       domain: string
-      logo_url: string
+      logo_url: string | null
       added_at: string
       mentions: number
       visibility: number
       sentiment: string
       avg_position: number | null
     }[] = (trackedData || []).map(t => {
-      const brandName = (t.ai_profiles as any)?.brand_name || 'Unknown'
+      const profile = profilesMap.get(t.profile_id)
+      const brandName = profile?.brand_name || 'Unknown'
       return {
         id: t.id,
         profile_id: t.profile_id,
         brand_name: brandName,
-        domain: (t.ai_profiles as any)?.domain || guessDomain(brandName),
-        logo_url: (t.ai_profiles as any)?.logo_url || getBrandLogo(brandName),
+        domain: profile?.domain || guessDomain(brandName),
+        logo_url: profile?.logo_url || getBrandLogo(brandName),
         added_at: t.added_at,
         mentions: 0,
         visibility: 0,
@@ -157,6 +167,8 @@ export async function GET(
         avg_position: null as number | null
       }
     })
+
+    console.log('[Competitors GET] Built tracked array, count:', tracked.length)
 
     // 3. Get brand mentions from USER'S OWN prompts first
     // Join: user_prompts -> prompt_executions -> prompt_brand_mentions
