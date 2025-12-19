@@ -402,8 +402,12 @@ export default function CompetitorManagePage() {
     }
   }, [searchQuery, competitors, currentDashboard?.domain])
 
-  const addCompetitor = async (brand: { brand_name: string; domain: string; logo_url?: string | null }, source = 'manual') => {
+  const addCompetitor = async (brand: { brand_name: string; domain: string; logo_url?: string | null; profile_id?: string | null }, source = 'manual') => {
     if (!currentDashboard?.id) return
+    if (!brand.brand_name) {
+      console.error('Cannot add competitor: brand_name is required')
+      return
+    }
     setAddingCompetitor(brand.domain)
     
     try {
@@ -411,30 +415,38 @@ export default function CompetitorManagePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          profile_id: brand.profile_id || null,
           brand_name: brand.brand_name,
           domain: brand.domain,
           logo_url: brand.logo_url
         })
       })
       
-      if (res.ok) {
-        const newComp: Competitor = {
-          id: Math.random().toString(),
-          profile_id: '',
-          brand_name: brand.brand_name,
-          domain: brand.domain,
-          logo_url: brand.logo_url || null,
-          added_at: new Date().toISOString(),
-          mentions: 0,
-          visibility: 0,
-          sentiment: 'neutral',
-          avg_position: null
-        }
-        setCompetitors([...competitors, newComp])
-        setSuggested(prev => prev.filter(s => s.domain !== brand.domain))
-        setShowAddModal(false)
-        setSearchQuery('')
-        setSearchResults([])
+      if (!res.ok) {
+        const errorData = await res.json()
+        console.error('Failed to add competitor:', errorData)
+        return
+      }
+      
+      const result = await res.json()
+      
+      const newComp: Competitor = {
+        id: result.competitor_id || Math.random().toString(),
+        profile_id: brand.profile_id || '',
+        brand_name: brand.brand_name,
+        domain: brand.domain,
+        logo_url: brand.logo_url || null,
+        added_at: new Date().toISOString(),
+        mentions: 0,
+        visibility: 0,
+        sentiment: 'neutral',
+        avg_position: null
+      }
+      setCompetitors([...competitors, newComp])
+      setSuggested(prev => prev.filter(s => s.domain !== brand.domain))
+      setShowAddModal(false)
+      setSearchQuery('')
+      setSearchResults([])
       }
     } catch (err) {
       console.error('Failed to add competitor:', err)

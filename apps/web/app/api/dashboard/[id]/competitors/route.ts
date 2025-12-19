@@ -391,7 +391,10 @@ export async function POST(
     const body = await request.json()
     const { profile_id, brand_name, domain } = body
 
+    console.log('[Competitors POST] Request:', { dashboardId, profile_id, brand_name, domain })
+
     if (!profile_id && !brand_name) {
+      console.log('[Competitors POST] Error: Missing profile_id and brand_name')
       return NextResponse.json({ error: 'profile_id or brand_name required' }, { status: 400 })
     }
 
@@ -429,36 +432,76 @@ export async function POST(
 
     // If no profile_id, try to find or create profile
     if (!finalProfileId && brand_name) {
+      // Try to find existing profile by name
       const { data: existingProfile } = await supabase
         .from('ai_profiles')
         .select('id')
         .ilike('brand_name', brand_name)
         .limit(1)
-        .single()
+        .maybeSingle()
 
       if (existingProfile) {
         finalProfileId = existingProfile.id
-      } else {
+      } else if (domain) {
+        // Try by domain
+        const { data: domainProfile } = await supabase
+          .from('ai_profiles')
+          .select('id')
+          .eq('domain', domain)
+          .limit(1)
+          .maybeSingle()
+        
+        if (domainProfile) {
+          finalProfileId = domainProfile.id
+        }
+      }
+      
+      // Still no profile? Create one
+      if (!finalProfileId) {
         const newDomain = domain || guessDomain(brand_name)
-        const { data: newProfile } = await supabase
+        const slug = brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+        
+        const { data: newProfile, error: insertError } = await supabase
           .from('ai_profiles')
           .insert({
             brand_name,
             domain: newDomain,
-            slug: brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+            slug: slug,
             logo_url: getBrandLogo(brand_name)
           })
           .select('id')
           .single()
 
-        if (newProfile) {
+        if (insertError) {
+          // If slug conflict, try with random suffix
+          const { data: retryProfile, error: retryError } = await supabase
+            .from('ai_profiles')
+            .insert({
+              brand_name,
+              domain: newDomain,
+              slug: `${slug}-${Date.now()}`,
+              logo_url: getBrandLogo(brand_name)
+            })
+            .select('id')
+            .single()
+          
+          if (retryProfile) {
+            finalProfileId = retryProfile.id
+          } else {
+            console.error('Failed to create profile:', retryError)
+          }
+        } else if (newProfile) {
           finalProfileId = newProfile.id
         }
       }
     }
 
     if (!finalProfileId) {
-      return NextResponse.json({ error: 'Could not resolve profile' }, { status: 400 })
+      console.log('[Competitors POST] Error: Could not resolve profile for', { brand_name, domain })
+      return NextResponse.json({ 
+        error: 'Could not resolve profile',
+        details: { brand_name, domain }
+      }, { status: 400 })
     }
 
     // Check if already tracking
@@ -467,11 +510,14 @@ export async function POST(
       .select('id')
       .eq('dashboard_id', dashboardId)
       .eq('profile_id', finalProfileId)
-      .single()
+      .maybeSingle()
 
     if (existing) {
+      console.log('[Competitors POST] Already tracking:', finalProfileId)
       return NextResponse.json({ error: 'Already tracking this competitor' }, { status: 409 })
     }
+
+    console.log('[Competitors POST] Adding competitor with profile_id:', finalProfileId)
 
     // Add competitor
     const { data: competitor, error } = await supabase
