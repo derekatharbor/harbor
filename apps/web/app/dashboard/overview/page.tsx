@@ -804,12 +804,12 @@ function VisibilityChart({
         />
         <Tooltip 
           contentStyle={{ 
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
+            backgroundColor: '#111213',
+            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '8px',
-            boxShadow: '0 4px 18px rgba(0,0,0,0.15)',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.22)',
           }}
-          labelStyle={{ color: 'var(--text-muted)', marginBottom: '4px' }}
+          labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
           itemStyle={{ padding: '2px 0' }}
           formatter={(value: any, name: string) => [
             value === null ? 'No data' : (metric === 'position' ? Number(value).toFixed(1) : `${value}%`),
