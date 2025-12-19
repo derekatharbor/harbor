@@ -104,7 +104,7 @@ export async function GET(
     const userBrandLower = userBrandName.toLowerCase()
 
     // 2. Get tracked competitors
-    const { data: trackedData } = await supabase
+    const { data: trackedData, error: trackedError } = await supabase
       .from('dashboard_competitors')
       .select(`
         id,
@@ -118,6 +118,13 @@ export async function GET(
       `)
       .eq('dashboard_id', dashboardId)
       .limit(maxCompetitors)
+
+    console.log('[Competitors GET] Dashboard:', dashboardId)
+    console.log('[Competitors GET] trackedData count:', trackedData?.length || 0)
+    console.log('[Competitors GET] trackedError:', trackedError)
+    if (trackedData && trackedData.length > 0) {
+      console.log('[Competitors GET] First tracked item:', JSON.stringify(trackedData[0]))
+    }
 
     const trackedNames = new Set(
       (trackedData || []).map(t => ((t.ai_profiles as any)?.brand_name || '').toLowerCase())
@@ -182,8 +189,9 @@ export async function GET(
       }
     }
 
-    // If user has no prompt data, return empty (don't show random SaaS brands)
+    // If user has no prompt data, return with tracked but no leaderboard
     if (allMentions.length === 0) {
+      console.log('[Competitors GET] No prompt data, returning tracked only. Count:', tracked.length)
       return NextResponse.json({
         competitors: [],
         total_brands_found: 0,
