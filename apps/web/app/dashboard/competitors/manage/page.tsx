@@ -29,7 +29,7 @@ interface Competitor {
   profile_id: string
   brand_name: string
   domain: string
-  logo_url: string
+  logo_url: string | null
   added_at: string
   mentions: number
   visibility: number
@@ -420,10 +420,15 @@ export default function CompetitorManagePage() {
       if (res.ok) {
         const newComp: Competitor = {
           id: Math.random().toString(),
+          profile_id: '',
           brand_name: brand.brand_name,
           domain: brand.domain,
           logo_url: brand.logo_url || null,
-          status: 'active'
+          added_at: new Date().toISOString(),
+          mentions: 0,
+          visibility: 0,
+          sentiment: 'neutral',
+          avg_position: null
         }
         setCompetitors([...competitors, newComp])
         setSuggested(prev => prev.filter(s => s.domain !== brand.domain))
