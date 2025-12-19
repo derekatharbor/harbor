@@ -430,9 +430,14 @@ export async function POST(
 
     let finalProfileId = profile_id
 
+    // Clean domain for consistent lookup
+    const cleanDomain = (d: string) => d?.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
+
     // If no profile_id, try to find or create profile
     if (!finalProfileId && brand_name) {
-      // Try to find existing profile by name
+      const searchDomain = domain ? cleanDomain(domain) : null
+      
+      // Try to find existing profile by name (case insensitive)
       const { data: existingProfile } = await supabase
         .from('ai_profiles')
         .select('id')
@@ -442,56 +447,53 @@ export async function POST(
 
       if (existingProfile) {
         finalProfileId = existingProfile.id
-      } else if (domain) {
-        // Try by domain
+        console.log('[Competitors POST] Found by brand_name:', finalProfileId)
+      } else if (searchDomain) {
+        // Try by domain (case insensitive)
         const { data: domainProfile } = await supabase
           .from('ai_profiles')
           .select('id')
-          .eq('domain', domain)
+          .ilike('domain', searchDomain)
           .limit(1)
           .maybeSingle()
         
         if (domainProfile) {
           finalProfileId = domainProfile.id
+          console.log('[Competitors POST] Found by domain:', finalProfileId)
         }
       }
       
       // Still no profile? Create one
       if (!finalProfileId) {
-        const newDomain = domain || guessDomain(brand_name)
-        const slug = brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+        const newDomain = searchDomain || guessDomain(brand_name)
+        const baseSlug = brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+        const uniqueSlug = `${baseSlug}-${Date.now()}`
+        
+        console.log('[Competitors POST] Creating profile:', { brand_name, domain: newDomain, slug: uniqueSlug })
         
         const { data: newProfile, error: insertError } = await supabase
           .from('ai_profiles')
           .insert({
             brand_name,
             domain: newDomain,
-            slug: slug,
+            slug: uniqueSlug,
             logo_url: getBrandLogo(brand_name)
           })
           .select('id')
           .single()
 
         if (insertError) {
-          // If slug conflict, try with random suffix
-          const { data: retryProfile, error: retryError } = await supabase
-            .from('ai_profiles')
-            .insert({
-              brand_name,
-              domain: newDomain,
-              slug: `${slug}-${Date.now()}`,
-              logo_url: getBrandLogo(brand_name)
-            })
-            .select('id')
-            .single()
-          
-          if (retryProfile) {
-            finalProfileId = retryProfile.id
-          } else {
-            console.error('Failed to create profile:', retryError)
-          }
+          console.error('[Competitors POST] Insert failed:', insertError)
+          // Return the actual error for debugging
+          return NextResponse.json({ 
+            error: 'Failed to create profile',
+            details: { brand_name, domain: newDomain, slug: uniqueSlug },
+            db_error: insertError.message,
+            code: insertError.code
+          }, { status: 400 })
         } else if (newProfile) {
           finalProfileId = newProfile.id
+          console.log('[Competitors POST] Created profile:', finalProfileId)
         }
       }
     }
@@ -500,7 +502,8 @@ export async function POST(
       console.log('[Competitors POST] Error: Could not resolve profile for', { brand_name, domain })
       return NextResponse.json({ 
         error: 'Could not resolve profile',
-        details: { brand_name, domain }
+        details: { brand_name, domain },
+        hint: 'Check Vercel logs for insert errors'
       }, { status: 400 })
     }
 
