@@ -1,5 +1,5 @@
 // app/api/dashboard/[id]/competitors/route.ts
-// Returns tracked competitors + category-based suggestions from seed data
+// Returns competitors data - backward compatible for Overview + new features for Competitors page
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -22,44 +22,59 @@ const PLAN_LIMITS: Record<string, number> = {
   enterprise: 50
 }
 
-// Map user categories to seed prompt topics
-const CATEGORY_TO_TOPICS: Record<string, string[]> = {
-  'Technology & SaaS': ['Project Management', 'Developer Tools', 'Analytics & BI', 'AI & Automation'],
-  'Software': ['Project Management', 'Developer Tools', 'Analytics & BI'],
-  'Marketing': ['Marketing & SEO', 'Marketing & Email', 'Analytics & BI'],
-  'E-commerce': ['E-commerce & Retail', 'Marketing & SEO', 'Customer Support'],
-  'Finance': ['Finance & Accounting', 'Analytics & BI'],
-  'Healthcare': ['Security & Compliance', 'Communication & Collaboration'],
-  'Education': ['universities', 'Communication & Collaboration'],
-  'CRM': ['CRM & Sales', 'Marketing & Email'],
-  'Sales': ['CRM & Sales', 'Communication & Collaboration'],
-  'Design': ['Design & Creative', 'Project Management'],
-  'Developer Tools': ['Developer Tools', 'Dev Tools & Infrastructure'],
-  'HR': ['HR & Recruiting', 'Communication & Collaboration'],
-  'Customer Support': ['Customer Support', 'Communication & Collaboration'],
-  'Project Management': ['Project Management', 'Communication & Collaboration'],
-  // Default fallback
-  'default': ['Project Management', 'CRM & Sales', 'Marketing & SEO']
+// Known brand -> domain mappings
+const DOMAIN_MAP: Record<string, string> = {
+  'asana': 'asana.com',
+  'monday.com': 'monday.com',
+  'monday': 'monday.com',
+  'clickup': 'clickup.com',
+  'trello': 'trello.com',
+  'notion': 'notion.so',
+  'slack': 'slack.com',
+  'basecamp': 'basecamp.com',
+  'jira': 'atlassian.com',
+  'linear': 'linear.app',
+  'figma': 'figma.com',
+  'hubspot': 'hubspot.com',
+  'salesforce': 'salesforce.com',
+  'pipedrive': 'pipedrive.com',
+  'zoho': 'zoho.com',
+  'close': 'close.com',
+  'github': 'github.com',
+  'microsoft teams': 'microsoft.com',
+  'zapier': 'zapier.com',
+  'zoom': 'zoom.us',
+  'make': 'make.com',
+  'airtable': 'airtable.com',
+  'coda': 'coda.io',
+  'height': 'height.app',
+  'shortcut': 'shortcut.com',
+  'wrike': 'wrike.com',
+  'smartsheet': 'smartsheet.com',
 }
 
-function getTopicsForCategory(category: string | null): string[] {
-  if (!category) return CATEGORY_TO_TOPICS['default']
-  
-  // Try exact match first
-  if (CATEGORY_TO_TOPICS[category]) {
-    return CATEGORY_TO_TOPICS[category]
-  }
-  
-  // Try partial match
-  const lowerCategory = category.toLowerCase()
-  for (const [key, topics] of Object.entries(CATEGORY_TO_TOPICS)) {
-    if (lowerCategory.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerCategory)) {
-      return topics
-    }
-  }
-  
-  return CATEGORY_TO_TOPICS['default']
+function guessDomain(brandName: string): string {
+  const clean = brandName.toLowerCase().trim()
+  if (DOMAIN_MAP[clean]) return DOMAIN_MAP[clean]
+  return clean.replace(/[^a-z0-9]/g, '') + '.com'
 }
+
+function getBrandLogo(brandName: string): string {
+  const domain = guessDomain(brandName)
+  return `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
+}
+
+// Chart colors
+const CHART_COLORS = [
+  '#FF6B4A', // Coral (user's brand)
+  '#3B82F6', // Blue
+  '#22C55E', // Green
+  '#8B5CF6', // Purple
+  '#F59E0B', // Amber
+  '#06B6D4', // Cyan
+  '#EC4899', // Pink
+  '#14B8A6', // Teal
+]
 
 export async function GET(
   request: NextRequest,
@@ -72,7 +87,7 @@ export async function GET(
     
     const supabase = getSupabase()
 
-    // 1. Get dashboard info including category
+    // 1. Get dashboard info
     const { data: dashboard, error: dashError } = await supabase
       .from('dashboards')
       .select('brand_name, domain, plan, metadata')
@@ -85,10 +100,10 @@ export async function GET(
 
     const plan = dashboard.plan || 'free'
     const maxCompetitors = PLAN_LIMITS[plan] || PLAN_LIMITS.free
-    const userCategory = dashboard.metadata?.category || null
-    const userBrandLower = dashboard.brand_name?.toLowerCase() || ''
+    const userBrandName = dashboard.brand_name || ''
+    const userBrandLower = userBrandName.toLowerCase()
 
-    // 2. Get tracked competitors (joined with ai_profiles)
+    // 2. Get tracked competitors
     const { data: trackedData } = await supabase
       .from('dashboard_competitors')
       .select(`
@@ -104,105 +119,184 @@ export async function GET(
       .eq('dashboard_id', dashboardId)
       .limit(maxCompetitors)
 
-    const tracked = (trackedData || []).map(t => ({
-      id: t.id,
-      profile_id: t.profile_id,
-      brand_name: (t.ai_profiles as any)?.brand_name || 'Unknown',
-      domain: (t.ai_profiles as any)?.domain || null,
-      logo_url: (t.ai_profiles as any)?.logo_url || null,
-      added_at: t.added_at,
-      mentions: 0,
-      visibility: 0,
-      sentiment: 'neutral',
-      avg_position: null
-    }))
+    const trackedNames = new Set(
+      (trackedData || []).map(t => ((t.ai_profiles as any)?.brand_name || '').toLowerCase())
+    )
 
-    const trackedNames = new Set(tracked.map(t => t.brand_name.toLowerCase()))
-
-    // 3. Get relevant topics for user's category
-    const relevantTopics = getTopicsForCategory(userCategory)
-
-    // 4. Get top brands from seed prompt data
+    // 3. Get all brand mentions from prompt executions
     const { data: allMentions } = await supabase
       .from('prompt_brand_mentions')
-      .select('brand_name, profile_id')
-    
-    // Aggregate by brand name
-    const brandCounts = new Map<string, { count: number; profile_id: string | null }>()
-    allMentions?.forEach((b: any) => {
-      const name = b.brand_name?.trim()
+      .select('brand_name, position, sentiment, profile_id')
+
+    // 4. Aggregate by brand name
+    const brandCounts = new Map<string, {
+      mentions: number
+      totalPosition: number
+      positionCount: number
+      sentiments: { positive: number; neutral: number; negative: number }
+      profile_id: string | null
+    }>()
+
+    allMentions?.forEach((m: any) => {
+      const name = m.brand_name?.trim()
       if (!name) return
-      const existing = brandCounts.get(name) || { count: 0, profile_id: b.profile_id }
-      existing.count++
+
+      const existing = brandCounts.get(name) || {
+        mentions: 0,
+        totalPosition: 0,
+        positionCount: 0,
+        sentiments: { positive: 0, neutral: 0, negative: 0 },
+        profile_id: m.profile_id || null
+      }
+
+      existing.mentions++
+      if (m.position) {
+        existing.totalPosition += m.position
+        existing.positionCount++
+      }
+
+      const sentiment = m.sentiment as 'positive' | 'neutral' | 'negative'
+      if (sentiment && existing.sentiments[sentiment] !== undefined) {
+        existing.sentiments[sentiment]++
+      } else {
+        existing.sentiments.neutral++
+      }
+
       brandCounts.set(name, existing)
     })
-    
-    const suggestedBrands = Array.from(brandCounts.entries())
-      .map(([name, data]) => ({ brand_name: name, mentions: data.count, profile_id: data.profile_id }))
-      .sort((a, b) => b.mentions - a.mentions)
-      .slice(0, 50)
 
-    // 5. Calculate max mentions for visibility percentage
-    const maxMentions = suggestedBrands.length > 0 
-      ? Math.max(...suggestedBrands.map((b: any) => b.mentions || 0))
-      : 1
+    // 5. Calculate user's stats
+    let userMentions = 0
+    let userPosition = 0
+    let userSentiment = 'neutral'
 
-    // 6. Build suggested list (exclude user's brand and already tracked)
-    const suggested = suggestedBrands
-      .filter((b: any) => {
-        const nameLower = b.brand_name?.toLowerCase() || ''
-        return !trackedNames.has(nameLower) && 
-               !nameLower.includes(userBrandLower) &&
-               !userBrandLower.includes(nameLower)
-      })
-      .slice(0, limit)
-      .map((b: any, idx: number) => {
-        const domain = guessDomain(b.brand_name)
-        return {
-          rank: idx + 1,
-          brand_name: b.brand_name,
-          domain: domain,
-          logo_url: `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`,
-          mentions: b.mentions || 0,
-          visibility: Math.round(((b.mentions || 0) / maxMentions) * 100),
-          sentiment: 'neutral',
-          profile_id: b.profile_id || null
-        }
-      })
-
-    // 7. Update tracked competitors with mention data from seed prompts
-    for (const comp of tracked) {
-      const matchedSuggested = suggestedBrands.find(
-        (b: any) => b.brand_name?.toLowerCase() === comp.brand_name.toLowerCase()
-      )
-      if (matchedSuggested) {
-        comp.mentions = matchedSuggested.mentions || 0
-        comp.visibility = Math.round(((matchedSuggested.mentions || 0) / maxMentions) * 100)
+    brandCounts.forEach((data, name) => {
+      const nameLower = name.toLowerCase()
+      if (nameLower.includes(userBrandLower) || userBrandLower.includes(nameLower)) {
+        userMentions = data.mentions
+        userPosition = data.positionCount > 0 ? data.totalPosition / data.positionCount : 0
+        const s = data.sentiments
+        userSentiment = s.positive >= s.neutral && s.positive >= s.negative ? 'positive' :
+                        s.negative > s.positive && s.negative >= s.neutral ? 'negative' : 'neutral'
+        brandCounts.delete(name) // Remove user from competitor list
       }
+    })
+
+    // 6. Sort by mentions and build competitors array
+    const sortedBrands = Array.from(brandCounts.entries())
+      .sort((a, b) => b[1].mentions - a[1].mentions)
+      .slice(0, limit)
+
+    const maxMentions = sortedBrands.length > 0 ? sortedBrands[0][1].mentions : 1
+
+    // 7. Build backward-compatible competitors array (for Overview page)
+    const competitors = sortedBrands.map(([name, data], idx) => {
+      const s = data.sentiments
+      const sentiment = s.positive >= s.neutral && s.positive >= s.negative ? 'positive' :
+                        s.negative > s.positive && s.negative >= s.neutral ? 'negative' : 'neutral'
+      const avgPosition = data.positionCount > 0 ? Math.round((data.totalPosition / data.positionCount) * 10) / 10 : null
+      const visibility = Math.round((data.mentions / maxMentions) * 100)
+      const domain = guessDomain(name)
+
+      return {
+        rank: idx + 1,
+        name: name,
+        domain: domain,
+        logo: getBrandLogo(name),
+        fallbackLogo: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a1a1a&color=fff&size=64`,
+        visibility: visibility,
+        visibilityDelta: null,
+        sentiment: sentiment,
+        sentimentDelta: null,
+        position: avgPosition,
+        positionDelta: null,
+        mentions: data.mentions,
+        isUser: false,
+        isTracked: trackedNames.has(name.toLowerCase()),
+        color: CHART_COLORS[(idx + 1) % CHART_COLORS.length],
+        profile_id: data.profile_id
+      }
+    })
+
+    // 8. Add user's brand at position based on mentions
+    const userVisibility = maxMentions > 0 ? Math.round((userMentions / maxMentions) * 100) : 0
+    const userRankCalc = competitors.filter(c => c.mentions > userMentions).length + 1
+    
+    // Insert user at correct rank position
+    const userEntry = {
+      rank: userRankCalc,
+      name: userBrandName,
+      domain: dashboard.domain || guessDomain(userBrandName),
+      logo: getBrandLogo(userBrandName),
+      fallbackLogo: `https://ui-avatars.com/api/?name=${encodeURIComponent(userBrandName)}&background=1a1a1a&color=fff&size=64`,
+      visibility: userVisibility,
+      visibilityDelta: null,
+      sentiment: userSentiment,
+      sentimentDelta: null,
+      position: userPosition > 0 ? Math.round(userPosition * 10) / 10 : null,
+      positionDelta: null,
+      mentions: userMentions,
+      isUser: true,
+      isTracked: false,
+      color: CHART_COLORS[0],
+      profile_id: null
     }
 
-    // 8. Get user's mentions from the data
-    const userMentions = suggestedBrands.find(
-      (b: any) => {
-        const nameLower = b.brand_name?.toLowerCase() || ''
-        return nameLower.includes(userBrandLower) || userBrandLower.includes(nameLower)
+    // Insert user into the list at correct position and re-rank
+    competitors.splice(userRankCalc - 1, 0, userEntry)
+    competitors.forEach((c, i) => { c.rank = i + 1 })
+
+    // 9. Build tracked array (for Competitors page)
+    const tracked = (trackedData || []).map(t => {
+      const brandName = (t.ai_profiles as any)?.brand_name || 'Unknown'
+      const matchedComp = competitors.find(c => c.name.toLowerCase() === brandName.toLowerCase())
+      
+      return {
+        id: t.id,
+        profile_id: t.profile_id,
+        brand_name: brandName,
+        domain: (t.ai_profiles as any)?.domain || guessDomain(brandName),
+        logo_url: (t.ai_profiles as any)?.logo_url || getBrandLogo(brandName),
+        added_at: t.added_at,
+        mentions: matchedComp?.mentions || 0,
+        visibility: matchedComp?.visibility || 0,
+        sentiment: matchedComp?.sentiment || 'neutral',
+        avg_position: matchedComp?.position || null
       }
-    )?.mentions || 0
+    })
+
+    // 10. Build suggested array (non-tracked, non-user brands)
+    const suggested = competitors
+      .filter(c => !c.isUser && !c.isTracked)
+      .slice(0, 20)
+      .map(c => ({
+        rank: c.rank,
+        brand_name: c.name,
+        domain: c.domain,
+        logo_url: c.logo,
+        mentions: c.mentions,
+        visibility: c.visibility,
+        sentiment: c.sentiment,
+        profile_id: c.profile_id
+      }))
 
     return NextResponse.json({
+      // Backward compatible (for Overview page)
+      competitors: competitors.slice(0, limit),
+      total_brands_found: brandCounts.size + 1,
+      user_rank: userRankCalc,
+      
+      // New fields (for Competitors page)
       tracked,
       suggested,
       user_data: {
-        brand_name: dashboard.brand_name,
-        category: userCategory,
-        visibility: maxMentions > 0 ? Math.round((userMentions / maxMentions) * 100) : 0,
-        mentions: userMentions
+        brand_name: userBrandName,
+        category: dashboard.metadata?.category || null,
+        visibility: userVisibility,
+        mentions: userMentions,
+        sentiment: userSentiment,
+        position: userPosition > 0 ? Math.round(userPosition * 10) / 10 : null
       },
-      category_info: {
-        category: userCategory,
-        topics: relevantTopics
-      },
-      total_brands_in_category: suggestedBrands.length,
       plan_limits: {
         current: tracked.length,
         max: maxCompetitors,
@@ -214,46 +308,6 @@ export async function GET(
     console.error('Error in competitors API:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-}
-
-// Helper to guess domain from brand name
-function guessDomain(brandName: string): string {
-  const clean = brandName.toLowerCase()
-    .replace(/\.com|\.io|\.co|\.ai/g, '')
-    .replace(/[^a-z0-9]/g, '')
-  
-  // Known mappings
-  const domainMap: Record<string, string> = {
-    'mondaycom': 'monday.com',
-    'monday': 'monday.com',
-    'asana': 'asana.com',
-    'clickup': 'clickup.com',
-    'trello': 'trello.com',
-    'notion': 'notion.so',
-    'slack': 'slack.com',
-    'basecamp': 'basecamp.com',
-    'jira': 'atlassian.com',
-    'linear': 'linear.app',
-    'figma': 'figma.com',
-    'hubspot': 'hubspot.com',
-    'salesforce': 'salesforce.com',
-    'pipedrive': 'pipedrive.com',
-    'zoho': 'zoho.com',
-    'close': 'close.com',
-    'github': 'github.com',
-    'microsoftteams': 'microsoft.com',
-    'zapier': 'zapier.com',
-    'zoom': 'zoom.us',
-    'make': 'make.com',
-    'airtable': 'airtable.com',
-    'coda': 'coda.io',
-    'height': 'height.app',
-    'shortcut': 'shortcut.com',
-    'wrike': 'wrike.com',
-    'smartsheet': 'smartsheet.com',
-  }
-  
-  return domainMap[clean] || `${clean}.com`
 }
 
 // POST - Add a competitor to tracking
@@ -300,7 +354,6 @@ export async function POST(
       }, { status: 403 })
     }
 
-    // If we have profile_id, use it directly
     let finalProfileId = profile_id
 
     // If no profile_id, try to find or create profile
@@ -315,7 +368,6 @@ export async function POST(
       if (existingProfile) {
         finalProfileId = existingProfile.id
       } else {
-        // Create new profile
         const newDomain = domain || guessDomain(brand_name)
         const { data: newProfile } = await supabase
           .from('ai_profiles')
@@ -323,7 +375,7 @@ export async function POST(
             brand_name,
             domain: newDomain,
             slug: brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-            logo_url: `https://cdn.brandfetch.io/${newDomain}?c=1id1Fyz-h7an5-5KR_y`
+            logo_url: getBrandLogo(brand_name)
           })
           .select('id')
           .single()
@@ -399,7 +451,6 @@ export async function DELETE(
     }
 
     const { error } = await query
-
     if (error) throw error
 
     return NextResponse.json({ success: true })
