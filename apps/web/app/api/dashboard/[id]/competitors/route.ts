@@ -477,7 +477,8 @@ export async function POST(
             brand_name,
             domain: newDomain,
             slug: uniqueSlug,
-            logo_url: getBrandLogo(brand_name)
+            logo_url: getBrandLogo(brand_name),
+            feed_data: {}  // Required field - empty object default
           })
           .select('id')
           .single()
