@@ -785,31 +785,31 @@ function VisibilityChart({
         <CartesianGrid 
           strokeDasharray="3 3" 
           vertical={true}
-          stroke="rgba(255,255,255,0.05)"
+          stroke="var(--border)"
         />
         <XAxis 
           dataKey="date" 
           axisLine={false}
           tickLine={false}
-          tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }}
+          tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
           dy={10}
         />
         <YAxis 
           axisLine={false}
           tickLine={false}
-          tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }}
+          tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
           domain={metric === 'position' ? [0, 10] : [0, 100]}
           tickFormatter={(value) => metric === 'position' ? value : `${value}%`}
           dx={-10}
         />
         <Tooltip 
           contentStyle={{ 
-            backgroundColor: '#111213',
-            border: '1px solid rgba(255,255,255,0.06)',
+            backgroundColor: 'var(--card)',
+            border: '1px solid var(--border)',
             borderRadius: '8px',
-            boxShadow: '0 4px 18px rgba(0,0,0,0.22)',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.15)',
           }}
-          labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
+          labelStyle={{ color: 'var(--text-muted)', marginBottom: '4px' }}
           itemStyle={{ padding: '2px 0' }}
           formatter={(value: any, name: string) => [
             value === null ? 'No data' : (metric === 'position' ? Number(value).toFixed(1) : `${value}%`),
@@ -821,7 +821,7 @@ function VisibilityChart({
           height={36}
           iconType="line"
           iconSize={10}
-          wrapperStyle={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}
+          wrapperStyle={{ fontSize: '11px', color: 'var(--text-muted)' }}
         />
         {charted.map((comp) => (
           <Line

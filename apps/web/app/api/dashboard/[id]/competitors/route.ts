@@ -420,10 +420,10 @@ export async function POST(
 
     const supabase = getSupabase()
 
-    // Check dashboard exists and get plan
+    // Check dashboard exists and get plan + brand name
     const { data: dashboard } = await supabase
       .from('dashboards')
-      .select('plan')
+      .select('plan, brand_name')
       .eq('id', dashboardId)
       .single()
 
@@ -554,6 +554,47 @@ export async function POST(
       .single()
 
     if (error) throw error
+
+    // Auto-create comparison prompts for this competitor
+    const competitorName = brand_name
+    const userBrandName = dashboard.brand_name || ''
+    
+    if (competitorName && userBrandName) {
+      const autoPrompts = [
+        `${userBrandName} vs ${competitorName}`,
+        `${competitorName} vs ${userBrandName}`,
+        `${competitorName} alternatives`
+      ]
+      
+      // Insert prompts (check for existing first)
+      for (const promptText of autoPrompts) {
+        try {
+          // Check if prompt already exists
+          const { data: existing } = await supabase
+            .from('user_prompts')
+            .select('id')
+            .eq('dashboard_id', dashboardId)
+            .eq('prompt_text', promptText)
+            .maybeSingle()
+          
+          if (!existing) {
+            await supabase
+              .from('user_prompts')
+              .insert({
+                dashboard_id: dashboardId,
+                prompt_text: promptText,
+                is_active: true,
+                run_frequency: 'weekly'
+              })
+          }
+        } catch (e) {
+          // Ignore duplicates
+          console.log('[Competitors POST] Prompt may already exist:', promptText)
+        }
+      }
+      
+      console.log('[Competitors POST] Created auto-prompts for:', competitorName)
+    }
 
     return NextResponse.json({ success: true, competitor_id: competitor.id })
 
