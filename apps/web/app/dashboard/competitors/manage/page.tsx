@@ -1,9 +1,10 @@
 // apps/web/app/dashboard/competitors/manage/page.tsx
-// Competitor Management - Improved with slide-out panel and quick compare
+// Competitor Management - Fixed button colors and navigation
 
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { 
   Users, 
   Plus, 
@@ -13,10 +14,12 @@ import {
   Trash2,
   Check,
   Info,
+  ChevronLeft,
   ChevronRight,
   TrendingUp,
   TrendingDown,
-  Minus
+  Minus,
+  ArrowUpRight
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -47,10 +50,7 @@ interface SearchResult {
   visibility_score: number
 }
 
-// Neutral gray banner - user can customize color in edit panel later
-const BANNER_COLOR = 'bg-gray-100 dark:bg-zinc-800'
-
-// Brand logo component - sits on banner, not cropped
+// Brand logo component
 function BrandLogo({ 
   domain, 
   name, 
@@ -68,7 +68,7 @@ function BrandLogo({
   if (error || !logoUrl) {
     return (
       <div 
-        className={`rounded-xl bg-[#1a1a1a] dark:bg-zinc-700 flex items-center justify-center text-white font-semibold ${className}`}
+        className={`rounded-xl bg-secondary flex items-center justify-center text-primary font-semibold ${className}`}
         style={{ width: size, height: size, fontSize: size * 0.4 }}
       >
         {name?.charAt(0)?.toUpperCase() || '?'}
@@ -78,7 +78,7 @@ function BrandLogo({
   
   return (
     <div 
-      className={`rounded-xl bg-white border border-gray-100 flex items-center justify-center overflow-hidden ${className}`}
+      className={`rounded-xl bg-card border border-border flex items-center justify-center overflow-hidden ${className}`}
       style={{ width: size, height: size }}
     >
       <img
@@ -126,7 +126,7 @@ function QuickCompare({
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">Difference</span>
           <span className={`font-semibold flex items-center gap-1 ${
-            isTied ? 'text-muted' : isAhead ? 'text-chart-2' : 'text-red-500'
+            isTied ? 'text-muted' : isAhead ? 'text-green-500' : 'text-red-500'
           }`}>
             {isTied ? (
               <>
@@ -191,8 +191,8 @@ function EditPanel({
       
       {/* Panel */}
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card border-l border-border shadow-2xl z-50 overflow-y-auto">
-        {/* Header - neutral gray by default */}
-        <div className="h-28 bg-gray-100 dark:bg-zinc-800" />
+        {/* Header */}
+        <div className="h-28 bg-secondary" />
         
         {/* Logo overlapping header */}
         <div className="px-6 -mt-10">
@@ -216,7 +216,7 @@ function EditPanel({
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-primary text-lg font-medium focus:outline-none focus:ring-2 focus:ring-chart-1/50"
+              className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-primary text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             />
           </div>
           
@@ -239,7 +239,7 @@ function EditPanel({
                   {trackedNames.length > 1 && (
                     <button
                       onClick={() => removeAlias(name)}
-                      className="text-muted hover:text-primary transition-colors cursor-pointer"
+                      className="text-muted hover:text-primary transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -255,7 +255,7 @@ function EditPanel({
                   setTrackedNames([...trackedNames, alias.trim()])
                 }
               }}
-              className="flex items-center gap-2 mt-3 text-sm text-muted hover:text-primary transition-colors cursor-pointer"
+              className="flex items-center gap-2 mt-3 text-sm text-muted hover:text-primary transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add Alias
@@ -278,7 +278,7 @@ function EditPanel({
           <div>
             <button
               onClick={onDelete}
-              className="text-sm text-red-500 hover:text-red-400 transition-colors cursor-pointer"
+              className="text-sm text-red-500 hover:text-red-400 transition-colors"
             >
               Remove competitor
             </button>
@@ -289,13 +289,13 @@ function EditPanel({
         <div className="sticky bottom-0 p-6 bg-card border-t border-border flex items-center justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-muted hover:text-primary transition-colors cursor-pointer"
+            className="px-4 py-2 text-sm font-medium text-muted hover:text-primary transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={() => onSave({ brand_name: displayName, tracked_names: trackedNames, domain })}
-            className="px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all cursor-pointer"
+            className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
           >
             Save
           </button>
@@ -405,21 +405,23 @@ export default function CompetitorManagePage() {
         body: JSON.stringify({
           brand_name: brand.brand_name,
           domain: brand.domain,
-          logo_url: brand.logo_url,
-          source
+          logo_url: brand.logo_url
         })
       })
       
       if (res.ok) {
-        const data = await res.json()
-        setCompetitors(prev => [...prev, data.competitor])
+        const newComp: Competitor = {
+          id: Math.random().toString(),
+          brand_name: brand.brand_name,
+          domain: brand.domain,
+          logo_url: brand.logo_url || null,
+          status: 'active'
+        }
+        setCompetitors([...competitors, newComp])
         setSuggested(prev => prev.filter(s => s.domain !== brand.domain))
+        setShowAddModal(false)
         setSearchQuery('')
         setSearchResults([])
-        setShowAddModal(false)
-      } else {
-        const data = await res.json()
-        alert(data.error || 'Failed to add competitor')
       }
     } catch (err) {
       console.error('Failed to add competitor:', err)
@@ -428,18 +430,17 @@ export default function CompetitorManagePage() {
     }
   }
 
-  const removeCompetitor = async (competitorId: string) => {
+  const removeCompetitor = async (id: string) => {
     if (!currentDashboard?.id) return
     
     try {
-      const res = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?competitorId=${competitorId}`, {
+      const comp = competitors.find(c => c.id === id)
+      await fetch(`/api/dashboard/${currentDashboard.id}/competitors?competitor_id=${id}`, {
         method: 'DELETE'
       })
       
-      if (res.ok) {
-        setCompetitors(prev => prev.filter(c => c.id !== competitorId))
-        setEditingCompetitor(null)
-      }
+      setCompetitors(competitors.filter(c => c.id !== id))
+      setEditingCompetitor(null)
     } catch (err) {
       console.error('Failed to remove competitor:', err)
     }
@@ -477,7 +478,7 @@ export default function CompetitorManagePage() {
   if (loading || brandLoading) {
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chart-1"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
     )
   }
@@ -488,30 +489,40 @@ export default function CompetitorManagePage() {
     <div className="min-h-screen bg-primary">
       <MobileHeader />
       
-      {/* Main container card */}
-      <div className="p-6">
-        <div className="card">
-          {/* Header */}
-          <div className="px-6 py-5 border-b border-border flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Users className="w-5 h-5 text-muted" strokeWidth={1.5} />
-              <h1 className="text-lg font-semibold text-primary">Brands</h1>
-            </div>
-            
-            <button
-              onClick={() => setShowAddModal(true)}
-              disabled={atLimit}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                atLimit
-                  ? 'bg-secondary text-muted cursor-not-allowed'
-                  : 'bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] hover:opacity-80 cursor-pointer'
-              }`}
-            >
-              <Plus className="w-4 h-4" />
-              Add Brand
-            </button>
+      {/* Header Bar with Back Navigation */}
+      <div className="page-header-bar">
+        <div className="flex items-center gap-3">
+          <Link 
+            href="/dashboard/competitors"
+            className="flex items-center gap-1.5 text-sm text-muted hover:text-primary transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back
+          </Link>
+          <span className="text-border">|</span>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-muted" />
+            <span className="text-sm font-medium text-secondary">Manage Competitors</span>
           </div>
-
+        </div>
+        
+        <button
+          onClick={() => setShowAddModal(true)}
+          disabled={atLimit}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            atLimit
+              ? 'bg-secondary text-muted cursor-not-allowed'
+              : 'bg-secondary text-primary hover:bg-hover'
+          }`}
+        >
+          <Plus className="w-4 h-4" />
+          Add Brand
+        </button>
+      </div>
+      
+      {/* Main container */}
+      <div className="p-6">
+        <div className="card p-0 overflow-hidden">
           <div className="p-6 space-y-8">
             {/* Suggested Brands */}
             {suggested.length > 0 && (
@@ -525,10 +536,10 @@ export default function CompetitorManagePage() {
                   {suggested.map((brand) => (
                     <div
                       key={brand.domain}
-                      className="relative group border border-border rounded-xl overflow-hidden bg-card hover:border-primary/20 transition-all"
+                      className="relative group border border-border rounded-xl overflow-hidden bg-card hover:border-muted transition-all"
                     >
-                      {/* Gray banner */}
-                      <div className="h-14 bg-gray-100 dark:bg-zinc-800" />
+                      {/* Banner */}
+                      <div className="h-14 bg-secondary" />
                       
                       {/* Content */}
                       <div className="px-5 pb-5 -mt-6">
@@ -543,10 +554,10 @@ export default function CompetitorManagePage() {
                           <button
                             onClick={() => addCompetitor(brand, 'suggested')}
                             disabled={addingCompetitor === brand.domain || atLimit}
-                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] text-sm font-medium rounded-lg hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-secondary text-primary text-sm font-medium rounded-lg hover:bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             {addingCompetitor === brand.domain ? (
-                              <div className="w-4 h-4 border-2 border-white/30 dark:border-[#1a1a1a]/30 border-t-white dark:border-t-[#1a1a1a] rounded-full animate-spin" />
+                              <div className="w-4 h-4 border-2 border-muted border-t-primary rounded-full animate-spin" />
                             ) : (
                               <>
                                 <Plus className="w-3.5 h-3.5" />
@@ -557,7 +568,7 @@ export default function CompetitorManagePage() {
                           <button
                             onClick={() => rejectSuggestion(brand)}
                             disabled={rejectingBrand === brand.domain}
-                            className="px-4 py-2 text-sm font-medium text-primary bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg transition-all cursor-pointer disabled:opacity-50"
+                            className="px-4 py-2 text-sm font-medium text-muted hover:text-primary bg-transparent hover:bg-secondary rounded-lg transition-colors disabled:opacity-50"
                           >
                             Reject
                           </button>
@@ -587,7 +598,7 @@ export default function CompetitorManagePage() {
                   </p>
                   <button
                     onClick={() => setShowAddModal(true)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] rounded-lg text-sm font-medium hover:opacity-80 cursor-pointer transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary text-primary rounded-lg text-sm font-medium hover:bg-hover transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                     Add Your First Competitor
@@ -597,8 +608,7 @@ export default function CompetitorManagePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* User's own brand */}
                   <div className="border border-border rounded-xl overflow-hidden bg-card">
-                    {/* Subtle tinted banner for your brand */}
-                    <div className="h-14 bg-rose-50 dark:bg-rose-900/20" />
+                    <div className="h-14 bg-blue-500/10" />
                     <div className="px-5 pb-5 -mt-6">
                       <div className="flex items-start justify-between">
                         <BrandLogo 
@@ -606,13 +616,13 @@ export default function CompetitorManagePage() {
                           name={currentDashboard?.brand_name || 'Your Brand'} 
                           size={52}
                         />
-                        <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-full font-medium mt-8">
+                        <span className="text-xs px-2.5 py-1 bg-secondary text-muted rounded-full font-medium mt-8">
                           Your brand
                         </span>
                       </div>
                       <h3 className="font-medium text-primary mt-3">{currentDashboard?.brand_name}</h3>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-md">
+                        <span className="text-xs px-2.5 py-1 bg-secondary text-muted rounded-md">
                           {currentDashboard?.domain}
                         </span>
                       </div>
@@ -623,10 +633,10 @@ export default function CompetitorManagePage() {
                   {competitors.map((comp) => (
                     <div 
                       key={comp.id} 
-                      className="border border-border rounded-xl overflow-hidden bg-card group cursor-pointer hover:border-primary/20 transition-all"
+                      className="border border-border rounded-xl overflow-hidden bg-card group cursor-pointer hover:border-muted transition-all"
                       onClick={() => setEditingCompetitor(comp)}
                     >
-                      <div className="h-14 bg-gray-100 dark:bg-zinc-800" />
+                      <div className="h-14 bg-secondary" />
                       
                       <div className="px-5 pb-5 -mt-6">
                         <BrandLogo 
@@ -637,7 +647,7 @@ export default function CompetitorManagePage() {
                         
                         <h3 className="font-medium text-primary mt-3">{comp.brand_name}</h3>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs px-2.5 py-1 bg-gray-100 dark:bg-zinc-800 text-muted rounded-md">
+                          <span className="text-xs px-2.5 py-1 bg-secondary text-muted rounded-md">
                             {comp.domain}
                           </span>
                           <MoreHorizontal className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -653,7 +663,7 @@ export default function CompetitorManagePage() {
                 <div className="flex items-center justify-between text-sm text-muted mt-6 pt-6 border-t border-border">
                   <span>Tracking {competitors.length} of {getPlanLimit()} brands</span>
                   {competitors.length >= getPlanLimit() - 1 && (
-                    <a href="/pricing" className="text-chart-1 hover:underline font-medium">
+                    <a href="/pricing" className="text-blue-500 hover:underline font-medium">
                       Want to track more? Upgrade →
                     </a>
                   )}
@@ -697,7 +707,7 @@ export default function CompetitorManagePage() {
                   setSearchQuery('')
                   setSearchResults([])
                 }}
-                className="p-2 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors cursor-pointer"
+                className="p-2 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -711,7 +721,7 @@ export default function CompetitorManagePage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by company name or domain..."
-                  className="w-full pl-11 pr-4 py-3 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-chart-1/50 focus:border-chart-1/50 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
                   autoFocus
                 />
                 {searching && (
@@ -728,7 +738,7 @@ export default function CompetitorManagePage() {
                       key={brand.domain}
                       onClick={() => addCompetitor(brand)}
                       disabled={addingCompetitor === brand.domain}
-                      className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left cursor-pointer disabled:opacity-50 group"
+                      className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left disabled:opacity-50 group"
                     >
                       <BrandLogo domain={brand.domain} name={brand.brand_name} size={44} />
                       <div className="flex-1 min-w-0">
@@ -736,7 +746,7 @@ export default function CompetitorManagePage() {
                         <p className="text-sm text-muted truncate">{brand.domain}</p>
                       </div>
                       {addingCompetitor === brand.domain ? (
-                        <div className="w-5 h-5 border-2 border-chart-1/30 border-t-chart-1 rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-muted border-t-primary rounded-full animate-spin" />
                       ) : (
                         <Plus className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
                       )}
@@ -757,7 +767,7 @@ export default function CompetitorManagePage() {
                         logo_url: null
                       })
                     }}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-secondary/80 text-primary transition-colors text-sm cursor-pointer font-medium"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-hover text-primary transition-colors text-sm font-medium"
                   >
                     <Plus className="w-4 h-4" />
                     Add "{searchQuery}" manually
