@@ -503,7 +503,7 @@ export default function CompetitorsPage() {
                         ) : (
                           <button
                             onClick={() => handleTrackBrand(brand)}
-                            disabled={addingBrand === brand.name || (planLimits && tracked.length >= planLimits.max)}
+                            disabled={addingBrand === brand.name || !!(planLimits && tracked.length >= planLimits.max)}
                             className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             title={planLimits && tracked.length >= planLimits.max ? 'Upgrade to track more' : 'Track competitor'}
                           >
