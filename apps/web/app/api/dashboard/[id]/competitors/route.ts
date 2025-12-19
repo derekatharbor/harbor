@@ -123,10 +123,61 @@ export async function GET(
       (trackedData || []).map(t => ((t.ai_profiles as any)?.brand_name || '').toLowerCase())
     )
 
-    // 3. Get all brand mentions from prompt executions
-    const { data: allMentions } = await supabase
-      .from('prompt_brand_mentions')
-      .select('brand_name, position, sentiment, profile_id')
+    // 3. Get brand mentions from USER'S OWN prompts first
+    // Join: user_prompts -> prompt_executions -> prompt_brand_mentions
+    const { data: userPrompts } = await supabase
+      .from('user_prompts')
+      .select('id')
+      .eq('dashboard_id', dashboardId)
+
+    const userPromptIds = (userPrompts || []).map(p => p.id)
+
+    let allMentions: any[] = []
+
+    if (userPromptIds.length > 0) {
+      // Get executions for user's prompts
+      const { data: userExecutions } = await supabase
+        .from('prompt_executions')
+        .select('id')
+        .in('prompt_id', userPromptIds)
+
+      const executionIds = (userExecutions || []).map(e => e.id)
+
+      if (executionIds.length > 0) {
+        // Get brand mentions from user's executions
+        const { data: userMentions } = await supabase
+          .from('prompt_brand_mentions')
+          .select('brand_name, position, sentiment, profile_id')
+          .in('execution_id', executionIds)
+
+        allMentions = userMentions || []
+      }
+    }
+
+    // If user has no prompt data, return empty (don't show random SaaS brands)
+    if (allMentions.length === 0) {
+      return NextResponse.json({
+        competitors: [],
+        total_brands_found: 0,
+        user_rank: null,
+        tracked,
+        suggested: [],
+        user_data: {
+          brand_name: userBrandName,
+          category: dashboard.metadata?.category || null,
+          visibility: 0,
+          mentions: 0,
+          sentiment: 'neutral',
+          position: null
+        },
+        plan_limits: {
+          current: tracked.length,
+          max: maxCompetitors,
+          plan: plan
+        },
+        message: 'Run prompts to discover competitors in your space'
+      })
+    }
 
     // 4. Aggregate by brand name
     const brandCounts = new Map<string, {
