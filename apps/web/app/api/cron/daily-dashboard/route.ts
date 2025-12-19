@@ -1,9 +1,6 @@
 // app/api/cron/daily-dashboard/route.ts
 // Daily dashboard cron - re-executes user prompts and stores visibility snapshots
 // Run daily via GitHub Actions
-// 
-// IMPORTANT: Only runs for PAID users and ACTIVE TRIALS
-// Does NOT run for free users or expired trials
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -35,36 +32,17 @@ function verifyCronSecret(request: NextRequest): boolean {
   return authHeader === `Bearer ${cronSecret}`
 }
 
-// Check if user should get scans (paid or active trial)
+// Check if user should get scans
 function isEligibleForScans(dashboard: {
   plan?: string | null
-  trial_ends_at?: string | null
-  created_at?: string | null
 }): boolean {
-  // Paid plans always eligible
-  const paidPlans = ['pro', 'growth', 'enterprise', 'solo', 'agency']
-  if (dashboard.plan && paidPlans.includes(dashboard.plan.toLowerCase())) {
-    return true
-  }
+  // All plans get scans for now - can gate to paid-only later
+  const eligiblePlans = ['pro', 'growth', 'enterprise', 'solo', 'agency', 'free']
   
-  // Check trial status
-  if (dashboard.trial_ends_at) {
-    const trialEnd = new Date(dashboard.trial_ends_at)
-    if (trialEnd > new Date()) {
-      return true // Active trial
-    }
-  }
+  // If no plan set, still eligible (new users default to solo)
+  if (!dashboard.plan) return true
   
-  // Fallback: 7-day trial from account creation if no explicit trial_ends_at
-  if (dashboard.created_at && !dashboard.plan) {
-    const createdAt = new Date(dashboard.created_at)
-    const trialEnd = new Date(createdAt.getTime() + 7 * 24 * 60 * 60 * 1000)
-    if (trialEnd > new Date()) {
-      return true // Within implicit 7-day trial
-    }
-  }
-  
-  return false
+  return eligiblePlans.includes(dashboard.plan.toLowerCase())
 }
 
 export async function GET(request: NextRequest) {
@@ -73,7 +51,7 @@ export async function GET(request: NextRequest) {
   // Get stats on dashboards and their prompts
   const { data: dashboards } = await supabase
     .from('dashboards')
-    .select('id, brand_name, plan, trial_ends_at, created_at')
+    .select('id, brand_name, plan, created_at')
     .not('brand_name', 'is', null)
   
   // Filter to eligible dashboards
@@ -102,7 +80,7 @@ export async function GET(request: NextRequest) {
     ineligible_skipped: ineligibleCount,
     total_active_prompts: totalPrompts || 0,
     last_snapshot: lastSnapshot?.snapshot_date || 'never',
-    hint: 'POST to execute prompts and create snapshots (paid/trial users only)'
+    hint: 'POST to execute prompts and create snapshots'
   })
 }
 
@@ -128,24 +106,24 @@ export async function POST(request: NextRequest) {
   }
   
   try {
-    // Get dashboards to process - include plan and trial info
+    // Get dashboards to process
     let dashboardQuery = supabase
       .from('dashboards')
-      .select('id, brand_name, domain, plan, trial_ends_at, created_at')
+      .select('id, brand_name, domain, plan, created_at')
       .not('brand_name', 'is', null)
     
     if (dashboardId) {
       dashboardQuery = dashboardQuery.eq('id', dashboardId)
     }
     
-    const { data: dashboards, error: dbError } = await dashboardQuery.limit(limit * 2) // Fetch more since some will be filtered
+    const { data: dashboards, error: dbError } = await dashboardQuery.limit(limit * 2)
     
     if (dbError || !dashboards) {
       throw new Error('Failed to fetch dashboards: ' + dbError?.message)
     }
     
     for (const dashboard of dashboards) {
-      // CHECK ELIGIBILITY - skip free/expired users
+      // CHECK ELIGIBILITY
       if (!isEligibleForScans(dashboard)) {
         results.dashboards_skipped_not_eligible++
         continue
