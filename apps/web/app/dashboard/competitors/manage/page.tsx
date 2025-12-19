@@ -447,7 +447,6 @@ export default function CompetitorManagePage() {
       setShowAddModal(false)
       setSearchQuery('')
       setSearchResults([])
-      }
     } catch (err) {
       console.error('Failed to add competitor:', err)
     } finally {
