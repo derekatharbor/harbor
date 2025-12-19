@@ -1,6 +1,6 @@
 // apps/web/app/robots.ts
 // Crawler permissions with explicit AI model support
-// Optimized to avoid override conflicts and maximize feed discoverability
+// Optimized for maximum AI crawler discoverability
 
 import { MetadataRoute } from 'next'
 
@@ -9,12 +9,14 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: [
-      // Block sensitive routes for ALL crawlers first
+      // Default rules for all crawlers
       {
         userAgent: '*',
         disallow: [
           '/api/scan/',
           '/api/upload/',
+          '/api/cron/',
+          '/api/stripe/',
           '/dashboard/',
           '/onboarding/',
           '/auth/',
@@ -22,40 +24,135 @@ export default function robots(): MetadataRoute.Robots {
         ],
         allow: '/',
       },
-      // Explicit allow rules for ChatGPT crawler (Feed Network)
+      
+      // === OPENAI CRAWLERS ===
+      // OAI-SearchBot - Indexes for ChatGPT Search (CRITICAL for citations)
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      // ChatGPT-User - Real-time fetching during user queries
       {
         userAgent: 'ChatGPT-User',
         allow: [
-          '/brands/*/harbor.json',
-          '/api/feed/',
+          '/',
           '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
         ],
       },
-      // Explicit allow rules for Claude crawler (Feed Network)
+      // GPTBot - General OpenAI crawler for training
+      {
+        userAgent: 'GPTBot',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      
+      // === ANTHROPIC CRAWLERS ===
+      {
+        userAgent: 'ClaudeBot',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
       {
         userAgent: 'Claude-Web',
         allow: [
-          '/brands/*/harbor.json',
-          '/api/feed/',
+          '/',
           '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
         ],
       },
-      // Explicit allow rules for Perplexity crawler (Feed Network)
+      {
+        userAgent: 'anthropic-ai',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      
+      // === PERPLEXITY ===
       {
         userAgent: 'PerplexityBot',
         allow: [
-          '/brands/*/harbor.json',
-          '/api/feed/',
+          '/',
           '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
         ],
       },
-      // Explicit allow rules for Googlebot (clarity for Gemini)
+      
+      // === GOOGLE (for Gemini/AI Overviews) ===
       {
         userAgent: 'Googlebot',
         allow: [
-          '/brands/*/harbor.json',
-          '/api/feed/',
+          '/',
           '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      {
+        userAgent: 'Google-Extended',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      
+      // === BING (ChatGPT Search uses Bing's index) ===
+      {
+        userAgent: 'Bingbot',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+          '/alternatives/',
+          '/compare/',
+        ],
+      },
+      
+      // === OTHER AI CRAWLERS ===
+      {
+        userAgent: 'Bytespider',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
+        ],
+      },
+      {
+        userAgent: 'CCBot',
+        allow: [
+          '/',
+          '/brands/',
+          '/brands/*/harbor.json',
         ],
       },
     ],

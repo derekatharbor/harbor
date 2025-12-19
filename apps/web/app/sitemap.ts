@@ -8,6 +8,7 @@ import { createClient } from '@supabase/supabase-js'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Regenerate every hour
+export const maxDuration = 60 // Allow up to 60 seconds for large sitemap
 
 // Category mappings for /best pages
 const CATEGORIES = [
@@ -24,6 +25,71 @@ const COMMON_INTEGRATIONS = [
   'salesforce', 'slack', 'quickbooks', 'hubspot', 'shopify', 'zapier',
   'stripe', 'google', 'microsoft', 'aws', 'zoom', 'jira', 'github'
 ]
+
+// Helper to fetch all rows with pagination
+async function fetchAllBrands(supabase: any): Promise<{ slug: string; updated_at: string | null; created_at: string | null }[]> {
+  const PAGE_SIZE = 10000
+  let allBrands: any[] = []
+  let page = 0
+  let hasMore = true
+
+  while (hasMore) {
+    const { data, error } = await supabase
+      .from('ai_profiles')
+      .select('slug, updated_at, created_at')
+      .order('created_at', { ascending: true })
+      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
+
+    if (error) {
+      console.error(`Sitemap: Error fetching brands page ${page}:`, error)
+      break
+    }
+
+    if (data && data.length > 0) {
+      allBrands = [...allBrands, ...data]
+      console.log(`Sitemap: Fetched page ${page}, got ${data.length} brands (total: ${allBrands.length})`)
+      hasMore = data.length === PAGE_SIZE
+      page++
+    } else {
+      hasMore = false
+    }
+  }
+
+  return allBrands
+}
+
+// Helper to fetch all enriched profiles with pagination
+async function fetchAllEnriched(supabase: any): Promise<{ slug: string; brand_name: string; category: string | null; updated_at: string | null }[]> {
+  const PAGE_SIZE = 10000
+  let allEnriched: any[] = []
+  let page = 0
+  let hasMore = true
+
+  while (hasMore) {
+    const { data, error } = await supabase
+      .from('ai_profiles')
+      .select('slug, brand_name, category, updated_at')
+      .not('enriched_at', 'is', null)
+      .not('feed_data', 'is', null)
+      .order('visibility_score', { ascending: false })
+      .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
+
+    if (error) {
+      console.error(`Sitemap: Error fetching enriched page ${page}:`, error)
+      break
+    }
+
+    if (data && data.length > 0) {
+      allEnriched = [...allEnriched, ...data]
+      hasMore = data.length === PAGE_SIZE
+      page++
+    } else {
+      hasMore = false
+    }
+  }
+
+  return allEnriched
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://useharbor.io'
@@ -56,32 +122,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     process.env.SUPABASE_SERVICE_ROLE_KEY
   )
 
-  // Fetch enriched profiles for alternatives and comparisons
-  const { data: enrichedProfiles, error: enrichedError } = await supabase
-    .from('ai_profiles')
-    .select('slug, brand_name, category, updated_at')
-    .not('enriched_at', 'is', null)
-    .not('feed_data', 'is', null)
-    .order('visibility_score', { ascending: false })
-
-  if (enrichedError) {
-    console.error('Sitemap: Error fetching enriched profiles:', enrichedError)
-  }
-
-  const enriched = enrichedProfiles || []
+  // Fetch ALL enriched profiles with pagination
+  const enriched = await fetchAllEnriched(supabase)
   console.log(`Sitemap: Found ${enriched.length} enriched profiles`)
 
-  // Fetch all brands for brand pages
-  const { data: allBrands, error: brandsError } = await supabase
-    .from('ai_profiles')
-    .select('slug, updated_at, created_at')
-    .order('rank_global', { ascending: true })
-
-  if (brandsError) {
-    console.error('Sitemap: Error fetching brands:', brandsError)
-  }
-
-  const brands = allBrands || []
+  // Fetch ALL brands with pagination
+  const brands = await fetchAllBrands(supabase)
   console.log(`Sitemap: Found ${brands.length} total brands`)
 
   // Generate /best category pages
@@ -140,7 +186,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Brand profile and feed URLs
+  // Brand profile URLs and harbor.json feeds
   const brandUrls: MetadataRoute.Sitemap = brands.flatMap((brand) => {
     const lastMod = brand.updated_at || brand.created_at || now
     return [
@@ -159,7 +205,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]
   })
 
-  console.log(`Sitemap: ${bestUrls.length} /best, ${integrationUrls.length} integration, ${alternativesUrls.length} /alternatives, ${compareUrls.length} /compare, ${brandUrls.length / 2} brands`)
+  const totalUrls = staticUrls.length + bestUrls.length + integrationUrls.length + 
+                    alternativesUrls.length + compareUrls.length + brandUrls.length
+
+  console.log(`Sitemap: Generating ${totalUrls} total URLs`)
+  console.log(`  - Static: ${staticUrls.length}`)
+  console.log(`  - /best: ${bestUrls.length}`)
+  console.log(`  - Integration: ${integrationUrls.length}`)
+  console.log(`  - /alternatives: ${alternativesUrls.length}`)
+  console.log(`  - /compare: ${compareUrls.length}`)
+  console.log(`  - /brands (HTML + JSON): ${brandUrls.length}`)
 
   return [
     ...staticUrls,
