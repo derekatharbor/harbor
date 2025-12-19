@@ -242,7 +242,8 @@ export default function CompetitorsPage() {
     )
   }
 
-  const hasData = competitors.length > 0
+  const hasLeaderboardData = competitors.length > 0
+  const hasTrackedOrLeaderboard = tracked.length > 0 || competitors.length > 0
   const canTrackMore = planLimits ? tracked.length < planLimits.max : true
 
   return (
@@ -297,21 +298,30 @@ export default function CompetitorsPage() {
         <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
-      {!hasData ? (
+      {!hasTrackedOrLeaderboard ? (
         <div className="p-6">
           <div className="card p-12 text-center">
             <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
             <h2 className="text-lg font-semibold text-primary mb-2">No competitor data yet</h2>
             <p className="text-sm text-muted mb-6">
-              Run prompts to see which brands AI mentions alongside yours.
+              Run prompts to see which brands AI mentions alongside yours, or add competitors manually.
             </p>
-            <Link 
-              href="/dashboard/prompts"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
-            >
-              Go to Prompts
-              <ArrowUpRight className="w-4 h-4" />
-            </Link>
+            <div className="flex items-center justify-center gap-3">
+              <Link 
+                href="/dashboard/prompts"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+              >
+                Go to Prompts
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+              <Link 
+                href="/dashboard/competitors/manage"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+              >
+                Add Manually
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       ) : (
@@ -335,7 +345,12 @@ export default function CompetitorsPage() {
               {tracked.length === 0 ? (
                 <div className="text-center py-6 bg-secondary rounded-lg">
                   <p className="text-sm text-muted mb-1">No competitors tracked yet</p>
-                  <p className="text-xs text-muted">Click + on any brand below to start tracking</p>
+                  <p className="text-xs text-muted">
+                    {hasLeaderboardData 
+                      ? "Click + on any brand below to start tracking"
+                      : "Use the Manage page to add competitors manually"
+                    }
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -433,19 +448,33 @@ export default function CompetitorsPage() {
               </div>
             </div>
 
-            {/* Table Header */}
-            <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs text-muted border-b border-border bg-secondary">
-              <div className="col-span-1">#</div>
-              <div className="col-span-5">Brand</div>
-              <div className="col-span-2 text-center">Visibility</div>
-              <div className="col-span-2 text-center">Mentions</div>
-              <div className="col-span-2 text-center">Sentiment</div>
-            </div>
+            {!hasLeaderboardData ? (
+              <div className="p-8 text-center">
+                <p className="text-sm text-muted mb-2">No AI response data yet</p>
+                <p className="text-xs text-muted mb-4">Run prompts to discover which brands AI recommends in your space</p>
+                <Link 
+                  href="/dashboard/prompts"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg text-xs font-medium text-primary hover:bg-hover transition-colors"
+                >
+                  Go to Prompts
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* Table Header */}
+                <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs text-muted border-b border-border bg-secondary">
+                  <div className="col-span-1">#</div>
+                  <div className="col-span-5">Brand</div>
+                  <div className="col-span-2 text-center">Visibility</div>
+                  <div className="col-span-2 text-center">Mentions</div>
+                  <div className="col-span-2 text-center">Sentiment</div>
+                </div>
 
-            {/* Table Body */}
-            <div className="max-h-[500px] overflow-y-auto">
-              {competitors.map((comp, idx) => {
-                const isTracking = trackingBrand === comp.name
+                {/* Table Body */}
+                <div className="max-h-[500px] overflow-y-auto">
+                  {competitors.map((comp, idx) => {
+                    const isTracking = trackingBrand === comp.name
                 
                 return (
                   <div 
@@ -530,7 +559,9 @@ export default function CompetitorsPage() {
                   </div>
                 )
               })}
-            </div>
+              </div>
+              </>
+            )}
           </div>
 
         </div>
