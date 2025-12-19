@@ -184,7 +184,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
     
     // Generate compare pages from enriched profiles
     const compareUrls: MetadataRoute.Sitemap = []
-    const categoryGroups: Record<string, typeof enriched> = {}
+    const categoryGroups: Record<string, Array<{ slug: string; category: string | null; updated_at: string | null }>> = {}
     
     for (const profile of enriched || []) {
       const cat = profile.category?.toLowerCase() || 'other'
@@ -195,6 +195,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
     }
     
     for (const profiles of Object.values(categoryGroups)) {
+      if (!profiles) continue
       for (let i = 0; i < Math.min(5, profiles.length); i++) {
         for (let j = i + 1; j < Math.min(10, profiles.length); j++) {
           if (compareUrls.length < 3000) { // Cap compare URLs
