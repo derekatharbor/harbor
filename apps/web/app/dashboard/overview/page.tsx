@@ -78,6 +78,14 @@ interface PromptExecution {
   citationFavicons: string[]
 }
 
+interface QuickWin {
+  id: string
+  title: string
+  description: string
+  impact: 'high' | 'medium' | 'low'
+  pages_affected?: number
+}
+
 // ============================================================================
 // COMPONENT
 // ============================================================================
@@ -134,6 +142,9 @@ export default function OverviewPage() {
   
   // Chart toggle
   const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
+  
+  // Quick wins from website analytics
+  const [quickWins, setQuickWins] = useState<QuickWin[]>([])
 
   // Fetch main data
   useEffect(() => {
@@ -168,6 +179,17 @@ export default function OverviewPage() {
           const data = await historyRes.json()
           setVisibilityHistory(data.history || [])
           setHasHistoricalData(data.has_data || false)
+        }
+        
+        // Fetch quick wins from website analytics (recommendations)
+        const websiteRes = await fetch(`/api/dashboard/${currentDashboard.id}/website-analytics`)
+        if (websiteRes.ok) {
+          const data = await websiteRes.json()
+          // Get top 3 high/medium impact recommendations
+          const recs = (data.recommendations || [])
+            .filter((r: QuickWin) => r.impact === 'high' || r.impact === 'medium')
+            .slice(0, 3)
+          setQuickWins(recs)
         }
       } catch (err) {
         console.error('Error fetching overview data:', err)
@@ -241,6 +263,11 @@ export default function OverviewPage() {
 
   const brandName = currentDashboard?.brand_name || 'Your Brand'
   const brandLogo = currentDashboard?.logo_url
+  
+  // Get user's own data from competitors array
+  const userData = competitors.find(c => c.isUser)
+  const userVisibility = userData?.visibility || 0
+  const userSentiment = userData?.sentiment || 'neutral'
 
   if (loading) {
     return (
@@ -339,6 +366,62 @@ export default function OverviewPage() {
         <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
+      {/* User Stats Summary */}
+      {hasData && (
+        <div className="px-6 pb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Visibility */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
+                <Eye className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className="text-2xl font-semibold text-primary">{userVisibility}%</div>
+              <p className="text-xs text-muted mt-1">Mentioned in {userVisibility}% of tracked prompts</p>
+            </div>
+            
+            {/* Rank */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
+                <Target className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className="text-2xl font-semibold text-primary">
+                {userRank ? `#${userRank}` : '—'}
+              </div>
+              <p className="text-xs text-muted mt-1">
+                {userRank ? `Out of ${totalBrands} brands in your space` : 'Not yet ranked'}
+              </p>
+            </div>
+            
+            {/* Sentiment */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
+                <MessageSquare className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className={`text-2xl font-semibold capitalize ${
+                userSentiment === 'positive' ? 'text-green-500' : 
+                userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
+              }`}>
+                {userSentiment}
+              </div>
+              <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
+            </div>
+            
+            {/* Citations */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
+                <Globe className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className="text-2xl font-semibold text-primary">{totalCitations}</div>
+              <p className="text-xs text-muted mt-1">Domains cited in AI responses</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!hasData ? (
         <div className="p-6">
           <div className="card p-12 text-center">
@@ -358,6 +441,39 @@ export default function OverviewPage() {
         </div>
       ) : (
       <div className="p-6 space-y-6">
+        {/* Quick Wins */}
+        {quickWins.length > 0 && (
+          <div className="card p-0 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <div>
+                <h3 className="font-semibold text-primary text-sm">Quick Wins</h3>
+                <p className="text-xs text-muted mt-0.5">High-impact improvements you can make now</p>
+              </div>
+              <Link href="/dashboard/website" className="expand-btn">
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="divide-y divide-border">
+              {quickWins.map((win) => (
+                <div key={win.id} className="px-4 py-3 flex items-start gap-3 hover:bg-hover transition-colors">
+                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                    win.impact === 'high' ? 'bg-red-500' : 'bg-amber-500'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-primary">{win.title}</div>
+                    <div className="text-xs text-muted mt-0.5 line-clamp-1">{win.description}</div>
+                  </div>
+                  {win.pages_affected && (
+                    <span className="text-xs text-muted flex-shrink-0">
+                      {win.pages_affected} page{win.pages_affected !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Chart + Competitors */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Chart - 7 columns */}
@@ -528,13 +644,19 @@ export default function OverviewPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {recentPrompts.map((prompt) => (
+                {recentPrompts.map((prompt) => {
+                  const isMentioned = prompt.brands.some(
+                    b => b.toLowerCase() === brandName.toLowerCase()
+                  )
+                  return (
                   <div 
                     key={prompt.id}
                     onClick={() => setSelectedPrompt(prompt)}
-                    className="bg-card border border-border rounded-lg p-4 transition-all cursor-pointer shadow-sm hover:shadow-md hover:border-muted hover:-translate-y-0.5"
+                    className={`bg-card border rounded-lg p-4 transition-all cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                      isMentioned ? 'border-green-500/30 hover:border-green-500/50' : 'border-border hover:border-muted'
+                    }`}
                   >
-                    {/* Header: Model logo + prompt */}
+                    {/* Header: Model logo + prompt + mentioned badge */}
                     <div className="flex items-start gap-3 mb-3">
                       <img 
                         src={prompt.modelLogo} 
@@ -544,9 +666,19 @@ export default function OverviewPage() {
                           (e.target as HTMLImageElement).src = 'https://via.placeholder.com/24'
                         }}
                       />
-                      <h4 className="text-sm font-medium text-primary line-clamp-2">
-                        {prompt.prompt}
-                      </h4>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          {isMentioned && (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium bg-green-500/10 text-green-500 rounded">
+                              <Check className="w-2.5 h-2.5" />
+                              Mentioned
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="text-sm font-medium text-primary line-clamp-2">
+                          {prompt.prompt}
+                        </h4>
+                      </div>
                     </div>
 
                     {/* Response preview */}
@@ -577,7 +709,7 @@ export default function OverviewPage() {
                       <span className="text-xs text-muted">{prompt.timeAgo}</span>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             )}
           </div>

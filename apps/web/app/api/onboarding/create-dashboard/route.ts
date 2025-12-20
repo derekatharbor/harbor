@@ -150,6 +150,17 @@ export async function POST(request: Request) {
       )
     }
 
+    // Trigger website crawl in background (fire-and-forget)
+    // This runs while user goes through analyzing page, so data is ready when they land in dashboard
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://useharbor.com'
+    fetch(`${baseUrl}/api/dashboard/${dashboard.id}/website-analytics`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    }).catch(err => {
+      console.error('[create-dashboard] Background crawl trigger failed:', err)
+    })
+    console.log(`[create-dashboard] Triggered background website crawl for ${cleanDomain}`)
+
     // Handle AI-generated prompts (new flow)
     if (prompts && Array.isArray(prompts) && prompts.length > 0) {
       const promptInserts = prompts.map((p: { topic: string; text: string }) => ({
