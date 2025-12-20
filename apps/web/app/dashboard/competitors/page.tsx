@@ -18,7 +18,7 @@ import {
   MessageSquare,
   BarChart3
 } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
+import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -95,17 +95,6 @@ function getSentimentBg(sentiment: string): string {
   }
 }
 
-// Mock trend data - will be replaced with real historical data
-const MOCK_TREND_DATA = [
-  { date: 'Dec 14', you: 45, competitor1: 62, competitor2: 38 },
-  { date: 'Dec 15', you: 48, competitor1: 58, competitor2: 42 },
-  { date: 'Dec 16', you: 52, competitor1: 55, competitor2: 45 },
-  { date: 'Dec 17', you: 55, competitor1: 52, competitor2: 48 },
-  { date: 'Dec 18', you: 58, competitor1: 54, competitor2: 44 },
-  { date: 'Dec 19', you: 62, competitor1: 51, competitor2: 46 },
-  { date: 'Dec 20', you: 68, competitor1: 48, competitor2: 42 },
-]
-
 // ============================================================================
 // STAT CARD COMPONENT
 // ============================================================================
@@ -131,8 +120,8 @@ function StatCard({
           <Image 
             src={`/icons/${icon}`} 
             alt="" 
-            width={20} 
-            height={20} 
+            width={24} 
+            height={24} 
             className="opacity-60"
           />
         )}
@@ -250,6 +239,8 @@ export default function CompetitorsPage() {
   const [userRank, setUserRank] = useState<number | null>(null)
   const [trackingBrand, setTrackingBrand] = useState<string | null>(null)
   const [untrackingId, setUntrackingId] = useState<string | null>(null)
+  const [trendData, setTrendData] = useState<Array<{ date: string; displayDate: string; you: number | null }>>([])
+  const [hasTrendData, setHasTrendData] = useState(false)
 
   // Fetch data
   useEffect(() => {
@@ -261,6 +252,8 @@ export default function CompetitorsPage() {
 
       try {
         setLoading(true)
+        
+        // Fetch competitors data
         const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
         
         if (!response.ok) throw new Error('Failed to fetch')
@@ -273,6 +266,20 @@ export default function CompetitorsPage() {
         setPlanLimits(data.plan_limits || null)
         setTotalBrands(data.total_brands_found || 0)
         setUserRank(data.user_rank || null)
+        
+        // Fetch historical visibility data
+        const historyResponse = await fetch(`/api/dashboard/${currentDashboard.id}/visibility-history?days=7`)
+        if (historyResponse.ok) {
+          const historyData = await historyResponse.json()
+          if (historyData.history && historyData.has_data) {
+            setTrendData(historyData.history.map((h: any) => ({
+              date: h.date,
+              displayDate: h.displayDate,
+              you: h.visibility
+            })))
+            setHasTrendData(true)
+          }
+        }
         
       } catch (err) {
         console.error('Error fetching competitors:', err)
@@ -434,7 +441,7 @@ export default function CompetitorsPage() {
               label="Visibility"
               value={userData?.visibility ? `${userData.visibility}%` : '—'}
               subValue="in AI responses"
-              trend={userData?.visibility ? { value: 12, positive: true } : null}
+              icon="visibility.png"
             />
             <StatCard
               label="Tracked"
@@ -446,6 +453,7 @@ export default function CompetitorsPage() {
               label="Mentions"
               value={userData?.mentions || 0}
               subValue="across all prompts"
+              icon="mentions.png"
             />
           </div>
           
@@ -457,65 +465,64 @@ export default function CompetitorsPage() {
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <div>
                   <h3 className="font-semibold text-primary text-sm">Visibility Over Time</h3>
-                  <p className="text-xs text-muted mt-0.5">You vs top competitors</p>
+                  <p className="text-xs text-muted mt-0.5">Your AI visibility trend</p>
                 </div>
-                <div className="flex items-center gap-4 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' }} />
-                    <span className="text-muted">You</span>
+                {hasTrendData && (
+                  <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' }} />
+                      <span className="text-muted">You</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-1 rounded-full bg-blue-500" />
-                    <span className="text-muted">Top Competitor</span>
-                  </div>
-                </div>
+                )}
               </div>
               
               <div className="p-4 h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={MOCK_TREND_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="holoGradient" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#06B6D4" />
-                        <stop offset="50%" stopColor="#A855F7" />
-                        <stop offset="100%" stopColor="#EC4899" />
-                      </linearGradient>
-                      <linearGradient id="holoFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#A855F7" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#A855F7" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis 
-                      dataKey="date" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-                      domain={[0, 100]}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Area
-                      type="monotone"
-                      dataKey="you"
-                      stroke="url(#holoGradient)"
-                      strokeWidth={3}
-                      fill="url(#holoFill)"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="competitor1"
-                      stroke="#3B82F6"
-                      strokeWidth={2}
-                      dot={false}
-                      strokeDasharray="4 4"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+                {hasTrendData ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="holoGradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="#06B6D4" />
+                          <stop offset="50%" stopColor="#A855F7" />
+                          <stop offset="100%" stopColor="#EC4899" />
+                        </linearGradient>
+                        <linearGradient id="holoFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#A855F7" stopOpacity={0.3} />
+                          <stop offset="100%" stopColor="#A855F7" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis 
+                        dataKey="displayDate" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                        domain={[0, 100]}
+                        tickFormatter={(v) => `${v}%`}
+                      />
+                      <Tooltip content={<ChartTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="you"
+                        stroke="url(#holoGradient)"
+                        strokeWidth={3}
+                        fill="url(#holoFill)"
+                        connectNulls
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center">
+                    <BarChart3 className="w-10 h-10 text-muted mb-3 opacity-40" />
+                    <p className="text-sm text-muted mb-1">No trend data yet</p>
+                    <p className="text-xs text-muted">Run prompts daily to build your visibility history</p>
+                  </div>
+                )}
               </div>
             </div>
             

@@ -1,12 +1,16 @@
 // app/api/cron/daily-dashboard/route.ts
 // Daily dashboard cron - re-executes user prompts and stores visibility snapshots
-// Run daily via GitHub Actions
+// Vercel crons use GET requests with Authorization header
+//
+// GET (with auth) → runs the cron job
+// GET (no auth) → returns stats for debugging
+// POST (with auth) → runs with custom params (manual trigger)
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
-export const maxDuration = 600 // 10 minutes max
+export const maxDuration = 300 // 5 minutes (Vercel Pro limit)
 
 function getSupabase() {
   return createClient(
@@ -15,91 +19,53 @@ function getSupabase() {
   )
 }
 
-// Verify cron secret
+// Verify cron secret - returns true if authorized
 function verifyCronSecret(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   
+  // Allow manual trigger in dev
   const { searchParams } = new URL(request.url)
-  if (searchParams.get('manual') === 'true' && process.env.NODE_ENV === 'development') {
-    return true
-  }
-  
-  if (!cronSecret) {
-    console.warn('CRON_SECRET not set - rejecting request')
+  if (searchParams.get('manual') === 'true') {
+    // In production, still require secret for manual
+    if (process.env.NODE_ENV === 'development') return true
+    if (cronSecret && authHeader === `Bearer ${cronSecret}`) return true
     return false
   }
+  
+  // Vercel cron sets this header automatically
+  if (!cronSecret) {
+    console.warn('[Cron] CRON_SECRET not set')
+    return false
+  }
+  
   return authHeader === `Bearer ${cronSecret}`
 }
 
-// Check if user should get scans
-function isEligibleForScans(dashboard: {
-  plan?: string | null
-}): boolean {
-  // All plans get scans for now - can gate to paid-only later
+// Check if dashboard should get scans
+function isEligibleForScans(dashboard: { plan?: string | null }): boolean {
   const eligiblePlans = ['pro', 'growth', 'enterprise', 'solo', 'agency', 'free']
-  
-  // If no plan set, still eligible (new users default to solo)
   if (!dashboard.plan) return true
-  
   return eligiblePlans.includes(dashboard.plan.toLowerCase())
 }
 
-export async function GET(request: NextRequest) {
-  const supabase = getSupabase()
-  
-  // Get stats on dashboards and their prompts
-  const { data: dashboards } = await supabase
-    .from('dashboards')
-    .select('id, brand_name, plan, created_at')
-    .not('brand_name', 'is', null)
-  
-  // Filter to eligible dashboards
-  const eligibleDashboards = dashboards?.filter(isEligibleForScans) || []
-  const ineligibleCount = (dashboards?.length || 0) - eligibleDashboards.length
-  
-  const { data: lastSnapshot } = await supabase
-    .from('dashboard_visibility_snapshots')
-    .select('snapshot_date')
-    .order('snapshot_date', { ascending: false })
-    .limit(1)
-    .single()
-  
-  // Count prompts for eligible dashboards only
-  const eligibleIds = eligibleDashboards.map(d => d.id)
-  const { count: totalPrompts } = await supabase
-    .from('user_prompts')
-    .select('*', { count: 'exact', head: true })
-    .in('dashboard_id', eligibleIds)
-    .eq('is_active', true)
-  
-  return NextResponse.json({
-    status: 'ok',
-    total_dashboards: dashboards?.length || 0,
-    eligible_dashboards: eligibleDashboards.length,
-    ineligible_skipped: ineligibleCount,
-    total_active_prompts: totalPrompts || 0,
-    last_snapshot: lastSnapshot?.snapshot_date || 'never',
-    hint: 'POST to execute prompts and create snapshots'
-  })
-}
+// ============================================================================
+// CORE EXECUTION LOGIC
+// ============================================================================
 
-export async function POST(request: NextRequest) {
-  if (!verifyCronSecret(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-  
+async function runDailyCron(options: {
+  dashboardId?: string
+  skipExecution?: boolean
+  limit?: number
+}) {
   const supabase = getSupabase()
   const today = new Date().toISOString().split('T')[0]
-  
-  const body = await request.json().catch(() => ({}))
-  const dashboardId = body.dashboard_id // Optional: run for specific dashboard
-  const skipExecution = body.skip_execution || false // Just snapshot, don't re-run
-  const limit = body.limit || 50 // Max dashboards to process
+  const { dashboardId, skipExecution = false, limit = 50 } = options
   
   const results = {
+    date: today,
     dashboards_processed: 0,
-    dashboards_skipped_not_eligible: 0,
+    dashboards_skipped: 0,
     prompts_executed: 0,
     snapshots_created: 0,
     errors: [] as string[]
@@ -109,7 +75,7 @@ export async function POST(request: NextRequest) {
     // Get dashboards to process
     let dashboardQuery = supabase
       .from('dashboards')
-      .select('id, brand_name, domain, plan, created_at')
+      .select('id, brand_name, domain, plan')
       .not('brand_name', 'is', null)
     
     if (dashboardId) {
@@ -122,32 +88,35 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to fetch dashboards: ' + dbError?.message)
     }
     
+    console.log(`[Cron] Processing ${dashboards.length} dashboards`)
+    
     for (const dashboard of dashboards) {
-      // CHECK ELIGIBILITY
       if (!isEligibleForScans(dashboard)) {
-        results.dashboards_skipped_not_eligible++
+        results.dashboards_skipped++
         continue
       }
       
-      // Stop if we've hit our limit
       if (results.dashboards_processed >= limit) break
       
       try {
-        // Get active prompts for this dashboard
+        // Get active prompts
         const { data: prompts } = await supabase
           .from('user_prompts')
           .select('id, prompt_text')
           .eq('dashboard_id', dashboard.id)
           .eq('is_active', true)
-          .limit(20) // Max 20 prompts per dashboard
+          .limit(10) // Reduced to stay within timeout
         
-        if (!prompts || prompts.length === 0) continue
+        if (!prompts || prompts.length === 0) {
+          results.dashboards_skipped++
+          continue
+        }
         
-        // Execute prompts if not skipping
+        // Execute prompts against AI models
         if (!skipExecution) {
           const models = ['chatgpt', 'claude', 'perplexity']
           
-          for (const prompt of prompts) {
+          for (const prompt of prompts.slice(0, 5)) { // Max 5 prompts per dashboard
             for (const model of models) {
               try {
                 const execResponse = await fetch(
@@ -158,7 +127,7 @@ export async function POST(request: NextRequest) {
                     body: JSON.stringify({
                       prompt_id: prompt.id,
                       prompt_text: prompt.prompt_text,
-                      model: model,
+                      model,
                       brand: dashboard.brand_name,
                       dashboard_id: dashboard.id
                     })
@@ -168,15 +137,15 @@ export async function POST(request: NextRequest) {
                 if (execResponse.ok) {
                   results.prompts_executed++
                 } else {
-                  const errData = await execResponse.json().catch(() => ({}))
-                  results.errors.push(`Prompt ${prompt.id} (${model}): ${errData.error || execResponse.status}`)
+                  const errText = await execResponse.text().catch(() => '')
+                  results.errors.push(`${prompt.id}/${model}: ${execResponse.status}`)
                 }
                 
-                // Small delay to avoid rate limits
-                await new Promise(r => setTimeout(r, 500))
+                // Rate limit protection
+                await new Promise(r => setTimeout(r, 300))
                 
               } catch (e) {
-                results.errors.push(`Prompt ${prompt.id} (${model}): ${e instanceof Error ? e.message : 'Failed'}`)
+                results.errors.push(`${prompt.id}/${model}: ${e instanceof Error ? e.message : 'error'}`)
               }
             }
           }
@@ -187,7 +156,6 @@ export async function POST(request: NextRequest) {
           .from('prompt_executions')
           .select(`
             id,
-            model,
             prompt_brand_mentions (brand_name, sentiment, position)
           `)
           .in('prompt_id', prompts.map(p => p.id))
@@ -215,12 +183,10 @@ export async function POST(request: NextRequest) {
           
           if (brandMention) {
             mentionCount++
-            
             if (brandMention.position) {
               positionSum += brandMention.position
               positionCount++
             }
-            
             if (brandMention.sentiment) {
               sentimentCount++
               if (brandMention.sentiment === 'positive') sentimentSum += 100
@@ -233,7 +199,7 @@ export async function POST(request: NextRequest) {
         const avgPosition = positionCount > 0 ? positionSum / positionCount : null
         const avgSentiment = sentimentCount > 0 ? Math.round(sentimentSum / sentimentCount) : 50
         
-        // Upsert snapshot for today
+        // Upsert today's snapshot
         const { error: snapshotError } = await supabase
           .from('dashboard_visibility_snapshots')
           .upsert({
@@ -251,26 +217,92 @@ export async function POST(request: NextRequest) {
         
         if (!snapshotError) {
           results.snapshots_created++
+        } else {
+          results.errors.push(`snapshot/${dashboard.id}: ${snapshotError.message}`)
         }
         
         results.dashboards_processed++
         
       } catch (e) {
-        results.errors.push(`Dashboard ${dashboard.id}: ${e instanceof Error ? e.message : 'Failed'}`)
+        results.errors.push(`dashboard/${dashboard.id}: ${e instanceof Error ? e.message : 'error'}`)
       }
     }
     
-    return NextResponse.json({
-      success: true,
-      date: today,
-      results
-    })
+    console.log(`[Cron] Complete:`, results)
+    return { success: true, results }
     
   } catch (error) {
-    console.error('Daily dashboard cron error:', error)
-    return NextResponse.json(
-      { error: 'Cron failed', details: error instanceof Error ? error.message : 'Unknown' },
-      { status: 500 }
-    )
+    console.error('[Cron] Fatal error:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      results 
+    }
   }
+}
+
+// ============================================================================
+// ROUTE HANDLERS
+// ============================================================================
+
+export async function GET(request: NextRequest) {
+  const isAuthorized = verifyCronSecret(request)
+  
+  // If authorized (Vercel cron or manual with secret), run the job
+  if (isAuthorized) {
+    console.log('[Cron] Starting daily-dashboard cron (GET)')
+    const result = await runDailyCron({})
+    return NextResponse.json(result)
+  }
+  
+  // Not authorized - just return stats for debugging
+  const supabase = getSupabase()
+  
+  const { data: dashboards } = await supabase
+    .from('dashboards')
+    .select('id, brand_name, plan')
+    .not('brand_name', 'is', null)
+  
+  const eligibleDashboards = dashboards?.filter(isEligibleForScans) || []
+  
+  const { data: lastSnapshot } = await supabase
+    .from('dashboard_visibility_snapshots')
+    .select('snapshot_date')
+    .order('snapshot_date', { ascending: false })
+    .limit(1)
+    .single()
+  
+  const eligibleIds = eligibleDashboards.map(d => d.id)
+  const { count: totalPrompts } = await supabase
+    .from('user_prompts')
+    .select('*', { count: 'exact', head: true })
+    .in('dashboard_id', eligibleIds.length > 0 ? eligibleIds : ['none'])
+    .eq('is_active', true)
+  
+  return NextResponse.json({
+    status: 'ready',
+    total_dashboards: dashboards?.length || 0,
+    eligible_dashboards: eligibleDashboards.length,
+    total_active_prompts: totalPrompts || 0,
+    last_snapshot: lastSnapshot?.snapshot_date || 'never',
+    hint: 'Add Authorization header to trigger execution'
+  })
+}
+
+// POST for manual triggers with custom options
+export async function POST(request: NextRequest) {
+  if (!verifyCronSecret(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  
+  const body = await request.json().catch(() => ({}))
+  
+  console.log('[Cron] Starting daily-dashboard cron (POST)', body)
+  const result = await runDailyCron({
+    dashboardId: body.dashboard_id,
+    skipExecution: body.skip_execution,
+    limit: body.limit
+  })
+  
+  return NextResponse.json(result)
 }
