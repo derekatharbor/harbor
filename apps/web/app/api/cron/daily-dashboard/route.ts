@@ -60,7 +60,9 @@ async function runDailyCron(options: {
 }) {
   const supabase = getSupabase()
   const today = new Date().toISOString().split('T')[0]
-  const { dashboardId, skipExecution = false, limit = 50 } = options
+  // Default to skipping execution - cron just snapshots existing data
+  // Set skipExecution=false explicitly to run prompts (manual trigger only)
+  const { dashboardId, skipExecution = true, limit = 100 } = options
   
   const results = {
     date: today,
@@ -151,7 +153,7 @@ async function runDailyCron(options: {
           }
         }
         
-        // Calculate visibility metrics from recent executions
+        // Calculate visibility metrics from recent executions (last 7 days)
         const { data: executions } = await supabase
           .from('prompt_executions')
           .select(`
@@ -159,7 +161,7 @@ async function runDailyCron(options: {
             prompt_brand_mentions (brand_name, sentiment, position)
           `)
           .in('prompt_id', prompts.map(p => p.id))
-          .gte('executed_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+          .gte('executed_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
         
         // Calculate metrics
         let totalExecutions = executions?.length || 0
