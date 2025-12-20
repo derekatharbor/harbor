@@ -5,19 +5,20 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Users,
   TrendingUp,
   TrendingDown,
-  Target,
-  Eye,
-  BarChart3,
   Plus,
   ArrowUpRight,
   AlertCircle,
+  X,
+  Eye,
   MessageSquare,
-  X
+  BarChart3
 } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
 
@@ -35,17 +36,6 @@ interface TrackedCompetitor {
   visibility: number
   sentiment: string
   avg_position: number | null
-}
-
-interface SuggestedBrand {
-  rank: number
-  brand_name: string
-  domain: string
-  logo_url: string
-  mentions: number
-  visibility: number
-  sentiment: string
-  profile_id: string | null
 }
 
 interface CompetitorData {
@@ -67,7 +57,7 @@ interface CompetitorData {
 interface ApiResponse {
   competitors: CompetitorData[]
   tracked: TrackedCompetitor[]
-  suggested: SuggestedBrand[]
+  suggested: any[]
   user_data: {
     brand_name: string
     category: string | null
@@ -105,11 +95,71 @@ function getSentimentBg(sentiment: string): string {
   }
 }
 
+// Mock trend data - will be replaced with real historical data
+const MOCK_TREND_DATA = [
+  { date: 'Dec 14', you: 45, competitor1: 62, competitor2: 38 },
+  { date: 'Dec 15', you: 48, competitor1: 58, competitor2: 42 },
+  { date: 'Dec 16', you: 52, competitor1: 55, competitor2: 45 },
+  { date: 'Dec 17', you: 55, competitor1: 52, competitor2: 48 },
+  { date: 'Dec 18', you: 58, competitor1: 54, competitor2: 44 },
+  { date: 'Dec 19', you: 62, competitor1: 51, competitor2: 46 },
+  { date: 'Dec 20', you: 68, competitor1: 48, competitor2: 42 },
+]
+
 // ============================================================================
-// COMPETITOR CARD COMPONENT
+// STAT CARD COMPONENT
 // ============================================================================
 
-function CompetitorCard({ 
+function StatCard({ 
+  label, 
+  value, 
+  subValue,
+  trend,
+  icon
+}: { 
+  label: string
+  value: string | number
+  subValue?: string
+  trend?: { value: number; positive: boolean } | null
+  icon?: string
+}) {
+  return (
+    <div className="bg-card rounded-xl border border-border p-4 hover:border-border-light transition-colors">
+      <div className="flex items-start justify-between mb-3">
+        <span className="text-xs text-muted uppercase tracking-wide">{label}</span>
+        {icon && (
+          <Image 
+            src={`/icons/${icon}`} 
+            alt="" 
+            width={20} 
+            height={20} 
+            className="opacity-60"
+          />
+        )}
+      </div>
+      <div className="flex items-end justify-between">
+        <div>
+          <div className="text-2xl font-semibold text-primary tabular-nums">{value}</div>
+          {subValue && (
+            <div className="text-xs text-muted mt-0.5">{subValue}</div>
+          )}
+        </div>
+        {trend && (
+          <div className={`flex items-center gap-1 text-sm font-medium ${trend.positive ? 'text-green-500' : 'text-red-500'}`}>
+            {trend.positive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+            {trend.value}%
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ============================================================================
+// TRACKED COMPETITOR ROW
+// ============================================================================
+
+function TrackedCompetitorRow({ 
   competitor, 
   userData, 
   onUntrack,
@@ -125,90 +175,62 @@ function CompetitorCard({
   const isTied = visibilityDiff === 0
   
   return (
-    <div className="group card p-0 overflow-hidden hover:border-border-light transition-all">
-      {/* Header */}
-      <div className="p-4 border-b border-border flex items-center gap-3">
-        <img 
-          src={competitor.logo_url}
-          alt=""
-          className="w-10 h-10 rounded-lg bg-secondary"
-          onError={(e) => { 
-            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(competitor.brand_name)}&background=1a1a1a&color=fff&size=64`
-          }}
-        />
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-primary truncate">{competitor.brand_name}</div>
-          <div className="text-xs text-muted truncate">{competitor.domain}</div>
-        </div>
+    <div className="group flex items-center gap-3 p-3 rounded-lg hover:bg-secondary/50 transition-colors">
+      <img 
+        src={competitor.logo_url}
+        alt=""
+        className="w-8 h-8 rounded-lg bg-secondary flex-shrink-0"
+        onError={(e) => { 
+          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(competitor.brand_name)}&background=1a1a1a&color=fff&size=64`
+        }}
+      />
+      <div className="flex-1 min-w-0">
+        <div className="font-medium text-primary text-sm truncate">{competitor.brand_name}</div>
+        <div className="text-xs text-muted">{competitor.visibility}% visibility</div>
+      </div>
+      <div className="flex items-center gap-2">
+        {userData && !isTied && (
+          <span className={`text-xs font-medium ${isWinning ? 'text-green-500' : 'text-red-500'}`}>
+            {isWinning ? '+' : ''}{-visibilityDiff}%
+          </span>
+        )}
         <button
           onClick={onUntrack}
           disabled={isUntracking}
-          className="p-2 rounded-lg text-muted opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-500/10 transition-all disabled:opacity-50"
+          className="p-1.5 rounded-lg text-muted opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-500/10 transition-all disabled:opacity-50"
           title="Stop tracking"
         >
           {isUntracking ? (
-            <div className="w-4 h-4 border-2 border-muted border-t-transparent rounded-full animate-spin" />
+            <div className="w-3.5 h-3.5 border-2 border-muted border-t-transparent rounded-full animate-spin" />
           ) : (
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           )}
         </button>
       </div>
-      
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 divide-x divide-border">
-        {/* Visibility */}
-        <div className="p-4">
-          <div className="flex items-center gap-1.5 text-xs text-muted mb-2">
-            <Eye className="w-3.5 h-3.5" />
-            Visibility
-          </div>
-          <div className="text-2xl font-semibold text-primary tabular-nums">
-            {competitor.visibility}%
-          </div>
-          <div className="mt-2 h-1.5 bg-secondary rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-blue-500 rounded-full transition-all"
-              style={{ width: `${competitor.visibility}%` }}
-            />
-          </div>
+    </div>
+  )
+}
+
+// ============================================================================
+// CUSTOM CHART TOOLTIP
+// ============================================================================
+
+function ChartTooltip({ active, payload, label }: any) {
+  if (!active || !payload) return null
+  
+  return (
+    <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+      <div className="text-xs text-muted mb-2">{label}</div>
+      {payload.map((entry: any, idx: number) => (
+        <div key={idx} className="flex items-center gap-2 text-sm">
+          <div 
+            className="w-2 h-2 rounded-full" 
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-muted capitalize">{entry.dataKey}:</span>
+          <span className="font-medium text-primary">{entry.value}%</span>
         </div>
-        
-        {/* Mentions */}
-        <div className="p-4">
-          <div className="flex items-center gap-1.5 text-xs text-muted mb-2">
-            <MessageSquare className="w-3.5 h-3.5" />
-            Mentions
-          </div>
-          <div className="text-2xl font-semibold text-primary tabular-nums">
-            {competitor.mentions}
-          </div>
-          <div className="text-xs text-muted mt-2">
-            across tracked prompts
-          </div>
-        </div>
-      </div>
-      
-      {/* vs You Comparison */}
-      {userData && (
-        <div className="p-4 bg-secondary/50 border-t border-border">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted">vs You</span>
-            {isTied ? (
-              <span className="text-sm text-muted font-medium">Tied</span>
-            ) : isWinning ? (
-              <span className="flex items-center gap-1.5 text-sm text-green-500 font-medium">
-                <TrendingUp className="w-4 h-4" />
-                You're ahead by {Math.abs(visibilityDiff)}%
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5 text-sm text-red-500 font-medium">
-                <TrendingDown className="w-4 h-4" />
-                Behind by {Math.abs(visibilityDiff)}%
-              </span>
-            )}
-          </div>
-        </div>
-      )}
+      ))}
     </div>
   )
 }
@@ -222,7 +244,6 @@ export default function CompetitorsPage() {
   const [loading, setLoading] = useState(true)
   const [competitors, setCompetitors] = useState<CompetitorData[]>([])
   const [tracked, setTracked] = useState<TrackedCompetitor[]>([])
-  const [suggested, setSuggested] = useState<SuggestedBrand[]>([])
   const [userData, setUserData] = useState<ApiResponse['user_data'] | null>(null)
   const [planLimits, setPlanLimits] = useState<ApiResponse['plan_limits'] | null>(null)
   const [totalBrands, setTotalBrands] = useState(0)
@@ -248,7 +269,6 @@ export default function CompetitorsPage() {
         
         setCompetitors(data.competitors || [])
         setTracked(data.tracked || [])
-        setSuggested(data.suggested || [])
         setUserData(data.user_data || null)
         setPlanLimits(data.plan_limits || null)
         setTotalBrands(data.total_brands_found || 0)
@@ -265,12 +285,11 @@ export default function CompetitorsPage() {
   }, [currentDashboard?.id])
 
   // Track a brand
-  async function handleTrackBrand(brand: SuggestedBrand | CompetitorData) {
+  async function handleTrackBrand(brand: CompetitorData) {
     if (!currentDashboard?.id) return
     if (planLimits && tracked.length >= planLimits.max) return
     
-    const brandNameToTrack = 'brand_name' in brand ? brand.brand_name : brand.name
-    setTrackingBrand(brandNameToTrack)
+    setTrackingBrand(brand.name)
     
     try {
       const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`, {
@@ -278,7 +297,7 @@ export default function CompetitorsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           profile_id: brand.profile_id,
-          brand_name: brandNameToTrack,
+          brand_name: brand.name,
           domain: brand.domain
         })
       })
@@ -289,7 +308,6 @@ export default function CompetitorsPage() {
           const data = await refreshRes.json()
           setCompetitors(data.competitors || [])
           setTracked(data.tracked || [])
-          setSuggested(data.suggested || [])
           setPlanLimits(data.plan_limits || null)
         }
       }
@@ -318,7 +336,6 @@ export default function CompetitorsPage() {
           const data = await refreshRes.json()
           setCompetitors(data.competitors || [])
           setTracked(data.tracked || [])
-          setSuggested(data.suggested || [])
           setPlanLimits(data.plan_limits || null)
         }
       }
@@ -336,13 +353,16 @@ export default function CompetitorsPage() {
         <MobileHeader />
         <div className="p-6">
           <div className="animate-pulse space-y-6">
-            <div className="h-16 bg-card rounded-lg w-full"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1,2,3].map(i => (
-                <div key={i} className="h-52 bg-card rounded-lg"></div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="h-24 bg-card rounded-xl"></div>
               ))}
             </div>
-            <div className="h-96 bg-card rounded-lg"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 h-72 bg-card rounded-xl"></div>
+              <div className="h-72 bg-card rounded-xl"></div>
+            </div>
+            <div className="h-96 bg-card rounded-xl"></div>
           </div>
         </div>
       </div>
@@ -362,22 +382,13 @@ export default function CompetitorsPage() {
         <div className="flex items-center gap-3">
           <Users className="w-4 h-4 text-muted" />
           <h1 className="text-sm font-medium text-secondary">Competitive Intelligence</h1>
-          
-          {userRank && (
-            <>
-              <span className="text-muted">•</span>
-              <span className="text-sm text-muted">
-                Your rank: <span className="text-primary font-medium">#{userRank}</span> of {totalBrands}
-              </span>
-            </>
-          )}
         </div>
 
         <Link 
           href="/dashboard/competitors/manage"
           className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-secondary hover:text-primary hover:bg-secondary transition-colors"
         >
-          Manage Competitors
+          Manage
           <ArrowUpRight className="w-4 h-4" />
         </Link>
       </div>
@@ -411,107 +422,158 @@ export default function CompetitorsPage() {
       ) : (
         <div className="p-6 space-y-6">
           
-          {/* Your Position Summary */}
-          {userData && (
-            <div className="card p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
-                    <Target className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted">Your Position</div>
-                    <div className="flex items-center gap-3 mt-0.5">
-                      <span className="text-2xl font-semibold text-primary">
-                        #{userRank || '—'}
-                      </span>
-                      <span className="text-muted">of {totalBrands} brands</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-6 sm:gap-8">
-                  <div className="text-center sm:text-right">
-                    <div className="text-xs text-muted uppercase tracking-wide">Visibility</div>
-                    <div className="text-xl font-semibold text-primary tabular-nums">{userData.visibility}%</div>
-                  </div>
-                  <div className="text-center sm:text-right">
-                    <div className="text-xs text-muted uppercase tracking-wide">Mentions</div>
-                    <div className="text-xl font-semibold text-primary tabular-nums">{userData.mentions}</div>
-                  </div>
-                  <div className="text-center sm:text-right">
-                    <div className="text-xs text-muted uppercase tracking-wide">Sentiment</div>
-                    <div className={`text-xl font-semibold capitalize ${getSentimentColor(userData.sentiment)}`}>
-                      {userData.sentiment}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Stat Cards Row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              label="Your Rank"
+              value={userRank ? `#${userRank}` : '—'}
+              subValue={totalBrands ? `of ${totalBrands} brands` : undefined}
+              icon="trophy.png"
+            />
+            <StatCard
+              label="Visibility"
+              value={userData?.visibility ? `${userData.visibility}%` : '—'}
+              subValue="in AI responses"
+              trend={userData?.visibility ? { value: 12, positive: true } : null}
+            />
+            <StatCard
+              label="Tracked"
+              value={tracked.length}
+              subValue={planLimits ? `of ${planLimits.max} slots` : undefined}
+              icon="user.png"
+            />
+            <StatCard
+              label="Mentions"
+              value={userData?.mentions || 0}
+              subValue="across all prompts"
+            />
+          </div>
           
-          {/* Tracked Competitors */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-sm font-semibold text-primary">Tracked Competitors</h2>
-                <p className="text-xs text-muted mt-0.5">
-                  {planLimits ? `${tracked.length} of ${planLimits.max} slots used` : `${tracked.length} tracked`}
-                </p>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Visibility Trend Chart */}
+            <div className="lg:col-span-2 card p-0 overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Visibility Over Time</h3>
+                  <p className="text-xs text-muted mt-0.5">You vs top competitors</p>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' }} />
+                    <span className="text-muted">You</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-1 rounded-full bg-blue-500" />
+                    <span className="text-muted">Top Competitor</span>
+                  </div>
+                </div>
               </div>
-              {canTrackMore && (
-                <Link 
-                  href="/dashboard/competitors/manage"
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-dashed border-border text-muted hover:text-primary hover:border-muted hover:bg-secondary transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Competitor
-                  {planLimits && (
-                    <span className="text-xs text-muted">({planLimits.max - tracked.length} left)</span>
-                  )}
-                </Link>
-              )}
+              
+              <div className="p-4 h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={MOCK_TREND_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="holoGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#06B6D4" />
+                        <stop offset="50%" stopColor="#A855F7" />
+                        <stop offset="100%" stopColor="#EC4899" />
+                      </linearGradient>
+                      <linearGradient id="holoFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#A855F7" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#A855F7" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis 
+                      dataKey="date" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                      domain={[0, 100]}
+                      tickFormatter={(v) => `${v}%`}
+                    />
+                    <Tooltip content={<ChartTooltip />} />
+                    <Area
+                      type="monotone"
+                      dataKey="you"
+                      stroke="url(#holoGradient)"
+                      strokeWidth={3}
+                      fill="url(#holoFill)"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="competitor1"
+                      stroke="#3B82F6"
+                      strokeWidth={2}
+                      dot={false}
+                      strokeDasharray="4 4"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             </div>
-
-            {tracked.length === 0 ? (
-              <div className="card p-8 text-center">
-                <Users className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
-                <p className="text-sm text-muted mb-1">No competitors tracked yet</p>
-                <p className="text-xs text-muted mb-4">
-                  {hasLeaderboardData 
-                    ? "Click + on any brand in the leaderboard to start tracking"
-                    : "Add competitors to see how you compare"
-                  }
-                </p>
-                <Link 
-                  href="/dashboard/competitors/manage"
-                  className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent/80 hover:underline transition-colors"
-                >
-                  Add your first competitor <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
+            
+            {/* Tracked Competitors Sidebar */}
+            <div className="card p-0 overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Tracked</h3>
+                  <p className="text-xs text-muted mt-0.5">
+                    {planLimits ? `${tracked.length}/${planLimits.max} slots` : `${tracked.length} competitors`}
+                  </p>
+                </div>
+                {canTrackMore && (
+                  <Link 
+                    href="/dashboard/competitors/manage"
+                    className="p-1.5 rounded-lg text-muted hover:text-primary hover:bg-secondary transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Link>
+                )}
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {tracked.map((comp) => (
-                  <CompetitorCard
-                    key={comp.id}
-                    competitor={comp}
-                    userData={userData}
-                    onUntrack={() => handleUntrackBrand(comp)}
-                    isUntracking={untrackingId === comp.id}
-                  />
-                ))}
+              
+              <div className="max-h-[232px] overflow-y-auto">
+                {tracked.length === 0 ? (
+                  <div className="p-6 text-center">
+                    <Users className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" />
+                    <p className="text-xs text-muted">No competitors tracked</p>
+                    <Link 
+                      href="/dashboard/competitors/manage"
+                      className="inline-flex items-center gap-1 text-xs text-accent hover:underline mt-2"
+                    >
+                      Add one <ArrowUpRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    {tracked.map((comp) => (
+                      <TrackedCompetitorRow
+                        key={comp.id}
+                        competitor={comp}
+                        userData={userData}
+                        onUntrack={() => handleUntrackBrand(comp)}
+                        isUntracking={untrackingId === comp.id}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
-          {/* All Brands Leaderboard */}
+          {/* Full Leaderboard */}
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div>
                 <h3 className="font-semibold text-primary text-sm">All Brands in AI Responses</h3>
                 <p className="text-xs text-muted mt-0.5">
-                  Every brand mentioned across your tracked prompts, ranked by visibility
+                  {totalBrands} brands mentioned across your tracked prompts
                 </p>
               </div>
             </div>
@@ -520,7 +582,7 @@ export default function CompetitorsPage() {
               <div className="p-8 text-center">
                 <BarChart3 className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
                 <p className="text-sm text-muted mb-2">No AI response data yet</p>
-                <p className="text-xs text-muted mb-4">Run prompts to discover which brands AI recommends in your space</p>
+                <p className="text-xs text-muted mb-4">Run prompts to discover which brands AI recommends</p>
                 <Link 
                   href="/dashboard/prompts"
                   className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg text-xs font-medium text-primary hover:bg-hover transition-colors"
@@ -542,7 +604,7 @@ export default function CompetitorsPage() {
                 </div>
 
                 {/* Table Body */}
-                <div className="max-h-[500px] overflow-y-auto">
+                <div className="max-h-[400px] overflow-y-auto">
                   {competitors.map((comp) => {
                     const isTracking = trackingBrand === comp.name
                     const isAlreadyTracked = comp.isTracked
@@ -577,7 +639,10 @@ export default function CompetitorsPage() {
                                 {comp.name}
                               </span>
                               {comp.isUser && (
-                                <span className="text-xs bg-accent/20 text-accent px-1.5 py-0.5 rounded font-medium">YOU</span>
+                                <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ 
+                                  background: 'linear-gradient(90deg, rgba(6,182,212,0.2), rgba(168,85,247,0.2), rgba(236,72,153,0.2))',
+                                  color: '#A855F7'
+                                }}>YOU</span>
                               )}
                               {isAlreadyTracked && !comp.isUser && (
                                 <span className="text-xs bg-green-500/20 text-green-500 px-1.5 py-0.5 rounded">Tracked</span>
@@ -592,7 +657,12 @@ export default function CompetitorsPage() {
                           <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
                             <div 
                               className="h-full rounded-full transition-all"
-                              style={{ width: `${comp.visibility}%`, backgroundColor: comp.isUser ? 'var(--accent)' : comp.color }}
+                              style={{ 
+                                width: `${comp.visibility}%`, 
+                                background: comp.isUser 
+                                  ? 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' 
+                                  : comp.color 
+                              }}
                             />
                           </div>
                           <span className="text-sm text-primary tabular-nums w-10 text-right font-medium">{comp.visibility}%</span>
