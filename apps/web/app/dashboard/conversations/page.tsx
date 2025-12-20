@@ -4,7 +4,6 @@
 
 import { useEffect, useState } from 'react'
 import { MessageSquare, TrendingUp, Users, Target } from 'lucide-react'
-import ScanProgressModal from '@/components/scan/ScanProgressModal'
 import ActionCard from '@/components/optimization/ActionCard'
 import ActionModal from '@/components/optimization/ActionModal'
 import { analyzeConversationsData, TaskRecommendation } from '@/lib/optimization/generator'
@@ -35,8 +34,6 @@ export default function ConversationVolumesPage() {
   const [data, setData] = useState<ConversationsData | null>(null)
   const [scanData, setScanData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [showScanModal, setShowScanModal] = useState(false)
-  const [currentScanId, setCurrentScanId] = useState<string | null>(null)
   
   // State for recommendations
   const [recommendations, setRecommendations] = useState<TaskRecommendation[]>([])
@@ -191,12 +188,6 @@ export default function ConversationVolumesPage() {
               </p>
             </div>
           </div>
-
-          <ScanProgressModal
-            isOpen={showScanModal}
-            onClose={() => setShowScanModal(false)}
-            scanId={currentScanId}
-          />
         </div>
       </>
     )
@@ -443,12 +434,6 @@ export default function ConversationVolumesPage() {
             context={recommendations.find(r => r.task.id === selectedTask.id)?.context}
           />
         )}
-
-        <ScanProgressModal
-          isOpen={showScanModal}
-          onClose={() => setShowScanModal(false)}
-          scanId={currentScanId}
-        />
       </div>
     </>
   )
