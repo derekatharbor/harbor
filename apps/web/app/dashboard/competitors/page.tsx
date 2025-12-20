@@ -1,5 +1,5 @@
 // apps/web/app/dashboard/competitors/page.tsx
-// Competitive Intelligence - matches Overview page patterns
+// Competitive Intelligence - Premium feature for tracking competitors
 
 'use client'
 
@@ -13,11 +13,10 @@ import {
   Eye,
   BarChart3,
   Plus,
-  Minus,
-  Check,
   ArrowUpRight,
   AlertCircle,
-  ChevronLeft
+  MessageSquare,
+  X
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -107,6 +106,114 @@ function getSentimentBg(sentiment: string): string {
 }
 
 // ============================================================================
+// COMPETITOR CARD COMPONENT
+// ============================================================================
+
+function CompetitorCard({ 
+  competitor, 
+  userData, 
+  onUntrack,
+  isUntracking 
+}: { 
+  competitor: TrackedCompetitor
+  userData: ApiResponse['user_data'] | null
+  onUntrack: () => void
+  isUntracking: boolean
+}) {
+  const visibilityDiff = userData ? competitor.visibility - userData.visibility : 0
+  const isWinning = visibilityDiff < 0
+  const isTied = visibilityDiff === 0
+  
+  return (
+    <div className="group card p-0 overflow-hidden hover:border-border-light transition-all">
+      {/* Header */}
+      <div className="p-4 border-b border-border flex items-center gap-3">
+        <img 
+          src={competitor.logo_url}
+          alt=""
+          className="w-10 h-10 rounded-lg bg-secondary"
+          onError={(e) => { 
+            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(competitor.brand_name)}&background=1a1a1a&color=fff&size=64`
+          }}
+        />
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-primary truncate">{competitor.brand_name}</div>
+          <div className="text-xs text-muted truncate">{competitor.domain}</div>
+        </div>
+        <button
+          onClick={onUntrack}
+          disabled={isUntracking}
+          className="p-2 rounded-lg text-muted opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-500/10 transition-all disabled:opacity-50"
+          title="Stop tracking"
+        >
+          {isUntracking ? (
+            <div className="w-4 h-4 border-2 border-muted border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <X className="w-4 h-4" />
+          )}
+        </button>
+      </div>
+      
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 divide-x divide-border">
+        {/* Visibility */}
+        <div className="p-4">
+          <div className="flex items-center gap-1.5 text-xs text-muted mb-2">
+            <Eye className="w-3.5 h-3.5" />
+            Visibility
+          </div>
+          <div className="text-2xl font-semibold text-primary tabular-nums">
+            {competitor.visibility}%
+          </div>
+          <div className="mt-2 h-1.5 bg-secondary rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-blue-500 rounded-full transition-all"
+              style={{ width: `${competitor.visibility}%` }}
+            />
+          </div>
+        </div>
+        
+        {/* Mentions */}
+        <div className="p-4">
+          <div className="flex items-center gap-1.5 text-xs text-muted mb-2">
+            <MessageSquare className="w-3.5 h-3.5" />
+            Mentions
+          </div>
+          <div className="text-2xl font-semibold text-primary tabular-nums">
+            {competitor.mentions}
+          </div>
+          <div className="text-xs text-muted mt-2">
+            across tracked prompts
+          </div>
+        </div>
+      </div>
+      
+      {/* vs You Comparison */}
+      {userData && (
+        <div className="p-4 bg-secondary/50 border-t border-border">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted">vs You</span>
+            {isTied ? (
+              <span className="text-sm text-muted font-medium">Tied</span>
+            ) : isWinning ? (
+              <span className="flex items-center gap-1.5 text-sm text-green-500 font-medium">
+                <TrendingUp className="w-4 h-4" />
+                You're ahead by {Math.abs(visibilityDiff)}%
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-sm text-red-500 font-medium">
+                <TrendingDown className="w-4 h-4" />
+                Behind by {Math.abs(visibilityDiff)}%
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
@@ -121,9 +228,7 @@ export default function CompetitorsPage() {
   const [totalBrands, setTotalBrands] = useState(0)
   const [userRank, setUserRank] = useState<number | null>(null)
   const [trackingBrand, setTrackingBrand] = useState<string | null>(null)
-  const [activeView, setActiveView] = useState<'leaderboard' | 'tracked'>('leaderboard')
-
-  const brandName = currentDashboard?.brand_name || 'Your Brand'
+  const [untrackingId, setUntrackingId] = useState<string | null>(null)
 
   // Fetch data
   useEffect(() => {
@@ -179,7 +284,6 @@ export default function CompetitorsPage() {
       })
       
       if (response.ok) {
-        // Refresh data
         const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
         if (refreshRes.ok) {
           const data = await refreshRes.json()
@@ -200,6 +304,8 @@ export default function CompetitorsPage() {
   async function handleUntrackBrand(competitor: TrackedCompetitor) {
     if (!currentDashboard?.id) return
     
+    setUntrackingId(competitor.id)
+    
     try {
       const response = await fetch(
         `/api/dashboard/${currentDashboard.id}/competitors?competitor_id=${competitor.id}`,
@@ -207,7 +313,6 @@ export default function CompetitorsPage() {
       )
       
       if (response.ok) {
-        // Refresh data
         const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
         if (refreshRes.ok) {
           const data = await refreshRes.json()
@@ -219,6 +324,8 @@ export default function CompetitorsPage() {
       }
     } catch (err) {
       console.error('Error untracking brand:', err)
+    } finally {
+      setUntrackingId(null)
     }
   }
 
@@ -228,11 +335,11 @@ export default function CompetitorsPage() {
       <div className="min-h-screen bg-primary" data-page="competitors">
         <MobileHeader />
         <div className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-12 bg-card rounded-lg w-full"></div>
-            <div className="grid grid-cols-5 gap-4">
-              {[1,2,3,4,5].map(i => (
-                <div key={i} className="h-36 bg-card rounded-lg"></div>
+          <div className="animate-pulse space-y-6">
+            <div className="h-16 bg-card rounded-lg w-full"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1,2,3].map(i => (
+                <div key={i} className="h-52 bg-card rounded-lg"></div>
               ))}
             </div>
             <div className="h-96 bg-card rounded-lg"></div>
@@ -253,24 +360,9 @@ export default function CompetitorsPage() {
       {/* Header Bar */}
       <div className="page-header-bar">
         <div className="flex items-center gap-3">
-          {/* View Toggle */}
-          <div className="pill-group">
-            <button 
-              className={`pill flex items-center gap-1.5 ${activeView === 'leaderboard' ? 'active' : ''}`}
-              onClick={() => setActiveView('leaderboard')}
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              Leaderboard
-            </button>
-            <button 
-              className={`pill flex items-center gap-1.5 ${activeView === 'tracked' ? 'active' : ''}`}
-              onClick={() => setActiveView('tracked')}
-            >
-              <Target className="w-3.5 h-3.5" />
-              Tracked ({tracked.length})
-            </button>
-          </div>
-
+          <Users className="w-4 h-4 text-muted" />
+          <h1 className="text-sm font-medium text-secondary">Competitive Intelligence</h1>
+          
           {userRank && (
             <>
               <span className="text-muted">•</span>
@@ -283,19 +375,11 @@ export default function CompetitorsPage() {
 
         <Link 
           href="/dashboard/competitors/manage"
-          className="flex items-center gap-2 px-3 py-1.5 text-sm text-secondary hover:text-primary transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-secondary hover:text-primary hover:bg-secondary transition-colors"
         >
-          Manage
+          Manage Competitors
           <ArrowUpRight className="w-4 h-4" />
         </Link>
-      </div>
-
-      {/* Page Title */}
-      <div className="px-6 pt-4 pb-2 flex items-center gap-2">
-        <Users className="w-4 h-4 text-muted" />
-        <h1 className="text-sm font-medium text-secondary">Competitive Intelligence</h1>
-        <span className="text-muted">•</span>
-        <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
       {!hasTrackedOrLeaderboard ? (
@@ -303,23 +387,23 @@ export default function CompetitorsPage() {
           <div className="card p-12 text-center">
             <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
             <h2 className="text-lg font-semibold text-primary mb-2">No competitor data yet</h2>
-            <p className="text-sm text-muted mb-6">
-              Run prompts to see which brands AI mentions alongside yours, or add competitors manually.
+            <p className="text-sm text-muted mb-6 max-w-md mx-auto">
+              Run prompts to see which brands AI mentions alongside yours, or add competitors manually to start tracking.
             </p>
             <div className="flex items-center justify-center gap-3">
               <Link 
                 href="/dashboard/prompts"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors"
               >
-                Go to Prompts
+                Run Prompts
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
               <Link 
                 href="/dashboard/competitors/manage"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
               >
                 Add Manually
-                <ArrowUpRight className="w-4 h-4" />
+                <Plus className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -327,129 +411,114 @@ export default function CompetitorsPage() {
       ) : (
         <div className="p-6 space-y-6">
           
-          {/* Tracked Competitors - Always visible */}
-          <div className="card p-0 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
+          {/* Your Position Summary */}
+          {userData && (
+            <div className="card p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-accent" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted">Your Position</div>
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <span className="text-2xl font-semibold text-primary">
+                        #{userRank || '—'}
+                      </span>
+                      <span className="text-muted">of {totalBrands} brands</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-6 sm:gap-8">
+                  <div className="text-center sm:text-right">
+                    <div className="text-xs text-muted uppercase tracking-wide">Visibility</div>
+                    <div className="text-xl font-semibold text-primary tabular-nums">{userData.visibility}%</div>
+                  </div>
+                  <div className="text-center sm:text-right">
+                    <div className="text-xs text-muted uppercase tracking-wide">Mentions</div>
+                    <div className="text-xl font-semibold text-primary tabular-nums">{userData.mentions}</div>
+                  </div>
+                  <div className="text-center sm:text-right">
+                    <div className="text-xs text-muted uppercase tracking-wide">Sentiment</div>
+                    <div className={`text-xl font-semibold capitalize ${getSentimentColor(userData.sentiment)}`}>
+                      {userData.sentiment}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Tracked Competitors */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="font-semibold text-primary text-sm">Tracked Competitors</h3>
+                <h2 className="text-sm font-semibold text-primary">Tracked Competitors</h2>
                 <p className="text-xs text-muted mt-0.5">
-                  {planLimits ? `${tracked.length}/${planLimits.max} slots used` : `${tracked.length} tracked`}
+                  {planLimits ? `${tracked.length} of ${planLimits.max} slots used` : `${tracked.length} tracked`}
                 </p>
               </div>
-              <Link href="/dashboard/competitors/manage" className="expand-btn">
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="p-4">
-              {tracked.length === 0 ? (
-                <div className="text-center py-6 bg-secondary rounded-lg">
-                  <p className="text-sm text-muted mb-1">No competitors tracked yet</p>
-                  <p className="text-xs text-muted">
-                    {hasLeaderboardData 
-                      ? "Click + on any brand below to start tracking"
-                      : "Use the Manage page to add competitors manually"
-                    }
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {tracked.map((comp) => (
-                    <div 
-                      key={comp.id}
-                      className="group relative p-3 bg-secondary rounded-lg hover:bg-hover transition-colors"
-                    >
-                      {/* Remove button */}
-                      <button
-                        onClick={() => handleUntrackBrand(comp)}
-                        className="absolute top-2 right-2 p-1 opacity-0 group-hover:opacity-100 text-muted hover:text-red-500 rounded transition-all"
-                        title="Stop tracking"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      
-                      <div className="flex items-center gap-2 mb-2">
-                        <img 
-                          src={comp.logo_url}
-                          alt=""
-                          className="w-8 h-8 rounded"
-                          onError={(e) => { 
-                            e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(comp.brand_name)}&background=1a1a1a&color=fff&size=64`
-                          }}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="font-medium text-primary text-sm truncate">{comp.brand_name}</div>
-                          <div className="text-xs text-muted truncate">{comp.domain}</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted">Visibility</span>
-                        <span className="font-medium text-primary">{comp.visibility}%</span>
-                      </div>
-                      <div className="w-full h-1 bg-primary/20 rounded-full mt-1 overflow-hidden">
-                        <div 
-                          className="h-full bg-blue-500 rounded-full"
-                          style={{ width: `${comp.visibility}%` }}
-                        />
-                      </div>
-                      
-                      <div className="flex items-center justify-between text-xs mt-2">
-                        <span className="text-muted">Mentions</span>
-                        <span className="font-medium text-primary">{comp.mentions}</span>
-                      </div>
-
-                      {/* vs You */}
-                      {userData && (
-                        <div className="flex items-center justify-between text-xs mt-2 pt-2 border-t border-border">
-                          <span className="text-muted">vs You</span>
-                          {comp.visibility > userData.visibility ? (
-                            <span className="text-red-500 flex items-center gap-0.5">
-                              <TrendingDown className="w-3 h-3" />
-                              {comp.visibility - userData.visibility}%
-                            </span>
-                          ) : comp.visibility < userData.visibility ? (
-                            <span className="text-green-500 flex items-center gap-0.5">
-                              <TrendingUp className="w-3 h-3" />
-                              {userData.visibility - comp.visibility}%
-                            </span>
-                          ) : (
-                            <span className="text-muted">Tied</span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  
-                  {/* Add More */}
-                  {canTrackMore && (
-                    <Link
-                      href="/dashboard/competitors/manage"
-                      className="p-3 border border-dashed border-border rounded-lg hover:border-muted hover:bg-secondary/50 transition-all flex flex-col items-center justify-center text-center min-h-[120px]"
-                    >
-                      <Plus className="w-5 h-5 text-muted mb-1" />
-                      <span className="text-xs text-muted">Add more</span>
-                      {planLimits && (
-                        <span className="text-xs text-muted mt-0.5">{planLimits.max - tracked.length} left</span>
-                      )}
-                    </Link>
+              {canTrackMore && (
+                <Link 
+                  href="/dashboard/competitors/manage"
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-dashed border-border text-muted hover:text-primary hover:border-muted hover:bg-secondary transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Competitor
+                  {planLimits && (
+                    <span className="text-xs text-muted">({planLimits.max - tracked.length} left)</span>
                   )}
-                </div>
+                </Link>
               )}
             </div>
+
+            {tracked.length === 0 ? (
+              <div className="card p-8 text-center">
+                <Users className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
+                <p className="text-sm text-muted mb-1">No competitors tracked yet</p>
+                <p className="text-xs text-muted mb-4">
+                  {hasLeaderboardData 
+                    ? "Click + on any brand in the leaderboard to start tracking"
+                    : "Add competitors to see how you compare"
+                  }
+                </p>
+                <Link 
+                  href="/dashboard/competitors/manage"
+                  className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent/80 hover:underline transition-colors"
+                >
+                  Add your first competitor <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {tracked.map((comp) => (
+                  <CompetitorCard
+                    key={comp.id}
+                    competitor={comp}
+                    userData={userData}
+                    onUntrack={() => handleUntrackBrand(comp)}
+                    isUntracking={untrackingId === comp.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Full Leaderboard */}
+          {/* All Brands Leaderboard */}
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div>
                 <h3 className="font-semibold text-primary text-sm">All Brands in AI Responses</h3>
-                <p className="text-xs text-muted mt-0.5">Ranked by visibility across all prompts</p>
+                <p className="text-xs text-muted mt-0.5">
+                  Every brand mentioned across your tracked prompts, ranked by visibility
+                </p>
               </div>
             </div>
 
             {!hasLeaderboardData ? (
               <div className="p-8 text-center">
+                <BarChart3 className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
                 <p className="text-sm text-muted mb-2">No AI response data yet</p>
                 <p className="text-xs text-muted mb-4">Run prompts to discover which brands AI recommends in your space</p>
                 <Link 
@@ -463,103 +532,105 @@ export default function CompetitorsPage() {
             ) : (
               <>
                 {/* Table Header */}
-                <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs text-muted border-b border-border bg-secondary">
+                <div className="grid grid-cols-12 gap-2 px-4 py-3 text-xs text-muted border-b border-border bg-secondary/50">
                   <div className="col-span-1">#</div>
-                  <div className="col-span-5">Brand</div>
-                  <div className="col-span-2 text-center">Visibility</div>
-                  <div className="col-span-2 text-center">Mentions</div>
+                  <div className="col-span-4">Brand</div>
+                  <div className="col-span-2 text-right">Visibility</div>
+                  <div className="col-span-2 text-right">Mentions</div>
                   <div className="col-span-2 text-center">Sentiment</div>
+                  <div className="col-span-1"></div>
                 </div>
 
                 {/* Table Body */}
                 <div className="max-h-[500px] overflow-y-auto">
-                  {competitors.map((comp, idx) => {
+                  {competitors.map((comp) => {
                     const isTracking = trackingBrand === comp.name
+                    const isAlreadyTracked = comp.isTracked
                 
-                return (
-                  <div 
-                    key={comp.name}
-                    className={`grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-hover transition-colors ${comp.isUser ? 'bg-secondary/50' : ''}`}
-                    style={{ 
-                      borderTop: idx > 0 ? '1px solid var(--border)' : 'none'
-                    }}
-                  >
-                    {/* Rank */}
-                    <div className="col-span-1 text-sm text-muted tabular-nums">
-                      {comp.rank}
-                    </div>
-                    
-                    {/* Brand */}
-                    <div className="col-span-5 flex items-center gap-2 min-w-0">
+                    return (
                       <div 
-                        className="w-2 h-2 rounded-full flex-shrink-0" 
-                        style={{ backgroundColor: comp.color }} 
-                      />
-                      <img 
-                        src={comp.logo}
-                        alt=""
-                        className="w-6 h-6 rounded flex-shrink-0"
-                        onError={(e) => { 
-                          e.currentTarget.src = comp.fallbackLogo
-                        }}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-sm truncate ${comp.isUser ? 'font-semibold text-primary' : 'text-primary'}`}>
-                            {comp.name}
+                        key={comp.name}
+                        className={`
+                          grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-border
+                          transition-colors
+                          ${comp.isUser ? 'bg-accent/5' : 'hover:bg-secondary/50'}
+                        `}
+                      >
+                        {/* Rank */}
+                        <div className="col-span-1 text-sm text-muted tabular-nums font-medium">
+                          {comp.rank}
+                        </div>
+                        
+                        {/* Brand */}
+                        <div className="col-span-4 flex items-center gap-3 min-w-0">
+                          <img 
+                            src={comp.logo}
+                            alt=""
+                            className="w-8 h-8 rounded-lg flex-shrink-0 bg-secondary"
+                            onError={(e) => { 
+                              e.currentTarget.src = comp.fallbackLogo
+                            }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm truncate ${comp.isUser ? 'font-semibold text-primary' : 'text-primary'}`}>
+                                {comp.name}
+                              </span>
+                              {comp.isUser && (
+                                <span className="text-xs bg-accent/20 text-accent px-1.5 py-0.5 rounded font-medium">YOU</span>
+                              )}
+                              {isAlreadyTracked && !comp.isUser && (
+                                <span className="text-xs bg-green-500/20 text-green-500 px-1.5 py-0.5 rounded">Tracked</span>
+                              )}
+                            </div>
+                            <span className="text-xs text-muted truncate block">{comp.domain}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Visibility */}
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                          <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
+                            <div 
+                              className="h-full rounded-full transition-all"
+                              style={{ width: `${comp.visibility}%`, backgroundColor: comp.isUser ? 'var(--accent)' : comp.color }}
+                            />
+                          </div>
+                          <span className="text-sm text-primary tabular-nums w-10 text-right font-medium">{comp.visibility}%</span>
+                        </div>
+                        
+                        {/* Mentions */}
+                        <div className="col-span-2 text-right">
+                          <span className="text-sm text-primary tabular-nums font-medium">{comp.mentions}</span>
+                        </div>
+                        
+                        {/* Sentiment */}
+                        <div className="col-span-2 flex items-center justify-center">
+                          <span className={`text-xs px-2.5 py-1 rounded-full capitalize ${getSentimentBg(comp.sentiment)} ${getSentimentColor(comp.sentiment)}`}>
+                            {comp.sentiment}
                           </span>
-                          {comp.isUser && (
-                            <span className="text-xs bg-accent/20 text-accent px-1.5 py-0.5 rounded">YOU</span>
-                          )}
-                          {comp.isTracked && !comp.isUser && (
-                            <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
+                        </div>
+                        
+                        {/* Action */}
+                        <div className="col-span-1 flex items-center justify-end">
+                          {!comp.isUser && !isAlreadyTracked && canTrackMore && (
+                            <button
+                              onClick={() => handleTrackBrand(comp)}
+                              disabled={isTracking}
+                              className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded-lg transition-all disabled:opacity-50"
+                              title="Track competitor"
+                            >
+                              {isTracking ? (
+                                <div className="w-4 h-4 border-2 border-muted border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Plus className="w-4 h-4" />
+                              )}
+                            </button>
                           )}
                         </div>
-                        <span className="text-xs text-muted truncate">{comp.domain}</span>
                       </div>
-                    </div>
-                    
-                    {/* Visibility */}
-                    <div className="col-span-2 flex items-center justify-center gap-2">
-                      <div className="w-12 h-1.5 bg-secondary rounded-full overflow-hidden">
-                        <div 
-                          className="h-full rounded-full"
-                          style={{ width: `${comp.visibility}%`, backgroundColor: comp.color }}
-                        />
-                      </div>
-                      <span className="text-sm text-primary tabular-nums w-8">{comp.visibility}%</span>
-                    </div>
-                    
-                    {/* Mentions */}
-                    <div className="col-span-2 text-center">
-                      <span className="text-sm text-primary tabular-nums">{comp.mentions}</span>
-                    </div>
-                    
-                    {/* Sentiment + Track Button */}
-                    <div className="col-span-2 flex items-center justify-center gap-2">
-                      <span className={`text-xs px-2 py-1 rounded-full ${getSentimentBg(comp.sentiment)} ${getSentimentColor(comp.sentiment)}`}>
-                        {comp.sentiment}
-                      </span>
-                      
-                      {!comp.isUser && !comp.isTracked && canTrackMore && (
-                        <button
-                          onClick={() => handleTrackBrand(comp)}
-                          disabled={isTracking}
-                          className="p-1 text-muted hover:text-primary hover:bg-secondary rounded transition-all disabled:opacity-50"
-                          title="Track competitor"
-                        >
-                          {isTracking ? (
-                            <div className="w-4 h-4 border-2 border-muted border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Plus className="w-4 h-4" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-              </div>
+                    )
+                  })}
+                </div>
               </>
             )}
           </div>
