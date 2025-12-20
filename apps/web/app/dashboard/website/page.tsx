@@ -25,7 +25,8 @@ import {
   Search,
   Bot,
   FileText,
-  Shield
+  Shield,
+  Copy
 } from 'lucide-react'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -91,6 +92,10 @@ export default function WebsitePage() {
   const [expandedPages, setExpandedPages] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState('')
   const [issueFilter, setIssueFilter] = useState<'all' | 'high' | 'med' | 'low'>('all')
+  
+  // AI Redirect state
+  const [redirectFormat, setRedirectFormat] = useState<'cloudflare' | 'nginx' | 'nextjs'>('cloudflare')
+  const [codeCopied, setCodeCopied] = useState(false)
 
   const fetchData = async (forceRefresh = false) => {
     if (!currentDashboard?.id) {
@@ -377,30 +382,107 @@ export default function WebsitePage() {
               )}
             </div>
 
-            {/* AI Crawler Activity - Coming Soon */}
+            {/* AI Redirect - Send AI Crawlers to Harbor */}
             <div className="lg:col-span-3 card p-0 overflow-hidden">
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <div className="flex items-center gap-2">
                   <Bot className="w-4 h-4 text-muted" />
-                  <h3 className="font-semibold text-primary text-sm">AI Crawler Activity</h3>
-                  <span className="badge badge-neutral">Coming Soon</span>
+                  <h3 className="font-semibold text-primary text-sm">AI Redirect</h3>
+                  <span className="badge" style={{ backgroundColor: 'rgba(34, 211, 238, 0.15)', color: '#22D3EE' }}>Recommended</span>
                 </div>
               </div>
-              <div className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { name: 'OpenAI', icon: '◯' },
-                    { name: 'Anthropic', icon: '◎' },
-                    { name: 'Google', icon: 'G' },
-                    { name: 'Perplexity', icon: '⟁' }
-                  ].map(bot => (
-                    <div key={bot.name} className="text-center p-4 rounded-lg bg-secondary">
-                      <div className="text-2xl font-semibold text-muted mb-1">--</div>
-                      <div className="text-xs text-muted">{bot.name}</div>
-                    </div>
+              <div className="p-4 space-y-4">
+                <p className="text-sm text-muted">
+                  Redirect AI crawlers (ChatGPT, Claude, Perplexity) to your Harbor profile. 
+                  AI gets accurate, structured data instead of your marketing site. Search engines unaffected.
+                </p>
+                
+                {/* Format selector */}
+                <div className="flex gap-2">
+                  {(['cloudflare', 'nginx', 'nextjs'] as const).map((format) => (
+                    <button
+                      key={format}
+                      onClick={() => setRedirectFormat(format)}
+                      className={`pill ${redirectFormat === format ? 'active' : ''}`}
+                    >
+                      {format === 'cloudflare' ? 'Cloudflare' : format === 'nginx' ? 'nginx' : 'Next.js'}
+                    </button>
                   ))}
                 </div>
-                <p className="text-xs text-muted text-center mt-4">Track which AI crawlers are indexing your pages</p>
+                
+                {/* Code snippet */}
+                <div className="relative">
+                  <pre className="p-4 bg-secondary rounded-lg text-xs font-mono text-muted overflow-x-auto max-h-40 overflow-y-auto">
+                    {redirectFormat === 'cloudflare' && `// Deploy at workers.cloudflare.com (free)
+const HARBOR = 'https://useharbor.io/brands/${currentDashboard?.domain?.replace(/\./g, '-') || 'your-brand'}';
+const AI = ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended'];
+const SEARCH = ['Googlebot','Bingbot'];
+
+export default {
+  async fetch(req) {
+    const ua = req.headers.get('User-Agent') || '';
+    if (SEARCH.some(b => ua.includes(b))) return fetch(req);
+    if (AI.some(b => ua.includes(b))) return Response.redirect(HARBOR, 302);
+    return fetch(req);
+  }
+};`}
+                    {redirectFormat === 'nginx' && `# Add to nginx server block
+map $http_user_agent $is_ai_bot {
+    default 0;
+    ~*(GPTBot|ClaudeBot|PerplexityBot|Google-Extended) 1;
+}
+map $http_user_agent $is_search_bot {
+    default 0;
+    ~*(Googlebot|Bingbot) 1;
+}
+set $redirect 0;
+if ($is_ai_bot = 1) { set $redirect 1; }
+if ($is_search_bot = 1) { set $redirect 0; }
+if ($redirect = 1) {
+    return 302 https://useharbor.io/brands/${currentDashboard?.domain?.replace(/\./g, '-') || 'your-brand'};
+}`}
+                    {redirectFormat === 'nextjs' && `// middleware.ts in project root
+import { NextResponse, NextRequest } from 'next/server'
+const HARBOR = 'https://useharbor.io/brands/${currentDashboard?.domain?.replace(/\./g, '-') || 'your-brand'}';
+const AI = ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended'];
+const SEARCH = ['Googlebot','Bingbot'];
+
+export function middleware(req: NextRequest) {
+  const ua = req.headers.get('user-agent') || '';
+  if (SEARCH.some(b => ua.includes(b))) return NextResponse.next();
+  if (AI.some(b => ua.includes(b))) return NextResponse.redirect(HARBOR);
+  return NextResponse.next();
+}
+export const config = { matcher: '/:path*' };`}
+                  </pre>
+                  
+                  <button
+                    onClick={async () => {
+                      const code = document.querySelector('.lg\\:col-span-3 pre')?.textContent || ''
+                      await navigator.clipboard.writeText(code)
+                      setCodeCopied(true)
+                      setTimeout(() => setCodeCopied(false), 2000)
+                    }}
+                    className="absolute top-3 right-3 p-2 rounded-lg bg-hover hover:bg-border transition-colors"
+                  >
+                    {codeCopied ? (
+                      <Check className="w-4 h-4 text-positive" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-muted" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex items-center gap-4 text-xs">
+                  <a
+                    href="https://workers.cloudflare.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-muted hover:text-primary transition-colors"
+                  >
+                    Cloudflare Workers (free) <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

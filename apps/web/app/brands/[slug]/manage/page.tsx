@@ -31,7 +31,11 @@ import {
   BookOpen,
   Info,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Code2,
+  Copy,
+  Bot,
+  Check
 } from 'lucide-react'
 
 // Types
@@ -95,6 +99,7 @@ const NAV_ITEMS = [
   { id: 'brand', label: 'Brand Info', icon: Building2 },
   { id: 'products', label: 'Products', icon: Package },
   { id: 'faqs', label: 'FAQs', icon: HelpCircle },
+  { id: 'redirect', label: 'AI Redirect', icon: Code2 },
 ] as const
 
 type NavId = typeof NAV_ITEMS[number]['id'] | 'getting-started'
@@ -141,6 +146,10 @@ export default function ManageBrandPage() {
   const [companyInfo, setCompanyInfo] = useState<FeedData['company_info']>({})
   const [offerings, setOfferings] = useState<NonNullable<FeedData['offerings']>>([])
   const [faqs, setFaqs] = useState<NonNullable<FeedData['faqs']>>([])
+
+  // AI Redirect state
+  const [redirectFormat, setRedirectFormat] = useState<'cloudflare' | 'nginx' | 'nextjs'>('cloudflare')
+  const [codeCopied, setCodeCopied] = useState(false)
 
   // Bot visits - using Brandfetch for high-quality logos
   const [botVisits] = useState<BotVisit[]>([
@@ -1205,6 +1214,173 @@ export default function ManageBrandPage() {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Redirect Section */}
+          {activeNav === 'redirect' && (
+            <div className="space-y-6">
+              {/* Explainer */}
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-[#111213] border border-white/[0.06]">
+                <Bot className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-white/70 text-sm mb-2">
+                    <span className="text-white font-medium">Why redirect AI crawlers?</span> AI models cite third-party sources 60% of the time over brand websites. 
+                    By redirecting AI crawlers to your Harbor profile, you ensure they get accurate, structured data that <em>you</em> control.
+                  </p>
+                  <p className="text-white/40 text-xs">Search engines (Google, Bing) are unaffected — only AI crawlers are redirected.</p>
+                </div>
+              </div>
+
+              {/* Main Card */}
+              <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+                <div className="p-4 bg-[#0F1011] border-b border-white/[0.06]">
+                  <div className="flex items-center gap-2">
+                    <Code2 className="w-4 h-4 text-white/60" />
+                    <h3 className="text-white font-semibold font-heading">Redirect Code</h3>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+                      Recommended
+                    </span>
+                  </div>
+                  <p className="text-white/40 text-xs mt-1">Deploy this to your server to redirect AI bots to your Harbor profile</p>
+                </div>
+                
+                <div className="p-4 space-y-4">
+                  {/* Format selector */}
+                  <div className="flex gap-2">
+                    {(['cloudflare', 'nginx', 'nextjs'] as const).map((format) => (
+                      <button
+                        key={format}
+                        onClick={() => setRedirectFormat(format)}
+                        className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                          redirectFormat === format 
+                            ? 'bg-blue-500 text-white' 
+                            : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
+                        }`}
+                      >
+                        {format === 'cloudflare' ? 'Cloudflare' : format === 'nginx' ? 'nginx' : 'Next.js'}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Code snippet */}
+                  <div className="relative">
+                    <pre className="p-4 bg-[#0B0B0C] rounded-lg text-xs font-mono text-white/70 overflow-x-auto max-h-64 overflow-y-auto border border-white/[0.06]">
+                      {redirectFormat === 'cloudflare' && `// Deploy at workers.cloudflare.com (free)
+// Add route: ${brand?.domain || 'yourdomain.com'}/*
+
+const HARBOR = 'https://useharbor.io/brands/${slug}';
+const AI = ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended'];
+const SEARCH = ['Googlebot','Bingbot'];
+
+export default {
+  async fetch(req) {
+    const ua = req.headers.get('User-Agent') || '';
+    if (SEARCH.some(b => ua.includes(b))) return fetch(req);
+    if (AI.some(b => ua.includes(b))) return Response.redirect(HARBOR, 302);
+    return fetch(req);
+  }
+};`}
+                      {redirectFormat === 'nginx' && `# Add to your nginx server block
+# Redirects AI crawlers to: https://useharbor.io/brands/${slug}
+
+map $http_user_agent $is_ai_bot {
+    default 0;
+    ~*(GPTBot|ClaudeBot|PerplexityBot|Google-Extended) 1;
+}
+
+map $http_user_agent $is_search_bot {
+    default 0;
+    ~*(Googlebot|Bingbot) 1;
+}
+
+set $redirect 0;
+if ($is_ai_bot = 1) { set $redirect 1; }
+if ($is_search_bot = 1) { set $redirect 0; }
+if ($redirect = 1) {
+    return 302 https://useharbor.io/brands/${slug};
+}`}
+                      {redirectFormat === 'nextjs' && `// Save as middleware.ts in your project root
+import { NextResponse, NextRequest } from 'next/server'
+
+const HARBOR = 'https://useharbor.io/brands/${slug}';
+const AI = ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended'];
+const SEARCH = ['Googlebot','Bingbot'];
+
+export function middleware(req: NextRequest) {
+  const ua = req.headers.get('user-agent') || '';
+  if (SEARCH.some(b => ua.includes(b))) return NextResponse.next();
+  if (AI.some(b => ua.includes(b))) return NextResponse.redirect(HARBOR);
+  return NextResponse.next();
+}
+
+export const config = { matcher: '/:path*' };`}
+                    </pre>
+                    
+                    <button
+                      onClick={async () => {
+                        const pre = document.querySelector('pre');
+                        if (pre) {
+                          await navigator.clipboard.writeText(pre.textContent || '');
+                          setCodeCopied(true);
+                          setTimeout(() => setCodeCopied(false), 2000);
+                        }
+                      }}
+                      className="absolute top-3 right-3 p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                    >
+                      {codeCopied ? (
+                        <Check className="w-4 h-4 text-green-400" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-white/40" />
+                      )}
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 text-xs pt-2">
+                    <a
+                      href="https://workers.cloudflare.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-white/40 hover:text-white/70 transition-colors"
+                    >
+                      Cloudflare Workers (free) <ExternalLink className="w-3 h-3" />
+                    </a>
+                    <a
+                      href={`https://useharbor.io/brands/${slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      View your Harbor profile <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* How it works */}
+              <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+                <div className="p-4 bg-[#0F1011] border-b border-white/[0.06]">
+                  <h3 className="text-white font-semibold font-heading text-sm">How it works</h3>
+                </div>
+                <div className="p-4 space-y-3 text-sm text-white/60">
+                  <div className="flex items-start gap-3">
+                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center flex-shrink-0">1</span>
+                    <span>AI crawler (ChatGPT, Claude, etc.) visits your website</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center flex-shrink-0">2</span>
+                    <span>Your server detects the AI user agent and redirects to Harbor</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center flex-shrink-0">3</span>
+                    <span>AI gets your structured Harbor profile with accurate pricing, products, and FAQs</span>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="w-5 h-5 rounded-full bg-green-500/20 text-green-400 text-xs flex items-center justify-center flex-shrink-0">✓</span>
+                    <span>Human visitors and search engines see your normal website (unaffected)</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
