@@ -37,13 +37,15 @@ export async function GET(request: NextRequest) {
 
       // Log to ai_redirect_events table (create if needed)
       // For now, just increment a counter on the profile
-      await supabase.rpc('increment_redirect_count', { 
-        brand_slug: brandSlug,
-        ai_platform: platform 
-      }).catch(() => {
-        // Fallback: just log it
+      try {
+        await supabase.rpc('increment_redirect_count', { 
+          brand_slug: brandSlug,
+          ai_platform: platform 
+        })
+      } catch {
+        // RPC doesn't exist yet - just log it
         console.log(`[AI Redirect] ${brandSlug} <- ${platform} (${userAgent.substring(0, 100)})`)
-      })
+      }
 
     } catch (error) {
       // Silent fail - don't break the redirect
