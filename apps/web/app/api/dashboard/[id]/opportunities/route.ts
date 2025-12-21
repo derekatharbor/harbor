@@ -1,29 +1,98 @@
 // app/api/dashboard/[id]/opportunities/route.ts
-// Returns personalized opportunity data based on scan results
+// Returns personalized opportunity data based on REAL citation and prompt data
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
+
+// Domain categorization for content types
+const DOMAIN_CATEGORIES = {
+  reviews: ['g2.com', 'capterra.com', 'trustradius.com', 'trustpilot.com', 'softwareadvice.com', 'getapp.com'],
+  reddit: ['reddit.com'],
+  linkedin: ['linkedin.com'],
+  editorial: [
+    'techcrunch.com', 'theverge.com', 'wired.com', 'forbes.com', 'bloomberg.com',
+    'businessinsider.com', 'inc.com', 'entrepreneur.com', 'fastcompany.com',
+    'venturebeat.com', 'zdnet.com', 'cnet.com', 'engadget.com', 'arstechnica.com',
+    'nytimes.com', 'wsj.com', 'theguardian.com', 'bbc.com', 'reuters.com'
+  ],
+  listicle: ['zapier.com', 'pcmag.com', 'techradar.com', 'tomsguide.com', 'cnet.com'],
+  howto: ['stackoverflow.com', 'medium.com', 'dev.to', 'github.com', 'youtube.com'],
+  reference: ['wikipedia.org', 'investopedia.com', 'docs.']
+}
+
+function categorizeDomain(domain: string): string[] {
+  const lowerDomain = domain.toLowerCase()
+  const categories: string[] = []
   
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Missing Supabase environment variables')
+  for (const [category, domains] of Object.entries(DOMAIN_CATEGORIES)) {
+    if (domains.some(d => lowerDomain.includes(d))) {
+      categories.push(category)
+    }
   }
   
-  return createClient(supabaseUrl, supabaseKey)
+  // If no specific category, it's likely corporate/competitor
+  if (categories.length === 0) {
+    categories.push('corporate')
+  }
+  
+  return categories
+}
+
+// Categorize prompts by intent
+function categorizePrompt(prompt: string): string[] {
+  const lower = prompt.toLowerCase()
+  const categories: string[] = []
+  
+  // Comparison intent
+  if (lower.includes(' vs ') || lower.includes('versus') || lower.includes('compare') || 
+      lower.includes('alternative') || lower.includes('difference between') ||
+      lower.includes('better than') || lower.includes('or ')) {
+    categories.push('comparison')
+  }
+  
+  // How-to intent
+  if (lower.includes('how to') || lower.includes('how do') || lower.includes('tutorial') ||
+      lower.includes('guide') || lower.includes('step by step') || lower.includes('set up') ||
+      lower.includes('configure') || lower.includes('install')) {
+    categories.push('howto')
+  }
+  
+  // Listicle intent
+  if (lower.includes('best ') || lower.includes('top ') || lower.includes('tools') ||
+      lower.includes('software') || lower.includes('apps for') || lower.includes('list of')) {
+    categories.push('listicle')
+  }
+  
+  // Product intent
+  if (lower.includes('pricing') || lower.includes('cost') || lower.includes('features') ||
+      lower.includes('review') || lower.includes('worth it') || lower.includes('pros and cons')) {
+    categories.push('product')
+  }
+  
+  // If no category matched, default to general
+  if (categories.length === 0) {
+    categories.push('general')
+  }
+  
+  return categories
 }
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = getSupabaseClient()
-    const dashboardId = params.id
+    const { id: dashboardId } = await params
+    const supabase = getSupabase()
 
     // 1. Get dashboard info
     const { data: dashboard } = await supabase
@@ -37,293 +106,386 @@ export async function GET(
     }
 
     const brandName = dashboard.brand_name
-    const category = dashboard.metadata?.category || 'your category'
+    const category = dashboard.metadata?.category || 'Unknown'
     const domain = dashboard.domain
 
-    // 2. Get latest scan
-    const { data: latestScan } = await supabase
-      .from('scans')
-      .select('id, finished_at')
+    // 2. Get all prompts for this dashboard
+    const { data: prompts } = await supabase
+      .from('user_prompts')
+      .select('id, prompt_text')
       .eq('dashboard_id', dashboardId)
-      .in('status', ['done', 'partial'])
-      .order('finished_at', { ascending: false })
-      .limit(1)
-      .single()
 
-    // 3. Get competitors in same industry
-    const { data: competitors } = await supabase
-      .from('ai_profiles')
-      .select('id, brand_name, domain, visibility_score, logo_url')
-      .eq('industry', category)
-      .not('visibility_score', 'is', null)
-      .order('visibility_score', { ascending: false })
-      .limit(10)
-
-    const topCompetitors = (competitors || [])
-      .filter(c => c.brand_name.toLowerCase() !== brandName.toLowerCase())
-      .slice(0, 5)
-
-    // 4. Get conversation/prompt data for common phrases
-    let topQuestions: any[] = []
-    let vsQueries: any[] = []
-    
-    if (latestScan) {
-      const { data: conversations } = await supabase
-        .from('results_conversations')
-        .select('question, intent, score')
-        .eq('scan_id', latestScan.id)
-        .order('score', { ascending: false })
-        .limit(20)
-
-      topQuestions = conversations || []
-      
-      // Find comparison/vs queries
-      vsQueries = topQuestions.filter(q => 
-        q.question.toLowerCase().includes(' vs ') || 
-        q.question.toLowerCase().includes('compare') ||
-        q.question.toLowerCase().includes('versus') ||
-        q.question.toLowerCase().includes('alternative')
-      )
+    if (!prompts || prompts.length === 0) {
+      return NextResponse.json({
+        brand: { name: brandName, domain, category },
+        competitors: [],
+        topCompetitor: null,
+        onPage: buildEmptyOnPage(),
+        offPage: buildEmptyOffPage(),
+        learn: buildLearnContent(brandName, category, null),
+        hasData: false
+      })
     }
 
-    // 5. Get top cited domains in category (from ai_profiles with high scores)
-    const topSources = (competitors || [])
-      .filter(c => c.visibility_score >= 80)
-      .slice(0, 5)
-      .map(c => ({
-        domain: c.domain,
-        name: c.brand_name,
-        score: c.visibility_score,
-        logo_url: c.logo_url
-      }))
+    const promptIds = prompts.map(p => p.id)
 
-    // 6. Build personalized action items for each category
-    const topCompetitor = topCompetitors[0]
-    const competitorName = topCompetitor?.brand_name || 'your top competitor'
-    const competitorDomain = topCompetitor?.domain || 'competitor.com'
+    // 3. Get all executions
+    const { data: executions } = await supabase
+      .from('prompt_executions')
+      .select('id, prompt_id')
+      .in('prompt_id', promptIds)
 
-    // Generate personalized phrases from real data
-    const comparisonPhrases = [
-      { phrase: `${brandName} vs ${competitorName}`, count: vsQueries.length > 0 ? vsQueries[0]?.score || 36 : 36 },
-      { phrase: `best ${category} for small business`, count: 35 },
-      { phrase: `${brandName} alternatives`, count: 28 },
-      { phrase: `${competitorName} vs ${brandName}`, count: 22 },
-      { phrase: `compare ${category} tools`, count: 18 }
-    ]
+    if (!executions || executions.length === 0) {
+      return NextResponse.json({
+        brand: { name: brandName, domain, category },
+        competitors: [],
+        topCompetitor: null,
+        onPage: buildEmptyOnPage(),
+        offPage: buildEmptyOffPage(),
+        learn: buildLearnContent(brandName, category, null),
+        hasData: false
+      })
+    }
 
-    // Build the response with personalized data
-    const opportunityData = {
+    const executionIds = executions.map(e => e.id)
+    
+    // Map execution_id to prompt_id for later use
+    const executionToPrompt = new Map<string, string>()
+    executions.forEach(e => executionToPrompt.set(e.id, e.prompt_id))
+
+    // 4. Get all citations
+    const { data: citations } = await supabase
+      .from('prompt_citations')
+      .select('id, url, domain, execution_id')
+      .in('execution_id', executionIds)
+
+    // 5. Aggregate citations by domain and category
+    const domainCounts = new Map<string, number>()
+    const categoryDomains: Record<string, Map<string, number>> = {
+      reviews: new Map(),
+      reddit: new Map(),
+      linkedin: new Map(),
+      editorial: new Map(),
+      listicle: new Map(),
+      howto: new Map(),
+      corporate: new Map()
+    }
+
+    if (citations) {
+      for (const citation of citations) {
+        const citationDomain = citation.domain || 'unknown'
+        
+        // Overall count
+        domainCounts.set(citationDomain, (domainCounts.get(citationDomain) || 0) + 1)
+        
+        // Category-specific counts
+        const categories = categorizeDomain(citationDomain)
+        for (const cat of categories) {
+          if (categoryDomains[cat]) {
+            categoryDomains[cat].set(citationDomain, (categoryDomains[cat].get(citationDomain) || 0) + 1)
+          }
+        }
+      }
+    }
+
+    // 6. Categorize prompts and count by category
+    const promptsByCategory: Record<string, Array<{ text: string; count: number }>> = {
+      comparison: [],
+      howto: [],
+      listicle: [],
+      product: [],
+      general: []
+    }
+
+    // Count how many times each prompt was executed
+    const promptExecutionCounts = new Map<string, number>()
+    executions.forEach(e => {
+      promptExecutionCounts.set(e.prompt_id, (promptExecutionCounts.get(e.prompt_id) || 0) + 1)
+    })
+
+    for (const prompt of prompts) {
+      const categories = categorizePrompt(prompt.prompt_text)
+      const count = promptExecutionCounts.get(prompt.id) || 1
+      
+      for (const cat of categories) {
+        if (promptsByCategory[cat]) {
+          promptsByCategory[cat].push({ text: prompt.prompt_text, count })
+        }
+      }
+    }
+
+    // Sort prompts by execution count
+    for (const cat of Object.keys(promptsByCategory)) {
+      promptsByCategory[cat].sort((a, b) => b.count - a.count)
+    }
+
+    // 7. Find top competitor from citations (most cited non-brand corporate domain)
+    const sortedCorporate = Array.from(categoryDomains.corporate.entries())
+      .filter(([d]) => !d.includes(domain)) // Exclude own domain
+      .sort((a, b) => b[1] - a[1])
+    
+    const topCompetitorDomain = sortedCorporate[0]?.[0] || null
+
+    // 8. Build the response
+    const response = {
       brand: {
         name: brandName,
         domain: domain,
         category: category
       },
-      competitors: topCompetitors.map(c => ({
-        name: c.brand_name,
-        domain: c.domain,
-        score: c.visibility_score,
-        logo_url: c.logo_url
+      competitors: sortedCorporate.slice(0, 5).map(([d, count]) => ({
+        name: extractBrandName(d),
+        domain: d,
+        score: count,
+        logo_url: null
       })),
-      topCompetitor: topCompetitor ? {
-        name: topCompetitor.brand_name,
-        domain: topCompetitor.domain,
-        score: topCompetitor.visibility_score,
-        logo_url: topCompetitor.logo_url
+      topCompetitor: topCompetitorDomain ? {
+        name: extractBrandName(topCompetitorDomain),
+        domain: topCompetitorDomain,
+        score: sortedCorporate[0][1],
+        logo_url: null
       } : null,
       
-      // On-Page opportunities
       onPage: {
         comparison: {
-          actionItems: [
-            `Create a "${brandName} vs ${competitorName}" comparison page targeting common queries`,
-            `Study ${competitorDomain}'s comparison pages - they rank #1 in your category`,
-            `Include objective feature tables, pricing, and use-case recommendations`,
-            `Add FAQ schema markup for better AI parsing`
-          ],
-          phrases: comparisonPhrases,
-          topSources: topSources.slice(0, 3).map(s => ({
-            domain: s.domain,
-            count: Math.round(s.score * 4), // Approximate citation count
-            logo_url: s.logo_url
-          }))
+          actionItems: buildComparisonActions(brandName, topCompetitorDomain, category),
+          phrases: promptsByCategory.comparison.slice(0, 5).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.corporate, 3)
         },
         article: {
-          actionItems: [
-            `Publish original research about ${category} trends`,
-            `Create data-driven content that competitors can't replicate`,
-            `Interview industry experts for unique insights`,
-            `Take a position on emerging ${category} debates`
-          ],
-          phrases: [
-            { phrase: `${category} trends 2025`, count: 42 },
-            { phrase: `future of ${category}`, count: 38 },
-            { phrase: `${category} best practices`, count: 31 },
-            { phrase: `${category} industry report`, count: 24 }
-          ],
-          topSources: [
-            { domain: 'hbr.org', count: 234, logo_url: null },
-            { domain: 'mckinsey.com', count: 189, logo_url: null },
-            { domain: 'forbes.com', count: 145, logo_url: null }
-          ]
+          actionItems: buildArticleActions(brandName, category),
+          phrases: promptsByCategory.general.slice(0, 5).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.editorial, 3)
         },
         howto: {
-          actionItems: [
-            `Create step-by-step guides for common ${brandName} use cases`,
-            `Include screenshots and practical examples`,
-            `Structure with clear H2/H3 headers for AI parsing`,
-            `Add FAQ sections addressing follow-up questions`
-          ],
-          phrases: topQuestions
-            .filter(q => q.intent === 'how_to')
-            .slice(0, 5)
-            .map(q => ({ phrase: q.question, count: q.score }))
-            .concat([
-              { phrase: `how to use ${brandName}`, count: 45 },
-              { phrase: `${brandName} tutorial`, count: 38 }
-            ].slice(0, 5 - topQuestions.filter(q => q.intent === 'how_to').length)),
-          topSources: [
-            { domain: 'docs.github.com', count: 312, logo_url: null },
-            { domain: 'stackoverflow.com', count: 287, logo_url: null },
-            { domain: 'medium.com', count: 156, logo_url: null }
-          ]
+          actionItems: buildHowtoActions(brandName),
+          phrases: promptsByCategory.howto.slice(0, 5).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.howto, 3)
         },
         listicle: {
-          actionItems: [
-            `Create "Top 10 ${category} Tools for [Use Case]" content`,
-            `Include ${brandName} naturally (authenticity matters)`,
-            `Provide genuine pros/cons for each option`,
-            `Update regularly to stay current`
-          ],
-          phrases: [
-            { phrase: `best ${category} tools`, count: 52 },
-            { phrase: `top ${category} software`, count: 41 },
-            { phrase: `${category} alternatives`, count: 33 },
-            { phrase: `${category} for startups`, count: 27 }
-          ],
-          topSources: [
-            { domain: 'zapier.com', count: 289, logo_url: null },
-            { domain: 'g2.com', count: 267, logo_url: null },
-            { domain: 'capterra.com', count: 198, logo_url: null }
-          ]
+          actionItems: buildListicleActions(brandName, category),
+          phrases: promptsByCategory.listicle.slice(0, 5).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.listicle, 3)
         },
         product: {
-          actionItems: [
-            `Add comprehensive Product schema to ${domain}`,
-            `Write 150+ word product descriptions`,
-            `Include pricing and specifications in structured data`,
-            `Add aggregateRating schema if you have reviews`
-          ],
-          phrases: [
-            { phrase: `${brandName} pricing`, count: 48 },
-            { phrase: `${brandName} features`, count: 42 },
-            { phrase: `${brandName} review`, count: 35 },
-            { phrase: `is ${brandName} worth it`, count: 29 }
-          ],
-          topSources: topSources.slice(0, 3).map(s => ({
-            domain: s.domain,
-            count: Math.round(s.score * 5),
-            logo_url: s.logo_url
-          }))
+          actionItems: buildProductActions(brandName, domain),
+          phrases: promptsByCategory.product.slice(0, 5).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.corporate, 3)
         }
       },
       
-      // Off-Page opportunities
       offPage: {
         reddit: {
-          actionItems: [
-            `Join r/${category.toLowerCase().replace(/\s+/g, '')} and related subreddits`,
-            `Answer questions helpfully without being promotional`,
-            `Share genuine expertise - obvious marketing gets downvoted`,
-            `Build karma and credibility over time`
-          ],
-          phrases: [
-            { phrase: `has anyone used ${brandName}`, count: 67 },
-            { phrase: `${brandName} experience`, count: 54 },
-            { phrase: `thoughts on ${brandName}`, count: 43 },
-            { phrase: `${category} recommendations`, count: 38 }
-          ],
-          topSources: [
-            { domain: 'reddit.com', count: 847, logo_url: null }
-          ]
+          actionItems: buildRedditActions(brandName, category),
+          phrases: promptsByCategory.general.filter(p => 
+            p.text.toLowerCase().includes('reddit') || 
+            p.text.toLowerCase().includes('recommend')
+          ).slice(0, 3).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.reddit, 3)
         },
         linkedin: {
-          actionItems: [
-            `Post regularly about ${category} insights`,
-            `Engage with industry conversations`,
-            `Share ${brandName} updates and milestones`,
-            `Ensure executives are active on the platform`
-          ],
-          phrases: [
-            { phrase: `${category} leader`, count: 34 },
-            { phrase: `${category} innovation`, count: 28 },
-            { phrase: `${category} trends`, count: 23 }
-          ],
-          topSources: [
-            { domain: 'linkedin.com', count: 423, logo_url: null }
-          ]
+          actionItems: buildLinkedinActions(brandName, category),
+          phrases: [],
+          topSources: mapToSources(categoryDomains.linkedin, 3)
         },
         reviews: {
-          actionItems: [
-            `Claim and complete your G2 profile for ${brandName}`,
-            `Respond to all reviews (positive and negative)`,
-            `Encourage satisfied customers to leave reviews`,
-            `Keep product information current`
-          ],
-          phrases: [
-            { phrase: `${brandName} reviews`, count: 56 },
-            { phrase: `is ${brandName} good`, count: 43 },
-            { phrase: `${brandName} rating`, count: 37 }
-          ],
-          topSources: [
-            { domain: 'g2.com', count: 312, logo_url: null },
-            { domain: 'capterra.com', count: 198, logo_url: null },
-            { domain: 'trustradius.com', count: 87, logo_url: null }
-          ]
+          actionItems: buildReviewsActions(brandName),
+          phrases: promptsByCategory.product.filter(p =>
+            p.text.toLowerCase().includes('review') ||
+            p.text.toLowerCase().includes('rating')
+          ).slice(0, 3).map(p => ({
+            phrase: p.text.length > 60 ? p.text.substring(0, 60) + '...' : p.text,
+            count: p.count
+          })),
+          topSources: mapToSources(categoryDomains.reviews, 3)
         },
         pr: {
-          actionItems: [
-            `Pitch ${brandName} stories to ${category} publications`,
-            `Contribute guest articles to authoritative sites`,
-            `Get mentioned in "best of ${category}" roundups`,
-            `Build relationships with industry journalists`
-          ],
-          phrases: [
-            { phrase: `${brandName} announcement`, count: 34 },
-            { phrase: `${category} news`, count: 28 },
-            { phrase: `${brandName} launch`, count: 22 }
-          ],
-          topSources: [
-            { domain: 'techcrunch.com', count: 156, logo_url: null },
-            { domain: 'forbes.com', count: 134, logo_url: null },
-            { domain: 'theverge.com', count: 98, logo_url: null }
-          ]
+          actionItems: buildPRActions(brandName, category),
+          phrases: [],
+          topSources: mapToSources(categoryDomains.editorial, 3)
         }
       },
       
-      // Learn content for each action type
-      learn: {
-        comparison: `Comparison pages are LLM magnets because they directly answer "which should I choose" questions that users constantly ask.\n\nIf competitors like ${competitorName} are winning these citations, build your own comparison that's more thorough, more honest, or covers angles they've missed.\n\nMake sure you can genuinely compete on quality: a weak comparison will hurt more than help.`,
-        article: `Thought leadership content gets cited for industry context. AI looks for authoritative voices when explaining ${category} concepts or trends.\n\nOriginal data and unique perspectives are particularly valuable - they can't be found elsewhere, making your content the primary source.`,
-        howto: `How-to content gets cited when users ask AI for instructions. Clear, well-structured guides rank higher in AI responses.\n\nThe key is specificity - generic advice is everywhere. Detailed, practical guides for ${brandName} with real examples become go-to references.`,
-        listicle: `Listicles get cited in "best of" queries. Being the author of authoritative ${category} lists builds category credibility.\n\nThe key is objectivity - if your list is obviously biased toward ${brandName}, it loses credibility and AI citation potential.`,
-        product: `Product pages with proper schema get cited in shopping queries. AI needs structured data to recommend ${brandName} accurately.\n\nIncomplete or poorly structured pages get skipped in favor of competitors with better markup.`,
-        reddit: `Reddit discussions frequently appear in AI citations. The platform's authentic, community-driven content is trusted by AI models.\n\nAuthentic participation matters - obvious marketing gets downvoted and ignored. Build real credibility in your ${category} community.`,
-        linkedin: `LinkedIn content gets indexed and cited for professional and B2B queries. Active presence signals credibility to AI models.\n\nConsistency matters more than virality - regular, valuable posts about ${category} build authority over time.`,
-        reviews: `Review sites are heavily cited by AI for product recommendations. High ratings for ${brandName} directly impact visibility.\n\nNegative reviews handled well can actually boost credibility - they show you're responsive and care about customers.`,
-        pr: `Editorial mentions from trusted domains carry significant weight in AI citations. Quality backlinks from authoritative sources boost ${brandName} visibility across all queries.\n\nFocus on genuine newsworthiness - AI can distinguish earned media from paid placements.`
-      },
-
-      lastScan: latestScan?.finished_at || null,
-      hasData: !!latestScan
+      learn: buildLearnContent(brandName, category, topCompetitorDomain),
+      hasData: (citations?.length || 0) > 0
     }
 
-    return NextResponse.json(opportunityData)
+    return NextResponse.json(response)
 
-  } catch (error) {
-    console.error('Error fetching opportunities data:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch opportunities data' },
-      { status: 500 }
-    )
+  } catch (error: any) {
+    console.error('Opportunities API error:', error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+
+// Helper: Extract brand name from domain
+function extractBrandName(domain: string): string {
+  return domain
+    .replace(/^www\./, '')
+    .split('.')[0]
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+// Helper: Map domain counts to source format
+function mapToSources(domainMap: Map<string, number>, limit: number) {
+  return Array.from(domainMap.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([domain, count]) => ({
+      domain,
+      count,
+      logo_url: null
+    }))
+}
+
+// Empty state builders
+function buildEmptyOnPage() {
+  return {
+    comparison: { actionItems: [], phrases: [], topSources: [] },
+    article: { actionItems: [], phrases: [], topSources: [] },
+    howto: { actionItems: [], phrases: [], topSources: [] },
+    listicle: { actionItems: [], phrases: [], topSources: [] },
+    product: { actionItems: [], phrases: [], topSources: [] }
+  }
+}
+
+function buildEmptyOffPage() {
+  return {
+    reddit: { actionItems: [], phrases: [], topSources: [] },
+    linkedin: { actionItems: [], phrases: [], topSources: [] },
+    reviews: { actionItems: [], phrases: [], topSources: [] },
+    pr: { actionItems: [], phrases: [], topSources: [] }
+  }
+}
+
+// Action item builders (personalized with real data)
+function buildComparisonActions(brand: string, competitor: string | null, category: string): string[] {
+  const actions = []
+  if (competitor) {
+    actions.push(`Create a "${brand} vs ${extractBrandName(competitor)}" comparison page`)
+    actions.push(`Analyze ${competitor}'s comparison content structure`)
+  } else {
+    actions.push(`Create comparison pages against top ${category} competitors`)
+  }
+  actions.push('Include feature tables, pricing, and use-case recommendations')
+  actions.push('Add FAQ schema for better AI parsing')
+  return actions
+}
+
+function buildArticleActions(brand: string, category: string): string[] {
+  return [
+    `Publish original research about ${category} trends`,
+    'Create data-driven content with unique insights',
+    'Take positions on industry debates to stand out',
+    'Include expert quotes and primary sources'
+  ]
+}
+
+function buildHowtoActions(brand: string): string[] {
+  return [
+    `Create step-by-step guides for ${brand} use cases`,
+    'Include screenshots and practical examples',
+    'Structure with clear H2/H3 headers for AI parsing',
+    'Add video tutorials for complex workflows'
+  ]
+}
+
+function buildListicleActions(brand: string, category: string): string[] {
+  return [
+    `Create "Best ${category} Tools" content (include ${brand} authentically)`,
+    'Provide genuine pros/cons for each option',
+    'Update regularly to stay current',
+    'Include specific use cases and recommendations'
+  ]
+}
+
+function buildProductActions(brand: string, domain: string): string[] {
+  return [
+    `Add Product schema markup to ${domain}`,
+    'Write detailed product descriptions (150+ words each)',
+    'Include pricing in structured data',
+    'Add customer review schema if available'
+  ]
+}
+
+function buildRedditActions(brand: string, category: string): string[] {
+  const subreddit = category.toLowerCase().replace(/\s+/g, '')
+  return [
+    `Monitor r/${subreddit} and related subreddits`,
+    'Answer questions helpfully without being promotional',
+    'Build karma through genuine community participation',
+    `Set up alerts for "${brand}" mentions`
+  ]
+}
+
+function buildLinkedinActions(brand: string, category: string): string[] {
+  return [
+    `Post ${category} insights regularly`,
+    'Engage with industry conversations',
+    `Share ${brand} milestones and updates`,
+    'Ensure executives are active on the platform'
+  ]
+}
+
+function buildReviewsActions(brand: string): string[] {
+  return [
+    `Claim your G2 and Capterra profiles for ${brand}`,
+    'Respond to all reviews (positive and negative)',
+    'Encourage satisfied customers to leave reviews',
+    'Keep product information current across platforms'
+  ]
+}
+
+function buildPRActions(brand: string, category: string): string[] {
+  return [
+    `Pitch ${brand} stories to ${category} publications`,
+    'Contribute guest articles to authoritative sites',
+    `Get featured in "best ${category}" roundups`,
+    'Build relationships with industry journalists'
+  ]
+}
+
+// Learn content (personalized)
+function buildLearnContent(brand: string, category: string, competitor: string | null): Record<string, string> {
+  const competitorName = competitor ? extractBrandName(competitor) : 'competitors'
+  
+  return {
+    comparison: `Comparison pages directly answer "which should I choose" questions that AI models frequently handle.\n\n${competitor ? `${competitorName} currently appears in comparison queries. ` : ''}Creating thorough, honest comparisons makes your content the primary source for these decisions.`,
+    
+    article: `Thought leadership gets cited for industry context. AI looks for authoritative voices when explaining ${category} concepts.\n\nOriginal data and unique perspectives are especially valuable—they become primary sources that can't be found elsewhere.`,
+    
+    howto: `How-to content gets cited when users ask AI for instructions. Clear, well-structured guides rank higher.\n\nThe key is specificity—detailed guides for ${brand} with real examples become go-to references.`,
+    
+    listicle: `Listicles get cited in "best of" queries. Being the author of authoritative ${category} lists builds category credibility.\n\nObjectivity matters—obviously biased lists lose credibility and AI citation potential.`,
+    
+    product: `Product pages with proper schema get cited in shopping queries. AI needs structured data to recommend ${brand} accurately.\n\nIncomplete pages get skipped for competitors with better markup.`,
+    
+    reddit: `Reddit discussions frequently appear in AI citations. The platform's authentic content is trusted by AI models.\n\nAuthentic participation matters—obvious marketing gets downvoted and ignored.`,
+    
+    linkedin: `LinkedIn content gets indexed for professional queries. Active presence signals credibility to AI models.\n\nConsistency matters more than virality—regular posts build authority over time.`,
+    
+    reviews: `Review sites are heavily cited for product recommendations. Ratings directly impact ${brand}'s visibility.\n\nNegative reviews handled well can boost credibility—they show responsiveness.`,
+    
+    pr: `Editorial mentions carry significant weight in AI citations. Quality backlinks boost visibility across all queries.\n\nFocus on genuine newsworthiness—AI distinguishes earned media from paid placements.`
   }
 }

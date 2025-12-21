@@ -477,6 +477,25 @@ function ContentStrategyTab({ data }: { data: OpportunityData | null }) {
   const actionData = data?.[selectedCategory === 'on-page' ? 'onPage' : 'offPage']?.[selectedAction]
   const learnContent = data?.learn?.[selectedAction]
 
+  // Check if we have any real data
+  const hasData = data?.hasData ?? false
+
+  // Empty state when no data
+  if (!hasData) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-180px)]">
+        <div className="text-center max-w-md">
+          <TrendingUp className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
+          <h3 className="text-lg font-medium text-primary mb-2">No data yet</h3>
+          <p className="text-sm text-muted">
+            Run some prompts first. Once AI models cite sources in their responses, 
+            you'll see personalized content recommendations here based on what's actually being cited.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex h-[calc(100vh-180px)]">
       {/* Left Column - Navigation */}
@@ -567,14 +586,18 @@ function ContentStrategyTab({ data }: { data: OpportunityData | null }) {
               </Tooltip>
             </div>
             <ul className="space-y-4">
-              {actionData?.actionItems.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 group">
-                  <div className="w-5 h-5 rounded-full bg-chart-2/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-chart-2/20 transition-colors">
-                    <CheckCircle2 className="w-3 h-3 text-chart-2" />
-                  </div>
-                  <span className="text-sm text-secondary leading-relaxed">{item}</span>
-                </li>
-              ))}
+              {actionData?.actionItems && actionData.actionItems.length > 0 ? (
+                actionData.actionItems.map((item, i) => (
+                  <li key={i} className="flex items-start gap-3 group">
+                    <div className="w-5 h-5 rounded-full bg-chart-2/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-chart-2/20 transition-colors">
+                      <CheckCircle2 className="w-3 h-3 text-chart-2" />
+                    </div>
+                    <span className="text-sm text-secondary leading-relaxed">{item}</span>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-muted">No action items available.</li>
+              )}
             </ul>
           </div>
 
@@ -608,23 +631,27 @@ function ContentStrategyTab({ data }: { data: OpportunityData | null }) {
                 </div>
               </div>
               <div className="space-y-1">
-                {actionData?.phrases.map((phrase, i) => (
-                  <div 
-                    key={i} 
-                    className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer"
-                    onClick={() => copyPhrase(phrase.phrase)}
-                  >
-                    <span className="text-sm text-secondary truncate pr-4 flex-1">{phrase.phrase}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-muted tabular-nums font-medium">{phrase.count}</span>
-                      {copiedPhrase === phrase.phrase ? (
-                        <Check className="w-4 h-4 text-chart-2 opacity-100" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
-                      )}
+                {actionData?.phrases && actionData.phrases.length > 0 ? (
+                  actionData.phrases.map((phrase, i) => (
+                    <div 
+                      key={i} 
+                      className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer"
+                      onClick={() => copyPhrase(phrase.phrase)}
+                    >
+                      <span className="text-sm text-secondary truncate pr-4 flex-1">{phrase.phrase}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-muted tabular-nums font-medium">{phrase.count}</span>
+                        {copiedPhrase === phrase.phrase ? (
+                          <Check className="w-4 h-4 text-chart-2 opacity-100" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-sm text-muted py-4">No matching prompts found. Add more prompts to see phrases here.</p>
+                )}
               </div>
             </div>
 
@@ -639,24 +666,28 @@ function ContentStrategyTab({ data }: { data: OpportunityData | null }) {
                 </div>
               </div>
               <div className="space-y-1">
-                {actionData?.topSources.map((source, i) => (
-                  <a
-                    key={i}
-                    href={`https://${source.domain}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-secondary/50 transition-colors group"
-                  >
-                    <span className="text-sm text-secondary flex items-center gap-2.5">
-                      <Favicon domain={source.domain} size={16} />
-                      <span className="group-hover:underline">{source.domain}</span>
-                    </span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-muted tabular-nums font-medium">{source.count}</span>
-                      <ExternalLink className="w-3.5 h-3.5 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </a>
-                ))}
+                {actionData?.topSources && actionData.topSources.length > 0 ? (
+                  actionData.topSources.map((source, i) => (
+                    <a
+                      key={i}
+                      href={`https://${source.domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-secondary/50 transition-colors group"
+                    >
+                      <span className="text-sm text-secondary flex items-center gap-2.5">
+                        <Favicon domain={source.domain} size={16} />
+                        <span className="group-hover:underline">{source.domain}</span>
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-muted tabular-nums font-medium">{source.count}</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    </a>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted py-4">No sources cited yet for this category.</p>
+                )}
               </div>
             </div>
           </div>
