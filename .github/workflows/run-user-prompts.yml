@@ -1,0 +1,49 @@
+name: User Prompt Execution
+
+on:
+  schedule:
+    # Every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+    inputs:
+      batch_size:
+        description: 'Number of prompts to run'
+        required: false
+        default: '3'
+      force:
+        description: 'Force run regardless of freshness'
+        required: false
+        default: 'false'
+
+jobs:
+  run-user-prompts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    
+    steps:
+      - name: Execute User Prompts
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://useharbor.io/api/prompts/execute-user-batch" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "batch_size": ${{ github.event.inputs.batch_size || 3 }},
+              "force": ${{ github.event.inputs.force || false }}
+            }')
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "::error::API returned status $http_code"
+            exit 1
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::User prompt execution failed - check Harbor API logs"

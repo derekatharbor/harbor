@@ -1,4 +1,4 @@
-name: Daily User Dashboard Scans
+name: Daily Visibility Snapshots
 
 on:
   schedule:
@@ -9,28 +9,24 @@ on:
       dashboard_id:
         description: 'Specific dashboard ID (optional)'
         required: false
-      skip_execution:
-        description: 'Skip prompt execution, just snapshot'
-        required: false
-        default: 'false'
       limit:
         description: 'Max dashboards to process'
         required: false
-        default: '5'
+        default: '100'
 
 jobs:
-  run-dashboard-scans:
+  capture-snapshots:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 3
     
     steps:
-      - name: Execute User Dashboard Scans
+      - name: Calculate Visibility Snapshots
         run: |
-          # Build request body
+          # Build request body - always skip execution, just snapshot existing data
           if [ -n "${{ github.event.inputs.dashboard_id }}" ]; then
-            body='{"dashboard_id": "${{ github.event.inputs.dashboard_id }}", "limit": ${{ github.event.inputs.limit || 5 }}, "skip_execution": ${{ github.event.inputs.skip_execution || false }}}'
+            body='{"dashboard_id": "${{ github.event.inputs.dashboard_id }}", "limit": ${{ github.event.inputs.limit || 100 }}, "skip_execution": true}'
           else
-            body='{"limit": ${{ github.event.inputs.limit || 5 }}, "skip_execution": ${{ github.event.inputs.skip_execution || false }}}'
+            body='{"limit": ${{ github.event.inputs.limit || 100 }}, "skip_execution": true}'
           fi
           
           response=$(curl -s -w "\n%{http_code}" -X POST \
@@ -53,4 +49,4 @@ jobs:
       - name: Notify on failure
         if: failure()
         run: |
-          echo "::warning::Daily dashboard scan failed - check Harbor API logs"
+          echo "::warning::Daily snapshot failed - check Harbor API logs"
