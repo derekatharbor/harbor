@@ -12,6 +12,7 @@ import {
   Search,
   Download,
   ArrowLeft,
+  Info,
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import MobileHeader from '@/components/layout/MobileHeader'
@@ -401,9 +402,24 @@ export default function SourcesPage() {
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-medium" style={{ color: colors.text }}>Source Usage by Domain</h3>
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-medium" style={{ color: colors.text }}>Citation Sources</h3>
+                  <div className="relative group">
+                    <Info className="w-3.5 h-3.5 cursor-help" style={{ color: colors.muted }} />
+                    <div 
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-lg"
+                      style={{ 
+                        backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
+                        color: colors.text,
+                        border: `1px solid ${colors.border}`
+                      }}
+                    >
+                      Websites AI models reference when answering your prompts
+                    </div>
+                  </div>
+                </div>
                 {chartView === 'historical' && (
-                  <p className="text-xs mt-0.5" style={{ color: colors.muted }}>Usage % over time</p>
+                  <p className="text-xs mt-0.5" style={{ color: colors.muted }}>Citations over time</p>
                 )}
               </div>
               <ChartViewToggle view={chartView} onChange={setChartView} isDark={isDark} />
@@ -514,9 +530,29 @@ export default function SourcesPage() {
             className="rounded-xl p-6"
             style={{ backgroundColor: colors.card, border: `1px solid ${colors.border}` }}
           >
-            <h3 className="text-sm font-medium mb-4" style={{ color: colors.text }}>
-              Source Type Distribution
-            </h3>
+            <div className="flex items-center gap-1.5 mb-4">
+              <h3 className="text-sm font-medium" style={{ color: colors.text }}>
+                Source Types
+              </h3>
+              <div className="relative group">
+                <Info className="w-3.5 h-3.5 cursor-help" style={{ color: colors.muted }} />
+                <div 
+                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 rounded-lg text-xs w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-lg"
+                  style={{ 
+                    backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
+                    color: colors.text,
+                    border: `1px solid ${colors.border}`
+                  }}
+                >
+                  <div className="space-y-1">
+                    <div><span className="font-medium">Editorial:</span> News & media</div>
+                    <div><span className="font-medium">Corporate:</span> Company sites</div>
+                    <div><span className="font-medium">UGC:</span> Reddit, forums</div>
+                    <div><span className="font-medium">Reference:</span> Wikipedia, docs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
             {distribution.length > 0 ? (
               <DonutChart 
                 data={distribution} 
