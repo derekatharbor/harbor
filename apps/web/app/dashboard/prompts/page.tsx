@@ -209,14 +209,13 @@ export default function PromptsPage() {
       {/* Main Card */}
       <div className="mx-6 card p-0 overflow-hidden">
         {/* Suggested Banner */}
-        {tab === 'suggested' && (
+        {tab === 'suggested' && suggested.length > 0 && (
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
             <div className="flex items-center gap-2 text-sm">
               <Sparkles className="w-4 h-4 text-muted" />
               <span className="font-medium text-primary">Suggested prompts.</span>
               <span className="text-secondary">Expand your brand's presence with suggested prompts.</span>
             </div>
-            <button className="px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-secondary transition-colors">Suggest more</button>
           </div>
         )}
 
@@ -316,9 +315,21 @@ export default function PromptsPage() {
                     ) : (
                       <>
                         <div className="text-sm text-muted">{p.visibility_score}%</div>
-                        <div className="text-sm text-muted">—</div>
-                        <div className="text-sm text-muted">—</div>
-                        <div className="text-sm text-muted">—</div>
+                        <div className="text-sm">
+                          {p.sentiment ? (
+                            <span className={`capitalize ${
+                              p.sentiment === 'positive' ? 'text-emerald-500' : 
+                              p.sentiment === 'negative' ? 'text-red-500' : 
+                              'text-muted'
+                            }`}>
+                              {p.sentiment}
+                            </span>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </div>
+                        <div className="text-sm text-muted">{p.position ? `#${p.position}` : '—'}</div>
+                        <div className="text-sm text-muted">{p.mentions > 0 ? p.mentions : '—'}</div>
                         <div className="flex items-center"><VolumeBar value={p.volume} /></div>
                       </>
                     )}

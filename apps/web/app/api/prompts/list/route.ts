@@ -47,14 +47,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ prompts: [], all_suggested: [], inactive: [], total: 0, topics: [] })
     }
 
-    // Get dashboard to find industry
+    // Get dashboard to find industry and brand name
     const { data: dashboard } = await supabase
       .from('dashboards')
-      .select('id, metadata')
+      .select('id, metadata, brand_name')
       .eq('id', dashboardId)
       .single()
 
     const userIndustry = dashboard?.metadata?.category || null
+    const brandName = dashboard?.brand_name?.toLowerCase() || ''
     const relevantTopics = userIndustry ? (INDUSTRY_TOPICS[userIndustry] || []) : []
 
     // 1. Get tracked prompts (dashboard_prompts)
@@ -138,36 +139,100 @@ export async function GET(request: NextRequest) {
       ...dismissedPrompts.map(p => p.id)
     ]
 
-    const execMap = new Map<string, { count: number; last: string | null }>()
+    const execMap = new Map<string, { count: number; last: string | null; execIds: string[] }>()
     
     if (allIds.length > 0) {
       const { data: execs } = await supabase
         .from('prompt_executions')
-        .select('prompt_id, executed_at')
+        .select('id, prompt_id, executed_at')
         .in('prompt_id', allIds)
         .is('error', null)
 
-      const execList = execs as Array<{ prompt_id: string; executed_at: string }> | null
+      const execList = execs as Array<{ id: string; prompt_id: string; executed_at: string }> | null
       (execList || []).forEach(e => {
-        const cur = execMap.get(e.prompt_id) || { count: 0, last: null as string | null }
+        const cur = execMap.get(e.prompt_id) || { count: 0, last: null as string | null, execIds: [] as string[] }
         cur.count++
+        cur.execIds.push(e.id)
         if (!cur.last || e.executed_at > cur.last) cur.last = e.executed_at
         execMap.set(e.prompt_id, cur)
       })
     }
 
-    // 6. Format
+    // 6. Get brand mentions for all executions
+    const allExecIds = Array.from(execMap.values()).flatMap(e => e.execIds)
+    const mentionsMap = new Map<string, { mentions: number; sentiment: string | null; position: number | null }>()
+    
+    if (allExecIds.length > 0 && brandName) {
+      const { data: mentions } = await supabase
+        .from('prompt_brand_mentions')
+        .select('execution_id, brand_name, sentiment, position')
+        .in('execution_id', allExecIds)
+      
+      // Group mentions by prompt_id (via execution_id)
+      const execToPrompt = new Map<string, string>()
+      execMap.forEach((val, promptId) => {
+        val.execIds.forEach(execId => execToPrompt.set(execId, promptId))
+      })
+      
+      // Aggregate mentions per prompt
+      const promptMentions = new Map<string, { count: number; sentiments: string[]; positions: number[] }>()
+      
+      ;(mentions || []).forEach(m => {
+        const promptId = execToPrompt.get(m.execution_id)
+        if (!promptId) return
+        
+        // Check if this mention is for the user's brand
+        const mentionName = m.brand_name?.toLowerCase() || ''
+        const isBrandMention = mentionName.includes(brandName) || brandName.includes(mentionName)
+        
+        if (isBrandMention) {
+          const cur = promptMentions.get(promptId) || { count: 0, sentiments: [], positions: [] }
+          cur.count++
+          if (m.sentiment) cur.sentiments.push(m.sentiment)
+          if (m.position) cur.positions.push(m.position)
+          promptMentions.set(promptId, cur)
+        }
+      })
+      
+      // Calculate averages
+      promptMentions.forEach((val, promptId) => {
+        // Most common sentiment
+        let sentiment: string | null = null
+        if (val.sentiments.length > 0) {
+          const counts = val.sentiments.reduce((acc, s) => {
+            acc[s] = (acc[s] || 0) + 1
+            return acc
+          }, {} as Record<string, number>)
+          sentiment = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || null
+        }
+        
+        // Average position
+        let position: number | null = null
+        if (val.positions.length > 0) {
+          position = Math.round(val.positions.reduce((a, b) => a + b, 0) / val.positions.length * 10) / 10
+        }
+        
+        mentionsMap.set(promptId, {
+          mentions: val.count,
+          sentiment,
+          position
+        })
+      })
+    }
+
+    // 7. Format
     const format = (p: any, source: string) => {
       const stats = execMap.get(p.id)
+      const mentionStats = mentionsMap.get(p.id)
       return {
         id: p.id,
         prompt_text: p.prompt_text,
         topic: p.topic || p.intent || null,
         status: source === 'seed' ? 'suggested' : source === 'dismissed' ? 'inactive' : 'active',
         visibility_score: stats ? Math.min(100, Math.round((stats.count / 3) * 100)) : 0,
-        sentiment: null,
-        position: null,
-        mentions: 0,
+        sentiment: mentionStats?.sentiment || null,
+        position: mentionStats?.position || null,
+        mentions: mentionStats?.mentions || 0,
         volume: stats ? Math.min(100, stats.count * 20) : 0,
         last_executed_at: stats?.last || null,
         created_at: p.created_at,
