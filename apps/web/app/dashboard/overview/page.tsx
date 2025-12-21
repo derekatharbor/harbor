@@ -19,7 +19,15 @@ import {
   Target,
   AlertCircle,
   MessageCircle,
-  X
+  X,
+  TrendingUp,
+  TrendingDown,
+  Zap,
+  CheckCircle2,
+  Circle,
+  Lightbulb,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
@@ -86,6 +94,46 @@ interface QuickWin {
   pages_affected?: number
 }
 
+interface ActionItem {
+  id: string
+  title: string
+  description: string
+  impact: 'high' | 'medium' | 'low'
+  href?: string
+  type: 'quick-win' | 'opportunity'
+}
+
+interface GettingStartedTask {
+  id: string
+  title: string
+  description: string
+  completed: boolean
+  href: string
+}
+
+// Benchmark thresholds by category (can be refined with real data)
+const CATEGORY_BENCHMARKS: Record<string, { visibility: number; rank: number }> = {
+  'Technology & SaaS': { visibility: 45, rank: 8 },
+  'E-commerce & Retail': { visibility: 35, rank: 12 },
+  'Marketing & Advertising': { visibility: 50, rank: 6 },
+  'Finance & Accounting': { visibility: 40, rank: 10 },
+  'default': { visibility: 40, rank: 10 }
+}
+
+function getBenchmarkContext(value: number, benchmark: number, metric: 'visibility' | 'rank'): { label: string; color: string } {
+  if (metric === 'visibility') {
+    const diff = value - benchmark
+    if (diff >= 10) return { label: 'Above average', color: 'text-green-500' }
+    if (diff >= -5) return { label: 'Average', color: 'text-muted' }
+    return { label: 'Below average', color: 'text-amber-500' }
+  } else {
+    // For rank, lower is better
+    if (value <= 3) return { label: 'Top 3', color: 'text-green-500' }
+    if (value <= benchmark) return { label: 'Above average', color: 'text-green-500' }
+    return { label: 'Room to grow', color: 'text-amber-500' }
+  }
+}
+
 // ============================================================================
 // COMPONENT
 // ============================================================================
@@ -145,6 +193,16 @@ export default function OverviewPage() {
   
   // Quick wins from website analytics
   const [quickWins, setQuickWins] = useState<QuickWin[]>([])
+  
+  // Action items (combined from quick wins + opportunities)
+  const [actionItems, setActionItems] = useState<ActionItem[]>([])
+  
+  // Getting started tasks
+  const [gettingStartedTasks, setGettingStartedTasks] = useState<GettingStartedTask[]>([])
+  const [showGettingStarted, setShowGettingStarted] = useState(true)
+  
+  // Top competitor for "losing to" context
+  const [topCompetitor, setTopCompetitor] = useState<{ name: string; visibility: number } | null>(null)
 
   // Fetch main data
   useEffect(() => {
@@ -159,9 +217,17 @@ export default function OverviewPage() {
         const competitorsRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=10`)
         if (competitorsRes.ok) {
           const data = await competitorsRes.json()
-          setCompetitors(data.competitors || [])
+          const comps = data.competitors || []
+          setCompetitors(comps)
           setUserRank(data.user_rank)
           setTotalBrands(data.total_brands_found || 0)
+          
+          // Find top competitor (first non-user competitor with higher visibility)
+          const userData = comps.find((c: CompetitorData) => c.isUser)
+          const topComp = comps.find((c: CompetitorData) => !c.isUser && c.visibility > (userData?.visibility || 0))
+          if (topComp) {
+            setTopCompetitor({ name: topComp.name, visibility: topComp.visibility })
+          }
         }
 
         // Fetch sources (filtered by dashboard's prompts)
@@ -181,16 +247,97 @@ export default function OverviewPage() {
           setHasHistoricalData(data.has_data || false)
         }
         
-        // Fetch quick wins from website analytics (recommendations)
+        // Fetch quick wins from website analytics
+        let quickWinItems: ActionItem[] = []
         const websiteRes = await fetch(`/api/dashboard/${currentDashboard.id}/website-analytics`)
         if (websiteRes.ok) {
           const data = await websiteRes.json()
-          // Get top 3 high/medium impact recommendations
           const recs = (data.recommendations || [])
             .filter((r: QuickWin) => r.impact === 'high' || r.impact === 'medium')
             .slice(0, 3)
           setQuickWins(recs)
+          quickWinItems = recs.map((r: QuickWin) => ({
+            ...r,
+            type: 'quick-win' as const,
+            href: '/dashboard/website'
+          }))
         }
+        
+        // If no quick wins, fetch opportunities as fallback
+        let opportunityItems: ActionItem[] = []
+        if (quickWinItems.length === 0) {
+          const oppRes = await fetch(`/api/dashboard/${currentDashboard.id}/opportunities`)
+          if (oppRes.ok) {
+            const data = await oppRes.json()
+            // Get first few action items from any content type
+            const allActions = Object.values(data.contentTypes || {})
+              .flatMap((ct: any) => ct.actionItems || [])
+              .slice(0, 3)
+            
+            opportunityItems = allActions.map((a: any, idx: number) => ({
+              id: `opp-${idx}`,
+              title: a.title || a,
+              description: a.description || '',
+              impact: 'medium' as const,
+              type: 'opportunity' as const,
+              href: '/dashboard/opportunities'
+            }))
+          }
+        }
+        
+        // Combine into action items
+        setActionItems([...quickWinItems, ...opportunityItems].slice(0, 3))
+        
+        // Calculate getting started tasks
+        const tasks: GettingStartedTask[] = [
+          {
+            id: 'prompts',
+            title: 'Track your first prompts',
+            description: 'Add prompts to monitor how AI mentions your brand',
+            completed: false, // Will check below
+            href: '/dashboard/prompts'
+          },
+          {
+            id: 'competitors',
+            title: 'Add competitors to track',
+            description: 'See how you compare to others in your space',
+            completed: false,
+            href: '/dashboard/competitors'
+          },
+          {
+            id: 'profile',
+            title: 'Complete your Harbor profile',
+            description: 'Help AI models describe your brand accurately',
+            completed: !!currentDashboard?.brand_name && !!currentDashboard?.domain,
+            href: `/brands/${currentDashboard?.slug || ''}/manage`
+          }
+        ]
+        
+        // Check if prompts exist
+        const promptsRes = await fetch(`/api/prompts/list?dashboard_id=${currentDashboard.id}`)
+        if (promptsRes.ok) {
+          const promptData = await promptsRes.json()
+          const hasPrompts = (promptData.prompts?.length || 0) > 0
+          tasks[0].completed = hasPrompts
+        }
+        
+        // Check if competitors are tracked
+        const trackedRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`)
+        if (trackedRes.ok) {
+          const trackedData = await trackedRes.json()
+          const hasTracked = (trackedData.tracked?.length || 0) > 0
+          tasks[1].completed = hasTracked
+        }
+        
+        setGettingStartedTasks(tasks)
+        
+        // Hide getting started if all done
+        const allDone = tasks.every(t => t.completed)
+        if (allDone) {
+          const dismissed = localStorage.getItem('harbor-getting-started-dismissed')
+          setShowGettingStarted(!dismissed)
+        }
+        
       } catch (err) {
         console.error('Error fetching overview data:', err)
       } finally {
@@ -199,7 +346,7 @@ export default function OverviewPage() {
     }
 
     fetchData()
-  }, [currentDashboard?.id])
+  }, [currentDashboard?.id, currentDashboard?.brand_name, currentDashboard?.domain, currentDashboard?.slug])
 
   // Fetch recent prompts - using prompts/recent which joins with executions
   useEffect(() => {
@@ -366,33 +513,109 @@ export default function OverviewPage() {
         <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
-      {/* User Stats Summary */}
+      {/* Getting Started Checklist - show for new users */}
+      {showGettingStarted && gettingStartedTasks.length > 0 && !gettingStartedTasks.every(t => t.completed) && (
+        <div className="px-6 pb-4">
+          <div className="card p-0 overflow-hidden border-l-4 border-l-accent">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-secondary/30">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-accent" />
+                <span className="font-semibold text-primary text-sm">Get Started with Harbor</span>
+                <span className="text-xs text-muted ml-2">
+                  {gettingStartedTasks.filter(t => t.completed).length}/{gettingStartedTasks.length} complete
+                </span>
+              </div>
+              <button 
+                onClick={() => {
+                  localStorage.setItem('harbor-getting-started-dismissed', 'true')
+                  setShowGettingStarted(false)
+                }}
+                className="text-xs text-muted hover:text-primary transition-colors"
+              >
+                Dismiss
+              </button>
+            </div>
+            <div className="divide-y divide-border">
+              {gettingStartedTasks.map((task) => (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors"
+                >
+                  {task.completed ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  ) : (
+                    <Circle className="w-5 h-5 text-muted flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-sm font-medium ${task.completed ? 'text-muted line-through' : 'text-primary'}`}>
+                      {task.title}
+                    </div>
+                    <div className="text-xs text-muted">{task.description}</div>
+                  </div>
+                  {!task.completed && <ArrowRight className="w-4 h-4 text-muted" />}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* User Stats Summary with Benchmarks */}
       {hasData && (
         <div className="px-6 pb-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* Visibility */}
-            <div className="card p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
-                <Eye className="w-3.5 h-3.5 text-muted" />
-              </div>
-              <div className="text-2xl font-semibold text-primary">{userVisibility}%</div>
-              <p className="text-xs text-muted mt-1">Mentioned in {userVisibility}% of tracked prompts</p>
-            </div>
+            {(() => {
+              const category = currentDashboard?.metadata?.category || 'default'
+              const benchmark = CATEGORY_BENCHMARKS[category] || CATEGORY_BENCHMARKS['default']
+              const context = getBenchmarkContext(userVisibility, benchmark.visibility, 'visibility')
+              return (
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
+                    <Eye className="w-3.5 h-3.5 text-muted" />
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-semibold text-primary">{userVisibility}%</span>
+                    {userVisibility > 0 && (
+                      <span className={`text-xs ${context.color}`}>{context.label}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted mt-1">
+                    {userVisibility > 0 
+                      ? `Category avg: ${benchmark.visibility}%`
+                      : 'Run prompts to measure visibility'}
+                  </p>
+                </div>
+              )
+            })()}
             
             {/* Rank */}
-            <div className="card p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
-                <Target className="w-3.5 h-3.5 text-muted" />
-              </div>
-              <div className="text-2xl font-semibold text-primary">
-                {userRank ? `#${userRank}` : '—'}
-              </div>
-              <p className="text-xs text-muted mt-1">
-                {userRank ? `Out of ${totalBrands} brands in your space` : 'Not yet ranked'}
-              </p>
-            </div>
+            {(() => {
+              const category = currentDashboard?.metadata?.category || 'default'
+              const benchmark = CATEGORY_BENCHMARKS[category] || CATEGORY_BENCHMARKS['default']
+              const context = userRank ? getBenchmarkContext(userRank, benchmark.rank, 'rank') : null
+              return (
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
+                    <Target className="w-3.5 h-3.5 text-muted" />
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-semibold text-primary">
+                      {userRank ? `#${userRank}` : '—'}
+                    </span>
+                    {context && (
+                      <span className={`text-xs ${context.color}`}>{context.label}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted mt-1">
+                    {userRank ? `Out of ${totalBrands} brands` : 'Not yet ranked'}
+                  </p>
+                </div>
+              )
+            })()}
             
             {/* Sentiment */}
             <div className="card p-4">
@@ -400,49 +623,139 @@ export default function OverviewPage() {
                 <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
                 <MessageSquare className="w-3.5 h-3.5 text-muted" />
               </div>
-              <div className={`text-2xl font-semibold capitalize ${
-                userSentiment === 'positive' ? 'text-green-500' : 
-                userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
-              }`}>
-                {userSentiment}
+              <div className="flex items-baseline gap-2">
+                <span className={`text-2xl font-semibold capitalize ${
+                  userSentiment === 'positive' ? 'text-green-500' : 
+                  userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
+                }`}>
+                  {userSentiment}
+                </span>
+                {userSentiment === 'positive' && <TrendingUp className="w-4 h-4 text-green-500" />}
+                {userSentiment === 'negative' && <TrendingDown className="w-4 h-4 text-red-500" />}
               </div>
               <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
             </div>
             
-            {/* Citations */}
+            {/* Sources/Citations */}
             <div className="card p-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
                 <Globe className="w-3.5 h-3.5 text-muted" />
               </div>
               <div className="text-2xl font-semibold text-primary">{totalCitations}</div>
-              <p className="text-xs text-muted mt-1">Domains cited in AI responses</p>
+              <p className="text-xs text-muted mt-1">
+                {totalCitations > 0 ? 'Domains cited in responses' : 'Run prompts to track sources'}
+              </p>
             </div>
           </div>
         </div>
       )}
 
       {!hasData ? (
+        /* Improved Empty State - Onboarding Guide */
         <div className="p-6">
-          <div className="card p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
-            <h2 className="text-lg font-semibold text-primary mb-2">No data yet</h2>
-            <p className="text-sm text-muted mb-6">
-              Run prompts to see how AI models mention your brand and competitors.
-            </p>
-            <Link 
-              href="/dashboard/prompts"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
-            >
-              Go to Prompts
-              <ArrowUpRight className="w-4 h-4" />
-            </Link>
+          <div className="card p-0 overflow-hidden">
+            <div className="p-8 text-center border-b border-border bg-gradient-to-b from-secondary/50 to-transparent">
+              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-accent" />
+              </div>
+              <h2 className="text-xl font-semibold text-primary mb-2">Welcome to Harbor</h2>
+              <p className="text-sm text-muted max-w-md mx-auto">
+                Track how AI models describe your brand. Complete these steps to get started.
+              </p>
+            </div>
+            
+            <div className="divide-y divide-border">
+              {gettingStartedTasks.map((task, idx) => (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="flex items-center gap-4 p-4 hover:bg-hover transition-colors"
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    task.completed 
+                      ? 'bg-green-500/20 text-green-500' 
+                      : 'bg-secondary text-muted'
+                  }`}>
+                    {task.completed ? <Check className="w-4 h-4" /> : idx + 1}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`font-medium ${task.completed ? 'text-muted' : 'text-primary'}`}>
+                      {task.title}
+                    </div>
+                    <div className="text-sm text-muted">{task.description}</div>
+                  </div>
+                  <ArrowRight className={`w-5 h-5 ${task.completed ? 'text-muted opacity-50' : 'text-muted'}`} />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       ) : (
       <div className="p-6 space-y-6">
-        {/* Quick Wins */}
-        {quickWins.length > 0 && (
+        {/* Action Items - Always visible (Quick Wins or Opportunities) */}
+        {actionItems.length > 0 && (
+          <div className="card p-0 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-amber-500" />
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Next Steps</h3>
+                  <p className="text-xs text-muted mt-0.5">High-impact actions to improve your AI visibility</p>
+                </div>
+              </div>
+              <Link href={actionItems[0]?.href || '/dashboard/opportunities'} className="expand-btn">
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="divide-y divide-border">
+              {actionItems.map((item) => (
+                <Link 
+                  key={item.id} 
+                  href={item.href || '/dashboard/opportunities'}
+                  className="px-4 py-3 flex items-start gap-3 hover:bg-hover transition-colors"
+                >
+                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                    item.impact === 'high' ? 'bg-red-500' : item.impact === 'medium' ? 'bg-amber-500' : 'bg-green-500'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-primary">{item.title}</div>
+                    {item.description && (
+                      <div className="text-xs text-muted mt-0.5 line-clamp-1">{item.description}</div>
+                    )}
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Competitor Alert - Show if losing to top competitor */}
+        {topCompetitor && userVisibility < topCompetitor.visibility && (
+          <div className="card p-4 border-l-4 border-l-amber-500 bg-amber-500/5">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="font-medium text-primary text-sm">
+                  {topCompetitor.name} has {topCompetitor.visibility - userVisibility}% higher visibility
+                </div>
+                <p className="text-xs text-muted mt-1">
+                  They appear in more AI responses than you. Track their prompts to see where they're winning.
+                </p>
+              </div>
+              <Link 
+                href="/dashboard/competitors"
+                className="text-xs text-accent hover:underline flex-shrink-0"
+              >
+                View comparison →
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Wins - Original section, now secondary to Action Items */}
+        {quickWins.length > 0 && actionItems.every(a => a.type !== 'quick-win') && (
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div>
