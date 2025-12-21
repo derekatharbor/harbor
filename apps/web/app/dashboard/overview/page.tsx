@@ -17,12 +17,10 @@ import {
   Tag,
   BarChart3,
   Target,
-  AlertCircle,
   MessageCircle,
   X,
   TrendingUp,
   TrendingDown,
-  Zap,
   CheckCircle2,
   Circle,
   Lightbulb,
@@ -231,6 +229,22 @@ export default function OverviewPage() {
   
   // Real benchmarks from API
   const [benchmarkData, setBenchmarkData] = useState<BenchmarkData | null>(null)
+  
+  // Dismissible competitor alert
+  const [competitorAlertDismissed, setCompetitorAlertDismissed] = useState(false)
+  
+  // Check localStorage for dismissed alert on mount
+  useEffect(() => {
+    const dismissed = localStorage.getItem('harbor-competitor-alert-dismissed')
+    if (dismissed) {
+      const dismissedData = JSON.parse(dismissed)
+      // Only keep dismissed if it's the same competitor and within 7 days
+      const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+      if (dismissedData.timestamp > sevenDaysAgo) {
+        setCompetitorAlertDismissed(true)
+      }
+    }
+  }, [])
 
   // Fetch main data
   useEffect(() => {
@@ -739,7 +753,7 @@ export default function OverviewPage() {
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-amber-500" />
+                <img src="/icons/lightbulb.png" alt="" className="w-5 h-5" />
                 <div>
                   <h3 className="font-semibold text-primary text-sm">Next Steps</h3>
                   <p className="text-xs text-muted mt-0.5">High-impact actions to improve your AI visibility</p>
@@ -773,10 +787,10 @@ export default function OverviewPage() {
         )}
 
         {/* Competitor Alert - Show if losing to top competitor */}
-        {topCompetitor && userVisibility < topCompetitor.visibility && (
+        {topCompetitor && userVisibility < topCompetitor.visibility && !competitorAlertDismissed && (
           <div className="card p-4 border-l-4 border-l-amber-500 bg-amber-500/5">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <div className="font-medium text-primary text-sm">
                   {topCompetitor.name} has {topCompetitor.visibility - userVisibility}% higher visibility
@@ -785,12 +799,27 @@ export default function OverviewPage() {
                   They appear in more AI responses than you. Track their prompts to see where they're winning.
                 </p>
               </div>
-              <Link 
-                href="/dashboard/competitors"
-                className="text-xs text-accent hover:underline flex-shrink-0"
-              >
-                View comparison →
-              </Link>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Link 
+                  href="/dashboard/competitors"
+                  className="text-xs text-accent hover:underline"
+                >
+                  View comparison →
+                </Link>
+                <button
+                  onClick={() => {
+                    setCompetitorAlertDismissed(true)
+                    localStorage.setItem('harbor-competitor-alert-dismissed', JSON.stringify({
+                      competitor: topCompetitor.name,
+                      timestamp: Date.now()
+                    }))
+                  }}
+                  className="p-1 hover:bg-hover rounded transition-colors"
+                  aria-label="Dismiss"
+                >
+                  <X className="w-4 h-4 text-muted" />
+                </button>
+              </div>
             </div>
           </div>
         )}
