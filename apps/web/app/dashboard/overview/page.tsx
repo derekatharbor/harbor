@@ -111,27 +111,52 @@ interface GettingStartedTask {
   href: string
 }
 
-// Benchmark thresholds by category (can be refined with real data)
-const CATEGORY_BENCHMARKS: Record<string, { visibility: number; rank: number }> = {
-  'Technology & SaaS': { visibility: 45, rank: 8 },
-  'E-commerce & Retail': { visibility: 35, rank: 12 },
-  'Marketing & Advertising': { visibility: 50, rank: 6 },
-  'Finance & Accounting': { visibility: 40, rank: 10 },
-  'default': { visibility: 40, rank: 10 }
+interface CategoryBenchmark {
+  category: string
+  avg_visibility: number
+  median_visibility: number
+  top_quartile_visibility: number
+  avg_rank: number
+  brand_count: number
+  positive_sentiment_pct: number
 }
 
-function getBenchmarkContext(value: number, benchmark: number, metric: 'visibility' | 'rank'): { label: string; color: string } {
-  if (metric === 'visibility') {
-    const diff = value - benchmark
-    if (diff >= 10) return { label: 'Above average', color: 'text-green-500' }
-    if (diff >= -5) return { label: 'Average', color: 'text-muted' }
-    return { label: 'Below average', color: 'text-amber-500' }
-  } else {
-    // For rank, lower is better
-    if (value <= 3) return { label: 'Top 3', color: 'text-green-500' }
-    if (value <= benchmark) return { label: 'Above average', color: 'text-green-500' }
-    return { label: 'Room to grow', color: 'text-amber-500' }
+interface BenchmarkData {
+  user_category: string | null
+  user_benchmark: CategoryBenchmark | null
+  global_benchmark: CategoryBenchmark | null
+}
+
+function getBenchmarkContext(
+  userVisibility: number, 
+  benchmark: CategoryBenchmark | null
+): { label: string; color: string; detail: string } {
+  if (!benchmark) {
+    return { label: '', color: 'text-muted', detail: '' }
   }
+  
+  if (userVisibility >= benchmark.top_quartile_visibility) {
+    return { label: 'Top performer', color: 'text-green-500', detail: `Top 25% in ${benchmark.category}` }
+  }
+  if (userVisibility >= benchmark.avg_visibility) {
+    return { label: 'Above average', color: 'text-green-500', detail: `Above ${benchmark.category} avg (${benchmark.avg_visibility}%)` }
+  }
+  if (userVisibility >= benchmark.avg_visibility * 0.7) {
+    return { label: 'Average', color: 'text-muted', detail: `${benchmark.category} avg: ${benchmark.avg_visibility}%` }
+  }
+  return { label: 'Below average', color: 'text-amber-500', detail: `${benchmark.category} avg: ${benchmark.avg_visibility}%` }
+}
+
+function getRankContext(
+  userRank: number, 
+  totalBrands: number,
+  benchmark: CategoryBenchmark | null
+): { label: string; color: string } {
+  const percentile = ((totalBrands - userRank) / totalBrands) * 100
+  if (percentile >= 90) return { label: 'Top 10%', color: 'text-green-500' }
+  if (percentile >= 75) return { label: 'Top 25%', color: 'text-green-500' }
+  if (percentile >= 50) return { label: 'Top half', color: 'text-muted' }
+  return { label: 'Room to grow', color: 'text-amber-500' }
 }
 
 // ============================================================================
@@ -203,6 +228,9 @@ export default function OverviewPage() {
   
   // Top competitor for "losing to" context
   const [topCompetitor, setTopCompetitor] = useState<{ name: string; visibility: number } | null>(null)
+  
+  // Real benchmarks from API
+  const [benchmarkData, setBenchmarkData] = useState<BenchmarkData | null>(null)
 
   // Fetch main data
   useEffect(() => {
@@ -245,6 +273,17 @@ export default function OverviewPage() {
           const data = await historyRes.json()
           setVisibilityHistory(data.history || [])
           setHasHistoricalData(data.has_data || false)
+        }
+        
+        // Fetch real benchmarks from category data
+        const benchmarksRes = await fetch(`/api/dashboard/${currentDashboard.id}/benchmarks`)
+        if (benchmarksRes.ok) {
+          const data = await benchmarksRes.json()
+          setBenchmarkData({
+            user_category: data.user_category,
+            user_benchmark: data.user_benchmark,
+            global_benchmark: data.global_benchmark
+          })
         }
         
         // Fetch quick wins from website analytics
@@ -309,7 +348,7 @@ export default function OverviewPage() {
             title: 'Complete your Harbor profile',
             description: 'Help AI models describe your brand accurately',
             completed: !!currentDashboard?.brand_name && !!currentDashboard?.domain,
-            href: `/brands/${currentDashboard?.slug || ''}/manage`
+            href: `/brands/${currentDashboard?.brand_name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || ''}/manage`
           }
         ]
         
@@ -346,7 +385,7 @@ export default function OverviewPage() {
     }
 
     fetchData()
-  }, [currentDashboard?.id, currentDashboard?.brand_name, currentDashboard?.domain, currentDashboard?.slug])
+  }, [currentDashboard?.id, currentDashboard?.brand_name, currentDashboard?.domain])
 
   // Fetch recent prompts - using prompts/recent which joins with executions
   useEffect(() => {
@@ -567,9 +606,8 @@ export default function OverviewPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {/* Visibility */}
             {(() => {
-              const category = currentDashboard?.metadata?.category || 'default'
-              const benchmark = CATEGORY_BENCHMARKS[category] || CATEGORY_BENCHMARKS['default']
-              const context = getBenchmarkContext(userVisibility, benchmark.visibility, 'visibility')
+              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+              const context = getBenchmarkContext(userVisibility, benchmark || null)
               return (
                 <div className="card p-4">
                   <div className="flex items-center justify-between mb-1">
@@ -578,13 +616,15 @@ export default function OverviewPage() {
                   </div>
                   <div className="flex items-baseline gap-2">
                     <span className="text-2xl font-semibold text-primary">{userVisibility}%</span>
-                    {userVisibility > 0 && (
+                    {userVisibility > 0 && context.label && (
                       <span className={`text-xs ${context.color}`}>{context.label}</span>
                     )}
                   </div>
                   <p className="text-xs text-muted mt-1">
-                    {userVisibility > 0 
-                      ? `Category avg: ${benchmark.visibility}%`
+                    {userVisibility > 0 && benchmark
+                      ? context.detail
+                      : userVisibility > 0
+                      ? 'Mentioned in AI responses'
                       : 'Run prompts to measure visibility'}
                   </p>
                 </div>
@@ -593,9 +633,8 @@ export default function OverviewPage() {
             
             {/* Rank */}
             {(() => {
-              const category = currentDashboard?.metadata?.category || 'default'
-              const benchmark = CATEGORY_BENCHMARKS[category] || CATEGORY_BENCHMARKS['default']
-              const context = userRank ? getBenchmarkContext(userRank, benchmark.rank, 'rank') : null
+              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+              const context = userRank ? getRankContext(userRank, totalBrands, benchmark || null) : null
               return (
                 <div className="card p-4">
                   <div className="flex items-center justify-between mb-1">
@@ -611,7 +650,9 @@ export default function OverviewPage() {
                     )}
                   </div>
                   <p className="text-xs text-muted mt-1">
-                    {userRank ? `Out of ${totalBrands} brands` : 'Not yet ranked'}
+                    {userRank 
+                      ? `Out of ${totalBrands} brands${benchmark ? ` in ${benchmarkData?.user_category || 'your space'}` : ''}`
+                      : 'Not yet ranked'}
                   </p>
                 </div>
               )
