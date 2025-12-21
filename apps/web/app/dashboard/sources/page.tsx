@@ -3,7 +3,7 @@
 
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Globe,
@@ -222,6 +222,8 @@ export default function SourcesPage() {
   const [urls, setUrls] = useState<UrlSource[]>([])
   const [distribution, setDistribution] = useState<DistributionItem[]>([])
   const [totalCitations, setTotalCitations] = useState(0)
+  const [historicalData, setHistoricalData] = useState<Record<string, any>[]>([])
+  const [topDomainsForChart, setTopDomainsForChart] = useState<DomainSource[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'domains' | 'urls'>('domains')
   const [chartView, setChartView] = useState<'historical' | 'total'>('total')
@@ -259,13 +261,15 @@ export default function SourcesPage() {
     
     setLoading(true)
     try {
-      const res = await fetch(`/api/dashboard/${currentDashboard.id}/sources`)
+      const res = await fetch(`/api/dashboard/${currentDashboard.id}/sources?days=7`)
       if (res.ok) {
         const data = await res.json()
         setDomains(data.domains || [])
         setUrls(data.urls || [])
         setDistribution(data.distribution || [])
         setTotalCitations(data.total || 0)
+        setHistoricalData(data.historical || [])
+        setTopDomainsForChart(data.topDomains || [])
       }
     } catch (err) {
       console.error('Failed to fetch sources:', err)
@@ -313,27 +317,8 @@ export default function SourcesPage() {
     currentPage * ITEMS_PER_PAGE
   )
 
-  // Top domains for charts
-  const topDomains = domains.slice(0, 6)
-
-  // Generate mock historical data for line chart (will be replaced with real API data)
-  const historicalData = useMemo(() => {
-    const days = ['Nov 28', 'Nov 29', 'Nov 30', 'Dec 1', 'Dec 2', 'Dec 3', 'Dec 4']
-    return days.map((day, i) => {
-      const dataPoint: Record<string, any> = { date: day }
-      topDomains.forEach((source) => {
-        // Simulate growth over time - last few days have data
-        if (i < 4) {
-          dataPoint[source.domain] = 0
-        } else {
-          const baseValue = totalCitations > 0 ? (source.citations / totalCitations) * 100 : 0
-          const variance = Math.random() * 10 - 5
-          dataPoint[source.domain] = Math.max(0, Math.round(baseValue + variance + (i - 4) * 5))
-        }
-      })
-      return dataPoint
-    })
-  }, [topDomains, totalCitations])
+  // Top domains for charts (now from API)
+  const topDomains = topDomainsForChart.slice(0, 6)
 
   if (loading) {
     return (
@@ -448,43 +433,49 @@ export default function SourcesPage() {
             {chartView === 'historical' ? (
               /* Line Chart */
               <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={historicalData}>
-                    <XAxis 
-                      dataKey="date" 
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: colors.muted, fontSize: 11 }}
-                    />
-                    <YAxis 
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: colors.muted, fontSize: 11 }}
-                      tickFormatter={(v) => `${v}%`}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: isDark ? '#161718' : '#FFFFFF',
-                        border: `1px solid ${colors.border}`,
-                        borderRadius: '8px',
-                        fontSize: '12px'
-                      }}
-                      labelStyle={{ color: colors.text, fontWeight: 600 }}
-                      formatter={(value: number, name: string) => [`${value}%`, name]}
-                    />
-                    {topDomains.map((source, i) => (
-                      <Line
-                        key={source.domain}
-                        type="monotone"
-                        dataKey={source.domain}
-                        stroke={LINE_COLORS[i % LINE_COLORS.length]}
-                        strokeWidth={2}
-                        dot={false}
-                        activeDot={{ r: 4 }}
+                {historicalData.length === 0 || topDomains.length === 0 ? (
+                  <div className="h-full flex items-center justify-center" style={{ color: colors.muted }}>
+                    <span className="text-sm">No historical data yet. Run prompts to track citations over time.</span>
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={historicalData}>
+                      <XAxis 
+                        dataKey="date" 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: colors.muted, fontSize: 11 }}
                       />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
+                      <YAxis 
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fill: colors.muted, fontSize: 11 }}
+                        allowDecimals={false}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: isDark ? '#161718' : '#FFFFFF',
+                          border: `1px solid ${colors.border}`,
+                          borderRadius: '8px',
+                          fontSize: '12px'
+                        }}
+                        labelStyle={{ color: colors.text, fontWeight: 600 }}
+                        formatter={(value: number, name: string) => [`${value} citations`, name]}
+                      />
+                      {topDomains.map((source, i) => (
+                        <Line
+                          key={source.domain}
+                          type="monotone"
+                          dataKey={source.domain}
+                          stroke={LINE_COLORS[i % LINE_COLORS.length]}
+                          strokeWidth={2}
+                          dot={false}
+                          activeDot={{ r: 4 }}
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             ) : (
               /* Bar Chart */

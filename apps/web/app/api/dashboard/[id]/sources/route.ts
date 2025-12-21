@@ -1,3 +1,5 @@
+// app/api/dashboard/[id]/sources/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -71,12 +73,28 @@ const TYPE_COLORS: Record<string, string> = {
   'Reference': '#A855F7'     // Purple
 }
 
+// Generate date labels for last N days
+function getDateLabels(days: number): { date: string; label: string }[] {
+  const labels: { date: string; label: string }[] = []
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    labels.push({
+      date: d.toISOString().split('T')[0],
+      label: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    })
+  }
+  return labels
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id: dashboardId } = await params
+    const { searchParams } = new URL(request.url)
+    const days = parseInt(searchParams.get('days') || '7')
     const supabase = getSupabase()
 
     // Get all user_prompts for this dashboard
@@ -91,16 +109,18 @@ export async function GET(
         domains: [],
         urls: [],
         distribution: [],
-        total: 0
+        total: 0,
+        historical: [],
+        topDomains: []
       })
     }
 
     const promptIds = prompts.map(p => p.id)
 
-    // Get all executions for these prompts
+    // Get all executions for these prompts (with date for historical)
     const { data: executions, error: execError } = await supabase
       .from('prompt_executions')
-      .select('id')
+      .select('id, executed_at')
       .in('prompt_id', promptIds)
     
     if (execError) throw execError
@@ -109,11 +129,19 @@ export async function GET(
         domains: [],
         urls: [],
         distribution: [],
-        total: 0
+        total: 0,
+        historical: [],
+        topDomains: []
       })
     }
 
     const executionIds = executions.map(e => e.id)
+    
+    // Create execution date map
+    const executionDateMap = new Map<string, string>()
+    executions.forEach(e => {
+      executionDateMap.set(e.id, e.executed_at?.split('T')[0] || '')
+    })
 
     // Get all citations from these executions
     const { data: citations, error: citationsError } = await supabase
@@ -127,17 +155,24 @@ export async function GET(
         domains: [],
         urls: [],
         distribution: [],
-        total: 0
+        total: 0,
+        historical: [],
+        topDomains: []
       })
     }
 
-    // Aggregate by domain
+    // Aggregate by domain (total counts)
     const domainMap = new Map<string, { count: number; type: string; urls: string[] }>()
+    
+    // Also track historical by domain and date
+    const historicalMap = new Map<string, Map<string, number>>() // domain -> date -> count
     
     for (const citation of citations) {
       const domain = citation.domain || 'unknown'
-      const existing = domainMap.get(domain)
+      const citationDate = executionDateMap.get(citation.execution_id) || ''
       
+      // Total aggregation
+      const existing = domainMap.get(domain)
       if (existing) {
         existing.count++
         if (!existing.urls.includes(citation.url)) {
@@ -149,6 +184,15 @@ export async function GET(
           type: classifyDomain(domain),
           urls: [citation.url]
         })
+      }
+      
+      // Historical aggregation
+      if (citationDate) {
+        if (!historicalMap.has(domain)) {
+          historicalMap.set(domain, new Map())
+        }
+        const domainDates = historicalMap.get(domain)!
+        domainDates.set(citationDate, (domainDates.get(citationDate) || 0) + 1)
       }
     }
 
@@ -162,6 +206,20 @@ export async function GET(
         citations: data.count,
         color: TYPE_COLORS[data.type] || TYPE_COLORS['Other']
       }))
+    
+    // Top domains for chart
+    const topDomains = sortedDomains.slice(0, 6).map(d => d.domain)
+
+    // Build historical time series
+    const dateLabels = getDateLabels(days)
+    const historical = dateLabels.map(({ date, label }) => {
+      const dataPoint: Record<string, any> = { date: label, fullDate: date }
+      topDomains.forEach(domain => {
+        const domainData = historicalMap.get(domain)
+        dataPoint[domain] = domainData?.get(date) || 0
+      })
+      return dataPoint
+    })
 
     // Get all URLs sorted by domain frequency
     const allUrls = citations
@@ -192,7 +250,9 @@ export async function GET(
       domains: sortedDomains.slice(0, 20),
       urls: allUrls,
       distribution,
-      total: citations.length
+      total: citations.length,
+      historical,
+      topDomains: sortedDomains.slice(0, 6)
     })
 
   } catch (error: any) {
