@@ -249,15 +249,19 @@ function ImpactEffortIndicator({ impact, effort }: { impact: string; effort: str
 function RecommendationCard({ 
   recommendation, 
   onMarkDone, 
-  onDiscard
+  onDiscard,
+  onRestore
 }: { 
   recommendation: Recommendation
   onMarkDone: () => void
   onDiscard: () => void
+  onRestore?: () => void
 }) {
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set())
+  const isCompleted = recommendation.status === 'done' || recommendation.status === 'discarded'
 
   const toggleStep = (index: number) => {
+    if (isCompleted) return // Don't allow step changes on completed tasks
     const newChecked = new Set(checkedSteps)
     if (newChecked.has(index)) {
       newChecked.delete(index)
@@ -270,7 +274,17 @@ function RecommendationCard({
   const allStepsCompleted = checkedSteps.size === recommendation.steps.length
 
   return (
-    <div className="card p-0 overflow-hidden">
+    <div className={`card p-0 overflow-hidden ${isCompleted ? 'opacity-75' : ''}`}>
+      {/* Status badge for completed tasks */}
+      {isCompleted && (
+        <div className={`px-6 py-2 text-xs font-medium ${
+          recommendation.status === 'done' 
+            ? 'bg-positive/10 text-positive' 
+            : 'bg-muted/10 text-muted'
+        }`}>
+          {recommendation.status === 'done' ? '✓ Completed' : '✗ Discarded'}
+        </div>
+      )}
       <div className="grid grid-cols-1 lg:grid-cols-5">
         {/* Left: Title, description, sources */}
         <div className="lg:col-span-3 p-6 border-b lg:border-b-0 lg:border-r border-border">
@@ -341,30 +355,72 @@ function RecommendationCard({
 
       {/* Footer actions */}
       <div className="flex items-center justify-end gap-3 px-6 py-4 bg-secondary/50 border-t border-border">
-        <button
-          onClick={onDiscard}
-          className="px-4 py-2 text-sm font-medium text-secondary hover:text-primary transition-colors"
-        >
-          Discard
-        </button>
-        <button
-          onClick={onMarkDone}
-          className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
-            allStepsCompleted
-              ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
-              : 'bg-card text-primary border-border hover:bg-hover'
-          }`}
-        >
-          Mark as done
-        </button>
+        {isCompleted ? (
+          <button
+            onClick={onRestore}
+            className="px-4 py-2 text-sm font-medium text-secondary hover:text-primary transition-colors"
+          >
+            Restore to pending
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={onDiscard}
+              className="px-4 py-2 text-sm font-medium text-secondary hover:text-primary transition-colors"
+            >
+              Discard
+            </button>
+            <button
+              onClick={onMarkDone}
+              className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                allStepsCompleted
+                  ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90'
+                  : 'bg-card text-primary border-border hover:bg-hover'
+              }`}
+            >
+              Mark as done
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
 }
 
 function GettingStartedTab() {
-  const [recommendations, setRecommendations] = useState<Recommendation[]>(STATIC_RECOMMENDATIONS)
-  const [filter, setFilter] = useState<'all' | 'high' | 'quick-wins'>('all')
+  const STORAGE_KEY = 'harbor-getting-started-tasks'
+  
+  // Initialize from localStorage or defaults
+  const [recommendations, setRecommendations] = useState<Recommendation[]>(() => {
+    if (typeof window === 'undefined') return STATIC_RECOMMENDATIONS
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved) as Record<string, 'pending' | 'done' | 'discarded'>
+        return STATIC_RECOMMENDATIONS.map(r => ({
+          ...r,
+          status: parsed[r.id] || r.status
+        }))
+      }
+    } catch (e) {
+      console.error('Failed to load task states:', e)
+    }
+    return STATIC_RECOMMENDATIONS
+  })
+  const [filter, setFilter] = useState<'all' | 'high' | 'quick-wins' | 'completed'>('all')
+
+  // Persist to localStorage when recommendations change
+  useEffect(() => {
+    try {
+      const states: Record<string, string> = {}
+      recommendations.forEach(r => {
+        states[r.id] = r.status
+      })
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(states))
+    } catch (e) {
+      console.error('Failed to save task states:', e)
+    }
+  }, [recommendations])
 
   const handleMarkDone = (id: string) => {
     setRecommendations(recs => 
@@ -378,7 +434,14 @@ function GettingStartedTab() {
     )
   }
 
+  const handleRestore = (id: string) => {
+    setRecommendations(recs => 
+      recs.map(r => r.id === id ? { ...r, status: 'pending' as const } : r)
+    )
+  }
+
   const filteredRecommendations = recommendations.filter(r => {
+    if (filter === 'completed') return r.status === 'done' || r.status === 'discarded'
     if (r.status === 'done' || r.status === 'discarded') return false
     if (filter === 'high') return r.impact === 'high'
     if (filter === 'quick-wins') return r.impact === 'high' && r.effort === 'low'
@@ -407,7 +470,7 @@ function GettingStartedTab() {
         </button>
         <button
           onClick={() => setFilter('quick-wins')}
-          className={`pill ${filter === 'quick-wins' ? 'active' : ''}`}
+          className={`pill flex items-center gap-1.5 ${filter === 'quick-wins' ? 'active' : ''}`}
         >
           <Sparkles className="w-3.5 h-3.5" />
           Quick wins
@@ -418,6 +481,15 @@ function GettingStartedTab() {
         >
           High impact
         </button>
+        {completedCount > 0 && (
+          <button
+            onClick={() => setFilter('completed')}
+            className={`pill flex items-center gap-1.5 ${filter === 'completed' ? 'active' : ''}`}
+          >
+            <Check className="w-3.5 h-3.5" />
+            Completed ({completedCount})
+          </button>
+        )}
       </div>
 
       {/* Recommendation cards */}
@@ -426,11 +498,13 @@ function GettingStartedTab() {
           <div className="card p-12 text-center">
             <Lightbulb className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
             <h3 className="text-lg font-medium text-primary mb-2">
-              {filter === 'all' ? 'All caught up!' : 'No matching recommendations'}
+              {filter === 'all' ? 'All caught up!' : filter === 'completed' ? 'No completed tasks' : 'No matching recommendations'}
             </h3>
             <p className="text-sm text-muted">
               {filter === 'all' 
                 ? "You've addressed all setup tasks. Check the Content Strategy tab for ongoing opportunities."
+                : filter === 'completed'
+                ? 'Complete some tasks and they will appear here.'
                 : 'Try adjusting your filter to see more recommendations.'
               }
             </p>
@@ -442,6 +516,7 @@ function GettingStartedTab() {
               recommendation={rec}
               onMarkDone={() => handleMarkDone(rec.id)}
               onDiscard={() => handleDiscard(rec.id)}
+              onRestore={() => handleRestore(rec.id)}
             />
           ))
         )}
