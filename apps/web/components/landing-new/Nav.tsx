@@ -9,7 +9,14 @@ import Image from 'next/image'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const productLinks = {
+interface NavLink {
+  label: string
+  description: string
+  href: string
+  badge?: string
+}
+
+const productLinks: { core: NavLink[]; more: NavLink[] } = {
   core: [
     {
       label: 'Platform Overview',
@@ -48,7 +55,7 @@ const productLinks = {
   ],
 }
 
-const resourceLinks = {
+const resourceLinks: { company: NavLink[]; explore: NavLink[] } = {
   company: [
     {
       label: 'About',
@@ -339,7 +346,7 @@ export default function Nav() {
                     className="flex items-center justify-between py-2 text-white/70 hover:text-white"
                   >
                     <span>{link.label}</span>
-                    {'badge' in link && link.badge && (
+                    {link.badge && (
                       <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-white/10 text-white/50 rounded">
                         {link.badge}
                       </span>
