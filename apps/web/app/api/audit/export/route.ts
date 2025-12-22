@@ -63,6 +63,8 @@ export async function GET(request: NextRequest) {
         overall_accuracy: audit?.overall_accuracy,
         consensus_issues: consensusIssues.join(', '),
         consensus_count: consensusIssues.length,
+        models_responded: (audit?.models_responded || []).join(', '),
+        models_responded_count: (audit?.models_responded || []).length,
         
         // Model-specific scores
         claude_accuracy: models.claude?.accuracy_score || null,
@@ -98,6 +100,8 @@ export async function GET(request: NextRequest) {
       'overall_accuracy',
       'consensus_issues',
       'consensus_count',
+      'models_responded',
+      'models_responded_count',
       'claude_accuracy',
       'chatgpt_accuracy',
       'perplexity_accuracy',

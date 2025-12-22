@@ -185,21 +185,43 @@ async function auditWithPerplexity(
 }
 
 function generateEmailHook(brandName: string, consensusIssues: string[], models: Record<string, ModelAudit>): string {
-  const modelCount = Object.keys(models).length
-  const modelsWithIssues = Object.values(models).filter(m => m.findings.length > 0).length
+  // Only count models that actually returned data
+  const respondingModels = Object.entries(models).filter(([_, m]) => 
+    m.accuracy_score > 0 || m.findings.length > 0
+  )
+  const modelNames = respondingModels.map(([name]) => {
+    if (name === 'chatgpt') return 'ChatGPT'
+    if (name === 'claude') return 'Claude'
+    if (name === 'perplexity') return 'Perplexity'
+    return name
+  })
   
-  if (consensusIssues.length === 0) {
-    return `We checked how ChatGPT, Claude, and Perplexity describe ${brandName} — minor gaps found.`
+  const modelsWithIssues = respondingModels.filter(([_, m]) => m.findings.length > 0)
+  
+  if (consensusIssues.length === 0 || modelsWithIssues.length === 0) {
+    if (modelNames.length === 0) {
+      return `We attempted to audit how AI models describe ${brandName} — check your profile for accuracy.`
+    }
+    return `We checked how ${modelNames.join(' and ')} describe ${brandName} — minor gaps found.`
   }
   
   const issueList = consensusIssues.slice(0, 2).join(' and ')
+  const modelCount = respondingModels.length
+  const issueCount = modelsWithIssues.length
   
-  if (modelsWithIssues === modelCount) {
-    return `Asked ChatGPT, Claude, and Perplexity about ${brandName} — all 3 models got your ${issueList} wrong.`
-  } else if (modelsWithIssues >= 2) {
-    return `${modelsWithIssues} out of 3 AI models we tested have incorrect info about ${brandName}'s ${issueList}.`
+  // Build model string based on what actually responded
+  const modelString = modelNames.length === 3 
+    ? 'ChatGPT, Claude, and Perplexity'
+    : modelNames.length === 2
+    ? `${modelNames[0]} and ${modelNames[1]}`
+    : modelNames[0] || 'AI models'
+  
+  if (issueCount === modelCount && modelCount >= 2) {
+    return `Asked ${modelString} about ${brandName} — ${modelCount === 3 ? 'all 3' : 'both'} got your ${issueList} wrong.`
+  } else if (issueCount >= 2) {
+    return `${issueCount} out of ${modelCount} AI models we tested have incorrect info about ${brandName}'s ${issueList}.`
   } else {
-    return `Found gaps in how AI models describe ${brandName}'s ${issueList}. This affects how prospects research you.`
+    return `Found gaps in how ${modelString} describe${modelCount === 1 ? 's' : ''} ${brandName}'s ${issueList}.`
   }
 }
 
@@ -270,10 +292,16 @@ async function auditBrand(
     Object.values(models).reduce((sum, m) => sum + m.accuracy_score, 0) / 3
   )
 
+  // Track which models actually responded
+  const modelsResponded = Object.entries(models)
+    .filter(([_, m]) => m.accuracy_score > 0 || m.findings.length > 0)
+    .map(([name]) => name)
+
   const emailHook = generateEmailHook(brand.brand_name, consensusIssues, models)
 
   return {
     models,
+    models_responded: modelsResponded,
     consensus_issues: consensusIssues,
     worst_issues: worstIssues,
     has_issues: hasIssues,
