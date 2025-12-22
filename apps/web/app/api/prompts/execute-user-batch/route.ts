@@ -140,7 +140,8 @@ export async function POST(request: NextRequest) {
                 prompt_text: prompt.prompt_text,
                 model,
                 brand: dashboard.brand_name,
-                dashboard_id: dashboard.id
+                dashboard_id: dashboard.id,
+                skip_extraction: true // Skip brand extraction in batch to avoid timeout
               })
             }
           )

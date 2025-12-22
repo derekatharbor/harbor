@@ -203,7 +203,7 @@ JSON array:`
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt_id, prompt_text, model, brand, dashboard_id } = await request.json()
+    const { prompt_id, prompt_text, model, brand, dashboard_id, skip_extraction } = await request.json()
     
     if (!prompt_id || !prompt_text || !model) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -245,8 +245,8 @@ export async function POST(request: NextRequest) {
       ? checkBrandMentioned(response.text, brand)
       : { mentioned: false, snippet: null }
     
-    // Extract brands from response (uses Claude)
-    const brandsFound = await extractBrands(response.text, brand || '')
+    // Extract brands from response (uses Claude) - skip in batch mode to save time
+    const brandsFound = skip_extraction ? [] : await extractBrands(response.text, brand || '')
     
     // Save to prompt_executions
     const { data: execution, error: execError } = await supabase
