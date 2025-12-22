@@ -753,7 +753,7 @@ export default function OverviewPage() {
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div className="flex items-center gap-2">
-                <img src="/icons/lightbulb.png" alt="" className="w-5 h-5" />
+                <img src="/icons/lightbulb.png" alt="" className="w-7 h-7" />
                 <div>
                   <h3 className="font-semibold text-primary text-sm">Next Steps</h3>
                   <p className="text-xs text-muted mt-0.5">High-impact actions to improve your AI visibility</p>
