@@ -339,7 +339,7 @@ export default function Nav() {
                     className="flex items-center justify-between py-2 text-white/70 hover:text-white"
                   >
                     <span>{link.label}</span>
-                    {link.badge && (
+                    {'badge' in link && link.badge && (
                       <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-white/10 text-white/50 rounded">
                         {link.badge}
                       </span>
