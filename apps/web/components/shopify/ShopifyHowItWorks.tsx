@@ -199,14 +199,35 @@ export default function ShopifyHowItWorks() {
 
                 {activeStep === 3 && (
                   <div className="space-y-4">
-                    <div className="flex items-end gap-1 h-24">
-                      {[20, 28, 35, 42, 48, 55, 62, 70].map((h, i) => (
-                        <div 
-                          key={i} 
-                          className="flex-1 bg-gradient-to-t from-[#95BF47]/50 to-[#95BF47] rounded-t transition-all duration-500"
-                          style={{ height: `${h}%` }}
+                    {/* Line chart */}
+                    <div className="relative h-24">
+                      <svg className="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
+                        {/* Grid lines */}
+                        <line x1="0" y1="20" x2="200" y2="20" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                        <line x1="0" y1="40" x2="200" y2="40" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                        <line x1="0" y1="60" x2="200" y2="60" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                        {/* Area fill */}
+                        <path 
+                          d="M 0 70 L 25 62 L 50 55 L 75 45 L 100 38 L 125 30 L 150 22 L 175 15 L 200 10 L 200 80 L 0 80 Z" 
+                          fill="url(#greenGradient)" 
                         />
-                      ))}
+                        {/* Line */}
+                        <path 
+                          d="M 0 70 L 25 62 L 50 55 L 75 45 L 100 38 L 125 30 L 150 22 L 175 15 L 200 10" 
+                          fill="none" 
+                          stroke="#95BF47" 
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        {/* Gradient definition */}
+                        <defs>
+                          <linearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#95BF47" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#95BF47" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
                     </div>
                     <div className="flex items-center justify-between text-xs text-white/40">
                       <span>Week 1</span>

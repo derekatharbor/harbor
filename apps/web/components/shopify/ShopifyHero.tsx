@@ -3,8 +3,6 @@
 
 import { ArrowRight, Check, Copy, ShoppingBag } from 'lucide-react'
 import { useShopifyWaitlist } from './useShopifyWaitlist'
-import Link from 'next/link'
-import Image from 'next/image'
 
 export default function ShopifyHero() {
   const {
@@ -36,32 +34,7 @@ export default function ShopifyHero() {
       {/* Gradient orb */}
       <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-[#95BF47]/5 rounded-full blur-[150px] pointer-events-none" />
 
-      {/* Nav */}
-      <nav className="absolute top-0 left-0 right-0 z-50 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/images/harbor-logo-white.svg"
-                alt="Harbor"
-                width={120}
-                height={32}
-                className="h-7 w-auto"
-              />
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/brands" className="text-white/50 hover:text-white text-sm transition-colors">
-                Brand Index
-              </Link>
-              <Link href="/pricing" className="text-white/50 hover:text-white text-sm transition-colors">
-                Pricing
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 pt-24">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
           {/* Left - Content */}
@@ -82,18 +55,6 @@ export default function ShopifyHero() {
               When customers ask ChatGPT, Claude, or Perplexity for product recommendations, 
               Shopify stores don't show up. Harbor changes that.
             </p>
-
-            {/* Stats row */}
-            <div className="flex flex-wrap gap-8 mb-8">
-              <div>
-                <p className="text-3xl font-bold text-white">40%</p>
-                <p className="text-sm text-white/40">of searches now start with AI</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-white">0%</p>
-                <p className="text-sm text-white/40">of Shopify stores optimized</p>
-              </div>
-            </div>
 
             {/* CTA to scroll */}
             <a 
