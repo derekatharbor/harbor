@@ -1,0 +1,96 @@
+# .github/workflows/run-audit-batch.yml
+# Runs brand audits in batches overnight
+# Manually triggered with category filter
+
+name: Run Audit Batch
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: 'Category to audit (e.g., DevTools, Security, CRM)'
+        required: false
+        default: ''
+      batch_size:
+        description: 'Brands per batch'
+        required: false
+        default: '50'
+      total_batches:
+        description: 'Number of batches to run'
+        required: false
+        default: '20'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120  # 2 hour max
+
+    steps:
+      - name: Run Audit Batches
+        env:
+          API_URL: ${{ secrets.PRODUCTION_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          CATEGORY="${{ github.event.inputs.category }}"
+          BATCH_SIZE="${{ github.event.inputs.batch_size }}"
+          TOTAL_BATCHES="${{ github.event.inputs.total_batches }}"
+          
+          echo "Starting audit run"
+          echo "Category: ${CATEGORY:-all}"
+          echo "Batch size: $BATCH_SIZE"
+          echo "Total batches: $TOTAL_BATCHES"
+          
+          OFFSET=0
+          TOTAL_PROCESSED=0
+          TOTAL_WITH_ISSUES=0
+          
+          for i in $(seq 1 $TOTAL_BATCHES); do
+            echo ""
+            echo "=== Batch $i of $TOTAL_BATCHES (offset: $OFFSET) ==="
+            
+            RESPONSE=$(curl -s -X POST "${API_URL}/api/audit/batch" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${CRON_SECRET}" \
+              -d "{
+                \"category\": \"${CATEGORY}\",
+                \"batch_size\": ${BATCH_SIZE},
+                \"offset\": ${OFFSET},
+                \"only_enriched\": true,
+                \"force_reaudit\": false
+              }")
+            
+            echo "Response: $RESPONSE"
+            
+            PROCESSED=$(echo $RESPONSE | jq -r '.processed // 0')
+            WITH_ISSUES=$(echo $RESPONSE | jq -r '.with_issues // 0')
+            
+            TOTAL_PROCESSED=$((TOTAL_PROCESSED + PROCESSED))
+            TOTAL_WITH_ISSUES=$((TOTAL_WITH_ISSUES + WITH_ISSUES))
+            
+            echo "Batch processed: $PROCESSED, with issues: $WITH_ISSUES"
+            
+            # Stop if no more brands
+            if [ "$PROCESSED" -eq 0 ]; then
+              echo "No more brands to process"
+              break
+            fi
+            
+            OFFSET=$((OFFSET + BATCH_SIZE))
+            
+            # Rate limit between batches
+            echo "Waiting 10 seconds before next batch..."
+            sleep 10
+          done
+          
+          echo ""
+          echo "=== AUDIT COMPLETE ==="
+          echo "Total processed: $TOTAL_PROCESSED"
+          echo "Total with issues: $TOTAL_WITH_ISSUES"
+
+      - name: Summary
+        run: |
+          echo "## Audit Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Category:** ${{ github.event.inputs.category || 'all' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batch size:** ${{ github.event.inputs.batch_size }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Batches run:** ${{ github.event.inputs.total_batches }}" >> $GITHUB_STEP_SUMMARY
