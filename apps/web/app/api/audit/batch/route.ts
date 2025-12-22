@@ -27,6 +27,7 @@ interface ModelAudit {
 
 interface AuditResult {
   models: Record<string, ModelAudit>
+  models_responded: string[]
   consensus_issues: string[]
   worst_issues: ModelFinding[]
   has_issues: boolean
