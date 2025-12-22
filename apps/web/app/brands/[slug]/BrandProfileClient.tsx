@@ -23,6 +23,14 @@ interface Brand {
   rank_global: number
   claimed: boolean
   feed_data?: any
+  audit_data?: {
+    models: Record<string, { accuracy_score: number; findings: any[] }>
+    models_responded?: string[]
+    consensus_issues: string[]
+    overall_accuracy: number
+    has_issues: boolean
+    checked_at: string
+  }
 }
 
 interface Props {
@@ -241,6 +249,76 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
             </p>
           )}
         </div>
+
+        {/* AI Accuracy Report - Teaser for unclaimed profiles */}
+        {brand.audit_data?.has_issues && !brand.claimed && (
+          <div className="bg-amber-400/[0.03] rounded-2xl border border-amber-400/20 p-6 md:p-8 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-xl font-semibold text-white">
+                    AI Accuracy: {brand.audit_data.overall_accuracy}%
+                  </h3>
+                </div>
+                <p className="text-white/50 text-sm mb-4">
+                  We audited how ChatGPT, Claude, and Perplexity describe this brand.
+                </p>
+                
+                {/* Model scores */}
+                <div className="flex gap-4 mb-4">
+                  {['chatgpt', 'claude', 'perplexity'].map((model) => {
+                    const audit = brand.audit_data?.models?.[model]
+                    const responded = audit && (audit.accuracy_score > 0 || audit.findings.length > 0)
+                    const label = model === 'chatgpt' ? 'ChatGPT' : model === 'claude' ? 'Claude' : 'Perplexity'
+                    
+                    return (
+                      <div key={model} className="text-center">
+                        <div className={`text-lg font-semibold ${
+                          !responded ? 'text-white/30' :
+                          (audit?.accuracy_score ?? 0) >= 70 ? 'text-emerald-400' :
+                          (audit?.accuracy_score ?? 0) >= 50 ? 'text-amber-400' : 'text-red-400'
+                        }`}>
+                          {responded ? `${audit?.accuracy_score}%` : '—'}
+                        </div>
+                        <div className="text-white/40 text-xs">{label}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Issues preview */}
+                {brand.audit_data.consensus_issues.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-white/30 text-xs uppercase tracking-wide">Issues found:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {brand.audit_data.consensus_issues.slice(0, 3).map((issue, idx) => (
+                        <span key={idx} className="px-3 py-1.5 rounded-lg bg-red-400/10 text-red-400/80 text-sm">
+                          {issue === 'pricing' ? 'Pricing' :
+                           issue === 'features' ? 'Features' :
+                           issue === 'icp' ? 'Target customer' :
+                           issue === 'description' ? 'Description' :
+                           issue === 'integrations' ? 'Integrations' :
+                           issue.charAt(0).toUpperCase() + issue.slice(1)}
+                        </span>
+                      ))}
+                      {brand.audit_data.consensus_issues.length > 3 && (
+                        <span className="px-3 py-1.5 rounded-lg bg-white/[0.04] text-white/40 text-sm">
+                          +{brand.audit_data.consensus_issues.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => setShowClaimModal(true)}
+                className="px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 transition-all flex-shrink-0"
+              >
+                Claim to fix
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* What's Missing + Claim CTA - Combined */}
         {!brand.claimed ? (

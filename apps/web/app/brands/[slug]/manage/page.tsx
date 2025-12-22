@@ -39,6 +39,32 @@ import {
 } from 'lucide-react'
 
 // Types
+interface ModelFinding {
+  field: string
+  type: 'missing' | 'incorrect' | 'outdated' | 'incomplete'
+  ai_said: string | null
+  harbor_says: string
+  severity: 'high' | 'medium' | 'low'
+}
+
+interface ModelAudit {
+  model: string
+  ai_description: string | null
+  findings: ModelFinding[]
+  accuracy_score: number
+}
+
+interface AuditData {
+  models: Record<string, ModelAudit>
+  models_responded?: string[]
+  consensus_issues: string[]
+  worst_issues: ModelFinding[]
+  has_issues: boolean
+  overall_accuracy: number
+  email_hook: string
+  checked_at: string
+}
+
 interface Brand {
   id: string
   brand_name: string
@@ -49,6 +75,7 @@ interface Brand {
   industry: string
   claimed: boolean
   feed_data: FeedData | null
+  audit_data: AuditData | null
 }
 
 interface FeedData {
@@ -607,6 +634,122 @@ export default function ManageBrandPage() {
           {/* Overview Section */}
           {activeNav === 'overview' && (
             <div className="space-y-6">
+              {/* AI Accuracy Report */}
+              {brand?.audit_data?.has_issues && (
+                <div className="bg-[#111213] rounded-xl border border-amber-500/20 overflow-hidden">
+                  {/* Header */}
+                  <div className="px-6 py-4 border-b border-white/[0.06] bg-amber-500/[0.03]">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                          <Info className="w-4 h-4 text-amber-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-white font-semibold font-heading">AI Accuracy Report</h3>
+                          <p className="text-white/50 text-xs">How AI models currently describe your brand</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-semibold text-white">{brand.audit_data.overall_accuracy}%</div>
+                        <div className="text-white/40 text-xs">accuracy score</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Model Scores */}
+                  <div className="px-6 py-4 border-b border-white/[0.06]">
+                    <div className="grid grid-cols-3 gap-4">
+                      {['chatgpt', 'claude', 'perplexity'].map((model) => {
+                        const audit = brand.audit_data?.models?.[model]
+                        const responded = audit && (audit.accuracy_score > 0 || audit.findings.length > 0)
+                        const label = model === 'chatgpt' ? 'ChatGPT' : model === 'claude' ? 'Claude' : 'Perplexity'
+                        
+                        return (
+                          <div key={model} className="text-center">
+                            <div className={`text-lg font-semibold ${
+                              !responded ? 'text-white/30' :
+                              (audit?.accuracy_score ?? 0) >= 70 ? 'text-emerald-400' :
+                              (audit?.accuracy_score ?? 0) >= 50 ? 'text-amber-400' : 'text-red-400'
+                            }`}>
+                              {responded ? `${audit?.accuracy_score}%` : '—'}
+                            </div>
+                            <div className="text-white/50 text-xs">{label}</div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Issues Found */}
+                  {brand.audit_data.consensus_issues.length > 0 && (
+                    <div className="px-6 py-4">
+                      <p className="text-white/50 text-xs uppercase tracking-wide mb-3">Issues found across models</p>
+                      <div className="space-y-2">
+                        {brand.audit_data.consensus_issues.slice(0, 4).map((issue) => {
+                          // Map issue to nav section
+                          const navTarget = 
+                            issue === 'pricing' || issue === 'features' || issue === 'integrations' ? 'products' :
+                            issue === 'icp' || issue === 'description' ? 'brand' :
+                            issue === 'faqs' ? 'faqs' : 'brand'
+                          
+                          const issueLabel = 
+                            issue === 'pricing' ? 'Pricing information' :
+                            issue === 'features' ? 'Feature list' :
+                            issue === 'integrations' ? 'Integrations' :
+                            issue === 'icp' ? 'Target customer (ICP)' :
+                            issue === 'description' ? 'Company description' :
+                            issue === 'offerings' ? 'Products/Services' :
+                            issue.charAt(0).toUpperCase() + issue.slice(1)
+
+                          return (
+                            <button
+                              key={issue}
+                              onClick={() => setActiveNav(navTarget)}
+                              className="w-full flex items-center justify-between p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.04] transition-colors text-left group"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center">
+                                  <X className="w-3 h-3 text-red-400" />
+                                </div>
+                                <span className="text-white/80 text-sm">{issueLabel}</span>
+                              </div>
+                              <span className="text-white/30 text-xs group-hover:text-white/50 transition-colors">
+                                Fix →
+                              </span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                      {brand.audit_data.consensus_issues.length > 4 && (
+                        <p className="text-white/30 text-xs mt-3 text-center">
+                          +{brand.audit_data.consensus_issues.length - 4} more issues
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Last checked */}
+                  <div className="px-6 py-3 border-t border-white/[0.06] bg-white/[0.01]">
+                    <p className="text-white/30 text-xs text-center">
+                      Last audited {new Date(brand.audit_data.checked_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* No audit data state */}
+              {!brand?.audit_data && (
+                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6 text-center">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white/[0.04] flex items-center justify-center">
+                    <Bot className="w-6 h-6 text-white/30" />
+                  </div>
+                  <h3 className="text-white/80 font-medium mb-1">AI Accuracy Report</h3>
+                  <p className="text-white/40 text-sm">
+                    We haven't audited how AI models describe your brand yet. Check back soon.
+                  </p>
+                </div>
+              )}
+
               {/* Progress Steps */}
               <div className="mb-2">
                 <div className="flex items-center justify-between mb-4">
