@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category')
   const format = searchParams.get('format') || 'json'
   const limit = parseInt(searchParams.get('limit') || '1000')
-  const minSeverity = searchParams.get('min_severity') || 'low' // low, medium, high
+  const minConsensus = parseInt(searchParams.get('min_consensus') || '2') // Minimum models that agree on issue
 
   const supabase = getSupabase()
 
@@ -40,34 +40,49 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Database error' }, { status: 500 })
   }
 
-  // Filter to only those with issues and map severity
-  const severityOrder = { low: 1, medium: 2, high: 3 }
-  const minSeverityNum = severityOrder[minSeverity as keyof typeof severityOrder] || 1
-
+  // Filter to those with consensus issues and map for export
   const brandsWithIssues = (brands || [])
-    .filter(b => b.audit_data?.has_issues)
+    .filter(b => {
+      const consensusCount = b.audit_data?.consensus_issues?.length || 0
+      return b.audit_data?.has_issues && consensusCount >= minConsensus
+    })
     .map(b => {
-      const findings = b.audit_data?.findings || []
-      const topFinding = findings
-        .filter((f: any) => severityOrder[f.severity as keyof typeof severityOrder] >= minSeverityNum)
-        .sort((a: any, b: any) => severityOrder[b.severity as keyof typeof severityOrder] - severityOrder[a.severity as keyof typeof severityOrder])[0]
-
+      const audit = b.audit_data
+      const consensusIssues = audit?.consensus_issues || []
+      const worstIssues = audit?.worst_issues || []
+      
+      // Get model-specific accuracy
+      const models = audit?.models || {}
+      
       return {
         slug: b.slug,
         brand_name: b.brand_name,
         domain: b.domain,
         category: b.category,
         visibility_score: b.visibility_score,
-        finding_count: findings.length,
-        top_finding_field: topFinding?.field || null,
-        top_finding_type: topFinding?.type || null,
-        top_finding_severity: topFinding?.severity || null,
-        ai_said: topFinding?.ai_said || null,
-        harbor_says: topFinding?.harbor_says || null,
-        email_hook: topFinding?.email_hook || null,
+        overall_accuracy: audit?.overall_accuracy,
+        consensus_issues: consensusIssues.join(', '),
+        consensus_count: consensusIssues.length,
+        
+        // Model-specific scores
+        claude_accuracy: models.claude?.accuracy_score || null,
+        chatgpt_accuracy: models.chatgpt?.accuracy_score || null,
+        perplexity_accuracy: models.perplexity?.accuracy_score || null,
+        
+        // Top issue details
+        top_issue_field: worstIssues[0]?.field || null,
+        top_issue_type: worstIssues[0]?.type || null,
+        top_issue_ai_said: worstIssues[0]?.ai_said || null,
+        top_issue_harbor_says: typeof worstIssues[0]?.harbor_says === 'object' 
+          ? JSON.stringify(worstIssues[0]?.harbor_says)
+          : worstIssues[0]?.harbor_says || null,
+        
+        // Ready-to-use outreach
+        email_hook: audit?.email_hook || null,
+        
+        // Links
         profile_url: `https://useharbor.io/brands/${b.slug}`,
-        accuracy_score: b.audit_data?.accuracy_score,
-        checked_at: b.audit_data?.checked_at
+        checked_at: audit?.checked_at
       }
     })
     .filter(b => b.email_hook) // Only include if we have an email hook
@@ -80,15 +95,18 @@ export async function GET(request: NextRequest) {
       'domain',
       'category',
       'visibility_score',
-      'finding_count',
-      'top_finding_field',
-      'top_finding_type',
-      'top_finding_severity',
-      'ai_said',
-      'harbor_says',
+      'overall_accuracy',
+      'consensus_issues',
+      'consensus_count',
+      'claude_accuracy',
+      'chatgpt_accuracy',
+      'perplexity_accuracy',
+      'top_issue_field',
+      'top_issue_type',
+      'top_issue_ai_said',
+      'top_issue_harbor_says',
       'email_hook',
       'profile_url',
-      'accuracy_score',
       'checked_at'
     ]
 
@@ -119,7 +137,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     total: brandsWithIssues.length,
     category: category || 'all',
-    min_severity: minSeverity,
+    min_consensus: minConsensus,
     brands: brandsWithIssues
   })
 }
