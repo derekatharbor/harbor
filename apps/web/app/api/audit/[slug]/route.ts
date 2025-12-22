@@ -90,16 +90,20 @@ Respond in this exact JSON format:
   "ai_description": "Brief description of what you know about this company",
   "findings": [
     {
-      "field": "pricing|description|category|features|icp",
+      "field": "pricing|description|category|features|icp|integrations",
       "type": "missing|incorrect|hallucination",
-      "ai_said": "What you (the AI) would say",
+      "ai_said": "What you (the AI) would say (or null if unknown)",
       "harbor_says": "What Harbor's data says",
       "severity": "high|medium|low",
-      "email_hook": "One sentence that could be used in outreach highlighting this issue"
+      "email_hook": "A cold outreach sentence pointing out THIS SPECIFIC problem. Frame it as: 'We asked [AI model] about [Company] and it said X / didn't know Y. This matters because Z.' Do NOT write marketing copy. Write like you're alerting them to a problem."
     }
   ],
   "accuracy_score": 0-100
 }
+
+CRITICAL for email_hook: Write it as a problem statement for cold outreach, NOT marketing copy. 
+- BAD: "Unlock the full potential of our pricing model"
+- GOOD: "Asked Claude about Linear's pricing — it had no idea you have a free tier or that paid starts at $10/user."
 
 If you have no knowledge of this company, return findings with type "missing" for key fields.
 If Harbor data is empty/null for a field, skip that field.
