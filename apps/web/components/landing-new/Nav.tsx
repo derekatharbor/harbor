@@ -1,60 +1,120 @@
 // components/landing-new/Nav.tsx
-// Professional nav with Product dropdown
+// Nav with Linear-style nested dropdown cards
 
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X, ChevronDown, BarChart3, Users, Globe, ShoppingBag, Code, Sparkles } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const productLinks = [
-  {
-    label: 'Platform Overview',
-    description: 'See how Harbor works',
-    href: '/product',
-    icon: Sparkles,
-  },
-  {
-    label: 'Competitor Intelligence',
-    description: 'Track how AI recommends your competitors',
-    href: '/product/competitors',
-    icon: Users,
-  },
-  {
-    label: 'Citation Sources',
-    description: 'See which sources AI trusts',
-    href: '/product/sources',
-    icon: Globe,
-  },
-  {
-    label: 'Website Analytics',
-    description: 'AI crawler traffic insights',
-    href: '/product/website',
-    icon: BarChart3,
-  },
-  {
-    label: 'Shopify Plugin',
-    description: 'AI visibility for your store',
-    href: '/shopify',
-    icon: ShoppingBag,
-    badge: 'Waitlist',
-  },
-  {
-    label: 'API Access',
-    description: 'Integrate Harbor data',
-    href: '/contact',
-    icon: Code,
-    badge: 'Coming Soon',
-  },
-]
+const productLinks = {
+  core: [
+    {
+      label: 'Platform Overview',
+      description: 'See how Harbor works',
+      href: '/product',
+    },
+    {
+      label: 'Competitor Intelligence',
+      description: 'Track AI recommendations',
+      href: '/product/competitors',
+    },
+    {
+      label: 'Citation Sources',
+      description: 'See which sources AI trusts',
+      href: '/product/sources',
+    },
+  ],
+  more: [
+    {
+      label: 'Website Analytics',
+      description: 'AI crawler insights',
+      href: '/product/website',
+    },
+    {
+      label: 'Shopify Plugin',
+      description: 'AI visibility for e-commerce',
+      href: '/shopify',
+      badge: 'Waitlist',
+    },
+    {
+      label: 'API',
+      description: 'Integrate Harbor data',
+      href: '/contact',
+      badge: 'Coming Soon',
+    },
+  ],
+}
+
+const resourceLinks = {
+  company: [
+    {
+      label: 'About',
+      description: 'Meet the team',
+      href: '/about',
+    },
+    {
+      label: 'Contact',
+      description: 'Get in touch',
+      href: '/contact',
+    },
+  ],
+  explore: [
+    {
+      label: 'Brand Index',
+      description: '100,000+ profiles',
+      href: '/brands',
+    },
+    {
+      label: 'Privacy',
+      description: 'How we handle data',
+      href: '/privacy',
+    },
+    {
+      label: 'Terms',
+      description: 'Terms of service',
+      href: '/terms',
+    },
+  ],
+}
+
+interface NavLinkItemProps {
+  href: string
+  label: string
+  description: string
+  badge?: string
+  onClick: () => void
+}
+
+function NavLinkItem({ href, label, description, badge, onClick }: NavLinkItemProps) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="block px-4 py-3 hover:bg-white/[0.04] transition-colors rounded-lg"
+    >
+      <div className="flex items-center gap-2">
+        <span className="text-[15px] font-medium text-white">{label}</span>
+        {badge && (
+          <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-white/[0.06] text-white/40 rounded">
+            {badge}
+          </span>
+        )}
+      </div>
+      <p className="text-[13px] text-white/40 mt-0.5">{description}</p>
+    </Link>
+  )
+}
 
 export default function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [productOpen, setProductOpen] = useState(false)
+  const [resourcesOpen, setResourcesOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const productRef = useRef<HTMLDivElement>(null)
+  const resourcesRef = useRef<HTMLDivElement>(null)
   const supabase = createClientComponentClient()
 
   useEffect(() => {
@@ -71,16 +131,23 @@ export default function Nav() {
     return () => subscription.unsubscribe()
   }, [supabase.auth])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (productRef.current && !productRef.current.contains(event.target as Node)) {
         setProductOpen(false)
+      }
+      if (resourcesRef.current && !resourcesRef.current.contains(event.target as Node)) {
+        setResourcesOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  const closeAll = () => {
+    setProductOpen(false)
+    setResourcesOpen(false)
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
@@ -98,67 +165,126 @@ export default function Nav() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-0">
             {/* Product Dropdown */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative" ref={productRef}>
               <button
-                onClick={() => setProductOpen(!productOpen)}
-                onMouseEnter={() => setProductOpen(true)}
-                className={`flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors ${
-                  productOpen ? 'text-white' : 'text-white/70 hover:text-white'
+                onClick={() => {
+                  setProductOpen(!productOpen)
+                  setResourcesOpen(false)
+                }}
+                onMouseEnter={() => {
+                  setProductOpen(true)
+                  setResourcesOpen(false)
+                }}
+                className={`flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  productOpen ? 'text-white bg-white/[0.06]' : 'text-white/60 hover:text-white'
                 }`}
               >
                 Product
-                <ChevronDown className={`w-4 h-4 transition-transform ${productOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${productOpen ? 'rotate-180' : ''}`} />
               </button>
 
-              {/* Dropdown Panel */}
+              {/* Product Dropdown - Linear style */}
               {productOpen && (
                 <div 
-                  className="absolute top-full left-0 mt-2 w-80 bg-[#111111] border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+                  className="absolute top-full left-0 mt-3 p-[6px] bg-black border border-white/[0.08] rounded-2xl shadow-2xl"
                   onMouseLeave={() => setProductOpen(false)}
                 >
-                  <div className="p-2">
-                    {productLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setProductOpen(false)}
-                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group"
-                      >
-                        <div className="p-2 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
-                          <link.icon className="w-4 h-4 text-white/70" />
+                  {/* Inner grey card */}
+                  <div className="bg-[#171717] rounded-xl overflow-hidden">
+                    <div className="flex">
+                      {/* Core Features */}
+                      <div className="py-3 px-2 border-r border-white/[0.06]">
+                        <p className="px-4 py-2 text-[13px] font-medium text-white/30">
+                          Core Features
+                        </p>
+                        <div className="min-w-[200px]">
+                          {productLinks.core.map((link) => (
+                            <NavLinkItem key={link.href} {...link} onClick={closeAll} />
+                          ))}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-white">{link.label}</span>
-                            {link.badge && (
-                              <span className="px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-white/10 text-white/60 rounded">
-                                {link.badge}
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs text-white/50 mt-0.5">{link.description}</p>
+                      </div>
+                      {/* More */}
+                      <div className="py-3 px-2">
+                        <p className="px-4 py-2 text-[13px] font-medium text-white/30">
+                          More
+                        </p>
+                        <div className="min-w-[200px]">
+                          {productLinks.more.map((link) => (
+                            <NavLinkItem key={link.href} {...link} onClick={closeAll} />
+                          ))}
                         </div>
-                      </Link>
-                    ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Brand Index */}
-            <Link href="/brands" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
-              Brand Index
-            </Link>
+            {/* Resources Dropdown */}
+            <div className="relative" ref={resourcesRef}>
+              <button
+                onClick={() => {
+                  setResourcesOpen(!resourcesOpen)
+                  setProductOpen(false)
+                }}
+                onMouseEnter={() => {
+                  setResourcesOpen(true)
+                  setProductOpen(false)
+                }}
+                className={`flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  resourcesOpen ? 'text-white bg-white/[0.06]' : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Resources
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${resourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Resources Dropdown - Linear style */}
+              {resourcesOpen && (
+                <div 
+                  className="absolute top-full left-0 mt-3 p-[6px] bg-black border border-white/[0.08] rounded-2xl shadow-2xl"
+                  onMouseLeave={() => setResourcesOpen(false)}
+                >
+                  {/* Inner grey card */}
+                  <div className="bg-[#171717] rounded-xl overflow-hidden">
+                    <div className="flex">
+                      {/* Company */}
+                      <div className="py-3 px-2 border-r border-white/[0.06]">
+                        <p className="px-4 py-2 text-[13px] font-medium text-white/30">
+                          Company
+                        </p>
+                        <div className="min-w-[180px]">
+                          {resourceLinks.company.map((link) => (
+                            <NavLinkItem key={link.href} {...link} onClick={closeAll} />
+                          ))}
+                        </div>
+                      </div>
+                      {/* Explore */}
+                      <div className="py-3 px-2">
+                        <p className="px-4 py-2 text-[13px] font-medium text-white/30">
+                          Explore
+                        </p>
+                        <div className="min-w-[180px]">
+                          {resourceLinks.explore.map((link) => (
+                            <NavLinkItem key={link.href} {...link} onClick={closeAll} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Pricing */}
-            <Link href="/pricing" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+            <Link href="/pricing" className="px-4 py-2 text-white/60 hover:text-white text-sm font-medium transition-colors">
               Pricing
             </Link>
 
             {/* Contact */}
-            <Link href="/contact" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+            <Link href="/contact" className="px-4 py-2 text-white/60 hover:text-white text-sm font-medium transition-colors">
               Contact
             </Link>
           </div>
@@ -174,7 +300,7 @@ export default function Nav() {
               </Link>
             ) : (
               <>
-                <Link href="/auth/login" className="px-4 py-2 text-white/70 hover:text-white text-sm font-medium transition-colors">
+                <Link href="/auth/login" className="px-4 py-2 text-white/60 hover:text-white text-sm font-medium transition-colors">
                   Log in
                 </Link>
                 <Link 
@@ -190,7 +316,7 @@ export default function Nav() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
+            className="md:hidden p-2 text-white/60 hover:text-white transition-colors"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -203,9 +329,9 @@ export default function Nav() {
           <div className="px-6 py-4 space-y-1">
             {/* Product Section */}
             <div className="py-2">
-              <span className="text-xs font-medium text-white/40 uppercase tracking-wide">Product</span>
+              <span className="text-xs font-medium text-white/30 uppercase tracking-wide">Product</span>
               <div className="mt-2 space-y-1">
-                {productLinks.map((link) => (
+                {[...productLinks.core, ...productLinks.more].map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -225,9 +351,25 @@ export default function Nav() {
 
             <div className="h-px bg-white/10 my-2" />
 
-            <Link href="/brands" onClick={() => setMobileOpen(false)} className="block py-2 text-white/70 hover:text-white">
-              Brand Index
-            </Link>
+            {/* Resources Section */}
+            <div className="py-2">
+              <span className="text-xs font-medium text-white/30 uppercase tracking-wide">Resources</span>
+              <div className="mt-2 space-y-1">
+                {[...resourceLinks.company, ...resourceLinks.explore].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-2 text-white/70 hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-px bg-white/10 my-2" />
+
             <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block py-2 text-white/70 hover:text-white">
               Pricing
             </Link>

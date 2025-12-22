@@ -1,7 +1,7 @@
 // components/shopify/ShopifyHowItWorks.tsx
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Download, Zap, BarChart3, TrendingUp } from 'lucide-react'
 
 const steps = [
@@ -9,21 +9,21 @@ const steps = [
     number: '01',
     icon: Download,
     title: 'Install the plugin',
-    description: 'One-click install from the Shopify App Store. No code, no developers, no configuration.',
+    description: 'One-click install from the Shopify App Store. No code, no developers, no configuration needed.',
     detail: 'Works with any Shopify theme',
   },
   {
     number: '02',
     icon: Zap,
     title: 'Harbor scans your store',
-    description: 'We analyze your products, descriptions, and metadata. Then generate AI-optimized structured data.',
+    description: 'We analyze your products, descriptions, and metadata to generate AI-optimized structured data.',
     detail: 'Schema, JSON-LD, FAQs auto-generated',
   },
   {
     number: '03',
     icon: BarChart3,
     title: 'Track your visibility',
-    description: 'See exactly when ChatGPT, Claude, Gemini, or Perplexity mentions your products — and for which queries.',
+    description: 'See when ChatGPT, Claude, Gemini, or Perplexity mentions your products and for which queries.',
     detail: 'Real-time monitoring dashboard',
   },
   {
@@ -31,55 +31,25 @@ const steps = [
     icon: TrendingUp,
     title: 'Get recommended',
     description: 'As AI models crawl your optimized store, your products start appearing in recommendations.',
-    detail: 'Automatic sync keeps you current',
+    detail: 'Automatic sync keeps data current',
   },
 ]
 
 export default function ShopifyHowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-  const sectionRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.2 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
-  // Auto-advance steps
-  useEffect(() => {
-    if (!isVisible) return
-    
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % steps.length)
-    }, 4000)
-
-    return () => clearInterval(interval)
-  }, [isVisible])
 
   return (
     <>
-      {/* Noise bar transition */}
+      {/* Gradient transition bar */}
       <div 
-        className="w-full h-3 md:h-4"
+        className="w-full h-1"
         style={{
-          background: 'linear-gradient(90deg, #95BF47 0%, #7da83d 25%, #0a0a0a 50%, #7da83d 75%, #95BF47 100%)',
-          opacity: 0.6,
+          background: 'linear-gradient(90deg, transparent 0%, #95BF47 50%, transparent 100%)',
+          opacity: 0.4,
         }}
       />
 
-      <section ref={sectionRef} className="relative bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
+      <section className="relative bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
         {/* Background grid */}
         <div 
           className="absolute inset-0 opacity-[0.02]"
@@ -159,9 +129,7 @@ export default function ShopifyHowItWorks() {
             </div>
 
             {/* Right - Visual */}
-            <div className={`relative transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
+            <div className="relative">
               {/* Mock dashboard/visual for active step */}
               <div className="relative bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6 sm:p-8 min-h-[320px]">
                 {/* Header */}
@@ -187,18 +155,13 @@ export default function ShopifyHowItWorks() {
                       </div>
                       <div className="flex-1">
                         <p className="text-white text-sm font-medium">Harbor for Shopify</p>
-                        <p className="text-white/40 text-xs">Click to install</p>
+                        <p className="text-white/40 text-xs">One-click install</p>
                       </div>
                       <div className="px-3 py-1.5 bg-[#95BF47] rounded-lg text-black text-xs font-semibold">
                         Install
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      {[1,2,3,4,5].map(i => (
-                        <div key={i} className="w-4 h-4 rounded-full bg-[#95BF47]" />
-                      ))}
-                      <span className="text-white/50 text-xs ml-2">4.9 rating</span>
-                    </div>
+                    <p className="text-white/30 text-xs text-center">No code changes required</p>
                   </div>
                 )}
 
@@ -220,9 +183,9 @@ export default function ShopifyHowItWorks() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-3 gap-3">
                       {[
-                        { label: 'ChatGPT', value: '12' },
-                        { label: 'Claude', value: '8' },
-                        { label: 'Perplexity', value: '15' },
+                        { label: 'ChatGPT', value: '—' },
+                        { label: 'Claude', value: '—' },
+                        { label: 'Perplexity', value: '—' },
                       ].map((stat, i) => (
                         <div key={i} className="p-3 bg-white/[0.03] rounded-lg text-center">
                           <p className="text-2xl font-bold text-white">{stat.value}</p>
@@ -230,35 +193,40 @@ export default function ShopifyHowItWorks() {
                         </div>
                       ))}
                     </div>
-                    <p className="text-white/30 text-xs text-center">Mentions this week</p>
+                    <p className="text-white/30 text-xs text-center">Mentions tracked in real-time</p>
                   </div>
                 )}
 
                 {activeStep === 3 && (
                   <div className="space-y-4">
                     <div className="flex items-end gap-1 h-24">
-                      {[20, 35, 28, 45, 52, 48, 65, 72].map((h, i) => (
+                      {[20, 28, 35, 42, 48, 55, 62, 70].map((h, i) => (
                         <div 
                           key={i} 
-                          className="flex-1 bg-gradient-to-t from-[#95BF47]/50 to-[#95BF47] rounded-t"
+                          className="flex-1 bg-gradient-to-t from-[#95BF47]/50 to-[#95BF47] rounded-t transition-all duration-500"
                           style={{ height: `${h}%` }}
                         />
                       ))}
                     </div>
                     <div className="flex items-center justify-between text-xs text-white/40">
                       <span>Week 1</span>
-                      <span className="text-[#95BF47]">+47% visibility</span>
+                      <span className="text-[#95BF47]">Growing visibility</span>
                       <span>Week 8</span>
                     </div>
                   </div>
                 )}
 
-                {/* Progress bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/[0.05] rounded-b-2xl overflow-hidden">
-                  <div 
-                    className="h-full bg-[#95BF47] transition-all duration-300"
-                    style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
-                  />
+                {/* Progress indicator */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {steps.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveStep(index)}
+                      className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                        index === activeStep ? 'bg-[#95BF47]' : 'bg-white/20'
+                      }`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
