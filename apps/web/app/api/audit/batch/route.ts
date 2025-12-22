@@ -143,6 +143,11 @@ async function auditWithPerplexity(
   domain: string | null,
   harborContext: any
 ): Promise<ModelAudit> {
+  if (!process.env.PERPLEXITY_API_KEY) {
+    console.warn('PERPLEXITY_API_KEY not configured')
+    return { model: 'perplexity', ai_description: null, findings: [], accuracy_score: 0 }
+  }
+  
   try {
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
@@ -151,18 +156,26 @@ async function auditWithPerplexity(
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: 'sonar',
         max_tokens: 1000,
         messages: [{ role: 'user', content: buildPrompt(brandName, domain, harborContext) }]
       })
     })
     
     if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.status}`)
+      const errText = await response.text()
+      console.error('Perplexity API error:', response.status, errText)
+      return { model: 'perplexity', ai_description: null, findings: [], accuracy_score: 0 }
     }
     
     const data = await response.json()
     const text = data.choices?.[0]?.message?.content || ''
+    
+    if (!text) {
+      console.error('Perplexity empty response:', JSON.stringify(data))
+      return { model: 'perplexity', ai_description: null, findings: [], accuracy_score: 0 }
+    }
+    
     const parsed = parseAuditResponse(text)
     return { model: 'perplexity', ...parsed }
   } catch (error) {

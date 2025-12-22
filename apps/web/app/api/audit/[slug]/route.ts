@@ -185,13 +185,29 @@ export async function GET(
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              model: 'llama-3.1-sonar-small-128k-online',
+              model: 'sonar',
               max_tokens: 1000,
               messages: [{ role: 'user', content: prompt }]
             })
-          }).then(r => r.json())
-            .then(d => parseAuditResponse(d.choices?.[0]?.message?.content || ''))
-            .catch(() => ({ ai_description: null, findings: [], accuracy_score: 0 }))
+          }).then(async r => {
+            if (!r.ok) {
+              const errText = await r.text()
+              console.error('Perplexity API error:', r.status, errText)
+              return { ai_description: null, findings: [], accuracy_score: 0 }
+            }
+            return r.json()
+          })
+            .then(d => {
+              if (d.choices?.[0]?.message?.content) {
+                return parseAuditResponse(d.choices[0].message.content)
+              }
+              console.error('Perplexity empty response:', JSON.stringify(d))
+              return { ai_description: null, findings: [], accuracy_score: 0 }
+            })
+            .catch(err => {
+              console.error('Perplexity fetch error:', err)
+              return { ai_description: null, findings: [], accuracy_score: 0 }
+            })
         : Promise.resolve({ ai_description: null, findings: [], accuracy_score: 0 })
     ])
 
