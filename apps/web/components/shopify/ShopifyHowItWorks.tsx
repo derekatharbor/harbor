@@ -1,447 +1,270 @@
 // components/shopify/ShopifyHowItWorks.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+import { Download, Zap, BarChart3, TrendingUp } from 'lucide-react'
 
 const steps = [
   {
     number: '01',
-    title: 'Install',
-    description: 'Connect your store in under 60 seconds. Install Harbor\'s Shopify plugin directly from the App Store. No code. No setup. Your products sync instantly.',
+    icon: Download,
+    title: 'Install the plugin',
+    description: 'One-click install from the Shopify App Store. No code, no developers, no configuration.',
+    detail: 'Works with any Shopify theme',
   },
   {
     number: '02',
-    title: 'Optimize',
-    description: 'Harbor fixes what AI can\'t read. Product schema, FAQs, attributes, and AI-ready descriptions are auto-generated and injected into your theme — so models can finally understand your products.',
+    icon: Zap,
+    title: 'Harbor scans your store',
+    description: 'We analyze your products, descriptions, and metadata. Then generate AI-optimized structured data.',
+    detail: 'Schema, JSON-LD, FAQs auto-generated',
   },
   {
     number: '03',
-    title: 'Get Recommended',
-    description: 'Your products start showing up in AI answers. Harbor tracks when ChatGPT, Claude, Gemini, and Perplexity begin recommending your products — and shows you which queries they appear in.',
+    icon: BarChart3,
+    title: 'Track your visibility',
+    description: 'See exactly when ChatGPT, Claude, Gemini, or Perplexity mentions your products — and for which queries.',
+    detail: 'Real-time monitoring dashboard',
+  },
+  {
+    number: '04',
+    icon: TrendingUp,
+    title: 'Get recommended',
+    description: 'As AI models crawl your optimized store, your products start appearing in recommendations.',
+    detail: 'Automatic sync keeps you current',
   },
 ]
 
-// Step 1 Visual: App Store Install Mockup
-function InstallVisual() {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 sm:p-6 max-w-sm w-full">
-        {/* App Store Header */}
-        <div className="flex items-start gap-4 mb-6">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#101A31] flex items-center justify-center flex-shrink-0">
-            <Image
-              src="/logo-icon.png"
-              alt="Harbor"
-              width={40}
-              height={40}
-              className="w-8 h-8 sm:w-10 sm:h-10"
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-gray-900 text-base sm:text-lg">Harbor</h3>
-            <p className="text-xs sm:text-sm text-gray-500">AI Visibility for Shopify</p>
-            <div className="flex items-center gap-1 mt-1">
-              {[1,2,3,4,5].map((star) => (
-                <svg key={star} className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-              <span className="text-xs text-gray-400 ml-1">5.0</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Install Button */}
-        <button className="w-full py-3 px-6 bg-[#95BF47] text-white font-semibold rounded-lg flex items-center justify-center gap-2">
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Install App
-        </button>
-
-        {/* Features */}
-        <div className="mt-6 space-y-3">
-          {['Automatic product sync', 'Schema injection', 'AI tracking'].map((feature, i) => (
-            <div key={i} className="flex items-center gap-2 text-sm text-gray-600">
-              <svg className="w-4 h-4 text-[#95BF47]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              {feature}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step 2 Visual: Schema Injection Mockup
-function OptimizeVisual() {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 sm:p-6 max-w-sm w-full">
-        {/* Product Page Wireframe */}
-        <div className="space-y-4">
-          {/* Product Header */}
-          <div className="flex gap-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-lg" />
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-gray-100 rounded w-3/4" />
-              <div className="h-3 bg-gray-100 rounded w-1/2" />
-              <div className="h-4 bg-gray-200 rounded w-1/3" />
-            </div>
-          </div>
-
-          {/* Schema Injection Highlights */}
-          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
-            <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
-              Product Schema
-            </div>
-            <div className="space-y-2">
-              <div className="h-2 bg-[#95BF47]/20 rounded w-full" />
-              <div className="h-2 bg-[#95BF47]/20 rounded w-4/5" />
-              <div className="h-2 bg-[#95BF47]/20 rounded w-3/5" />
-            </div>
-            <div className="absolute -right-1 -top-1 w-3 h-3 bg-[#95BF47] rounded-full animate-ping" />
-          </div>
-
-          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
-            <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
-              FAQ Added
-            </div>
-            <div className="space-y-2">
-              <div className="h-2 bg-[#95BF47]/20 rounded w-full" />
-              <div className="h-2 bg-[#95BF47]/20 rounded w-2/3" />
-            </div>
-            <div className="absolute -right-1 -top-1 w-3 h-3 bg-[#95BF47] rounded-full animate-ping" style={{ animationDelay: '0.5s' }} />
-          </div>
-
-          <div className="relative p-3 sm:p-4 border-2 border-[#95BF47] rounded-lg bg-[#95BF47]/5">
-            <div className="absolute -top-2 left-3 px-2 bg-white text-xs font-medium text-[#95BF47]">
-              AI-Ready Description
-            </div>
-            <div className="space-y-2">
-              <div className="h-2 bg-[#95BF47]/20 rounded w-full" />
-              <div className="h-2 bg-[#95BF47]/20 rounded w-5/6" />
-              <div className="h-2 bg-[#95BF47]/20 rounded w-4/5" />
-            </div>
-            <div className="absolute -right-1 -top-1 w-3 h-3 bg-[#95BF47] rounded-full animate-ping" style={{ animationDelay: '1s' }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step 3 Visual: ChatGPT Answer Mockup
-function RecommendedVisual() {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-8">
-      <div className="bg-[#343541] rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full">
-        {/* ChatGPT Header - Dark with white logo */}
-        <div className="flex items-center gap-2 px-4 py-3 bg-[#202123] border-b border-white/10">
-          <Image
-            src="/logos/chatgpt.svg"
-            alt="ChatGPT"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-          <span className="text-sm font-medium text-white">ChatGPT</span>
-        </div>
-
-        {/* Chat Content */}
-        <div className="p-4 sm:p-5 space-y-4">
-          {/* Question */}
-          <div className="flex gap-3">
-            <div className="w-7 h-7 rounded-full bg-[#5436DA] flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs font-medium">U</span>
-            </div>
-            <p className="text-sm text-gray-300 pt-1">What's the best wireless headphone for running?</p>
-          </div>
-
-          {/* Answer */}
-          <div className="flex gap-3">
-            <div className="w-7 h-7 rounded-full bg-[#19C37D] flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.8956zm16.0993 3.8558L12.6 8.3829l2.02-1.1638a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
-              </svg>
-            </div>
-            <div className="flex-1 space-y-3 pt-1">
-              <p className="text-sm text-gray-300">Based on my research, I'd recommend:</p>
-              
-              {/* Product Card */}
-              <div className="relative p-3 sm:p-4 bg-[#444654] rounded-xl">
-                <div className="absolute -top-2 -right-2">
-                  <span className="px-2 py-1 bg-[#95BF47] text-white text-xs font-medium rounded-full flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Recommended
-                  </span>
-                </div>
-                <div className="flex gap-3">
-                  <div className="w-12 h-12 bg-[#565869] rounded-lg flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="font-medium text-white text-sm">Your Product Name</p>
-                    <p className="text-xs text-gray-400">$149.00</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      {[1,2,3,4,5].map((star) => (
-                        <svg key={star} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-300">This product stands out for its comfort, battery life, and sweat resistance...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Step Icons
-function InstallIcon({ active }: { active: boolean }) {
-  return (
-    <svg 
-      className={`w-6 h-6 transition-colors ${active ? 'text-[#95BF47]' : 'text-gray-300'}`} 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor" 
-      strokeWidth={1.5}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-    </svg>
-  )
-}
-
-function OptimizeIcon({ active }: { active: boolean }) {
-  return (
-    <svg 
-      className={`w-6 h-6 transition-colors ${active ? 'text-[#95BF47]' : 'text-gray-300'}`} 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor" 
-      strokeWidth={1.5}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-    </svg>
-  )
-}
-
-function RecommendedIcon({ active }: { active: boolean }) {
-  return (
-    <svg 
-      className={`w-6 h-6 transition-colors ${active ? 'text-[#95BF47]' : 'text-gray-300'}`} 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor" 
-      strokeWidth={1.5}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-    </svg>
-  )
-}
-
 export default function ShopifyHowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
-  const stepRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
-  const visuals = [
-    <InstallVisual key="install" />,
-    <OptimizeVisual key="optimize" />,
-    <RecommendedVisual key="recommended" />,
-  ]
-
-  const icons = [InstallIcon, OptimizeIcon, RecommendedIcon]
-
-  // IntersectionObserver on each step card
   useEffect(() => {
-    const observers: IntersectionObserver[] = []
-
-    stepRefs.current.forEach((ref, index) => {
-      if (!ref) return
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            // When step enters the "active zone" (middle 40% of viewport)
-            if (entry.isIntersecting) {
-              setActiveStep(index)
-            }
-          })
-        },
-        {
-          // Trigger when step is in the middle portion of the viewport
-          rootMargin: '-30% 0px -30% 0px',
-          threshold: 0.5,
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
         }
-      )
+      },
+      { threshold: 0.2 }
+    )
 
-      observer.observe(ref)
-      observers.push(observer)
-    })
-
-    return () => {
-      observers.forEach((obs) => obs.disconnect())
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
     }
+
+    return () => observer.disconnect()
   }, [])
 
+  // Auto-advance steps
+  useEffect(() => {
+    if (!isVisible) return
+    
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % steps.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [isVisible])
+
   return (
-    <section>
-      {/* Color Noise Transition - Shopify themed */}
+    <>
+      {/* Noise bar transition */}
       <div 
-        className="w-full h-4 md:h-6"
+        className="w-full h-3 md:h-4"
         style={{
-          backgroundImage: 'url(/shopify-noise-bar.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          background: 'linear-gradient(90deg, #95BF47 0%, #7da83d 25%, #0a0a0a 50%, #7da83d 75%, #95BF47 100%)',
+          opacity: 0.6,
         }}
       />
 
-      {/* Main Content */}
-      <div className="bg-white py-16 sm:py-24 md:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          
+      <section ref={sectionRef} className="relative bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
+        {/* Background grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+        />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-6">
           {/* Header */}
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+          <div className="text-center mb-16">
             <p className="text-sm font-medium text-[#95BF47] uppercase tracking-wider mb-3">
-              Simple Steps
+              How It Works
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-[#101A31] mb-4">
-              How it works
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Four steps to AI visibility
             </h2>
-            <p className="text-gray-500 text-base sm:text-lg max-w-xl mx-auto">
-              No confusion or delays. Just fast and reliable AI visibility.
+            <p className="text-white/50 text-base max-w-xl mx-auto">
+              Install once. Harbor handles the rest automatically.
             </p>
           </div>
 
-          {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
-            
-            {/* Left: Sticky Visual Panel */}
-            <div className="hidden lg:block">
-              <div className="sticky top-24">
-                <div className="relative h-[500px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl overflow-hidden">
-                  {visuals.map((Visual, index) => (
-                    <div
-                      key={index}
-                      className={`absolute inset-0 transition-all duration-500 ${
-                        activeStep === index 
-                          ? 'opacity-100 scale-100' 
-                          : 'opacity-0 scale-95 pointer-events-none'
-                      }`}
-                    >
-                      {Visual}
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Step Indicator Dots */}
-                <div className="flex items-center justify-center gap-2 mt-6">
-                  {steps.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveStep(index)}
-                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                        activeStep === index 
-                          ? 'bg-[#95BF47] w-8' 
-                          : 'bg-gray-300 hover:bg-gray-400'
-                      }`}
-                      aria-label={`Go to step ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Clickable Steps List */}
-            <div className="space-y-6 lg:space-y-8">
+          {/* Steps */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+            {/* Left - Step list */}
+            <div className="space-y-2">
               {steps.map((step, index) => {
-                const Icon = icons[index]
-                const isActive = activeStep === index
-
+                const Icon = step.icon
+                const isActive = index === activeStep
+                
                 return (
                   <button
-                    key={step.number}
-                    ref={(el) => { stepRefs.current[index] = el }}
-                    onClick={() => {
-                      setActiveStep(index)
-                      // Smooth scroll to center this step on mobile
-                      if (window.innerWidth < 1024) {
-                        stepRefs.current[index]?.scrollIntoView({ 
-                          behavior: 'smooth', 
-                          block: 'center' 
-                        })
-                      }
-                    }}
-                    className={`relative w-full text-left pl-6 sm:pl-8 pr-4 sm:pr-6 py-8 sm:py-10 lg:py-12 rounded-2xl transition-all duration-300 cursor-pointer ${
+                    key={index}
+                    onClick={() => setActiveStep(index)}
+                    className={`w-full text-left p-5 rounded-xl border transition-all duration-300 ${
                       isActive 
-                        ? 'bg-gray-50 shadow-sm' 
-                        : 'bg-transparent hover:bg-gray-50/50'
+                        ? 'bg-white/[0.05] border-[#95BF47]/30' 
+                        : 'bg-transparent border-white/[0.05] hover:border-white/[0.1]'
                     }`}
                   >
-                    {/* Active Indicator Line */}
-                    <div 
-                      className={`absolute left-0 top-8 sm:top-10 lg:top-12 bottom-8 sm:bottom-10 lg:bottom-12 w-1 rounded-full transition-all duration-300 ${
-                        isActive ? 'bg-[#95BF47]' : 'bg-gray-200'
-                      }`}
-                    />
-
                     <div className="flex items-start gap-4">
-                      {/* Icon */}
-                      <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl transition-colors flex-shrink-0 ${
-                        isActive ? 'bg-[#95BF47]/10' : 'bg-gray-100'
+                      {/* Number */}
+                      <span className={`text-sm font-mono transition-colors ${
+                        isActive ? 'text-[#95BF47]' : 'text-white/20'
                       }`}>
-                        <Icon active={isActive} />
-                      </div>
+                        {step.number}
+                      </span>
 
+                      {/* Content */}
                       <div className="flex-1 min-w-0">
-                        {/* Step Number */}
-                        <p className={`text-sm font-medium mb-1 transition-colors ${
-                          isActive ? 'text-[#95BF47]' : 'text-gray-400'
-                        }`}>
-                          Step {step.number}
-                        </p>
-
-                        {/* Title */}
-                        <h3 className={`text-xl sm:text-2xl font-heading font-bold mb-2 transition-colors ${
-                          isActive ? 'text-[#101A31]' : 'text-gray-400'
+                        <h3 className={`font-semibold mb-1 transition-colors ${
+                          isActive ? 'text-white' : 'text-white/60'
                         }`}>
                           {step.title}
                         </h3>
-
-                        {/* Description */}
-                        <p className={`text-sm sm:text-base leading-relaxed transition-colors ${
-                          isActive ? 'text-gray-600' : 'text-gray-400'
+                        <p className={`text-sm transition-colors ${
+                          isActive ? 'text-white/50' : 'text-white/30'
                         }`}>
                           {step.description}
                         </p>
                       </div>
-                    </div>
 
-                    {/* Mobile Visual (shown inline on mobile when active) */}
-                    {isActive && (
-                      <div className="lg:hidden mt-6">
-                        <div className="relative h-[350px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden">
-                          {visuals[index]}
-                        </div>
+                      {/* Icon */}
+                      <div className={`p-2 rounded-lg transition-colors ${
+                        isActive ? 'bg-[#95BF47]/10' : 'bg-white/[0.03]'
+                      }`}>
+                        <Icon className={`w-5 h-5 transition-colors ${
+                          isActive ? 'text-[#95BF47]' : 'text-white/30'
+                        }`} />
                       </div>
-                    )}
+                    </div>
                   </button>
                 )
               })}
             </div>
 
+            {/* Right - Visual */}
+            <div className={`relative transition-all duration-700 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+              {/* Mock dashboard/visual for active step */}
+              <div className="relative bg-white/[0.02] border border-white/[0.08] rounded-2xl p-6 sm:p-8 min-h-[320px]">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-lg bg-[#95BF47]/10">
+                    {(() => {
+                      const Icon = steps[activeStep].icon
+                      return <Icon className="w-5 h-5 text-[#95BF47]" />
+                    })()}
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">{steps[activeStep].title}</p>
+                    <p className="text-white/40 text-sm">{steps[activeStep].detail}</p>
+                  </div>
+                </div>
+
+                {/* Step-specific visuals */}
+                {activeStep === 0 && (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 p-4 bg-white/[0.03] rounded-xl">
+                      <div className="w-12 h-12 bg-[#95BF47]/10 rounded-lg flex items-center justify-center">
+                        <Download className="w-6 h-6 text-[#95BF47]" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-white text-sm font-medium">Harbor for Shopify</p>
+                        <p className="text-white/40 text-xs">Click to install</p>
+                      </div>
+                      <div className="px-3 py-1.5 bg-[#95BF47] rounded-lg text-black text-xs font-semibold">
+                        Install
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {[1,2,3,4,5].map(i => (
+                        <div key={i} className="w-4 h-4 rounded-full bg-[#95BF47]" />
+                      ))}
+                      <span className="text-white/50 text-xs ml-2">4.9 rating</span>
+                    </div>
+                  </div>
+                )}
+
+                {activeStep === 1 && (
+                  <div className="space-y-3">
+                    {['Products analyzed', 'Schema generated', 'FAQs created', 'Metadata optimized'].map((item, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-white/[0.03] rounded-lg">
+                        <div className="w-6 h-6 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                          <div className="w-2 h-2 rounded-full bg-[#95BF47]" />
+                        </div>
+                        <span className="text-white/70 text-sm">{item}</span>
+                        <span className="ml-auto text-[#95BF47] text-xs">✓</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {activeStep === 2 && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: 'ChatGPT', value: '12' },
+                        { label: 'Claude', value: '8' },
+                        { label: 'Perplexity', value: '15' },
+                      ].map((stat, i) => (
+                        <div key={i} className="p-3 bg-white/[0.03] rounded-lg text-center">
+                          <p className="text-2xl font-bold text-white">{stat.value}</p>
+                          <p className="text-white/40 text-xs">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-white/30 text-xs text-center">Mentions this week</p>
+                  </div>
+                )}
+
+                {activeStep === 3 && (
+                  <div className="space-y-4">
+                    <div className="flex items-end gap-1 h-24">
+                      {[20, 35, 28, 45, 52, 48, 65, 72].map((h, i) => (
+                        <div 
+                          key={i} 
+                          className="flex-1 bg-gradient-to-t from-[#95BF47]/50 to-[#95BF47] rounded-t"
+                          style={{ height: `${h}%` }}
+                        />
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-white/40">
+                      <span>Week 1</span>
+                      <span className="text-[#95BF47]">+47% visibility</span>
+                      <span>Week 8</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Progress bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/[0.05] rounded-b-2xl overflow-hidden">
+                  <div 
+                    className="h-full bg-[#95BF47] transition-all duration-300"
+                    style={{ width: `${((activeStep + 1) / steps.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

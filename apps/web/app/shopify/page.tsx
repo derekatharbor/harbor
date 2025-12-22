@@ -11,7 +11,7 @@ import { ShopifyWaitlistProvider } from '@/components/shopify/useShopifyWaitlist
 export default function ShopifyWaitlistPage() {
   return (
     <ShopifyWaitlistProvider>
-      <div className="min-h-screen bg-[#101A31]">
+      <div className="min-h-screen bg-[#0a0a0a]">
         <main>
           <ShopifyHero />
           <div id="how-it-works">
