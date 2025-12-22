@@ -737,19 +737,6 @@ export default function ManageBrandPage() {
                 </div>
               )}
 
-              {/* No audit data state */}
-              {!brand?.audit_data && (
-                <div className="bg-[#111213] rounded-xl border border-white/[0.06] p-6 text-center">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white/[0.04] flex items-center justify-center">
-                    <Bot className="w-6 h-6 text-white/30" />
-                  </div>
-                  <h3 className="text-white/80 font-medium mb-1">AI Accuracy Report</h3>
-                  <p className="text-white/40 text-sm">
-                    We haven't audited how AI models describe your brand yet. Check back soon.
-                  </p>
-                </div>
-              )}
-
               {/* Progress Steps */}
               <div className="mb-2">
                 <div className="flex items-center justify-between mb-4">
