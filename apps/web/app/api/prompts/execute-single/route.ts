@@ -115,15 +115,26 @@ function checkBrandMentioned(text: string, brandName: string): { mentioned: bool
 interface ExtractedBrand {
   name: string
   sentiment: 'positive' | 'neutral' | 'negative'
+  features_mentioned?: string[]
+  price_mentioned?: string
+  is_winner?: boolean
 }
 
-async function extractBrands(text: string, userBrand: string): Promise<ExtractedBrand[]> {
+interface ExtractionResult {
+  brands: ExtractedBrand[]
+  comparison_winner?: string
+}
+
+async function extractBrands(text: string, userBrand: string, promptText?: string): Promise<ExtractionResult> {
   console.log('[extractBrands] Starting extraction, text length:', text?.length || 0)
   
   if (!text || text.length < 50) {
     console.log('[extractBrands] Text too short, skipping')
-    return []
+    return { brands: [] }
   }
+  
+  // Detect if this is a comparison prompt
+  const isComparison = promptText ? /\bvs\b|versus|compare|comparison|better/i.test(promptText) : false
   
   // Use Claude to extract brand/company/website names with sentiment
   try {
@@ -133,67 +144,85 @@ async function extractBrands(text: string, userBrand: string): Promise<Extracted
     
     const response = await anthropic.messages.create({
       model: 'claude-3-5-haiku-20241022',
-      max_tokens: 800,
+      max_tokens: 1200,
       messages: [{
         role: 'user',
-        content: `Extract all brand names, company names, product names, and website names mentioned in this text. For each, determine the sentiment based on how it's portrayed:
-- "positive": recommended, praised, highlighted as good/best, featured favorably
-- "neutral": just mentioned factually, listed without opinion
-- "negative": criticized, mentioned as inferior, compared unfavorably
+        content: `Extract all brand names, company names, product names, and website names mentioned in this text. For each, provide:
+- "name": the brand/product name
+- "sentiment": "positive" (recommended/praised), "neutral" (just mentioned), or "negative" (criticized)
+- "features_mentioned": array of specific features/capabilities mentioned for this brand (empty array if none)
+- "price_mentioned": any specific pricing mentioned for this brand (null if none)
+- "is_winner": true if this brand is explicitly recommended as the best choice or winner${isComparison ? ' in the comparison' : ''}, false otherwise
 
-Return ONLY a JSON array of objects with "name" and "sentiment" fields. Example:
-[{"name": "Notion", "sentiment": "positive"}, {"name": "Trello", "sentiment": "neutral"}]
+Return a JSON object with:
+- "brands": array of brand objects
+- "comparison_winner": name of the brand recommended as best overall (null if no clear winner)
 
-If no brands found, return [].
+Example:
+{
+  "brands": [
+    {"name": "Notion", "sentiment": "positive", "features_mentioned": ["all-in-one workspace", "templates"], "price_mentioned": "$8/user/month", "is_winner": true},
+    {"name": "Trello", "sentiment": "neutral", "features_mentioned": ["kanban boards"], "price_mentioned": null, "is_winner": false}
+  ],
+  "comparison_winner": "Notion"
+}
+
+If no brands found, return {"brands": [], "comparison_winner": null}.
 
 Text:
-${text.slice(0, 2000)}
+${text.slice(0, 2500)}
 
-JSON array:`
+JSON:`
       }]
     })
     
-    const content = response.content[0]?.type === 'text' ? response.content[0].text : '[]'
-    console.log('[extractBrands] Claude response:', content.slice(0, 300))
+    const content = response.content[0]?.type === 'text' ? response.content[0].text : '{}'
+    console.log('[extractBrands] Claude response:', content.slice(0, 400))
     
-    // Parse the JSON array
+    // Parse the JSON
     const cleaned = content.trim().replace(/```json\n?|\n?```/g, '')
-    const brands = JSON.parse(cleaned)
+    const result = JSON.parse(cleaned)
     
-    if (Array.isArray(brands)) {
-      // Remove duplicates but KEEP the user's brand (we need it for visibility tracking)
+    if (result && Array.isArray(result.brands)) {
+      // Remove duplicates
       const seen = new Set<string>()
       
-      const filtered = brands
-        .filter((b): b is { name: string; sentiment: string } => 
+      const filtered = result.brands
+        .filter((b: any): b is ExtractedBrand => 
           typeof b === 'object' &&
           typeof b.name === 'string' && 
           b.name.length > 1 && 
           b.name.length < 50
         )
-        .filter(b => {
+        .filter((b: ExtractedBrand) => {
           const lower = b.name.toLowerCase()
           if (seen.has(lower)) return false
           seen.add(lower)
           return true
         })
-        .map(b => ({
+        .map((b: any) => ({
           name: b.name,
           sentiment: (['positive', 'neutral', 'negative'].includes(b.sentiment) 
             ? b.sentiment 
-            : 'neutral') as 'positive' | 'neutral' | 'negative'
+            : 'neutral') as 'positive' | 'neutral' | 'negative',
+          features_mentioned: Array.isArray(b.features_mentioned) ? b.features_mentioned.slice(0, 10) : [],
+          price_mentioned: typeof b.price_mentioned === 'string' ? b.price_mentioned : null,
+          is_winner: b.is_winner === true
         }))
         .slice(0, 15)
       
-      console.log('[extractBrands] Extracted brands:', filtered)
-      return filtered
+      console.log('[extractBrands] Extracted brands:', filtered.length)
+      return {
+        brands: filtered,
+        comparison_winner: typeof result.comparison_winner === 'string' ? result.comparison_winner : undefined
+      }
     }
     
-    console.log('[extractBrands] Response was not an array')
-    return []
+    console.log('[extractBrands] Response was not valid format')
+    return { brands: [] }
   } catch (err) {
     console.error('[extractBrands] Error:', err)
-    return []
+    return { brands: [] }
   }
 }
 
@@ -246,7 +275,9 @@ export async function POST(request: NextRequest) {
       : { mentioned: false, snippet: null }
     
     // Extract brands from response (uses Claude) - skip in batch mode to save time
-    const brandsFound = skip_extraction ? [] : await extractBrands(response.text, brand || '')
+    const extractionResult = skip_extraction 
+      ? { brands: [] } 
+      : await extractBrands(response.text, brand || '', prompt_text)
     
     // Save to prompt_executions
     const { data: execution, error: execError } = await supabase
@@ -256,7 +287,8 @@ export async function POST(request: NextRequest) {
         model,
         response_text: response.text,
         tokens_used: response.tokens,
-        executed_at: new Date().toISOString()
+        executed_at: new Date().toISOString(),
+        comparison_winner: extractionResult.comparison_winner || null
       })
       .select()
       .single()
@@ -267,12 +299,15 @@ export async function POST(request: NextRequest) {
     }
     
     // Save brand mentions if we found any
-    if (execution && brandsFound.length > 0) {
-      const mentionInserts = brandsFound.map((brand, idx) => ({
+    if (execution && extractionResult.brands.length > 0) {
+      const mentionInserts = extractionResult.brands.map((b, idx) => ({
         execution_id: execution.id,
-        brand_name: brand.name,
+        brand_name: b.name,
         position: idx + 1,
-        sentiment: brand.sentiment
+        sentiment: b.sentiment,
+        features_mentioned: b.features_mentioned || [],
+        price_mentioned: b.price_mentioned || null,
+        is_winner: b.is_winner || false
       }))
       
       console.log('[execute-single] Saving brand mentions:', mentionInserts.length)
@@ -316,7 +351,8 @@ export async function POST(request: NextRequest) {
       prompt_id,
       mentioned,
       snippet,
-      brands_found: brandsFound,
+      brands_found: extractionResult.brands,
+      comparison_winner: extractionResult.comparison_winner,
       tokens: response.tokens,
       duration_ms: duration
     })
