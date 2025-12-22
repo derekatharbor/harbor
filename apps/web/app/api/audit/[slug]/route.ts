@@ -1,17 +1,106 @@
 // app/api/audit/[slug]/route.ts
-// Audit a single brand - useful for testing and on-demand checks
+// Audit a single brand against multiple AI models
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 
 export const dynamic = 'force-dynamic'
+
+interface ModelFinding {
+  field: string
+  type: 'missing' | 'incorrect' | 'outdated' | 'incomplete'
+  ai_said: string | null
+  harbor_says: string
+  severity: 'high' | 'medium' | 'low'
+}
+
+interface ModelAudit {
+  model: string
+  ai_description: string | null
+  findings: ModelFinding[]
+  accuracy_score: number
+}
 
 function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
+}
+
+function buildPrompt(brandName: string, domain: string | null, harborContext: any): string {
+  return `You are auditing how AI models describe a software company. Compare what you know about this company to the structured data provided.
+
+Company: ${brandName}
+Domain: ${domain || 'unknown'}
+Category: ${harborContext.category || 'unknown'}
+
+Harbor Profile Data (source of truth):
+${JSON.stringify(harborContext, null, 2)}
+
+Your task:
+1. Based on your training data, describe what you know about ${brandName}
+2. Compare your knowledge to the Harbor profile data above
+3. Identify specific discrepancies where your knowledge differs from or is missing
+
+Focus on: description, pricing, features, integrations, target customer (ICP)
+
+Respond in this exact JSON format:
+{
+  "ai_description": "Brief description of what you know about this company",
+  "findings": [
+    {
+      "field": "pricing|description|category|features|icp|integrations",
+      "type": "missing|incorrect|incomplete",
+      "ai_said": "What you would say (or null if unknown)",
+      "harbor_says": "What Harbor's data says",
+      "severity": "high|medium|low"
+    }
+  ],
+  "accuracy_score": 0-100
+}
+
+Only return real discrepancies, not minor wording differences.
+If you have no knowledge of this company, return findings with type "missing".
+If Harbor data is empty/null for a field, skip that field.`
+}
+
+function parseAuditResponse(text: string): { ai_description: string | null; findings: ModelFinding[]; accuracy_score: number } {
+  try {
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      return { ai_description: null, findings: [], accuracy_score: 0 }
+    }
+    const parsed = JSON.parse(jsonMatch[0])
+    return {
+      ai_description: parsed.ai_description || null,
+      findings: parsed.findings || [],
+      accuracy_score: parsed.accuracy_score || 0
+    }
+  } catch {
+    return { ai_description: null, findings: [], accuracy_score: 0 }
+  }
+}
+
+function generateEmailHook(brandName: string, consensusIssues: string[], models: Record<string, ModelAudit>): string {
+  const modelCount = Object.keys(models).length
+  const modelsWithIssues = Object.values(models).filter(m => m.findings.length > 0).length
+  
+  if (consensusIssues.length === 0) {
+    return `We checked how ChatGPT, Claude, and Perplexity describe ${brandName} — minor gaps found.`
+  }
+  
+  const issueList = consensusIssues.slice(0, 2).join(' and ')
+  
+  if (modelsWithIssues === modelCount) {
+    return `Asked ChatGPT, Claude, and Perplexity about ${brandName} — all 3 models got your ${issueList} wrong.`
+  } else if (modelsWithIssues >= 2) {
+    return `${modelsWithIssues} out of 3 AI models we tested have incorrect info about ${brandName}'s ${issueList}.`
+  } else {
+    return `Found gaps in how AI models describe ${brandName}'s ${issueList}. This affects how prospects research you.`
+  }
 }
 
 export async function GET(
@@ -49,6 +138,8 @@ export async function GET(
 
   // Run fresh audit
   const anthropic = new Anthropic()
+  const openai = new OpenAI()
+  
   const feedData = typeof brand.feed_data === 'string' 
     ? JSON.parse(brand.feed_data) 
     : brand.feed_data || {}
@@ -64,77 +155,87 @@ export async function GET(
     icp: feedData.icp,
   }
 
-  const prompt = `You are auditing how AI models might describe a software company. Compare what you know about this company to the structured data provided.
-
-Company: ${brand.brand_name}
-Domain: ${brand.domain || 'unknown'}
-Category: ${harborContext.category || 'unknown'}
-
-Harbor Profile Data (source of truth):
-${JSON.stringify(harborContext, null, 2)}
-
-Your task:
-1. Based on your training data, describe what you know about ${brand.brand_name}
-2. Compare your knowledge to the Harbor profile data above
-3. Identify specific discrepancies where your knowledge differs from or is missing compared to Harbor's data
-
-Focus on these high-value fields:
-- Company description/what they do
-- Pricing (if available)
-- Key features
-- Target customer (ICP)
-- Category classification
-
-Respond in this exact JSON format:
-{
-  "ai_description": "Brief description of what you know about this company",
-  "findings": [
-    {
-      "field": "pricing|description|category|features|icp|integrations",
-      "type": "missing|incorrect|hallucination",
-      "ai_said": "What you (the AI) would say (or null if unknown)",
-      "harbor_says": "What Harbor's data says",
-      "severity": "high|medium|low",
-      "email_hook": "A cold outreach sentence pointing out THIS SPECIFIC problem. Frame it as: 'We asked [AI model] about [Company] and it said X / didn't know Y. This matters because Z.' Do NOT write marketing copy. Write like you're alerting them to a problem."
-    }
-  ],
-  "accuracy_score": 0-100
-}
-
-CRITICAL for email_hook: Write it as a problem statement for cold outreach, NOT marketing copy. 
-- BAD: "Unlock the full potential of our pricing model"
-- GOOD: "Asked Claude about Linear's pricing — it had no idea you have a free tier or that paid starts at $10/user."
-
-If you have no knowledge of this company, return findings with type "missing" for key fields.
-If Harbor data is empty/null for a field, skip that field.
-Only return real discrepancies, not minor wording differences.`
+  const prompt = buildPrompt(brand.brand_name, brand.domain, harborContext)
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: prompt }]
-    })
+    // Run all 3 audits in parallel
+    const [claudeRes, gptRes, perplexityRes] = await Promise.all([
+      // Claude
+      anthropic.messages.create({
+        model: 'claude-3-5-haiku-20241022',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      }).then(r => parseAuditResponse(r.content[0].type === 'text' ? r.content[0].text : ''))
+        .catch(() => ({ ai_description: null, findings: [], accuracy_score: 0 })),
+      
+      // GPT
+      openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      }).then(r => parseAuditResponse(r.choices[0]?.message?.content || ''))
+        .catch(() => ({ ai_description: null, findings: [], accuracy_score: 0 })),
+      
+      // Perplexity
+      process.env.PERPLEXITY_API_KEY 
+        ? fetch('https://api.perplexity.ai/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              model: 'llama-3.1-sonar-small-128k-online',
+              max_tokens: 1000,
+              messages: [{ role: 'user', content: prompt }]
+            })
+          }).then(r => r.json())
+            .then(d => parseAuditResponse(d.choices?.[0]?.message?.content || ''))
+            .catch(() => ({ ai_description: null, findings: [], accuracy_score: 0 }))
+        : Promise.resolve({ ai_description: null, findings: [], accuracy_score: 0 })
+    ])
 
-    const text = response.content[0].type === 'text' ? response.content[0].text : ''
-    
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      return NextResponse.json({ 
-        error: 'Failed to parse audit response',
-        raw: text 
-      }, { status: 500 })
+    const models: Record<string, ModelAudit> = {
+      claude: { model: 'claude', ...claudeRes },
+      chatgpt: { model: 'chatgpt', ...gptRes },
+      perplexity: { model: 'perplexity', ...perplexityRes }
     }
 
-    const parsed = JSON.parse(jsonMatch[0])
+    // Find consensus issues
+    const fieldIssueCount: Record<string, number> = {}
+    const allFindings: ModelFinding[] = []
     
+    for (const audit of Object.values(models)) {
+      for (const finding of audit.findings) {
+        fieldIssueCount[finding.field] = (fieldIssueCount[finding.field] || 0) + 1
+        allFindings.push(finding)
+      }
+    }
+
+    const consensusIssues = Object.entries(fieldIssueCount)
+      .filter(([_, count]) => count >= 2)
+      .sort((a, b) => b[1] - a[1])
+      .map(([field]) => field)
+
+    const worstIssues = allFindings
+      .filter(f => consensusIssues.includes(f.field) || f.severity === 'high')
+      .slice(0, 5)
+
+    const hasIssues = allFindings.length > 0
+    const overallAccuracy = Math.round(
+      Object.values(models).reduce((sum, m) => sum + m.accuracy_score, 0) / 3
+    )
+
+    const emailHook = generateEmailHook(brand.brand_name, consensusIssues, models)
+
     const auditData = {
-      findings: parsed.findings || [],
-      has_issues: (parsed.findings || []).length > 0,
-      accuracy_score: parsed.accuracy_score || 100,
-      ai_description: parsed.ai_description,
-      checked_at: new Date().toISOString(),
-      model_used: 'claude-3-5-haiku-20241022'
+      models,
+      consensus_issues: consensusIssues,
+      worst_issues: worstIssues,
+      has_issues: hasIssues,
+      overall_accuracy: overallAccuracy,
+      email_hook: emailHook,
+      checked_at: new Date().toISOString()
     }
 
     // Cache the result
