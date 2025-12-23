@@ -1,10 +1,11 @@
-// apps/web/app/auth/login/page.tsx
+// app/auth/login/page.tsx
 // Split-screen login with black background
+// Updated with ?next= param support for Shopify claim flow
 
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -12,6 +13,9 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const next = searchParams.get('next')
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -32,7 +36,8 @@ export default function LoginPage() {
 
       if (authError) throw authError
 
-      router.push('/dashboard')
+      // Redirect to next param or dashboard
+      router.push(next || '/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sign in')
     } finally {
@@ -44,11 +49,13 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const supabase = createClientComponentClient()
+      const redirectTo = next 
+        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+        : `${window.location.origin}/auth/callback`
+      
       await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
+        options: { redirectTo }
       })
     } catch (err) {
       setError('Failed to sign in with Google')
@@ -178,7 +185,10 @@ export default function LoginPage() {
           {/* Sign up link */}
           <p className="text-center text-sm text-white/40 mt-6">
             Don't have an account?{' '}
-            <Link href="/auth/signup" className="text-white font-medium hover:underline">
+            <Link 
+              href={next ? `/auth/signup?next=${encodeURIComponent(next)}` : '/auth/signup'} 
+              className="text-white font-medium hover:underline"
+            >
               Sign up
             </Link>
           </p>
