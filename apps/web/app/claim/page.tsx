@@ -48,12 +48,28 @@ export default function ClaimPage() {
 
       setUser(user)
 
-      // Fetch user's dashboards
-      const { data: userDashboards, error: dashError } = await supabase
-        .from('dashboards')
-        .select('id, brand_name, domain, logo_url, created_at')
+      // Get user's org(s) via user_roles
+      const { data: userRoles } = await supabase
+        .from('user_roles')
+        .select('org_id')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+
+      const orgIds = userRoles?.map(r => r.org_id) || []
+
+      // Fetch dashboards for user's orgs
+      let userDashboards: Dashboard[] = []
+      let dashError = null
+      
+      if (orgIds.length > 0) {
+        const { data, error } = await supabase
+          .from('dashboards')
+          .select('id, brand_name, domain, logo_url, created_at')
+          .in('org_id', orgIds)
+          .order('created_at', { ascending: false })
+        
+        userDashboards = data || []
+        dashError = error
+      }
 
       if (dashError) {
         console.error('Failed to fetch dashboards:', dashError)
