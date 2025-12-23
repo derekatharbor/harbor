@@ -94,7 +94,7 @@ export default function ClaimPage() {
   }, [shopDomain, router, supabase])
 
   const handleLink = async () => {
-    if (!selectedDashboard || !shopDomain) return
+    if (!selectedDashboard || !shopDomain || !user) return
 
     setLinking(true)
     setError('')
@@ -103,7 +103,7 @@ export default function ClaimPage() {
       // Get the dashboard to find associated profile
       const { data: dashboard } = await supabase
         .from('dashboards')
-        .select('id, brand_name, domain')
+        .select('id, brand_name, domain, logo_url')
         .eq('id', selectedDashboard)
         .single()
 
@@ -113,16 +113,60 @@ export default function ClaimPage() {
 
       // Find or create ai_profile for this brand
       let profileId = null
+      const shopSlug = shopDomain.replace('.myshopify.com', '')
+      const brandDomain = dashboard.domain || `${shopSlug}.myshopify.com`
       
-      // Try to find existing profile by domain
-      if (dashboard.domain) {
-        const { data: existingProfile } = await supabase
-          .from('ai_profiles')
-          .select('id')
-          .eq('domain', dashboard.domain)
-          .single()
+      // Try to find existing profile by domain or slug
+      const { data: existingProfile } = await supabase
+        .from('ai_profiles')
+        .select('id')
+        .or(`domain.eq.${brandDomain},slug.eq.${shopSlug}`)
+        .limit(1)
+        .single()
+      
+      if (existingProfile) {
+        profileId = existingProfile.id
         
-        profileId = existingProfile?.id
+        // Update existing profile with claim info
+        await supabase
+          .from('ai_profiles')
+          .update({
+            claimed: true,
+            claimed_by_user_id: user.id,
+            claimed_at: new Date().toISOString(),
+            dashboard_id: selectedDashboard,
+          })
+          .eq('id', profileId)
+      } else {
+        // Create new ai_profile
+        const { data: newProfile, error: profileError } = await supabase
+          .from('ai_profiles')
+          .insert({
+            brand_name: dashboard.brand_name,
+            slug: shopSlug,
+            domain: brandDomain,
+            logo_url: dashboard.logo_url,
+            claimed: true,
+            claimed_by_user_id: user.id,
+            claimed_at: new Date().toISOString(),
+            dashboard_id: selectedDashboard,
+            generation_method: 'claim',
+            feed_data: {
+              brand_name: dashboard.brand_name,
+              domain: brandDomain,
+              source: 'shopify',
+              shop_domain: shopDomain,
+            },
+          })
+          .select('id')
+          .single()
+
+        if (profileError) {
+          console.error('Failed to create profile:', profileError)
+          // Continue without profile - not a blocker
+        } else {
+          profileId = newProfile.id
+        }
       }
 
       // Update shopify_stores with the link
