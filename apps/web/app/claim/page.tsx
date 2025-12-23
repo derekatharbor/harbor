@@ -143,7 +143,7 @@ export default function ClaimPage() {
       // Redirect back to Shopify after a moment
       setTimeout(() => {
         // Shopify embedded apps use this URL pattern
-        window.location.href = `https://admin.shopify.com/store/${shopDomain.replace('.myshopify.com', '')}/apps/harbor`
+        window.location.href = `https://admin.shopify.com/store/${shopDomain.replace('.myshopify.com', '')}/apps/harbor-3`
       }, 2000)
 
     } catch (err) {
