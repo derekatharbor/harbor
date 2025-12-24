@@ -333,7 +333,7 @@ export async function runCategoryScan(storeId: string): Promise<{
     console.log(`[CategoryScan] Found ${categories.length} categories`)
 
     for (const category of categories) {
-      const heroVendor = category.products[0]?.vendor || null
+      const heroVendor = category.products[0]?.vendor || undefined
       const prompts = generatePrompts(category.category, category.heroProduct.title, heroVendor)
       const allResults: ScanResult[] = []
       const allProductMatches: Map<string, { mentions: number; bestPosition: number; models: string[] }> = new Map()
