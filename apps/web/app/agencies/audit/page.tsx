@@ -44,9 +44,11 @@ function AuditContent() {
   
   const url = searchParams.get('url') || ''
   
-  const [phase, setPhase] = useState<'init' | 'extracting' | 'scanning' | 'complete' | 'error'>('init')
+  const [phase, setPhase] = useState<'init' | 'fetching' | 'analyzing' | 'scanning' | 'calculating' | 'complete' | 'error'>('init')
   const [brandName, setBrandName] = useState('')
   const [domain, setDomain] = useState('')
+  const [step, setStep] = useState('')
+  const [logo, setLogo] = useState<string | null>(null)
   const [modelStatus, setModelStatus] = useState<Record<string, 'pending' | 'running' | 'complete'>>({
     chatgpt: 'pending',
     claude: 'pending',
@@ -125,8 +127,16 @@ function AuditContent() {
                 setPhase(data.phase)
               }
               
+              if (data.step) {
+                setStep(data.step)
+              }
+              
               if (data.brand_name) {
                 setBrandName(data.brand_name)
+              }
+              
+              if (data.logo) {
+                setLogo(data.logo)
               }
               
               if (data.model_status) {
@@ -178,7 +188,6 @@ function AuditContent() {
   const isComplete = phase === 'complete'
   const isError = phase === 'error'
   const completedModels = Object.values(modelStatus).filter(s => s === 'complete').length
-  const progress = Math.round((completedModels / MODELS.length) * 100)
 
   return (
     <div className="min-h-screen bg-[#0B0B0C] flex flex-col">
@@ -276,22 +285,46 @@ function AuditContent() {
 
         {/* Status text */}
         <div className="text-center mb-6">
-          {phase === 'init' || phase === 'extracting' ? (
+          {phase === 'init' ? (
             <>
               <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
-                Analyzing {domain}
+                Starting audit...
+              </h2>
+            </>
+          ) : phase === 'fetching' ? (
+            <>
+              <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+                Analyzing {brandName || domain}
               </h2>
               <p className="text-white/40 text-sm font-['Source_Code_Pro']">
-                Extracting brand information...
+                {step || 'Fetching brand assets...'}
+              </p>
+            </>
+          ) : phase === 'analyzing' ? (
+            <>
+              <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+                Analyzing {brandName || domain}
+              </h2>
+              <p className="text-white/40 text-sm font-['Source_Code_Pro']">
+                {step || 'Detecting category...'}
               </p>
             </>
           ) : phase === 'scanning' ? (
             <>
               <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
-                Scanning AI visibility
+                Scanning AI models
               </h2>
               <p className="text-white/40 text-sm font-['Source_Code_Pro']">
-                Checking {brandName || domain} across {MODELS.length} AI models
+                Checking {brandName || domain} across ChatGPT, Claude, and Perplexity
+              </p>
+            </>
+          ) : phase === 'calculating' ? (
+            <>
+              <h2 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+                Building your report
+              </h2>
+              <p className="text-white/40 text-sm font-['Source_Code_Pro']">
+                {step || 'Calculating final metrics...'}
               </p>
             </>
           ) : isComplete ? (
@@ -323,9 +356,23 @@ function AuditContent() {
                 className={`h-full rounded-full transition-all duration-500 ease-out ${
                   isComplete ? 'bg-emerald-500/60' : 'bg-white/40'
                 }`}
-                style={{ width: `${phase === 'extracting' ? 10 : phase === 'scanning' ? 10 + (progress * 0.9) : 100}%` }}
+                style={{ 
+                  width: `${
+                    phase === 'init' ? 5 :
+                    phase === 'fetching' ? 15 :
+                    phase === 'analyzing' ? 25 :
+                    phase === 'scanning' ? 25 + (completedModels / 3) * 50 :
+                    phase === 'calculating' ? 90 :
+                    100
+                  }%` 
+                }}
               />
             </div>
+            {!isComplete && (
+              <p className="text-center text-xs text-white/30 mt-2 font-['Source_Code_Pro']">
+                {phase === 'scanning' ? `${completedModels} of 3 models complete` : ''}
+              </p>
+            )}
           </div>
         )}
 
