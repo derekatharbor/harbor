@@ -2,6 +2,8 @@
 // New file - category-level AI scans for Shopify stores
 
 import { createClient } from '@supabase/supabase-js'
+import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 
 function getSupabase() {
   return createClient(
@@ -15,15 +17,74 @@ const MODELS = [
   { id: 'chatgpt', name: 'ChatGPT', provider: 'openai' },
   { id: 'claude', name: 'Claude', provider: 'anthropic' },
   { id: 'perplexity', name: 'Perplexity', provider: 'perplexity' },
-  { id: 'gemini', name: 'Gemini', provider: 'google' },
 ]
 
 // Prompt templates for category scanning
 const PROMPT_TEMPLATES = [
-  "What are the best {category} to buy in 2024?",
-  "I'm looking for {category} recommendations. What should I consider?",
-  "Top rated {category} for someone new to this",
+  "What are the best {category} to buy right now?",
 ]
+
+// ============================================================================
+// AI EXECUTION FUNCTIONS
+// ============================================================================
+
+async function executeChatGPT(prompt: string): Promise<{ text: string; tokens: number }> {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: 1000,
+    temperature: 0.7
+  })
+  
+  return {
+    text: response.choices[0]?.message?.content || '',
+    tokens: response.usage?.total_tokens || 0
+  }
+}
+
+async function executeClaude(prompt: string): Promise<{ text: string; tokens: number }> {
+  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+  
+  const response = await anthropic.messages.create({
+    model: 'claude-3-5-haiku-20241022',
+    max_tokens: 1000,
+    messages: [{ role: 'user', content: prompt }]
+  })
+  
+  const text = response.content[0]?.type === 'text' ? response.content[0].text : ''
+  return {
+    text,
+    tokens: (response.usage?.input_tokens || 0) + (response.usage?.output_tokens || 0)
+  }
+}
+
+async function executePerplexity(prompt: string): Promise<{ text: string; tokens: number; citations?: string[] }> {
+  const response = await fetch('https://api.perplexity.ai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'sonar',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 1000
+    })
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Perplexity API error: ${response.status}`)
+  }
+  
+  const data = await response.json()
+  return {
+    text: data.choices?.[0]?.message?.content || '',
+    tokens: data.usage?.total_tokens || 0,
+    citations: data.citations || []
+  }
+}
 
 interface CategoryGroup {
   category: string
@@ -121,21 +182,49 @@ function generatePrompts(category: string): string[] {
 
 /**
  * Execute a single prompt against a model
- * TODO: Wire up to real APIs - returns mock data for now
  */
 async function executePrompt(
   model: typeof MODELS[0],
   prompt: string,
   storeProducts: string[]
 ): Promise<ScanResult> {
-  // TODO: Wire up to actual AI APIs
-  console.log(`[CategoryScan] Would execute: ${model.name} - "${prompt}"`)
+  console.log(`[CategoryScan] Executing: ${model.name} - "${prompt.slice(0, 50)}..."`)
+  
+  let response: { text: string; tokens: number; citations?: string[] }
+  
+  try {
+    switch (model.id) {
+      case 'chatgpt':
+        response = await executeChatGPT(prompt)
+        break
+      case 'claude':
+        response = await executeClaude(prompt)
+        break
+      case 'perplexity':
+        response = await executePerplexity(prompt)
+        break
+      default:
+        throw new Error(`Unknown model: ${model.id}`)
+    }
+  } catch (error) {
+    console.error(`[CategoryScan] Error executing ${model.name}:`, error)
+    return {
+      model: model.id,
+      prompt,
+      response: '',
+      productsFound: [],
+      competitorsFound: [],
+      timestamp: new Date().toISOString(),
+    }
+  }
+  
+  console.log(`[CategoryScan] Got response from ${model.name}, ${response.text.length} chars`)
   
   return {
     model: model.id,
     prompt,
-    response: `[Mock response for ${model.name}]`,
-    productsFound: [],
+    response: response.text,
+    productsFound: [], // Will be filled by matchProducts
     competitorsFound: [],
     timestamp: new Date().toISOString(),
   }
@@ -240,6 +329,9 @@ export async function runCategoryScan(storeId: string): Promise<{
             result.response,
             category.products.map(p => ({ id: p.id, title: p.title }))
           )
+          
+          // Track which products were found in this response
+          result.productsFound = matches.map(m => m.title)
 
           for (let i = 0; i < matches.length; i++) {
             const match = matches[i]
@@ -258,14 +350,20 @@ export async function runCategoryScan(storeId: string): Promise<{
             result.response,
             category.products.map(p => p.title)
           )
+          
+          // Small delay between API calls to avoid rate limits
+          await new Promise(resolve => setTimeout(resolve, 500))
         }
       }
 
+      // Calculate visibility: what % of models mentioned at least one store product
       const modelsWithMentions = new Set(
         allResults.filter(r => r.productsFound.length > 0).map(r => r.model)
       )
       const visibilityScore = Math.round((modelsWithMentions.size / MODELS.length) * 100)
       const allCompetitors = [...new Set(allResults.flatMap(r => r.competitorsFound))]
+      
+      console.log(`[CategoryScan] ${category.category}: ${modelsWithMentions.size}/${MODELS.length} models mentioned products, visibility=${visibilityScore}%`)
 
       const { data: scanRecord, error: scanError } = await supabase
         .from('shopify_category_scans')
