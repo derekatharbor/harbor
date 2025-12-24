@@ -23,7 +23,7 @@ import {
   Minus,
   Code,
   Globe,
-  Bookmark
+  Download
 } from 'lucide-react'
 
 // ============================================================================
@@ -94,12 +94,12 @@ const MODEL_NAMES: Record<string, string> = {
 // COMPONENTS
 // ============================================================================
 
-function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
+function ScoreRing({ score, size = 120, color, label }: { score: number; size?: number; color?: string; label?: string }) {
   const radius = (size - 12) / 2
   const circumference = 2 * Math.PI * radius
   const progress = (score / 100) * circumference
   
-  const color = score >= 60 ? '#34D399' : score >= 30 ? '#FBBF24' : '#F87171'
+  const ringColor = color || (score >= 60 ? '#34D399' : score >= 30 ? '#FBBF24' : '#F87171')
   
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -117,7 +117,7 @@ function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke={color}
+          stroke={ringColor}
           strokeWidth="8"
           strokeDasharray={circumference}
           strokeDashoffset={circumference - progress}
@@ -126,7 +126,7 @@ function ScoreRing({ score, size = 120 }: { score: number; size?: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-3xl font-semibold text-white font-['Space_Grotesk']">{score}%</span>
+        <span className="text-3xl font-semibold text-white font-['Space_Grotesk']">{label || `${score}%`}</span>
       </div>
     </div>
   )
@@ -320,19 +320,28 @@ export default function ReportPage() {
             <div className="text-center">
               {audit.competitors[0] ? (
                 <>
-                  <div className="text-5xl font-semibold text-red-400 font-['Space_Grotesk'] mb-3">
-                    {topCompetitorShare - brandShare > 0 ? '+' : ''}{topCompetitorShare - brandShare}%
+                  <div className="flex justify-center mb-3">
+                    <ScoreRing 
+                      score={Math.min(100, Math.max(0, 100 - (topCompetitorShare - brandShare)))} 
+                      color={topCompetitorShare > brandShare ? '#F87171' : '#34D399'}
+                      label={`${topCompetitorShare - brandShare > 0 ? '+' : ''}${topCompetitorShare - brandShare}%`}
+                    />
                   </div>
                   <div className="text-xs text-white/40 uppercase tracking-wide font-['Source_Code_Pro'] mb-1">
-                    Competitor Advantage
+                    Competitor Gap
                   </div>
                   <p className="text-sm text-white/60 font-['Source_Code_Pro']">
-                    {audit.competitors[0].name} leads by {topCompetitorShare - brandShare}pts
+                    {topCompetitorShare > brandShare 
+                      ? `${audit.competitors[0].name} leads by ${topCompetitorShare - brandShare}pts`
+                      : `You lead by ${brandShare - topCompetitorShare}pts`
+                    }
                   </p>
                 </>
               ) : (
                 <>
-                  <div className="text-5xl font-semibold text-white/20 font-['Space_Grotesk'] mb-3">—</div>
+                  <div className="flex justify-center mb-3">
+                    <ScoreRing score={100} color="#34D399" />
+                  </div>
                   <div className="text-xs text-white/40 uppercase tracking-wide font-['Source_Code_Pro'] mb-1">
                     Competitor Gap
                   </div>
@@ -545,6 +554,48 @@ export default function ReportPage() {
           </div>
         </div>
 
+        {/* ============ AGENCY VALUE PROP ============ */}
+        <div className="bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 rounded-2xl p-6 mb-6">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-base font-semibold text-white mb-1 font-['Space_Grotesk']">
+                Won the deal? Deliver with Harbor.
+              </h3>
+              <p className="text-sm text-white/50 font-['Source_Code_Pro'] mb-4">
+                Use this audit to close the client. Then use Harbor to actually fix their AI visibility — and bill it as a service.
+              </p>
+              
+              <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                <div className="flex items-center gap-2 text-xs text-white/60 font-['Source_Code_Pro']">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Full visibility dashboard per client</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-white/60 font-['Source_Code_Pro']">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>White-label monthly reports</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-white/60 font-['Source_Code_Pro']">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Hallucination alerts & fixes</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-white/60 font-['Source_Code_Pro']">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Competitor monitoring</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-white/30 font-['Source_Code_Pro']">Starting at</span>
+                <span className="text-lg font-semibold text-white font-['Space_Grotesk']">$99<span className="text-sm font-normal text-white/40">/brand/mo</span></span>
+                <span className="text-xs text-white/30 font-['Source_Code_Pro']">· Bill your client $500+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ============ CTAs ============ */}
         <div className="grid md:grid-cols-2 gap-4 mb-12">
           <button
@@ -552,15 +603,15 @@ export default function ReportPage() {
             className="flex items-center justify-center gap-2 px-6 py-4 bg-white text-[#0B0B0C] rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-white/90 transition-all"
           >
             <Mail className="w-4 h-4" />
-            Get Full PDF Report
+            Get PDF for Pitch Deck
           </button>
           
           <Link
-            href="/pricing"
-            className="flex items-center justify-center gap-2 px-6 py-4 bg-white/10 text-white rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-white/15 transition-all"
+            href="/agencies/signup"
+            className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 text-white rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-emerald-500/90 transition-all"
           >
-            <Bookmark className="w-4 h-4" />
-            Save to Pitch Workspace
+            Start Agency Account
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -582,10 +633,10 @@ export default function ReportPage() {
             {!emailSuccess ? (
               <>
                 <h3 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
-                  Get the full report
+                  Get your pitch-ready PDF
                 </h3>
                 <p className="text-sm text-white/40 font-['Source_Code_Pro'] mb-6">
-                  Enter your email to receive a white-label PDF with detailed recommendations.
+                  Enter your email to download a white-label PDF you can add to your pitch deck.
                 </p>
                 
                 <form onSubmit={handleEmailSubmit}>
@@ -621,14 +672,28 @@ export default function ReportPage() {
                 <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                   <Check className="w-6 h-6 text-emerald-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">Report sent!</h3>
-                <p className="text-sm text-white/40 font-['Source_Code_Pro'] mb-6">Check your inbox for the full report.</p>
-                <button
-                  onClick={() => setShowEmailModal(false)}
-                  className="px-6 py-2.5 bg-white/10 text-white rounded-lg font-medium text-sm font-['Space_Grotesk'] hover:bg-white/15 transition-all"
-                >
-                  Close
-                </button>
+                <h3 className="text-xl font-semibold text-white mb-2 font-['Space_Grotesk']">
+                  Your PDF is ready
+                </h3>
+                <p className="text-sm text-white/40 font-['Source_Code_Pro'] mb-6">
+                  Download your white-label audit report below.
+                </p>
+                <div className="flex flex-col gap-3">
+                  <a
+                    href={`/api/agencies/audit/${auditId}/pdf`}
+                    download
+                    className="px-6 py-3 bg-white text-[#0B0B0C] rounded-lg font-medium text-sm font-['Space_Grotesk'] hover:bg-white/90 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download PDF
+                  </a>
+                  <button
+                    onClick={() => setShowEmailModal(false)}
+                    className="px-6 py-2.5 text-white/50 hover:text-white/70 text-sm font-['Source_Code_Pro'] transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             )}
           </div>
