@@ -21,7 +21,8 @@ const MODELS = [
 
 // Prompt templates for category scanning
 const PROMPT_TEMPLATES = [
-  "What are the best {category} to buy right now?",
+  "What are the best {category} to buy?",
+  "Recommend some good {category}",
 ]
 
 // ============================================================================
@@ -174,7 +175,27 @@ export async function groupProductsByCategory(storeId: string): Promise<Category
 /**
  * Generate prompts for a category
  */
-function generatePrompts(category: string): string[] {
+function generatePrompts(category: string, heroProduct?: string, vendor?: string): string[] {
+  // If category is generic/empty, use product or vendor name
+  const isGeneric = !category || category === 'General' || category.length < 3
+  
+  if (isGeneric && heroProduct) {
+    // Use product name for specific prompts
+    return [
+      `What are the best ${heroProduct} alternatives?`,
+      `Is ${heroProduct} worth buying?`,
+    ]
+  }
+  
+  if (isGeneric && vendor) {
+    // Fall back to vendor/brand
+    return [
+      `What are the best products from ${vendor}?`,
+      `${vendor} product recommendations`,
+    ]
+  }
+  
+  // Normal category prompt
   return PROMPT_TEMPLATES.map(template => 
     template.replace('{category}', category.toLowerCase())
   )
@@ -312,7 +333,8 @@ export async function runCategoryScan(storeId: string): Promise<{
     console.log(`[CategoryScan] Found ${categories.length} categories`)
 
     for (const category of categories) {
-      const prompts = generatePrompts(category.category)
+      const heroVendor = category.products[0]?.vendor || null
+      const prompts = generatePrompts(category.category, category.heroProduct.title, heroVendor)
       const allResults: ScanResult[] = []
       const allProductMatches: Map<string, { mentions: number; bestPosition: number; models: string[] }> = new Map()
 
