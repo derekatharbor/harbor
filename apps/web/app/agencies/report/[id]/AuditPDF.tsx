@@ -10,109 +10,85 @@ import {
 } from '@react-pdf/renderer'
 
 // ============================================================================
-// STYLES - LIGHT MODE FOR PRINT
+// STYLES - LINEAR-INSPIRED LIGHT MODE
 // ============================================================================
 
 const colors = {
   bg: '#FFFFFF',
-  surface: '#F7F7F8',
-  border: 'rgba(0,0,0,0.08)',
-  text: '#1C1C1E',
-  textMuted: '#6B6B6F',
-  textLight: '#8E8E93',
-  emerald: '#059669',
-  emeraldBg: 'rgba(5,150,105,0.1)',
-  yellow: '#D97706',
-  yellowBg: 'rgba(217,119,6,0.1)',
-  red: '#DC2626',
-  redBg: 'rgba(220,38,38,0.1)',
+  surface: '#FAFAFA',
+  border: '#E5E5E5',
+  borderLight: '#F0F0F0',
+  text: '#171717',
+  textMuted: '#525252',
+  textLight: '#A3A3A3',
+  emerald: '#10B981',
+  emeraldBg: '#F0FDF4',
+  yellow: '#F59E0B',
+  yellowBg: '#FFFBEB',
+  red: '#EF4444',
+  redBg: '#FEF2F2',
 }
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.bg,
-    padding: 40,
+    padding: 48,
     fontFamily: 'Helvetica',
     color: colors.text,
   },
   // Header
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 30,
-    paddingBottom: 20,
+    marginBottom: 32,
+    paddingBottom: 24,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  logoPlaceholder: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: colors.surface,
-    marginRight: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   brandName: {
-    fontSize: 24,
+    fontSize: 28,
     fontFamily: 'Helvetica-Bold',
     color: colors.text,
     marginBottom: 4,
   },
   brandMeta: {
-    fontSize: 10,
+    fontSize: 11,
     color: colors.textLight,
-  },
-  badge: {
-    backgroundColor: colors.surface,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    marginLeft: 'auto',
-  },
-  badgeText: {
-    fontSize: 8,
-    color: colors.textMuted,
   },
   // Score Section
   scoresContainer: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 24,
-    marginBottom: 20,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    marginBottom: 32,
+    paddingBottom: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderLight,
   },
   scoreItem: {
+    flex: 1,
     alignItems: 'center',
   },
   scoreValue: {
-    fontSize: 32,
+    fontSize: 36,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   scoreLabel: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.textLight,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
     marginBottom: 4,
   },
   scoreDescription: {
-    fontSize: 9,
+    fontSize: 10,
     color: colors.textMuted,
     textAlign: 'center',
-    maxWidth: 140,
   },
   // Section
   section: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Helvetica-Bold',
     color: colors.text,
     marginBottom: 16,
@@ -121,10 +97,10 @@ const styles = StyleSheet.create({
   competitorRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   competitorRank: {
-    width: 20,
+    width: 24,
     fontSize: 10,
     color: colors.textLight,
   },
@@ -135,17 +111,17 @@ const styles = StyleSheet.create({
   },
   competitorBar: {
     flex: 2,
-    height: 6,
-    backgroundColor: 'rgba(0,0,0,0.08)',
-    borderRadius: 3,
-    marginHorizontal: 12,
+    height: 4,
+    backgroundColor: colors.borderLight,
+    borderRadius: 2,
+    marginHorizontal: 16,
   },
   competitorBarFill: {
-    height: 6,
-    borderRadius: 3,
+    height: 4,
+    borderRadius: 2,
   },
   competitorShare: {
-    width: 35,
+    width: 40,
     fontSize: 10,
     color: colors.textMuted,
     textAlign: 'right',
@@ -153,31 +129,31 @@ const styles = StyleSheet.create({
   // Model Results
   modelGrid: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
   },
   modelCard: {
     flex: 1,
-    padding: 12,
+    padding: 16,
     borderRadius: 8,
     borderWidth: 1,
   },
   modelCardMentioned: {
-    backgroundColor: colors.emeraldBg,
-    borderColor: 'rgba(5,150,105,0.2)',
+    backgroundColor: colors.bg,
+    borderColor: colors.emerald,
   },
   modelCardNotMentioned: {
-    backgroundColor: colors.redBg,
-    borderColor: 'rgba(220,38,38,0.2)',
+    backgroundColor: colors.bg,
+    borderColor: colors.red,
   },
   modelName: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: 'Helvetica-Bold',
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   modelStatus: {
-    fontSize: 9,
-    marginBottom: 8,
+    fontSize: 10,
+    marginBottom: 12,
   },
   modelStatusMentioned: {
     color: colors.emerald,
@@ -191,50 +167,50 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   modelMetricLabel: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.textLight,
   },
   modelMetricValue: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.text,
   },
   // Hallucinations
   hallucinationItem: {
-    backgroundColor: colors.redBg,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(220,38,38,0.2)',
+    padding: 14,
+    borderRadius: 6,
+    marginBottom: 10,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.red,
+    backgroundColor: colors.surface,
   },
   hallucinationBadge: {
-    fontSize: 7,
+    fontSize: 8,
     color: colors.red,
     textTransform: 'uppercase',
     marginBottom: 6,
     fontFamily: 'Helvetica-Bold',
+    letterSpacing: 0.5,
   },
   hallucinationClaim: {
-    fontSize: 10,
+    fontSize: 11,
     color: colors.text,
     marginBottom: 4,
+    lineHeight: 1.4,
   },
   hallucinationSource: {
-    fontSize: 8,
-    color: colors.textMuted,
+    fontSize: 9,
+    color: colors.textLight,
   },
   // Schema
   schemaGrid: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
   },
   schemaCard: {
     flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: colors.bg,
-    borderWidth: 1,
-    borderColor: colors.border,
+    padding: 14,
+    borderRadius: 6,
+    backgroundColor: colors.surface,
   },
   schemaStatus: {
     flexDirection: 'row',
@@ -242,36 +218,37 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   schemaStatusIcon: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     marginRight: 8,
   },
   schemaStatusText: {
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: 'Helvetica-Bold',
     color: colors.text,
   },
   schemaDetail: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.textMuted,
+    lineHeight: 1.4,
   },
   // Footer
   footer: {
     marginTop: 'auto',
-    paddingTop: 20,
+    paddingTop: 24,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopColor: colors.borderLight,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   footerText: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.textLight,
   },
   footerBrand: {
-    fontSize: 8,
+    fontSize: 9,
     color: colors.textMuted,
   },
 })
@@ -360,23 +337,12 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header} wrap={false}>
-          <View style={styles.logoPlaceholder}>
-            <Text style={{ fontSize: 20, color: colors.textLight }}>
-              {audit.brand_name.charAt(0)}
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.brandName}>{audit.brand_name}</Text>
-            <Text style={styles.brandMeta}>{audit.domain} · {audit.category}</Text>
-          </View>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>AI Visibility Audit</Text>
-          </View>
+          <Text style={styles.brandName}>{audit.brand_name}</Text>
+          <Text style={styles.brandMeta}>AI Visibility Audit · {audit.domain} · {audit.category}</Text>
         </View>
 
         {/* Score Cards */}
         <View style={styles.scoresContainer} wrap={false}>
-          {/* Share of Voice */}
           <View style={styles.scoreItem}>
             <Text style={[styles.scoreValue, { color: getScoreColor(audit.share_of_voice) }]}>
               {audit.share_of_voice}%
@@ -385,12 +351,11 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
             <Text style={styles.scoreDescription}>
               {audit.share_of_voice > 0 
                 ? `Appears in ${audit.share_of_voice}% of recommendations`
-                : 'Not appearing in recommendations'
+                : 'Not in recommendations'
               }
             </Text>
           </View>
 
-          {/* AI Visibility */}
           <View style={styles.scoreItem}>
             <Text style={[styles.scoreValue, { color: getScoreColor(audit.visibility_score) }]}>
               {audit.visibility_score}%
@@ -401,7 +366,6 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
             </Text>
           </View>
 
-          {/* Competitor Gap */}
           <View style={styles.scoreItem}>
             <Text style={[styles.scoreValue, { color: competitorGap > 0 ? colors.red : colors.emerald }]}>
               {competitorGap > 0 ? '+' : ''}{competitorGap}%
@@ -410,9 +374,9 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
             <Text style={styles.scoreDescription}>
               {audit.competitors[0] 
                 ? competitorGap > 0
-                  ? `${audit.competitors[0].name} leads by ${competitorGap}pts`
-                  : `You lead by ${Math.abs(competitorGap)}pts`
-                : 'No competitors detected'
+                  ? `${audit.competitors[0].name} leads`
+                  : 'You lead'
+                : 'No competitors'
               }
             </Text>
           </View>
@@ -421,19 +385,17 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
         {/* Competitors */}
         {audit.competitors.length > 0 && (
           <View style={styles.section} wrap={false}>
-            <Text style={styles.sectionTitle}>Who's Winning in AI Results</Text>
+            <Text style={styles.sectionTitle}>Competitive Landscape</Text>
             
-            {/* Your brand */}
             <View style={styles.competitorRow}>
-              <Text style={[styles.competitorRank, { color: colors.emerald }]}>★</Text>
-              <Text style={[styles.competitorName, { color: colors.emerald }]}>{audit.brand_name}</Text>
+              <Text style={[styles.competitorRank, { color: colors.emerald }]}>●</Text>
+              <Text style={[styles.competitorName, { fontFamily: 'Helvetica-Bold' }]}>{audit.brand_name}</Text>
               <View style={styles.competitorBar}>
                 <View style={[styles.competitorBarFill, { width: `${brandShare}%`, backgroundColor: colors.emerald }]} />
               </View>
               <Text style={[styles.competitorShare, { color: colors.emerald }]}>{brandShare}%</Text>
             </View>
 
-            {/* Competitors */}
             {audit.competitors.slice(0, 5).map((comp, i) => {
               const share = Math.round((comp.count / totalMentions) * 100)
               return (
@@ -485,7 +447,7 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
         {/* Hallucinations */}
         {audit.hallucinations.length > 0 && (
           <View style={styles.section} wrap={false}>
-            <Text style={styles.sectionTitle}>⚠ Potential Hallucinations Detected</Text>
+            <Text style={styles.sectionTitle}>Potential Inaccuracies Detected</Text>
             {audit.hallucinations.slice(0, 3).map((h, i) => (
               <View key={i} style={styles.hallucinationItem}>
                 <Text style={styles.hallucinationBadge}>{h.severity} · {h.category}</Text>
@@ -498,7 +460,7 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
 
         {/* Schema Health */}
         <View style={styles.section} wrap={false}>
-          <Text style={styles.sectionTitle}>Technical AI Health</Text>
+          <Text style={styles.sectionTitle}>Technical Health</Text>
           <View style={styles.schemaGrid}>
             <View style={styles.schemaCard}>
               <View style={styles.schemaStatus}>
@@ -521,7 +483,7 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
                   styles.schemaStatusIcon, 
                   { backgroundColor: audit.schema_health.issues.length > 0 ? colors.yellow : colors.emerald }
                 ]} />
-                <Text style={styles.schemaStatusText}>Issues Found</Text>
+                <Text style={styles.schemaStatusText}>Issues</Text>
               </View>
               <Text style={styles.schemaDetail}>
                 {audit.schema_health.issues.length > 0 
@@ -540,7 +502,7 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
               Generated {new Date(audit.created_at).toLocaleDateString()}
             </Text>
             <Text style={styles.footerBrand}>
-              Powered by Harbor · useharbor.io
+              Harbor · useharbor.io
             </Text>
           </View>
         )}
