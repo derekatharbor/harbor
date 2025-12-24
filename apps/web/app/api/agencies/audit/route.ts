@@ -1,5 +1,5 @@
 // DESTINATION: ~/Claude Harbor/apps/web/app/api/agencies/audit/route.ts
-// API endpoint to run agency audits - streams progress updates
+// API endpoint to run agency audits - FAST version
 
 import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
@@ -17,8 +17,19 @@ function getSupabase() {
 }
 
 // ============================================================================
-// AI EXECUTION
+// AI EXECUTION WITH TIMEOUT
 // ============================================================================
+
+async function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  const timeout = new Promise<T>((_, reject) => 
+    setTimeout(() => reject(new Error('Timeout')), ms)
+  )
+  try {
+    return await Promise.race([promise, timeout])
+  } catch {
+    return fallback
+  }
+}
 
 async function executeChatGPT(prompt: string): Promise<string> {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -26,7 +37,7 @@ async function executeChatGPT(prompt: string): Promise<string> {
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{ role: 'user', content: prompt }],
-    max_tokens: 1000,
+    max_tokens: 500,
     temperature: 0.7
   })
   
@@ -38,7 +49,7 @@ async function executeClaude(prompt: string): Promise<string> {
   
   const response = await anthropic.messages.create({
     model: 'claude-3-5-haiku-20241022',
-    max_tokens: 1000,
+    max_tokens: 500,
     messages: [{ role: 'user', content: prompt }]
   })
   
@@ -55,105 +66,18 @@ async function executePerplexity(prompt: string): Promise<string> {
     body: JSON.stringify({
       model: 'sonar',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 1000
+      max_tokens: 500
     })
   })
   
-  if (!response.ok) {
-    throw new Error(`Perplexity API error: ${response.status}`)
-  }
+  if (!response.ok) return ''
   
   const data = await response.json()
   return data.choices?.[0]?.message?.content || ''
 }
 
 // ============================================================================
-// BRAND EXTRACTION
-// ============================================================================
-
-async function extractBrandInfo(domain: string): Promise<{
-  brand_name: string
-  category: string
-  description: string
-}> {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  
-  const response = await anthropic.messages.create({
-    model: 'claude-3-5-haiku-20241022',
-    max_tokens: 500,
-    messages: [{
-      role: 'user',
-      content: `Given this domain: ${domain}
-
-Extract the following information. If you're not sure, make a reasonable guess based on the domain name.
-
-Return a JSON object with:
-- brand_name: The company/brand name (e.g., "Notion" from notion.so)
-- category: The industry/category they're in (e.g., "productivity software", "e-commerce", "SaaS")
-- description: A brief 1-sentence description of what they likely do
-
-JSON only, no explanation:`
-    }]
-  })
-  
-  const text = response.content[0]?.type === 'text' ? response.content[0].text : '{}'
-  
-  try {
-    const cleaned = text.replace(/```json\n?|\n?```/g, '').trim()
-    return JSON.parse(cleaned)
-  } catch {
-    // Fallback
-    const namePart = domain.split('.')[0]
-    return {
-      brand_name: namePart.charAt(0).toUpperCase() + namePart.slice(1),
-      category: 'unknown',
-      description: `A company at ${domain}`
-    }
-  }
-}
-
-// ============================================================================
-// COMPETITOR EXTRACTION
-// ============================================================================
-
-async function extractCompetitorsFromResponse(
-  response: string, 
-  brandName: string
-): Promise<{ name: string; mentioned: boolean; sentiment: string }[]> {
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  
-  const extraction = await anthropic.messages.create({
-    model: 'claude-3-5-haiku-20241022',
-    max_tokens: 800,
-    messages: [{
-      role: 'user',
-      content: `Extract all brand/company names mentioned in this AI response.
-
-For each brand, provide:
-- name: the brand name
-- mentioned: true if "${brandName}" is mentioned (case insensitive)
-- sentiment: "positive", "neutral", or "negative" based on how they're described
-
-Response text:
-${response.slice(0, 2000)}
-
-Return JSON array only:
-[{"name": "...", "mentioned": false, "sentiment": "..."}]`
-    }]
-  })
-  
-  const text = extraction.content[0]?.type === 'text' ? extraction.content[0].text : '[]'
-  
-  try {
-    const cleaned = text.replace(/```json\n?|\n?```/g, '').trim()
-    return JSON.parse(cleaned)
-  } catch {
-    return []
-  }
-}
-
-// ============================================================================
-// MAIN HANDLER
+// MAIN HANDLER - FAST VERSION
 // ============================================================================
 
 export async function POST(request: NextRequest) {
@@ -177,14 +101,14 @@ export async function POST(request: NextRequest) {
         const supabase = getSupabase()
         const auditId = crypto.randomUUID()
         
-        // Phase 1: Extract brand info
-        send({ phase: 'extracting' })
+        // Extract brand name from domain (simple, no API call)
+        const brandName = domain
+          .replace(/^www\./, '')
+          .split('.')[0]
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, (c: string) => c.toUpperCase())
         
-        const brandInfo = await extractBrandInfo(domain)
-        send({ brand_name: brandInfo.brand_name })
-        
-        // Phase 2: Scan AI models
-        send({ phase: 'scanning' })
+        send({ phase: 'scanning', brand_name: brandName })
         
         const modelStatus: Record<string, 'pending' | 'running' | 'complete'> = {
           chatgpt: 'pending',
@@ -192,131 +116,93 @@ export async function POST(request: NextRequest) {
           perplexity: 'pending'
         }
         
-        // Generate prompts based on category
-        const prompts = [
-          `What are the best ${brandInfo.category} companies?`,
-          `Tell me about ${brandInfo.brand_name}`,
-          `${brandInfo.brand_name} alternatives and competitors`
+        // Single prompt - just ask about the brand
+        const prompt = `Tell me about ${brandName}. What does this company do and who are their main competitors?`
+        
+        const results: { model: string; response: string; mentioned: boolean }[] = []
+        
+        // Run all models in PARALLEL with 15s timeout each
+        const modelPromises = [
+          {
+            model: 'chatgpt',
+            execute: () => withTimeout(executeChatGPT(prompt), 15000, '')
+          },
+          {
+            model: 'claude', 
+            execute: () => withTimeout(executeClaude(prompt), 15000, '')
+          },
+          {
+            model: 'perplexity',
+            execute: () => withTimeout(executePerplexity(prompt), 15000, '')
+          }
         ]
         
-        const results: {
-          model: string
-          responses: string[]
-          mentioned: boolean
-          competitors: { name: string; mentioned: boolean; sentiment: string }[]
-        }[] = []
-        
-        // Execute on each model
-        for (const model of ['chatgpt', 'claude', 'perplexity']) {
-          modelStatus[model] = 'running'
-          send({ model_status: { ...modelStatus } })
-          
-          const responses: string[] = []
-          let mentioned = false
-          const allCompetitors: { name: string; mentioned: boolean; sentiment: string }[] = []
-          
-          for (const prompt of prompts) {
-            try {
-              let response = ''
-              
-              switch (model) {
-                case 'chatgpt':
-                  response = await executeChatGPT(prompt)
-                  break
-                case 'claude':
-                  response = await executeClaude(prompt)
-                  break
-                case 'perplexity':
-                  response = await executePerplexity(prompt)
-                  break
-              }
-              
-              responses.push(response)
-              
-              // Check if brand is mentioned
-              if (response.toLowerCase().includes(brandInfo.brand_name.toLowerCase())) {
-                mentioned = true
-              }
-              
-              // Extract competitors (only for first prompt to save time)
-              if (prompt.includes('best') || prompt.includes('alternatives')) {
-                const competitors = await extractCompetitorsFromResponse(response, brandInfo.brand_name)
-                allCompetitors.push(...competitors)
-              }
-              
-            } catch (err) {
-              console.error(`Error executing ${model}:`, err)
-              responses.push('')
-            }
-          }
-          
-          // Dedupe competitors
-          const uniqueCompetitors = Array.from(
-            new Map(allCompetitors.map(c => [c.name.toLowerCase(), c])).values()
-          ).slice(0, 10)
-          
-          results.push({
-            model,
-            responses,
-            mentioned,
-            competitors: uniqueCompetitors
-          })
-          
-          modelStatus[model] = 'complete'
-          send({ model_status: { ...modelStatus } })
-          
-          // Small delay between models
-          await new Promise(resolve => setTimeout(resolve, 300))
+        // Start all models
+        for (const m of modelPromises) {
+          modelStatus[m.model] = 'running'
         }
+        send({ model_status: { ...modelStatus } })
         
-        // Calculate scores
+        // Execute in parallel
+        const responses = await Promise.all(
+          modelPromises.map(async (m) => {
+            try {
+              const response = await m.execute()
+              modelStatus[m.model] = 'complete'
+              send({ model_status: { ...modelStatus } })
+              
+              const mentioned = response.toLowerCase().includes(brandName.toLowerCase())
+              return { model: m.model, response, mentioned }
+            } catch {
+              modelStatus[m.model] = 'complete'
+              send({ model_status: { ...modelStatus } })
+              return { model: m.model, response: '', mentioned: false }
+            }
+          })
+        )
+        
+        results.push(...responses)
+        
+        // Calculate visibility
         const modelsWithMention = results.filter(r => r.mentioned).length
         const visibilityScore = Math.round((modelsWithMention / 3) * 100)
         
-        // Aggregate competitors across all models
-        const allCompetitors = results.flatMap(r => r.competitors)
-        const competitorCounts = new Map<string, { count: number; sentiment: string }>()
+        // Extract competitors from responses (simple regex, no API call)
+        const allText = results.map(r => r.response).join(' ')
+        const competitorMatches = allText.match(/competitors?(?:\s+(?:include|are|like))?\s*:?\s*([^.]+)/i)
+        const competitors: { name: string; mentions: number; sentiment: string }[] = []
         
-        for (const comp of allCompetitors) {
-          const key = comp.name.toLowerCase()
-          const existing = competitorCounts.get(key) || { count: 0, sentiment: 'neutral' }
-          existing.count++
-          if (comp.sentiment === 'positive') existing.sentiment = 'positive'
-          competitorCounts.set(key, existing)
+        if (competitorMatches) {
+          const names = competitorMatches[1]
+            .split(/,|and|\//i)
+            .map(s => s.trim())
+            .filter(s => s.length > 2 && s.length < 30)
+            .slice(0, 5)
+          
+          for (const name of names) {
+            competitors.push({ name, mentions: 1, sentiment: 'neutral' })
+          }
         }
         
-        const topCompetitors = Array.from(competitorCounts.entries())
-          .map(([name, data]) => ({
-            name: name.charAt(0).toUpperCase() + name.slice(1),
-            mentions: data.count,
-            sentiment: data.sentiment
-          }))
-          .sort((a, b) => b.mentions - a.mentions)
-          .slice(0, 5)
-        
         // Save to database
-        const { error: saveError } = await supabase
+        await supabase
           .from('agency_audits')
           .insert({
             id: auditId,
             url,
             domain,
-            brand_name: brandInfo.brand_name,
-            category: brandInfo.category,
-            description: brandInfo.description,
+            brand_name: brandName,
+            category: 'unknown',
+            description: '',
             visibility_score: visibilityScore,
             model_results: results.map(r => ({
               model: r.model,
               mentioned: r.mentioned,
-              response_count: r.responses.length
+              response_count: 1
             })),
-            competitors: topCompetitors,
+            competitors,
             created_at: new Date().toISOString()
           })
-        
-        if (saveError) {
-          console.error('Error saving audit:', saveError)
-        }
         
         // Complete
         send({ phase: 'complete', audit_id: auditId })
