@@ -1,7 +1,14 @@
-// app/lib/category-scan.server.ts
-// Executes category-level AI scans for Shopify product visibility
+// DESTINATION: ~/Claude Harbor/apps/web/lib/category-scan.server.ts
+// New file - category-level AI scans for Shopify stores
 
-import { supabase } from "./supabase.server";
+import { createClient } from '@supabase/supabase-js'
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Model configurations
 const MODELS = [
@@ -9,83 +16,87 @@ const MODELS = [
   { id: 'claude', name: 'Claude', provider: 'anthropic' },
   { id: 'perplexity', name: 'Perplexity', provider: 'perplexity' },
   { id: 'gemini', name: 'Gemini', provider: 'google' },
-];
+]
 
 // Prompt templates for category scanning
 const PROMPT_TEMPLATES = [
   "What are the best {category} to buy in 2024?",
   "I'm looking for {category} recommendations. What should I consider?",
   "Top rated {category} for someone new to this",
-];
+]
 
 interface CategoryGroup {
-  category: string;
+  category: string
   products: {
-    id: string;
-    title: string;
-    price: string | null;
-    vendor: string | null;
-  }[];
+    id: string
+    title: string
+    price: string | null
+    vendor: string | null
+  }[]
   heroProduct: {
-    id: string;
-    title: string;
-  };
+    id: string
+    title: string
+  }
 }
 
 interface ScanResult {
-  model: string;
-  prompt: string;
-  response: string;
-  productsFound: string[];
-  competitorsFound: string[];
-  timestamp: string;
+  model: string
+  prompt: string
+  response: string
+  productsFound: string[]
+  competitorsFound: string[]
+  timestamp: string
 }
 
 /**
  * Get stores that are due for scanning based on their plan frequency
  */
 export async function getStoresDueForScan(): Promise<any[]> {
+  const supabase = getSupabase()
+  
   const { data: stores, error } = await supabase
     .from('shopify_stores')
     .select('*')
     .not('dashboard_id', 'is', null)
-    .or('next_scan_at.is.null,next_scan_at.lte.now()');
+    .or('next_scan_at.is.null,next_scan_at.lte.now()')
 
   if (error) {
-    console.error('[CategoryScan] Error fetching stores:', error);
-    return [];
+    console.error('[CategoryScan] Error fetching stores:', error)
+    return []
   }
 
-  return stores || [];
+  return stores || []
 }
 
 /**
  * Group products by category (product_type) and select hero product
  */
 export async function groupProductsByCategory(storeId: string): Promise<CategoryGroup[]> {
+  const supabase = getSupabase()
+  
   const { data: products, error } = await supabase
     .from('shopify_products')
     .select('id, title, handle, vendor, product_type, price, currency')
     .eq('store_id', storeId)
-    .order('price', { ascending: false, nullsFirst: false });
+    .order('price', { ascending: false, nullsFirst: false })
 
   if (error || !products?.length) {
-    console.error('[CategoryScan] Error fetching products:', error);
-    return [];
+    console.error('[CategoryScan] Error fetching products:', error)
+    return []
   }
 
   // Group by product_type
-  const groups = new Map<string, CategoryGroup>();
+  const groups = new Map<string, CategoryGroup>()
 
   for (const product of products) {
-    const category = product.product_type || 'General';
+    const category = product.product_type || 'General'
     
     if (!groups.has(category)) {
       groups.set(category, {
         category,
         products: [],
-        heroProduct: { id: product.id, title: product.title }, // First (highest priced) becomes hero
-      });
+        heroProduct: { id: product.id, title: product.title },
+      })
     }
 
     groups.get(category)!.products.push({
@@ -93,10 +104,10 @@ export async function groupProductsByCategory(storeId: string): Promise<Category
       title: product.title,
       price: product.price,
       vendor: product.vendor,
-    });
+    })
   }
 
-  return Array.from(groups.values());
+  return Array.from(groups.values())
 }
 
 /**
@@ -105,12 +116,12 @@ export async function groupProductsByCategory(storeId: string): Promise<Category
 function generatePrompts(category: string): string[] {
   return PROMPT_TEMPLATES.map(template => 
     template.replace('{category}', category.toLowerCase())
-  );
+  )
 }
 
 /**
  * Execute a single prompt against a model
- * Returns mock data for now - wire up to real APIs
+ * TODO: Wire up to real APIs - returns mock data for now
  */
 async function executePrompt(
   model: typeof MODELS[0],
@@ -118,19 +129,16 @@ async function executePrompt(
   storeProducts: string[]
 ): Promise<ScanResult> {
   // TODO: Wire up to actual AI APIs
-  // For now, return structure for testing
+  console.log(`[CategoryScan] Would execute: ${model.name} - "${prompt}"`)
   
-  console.log(`[CategoryScan] Would execute: ${model.name} - "${prompt}"`);
-  
-  // Mock response structure
   return {
     model: model.id,
     prompt,
     response: `[Mock response for ${model.name}]`,
-    productsFound: [], // Will be populated by fuzzy matching
+    productsFound: [],
     competitorsFound: [],
     timestamp: new Date().toISOString(),
-  };
+  }
 }
 
 /**
@@ -140,20 +148,18 @@ function matchProducts(
   response: string,
   storeProducts: { id: string; title: string }[]
 ): { productId: string; title: string; position: number }[] {
-  const matches: { productId: string; title: string; position: number }[] = [];
-  const responseLower = response.toLowerCase();
+  const matches: { productId: string; title: string; position: number }[] = []
+  const responseLower = response.toLowerCase()
 
   for (const product of storeProducts) {
-    const titleLower = product.title.toLowerCase();
+    const titleLower = product.title.toLowerCase()
     
-    // Try exact match first
-    let position = responseLower.indexOf(titleLower);
+    let position = responseLower.indexOf(titleLower)
     
-    // Try partial match (first 3+ words)
     if (position === -1) {
-      const words = titleLower.split(' ').slice(0, 3).join(' ');
+      const words = titleLower.split(' ').slice(0, 3).join(' ')
       if (words.length > 10) {
-        position = responseLower.indexOf(words);
+        position = responseLower.indexOf(words)
       }
     }
 
@@ -162,120 +168,105 @@ function matchProducts(
         productId: product.id,
         title: product.title,
         position: position,
-      });
+      })
     }
   }
 
-  // Sort by position in response (earlier = better ranking)
-  return matches.sort((a, b) => a.position - b.position);
+  return matches.sort((a, b) => a.position - b.position)
 }
 
 /**
  * Extract competitor product names from response
- * (products mentioned that aren't in the store's catalog)
  */
 function extractCompetitors(
   response: string,
   storeProducts: string[]
 ): string[] {
-  // Simple heuristic: look for patterns like "Brand Name Product"
-  // This is a placeholder - would need NER or more sophisticated parsing
-  const competitors: string[] = [];
+  const competitors: string[] = []
   
-  // Common patterns: "the X from Brand", "Brand's X", "X by Brand"
   const patterns = [
     /(?:the|a)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:from|by)/g,
     /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)'s\s+\w+/g,
-  ];
+  ]
 
   for (const pattern of patterns) {
-    let match;
+    let match
     while ((match = pattern.exec(response)) !== null) {
-      const potential = match[1];
-      // Filter out store's own products
+      const potential = match[1]
       if (!storeProducts.some(p => p.toLowerCase().includes(potential.toLowerCase()))) {
-        competitors.push(potential);
+        competitors.push(potential)
       }
     }
   }
 
-  return [...new Set(competitors)]; // Dedupe
+  return [...new Set(competitors)]
 }
 
 /**
  * Run full category scan for a store
  */
 export async function runCategoryScan(storeId: string): Promise<{
-  success: boolean;
-  categoriesScanned: number;
-  error?: string;
+  success: boolean
+  categoriesScanned: number
+  error?: string
 }> {
-  console.log(`[CategoryScan] Starting scan for store: ${storeId}`);
+  const supabase = getSupabase()
+  console.log(`[CategoryScan] Starting scan for store: ${storeId}`)
 
   try {
-    // 1. Group products by category
-    const categories = await groupProductsByCategory(storeId);
+    const categories = await groupProductsByCategory(storeId)
     
     if (categories.length === 0) {
-      return { success: true, categoriesScanned: 0 };
+      return { success: true, categoriesScanned: 0 }
     }
 
-    console.log(`[CategoryScan] Found ${categories.length} categories`);
+    console.log(`[CategoryScan] Found ${categories.length} categories`)
 
-    // 2. For each category, run scans
     for (const category of categories) {
-      const prompts = generatePrompts(category.category);
-      const allResults: ScanResult[] = [];
-      const allProductMatches: Map<string, { mentions: number; bestPosition: number; models: string[] }> = new Map();
+      const prompts = generatePrompts(category.category)
+      const allResults: ScanResult[] = []
+      const allProductMatches: Map<string, { mentions: number; bestPosition: number; models: string[] }> = new Map()
 
-      // Run each prompt against each model
-      for (const prompt of prompts.slice(0, 1)) { // Just 1 prompt per category for cost efficiency
+      for (const prompt of prompts.slice(0, 1)) {
         for (const model of MODELS) {
           const result = await executePrompt(
             model,
             prompt,
             category.products.map(p => p.title)
-          );
-          allResults.push(result);
+          )
+          allResults.push(result)
 
-          // Match store products in response
           const matches = matchProducts(
             result.response,
             category.products.map(p => ({ id: p.id, title: p.title }))
-          );
+          )
 
-          // Track matches per product
           for (let i = 0; i < matches.length; i++) {
-            const match = matches[i];
+            const match = matches[i]
             const existing = allProductMatches.get(match.productId) || {
               mentions: 0,
               bestPosition: 999,
               models: [],
-            };
-            existing.mentions++;
-            existing.bestPosition = Math.min(existing.bestPosition, i + 1);
-            existing.models.push(model.id);
-            allProductMatches.set(match.productId, existing);
+            }
+            existing.mentions++
+            existing.bestPosition = Math.min(existing.bestPosition, i + 1)
+            existing.models.push(model.id)
+            allProductMatches.set(match.productId, existing)
           }
 
-          // Extract competitors
           result.competitorsFound = extractCompetitors(
             result.response,
             category.products.map(p => p.title)
-          );
+          )
         }
       }
 
-      // 3. Calculate category-level metrics
       const modelsWithMentions = new Set(
         allResults.filter(r => r.productsFound.length > 0).map(r => r.model)
-      );
-      const visibilityScore = Math.round((modelsWithMentions.size / MODELS.length) * 100);
+      )
+      const visibilityScore = Math.round((modelsWithMentions.size / MODELS.length) * 100)
+      const allCompetitors = [...new Set(allResults.flatMap(r => r.competitorsFound))]
 
-      // Collect all competitors found
-      const allCompetitors = [...new Set(allResults.flatMap(r => r.competitorsFound))];
-
-      // 4. Save category scan
       const { data: scanRecord, error: scanError } = await supabase
         .from('shopify_category_scans')
         .insert({
@@ -290,16 +281,15 @@ export async function runCategoryScan(storeId: string): Promise<{
           competitors_found: allCompetitors,
         })
         .select('id')
-        .single();
+        .single()
 
       if (scanError) {
-        console.error('[CategoryScan] Error saving scan:', scanError);
-        continue;
+        console.error('[CategoryScan] Error saving scan:', scanError)
+        continue
       }
 
-      // 5. Save product-level visibility
       const productVisibilityRecords = category.products.map(product => {
-        const matchData = allProductMatches.get(product.id);
+        const matchData = allProductMatches.get(product.id)
         return {
           product_id: product.id,
           scan_id: scanRecord.id,
@@ -307,32 +297,32 @@ export async function runCategoryScan(storeId: string): Promise<{
           mention_count: matchData?.mentions || 0,
           best_position: matchData?.bestPosition || null,
           mentioned_by: matchData?.models || [],
-          issues: [], // TODO: Add accuracy checking
+          issues: [],
           issue_count: 0,
-        };
-      });
+        }
+      })
 
       await supabase
         .from('shopify_product_visibility')
-        .insert(productVisibilityRecords);
+        .insert(productVisibilityRecords)
 
-      console.log(`[CategoryScan] Completed category: ${category.category}`);
+      console.log(`[CategoryScan] Completed category: ${category.category}`)
     }
 
-    // 6. Update store scan timestamps
+    const nextScan = await calculateNextScan(storeId)
     await supabase
       .from('shopify_stores')
       .update({
         last_scan_at: new Date().toISOString(),
-        next_scan_at: calculateNextScan(storeId),
+        next_scan_at: nextScan,
       })
-      .eq('id', storeId);
+      .eq('id', storeId)
 
-    return { success: true, categoriesScanned: categories.length };
+    return { success: true, categoriesScanned: categories.length }
 
   } catch (error) {
-    console.error('[CategoryScan] Error:', error);
-    return { success: false, categoriesScanned: 0, error: String(error) };
+    console.error('[CategoryScan] Error:', error)
+    return { success: false, categoriesScanned: 0, error: String(error) }
   }
 }
 
@@ -340,48 +330,51 @@ export async function runCategoryScan(storeId: string): Promise<{
  * Calculate next scan date based on store's plan
  */
 async function calculateNextScan(storeId: string): Promise<string> {
+  const supabase = getSupabase()
+  
   const { data: store } = await supabase
     .from('shopify_stores')
     .select('scan_frequency')
     .eq('id', storeId)
-    .single();
+    .single()
 
-  const frequency = store?.scan_frequency || 'monthly';
-  const now = new Date();
+  const frequency = store?.scan_frequency || 'monthly'
+  const now = new Date()
 
   switch (frequency) {
     case 'daily':
-      now.setDate(now.getDate() + 1);
-      break;
+      now.setDate(now.getDate() + 1)
+      break
     case 'weekly':
-      now.setDate(now.getDate() + 7);
-      break;
+      now.setDate(now.getDate() + 7)
+      break
     case 'monthly':
     default:
-      now.setDate(now.getDate() + 30);
-      break;
+      now.setDate(now.getDate() + 30)
+      break
   }
 
-  return now.toISOString();
+  return now.toISOString()
 }
 
 /**
  * Get visibility summary for a store's dashboard
  */
 export async function getStoreVisibilitySummary(storeId: string): Promise<{
-  overallScore: number | null;
-  totalMentions: number;
-  categoriesTracked: number;
-  topIssues: any[];
-  lastScanAt: string | null;
+  overallScore: number | null
+  totalMentions: number
+  categoriesTracked: number
+  topIssues: any[]
+  lastScanAt: string | null
 }> {
-  // Get latest scan per category
+  const supabase = getSupabase()
+  
   const { data: latestScans } = await supabase
     .from('shopify_category_scans')
     .select('*')
     .eq('store_id', storeId)
     .order('scanned_at', { ascending: false })
-    .limit(50);
+    .limit(50)
 
   if (!latestScans?.length) {
     return {
@@ -390,35 +383,31 @@ export async function getStoreVisibilitySummary(storeId: string): Promise<{
       categoriesTracked: 0,
       topIssues: [],
       lastScanAt: null,
-    };
-  }
-
-  // Dedupe to get latest per category
-  const latestPerCategory = new Map<string, typeof latestScans[0]>();
-  for (const scan of latestScans) {
-    if (!latestPerCategory.has(scan.category)) {
-      latestPerCategory.set(scan.category, scan);
     }
   }
 
-  const scans = Array.from(latestPerCategory.values());
+  const latestPerCategory = new Map<string, typeof latestScans[0]>()
+  for (const scan of latestScans) {
+    if (!latestPerCategory.has(scan.category)) {
+      latestPerCategory.set(scan.category, scan)
+    }
+  }
 
-  // Calculate overall visibility score (average across categories)
-  const validScores = scans.filter(s => s.visibility_score !== null);
+  const scans = Array.from(latestPerCategory.values())
+
+  const validScores = scans.filter(s => s.visibility_score !== null)
   const overallScore = validScores.length > 0
     ? Math.round(validScores.reduce((sum, s) => sum + s.visibility_score, 0) / validScores.length)
-    : null;
+    : null
 
-  // Get total mentions from product visibility
-  const scanIds = scans.map(s => s.id);
+  const scanIds = scans.map(s => s.id)
   const { count: mentionCount } = await supabase
     .from('shopify_product_visibility')
     .select('*', { count: 'exact', head: true })
     .in('scan_id', scanIds)
-    .eq('mentioned', true);
+    .eq('mentioned', true)
 
-  // Get top issues (placeholder - would come from accuracy checking)
-  const topIssues: any[] = [];
+  const topIssues: any[] = []
 
   return {
     overallScore,
@@ -426,5 +415,5 @@ export async function getStoreVisibilitySummary(storeId: string): Promise<{
     categoriesTracked: scans.length,
     topIssues,
     lastScanAt: scans[0]?.scanned_at || null,
-  };
+  }
 }
