@@ -90,7 +90,7 @@ function AuditContent() {
     if (!domain || phase !== 'init') return
     
     async function runAudit() {
-      setPhase('extracting')
+      setPhase('fetching')
       
       try {
         // Call the audit API
