@@ -43,10 +43,13 @@ export async function GET(
       AuditPDF({ audit, whiteLabel })
     )
     
+    // Convert Buffer to Uint8Array for NextResponse
+    const uint8Array = new Uint8Array(pdfBuffer)
+    
     // Return PDF
     const filename = `${audit.brand_name.toLowerCase().replace(/\s+/g, '-')}-ai-audit.pdf`
     
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(uint8Array, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`,
