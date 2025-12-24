@@ -5,7 +5,7 @@ import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
-import { v4 as uuidv4 } from 'uuid'
+import crypto from 'crypto'
 
 export const maxDuration = 60
 
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
         }
         
         const supabase = getSupabase()
-        const auditId = uuidv4()
+        const auditId = crypto.randomUUID()
         
         // Phase 1: Extract brand info
         send({ phase: 'extracting' })
