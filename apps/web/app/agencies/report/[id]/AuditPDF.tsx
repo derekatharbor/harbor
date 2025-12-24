@@ -6,26 +6,8 @@ import {
   Page,
   Text,
   View,
-  Image,
   StyleSheet,
-  Svg,
-  Circle,
-  Font
 } from '@react-pdf/renderer'
-
-// Register fonts
-Font.register({
-  family: 'Space Grotesk',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/spacegrotesk/v15/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMBBSSJLm2E.ttf', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/spacegrotesk/v15/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMBBSSJLm2E.ttf', fontWeight: 600 }
-  ]
-})
-
-Font.register({
-  family: 'Source Code Pro',
-  src: 'https://fonts.gstatic.com/s/sourcecodepro/v22/HI_SiYsKILxRpg3hIP6sJ7fM7PqlPevW.ttf'
-})
 
 // ============================================================================
 // STYLES
@@ -53,7 +35,7 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.bg,
     padding: 40,
-    fontFamily: 'Source Code Pro',
+    fontFamily: 'Helvetica',
     color: colors.white,
   },
   // Header
@@ -79,8 +61,7 @@ const styles = StyleSheet.create({
   },
   brandName: {
     fontSize: 24,
-    fontFamily: 'Space Grotesk',
-    fontWeight: 600,
+    fontFamily: 'Helvetica-Bold',
     color: colors.white,
     marginBottom: 4,
   },
@@ -113,8 +94,7 @@ const styles = StyleSheet.create({
   },
   scoreValue: {
     fontSize: 32,
-    fontFamily: 'Space Grotesk',
-    fontWeight: 600,
+    fontFamily: 'Helvetica-Bold',
     marginBottom: 4,
   },
   scoreLabel: {
@@ -139,8 +119,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontFamily: 'Space Grotesk',
-    fontWeight: 600,
+    fontFamily: 'Helvetica-Bold',
     color: colors.white,
     marginBottom: 16,
   },
@@ -195,8 +174,7 @@ const styles = StyleSheet.create({
   },
   modelName: {
     fontSize: 11,
-    fontFamily: 'Space Grotesk',
-    fontWeight: 600,
+    fontFamily: 'Helvetica-Bold',
     color: colors.white,
     marginBottom: 4,
   },
@@ -269,8 +247,7 @@ const styles = StyleSheet.create({
   },
   schemaStatusText: {
     fontSize: 10,
-    fontFamily: 'Space Grotesk',
-    fontWeight: 600,
+    fontFamily: 'Helvetica-Bold',
     color: colors.white,
   },
   schemaDetail: {
@@ -381,15 +358,11 @@ export function AuditPDF({ audit, whiteLabel = false }: AuditPDFProps) {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          {audit.logo_url ? (
-            <Image src={audit.logo_url} style={styles.logo} />
-          ) : (
-            <View style={styles.logoPlaceholder}>
-              <Text style={{ fontSize: 20, color: colors.white30 }}>
-                {audit.brand_name.charAt(0)}
-              </Text>
-            </View>
-          )}
+          <View style={styles.logoPlaceholder}>
+            <Text style={{ fontSize: 20, color: colors.white30 }}>
+              {audit.brand_name.charAt(0)}
+            </Text>
+          </View>
           <View>
             <Text style={styles.brandName}>{audit.brand_name}</Text>
             <Text style={styles.brandMeta}>{audit.domain} · {audit.category}</Text>
