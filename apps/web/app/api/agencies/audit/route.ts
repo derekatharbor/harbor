@@ -62,28 +62,9 @@ async function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Pro
   }
 }
 
-async function fetchLogo(domain: string): Promise<string | null> {
-  try {
-    // Try Brandfetch
-    const res = await fetch(`https://api.brandfetch.io/v2/brands/${domain}`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.BRANDFETCH_API_KEY}`
-      }
-    })
-    
-    if (res.ok) {
-      const data = await res.json()
-      const logo = data.logos?.find((l: any) => l.type === 'icon' || l.type === 'logo')
-      if (logo?.formats?.[0]?.src) {
-        return logo.formats[0].src
-      }
-    }
-  } catch (e) {
-    console.error('Brandfetch error:', e)
-  }
-  
-  // Fallback to clearbit
-  return `https://logo.clearbit.com/${domain}`
+async function fetchLogo(domain: string): Promise<string> {
+  // Brandfetch CDN - free, no API key needed
+  return `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`
 }
 
 async function checkSchemaHealth(domain: string): Promise<{
@@ -329,7 +310,7 @@ export async function POST(request: NextRequest) {
         send({ phase: 'fetching', step: 'Fetching brand assets...' })
         
         const [logo, schemaHealth] = await Promise.all([
-          withTimeout(fetchLogo(domain), 5000, null),
+          fetchLogo(domain),
           withTimeout(checkSchemaHealth(domain), 8000, { hasSchema: false, schemaTypes: [], issues: ['Timeout'] })
         ])
         
