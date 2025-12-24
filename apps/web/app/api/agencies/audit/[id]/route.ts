@@ -13,10 +13,10 @@ function getSupabase() {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = getSupabase()
-  const auditId = params.id
+  const { id: auditId } = await params
   
   const { data: audit, error } = await supabase
     .from('agency_audits')
