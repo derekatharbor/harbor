@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
           </p>
           
           <a href="https://useharbor.io/agencies/signup" style="display: inline-block; background: #1C1C1E; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px;">
-            Start Agency Account
+            Create Agency Account
           </a>
           
           <hr style="border: none; border-top: 1px solid #E6E6E7; margin: 32px 0;" />

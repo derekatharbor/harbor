@@ -610,7 +610,7 @@ export default function ReportPage() {
             href="/agencies/signup"
             className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 text-white rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-emerald-500/90 transition-all"
           >
-            Start Agency Account
+            Create Agency Account
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
