@@ -23,7 +23,8 @@ import {
   Minus,
   Code,
   Globe,
-  Download
+  Download,
+  Plus
 } from 'lucide-react'
 
 // ============================================================================
@@ -163,6 +164,12 @@ export default function ReportPage() {
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailSuccess, setEmailSuccess] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [workspaceStatus, setWorkspaceStatus] = useState<{
+    authenticated: boolean
+    in_workspace: boolean
+    loading: boolean
+  }>({ authenticated: false, in_workspace: false, loading: true })
+  const [savingToWorkspace, setSavingToWorkspace] = useState(false)
 
   useEffect(() => {
     async function fetchAudit() {
@@ -180,6 +187,48 @@ export default function ReportPage() {
     
     if (auditId) fetchAudit()
   }, [auditId])
+
+  useEffect(() => {
+    async function checkWorkspace() {
+      try {
+        const res = await fetch(`/api/agencies/workspace?audit_id=${auditId}`)
+        const data = await res.json()
+        setWorkspaceStatus({
+          authenticated: data.authenticated,
+          in_workspace: data.in_workspace,
+          loading: false
+        })
+      } catch {
+        setWorkspaceStatus(prev => ({ ...prev, loading: false }))
+      }
+    }
+    
+    if (auditId) checkWorkspace()
+  }, [auditId])
+
+  const handleSaveToWorkspace = async () => {
+    if (!workspaceStatus.authenticated) {
+      router.push(`/agencies/signup?next=/agencies/report/${auditId}`)
+      return
+    }
+    
+    setSavingToWorkspace(true)
+    try {
+      const res = await fetch('/api/agencies/workspace', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ audit_id: auditId })
+      })
+      
+      if (res.ok) {
+        setWorkspaceStatus(prev => ({ ...prev, in_workspace: true }))
+      }
+    } catch (err) {
+      console.error('Failed to save:', err)
+    } finally {
+      setSavingToWorkspace(false)
+    }
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -606,13 +655,39 @@ export default function ReportPage() {
             Get PDF for Pitch Deck
           </button>
           
-          <Link
-            href="/agencies/signup"
-            className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 text-white rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-emerald-500/90 transition-all"
-          >
-            Create Agency Account
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {workspaceStatus.loading ? (
+            <div className="flex items-center justify-center gap-2 px-6 py-4 bg-white/10 text-white/50 rounded-xl font-medium text-sm font-['Space_Grotesk']">
+              <Loader2 className="w-4 h-4 animate-spin" />
+            </div>
+          ) : workspaceStatus.in_workspace ? (
+            <Link
+              href="/agencies/workspace"
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500/20 text-emerald-400 rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-emerald-500/30 transition-all border border-emerald-500/30"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              Saved to Workspace
+            </Link>
+          ) : (
+            <button
+              onClick={handleSaveToWorkspace}
+              disabled={savingToWorkspace}
+              className="flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 text-white rounded-xl font-medium text-sm font-['Space_Grotesk'] hover:bg-emerald-500/90 transition-all disabled:opacity-50"
+            >
+              {savingToWorkspace ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : workspaceStatus.authenticated ? (
+                <>
+                  <Plus className="w-4 h-4" />
+                  Save to Workspace
+                </>
+              ) : (
+                <>
+                  Create Agency Account
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         {/* Footer */}
