@@ -73,16 +73,14 @@ export default function HomePage() {
         {/* Navigation */}
         <nav className="flex items-center justify-between px-14 py-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
               src="/images/harbor-logo-black.svg"
               alt="Harbor"
-              width={21}
-              height={21}
+              width={120}
+              height={28}
+              className="h-7 w-auto"
             />
-            <span className="text-[30px] font-medium font-space tracking-[0.69px] text-black">
-              harbor
-            </span>
           </Link>
 
           {/* Nav Buttons */}
@@ -107,7 +105,7 @@ export default function HomePage() {
           {/* NEW Badge */}
           <Link 
             href="/pitch"
-            className="flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-4 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow"
+            className="flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-8 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow"
           >
             <span className="px-2 py-0.5 bg-black rounded-[3px] text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">
               NEW
