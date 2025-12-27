@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 /* ========================================
    HARBOR VISUAL REFRESH v2.1
@@ -465,6 +465,11 @@
   .bg-card { background-color: var(--bg-card); }
   .border-border { border-color: var(--border); }
   .border-light { border-color: var(--border-light); }
+
+  /* Marketing page font utilities */
+  .font-space { font-family: 'Space Grotesk', sans-serif; }
+  .font-source-sans { font-family: 'Source Sans 3', sans-serif; }
+  .font-source-code { font-family: 'Source Code Pro', monospace; }
 }
 
 button, [role="button"], [type="button"], [type="submit"], a[href],

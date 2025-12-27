@@ -1,37 +1,34 @@
 // apps/web/app/page.tsx
-// Harbor Homepage - Claim your brand's AI profile
+// Harbor Homepage - Marketing landing page
 
 import { Metadata } from 'next'
-import HarborIndexClient from './brands/HarborIndexClient'
-
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Harbor - AI Profiles for Brands',
-  description: 'Your brand has an AI profile. Claim it. Create the structured profile AI systems reference when answering questions about your brand. 100,000+ brands indexed.',
+  title: 'Harbor - AI Visibility Analytics',
+  description: 'Visibility analytics to win AI search. Measure your presence across AI answers and competitor comparisons. See how ChatGPT, Claude, and Perplexity describe your brand.',
   keywords: [
-    'AI profile',
     'AI visibility',
-    'brand profile',
+    'AI search analytics',
+    'brand visibility',
     'ChatGPT brand',
-    'AI search',
+    'AI search optimization',
     'generative engine optimization',
     'GEO',
-    'claim brand',
-    'AI brand index',
+    'AI brand monitoring',
   ],
   openGraph: {
-    title: 'Harbor - AI Profiles for Brands',
-    description: 'Your brand has an AI profile. Claim it. Create the structured profile AI systems reference when answering questions about your brand.',
+    title: 'Harbor - AI Visibility Analytics',
+    description: 'Visibility analytics to win AI search. Measure your presence across AI answers and competitor comparisons.',
     url: 'https://useharbor.io',
     siteName: 'Harbor',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Harbor - AI Profiles for Brands',
-    description: 'Your brand has an AI profile. Claim it.',
+    title: 'Harbor - AI Visibility Analytics',
+    description: 'Visibility analytics to win AI search.',
   },
   alternates: {
     canonical: 'https://useharbor.io',
@@ -41,12 +38,11 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const siteUrl = 'https://useharbor.io'
   
-  // Schema.org structured data for the homepage
   const schemaOrgData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     'name': 'Harbor',
-    'description': 'AI profiles for brands. Create the structured profile AI systems reference when answering questions about your brand.',
+    'description': 'AI visibility analytics. Measure your presence across AI answers and competitor comparisons.',
     'url': siteUrl,
     'publisher': {
       '@type': 'Organization',
@@ -72,7 +68,87 @@ export default function HomePage() {
           __html: JSON.stringify(schemaOrgData)
         }}
       />
-      <HarborIndexClient />
+      
+      <div className="min-h-screen bg-[#F6F5F3]">
+        {/* Navigation */}
+        <nav className="flex items-center justify-between px-14 py-6">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/images/harbor-logo-black.svg"
+              alt="Harbor"
+              width={21}
+              height={21}
+            />
+            <span className="text-[30px] font-medium font-space tracking-[0.69px] text-black">
+              harbor
+            </span>
+          </Link>
+
+          {/* Nav Buttons */}
+          <div className="flex items-center gap-2.5">
+            <Link 
+              href="/login"
+              className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
+            >
+              Login
+            </Link>
+            <Link 
+              href="/signup"
+              className="h-[41px] px-6 rounded-[7px] bg-[#111111] text-[15px] font-medium font-space tracking-[0.69px] text-white hover:bg-[#333] transition-colors flex items-center"
+            >
+              Get started
+            </Link>
+          </div>
+        </nav>
+
+        {/* Hero Content */}
+        <div className="flex flex-col items-center pt-[100px]">
+          {/* NEW Badge */}
+          <Link 
+            href="/pitch"
+            className="flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-4 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow"
+          >
+            <span className="px-2 py-0.5 bg-black rounded-[3px] text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">
+              NEW
+            </span>
+            <span className="text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">
+              Try our new Agency Pitch space
+            </span>
+          </Link>
+
+          {/* Headline */}
+          <h1 className="w-[448px] text-center text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.04]">
+            Visibility analytics to win AI search
+          </h1>
+
+          {/* Subheadline */}
+          <p className="w-[448px] mt-6 text-center text-[20px] font-normal font-source-code tracking-[0.69px] text-[#6C6C6B]">
+            Measure your presence across AI answers and competitor comparisons.
+          </p>
+
+          {/* Email Input + CTA */}
+          <form className="flex items-center mt-6 h-12 bg-white rounded-[10px] border border-[#F0F0EF] overflow-hidden">
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your company email"
+              className="w-[320px] h-full px-4 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
+              required
+            />
+            <button 
+              type="submit"
+              className="h-[38px] px-6 mr-1.5 bg-black rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] text-white hover:bg-[#333] transition-colors whitespace-nowrap"
+            >
+              Get started
+            </button>
+          </form>
+        </div>
+
+        {/* Dashboard Preview - placeholder for now */}
+        {/* TODO: Add dashboard screenshot below the fold */}
+        
+      </div>
     </>
   )
 }
