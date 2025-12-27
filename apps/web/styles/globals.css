@@ -472,6 +472,54 @@
   .font-source-code { font-family: 'Source Code Pro', monospace; }
 }
 
+/* ========================================
+   HOLOGRAPHIC GRADIENT BUTTON ANIMATION
+   Used on all black buttons on hover
+   ======================================== */
+
+@keyframes gradient-spin {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.btn-black {
+  background: #111111;
+  color: white;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-black:hover {
+  background: linear-gradient(
+    135deg,
+    #f8c8dc 0%,
+    #e8b4f8 12%,
+    #d4b4f8 24%,
+    #b4c8f8 36%,
+    #8fd8f8 48%,
+    #b4f0f0 60%,
+    #c8e8f8 72%,
+    #f8d8c8 84%,
+    #f8c8dc 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-spin 4s linear infinite;
+  color: #111111;
+}
+
 button, [role="button"], [type="button"], [type="submit"], a[href],
 .cursor-pointer, .card-interactive, .pill, .btn-primary, .btn-secondary,
 .expand-btn, .ranking-row, .nav-item, .dropdown-trigger, .dropdown-item, .prompt-card,

@@ -77,9 +77,9 @@ export default function HomePage() {
             <Image
               src="/images/harbor-logo-black.svg"
               alt="Harbor"
-              width={120}
-              height={28}
-              className="h-7 w-auto"
+              width={140}
+              height={32}
+              className="h-8 w-auto"
             />
           </Link>
 
@@ -93,7 +93,7 @@ export default function HomePage() {
             </Link>
             <Link 
               href="/signup"
-              className="h-[41px] px-6 rounded-[7px] bg-[#111111] text-[15px] font-medium font-space tracking-[0.69px] text-white hover:bg-[#333] transition-colors flex items-center"
+              className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
             >
               Get started
             </Link>
@@ -136,7 +136,7 @@ export default function HomePage() {
             />
             <button 
               type="submit"
-              className="h-[38px] px-6 mr-1.5 bg-black rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] text-white hover:bg-[#333] transition-colors whitespace-nowrap"
+              className="btn-black h-[38px] px-6 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap"
             >
               Get started
             </button>
