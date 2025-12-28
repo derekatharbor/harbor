@@ -540,78 +540,14 @@
   color: #111111;
 }
 
-/* Holographic text effect */
-@keyframes holographic-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 100% 25%;
-  }
-  50% {
-    background-position: 50% 100%;
-  }
-  75% {
-    background-position: 25% 0%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
+/* Holographic text effect - simple version */
 .holographic-text {
-  background: radial-gradient(
-    ellipse at center,
-    #f8c8dc 0%,
-    #e8b4f8 15%,
-    #b4c8f8 30%,
-    #8fd8f8 45%,
-    #b4f0f0 60%,
-    #c8e8f8 75%,
-    #f8d8c8 90%,
-    #f8c8dc 100%
-  );
-  background-size: 300% 300%;
-  animation: holographic-shift 6s ease-in-out infinite;
+  background-image: url('/images/holographic-bg.png');
+  background-size: cover;
+  background-position: center;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-/* Holographic text with noise overlay - matches Amplemarket style */
-.holographic-text-noise {
-  position: relative;
-  background: linear-gradient(
-    135deg,
-    #c2f8e0 0%,
-    #f8d0e0 15%,
-    #e0c0f8 30%,
-    #c0d8f8 45%,
-    #b8f0f0 55%,
-    #f8e0d0 70%,
-    #f0c8e8 85%,
-    #c2f8e0 100%
-  );
-  background-size: 400% 400%;
-  animation: holographic-shift 5s ease-in-out infinite;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: contrast(1.1) brightness(1.05);
-}
-
-.holographic-text-noise::after {
-  content: 'AI SEARCH';
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 100px 100px;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  opacity: 0.08;
-  pointer-events: none;
 }
 
 button, [role="button"], [type="button"], [type="submit"], a[href],

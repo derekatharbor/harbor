@@ -281,10 +281,9 @@ export default function HomePage() {
 
           {/* CTA Card */}
           <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] h-[509px] px-8 flex flex-col items-center justify-center">
-            {/* Headline with holographic image text */}
-            <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '100px', lineHeight: '75px', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+            {/* Headline */}
+            <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '100px', lineHeight: '1' }}>
               <span 
-                className="inline-block"
                 style={{
                   backgroundImage: 'url(/images/holographic-bg.png)',
                   backgroundSize: 'cover',
@@ -292,16 +291,17 @@ export default function HomePage() {
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  color: 'transparent'
                 }}
               >
-                AI SEARCH{' '}
+                AI SEARCH
               </span>
-              <span className="text-white">IS THE NEW SEO</span>
+              <span className="text-white"> IS</span>
+              <br />
+              <span className="text-white">THE NEW SEO</span>
             </h2>
 
             {/* Email Input */}
-            <div className="flex items-center mt-10 h-[43px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828] overflow-hidden">
+            <div className="flex items-center mt-12 h-[43px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828]">
               <input
                 type="email"
                 placeholder="Enter your company email"
