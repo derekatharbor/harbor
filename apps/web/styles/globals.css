@@ -540,6 +540,44 @@
   color: #111111;
 }
 
+/* Holographic text effect */
+@keyframes holographic-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 25%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  75% {
+    background-position: 25% 0%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.holographic-text {
+  background: radial-gradient(
+    ellipse at center,
+    #f8c8dc 0%,
+    #e8b4f8 15%,
+    #b4c8f8 30%,
+    #8fd8f8 45%,
+    #b4f0f0 60%,
+    #c8e8f8 75%,
+    #f8d8c8 90%,
+    #f8c8dc 100%
+  );
+  background-size: 300% 300%;
+  animation: holographic-shift 6s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 button, [role="button"], [type="button"], [type="submit"], a[href],
 .cursor-pointer, .card-interactive, .pill, .btn-primary, .btn-secondary,
 .expand-btn, .ranking-row, .nav-item, .dropdown-trigger, .dropdown-item, .prompt-card,

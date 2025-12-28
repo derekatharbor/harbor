@@ -267,6 +267,27 @@ export default function HomePage() {
           <div className="w-full max-w-4xl mx-auto aspect-[16/9] bg-white rounded-xl border border-black/10 shadow-sm flex items-center justify-center">
             <span className="text-black/20 text-lg font-source-code">Stacked Windows Placeholder</span>
           </div>
+
+          {/* CTA Card */}
+          <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] py-16 px-8 flex flex-col items-center justify-center">
+            {/* Headline with holographic animated text */}
+            <h2 className="text-center text-[80px] font-black font-source-sans leading-[1] tracking-tight" style={{ textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+              <span className="holographic-text">AI SEARCH</span>
+              <span className="text-white"> IS THE<br />NEW SEO</span>
+            </h2>
+
+            {/* Email Input */}
+            <div className="flex items-center mt-10 h-[43px] bg-[#111111]/85 rounded-[10px] overflow-hidden">
+              <input
+                type="email"
+                placeholder="Enter your company email"
+                className="w-[260px] h-full px-4 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
+              />
+              <button className="h-[28px] px-4 mr-2 bg-white rounded-[3px] text-[12px] font-medium font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
+                Get started
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </>
