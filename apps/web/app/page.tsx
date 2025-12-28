@@ -74,16 +74,12 @@ export default function HomePage() {
       {/* Sticky Nav - appears on scroll */}
       <StickyNav />
       
-      <div className="min-h-screen bg-[#F6F5F3] relative overflow-hidden">
+      <div className="h-[1728px] bg-[#F6F5F3] relative overflow-hidden">
         {/* Hero Noise Hills Background */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-[60%] pointer-events-none"
-          style={{
-            backgroundImage: 'url(/images/hero-noise.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'bottom center',
-            backgroundRepeat: 'no-repeat'
-          }}
+        <img 
+          src="/images/hero-noise.png"
+          alt=""
+          className="absolute bottom-0 left-0 w-full pointer-events-none"
         />
 
         {/* Navigation */}
