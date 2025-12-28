@@ -271,19 +271,21 @@ export default function HomePage() {
           {/* CTA Card */}
           <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] py-16 px-8 flex flex-col items-center justify-center">
             {/* Headline with holographic animated text */}
-            <h2 className="text-center text-[80px] font-black font-source-sans leading-[1] tracking-tight" style={{ textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-              <span className="holographic-text">AI SEARCH</span>
-              <span className="text-white"> IS THE<br />NEW SEO</span>
+            <h2 className="text-center font-source-sans font-black leading-none tracking-tight" style={{ fontSize: '80px', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+              <span className="holographic-text-noise">AI SEARCH</span>
+              <span className="text-white"> IS THE</span>
+              <br />
+              <span className="text-white">NEW SEO</span>
             </h2>
 
             {/* Email Input */}
-            <div className="flex items-center mt-10 h-[43px] bg-[#111111]/85 rounded-[10px] overflow-hidden">
+            <div className="flex items-center mt-10 h-[43px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828] overflow-hidden">
               <input
                 type="email"
                 placeholder="Enter your company email"
-                className="w-[260px] h-full px-4 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
+                className="w-[220px] h-full px-4 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
               />
-              <button className="h-[28px] px-4 mr-2 bg-white rounded-[3px] text-[12px] font-medium font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
+              <button className="h-[28px] px-4 mr-2 bg-white rounded-[5px] text-[12px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
                 Get started
               </button>
             </div>
