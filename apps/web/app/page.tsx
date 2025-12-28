@@ -248,6 +248,49 @@ export default function HomePage() {
 
         {/* Marquee Section */}
         <PromptsMarquee />
+
+        {/* Features Tabs Section */}
+        <div className="max-w-[1440px] mx-auto px-14 py-24">
+          {/* Tab Navigation */}
+          <div className="flex items-center justify-center gap-2 mb-12">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white/10 rounded-lg border border-white/10 text-white text-sm font-medium font-source-sans transition-all hover:bg-white/15">
+              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+              Brand Visibility
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              Shopping
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
+              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+              Conversations
+            </button>
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
+              <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+              Website Analytics
+            </button>
+          </div>
+
+          {/* Content Area */}
+          <div className="grid grid-cols-2 gap-16 items-center">
+            {/* Left - Text */}
+            <div>
+              <h3 className="text-white text-3xl font-semibold font-source-sans tracking-[0.69px] leading-tight">
+                Stop guessing,<br />start growing
+              </h3>
+              <p className="text-[#6C6C6B] text-lg font-source-code tracking-[0.5px] mt-6 leading-relaxed">
+                See exactly how AI models describe your brand. Track sentiment, visibility scores, and competitor comparisons across every major AI platform.
+              </p>
+            </div>
+
+            {/* Right - Screenshot Placeholder */}
+            <div className="relative aspect-[4/3] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white/20 text-lg font-source-code">Feature Screenshot</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   )

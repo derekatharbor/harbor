@@ -34,15 +34,15 @@ export default function StickyNav() {
           : 'opacity-0 -translate-y-4 pointer-events-none'
       }`}
     >
-      <div className={`flex items-center justify-between w-[768px] h-14 px-6 rounded-xl transition-all duration-300 ${
+      <div className={`flex items-center justify-between w-[768px] h-14 px-6 rounded-xl transition-all duration-300 backdrop-blur-md ${
         isDark 
-          ? 'bg-[#111111] shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)]' 
-          : 'bg-[#FBFAF8] shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)]'
+          ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
+          : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
       }`}>
         {/* Logo Mark */}
         <Link href="/" className="flex items-center">
           <Image
-            src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
+            src={isDark ? '/images/Harbor_Logo_White.png' : '/images/harbor-logo-dark-solo.svg'}
             alt="Harbor"
             width={25}
             height={25}
