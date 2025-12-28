@@ -74,7 +74,7 @@ export default function HomePage() {
       {/* Sticky Nav - appears on scroll */}
       <StickyNav />
       
-      <div className="h-[1728px] bg-[#F6F5F3] relative overflow-hidden">
+      <div className="h-[1040px] bg-[#F6F5F3] relative overflow-hidden">
         {/* Hero Noise Hills Background */}
         <img 
           src="/images/hero-noise.png"
