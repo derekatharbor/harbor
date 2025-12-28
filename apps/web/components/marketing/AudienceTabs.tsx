@@ -63,6 +63,7 @@ const AUDIENCES = [
 
 export default function AudienceTabs() {
   const [activeTab, setActiveTab] = useState(0)
+  const [hoveredTab, setHoveredTab] = useState<number | null>(null)
   const active = AUDIENCES[activeTab]
 
   return (
@@ -74,45 +75,54 @@ export default function AudienceTabs() {
           <span className="holographic-text">win AI search</span>
         </h2>
 
-        {/* Tab Cards */}
-        <div className="flex justify-center gap-1 mb-16">
-          {AUDIENCES.map((audience, index) => (
-            <button
-              key={audience.id}
-              onClick={() => setActiveTab(index)}
-              className={`flex flex-col items-center p-6 rounded-xl transition-all duration-300 w-[180px] ${
-                activeTab === index 
-                  ? 'bg-white shadow-md' 
-                  : 'bg-transparent hover:bg-white/50'
-              }`}
-            >
-              {/* Illustration - swap between BW and color */}
-              <div className="w-[120px] h-[120px] mb-3 relative">
-                {/* B/W version - always present, fades out when active */}
-                <img
-                  src={audience.imageBW}
-                  alt=""
-                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
-                    activeTab === index ? 'opacity-0' : 'opacity-100'
+        {/* Tab Cards Container */}
+        <div className="bg-[#FBFAF9] rounded-2xl p-3 mb-16">
+          <div className="flex gap-2">
+            {AUDIENCES.map((audience, index) => {
+              const isActive = activeTab === index
+              const isHovered = hoveredTab === index
+              const showColor = isActive || isHovered
+
+              return (
+                <button
+                  key={audience.id}
+                  onClick={() => setActiveTab(index)}
+                  onMouseEnter={() => setHoveredTab(index)}
+                  onMouseLeave={() => setHoveredTab(null)}
+                  className={`flex-1 flex flex-col items-center pt-6 pb-8 rounded-xl transition-colors duration-200 ${
+                    isActive ? 'bg-[#F7F7F4]' : 'bg-transparent hover:bg-[#F7F7F4]'
                   }`}
-                />
-                {/* Color version - fades in when active */}
-                <img
-                  src={audience.imageColor}
-                  alt=""
-                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
-                    activeTab === index ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              </div>
-              {/* Title */}
-              <span className={`text-[15px] font-medium font-source-sans transition-colors ${
-                activeTab === index ? 'text-black' : 'text-black/60'
-              }`}>
-                {audience.title}
-              </span>
-            </button>
-          ))}
+                >
+                  {/* Title */}
+                  <span className={`text-[15px] font-medium font-source-sans mb-4 transition-colors ${
+                    isActive ? 'text-black' : 'text-black/50'
+                  }`}>
+                    {audience.title}
+                  </span>
+
+                  {/* Illustration - swap between BW and color */}
+                  <div className="w-[140px] h-[160px] relative">
+                    {/* B/W version */}
+                    <img
+                      src={audience.imageBW}
+                      alt=""
+                      className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${
+                        showColor ? 'opacity-0' : 'opacity-100'
+                      }`}
+                    />
+                    {/* Color version */}
+                    <img
+                      src={audience.imageColor}
+                      alt=""
+                      className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${
+                        showColor ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                  </div>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Content Area */}
@@ -140,7 +150,7 @@ export default function AudienceTabs() {
           </div>
 
           {/* Right - Screenshot/Visual placeholder */}
-          <div className="aspect-[4/3] bg-white rounded-xl border border-black/10 shadow-sm flex items-center justify-center">
+          <div className="aspect-[4/3] bg-white rounded-xl border border-black/10 flex items-center justify-center">
             <span className="text-black/20 text-lg font-source-code">Feature Screenshot</span>
           </div>
         </div>
