@@ -74,7 +74,18 @@ export default function HomePage() {
       {/* Sticky Nav - appears on scroll */}
       <StickyNav />
       
-      <div className="min-h-screen bg-[#F6F5F3]">
+      <div className="min-h-screen bg-[#F6F5F3] relative overflow-hidden">
+        {/* Hero Noise Hills Background */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[60%] pointer-events-none"
+          style={{
+            backgroundImage: 'url(/images/hero-noise.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'bottom center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+
         {/* Navigation */}
         <nav className="flex items-center justify-between px-14 py-6">
           {/* Logo */}
@@ -269,13 +280,24 @@ export default function HomePage() {
           </div>
 
           {/* CTA Card */}
-          <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] py-16 px-8 flex flex-col items-center justify-center">
-            {/* Headline with holographic animated text */}
-            <h2 className="text-center font-source-sans font-black leading-none tracking-tight" style={{ fontSize: '80px', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
-              <span className="holographic-text-noise">AI SEARCH</span>
-              <span className="text-white"> IS THE</span>
-              <br />
-              <span className="text-white">NEW SEO</span>
+          <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] h-[509px] px-8 flex flex-col items-center justify-center">
+            {/* Headline with holographic image text */}
+            <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '100px', lineHeight: '75px', textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+              <span 
+                className="inline-block"
+                style={{
+                  backgroundImage: 'url(/images/holographic-bg.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent'
+                }}
+              >
+                AI SEARCH{' '}
+              </span>
+              <span className="text-white">IS THE NEW SEO</span>
             </h2>
 
             {/* Email Input */}
