@@ -151,6 +151,19 @@ export default function HomePage() {
         {/* TODO: Add dashboard screenshot below the fold */}
         
       </div>
+
+      {/* Dark Section */}
+      <section id="dark-section" className="w-full bg-[#111111] min-h-[1440px]">
+        <div className="max-w-[1440px] mx-auto px-14 py-24">
+          {/* Placeholder content - we'll build this out */}
+          <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px] text-center">
+            See how AI sees your brand
+          </h2>
+          <p className="text-[#6C6C6B] text-xl font-source-code tracking-[0.69px] text-center mt-6 max-w-xl mx-auto">
+            Track your visibility across ChatGPT, Claude, Perplexity, and Gemini in one dashboard.
+          </p>
+        </div>
+      </section>
     </>
   )
 }
