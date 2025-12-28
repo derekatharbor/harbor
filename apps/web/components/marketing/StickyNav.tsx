@@ -13,12 +13,20 @@ export default function StickyNav() {
       // Show sticky nav after scrolling past 100px
       setIsVisible(window.scrollY > 100)
       
-      // Check if we're over the dark section
+      // Check which section the nav is over
       const darkSection = document.getElementById('dark-section')
-      if (darkSection) {
-        const rect = darkSection.getBoundingClientRect()
-        // Switch to dark mode when the dark section is near the top of viewport
-        setIsDark(rect.top < 80)
+      const lightSection = document.getElementById('light-section')
+      
+      if (darkSection && lightSection) {
+        const darkRect = darkSection.getBoundingClientRect()
+        const lightRect = lightSection.getBoundingClientRect()
+        
+        // We're over the dark section if its top is above 80px and light section hasn't reached top yet
+        const overDark = darkRect.top < 80 && lightRect.top > 80
+        setIsDark(overDark)
+      } else if (darkSection) {
+        const darkRect = darkSection.getBoundingClientRect()
+        setIsDark(darkRect.top < 80)
       }
     }
 
@@ -42,7 +50,7 @@ export default function StickyNav() {
         {/* Logo Mark */}
         <Link href="/" className="flex items-center">
           <Image
-            src={isDark ? '/images/Harbor_Logo_White.png' : '/images/harbor-logo-dark-solo.svg'}
+            src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
             alt="Harbor"
             width={25}
             height={25}
