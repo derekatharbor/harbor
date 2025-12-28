@@ -138,17 +138,17 @@ export default function HomePage() {
           </p>
 
           {/* Email Input + CTA */}
-          <form className="flex items-center mt-6 h-12 bg-white rounded-[10px] border border-[#F0F0EF] overflow-hidden">
+          <form className="flex items-center mt-8 h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm">
             <input
               type="email"
               name="email"
               placeholder="Enter your company email"
-              className="w-[320px] h-full px-4 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
+              className="w-[340px] h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
               required
             />
             <button 
               type="submit"
-              className="btn-black h-[38px] px-6 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap"
+              className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap"
             >
               Get started
             </button>
