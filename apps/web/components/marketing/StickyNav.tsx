@@ -14,7 +14,6 @@ export default function StickyNav() {
       setIsVisible(window.scrollY > 100)
       
       // Check if we're over the dark section
-      // The dark section starts after the hero (~100vh or when we hit the dark bg)
       const darkSection = document.getElementById('dark-section')
       if (darkSection) {
         const rect = darkSection.getBoundingClientRect()
@@ -35,13 +34,15 @@ export default function StickyNav() {
           : 'opacity-0 -translate-y-4 pointer-events-none'
       }`}
     >
-      <div className={`flex items-center justify-between gap-8 h-14 px-6 rounded-xl shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] transition-colors duration-300 ${
-        isDark ? 'bg-[#111111]' : 'bg-[#FBFAF8]'
+      <div className={`flex items-center justify-between w-[768px] h-14 px-6 rounded-xl transition-all duration-300 ${
+        isDark 
+          ? 'bg-[#111111] shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)]' 
+          : 'bg-[#FBFAF8] shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)]'
       }`}>
         {/* Logo Mark */}
         <Link href="/" className="flex items-center">
           <Image
-            src={isDark ? '/images/harbor-logo-white.png' : '/images/harbor-logo-dark-solo.svg'}
+            src={isDark ? '/images/Harbor_Logo_White.png' : '/images/harbor-logo-dark-solo.svg'}
             alt="Harbor"
             width={25}
             height={25}
