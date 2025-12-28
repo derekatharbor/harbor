@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
+import PromptsMarquee from '@/components/marketing/PromptsMarquee'
 
 export const metadata: Metadata = {
   title: 'Harbor - AI Visibility Analytics',
@@ -153,16 +154,86 @@ export default function HomePage() {
       </div>
 
       {/* Dark Section */}
-      <section id="dark-section" className="w-full bg-[#111111] min-h-[1440px]">
+      <section id="dark-section" className="w-full bg-[#111111]">
         <div className="max-w-[1440px] mx-auto px-14 py-24">
-          {/* Placeholder content - we'll build this out */}
-          <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px] text-center">
-            See how AI sees your brand
-          </h2>
-          <p className="text-[#6C6C6B] text-xl font-source-code tracking-[0.69px] text-center mt-6 max-w-xl mx-auto">
-            Track your visibility across ChatGPT, Claude, Perplexity, and Gemini in one dashboard.
-          </p>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px]">
+              See how AI sees your brand
+            </h2>
+            <p className="text-[#6C6C6B] text-xl font-source-code tracking-[0.69px] mt-6 max-w-xl mx-auto">
+              Track your visibility across ChatGPT, Claude, Perplexity, and Gemini in one dashboard.
+            </p>
+            <button className="btn-black mt-8 h-12 px-8 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px]">
+              Start tracking for free
+            </button>
+          </div>
+
+          {/* Dashboard Preview Container */}
+          <div className="relative max-w-5xl mx-auto">
+            {/* Dashboard Placeholder */}
+            <div className="relative aspect-[16/10] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
+              {/* Placeholder content - will be replaced with actual screenshot */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white/20 text-lg font-source-code">Dashboard Screenshot</span>
+              </div>
+            </div>
+
+            {/* Hovering Prompt Card - Left */}
+            <div className="absolute -left-8 top-1/4 animate-float-slow">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y"
+                    alt="ChatGPT"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">Best CRM for small businesses?</p>
+                  <p className="text-white/40 text-xs mt-1">ChatGPT • 2.4M monthly searches</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hovering Prompt Card - Right */}
+            <div className="absolute -right-8 top-1/3 animate-float-delayed">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y"
+                    alt="Perplexity"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">Compare HubSpot vs Salesforce</p>
+                  <p className="text-white/40 text-xs mt-1">Perplexity • 1.8M monthly searches</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hovering Prompt Card - Bottom Left */}
+            <div className="absolute -left-4 bottom-1/4 animate-float">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[260px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y"
+                    alt="Claude"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">What's the easiest CRM to use?</p>
+                  <p className="text-white/40 text-xs mt-1">Claude • 890K monthly searches</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Marquee Section */}
+        <PromptsMarquee />
       </section>
     </>
   )
