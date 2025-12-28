@@ -4,6 +4,7 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import StickyNav from '@/components/marketing/StickyNav'
 
 export const metadata: Metadata = {
   title: 'Harbor - AI Visibility Analytics',
@@ -68,6 +69,9 @@ export default function HomePage() {
           __html: JSON.stringify(schemaOrgData)
         }}
       />
+      
+      {/* Sticky Nav - appears on scroll */}
+      <StickyNav />
       
       <div className="min-h-screen bg-[#F6F5F3]">
         {/* Navigation */}
