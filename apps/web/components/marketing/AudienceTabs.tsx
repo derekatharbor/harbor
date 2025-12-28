@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-// Define audience segments - you'll add your own illustrations
+// Define audience segments
 const AUDIENCES = [
   {
     id: 'marketers',
@@ -16,36 +16,36 @@ const AUDIENCES = [
     ctaLink: '/solutions/marketers'
   },
   {
-    id: 'founders',
-    title: 'Founders',
-    imageBW: '/images/audiences/founders-bw.png',
-    imageColor: '/images/audiences/founders-color.png',
-    headline: 'Win before they search Google',
-    stat: '73% of AI users trust recommendations',
-    description: 'AI is becoming the first touchpoint for product discovery. Make sure your startup shows up when prospects ask "what\'s the best tool for X?"',
-    cta: 'Explore Founder solutions',
-    ctaLink: '/solutions/founders'
+    id: 'universities',
+    title: 'Universities',
+    imageBW: '/images/audiences/universities-bw.png',
+    imageColor: '/images/audiences/universities-color.png',
+    headline: 'Attract the right students',
+    stat: 'Gen Z asks AI for college advice',
+    description: 'Prospective students are asking AI which schools to apply to. Make sure your programs, campus life, and outcomes are represented accurately.',
+    cta: 'Explore University solutions',
+    ctaLink: '/solutions/universities'
   },
   {
-    id: 'agencies',
-    title: 'Agencies',
-    imageBW: '/images/audiences/agencies-bw.png',
-    imageColor: '/images/audiences/agencies-color.png',
-    headline: 'New revenue stream',
-    stat: 'Add GEO to your service offering',
-    description: 'Generative Engine Optimization is the next SEO. Be first to offer AI visibility audits and ongoing monitoring to your clients.',
-    cta: 'Explore Agency solutions',
-    ctaLink: '/solutions/agencies'
+    id: 'smbs',
+    title: 'SMBs',
+    imageBW: '/images/audiences/smbs-bw.png',
+    imageColor: '/images/audiences/smbs-color.png',
+    headline: 'Compete with the big guys',
+    stat: 'AI levels the playing field',
+    description: 'You don\'t need a massive SEO budget to show up in AI answers. Track how you\'re positioned against larger competitors and find opportunities to stand out.',
+    cta: 'Explore SMB solutions',
+    ctaLink: '/solutions/smbs'
   },
   {
     id: 'ecommerce',
-    title: 'E-commerce',
+    title: 'E-Commerce',
     imageBW: '/images/audiences/ecommerce-bw.png',
     imageColor: '/images/audiences/ecommerce-color.png',
     headline: 'Get recommended',
     stat: 'Track product mentions in shopping queries',
     description: 'When someone asks AI "best running shoes under $150", is your product in the answer? Track shopping intent queries across all major AI platforms.',
-    cta: 'Explore E-commerce solutions',
+    cta: 'Explore E-Commerce solutions',
     ctaLink: '/solutions/ecommerce'
   },
   {
@@ -76,7 +76,7 @@ export default function AudienceTabs() {
         </h2>
 
         {/* Tab Cards Container */}
-        <div className="bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6">
+        <div className="inline-flex flex-col bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6 w-auto mx-auto">
           {/* Cards Row */}
           <div className="flex gap-3 mb-8">
             {AUDIENCES.map((audience, index) => {
@@ -127,9 +127,9 @@ export default function AudienceTabs() {
           <div className="w-full h-px bg-[#EFEEED] mb-8" />
 
           {/* Content Area */}
-          <div className="flex gap-16 px-2">
+          <div className="flex gap-12 px-2">
             {/* Left - Title + CTA */}
-            <div className="w-[305px] flex-shrink-0">
+            <div className="w-[280px] flex-shrink-0">
               <h3 className="text-[35px] font-medium font-inter text-black leading-tight">
                 {active.headline}
               </h3>
