@@ -42,7 +42,7 @@ export default function StickyNav() {
         {/* Logo Mark */}
         <Link href="/" className="flex items-center">
           <Image
-            src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-logo-dark-solo.svg'}
+            src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
             alt="Harbor"
             width={25}
             height={25}
