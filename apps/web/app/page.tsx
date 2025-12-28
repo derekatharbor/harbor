@@ -160,16 +160,16 @@ export default function HomePage() {
           <div className="text-center mb-16">
             {/* NEW Pill */}
             <div className="inline-flex items-center gap-2 h-[34px] px-3 bg-[#272625] rounded-[9px] mb-6">
-              <div className="flex items-center justify-center w-[48px] h-[25px] rounded-[6.5px] overflow-hidden"
+              <div className="flex items-center justify-center w-[44px] h-[22px] rounded-[5px] overflow-hidden"
                 style={{
                   backgroundImage: 'url(/images/holographic-bg.png)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
                 }}
               >
-                <span className="text-[#272625] text-[15.7px] font-semibold font-source-sans">NEW</span>
+                <span className="text-[#272625] text-[12px] font-semibold font-source-sans">NEW</span>
               </div>
-              <span className="text-white text-[15.7px] font-normal font-source-code">Track competitors</span>
+              <span className="text-white text-[14px] font-normal font-source-code">Track competitors</span>
             </div>
 
             <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px]">
