@@ -248,47 +248,58 @@ export default function HomePage() {
 
         {/* Marquee Section */}
         <PromptsMarquee />
+      </section>
 
-        {/* Features Tabs Section */}
+      {/* Features Section - Light */}
+      <section className="w-full bg-[#F6F5F3]">
         <div className="max-w-[1440px] mx-auto px-14 py-24">
-          {/* Tab Navigation */}
-          <div className="flex items-center justify-center gap-2 mb-12">
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-white/10 rounded-lg border border-white/10 text-white text-sm font-medium font-source-sans transition-all hover:bg-white/15">
-              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-              Brand Visibility
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              Shopping
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
-              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-              Conversations
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-white/50 text-sm font-medium font-source-sans transition-all hover:bg-white/5 hover:text-white/70">
-              <span className="w-2 h-2 rounded-full bg-purple-400"></span>
-              Website Analytics
-            </button>
-          </div>
-
-          {/* Content Area */}
-          <div className="grid grid-cols-2 gap-16 items-center">
-            {/* Left - Text */}
-            <div>
-              <h3 className="text-white text-3xl font-semibold font-source-sans tracking-[0.69px] leading-tight">
-                Stop guessing,<br />start growing
-              </h3>
-              <p className="text-[#6C6C6B] text-lg font-source-code tracking-[0.5px] mt-6 leading-relaxed">
-                See exactly how AI models describe your brand. Track sentiment, visibility scores, and competitor comparisons across every major AI platform.
-              </p>
-            </div>
-
-            {/* Right - Screenshot Placeholder */}
-            <div className="relative aspect-[4/3] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-white/20 text-lg font-source-code">Feature Screenshot</span>
+          {/* Stacked Windows */}
+          <div className="relative flex flex-col items-center">
+            {/* Window 4 - Back (Website Analytics) */}
+            <div className="w-full max-w-4xl bg-white rounded-xl border border-black/10 shadow-sm p-4 translate-y-12 opacity-40">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+                <span className="text-sm font-medium text-black/70 font-source-sans">Website Analytics</span>
               </div>
             </div>
+
+            {/* Window 3 */}
+            <div className="w-full max-w-4xl bg-white rounded-xl border border-black/10 shadow-sm p-4 -mt-8 translate-y-8 opacity-60">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span className="text-sm font-medium text-black/70 font-source-sans">Conversations</span>
+              </div>
+            </div>
+
+            {/* Window 2 */}
+            <div className="w-full max-w-4xl bg-white rounded-xl border border-black/10 shadow-sm p-4 -mt-8 translate-y-4 opacity-80">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span className="text-sm font-medium text-black/70 font-source-sans">Shopping</span>
+              </div>
+            </div>
+
+            {/* Window 1 - Front (Brand Visibility) */}
+            <div className="w-full max-w-4xl bg-white rounded-xl border border-black/10 shadow-md p-4 -mt-8 relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span className="text-sm font-medium text-black font-source-sans">Brand Visibility</span>
+              </div>
+              {/* Screenshot placeholder */}
+              <div className="aspect-[16/9] bg-[#F6F5F3] rounded-lg flex items-center justify-center">
+                <span className="text-black/20 text-lg font-source-code">Dashboard Screenshot</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="max-w-xl mx-auto text-center mt-16">
+            <h3 className="text-black text-3xl font-semibold font-source-sans tracking-[0.69px] leading-tight">
+              Stop guessing,<br />start growing
+            </h3>
+            <p className="text-[#6C6C6B] text-lg font-source-code tracking-[0.5px] mt-6 leading-relaxed">
+              See exactly how AI models describe your brand. Track sentiment, visibility scores, and competitor comparisons across every major AI platform.
+            </p>
           </div>
         </div>
       </section>
