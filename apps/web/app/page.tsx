@@ -158,13 +158,27 @@ export default function HomePage() {
         <div className="max-w-[1440px] mx-auto px-14 py-24">
           {/* Section Header */}
           <div className="text-center mb-16">
+            {/* NEW Pill */}
+            <div className="inline-flex items-center gap-2 h-[34px] px-3 bg-[#272625] rounded-[9px] mb-6">
+              <div className="flex items-center justify-center w-[48px] h-[25px] rounded-[6.5px] overflow-hidden"
+                style={{
+                  backgroundImage: 'url(/images/holographic-bg.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                }}
+              >
+                <span className="text-[#272625] text-[15.7px] font-semibold font-source-sans">NEW</span>
+              </div>
+              <span className="text-white text-[15.7px] font-normal font-source-code">Track competitors</span>
+            </div>
+
             <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px]">
               See how AI sees your brand
             </h2>
             <p className="text-[#6C6C6B] text-xl font-source-code tracking-[0.69px] mt-6 max-w-xl mx-auto">
               Track your visibility across ChatGPT, Claude, Perplexity, and Gemini in one dashboard.
             </p>
-            <button className="btn-black mt-8 h-12 px-8 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px]">
+            <button className="mt-8 h-12 px-8 rounded-[7px] bg-white text-black text-[15px] font-medium font-source-sans tracking-[0.69px] hover:bg-gray-100 transition-colors">
               Start tracking for free
             </button>
           </div>
