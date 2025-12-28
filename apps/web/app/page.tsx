@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
 import PromptsMarquee from '@/components/marketing/PromptsMarquee'
+import AudienceTabs from '@/components/marketing/AudienceTabs'
 
 export const metadata: Metadata = {
   title: 'Harbor - AI Visibility Analytics',
@@ -310,6 +311,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Audience Tabs Section */}
+      <AudienceTabs />
     </>
   )
 }
