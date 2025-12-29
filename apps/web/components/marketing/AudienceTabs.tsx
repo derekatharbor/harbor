@@ -1,3 +1,5 @@
+// components/marketing/AudienceTabs.tsx
+
 'use client'
 
 import { useState } from 'react'
@@ -100,7 +102,9 @@ export default function AudienceTabs() {
                   onClick={() => setActiveTab(index)}
                   onMouseEnter={() => setHoveredTab(index)}
                   onMouseLeave={() => setHoveredTab(null)}
-                  className="w-[160px] h-[232px] flex flex-col items-center pt-5 rounded-[7px] border border-[#EBEBE8] bg-[#F6F5F3] transition-colors duration-200"
+                  className={`w-[160px] h-[232px] flex flex-col items-center pt-5 rounded-[7px] border border-[#EBEBE8] transition-colors duration-200 ${
+                    showColor ? 'bg-[#F6F5F3]' : 'bg-[#F7F7F4] hover:bg-[#F6F5F3]'
+                  }`}
                 >
                   {/* Title */}
                   <span className={`text-[17px] font-medium font-source-sans mb-4 transition-colors ${
@@ -159,7 +163,7 @@ export default function AudienceTabs() {
                 <p className="text-[25px] font-normal font-source-sans text-black">
                   {active.stat1}
                 </p>
-                <p className="text-[20px] font-normal font-source-sans text-[#6F6E6E] mt-2 leading-relaxed">
+                <p className="text-[17px] font-normal font-source-sans text-[#6F6E6E] mt-2 leading-relaxed">
                   {active.desc1}
                 </p>
               </div>
@@ -172,7 +176,7 @@ export default function AudienceTabs() {
                 <p className="text-[25px] font-normal font-source-sans text-black">
                   {active.stat2}
                 </p>
-                <p className="text-[20px] font-normal font-source-sans text-[#6F6E6E] mt-2 leading-relaxed">
+                <p className="text-[17px] font-normal font-source-sans text-[#6F6E6E] mt-2 leading-relaxed">
                   {active.desc2}
                 </p>
               </div>

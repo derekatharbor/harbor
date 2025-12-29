@@ -241,7 +241,7 @@ export default function MainNav() {
   return (
     <nav className="flex items-center justify-between px-14 py-6">
       {/* Left: Logo + Nav Links */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center mr-4">
           <Image
             src="/images/harbor-logo-black.svg"

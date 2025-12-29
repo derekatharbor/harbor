@@ -280,7 +280,7 @@ export default function StickyNav() {
           : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
       }`}>
         {/* Left: Logo + Nav Links */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center mr-3">
             <Image
               src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
