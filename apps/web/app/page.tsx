@@ -177,7 +177,10 @@ export default function HomePage() {
             </div>
 
             {/* Hovering Prompt Card - Left */}
-            <div className="absolute -left-8 top-1/4 animate-float-slow">
+            <div 
+              className="absolute -left-8 top-1/4"
+              style={{ animation: 'float 5s ease-in-out infinite' }}
+            >
               <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
                 <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
                   <img
@@ -194,7 +197,10 @@ export default function HomePage() {
             </div>
 
             {/* Hovering Prompt Card - Right */}
-            <div className="absolute -right-8 top-1/3 animate-float-delayed">
+            <div 
+              className="absolute -right-8 top-1/3"
+              style={{ animation: 'float 4.5s ease-in-out infinite 0.5s' }}
+            >
               <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
                 <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
                   <img
@@ -211,7 +217,10 @@ export default function HomePage() {
             </div>
 
             {/* Hovering Prompt Card - Bottom Left */}
-            <div className="absolute -left-4 bottom-1/4 animate-float">
+            <div 
+              className="absolute -left-4 bottom-1/4"
+              style={{ animation: 'float 4s ease-in-out infinite 0.25s' }}
+            >
               <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[260px]">
                 <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
                   <img
@@ -391,31 +400,6 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
-
-      {/* Floating card animations */}
-      <style jsx global>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes float-slow {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
-        @keyframes float-delayed {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
-        }
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        .animate-float-slow {
-          animation: float-slow 5s ease-in-out infinite;
-        }
-        .animate-float-delayed {
-          animation: float-delayed 4.5s ease-in-out infinite 0.5s;
-        }
-      `}</style>
         <div className="max-w-[1200px] mx-auto px-14">
           {/* Footer Content */}
           <div className="flex gap-16 mb-16">
