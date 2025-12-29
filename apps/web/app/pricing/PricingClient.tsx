@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Check, ArrowRight, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
+import MainNav from '@/components/marketing/MainNav'
 import MobileMenu from '@/components/marketing/MobileMenu'
 
 const plans = [
@@ -136,36 +137,7 @@ export default function PricingClient() {
 
       {/* Dark Hero Section */}
       <section id="dark-section" className="bg-[#111111]">
-        {/* Navigation */}
-        <nav className="flex items-center justify-between px-6 lg:px-14 py-4 lg:py-6">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center mr-4">
-              <img
-                src="/images/harbor-logo-white.svg"
-                alt="Harbor"
-                className="h-7 lg:h-8 w-auto"
-                onError={(e) => { e.currentTarget.src = '/images/Harbor_White_Logo.png'; e.currentTarget.className = 'h-7 lg:h-8 w-auto'; }}
-              />
-            </Link>
-            <div className="hidden lg:flex items-center gap-1">
-              <Link href="/#features" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white/70 hover:text-white transition-colors rounded hover:bg-white/5">Product</Link>
-              <Link href="/#solutions" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white/70 hover:text-white transition-colors rounded hover:bg-white/5">Solutions</Link>
-              <Link href="/pricing" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white transition-colors rounded bg-white/10">Pricing</Link>
-            </div>
-          </div>
-          <div className="hidden lg:flex items-center gap-2.5">
-            <Link href="/login" className="h-[41px] px-6 rounded-[7px] border border-[#333] text-[15px] font-medium font-space tracking-[0.69px] text-white hover:bg-white/5 transition-colors flex items-center">Login</Link>
-            <Link href="/signup" className="h-[41px] px-6 rounded-[7px] bg-white text-black text-[15px] font-medium font-space tracking-[0.69px] hover:bg-gray-100 transition-colors flex items-center">Get started</Link>
-          </div>
-          <button 
-            onClick={() => setMobileMenuOpen(true)}
-            className="lg:hidden p-2 -mr-2 hover:bg-white/5 rounded-lg transition-colors"
-          >
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </nav>
+        <MainNav isDark={true} />
 
         {/* Hero Content */}
         <div className="max-w-[1200px] mx-auto px-6 lg:px-14 pt-12 lg:pt-20 pb-16 lg:pb-24">

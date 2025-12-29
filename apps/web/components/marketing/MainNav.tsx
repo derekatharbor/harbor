@@ -188,9 +188,10 @@ function DropdownContent({ items, rightContent, defaultActive }: DropdownProps) 
 interface NavDropdownProps {
   label: string
   children: React.ReactNode
+  isDark?: boolean
 }
 
-function NavDropdown({ label, children }: NavDropdownProps) {
+function NavDropdown({ label, children, isDark = false }: NavDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -211,7 +212,9 @@ function NavDropdown({ label, children }: NavDropdownProps) {
     >
       <button
         className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-medium font-source-sans transition-colors rounded ${
-          isOpen ? 'text-black bg-black/5' : 'text-black/70 hover:text-black hover:bg-black/5'
+          isDark
+            ? isOpen ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'
+            : isOpen ? 'text-black bg-black/5' : 'text-black/70 hover:text-black hover:bg-black/5'
         }`}
       >
         {label}
@@ -239,7 +242,11 @@ function NavDropdown({ label, children }: NavDropdownProps) {
   )
 }
 
-export default function MainNav() {
+interface MainNavProps {
+  isDark?: boolean
+}
+
+export default function MainNav({ isDark = false }: MainNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -249,7 +256,7 @@ export default function MainNav() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center mr-4">
             <Image
-              src="/images/harbor-logo-black.svg"
+              src={isDark ? "/images/Harbor_White_Logo.png" : "/images/harbor-logo-black.svg"}
               alt="Harbor"
               width={140}
               height={32}
@@ -259,7 +266,7 @@ export default function MainNav() {
 
           {/* Desktop Nav Dropdowns - Hidden on mobile */}
           <div className="hidden lg:flex items-center gap-2">
-            <NavDropdown label="Product">
+            <NavDropdown label="Product" isDark={isDark}>
               <DropdownContent 
                 items={PRODUCT_LEFT} 
                 rightContent={PRODUCT_RIGHT} 
@@ -267,7 +274,7 @@ export default function MainNav() {
               />
             </NavDropdown>
 
-            <NavDropdown label="Solutions">
+            <NavDropdown label="Solutions" isDark={isDark}>
               <DropdownContent 
                 items={SOLUTIONS_LEFT} 
                 rightContent={SOLUTIONS_RIGHT} 
@@ -277,7 +284,11 @@ export default function MainNav() {
 
             <Link
               href="/pricing"
-              className="px-3 py-2 text-[15px] font-medium font-source-sans text-black/70 hover:text-black transition-colors rounded hover:bg-black/5"
+              className={`px-3 py-2 text-[15px] font-medium font-source-sans transition-colors rounded ${
+                isDark 
+                  ? 'text-white/70 hover:text-white hover:bg-white/5' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
             >
               Pricing
             </Link>
@@ -288,24 +299,34 @@ export default function MainNav() {
         <div className="hidden lg:flex items-center gap-2.5">
           <Link 
             href="/login"
-            className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
+            className={`h-[41px] px-6 rounded-[7px] border text-[15px] font-medium font-space tracking-[0.69px] transition-colors flex items-center ${
+              isDark
+                ? 'border-white/20 text-white hover:bg-white/5'
+                : 'border-[#B1B0AF] text-black hover:bg-black/5'
+            }`}
           >
             Login
           </Link>
           <Link 
             href="/signup"
-            className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
+            className={`h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center transition-colors ${
+              isDark
+                ? 'bg-white text-black hover:bg-gray-100'
+                : 'btn-black'
+            }`}
           >
-            Get started
+            <span>Get started</span>
           </Link>
         </div>
 
         {/* Mobile: Hamburger Menu */}
         <button 
           onClick={() => setMobileMenuOpen(true)}
-          className="lg:hidden p-2 -mr-2 hover:bg-black/5 rounded-lg transition-colors"
+          className={`lg:hidden p-2 -mr-2 rounded-lg transition-colors ${
+            isDark ? 'hover:bg-white/5' : 'hover:bg-black/5'
+          }`}
         >
-          <Menu className="w-6 h-6 text-black" />
+          <Menu className={`w-6 h-6 ${isDark ? 'text-white' : 'text-black'}`} />
         </button>
       </nav>
 
@@ -313,7 +334,7 @@ export default function MainNav() {
       <MobileMenu 
         isOpen={mobileMenuOpen} 
         onClose={() => setMobileMenuOpen(false)} 
-        isDark={false}
+        isDark={isDark}
       />
     </>
   )
