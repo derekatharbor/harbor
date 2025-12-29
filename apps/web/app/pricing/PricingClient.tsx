@@ -271,27 +271,30 @@ export default function PricingClient() {
                       </span>
                     </li>
                   ))}
-                </ul>
-
-                {/* AI Platform Logos */}
-                <div className="flex items-center gap-2 mb-6">
-                  {[
-                    { name: 'ChatGPT', logo: '/logos/chatgpt-dark.svg' },
-                    { name: 'Perplexity', logo: '/logos/perplexity-dark.svg' },
-                    { name: 'Claude', logo: '/logos/claude-dark.svg' },
-                    { name: 'Gemini', logo: '/logos/gemini-dark.svg' },
-                  ].map((ai) => (
-                    <div 
-                      key={ai.name}
-                      className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center ${
-                        plan.highlight ? 'bg-black/5' : 'bg-white/10'
-                      }`}
-                      title={ai.name}
-                    >
-                      <img src={ai.logo} alt={ai.name} className="w-4 h-4 object-contain" />
+                  {/* AI Models tracked - with logos inline */}
+                  <li className="flex items-center gap-2.5">
+                    <Check className={`w-4 h-4 flex-shrink-0 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
+                    <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
+                      4 AI models
+                    </span>
+                    <div className="flex items-center -space-x-1">
+                      {[
+                        { name: 'ChatGPT', logo: '/logos/chatgpt-dark.svg' },
+                        { name: 'Perplexity', logo: '/logos/perplexity-dark.svg' },
+                        { name: 'Claude', logo: '/logos/claude-dark.svg' },
+                        { name: 'Gemini', logo: '/logos/gemini-dark.svg' },
+                      ].map((ai) => (
+                        <img 
+                          key={ai.name}
+                          src={ai.logo} 
+                          alt={ai.name} 
+                          title={ai.name}
+                          className="w-5 h-5 rounded-full object-cover"
+                        />
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </li>
+                </ul>
 
                 <Link
                   href={getHref(plan)}
