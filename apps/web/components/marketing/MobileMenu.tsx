@@ -65,11 +65,21 @@ const SOLUTIONS_ITEMS = [
 ]
 
 export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMenuProps) {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null)
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
 
   const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section)
+    setExpandedSections(prev => {
+      const next = new Set(prev)
+      if (next.has(section)) {
+        next.delete(section)
+      } else {
+        next.add(section)
+      }
+      return next
+    })
   }
+
+  const isExpanded = (section: string) => expandedSections.has(section)
 
   if (!isOpen) return null
 
@@ -116,10 +126,10 @@ export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMe
             >
               Product
               <ChevronDown className={`w-5 h-5 transition-transform ${
-                expandedSection === 'product' ? 'rotate-180' : ''
+                isExpanded('product') ? 'rotate-180' : ''
               } ${isDark ? 'text-white/60' : 'text-black/60'}`} />
             </button>
-            {expandedSection === 'product' && (
+            {isExpanded('product') && (
               <div className="pl-4 pb-4 space-y-3">
                 {PRODUCT_ITEMS.map((item) => (
                   <Link
@@ -150,10 +160,10 @@ export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMe
             >
               Solutions
               <ChevronDown className={`w-5 h-5 transition-transform ${
-                expandedSection === 'solutions' ? 'rotate-180' : ''
+                isExpanded('solutions') ? 'rotate-180' : ''
               } ${isDark ? 'text-white/60' : 'text-black/60'}`} />
             </button>
-            {expandedSection === 'solutions' && (
+            {isExpanded('solutions') && (
               <div className="pl-4 pb-4 space-y-1">
                 {SOLUTIONS_ITEMS.map((item) => (
                   <div key={item.href}>
@@ -170,10 +180,10 @@ export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMe
                         </p>
                       </div>
                       <ChevronDown className={`w-4 h-4 transition-transform ${
-                        expandedSection === `solutions-${item.title}` ? 'rotate-180' : ''
+                        isExpanded(`solutions-${item.title}`) ? 'rotate-180' : ''
                       } ${isDark ? 'text-white/40' : 'text-black/40'}`} />
                     </button>
-                    {expandedSection === `solutions-${item.title}` && (
+                    {isExpanded(`solutions-${item.title}`) && (
                       <div className="pl-4 pb-2 space-y-1">
                         {item.subItems.map((subItem) => (
                           <Link
