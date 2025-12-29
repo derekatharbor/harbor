@@ -1,10 +1,11 @@
-// apps/web/app/page.tsx
+// app/page.tsx
 // Harbor Homepage - Marketing landing page
 
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
+import MainNav from '@/components/marketing/MainNav'
 import PromptsMarquee from '@/components/marketing/PromptsMarquee'
 import AudienceTabs from '@/components/marketing/AudienceTabs'
 
@@ -84,34 +85,7 @@ export default function HomePage() {
         />
 
         {/* Navigation */}
-        <nav className="flex items-center justify-between px-14 py-6">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/images/harbor-logo-black.svg"
-              alt="Harbor"
-              width={140}
-              height={32}
-              className="h-8 w-auto"
-            />
-          </Link>
-
-          {/* Nav Buttons */}
-          <div className="flex items-center gap-2.5">
-            <Link 
-              href="/login"
-              className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
-            >
-              Login
-            </Link>
-            <Link 
-              href="/signup"
-              className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
-            >
-              Get started
-            </Link>
-          </div>
-        </nav>
+        <MainNav />
 
         {/* Hero Content */}
         <div className="flex flex-col items-center pt-[100px]">
@@ -175,119 +149,64 @@ export default function HomePage() {
                   backgroundPosition: 'center'
                 }}
               >
-                <span className="text-[#272625] text-[12px] font-semibold font-source-sans">NEW</span>
+                <span className="text-[10px] font-bold font-source-code text-black tracking-wider">NEW</span>
               </div>
-              <span className="text-white text-[14px] font-normal font-source-code">Track competitors</span>
+              <span className="text-[13px] font-medium font-source-sans text-white/80">
+                Competitor Intelligence
+              </span>
             </div>
 
-            <h2 className="text-white text-4xl font-semibold font-source-sans tracking-[0.69px]">
-              See how AI sees your brand
+            {/* Headline */}
+            <h2 className="text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight">
+              See how you compare
             </h2>
-            <p className="text-[#6C6C6B] text-xl font-source-code tracking-[0.69px] mt-6 max-w-xl mx-auto">
-              Track your visibility across ChatGPT, Claude, Perplexity, and Gemini in one dashboard.
+            <p className="mt-4 text-[18px] font-normal font-source-code text-white/50 max-w-[500px] mx-auto">
+              Track your brand visibility against competitors across all major AI platforms.
             </p>
-            <button className="mt-8 h-12 px-8 rounded-[7px] bg-white text-black text-[15px] font-medium font-source-sans tracking-[0.69px] hover:bg-gray-100 transition-colors">
-              Start tracking for free
-            </button>
           </div>
 
-          {/* Dashboard Preview Container */}
-          <div className="relative max-w-5xl mx-auto">
-            {/* Dashboard Placeholder */}
-            <div className="relative aspect-[16/10] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
-              {/* Placeholder content - will be replaced with actual screenshot */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-white/20 text-lg font-source-code">Dashboard Screenshot</span>
-              </div>
-            </div>
-
-            {/* Hovering Prompt Card - Left */}
-            <div className="absolute -left-8 top-1/4 animate-float-slow">
-              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
-                  <img
-                    src="https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y"
-                    alt="ChatGPT"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium leading-snug">Best CRM for small businesses?</p>
-                  <p className="text-white/40 text-xs mt-1">ChatGPT • 2.4M monthly searches</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hovering Prompt Card - Right */}
-            <div className="absolute -right-8 top-1/3 animate-float-delayed">
-              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
-                  <img
-                    src="https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y"
-                    alt="Perplexity"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium leading-snug">Compare HubSpot vs Salesforce</p>
-                  <p className="text-white/40 text-xs mt-1">Perplexity • 1.8M monthly searches</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hovering Prompt Card - Bottom Left */}
-            <div className="absolute -left-4 bottom-1/4 animate-float">
-              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[260px]">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
-                  <img
-                    src="https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y"
-                    alt="Claude"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium leading-snug">What's the easiest CRM to use?</p>
-                  <p className="text-white/40 text-xs mt-1">Claude • 890K monthly searches</p>
-                </div>
-              </div>
+          {/* Competitor Preview Card */}
+          <div className="max-w-[900px] mx-auto bg-[#161718] rounded-xl border border-white/[0.06] p-8">
+            {/* Placeholder for competitor tracking preview */}
+            <div className="h-[300px] flex items-center justify-center text-white/30 text-sm font-source-code">
+              Competitor tracking preview
             </div>
           </div>
         </div>
 
-        {/* Marquee Section */}
+        {/* Prompts Marquee */}
         <PromptsMarquee />
       </section>
 
-      {/* Features Section - Light */}
-      <section id="light-section" className="w-full bg-[#F6F5F3]">
-        <div className="max-w-[1440px] mx-auto px-14 py-24">
-          {/* Text Content */}
-          <div className="max-w-xl mx-auto text-center mb-16">
-            <h3 className="text-black text-3xl font-semibold font-source-sans tracking-[0.69px] leading-tight">
-              Stop guessing,<br />start growing
-            </h3>
-            <p className="text-[#6C6C6B] text-lg font-source-code tracking-[0.5px] mt-6 leading-relaxed">
-              See exactly how AI models describe your brand. Track sentiment, visibility scores, and competitor comparisons across every major AI platform.
+      {/* Light Section */}
+      <section id="light-section" className="w-full bg-[#F6F5F3] py-24">
+        <div className="max-w-[1200px] mx-auto px-14">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-[42px] font-semibold font-source-sans tracking-tight text-black leading-tight">
+              See your brand through AI&apos;s eyes
+            </h2>
+            <p className="mt-4 text-[18px] font-normal font-source-code text-[#6F6E6E] max-w-[500px] mx-auto">
+              Understand how ChatGPT, Claude, Perplexity, and Gemini describe your brand to millions of users.
             </p>
           </div>
 
-          {/* Screenshot/Windows Placeholder */}
-          <div className="w-full max-w-4xl mx-auto aspect-[16/9] bg-white rounded-xl border border-black/10 shadow-sm flex items-center justify-center">
-            <span className="text-black/20 text-lg font-source-code">Stacked Windows Placeholder</span>
+          {/* Stacked Windows Visual Placeholder */}
+          <div className="max-w-[800px] mx-auto h-[400px] bg-white rounded-xl border border-[#EFEEED] flex items-center justify-center text-[#6F6E6E] text-sm font-source-code">
+            Stacked windows visual
           </div>
+        </div>
+      </section>
 
-          {/* CTA Card */}
-          <div className="w-full max-w-[1368px] mx-auto mt-24 rounded-[15px] h-[509px] bg-[#10054D] flex flex-col items-center justify-center relative overflow-hidden">
+      {/* CTA Card Section */}
+      <section className="w-full bg-[#F6F5F3] pb-24">
+        <div className="max-w-[1200px] mx-auto px-14">
+          <div 
+            className="w-full rounded-[20px] py-16 px-12 flex flex-col items-center"
+            style={{ backgroundColor: '#10054D' }}
+          >
             {/* Headline */}
-            <h2 
-              className="relative z-10 text-center tracking-tight"
-              style={{ 
-                fontFamily: 'Source Sans 3, sans-serif',
-                fontWeight: 900,
-                fontSize: '90px', 
-                lineHeight: '1.05',
-              }}
-            >
+            <h2 className="text-center font-source-sans font-black tracking-tight mb-8" style={{ fontSize: '90px', lineHeight: '1' }}>
               <span 
                 style={{
                   backgroundImage: 'url(/images/holographic-bg.png)',
@@ -301,13 +220,12 @@ export default function HomePage() {
               >
                 AI SEARCH
               </span>
-              <span className="text-white"> IS THE</span>
               <br />
-              <span className="text-white">NEW SEO</span>
+              <span className="text-white">IS THE NEW SEO</span>
             </h2>
 
-            {/* Email Input */}
-            <div className="relative z-10 flex items-center mt-10 h-[50px] bg-[rgba(0,0,0,0.3)] rounded-[10px] border border-white/20">
+            {/* Email Capture */}
+            <div className="flex items-center h-[52px] bg-[#1a1a3e]/50 rounded-[10px] border border-white/20">
               <input
                 type="email"
                 placeholder="Enter your company email"
