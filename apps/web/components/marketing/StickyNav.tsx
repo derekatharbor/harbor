@@ -122,7 +122,7 @@ function DropdownContent({ items, rightContent, defaultActive }: DropdownProps) 
   return (
     <div className="flex">
       {/* Left Column */}
-      <div className="w-[260px] py-3 pr-2">
+      <div className="w-[260px] py-3 px-2">
         {items.map((item) => (
           <div
             key={item.id}
