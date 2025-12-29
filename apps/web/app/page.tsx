@@ -277,36 +277,48 @@ export default function HomePage() {
           </div>
 
           {/* CTA Card */}
-          <div className="w-full max-w-[1368px] mx-auto mt-24 bg-black rounded-[15px] h-[509px] px-8 flex flex-col items-center justify-center">
-            {/* Headline */}
-            <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '100px', lineHeight: '1' }}>
-              <span 
-                style={{
-                  backgroundImage: 'url(/images/holographic-bg.png)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                AI SEARCH
-              </span>
-              <span className="text-white"> IS</span>
-              <br />
-              <span className="text-white">THE NEW SEO</span>
-            </h2>
+          <div 
+            className="relative w-full max-w-[1368px] mx-auto mt-24 rounded-[15px] h-[509px] overflow-hidden"
+            style={{
+              backgroundImage: 'url(/images/cta-geometric-bg.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Center black box for content */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-[700px] h-[320px] bg-black rounded-[15px] flex flex-col items-center justify-center px-8">
+                {/* Headline */}
+                <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '72px', lineHeight: '1' }}>
+                  <span 
+                    style={{
+                      backgroundImage: 'url(/images/holographic-bg.png)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    AI SEARCH
+                  </span>
+                  <span className="text-white"> IS</span>
+                  <br />
+                  <span className="text-white">THE NEW SEO</span>
+                </h2>
 
-            {/* Email Input */}
-            <div className="flex items-center mt-12 h-[43px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828]">
-              <input
-                type="email"
-                placeholder="Enter your company email"
-                className="w-[220px] h-full px-4 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
-              />
-              <button className="h-[28px] px-4 mr-2 bg-white rounded-[5px] text-[12px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
-                Get started
-              </button>
+                {/* Email Input */}
+                <div className="flex items-center mt-8 h-[50px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828]">
+                  <input
+                    type="email"
+                    placeholder="Enter your company email"
+                    className="w-[260px] h-full px-5 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
+                  />
+                  <button className="h-[36px] px-5 mr-2 bg-white rounded-[5px] text-[13px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
+                    Get started
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
