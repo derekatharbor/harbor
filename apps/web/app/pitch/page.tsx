@@ -32,13 +32,13 @@ const FEATURES = [
 // Value props for the two-column section
 const VALUE_PROPS = [
   {
-    title: 'Stop paying $500/month for "partnership" programs',
-    description: 'Other platforms gate basic features behind expensive agency tiers. Harbor gives you pitch workspaces on our standard Agency plan. No certification fees. No partner applications. Just tools that help you win business.',
+    title: 'Pitch workspaces included on every Agency plan',
+    description: 'While other platforms charge $500/month for "partnership" programs and gate features behind certification fees, Harbor includes pitch workspaces as a standard feature. Generate unlimited prospect reports without the enterprise sales pitch.',
     image: '/images/pitch/value-1.png',
   },
   {
     title: 'Turn cold outreach into warm conversations',
-    description: 'Lead with value, not a sales pitch. Send prospects a preview of their AI visibility score and watch response rates climb. When they see their competitors outranking them, they\'ll want to talk.',
+    description: 'Lead with value instead of a sales pitch. Send prospects a preview of their AI visibility score and competitive positioning. When they see competitors outranking them, they\'ll want to talk.',
     image: '/images/pitch/value-2.png',
   },
 ]
@@ -69,50 +69,50 @@ export default function PitchPage() {
       <StickyNav />
 
       {/* Light Hero Section */}
-      <section id="light-section" className="bg-[#F6F5F3] min-h-screen">
+      <section id="light-section" className="bg-[#F6F5F3]">
         <MainNav isDark={false} />
 
         <div className="max-w-[1200px] mx-auto px-6 lg:px-14 pt-8 lg:pt-16 pb-16 lg:pb-24">
-          {/* Badge */}
-          <div className="flex justify-center mb-6">
-            <span className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[12px] font-semibold font-source-code text-black/60 uppercase tracking-wider">
-              For Agencies
-            </span>
-          </div>
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            {/* Left - Text Content */}
+            <div className="flex-1 text-left">
+              {/* Badge */}
+              <div className="flex mb-6">
+                <span className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[12px] font-semibold font-source-code text-black/60 uppercase tracking-wider">
+                  Pitch Workspaces
+                </span>
+              </div>
 
-          {/* Hero Content */}
-          <div className="text-center max-w-[600px] mx-auto mb-10 lg:mb-12">
-            <h1 className="text-[36px] lg:text-[56px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
-              Win new business<br />with AI visibility data
-            </h1>
-            <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8">
-              Generate instant AI visibility reports for prospects. Show them how they rank against competitors before they even sign.
-            </p>
+              <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
+                Win new business<br />before the first call
+              </h1>
+              <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
+                Generate instant AI visibility reports for prospects. Show them exactly how they stack up against competitors—and watch response rates climb.
+              </p>
 
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                href="/signup?plan=agency"
-                className="btn-black w-full sm:w-auto h-12 px-8 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center"
-              >
-                <span>Start free trial</span>
-              </Link>
-              <Link
-                href="/demo"
-                className="w-full sm:w-auto h-12 px-8 rounded-[10px] border border-black/20 text-black text-[15px] font-medium font-source-sans flex items-center justify-center hover:bg-black/5 transition-colors"
-              >
-                See a demo report
-              </Link>
+              {/* CTA */}
+              <div className="flex flex-col sm:flex-row items-start gap-3">
+                <Link
+                  href="/signup?plan=agency"
+                  className="btn-black h-12 px-8 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center"
+                >
+                  <span>Start free trial</span>
+                </Link>
+                <Link
+                  href="/demo"
+                  className="h-12 px-8 rounded-[10px] border border-black/20 text-black text-[15px] font-medium font-source-sans flex items-center justify-center hover:bg-black/5 transition-colors"
+                >
+                  See a demo report
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Hero Image Placeholder */}
-          <div className="max-w-[900px] mx-auto">
-            <div className="relative rounded-xl overflow-hidden border border-black/10 shadow-xl bg-white">
+            {/* Right - Hero Image */}
+            <div className="flex-1 w-full">
               <img 
-                src="/images/pitch/hero-screenshot.png" 
-                alt="Pitch Workspace Dashboard"
-                className="w-full h-auto"
+                src="/images/pitch/hero-illustration.png" 
+                alt="Pitch Workspaces"
+                className="w-full h-auto max-w-[500px] mx-auto lg:mx-0"
               />
             </div>
           </div>
@@ -244,12 +244,39 @@ export default function PitchPage() {
 
       {/* Final CTA */}
       <section className="bg-[#111111] py-16 lg:py-24">
+        <style jsx>{`
+          @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .animated-gradient-text {
+            background: linear-gradient(
+              90deg,
+              #c9b8d4,
+              #d4b8c9,
+              #e8c4b8,
+              #f0d0b8,
+              #d4b8c9,
+              #c9b8d4
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 4s ease infinite;
+          }
+        `}</style>
         <div className="max-w-[700px] mx-auto px-6 lg:px-14 text-center">
-          <h2 className="text-[26px] lg:text-[38px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
-            Ready to win more clients?
+          <h2 className="text-[32px] lg:text-[56px] font-bold font-source-sans tracking-tight leading-tight mb-4">
+            <span className="text-white">UNLOCK YOUR</span>
+            <br />
+            <span className="animated-gradient-text">AI SEARCH</span>
+            <br />
+            <span className="animated-gradient-text">SUPERPOWERS</span>
           </h2>
           <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 mb-8 max-w-[400px] mx-auto">
-            Start generating AI visibility reports today. No credit card required.
+            Start generating AI visibility reports today.
           </p>
           <Link
             href="/signup?plan=agency"
