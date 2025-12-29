@@ -277,48 +277,55 @@ export default function HomePage() {
           </div>
 
           {/* CTA Card */}
-          <div 
-            className="relative w-full max-w-[1368px] mx-auto mt-24 rounded-[15px] h-[509px] overflow-hidden"
-            style={{
-              backgroundImage: 'url(/images/cta-geometric-bg.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            {/* Center black box for content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[700px] h-[320px] bg-black rounded-[15px] flex flex-col items-center justify-center px-8">
-                {/* Headline */}
-                <h2 className="text-center font-source-sans font-black tracking-tight" style={{ fontSize: '72px', lineHeight: '1' }}>
-                  <span 
-                    style={{
-                      backgroundImage: 'url(/images/holographic-bg.png)',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
-                    AI SEARCH
-                  </span>
-                  <span className="text-white"> IS</span>
-                  <br />
-                  <span className="text-white">THE NEW SEO</span>
-                </h2>
+          <div className="w-full max-w-[1368px] mx-auto mt-24 rounded-[15px] h-[509px] bg-[#10054D] flex flex-col items-center justify-center relative overflow-hidden">
+            {/* Noise overlay */}
+            <div 
+              className="absolute inset-0 opacity-40 pointer-events-none"
+              style={{
+                backgroundImage: 'url(/images/noise-texture.png)',
+                backgroundSize: '200px 200px',
+                mixBlendMode: 'overlay',
+              }}
+            />
 
-                {/* Email Input */}
-                <div className="flex items-center mt-8 h-[50px] bg-[rgba(17,17,17,0.85)] rounded-[10px] border border-[#282828]">
-                  <input
-                    type="email"
-                    placeholder="Enter your company email"
-                    className="w-[260px] h-full px-5 text-[15px] font-light font-source-sans text-white placeholder:text-[#A6A6A6] bg-transparent outline-none"
-                  />
-                  <button className="h-[36px] px-5 mr-2 bg-white rounded-[5px] text-[13px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
-                    Get started
-                  </button>
-                </div>
-              </div>
+            {/* Headline */}
+            <h2 
+              className="relative z-10 text-center tracking-tight"
+              style={{ 
+                fontFamily: 'Source Sans 3, sans-serif',
+                fontWeight: 900,
+                fontSize: '140px', 
+                lineHeight: '0.95',
+                textShadow: '2px 4px 8px rgba(255, 255, 255, 0.25)'
+              }}
+            >
+              <span 
+                style={{
+                  backgroundImage: 'url(/images/holographic-bg.png)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                AI SEARCH
+              </span>
+              <span className="text-white"> IS THE</span>
+              <br />
+              <span className="text-white">NEW SEO</span>
+            </h2>
+
+            {/* Email Input */}
+            <div className="relative z-10 flex items-center mt-10 h-[50px] bg-[rgba(0,0,0,0.3)] rounded-[10px] border border-white/20">
+              <input
+                type="email"
+                placeholder="Enter your company email"
+                className="w-[280px] h-full px-5 text-[15px] font-light font-source-sans text-white placeholder:text-white/50 bg-transparent outline-none"
+              />
+              <button className="h-[38px] px-5 mr-1.5 bg-white rounded-[6px] text-[13px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
+                Get started
+              </button>
             </div>
           </div>
         </div>
@@ -339,7 +346,7 @@ export default function HomePage() {
           <div className="grid grid-cols-4 gap-4">
             {/* Card 1 */}
             <div className="bg-white rounded-[10px] p-6">
-              <div className="w-4 h-4 bg-blue-400 rotate-45 mb-5" />
+              <img src="/images/icons/icon-visibility.png" alt="" className="w-8 h-8 mb-5" />
               <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
                 Track AI visibility across platforms
               </h3>
@@ -350,7 +357,7 @@ export default function HomePage() {
 
             {/* Card 2 */}
             <div className="bg-white rounded-[10px] p-6">
-              <div className="w-4 h-4 bg-red-400 rotate-45 mb-5" />
+              <img src="/images/icons/icon-benchmark.png" alt="" className="w-8 h-8 mb-5" />
               <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
                 Benchmark against competitors
               </h3>
@@ -361,7 +368,7 @@ export default function HomePage() {
 
             {/* Card 3 */}
             <div className="bg-white rounded-[10px] p-6">
-              <div className="w-4 h-4 bg-amber-400 rotate-45 mb-5" />
+              <img src="/images/icons/icon-insights.png" alt="" className="w-8 h-8 mb-5" />
               <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
                 Get actionable insights
               </h3>
@@ -372,7 +379,7 @@ export default function HomePage() {
 
             {/* Card 4 */}
             <div className="bg-white rounded-[10px] p-6">
-              <div className="w-4 h-4 bg-emerald-400 rotate-45 mb-5" />
+              <img src="/images/icons/icon-sentiment.png" alt="" className="w-8 h-8 mb-5" />
               <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
                 Monitor brand sentiment
               </h3>
@@ -419,7 +426,75 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer would go here */}
+      {/* Footer */}
+      <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
+        <div className="max-w-[1200px] mx-auto px-14">
+          {/* Footer Content */}
+          <div className="flex gap-16 mb-16">
+            {/* Logo Column */}
+            <div className="w-[200px] flex-shrink-0">
+              <img 
+                src="/images/Harbor_White_Logo.png" 
+                alt="Harbor" 
+                className="w-10 h-10 mb-6"
+              />
+            </div>
+
+            {/* Product Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[18px] font-semibold font-source-sans mb-6">Product</h4>
+              <ul className="space-y-4">
+                <li><Link href="/features/brand-visibility" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Brand Visibility</Link></li>
+                <li><Link href="/features/shopping" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Shopping Intelligence</Link></li>
+                <li><Link href="/features/conversations" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Conversation Tracking</Link></li>
+                <li><Link href="/features/analytics" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Website Analytics</Link></li>
+              </ul>
+            </div>
+
+            {/* Company Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[18px] font-semibold font-source-sans mb-6">Company</h4>
+              <ul className="space-y-4">
+                <li><Link href="/pricing" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link href="/about" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">About us</Link></li>
+                <li><Link href="/blog" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+
+            {/* Resources Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[18px] font-semibold font-source-sans mb-6">Resources</h4>
+              <ul className="space-y-4">
+                <li><Link href="/index" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Brand Index</Link></li>
+                <li><Link href="/docs" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Documentation</Link></li>
+                <li><Link href="/help" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Help Center</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact Column */}
+            <div className="flex-1">
+              <h4 className="text-white text-[18px] font-semibold font-source-sans mb-6">Contact</h4>
+              <ul className="space-y-4">
+                <li><a href="mailto:hello@useharbor.io" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">hello@useharbor.io</a></li>
+                <li><a href="https://twitter.com/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">Twitter / X</a></li>
+                <li><a href="https://linkedin.com/company/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[15px] font-source-sans hover:text-white transition-colors">LinkedIn</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="flex items-center justify-between pt-8 border-t border-[#222]">
+            <p className="text-[#666] text-[14px] font-source-sans">
+              © 2025 Harbor
+            </p>
+            <div className="flex items-center gap-8">
+              <Link href="/privacy" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Terms of Service</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   )
 }
