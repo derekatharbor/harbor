@@ -228,7 +228,9 @@ export default function HomePage() {
 
           {/* Footer Links */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-16 mb-12 lg:mb-16">
-            <div className="hidden lg:block"><img src="/images/Harbor_White_Logo.png" alt="Harbor" className="w-10 h-10 mb-6" /></div>
+            <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start mb-4 lg:mb-0">
+              <img src="/images/Harbor_White_Logo.png" alt="Harbor" className="w-10 h-10" />
+            </div>
             <div>
               <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Product</h4>
               <ul className="space-y-3 lg:space-y-4">

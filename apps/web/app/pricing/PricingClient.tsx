@@ -3,90 +3,75 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ArrowRight } from 'lucide-react'
+import { Check, ArrowRight, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
-import Nav from '@/components/landing-new/Nav'
-import Footer from '@/components/landing-new/Footer'
+import StickyNav from '@/components/marketing/StickyNav'
+import MobileMenu from '@/components/marketing/MobileMenu'
 
 const plans = [
   {
-    name: 'Pro',
-    monthlyPrice: 99,
-    yearlyPrice: 990,
-    description: 'For brands serious about understanding and improving their AI visibility.',
+    name: 'Solo',
+    monthlyPrice: 79,
+    yearlyPrice: 790,
+    description: 'For individual marketers and small brands getting started with AI visibility.',
     features: [
-      '100 prompts tracked',
+      '1 brand dashboard',
+      '50 prompts/month',
       '4 AI platforms',
-      '5 competitors',
-      'Daily monitoring',
-      'Visibility trends',
-      'Source citations',
-      'Priority support',
+      '3 competitors',
+      'Weekly visibility reports',
+      'Email support',
     ],
-    cta: 'Start Pro',
-    planId: 'pro',
+    cta: 'Start free trial',
+    planId: 'solo',
     highlight: false,
-  },
-  {
-    name: 'Growth',
-    monthlyPrice: 179,
-    yearlyPrice: 1790,
-    description: 'For teams managing multiple brands or tracking competitive markets.',
-    features: [
-      '200 prompts tracked',
-      '4 AI platforms',
-      '10 competitors',
-      'Daily monitoring',
-      'Advanced analytics',
-      'Team seats',
-      'API access',
-      'Slack alerts',
-    ],
-    cta: 'Start Growth',
-    planId: 'growth',
-    highlight: true,
   },
   {
     name: 'Agency',
     monthlyPrice: 199,
     yearlyPrice: 1990,
-    description: 'For agencies managing AI visibility across multiple client brands.',
+    description: 'For agencies and teams managing multiple brands and client accounts.',
     features: [
-      '500 prompts tracked',
+      '5 brand dashboards',
+      '250 prompts/month',
       '4 AI platforms',
-      '25 competitors',
-      'Daily monitoring',
-      'White-label reports',
-      'Multi-brand dashboards',
-      'Client seat management',
+      '10 competitors per brand',
+      'Daily visibility reports',
+      'Pitch workspaces',
+      'White-label exports',
       'Priority support',
     ],
-    cta: 'Start Agency',
+    cta: 'Start free trial',
     planId: 'agency',
-    highlight: false,
+    highlight: true,
+    badge: 'Most Popular',
   },
   {
     name: 'Enterprise',
     monthlyPrice: null,
     yearlyPrice: null,
-    description: 'For organizations requiring scale, security, and dedicated support.',
+    description: 'For organizations needing custom solutions, API access, and dedicated support.',
     features: [
+      'Unlimited dashboards',
       'Unlimited prompts',
-      '4 AI platforms',
-      '50+ competitors',
-      'Daily monitoring',
-      'SSO / SAML',
-      'Dedicated success manager',
+      'All AI platforms',
+      'Unlimited competitors',
+      'Real-time monitoring',
+      'API access',
       'Custom integrations',
-      'SLA guarantee',
+      'Dedicated account manager',
     ],
-    cta: 'Contact Sales',
+    cta: 'Contact sales',
     planId: 'enterprise',
     highlight: false,
   },
 ]
 
 const faqs = [
+  {
+    question: 'What is AI visibility?',
+    answer: 'AI visibility measures how often and how favorably AI models like ChatGPT, Claude, Perplexity, and Gemini mention your brand when users ask questions related to your industry. As more people use AI for research and recommendations, your AI visibility directly impacts brand awareness and customer acquisition.',
+  },
   {
     question: 'What AI platforms do you track?',
     answer: 'Harbor tracks ChatGPT, Perplexity, Claude, and Google Gemini. We monitor how each platform describes your brand, where you rank in recommendations, and which sources they cite.',
@@ -96,285 +81,305 @@ const faqs = [
     answer: 'A prompt is a search query we monitor on your behalf. For example, "best CRM for startups" or "alternatives to Salesforce". We track how AI responds to these prompts daily and whether your brand is mentioned.',
   },
   {
-    question: 'How often is data refreshed?',
-    answer: 'All plans include daily monitoring. We query each AI platform every 24 hours for your tracked prompts and update your dashboard with the latest results.',
+    question: 'Can I try Harbor before committing?',
+    answer: 'Yes! All paid plans include a 14-day free trial with full access to features. No credit card required to start. You can also explore our free Brand Index to see basic visibility data for any brand.',
   },
   {
-    question: 'Can I change plans later?',
-    answer: 'Yes. Upgrade instantly, downgrade at the end of your billing cycle. No long-term contracts.',
+    question: 'What are Pitch Workspaces?',
+    answer: "Pitch Workspaces are a feature for agencies to create branded AI visibility reports for prospective clients. Show potential clients their current AI visibility, competitor positioning, and opportunities—all before they sign. It's a powerful way to demonstrate value and win new business.",
   },
   {
-    question: 'What\'s the difference between monthly and yearly?',
-    answer: 'Yearly billing saves you roughly 2 months compared to paying monthly. You can switch between billing periods at any time.',
+    question: 'Can I change plans or cancel anytime?',
+    answer: "Absolutely. You can upgrade, downgrade, or cancel your subscription at any time. If you cancel, you'll retain access until the end of your billing period. No long-term contracts or cancellation fees.",
   },
+]
+
+// AI Model links for footer
+const AI_PROMPT = encodeURIComponent("I'm researching AI visibility and want to understand how Harbor helps brands track and optimize how they appear in AI search results like ChatGPT, Claude, Perplexity, and Gemini. Summarize what you find from Harbor's website: https://useharbor.io. Start with what stands out about their platform (bullet points), then explain who it's built for and how it works.")
+
+const AI_MODELS = [
+  { name: 'ChatGPT', icon: '/icons/ai-chatgpt.svg', url: `https://chat.openai.com/?q=${AI_PROMPT}` },
+  { name: 'Gemini', icon: '/icons/ai-gemini.svg', url: `https://gemini.google.com/app?q=${AI_PROMPT}` },
+  { name: 'Perplexity', icon: '/icons/ai-perplexity.svg', url: `https://www.perplexity.ai/search?q=${AI_PROMPT}` },
+  { name: 'Claude', icon: '/icons/ai-claude.svg', url: `https://claude.ai/new?q=${AI_PROMPT}` },
+  { name: 'Grok', icon: '/icons/ai-grok.svg', url: `https://grok.x.ai/?q=${AI_PROMPT}` },
 ]
 
 export default function PricingClient() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const getPrice = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === null) return 'Custom'
     return billingPeriod === 'monthly' 
       ? `$${plan.monthlyPrice}` 
-      : `$${plan.yearlyPrice}`
+      : `$${Math.round(plan.yearlyPrice / 12)}`
   }
 
   const getPeriod = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === null) return ''
-    return billingPeriod === 'monthly' ? '/month' : '/year'
+    return '/month'
+  }
+
+  const getBilledText = (plan: typeof plans[0]) => {
+    if (plan.monthlyPrice === null) return ''
+    return billingPeriod === 'yearly' ? `Billed $${plan.yearlyPrice}/year` : ''
   }
 
   const getHref = (plan: typeof plans[0]) => {
     if (plan.planId === 'enterprise') return '/contact?inquiry=enterprise'
-    return `/auth/signup?plan=${plan.planId}&billing=${billingPeriod}`
+    return `/signup?plan=${plan.planId}&billing=${billingPeriod}`
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0B0C]">
-      {/* Holographic button styles */}
-      <style jsx global>{`
-        @keyframes holographic-shift {
-          0% { 
-            background-position: 0% 50%;
-            filter: hue-rotate(0deg);
-          }
-          25% { 
-            background-position: 50% 0%;
-            filter: hue-rotate(15deg);
-          }
-          50% { 
-            background-position: 100% 50%;
-            filter: hue-rotate(0deg);
-          }
-          75% { 
-            background-position: 50% 100%;
-            filter: hue-rotate(-15deg);
-          }
-          100% { 
-            background-position: 0% 50%;
-            filter: hue-rotate(0deg);
-          }
-        }
-        
-        .iridescent-hover {
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .iridescent-hover::before {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          background: radial-gradient(
-            ellipse at 30% 40%,
-            rgba(180, 220, 255, 0.95) 0%,
-            rgba(200, 180, 255, 0.9) 20%,
-            rgba(255, 180, 220, 0.9) 40%,
-            rgba(255, 200, 180, 0.85) 60%,
-            rgba(180, 255, 240, 0.9) 80%,
-            rgba(180, 220, 255, 0.95) 100%
-          );
-          background-size: 200% 200%;
-          opacity: 0;
-          transition: opacity 150ms ease-out;
-          animation: holographic-shift 3s ease-in-out infinite;
-          border-radius: inherit;
-        }
-        
-        .iridescent-hover:hover::before {
-          opacity: 1;
-        }
-        
-        .iridescent-hover:hover {
-          color: #000 !important;
-        }
-        
-        .iridescent-hover span,
-        .iridescent-hover svg {
-          position: relative;
-          z-index: 1;
-        }
-      `}</style>
+    <div className="min-h-screen">
+      <StickyNav />
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} isDark={true} />
 
-      <Nav />
+      {/* Dark Hero Section */}
+      <section id="dark-section" className="bg-[#111111]">
+        {/* Navigation */}
+        <nav className="flex items-center justify-between px-6 lg:px-14 py-4 lg:py-6">
+          <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center mr-4">
+              <img
+                src="/images/harbor-logo-white.svg"
+                alt="Harbor"
+                className="h-7 lg:h-8 w-auto"
+                onError={(e) => { e.currentTarget.src = '/images/Harbor_White_Logo.png'; e.currentTarget.className = 'h-7 lg:h-8 w-auto'; }}
+              />
+            </Link>
+            <div className="hidden lg:flex items-center gap-1">
+              <Link href="/#features" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white/70 hover:text-white transition-colors rounded hover:bg-white/5">Product</Link>
+              <Link href="/#solutions" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white/70 hover:text-white transition-colors rounded hover:bg-white/5">Solutions</Link>
+              <Link href="/pricing" className="px-3 py-2 text-[15px] font-medium font-source-sans text-white transition-colors rounded bg-white/10">Pricing</Link>
+            </div>
+          </div>
+          <div className="hidden lg:flex items-center gap-2.5">
+            <Link href="/login" className="h-[41px] px-6 rounded-[7px] border border-[#333] text-[15px] font-medium font-space tracking-[0.69px] text-white hover:bg-white/5 transition-colors flex items-center">Login</Link>
+            <Link href="/signup" className="h-[41px] px-6 rounded-[7px] bg-white text-black text-[15px] font-medium font-space tracking-[0.69px] hover:bg-gray-100 transition-colors flex items-center">Get started</Link>
+          </div>
+          <button 
+            onClick={() => setMobileMenuOpen(true)}
+            className="lg:hidden p-2 -mr-2 hover:bg-white/5 rounded-lg transition-colors"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </nav>
 
-      {/* Hero */}
-      <section className="pt-32 pb-12 md:pt-40 md:pb-16 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight mb-6 font-['Space_Grotesk']">
-            Simple, transparent pricing
-          </h1>
-          <p className="text-lg text-white/50 leading-relaxed max-w-xl mx-auto mb-10">
-            Upgrade when you need more prompts, competitors, or team features.
-          </p>
+        {/* Hero Content */}
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-14 pt-12 lg:pt-20 pb-16 lg:pb-24">
+          {/* Header */}
+          <div className="text-center mb-10 lg:mb-14">
+            <p className="text-[13px] font-medium font-source-code text-white/40 uppercase tracking-wider mb-4">Pricing</p>
+            <h1 className="text-[32px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-white leading-[1.1] mb-4">
+              Pick the plan that<br />suits you best
+            </h1>
+            <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 max-w-[440px] mx-auto">
+              Start free, upgrade when you need more. All plans include a 14-day trial.
+            </p>
+          </div>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-1 p-1 bg-white/[0.06] rounded-lg">
-            <button
-              onClick={() => setBillingPeriod('monthly')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
-                billingPeriod === 'monthly'
-                  ? 'bg-white text-black'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBillingPeriod('yearly')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-all flex items-center gap-2 ${
-                billingPeriod === 'yearly'
-                  ? 'bg-white text-black'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              Yearly
-              <span className={`text-xs px-1.5 py-0.5 rounded ${
-                billingPeriod === 'yearly' 
-                  ? 'bg-black/10 text-black/70' 
-                  : 'bg-white/10 text-white/50'
-              }`}>
-                Save 2 months
-              </span>
-            </button>
+          <div className="flex justify-center mb-10 lg:mb-12">
+            <div className="inline-flex items-center gap-1 p-1 bg-white/[0.06] rounded-lg border border-white/10">
+              <button
+                onClick={() => setBillingPeriod('monthly')}
+                className={`px-4 py-2 text-[14px] font-medium font-source-sans rounded-md transition-all ${
+                  billingPeriod === 'monthly'
+                    ? 'bg-white text-black'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBillingPeriod('yearly')}
+                className={`px-4 py-2 text-[14px] font-medium font-source-sans rounded-md transition-all flex items-center gap-2 ${
+                  billingPeriod === 'yearly'
+                    ? 'bg-white text-black'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                Yearly
+                <span className={`text-[11px] px-1.5 py-0.5 rounded font-semibold ${
+                  billingPeriod === 'yearly' 
+                    ? 'bg-black/10 text-black/70' 
+                    : 'bg-white/10 text-white/50'
+                }`}>
+                  Save 17%
+                </span>
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Pricing Grid */}
-      <section className="pb-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 max-w-[1000px] mx-auto">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative bg-[#0B0B0C] p-8 flex flex-col ${
-                  plan.highlight ? 'ring-1 ring-white/20' : ''
+                className={`relative rounded-[16px] p-6 lg:p-7 flex flex-col ${
+                  plan.highlight
+                    ? 'bg-white text-black'
+                    : 'bg-[#1a1a1a] border border-white/10 text-white'
                 }`}
               >
-                {plan.highlight && (
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                {plan.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span 
+                      className="px-3 py-1 text-[11px] font-bold font-source-sans rounded-full text-black"
+                      style={{
+                        backgroundImage: 'url(/images/holographic-bg.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    >
+                      {plan.badge}
+                    </span>
+                  </div>
                 )}
 
-                {/* Header */}
-                <div className="mb-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <h3 className="text-lg font-medium text-white font-['Space_Grotesk']">
-                      {plan.name}
-                    </h3>
-                    {plan.highlight && (
-                      <span className="text-[10px] uppercase tracking-wider text-white/40 bg-white/[0.06] px-2 py-0.5 rounded">
-                        Popular
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-baseline gap-1 mb-3">
-                    <span className="text-3xl font-semibold text-white font-['Space_Grotesk']">
+                <div className="mb-5">
+                  <h3 className={`text-[17px] font-semibold font-source-sans mb-3 ${plan.highlight ? 'text-black' : 'text-white'}`}>
+                    {plan.name}
+                  </h3>
+                  <div className="flex items-baseline gap-1">
+                    <span className={`text-[38px] font-bold font-source-sans leading-none ${plan.highlight ? 'text-black' : 'text-white'}`}>
                       {getPrice(plan)}
                     </span>
                     {getPeriod(plan) && (
-                      <span className="text-white/40 text-sm">{getPeriod(plan)}</span>
+                      <span className={`text-[15px] font-normal ${plan.highlight ? 'text-black/50' : 'text-white/50'}`}>
+                        {getPeriod(plan)}
+                      </span>
                     )}
                   </div>
-                  <p className="text-white/40 text-sm leading-relaxed min-h-[48px]">
+                  {getBilledText(plan) && (
+                    <p className={`text-[13px] mt-1 ${plan.highlight ? 'text-black/50' : 'text-white/40'}`}>
+                      {getBilledText(plan)}
+                    </p>
+                  )}
+                  <p className={`text-[13px] mt-3 leading-relaxed ${plan.highlight ? 'text-black/60' : 'text-white/50'}`}>
                     {plan.description}
                   </p>
                 </div>
 
-                {/* Features */}
-                <div className="flex-1 mb-8">
-                  <div className="space-y-3">
-                    {plan.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <Check className="w-4 h-4 text-white/30 flex-shrink-0 mt-0.5" />
-                        <span className="text-white/60 text-sm">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ul className="space-y-2.5 mb-6 flex-1">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
+                      <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
-                {/* CTA */}
                 <Link
                   href={getHref(plan)}
-                  className={`flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-medium transition-all ${
+                  className={`block w-full h-[44px] rounded-[8px] text-[14px] font-semibold font-source-sans flex items-center justify-center transition-colors ${
                     plan.highlight
-                      ? 'iridescent-hover bg-white text-black'
-                      : 'bg-white/[0.06] text-white hover:bg-white/[0.1]'
+                      ? 'bg-black text-white hover:bg-black/90'
+                      : 'bg-white text-black hover:bg-gray-100'
                   }`}
                 >
-                  <span>{plan.cta}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {plan.cta}
                 </Link>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Platform logos */}
-      <section className="pb-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-white/30 text-sm mb-8">Tracking visibility across</p>
-          <div className="flex items-center justify-center gap-12 flex-wrap">
-            <div className="text-white/40 font-medium">ChatGPT</div>
-            <div className="text-white/40 font-medium">Perplexity</div>
-            <div className="text-white/40 font-medium">Claude</div>
-            <div className="text-white/40 font-medium">Gemini</div>
+          {/* Platform logos */}
+          <div className="mt-14 lg:mt-16 text-center">
+            <p className="text-[13px] font-normal font-source-code text-white/30 mb-5">
+              Tracking visibility across
+            </p>
+            <div className="flex items-center justify-center gap-6 lg:gap-10 flex-wrap">
+              <span className="text-white/40 text-[14px] font-medium font-source-sans">ChatGPT</span>
+              <span className="text-white/40 text-[14px] font-medium font-source-sans">Claude</span>
+              <span className="text-white/40 text-[14px] font-medium font-source-sans">Perplexity</span>
+              <span className="text-white/40 text-[14px] font-medium font-source-sans">Gemini</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Comparison note */}
-      <section className="pb-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-8">
-            <h3 className="text-white font-medium mb-3 font-['Space_Grotesk']">
-              How we compare
-            </h3>
-            <p className="text-white/50 text-sm leading-relaxed mb-4">
-              Harbor tracks 4 AI platforms with daily monitoring on all plans. 
-              Competitors charge $300+ for similar coverage and often limit you to 2-3 platforms 
-              with weekly updates. Our Pro plan delivers enterprise-grade monitoring at a fraction of the cost.
-            </p>
-            <p className="text-white/30 text-sm">
-              We believe AI visibility monitoring should be accessible, not gated behind enterprise contracts.
-            </p>
+      {/* Light Section - Pitch Workspaces */}
+      <section id="light-section" className="bg-[#F6F5F3] py-16 lg:py-24">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-14">
+          <div className="bg-white rounded-[20px] border border-[#EFEEED] p-6 lg:p-10 flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
+            {/* Left Content */}
+            <div className="flex-1 lg:pr-4">
+              <h2 className="text-[24px] lg:text-[32px] font-semibold font-source-sans text-black leading-tight mb-3">
+                Pitch Workspaces
+              </h2>
+              <p className="text-[15px] lg:text-[16px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-5">
+                Use pitch workspaces to win new business and showcase your expertise, by delivering competitive positioning data and AI visibility reports.
+              </p>
+              <Link
+                href="/pitch"
+                className="inline-flex items-center gap-2 h-[42px] px-5 rounded-[8px] bg-black text-white text-[14px] font-semibold font-source-sans hover:bg-black/90 transition-colors"
+              >
+                Learn more
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Right - Image */}
+            <div className="flex-1 w-full">
+              <div className="bg-[#F6F5F3] rounded-[12px] overflow-hidden">
+                <img 
+                  src="/images/pitch-workspaces-preview.png" 
+                  alt="Pitch Workspaces"
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="pb-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-semibold text-white mb-8 font-['Space_Grotesk']">
-            Questions
-          </h2>
-          
-          <div className="space-y-0">
-            {faqs.map((faq, index) => (
+      {/* FAQ Section */}
+      <section className="bg-[#F6F5F3] py-16 lg:py-24">
+        <div className="max-w-[700px] mx-auto px-6 lg:px-14">
+          <div className="text-center mb-10">
+            <h2 className="text-[26px] lg:text-[32px] font-semibold font-source-sans text-black mb-3">
+              FAQs
+            </h2>
+            <p className="text-[15px] font-normal font-source-code text-[#6F6E6E]">
+              Got questions? We&apos;ve got answers.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {faqs.map((faq, idx) => (
               <div
-                key={index}
-                className="border-b border-white/[0.06]"
+                key={idx}
+                className="bg-white rounded-[12px] border border-[#EFEEED] overflow-hidden"
               >
                 <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full flex items-center justify-between py-5 text-left"
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full flex items-center justify-between p-5 text-left"
                 >
-                  <span className="text-white/80 text-sm pr-4">
+                  <span className="text-[15px] lg:text-[16px] font-medium font-source-sans text-black pr-4">
                     {faq.question}
                   </span>
-                  <span className="text-white/30 text-lg">
-                    {openFaq === index ? '−' : '+'}
-                  </span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-black/40 flex-shrink-0 transition-transform ${
+                      openFaq === idx ? 'rotate-180' : ''
+                    }`}
+                  />
                 </button>
-                
                 <div className={`transition-all duration-200 overflow-hidden ${
-                  openFaq === index ? 'max-h-48 opacity-100 pb-5' : 'max-h-0 opacity-0'
+                  openFaq === idx ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'
                 }`}>
-                  <p className="text-white/40 text-sm leading-relaxed pr-8">
-                    {faq.answer}
-                  </p>
+                  <div className="px-5 pb-5">
+                    <p className="text-[14px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -382,26 +387,114 @@ export default function PricingClient() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="pb-24 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl font-semibold text-white mb-4 font-['Space_Grotesk']">
-            Ready to see how AI sees you?
+      {/* Final CTA */}
+      <section className="bg-[#111111] py-16 lg:py-24">
+        <div className="max-w-[700px] mx-auto px-6 lg:px-14 text-center">
+          <h2 className="text-[26px] lg:text-[38px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
+            <span
+              style={{
+                backgroundImage: 'url(/images/holographic-bg.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              UNLOCK YOUR
+            </span>
+            <br />
+            <span
+              style={{
+                backgroundImage: 'url(/images/holographic-bg.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              AI VISIBILITY
+            </span>
           </h2>
-          <p className="text-white/50 mb-8">
-            Get started in minutes. No credit card required to sign up.
+          <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 mb-8 max-w-[380px] mx-auto">
+            Start your free trial today. No credit card required.
           </p>
           <Link
-            href="/auth/signup"
-            className="iridescent-hover inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-medium transition-colors"
+            href="/signup"
+            className="inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors"
           >
-            <span>Get Started</span>
-            <ArrowRight className="w-4 h-4" />
+            Get started free
           </Link>
         </div>
       </section>
 
-      <Footer />
+      {/* Footer */}
+      <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
+          {/* Ask AI About Harbor */}
+          <div className="flex flex-col items-center mb-12 lg:mb-16">
+            <p className="text-[#888] text-[15px] font-source-sans mb-4">Ask AI about Harbor</p>
+            <div className="flex items-center gap-2">
+              {AI_MODELS.map((model) => (
+                <a key={model.name} href={model.url} target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-lg bg-[#1a1a1a] border border-[#333] flex items-center justify-center hover:bg-[#222] hover:border-[#444] transition-colors" title={`Ask ${model.name} about Harbor`}>
+                  <img src={model.icon} alt={model.name} className="w-5 h-5 opacity-60" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer Links */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-16 mb-12 lg:mb-16">
+            <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start mb-4 lg:mb-0">
+              <img src="/images/Harbor_White_Logo.png" alt="Harbor" className="w-10 h-10" />
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Product</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/features/brand-visibility" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Visibility</Link></li>
+                <li><Link href="/features/shopping" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Shopping Intelligence</Link></li>
+                <li><Link href="/features/conversations" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Conversation Tracking</Link></li>
+                <li><Link href="/features/analytics" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Website Analytics</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Company</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/pricing" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link href="/about" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">About us</Link></li>
+                <li><Link href="/blog" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Resources</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/index" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Index</Link></li>
+                <li><Link href="/docs" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Documentation</Link></li>
+                <li><Link href="/help" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Help Center</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Contact</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><a href="mailto:hello@useharbor.io" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">hello@useharbor.io</a></li>
+                <li><a href="https://twitter.com/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Twitter / X</a></li>
+                <li><a href="https://linkedin.com/company/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">LinkedIn</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="flex flex-col lg:flex-row items-center justify-between pt-8 border-t border-[#222] gap-4">
+            <p className="text-[#666] text-[14px] font-source-sans">© 2025 Harbor</p>
+            <div className="flex items-center gap-6 lg:gap-8">
+              <Link href="/privacy" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Terms of Service</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
