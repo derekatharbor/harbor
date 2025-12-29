@@ -256,11 +256,11 @@ export default function HomePage() {
           </div>
 
           {/* Stacked Windows Visual */}
-          <div className="max-w-[800px] mx-auto">
+          <div className="max-w-[1100px] mx-auto">
             <img 
               src="/images/competitors-preview.png"
               alt="Harbor Competitors Dashboard"
-              className="w-full rounded-xl border border-[#EFEEED] shadow-sm"
+              className="w-full"
             />
           </div>
         </div>
