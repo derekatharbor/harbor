@@ -520,9 +520,13 @@
   color: white;
   transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
 }
 
-.btn-black:hover {
+.btn-black::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: linear-gradient(
     135deg,
     #f8c8dc 0%,
@@ -536,8 +540,45 @@
     #f8c8dc 100%
   );
   background-size: 400% 400%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
   animation: gradient-spin 4s linear infinite;
+  border-radius: inherit;
+}
+
+/* Noise texture overlay */
+.btn-black::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.btn-black:hover::before {
+  opacity: 1;
+}
+
+.btn-black:hover::after {
+  opacity: 0.12;
+}
+
+.btn-black:hover {
   color: #111111;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 15px rgba(180, 200, 255, 0.25),
+    0 8px 30px rgba(248, 200, 220, 0.15);
+}
+
+/* Ensure text/icons stay above the gradient */
+.btn-black > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Holographic text effect - simple version */

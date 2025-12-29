@@ -279,13 +279,13 @@ export default function PricingClient() {
 
                 <Link
                   href={getHref(plan)}
-                  className={`block w-full h-[44px] rounded-[8px] text-[14px] font-semibold font-source-sans flex items-center justify-center transition-colors ${
+                  className={`block w-full h-[44px] rounded-[8px] text-[14px] font-semibold font-source-sans flex items-center justify-center ${
                     plan.highlight
-                      ? 'bg-black text-white hover:bg-black/90'
-                      : 'bg-white text-black hover:bg-gray-100'
+                      ? 'btn-black'
+                      : 'bg-white text-black hover:bg-gray-100 transition-colors'
                   }`}
                 >
-                  {plan.cta}
+                  <span>{plan.cta}</span>
                 </Link>
               </div>
             ))}
@@ -320,9 +320,9 @@ export default function PricingClient() {
               </p>
               <Link
                 href="/pitch"
-                className="inline-flex items-center gap-2 h-[42px] px-5 rounded-[8px] bg-black text-white text-[14px] font-semibold font-source-sans hover:bg-black/90 transition-colors"
+                className="btn-black inline-flex items-center gap-2 h-[42px] px-5 rounded-[8px] text-[14px] font-semibold font-source-sans"
               >
-                Learn more
+                <span>Learn more</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
