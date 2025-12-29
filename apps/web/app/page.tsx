@@ -248,16 +248,20 @@ export default function HomePage() {
           {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="text-[42px] font-semibold font-source-sans tracking-tight text-black leading-tight">
-              See your brand through AI&apos;s eyes
+              Track your AI presence
             </h2>
             <p className="mt-4 text-[18px] font-normal font-source-code text-[#6F6E6E] max-w-[500px] mx-auto">
               Understand how ChatGPT, Claude, Perplexity, and Gemini describe your brand to millions of users.
             </p>
           </div>
 
-          {/* Stacked Windows Visual Placeholder */}
-          <div className="max-w-[800px] mx-auto h-[400px] bg-white rounded-xl border border-[#EFEEED] flex items-center justify-center text-[#6F6E6E] text-sm font-source-code">
-            Stacked windows visual
+          {/* Stacked Windows Visual */}
+          <div className="max-w-[800px] mx-auto">
+            <img 
+              src="/images/competitors-preview.png"
+              alt="Harbor Competitors Dashboard"
+              className="w-full rounded-xl border border-[#EFEEED] shadow-sm"
+            />
           </div>
         </div>
       </section>
