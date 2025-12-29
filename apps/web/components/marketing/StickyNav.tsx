@@ -5,6 +5,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Menu } from 'lucide-react'
+import MobileMenu from './MobileMenu'
 
 // Product dropdown - left items control right content
 const PRODUCT_LEFT = [
@@ -243,6 +245,7 @@ function NavDropdown({ label, children, isDark }: NavDropdownProps) {
 export default function StickyNav() {
   const [isVisible, setIsVisible] = useState(false)
   const [isDark, setIsDark] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -267,83 +270,131 @@ export default function StickyNav() {
   }, [])
 
   return (
-    <div
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 -translate-y-4 pointer-events-none'
-      }`}
-    >
-      <div className={`flex items-center justify-between w-[768px] h-14 px-5 rounded-xl transition-all duration-300 backdrop-blur-md ${
-        isDark 
-          ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
-          : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
-      }`}>
-        {/* Left: Logo + Nav Links */}
-        <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center mr-3">
+    <>
+      <div
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+          isVisible 
+            ? 'opacity-100 translate-y-0' 
+            : 'opacity-0 -translate-y-4 pointer-events-none'
+        }`}
+      >
+        {/* Desktop Nav */}
+        <div className={`hidden lg:flex items-center justify-between w-[768px] h-14 px-5 rounded-xl transition-all duration-300 backdrop-blur-md ${
+          isDark 
+            ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
+            : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
+        }`}>
+          {/* Left: Logo + Nav Links */}
+          <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center mr-3">
+              <Image
+                src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
+                alt="Harbor"
+                width={25}
+                height={25}
+                className="transition-opacity duration-300"
+              />
+            </Link>
+
+            {/* Nav Dropdowns */}
+            <NavDropdown label="Product" isDark={isDark}>
+              <DropdownContent 
+                items={PRODUCT_LEFT} 
+                rightContent={PRODUCT_RIGHT} 
+                defaultActive="competitors" 
+              />
+            </NavDropdown>
+
+            <NavDropdown label="Solutions" isDark={isDark}>
+              <DropdownContent 
+                items={SOLUTIONS_LEFT} 
+                rightContent={SOLUTIONS_RIGHT} 
+                defaultActive="marketers" 
+              />
+            </NavDropdown>
+
+            <Link
+              href="/pricing"
+              className={`px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
+                isDark 
+                  ? 'text-white/80 hover:text-white hover:bg-white/10' 
+                  : 'text-black/70 hover:text-black hover:bg-black/5'
+              }`}
+            >
+              Pricing
+            </Link>
+          </div>
+
+          {/* Right: Buttons */}
+          <div className="flex items-center gap-2">
+            <Link 
+              href="/login"
+              className={`h-9 px-5 rounded-md border text-[13px] font-medium font-space tracking-[0.61px] transition-colors flex items-center ${
+                isDark 
+                  ? 'border-[#333] text-white hover:bg-white/10' 
+                  : 'border-[#B1B0AF] text-black hover:bg-black/5'
+              }`}
+            >
+              Login
+            </Link>
+            <Link 
+              href="/signup"
+              className={`h-9 px-5 rounded-md text-[13px] font-medium font-space tracking-[0.61px] flex items-center transition-colors ${
+                isDark
+                  ? 'bg-white text-black hover:bg-gray-200'
+                  : 'btn-black'
+              }`}
+            >
+              Get started
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobile Nav */}
+        <div className={`lg:hidden flex items-center justify-between w-[calc(100vw-32px)] max-w-[400px] h-12 px-4 rounded-xl transition-all duration-300 backdrop-blur-md ${
+          isDark 
+            ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
+            : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
+        }`}>
+          <Link href="/" className="flex items-center">
             <Image
               src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
               alt="Harbor"
-              width={25}
-              height={25}
+              width={24}
+              height={24}
               className="transition-opacity duration-300"
             />
           </Link>
 
-          {/* Nav Dropdowns */}
-          <NavDropdown label="Product" isDark={isDark}>
-            <DropdownContent 
-              items={PRODUCT_LEFT} 
-              rightContent={PRODUCT_RIGHT} 
-              defaultActive="competitors" 
-            />
-          </NavDropdown>
-
-          <NavDropdown label="Solutions" isDark={isDark}>
-            <DropdownContent 
-              items={SOLUTIONS_LEFT} 
-              rightContent={SOLUTIONS_RIGHT} 
-              defaultActive="marketers" 
-            />
-          </NavDropdown>
-
-          <Link
-            href="/pricing"
-            className={`px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
-              isDark 
-                ? 'text-white/80 hover:text-white hover:bg-white/10' 
-                : 'text-black/70 hover:text-black hover:bg-black/5'
-            }`}
-          >
-            Pricing
-          </Link>
-        </div>
-
-        {/* Right: Buttons */}
-        <div className="flex items-center gap-2">
-          <Link 
-            href="/login"
-            className={`h-9 px-5 rounded-md border text-[13px] font-medium font-space tracking-[0.61px] transition-colors flex items-center ${
-              isDark 
-                ? 'border-[#333] text-white hover:bg-white/10' 
-                : 'border-[#B1B0AF] text-black hover:bg-black/5'
-            }`}
-          >
-            Login
-          </Link>
-          <Link 
-            href="/signup"
-            className={`h-9 px-5 rounded-md text-[13px] font-medium font-space tracking-[0.61px] flex items-center transition-colors ${
-              isDark
-                ? 'bg-white text-black hover:bg-gray-200'
-                : 'btn-black'
-            }`}
-          >
-            Get started
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link 
+              href="/signup"
+              className={`h-8 px-4 rounded-md text-[12px] font-medium font-space tracking-[0.5px] flex items-center transition-colors ${
+                isDark
+                  ? 'bg-white text-black hover:bg-gray-200'
+                  : 'btn-black'
+              }`}
+            >
+              Get started
+            </Link>
+            <button 
+              onClick={() => setMobileMenuOpen(true)}
+              className={`p-1.5 rounded-lg transition-colors ${
+                isDark ? 'hover:bg-white/10' : 'hover:bg-black/5'
+              }`}
+            >
+              <Menu className={`w-5 h-5 ${isDark ? 'text-white' : 'text-black'}`} />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        isDark={isDark}
+      />
+    </>
   )
 }

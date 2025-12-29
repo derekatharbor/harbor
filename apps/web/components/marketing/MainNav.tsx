@@ -5,6 +5,8 @@
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Menu } from 'lucide-react'
+import MobileMenu from './MobileMenu'
 
 // Product dropdown - left items control right content
 const PRODUCT_LEFT = [
@@ -238,60 +240,81 @@ function NavDropdown({ label, children }: NavDropdownProps) {
 }
 
 export default function MainNav() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
-    <nav className="flex items-center justify-between px-14 py-6">
-      {/* Left: Logo + Nav Links */}
-      <div className="flex items-center gap-2">
-        <Link href="/" className="flex items-center mr-4">
-          <Image
-            src="/images/harbor-logo-black.svg"
-            alt="Harbor"
-            width={140}
-            height={32}
-            className="h-8 w-auto"
-          />
-        </Link>
+    <>
+      <nav className="flex items-center justify-between px-6 lg:px-14 py-4 lg:py-6">
+        {/* Left: Logo + Nav Links */}
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center mr-4">
+            <Image
+              src="/images/harbor-logo-black.svg"
+              alt="Harbor"
+              width={140}
+              height={32}
+              className="h-7 lg:h-8 w-auto"
+            />
+          </Link>
 
-        {/* Nav Dropdowns */}
-        <NavDropdown label="Product">
-          <DropdownContent 
-            items={PRODUCT_LEFT} 
-            rightContent={PRODUCT_RIGHT} 
-            defaultActive="competitors" 
-          />
-        </NavDropdown>
+          {/* Desktop Nav Dropdowns - Hidden on mobile */}
+          <div className="hidden lg:flex items-center gap-2">
+            <NavDropdown label="Product">
+              <DropdownContent 
+                items={PRODUCT_LEFT} 
+                rightContent={PRODUCT_RIGHT} 
+                defaultActive="competitors" 
+              />
+            </NavDropdown>
 
-        <NavDropdown label="Solutions">
-          <DropdownContent 
-            items={SOLUTIONS_LEFT} 
-            rightContent={SOLUTIONS_RIGHT} 
-            defaultActive="marketers" 
-          />
-        </NavDropdown>
+            <NavDropdown label="Solutions">
+              <DropdownContent 
+                items={SOLUTIONS_LEFT} 
+                rightContent={SOLUTIONS_RIGHT} 
+                defaultActive="marketers" 
+              />
+            </NavDropdown>
 
-        <Link
-          href="/pricing"
-          className="px-3 py-2 text-[15px] font-medium font-source-sans text-black/70 hover:text-black transition-colors rounded hover:bg-black/5"
+            <Link
+              href="/pricing"
+              className="px-3 py-2 text-[15px] font-medium font-source-sans text-black/70 hover:text-black transition-colors rounded hover:bg-black/5"
+            >
+              Pricing
+            </Link>
+          </div>
+        </div>
+
+        {/* Right: Desktop Buttons - Hidden on mobile */}
+        <div className="hidden lg:flex items-center gap-2.5">
+          <Link 
+            href="/login"
+            className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
+          >
+            Login
+          </Link>
+          <Link 
+            href="/signup"
+            className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
+          >
+            Get started
+          </Link>
+        </div>
+
+        {/* Mobile: Hamburger Menu */}
+        <button 
+          onClick={() => setMobileMenuOpen(true)}
+          className="lg:hidden p-2 -mr-2 hover:bg-black/5 rounded-lg transition-colors"
         >
-          Pricing
-        </Link>
-      </div>
+          <Menu className="w-6 h-6 text-black" />
+        </button>
+      </nav>
 
-      {/* Right: Buttons */}
-      <div className="flex items-center gap-2.5">
-        <Link 
-          href="/login"
-          className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
-        >
-          Login
-        </Link>
-        <Link 
-          href="/signup"
-          className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
-        >
-          Get started
-        </Link>
-      </div>
-    </nav>
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        isDark={false}
+      />
+    </>
   )
 }
