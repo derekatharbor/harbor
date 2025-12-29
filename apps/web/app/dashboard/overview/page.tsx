@@ -1,10 +1,9 @@
 // apps/web/app/dashboard/overview/page.tsx
-// Overview Dashboard with DUMMY DATA for screenshots
-// Replace with original page.tsx after screenshots are taken
+// Overview Dashboard with real data from APIs
 
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { 
   ArrowUpRight,
@@ -16,213 +15,21 @@ import {
   MessageSquare,
   Calendar,
   Tag,
+  BarChart3,
   Target,
+  MessageCircle,
   X,
   TrendingUp,
+  TrendingDown,
   CheckCircle2,
   Circle,
   Lightbulb,
   ArrowRight,
   Sparkles
 } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts'
+import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
-
-// ============================================================================
-// DUMMY DATA FOR SCREENSHOTS
-// ============================================================================
-
-const DUMMY_BRAND = {
-  name: 'Acme Corp',
-  logo: 'https://logo.clearbit.com/acme.com',
-  domain: 'acme.com'
-}
-
-const DUMMY_COMPETITORS: CompetitorData[] = [
-  {
-    rank: 1,
-    name: 'Acme Corp',
-    logo: 'https://logo.clearbit.com/acme.com',
-    visibility: 72,
-    visibilityDelta: 8,
-    sentiment: 'positive',
-    sentimentDelta: 5,
-    position: 2.1,
-    positionDelta: -0.3,
-    mentions: 847,
-    isUser: true,
-    color: '#FF6B4A'
-  },
-  {
-    rank: 2,
-    name: 'TechFlow',
-    logo: 'https://logo.clearbit.com/techflow.io',
-    visibility: 68,
-    visibilityDelta: 3,
-    sentiment: 'positive',
-    sentimentDelta: 2,
-    position: 2.4,
-    positionDelta: 0.1,
-    mentions: 723,
-    isUser: false,
-    color: '#3B82F6'
-  },
-  {
-    rank: 3,
-    name: 'Zenith Labs',
-    logo: 'https://logo.clearbit.com/zenith.com',
-    visibility: 54,
-    visibilityDelta: -2,
-    sentiment: 'neutral',
-    sentimentDelta: 0,
-    position: 3.2,
-    positionDelta: 0.4,
-    mentions: 512,
-    isUser: false,
-    color: '#22C55E'
-  },
-  {
-    rank: 4,
-    name: 'Quantum Inc',
-    logo: 'https://logo.clearbit.com/quantum.com',
-    visibility: 41,
-    visibilityDelta: 5,
-    sentiment: 'positive',
-    sentimentDelta: 3,
-    position: 4.1,
-    positionDelta: -0.2,
-    mentions: 389,
-    isUser: false,
-    color: '#8B5CF6'
-  },
-  {
-    rank: 5,
-    name: 'Nova Systems',
-    logo: 'https://logo.clearbit.com/nova.io',
-    visibility: 35,
-    visibilityDelta: 1,
-    sentiment: 'neutral',
-    sentimentDelta: -1,
-    position: 4.8,
-    positionDelta: 0.2,
-    mentions: 298,
-    isUser: false,
-    color: '#F59E0B'
-  },
-  {
-    rank: 6,
-    name: 'Apex Digital',
-    logo: 'https://logo.clearbit.com/apex.com',
-    visibility: 28,
-    visibilityDelta: -4,
-    sentiment: 'negative',
-    sentimentDelta: -2,
-    position: 5.3,
-    positionDelta: 0.5,
-    mentions: 234,
-    isUser: false,
-    color: '#EC4899'
-  },
-]
-
-const DUMMY_SOURCES: SourceData[] = [
-  { domain: 'techcrunch.com', logo: 'https://logo.clearbit.com/techcrunch.com', type: 'Editorial', citations: 127, color: '#3B82F6' },
-  { domain: 'g2.com', logo: 'https://logo.clearbit.com/g2.com', type: 'UGC', citations: 98, color: '#22D3EE' },
-  { domain: 'acme.com', logo: 'https://logo.clearbit.com/acme.com', type: 'Corporate', citations: 84, color: '#FF8C42' },
-  { domain: 'gartner.com', logo: 'https://logo.clearbit.com/gartner.com', type: 'Institutional', citations: 72, color: '#4ADE80' },
-  { domain: 'wikipedia.org', logo: 'https://logo.clearbit.com/wikipedia.org', type: 'Reference', citations: 56, color: '#A855F7' },
-]
-
-const DUMMY_VISIBILITY_HISTORY = [
-  { date: '2025-12-22', displayDate: 'Dec 22', visibility: 58, position: 3.2, sentiment: 65 },
-  { date: '2025-12-23', displayDate: 'Dec 23', visibility: 61, position: 2.9, sentiment: 68 },
-  { date: '2025-12-24', displayDate: 'Dec 24', visibility: 59, position: 3.0, sentiment: 66 },
-  { date: '2025-12-25', displayDate: 'Dec 25', visibility: 64, position: 2.7, sentiment: 70 },
-  { date: '2025-12-26', displayDate: 'Dec 26', visibility: 67, position: 2.4, sentiment: 72 },
-  { date: '2025-12-27', displayDate: 'Dec 27', visibility: 69, position: 2.2, sentiment: 75 },
-  { date: '2025-12-28', displayDate: 'Dec 28', visibility: 72, position: 2.1, sentiment: 78 },
-]
-
-const DUMMY_PROMPTS: PromptExecution[] = [
-  {
-    id: '1',
-    prompt: 'What is the best project management software for startups?',
-    topic: 'Project Management',
-    model: 'chatgpt',
-    modelName: 'ChatGPT',
-    modelLogo: 'https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y',
-    responsePreview: 'For startups, I recommend considering Acme Corp, TechFlow, or Notion based on your specific needs...',
-    responseText: 'For startups, I recommend considering **Acme Corp**, **TechFlow**, or **Notion** based on your specific needs. Acme Corp offers excellent collaboration features and scales well. TechFlow is great for agile teams with its sprint planning tools.',
-    executedAt: '2025-12-28T14:30:00Z',
-    timeAgo: '2 hours ago',
-    brandsCount: 3,
-    brands: ['Acme Corp', 'TechFlow', 'Notion'],
-    citationsCount: 2,
-    citationDomains: ['g2.com', 'techcrunch.com'],
-    citationFavicons: []
-  },
-  {
-    id: '2',
-    prompt: 'Compare enterprise CRM solutions for B2B companies',
-    topic: 'CRM',
-    model: 'claude',
-    modelName: 'Claude',
-    modelLogo: 'https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y',
-    responsePreview: 'When comparing enterprise CRM solutions, Salesforce leads in features while Acme Corp offers better value...',
-    responseText: 'When comparing enterprise CRM solutions, **Salesforce** leads in features while **Acme Corp** offers better value for mid-market companies. HubSpot is ideal for marketing-heavy teams.',
-    executedAt: '2025-12-28T12:15:00Z',
-    timeAgo: '4 hours ago',
-    brandsCount: 3,
-    brands: ['Salesforce', 'Acme Corp', 'HubSpot'],
-    citationsCount: 3,
-    citationDomains: ['gartner.com', 'forrester.com', 'g2.com'],
-    citationFavicons: []
-  },
-  {
-    id: '3',
-    prompt: 'Best automation tools for small business',
-    topic: 'Automation',
-    model: 'perplexity',
-    modelName: 'Perplexity',
-    modelLogo: 'https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y',
-    responsePreview: 'For small business automation, Zapier and Acme Corp are top choices...',
-    responseText: 'For small business automation, **Zapier** and **Acme Corp** are top choices. Acme Corp recently launched workflow automation that rivals Make.com at a lower price point.',
-    executedAt: '2025-12-28T10:00:00Z',
-    timeAgo: '6 hours ago',
-    brandsCount: 3,
-    brands: ['Zapier', 'Acme Corp', 'Make.com'],
-    citationsCount: 1,
-    citationDomains: ['techcrunch.com'],
-    citationFavicons: []
-  },
-]
-
-const DUMMY_ACTION_ITEMS: ActionItem[] = [
-  {
-    id: '1',
-    title: 'Add schema markup to product pages',
-    description: 'Help AI models understand your product features better with structured data',
-    impact: 'high',
-    href: '/dashboard/website',
-    type: 'quick-win'
-  },
-  {
-    id: '2',
-    title: 'Create comparison content',
-    description: 'Acme Corp vs TechFlow content could capture 15% more AI mentions',
-    impact: 'high',
-    href: '/dashboard/opportunities',
-    type: 'opportunity'
-  },
-  {
-    id: '3',
-    title: 'Update meta descriptions',
-    description: '12 pages have outdated descriptions that AI models may misinterpret',
-    impact: 'medium',
-    href: '/dashboard/website',
-    type: 'quick-win'
-  },
-]
 
 // ============================================================================
 // TYPES
@@ -252,6 +59,13 @@ interface SourceData {
   color: string
 }
 
+interface SourceDistribution {
+  type: string
+  count: number
+  color: string
+  percentage: number
+}
+
 interface PromptExecution {
   id: string
   prompt: string
@@ -270,6 +84,14 @@ interface PromptExecution {
   citationFavicons: string[]
 }
 
+interface QuickWin {
+  id: string
+  title: string
+  description: string
+  impact: 'high' | 'medium' | 'low'
+  pages_affected?: number
+}
+
 interface ActionItem {
   id: string
   title: string
@@ -277,6 +99,62 @@ interface ActionItem {
   impact: 'high' | 'medium' | 'low'
   href?: string
   type: 'quick-win' | 'opportunity'
+}
+
+interface GettingStartedTask {
+  id: string
+  title: string
+  description: string
+  completed: boolean
+  href: string
+}
+
+interface CategoryBenchmark {
+  category: string
+  avg_visibility: number
+  median_visibility: number
+  top_quartile_visibility: number
+  avg_rank: number
+  brand_count: number
+  positive_sentiment_pct: number
+}
+
+interface BenchmarkData {
+  user_category: string | null
+  user_benchmark: CategoryBenchmark | null
+  global_benchmark: CategoryBenchmark | null
+}
+
+function getBenchmarkContext(
+  userVisibility: number, 
+  benchmark: CategoryBenchmark | null
+): { label: string; color: string; detail: string } {
+  if (!benchmark) {
+    return { label: '', color: 'text-muted', detail: '' }
+  }
+  
+  if (userVisibility >= benchmark.top_quartile_visibility) {
+    return { label: 'Top performer', color: 'text-green-500', detail: `Top 25% in ${benchmark.category}` }
+  }
+  if (userVisibility >= benchmark.avg_visibility) {
+    return { label: 'Above average', color: 'text-green-500', detail: `Above ${benchmark.category} avg (${benchmark.avg_visibility}%)` }
+  }
+  if (userVisibility >= benchmark.avg_visibility * 0.7) {
+    return { label: 'Average', color: 'text-muted', detail: `${benchmark.category} avg: ${benchmark.avg_visibility}%` }
+  }
+  return { label: 'Below average', color: 'text-amber-500', detail: `${benchmark.category} avg: ${benchmark.avg_visibility}%` }
+}
+
+function getRankContext(
+  userRank: number, 
+  totalBrands: number,
+  benchmark: CategoryBenchmark | null
+): { label: string; color: string } {
+  const percentile = ((totalBrands - userRank) / totalBrands) * 100
+  if (percentile >= 90) return { label: 'Top 10%', color: 'text-green-500' }
+  if (percentile >= 75) return { label: 'Top 25%', color: 'text-green-500' }
+  if (percentile >= 50) return { label: 'Top half', color: 'text-muted' }
+  return { label: 'Room to grow', color: 'text-amber-500' }
 }
 
 // ============================================================================
@@ -290,33 +168,326 @@ const MODEL_NAMES: Record<string, string> = {
   perplexity: 'Perplexity',
 }
 
+// Color palette for chart lines
+const CHART_COLORS = [
+  '#FF6B4A', // Coral (user's brand)
+  '#3B82F6', // Blue
+  '#22C55E', // Green
+  '#8B5CF6', // Purple
+  '#F59E0B', // Amber
+]
+
 export default function OverviewPage() {
+  const { currentDashboard } = useBrand()
+  
+  const [loading, setLoading] = useState(true)
+  const [competitors, setCompetitors] = useState<CompetitorData[]>([])
+  const [sources, setSources] = useState<SourceData[]>([])
+  const [sourceDistribution, setSourceDistribution] = useState<SourceDistribution[]>([])
+  const [totalCitations, setTotalCitations] = useState(0)
+  const [userRank, setUserRank] = useState<number | null>(null)
+  const [totalBrands, setTotalBrands] = useState(0)
+  
+  // Visibility history for chart
+  const [visibilityHistory, setVisibilityHistory] = useState<{
+    date: string
+    displayDate: string
+    visibility: number | null
+    position: number | null
+    sentiment: number | null
+  }[]>([])
+  const [hasHistoricalData, setHasHistoricalData] = useState(false)
+  
+  // Recent prompts state
+  const [recentPrompts, setRecentPrompts] = useState<PromptExecution[]>([])
+  const [promptsLoading, setPromptsLoading] = useState(true)
+  const [brandMentionedOnly, setBrandMentionedOnly] = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptExecution | null>(null)
+  
+  // Filters
   const [selectedModel, setSelectedModel] = useState('all')
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false)
   const [tagsDropdownOpen, setTagsDropdownOpen] = useState(false)
   const modelDropdownRef = useRef<HTMLDivElement>(null)
   const tagsDropdownRef = useRef<HTMLDivElement>(null)
-  const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptExecution | null>(null)
-  const [competitorAlertDismissed, setCompetitorAlertDismissed] = useState(false)
-
-  // Use dummy data
-  const brandName = DUMMY_BRAND.name
-  const brandLogo = DUMMY_BRAND.logo
-  const competitors = DUMMY_COMPETITORS
-  const sources = DUMMY_SOURCES
-  const visibilityHistory = DUMMY_VISIBILITY_HISTORY
-  const recentPrompts = DUMMY_PROMPTS
-  const actionItems = DUMMY_ACTION_ITEMS
-  const totalCitations = sources.reduce((sum, s) => sum + s.citations, 0)
-  const totalBrands = 847
   
+  // Chart toggle
+  const [activeMetric, setActiveMetric] = useState<'visibility' | 'sentiment' | 'position'>('visibility')
+  
+  // Quick wins from website analytics
+  const [quickWins, setQuickWins] = useState<QuickWin[]>([])
+  
+  // Action items (combined from quick wins + opportunities)
+  const [actionItems, setActionItems] = useState<ActionItem[]>([])
+  
+  // Getting started tasks
+  const [gettingStartedTasks, setGettingStartedTasks] = useState<GettingStartedTask[]>([])
+  const [showGettingStarted, setShowGettingStarted] = useState(true)
+  
+  // Top competitor for "losing to" context
+  const [topCompetitor, setTopCompetitor] = useState<{ name: string; visibility: number } | null>(null)
+  
+  // Real benchmarks from API
+  const [benchmarkData, setBenchmarkData] = useState<BenchmarkData | null>(null)
+  
+  // Dismissible competitor alert
+  const [competitorAlertDismissed, setCompetitorAlertDismissed] = useState(false)
+  
+  // Check localStorage for dismissed alert on mount
+  useEffect(() => {
+    const dismissed = localStorage.getItem('harbor-competitor-alert-dismissed')
+    if (dismissed) {
+      const dismissedData = JSON.parse(dismissed)
+      // Only keep dismissed if it's the same competitor and within 7 days
+      const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000)
+      if (dismissedData.timestamp > sevenDaysAgo) {
+        setCompetitorAlertDismissed(true)
+      }
+    }
+  }, [])
+
+  // Fetch main data
+  useEffect(() => {
+    async function fetchData() {
+      if (!currentDashboard?.id) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        // Fetch competitors
+        const competitorsRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=10`)
+        if (competitorsRes.ok) {
+          const data = await competitorsRes.json()
+          const comps = data.competitors || []
+          setCompetitors(comps)
+          setUserRank(data.user_rank)
+          setTotalBrands(data.total_brands_found || 0)
+          
+          // Find top competitor (first non-user competitor with higher visibility)
+          const userData = comps.find((c: CompetitorData) => c.isUser)
+          const topComp = comps.find((c: CompetitorData) => !c.isUser && c.visibility > (userData?.visibility || 0))
+          if (topComp) {
+            setTopCompetitor({ name: topComp.name, visibility: topComp.visibility })
+          }
+        }
+
+        // Fetch sources (filtered by dashboard's prompts)
+        const sourcesRes = await fetch(`/api/dashboard/${currentDashboard.id}/sources`)
+        if (sourcesRes.ok) {
+          const data = await sourcesRes.json()
+          setSources(data.domains || [])
+          setSourceDistribution(data.distribution || [])
+          setTotalCitations(data.total || 0)
+        }
+        
+        // Fetch visibility history for chart
+        const historyRes = await fetch(`/api/dashboard/${currentDashboard.id}/visibility-history?days=7`)
+        if (historyRes.ok) {
+          const data = await historyRes.json()
+          setVisibilityHistory(data.history || [])
+          setHasHistoricalData(data.has_data || false)
+        }
+        
+        // Fetch real benchmarks from category data
+        const benchmarksRes = await fetch(`/api/dashboard/${currentDashboard.id}/benchmarks`)
+        if (benchmarksRes.ok) {
+          const data = await benchmarksRes.json()
+          setBenchmarkData({
+            user_category: data.user_category,
+            user_benchmark: data.user_benchmark,
+            global_benchmark: data.global_benchmark
+          })
+        }
+        
+        // Fetch quick wins from website analytics
+        let quickWinItems: ActionItem[] = []
+        const websiteRes = await fetch(`/api/dashboard/${currentDashboard.id}/website-analytics`)
+        if (websiteRes.ok) {
+          const data = await websiteRes.json()
+          const recs = (data.recommendations || [])
+            .filter((r: QuickWin) => r.impact === 'high' || r.impact === 'medium')
+            .slice(0, 3)
+          setQuickWins(recs)
+          quickWinItems = recs.map((r: QuickWin) => ({
+            ...r,
+            type: 'quick-win' as const,
+            href: '/dashboard/website'
+          }))
+        }
+        
+        // If no quick wins, fetch opportunities as fallback
+        let opportunityItems: ActionItem[] = []
+        if (quickWinItems.length === 0) {
+          const oppRes = await fetch(`/api/dashboard/${currentDashboard.id}/opportunities`)
+          if (oppRes.ok) {
+            const data = await oppRes.json()
+            // Get first few action items from any content type
+            const allActions = Object.values(data.contentTypes || {})
+              .flatMap((ct: any) => ct.actionItems || [])
+              .slice(0, 3)
+            
+            opportunityItems = allActions.map((a: any, idx: number) => ({
+              id: `opp-${idx}`,
+              title: a.title || a,
+              description: a.description || '',
+              impact: 'medium' as const,
+              type: 'opportunity' as const,
+              href: '/dashboard/opportunities'
+            }))
+          }
+        }
+        
+        // Combine into action items
+        setActionItems([...quickWinItems, ...opportunityItems].slice(0, 3))
+        
+        // Calculate getting started tasks
+        const tasks: GettingStartedTask[] = [
+          {
+            id: 'prompts',
+            title: 'Track your first prompts',
+            description: 'Add prompts to monitor how AI mentions your brand',
+            completed: false, // Will check below
+            href: '/dashboard/prompts'
+          },
+          {
+            id: 'competitors',
+            title: 'Add competitors to track',
+            description: 'See how you compare to others in your space',
+            completed: false,
+            href: '/dashboard/competitors'
+          },
+          {
+            id: 'profile',
+            title: 'Complete your Harbor profile',
+            description: 'Help AI models describe your brand accurately',
+            completed: !!currentDashboard?.brand_name && !!currentDashboard?.domain,
+            href: `/brands/${currentDashboard?.brand_name?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || ''}/manage`
+          }
+        ]
+        
+        // Check if prompts exist
+        const promptsRes = await fetch(`/api/prompts/list?dashboard_id=${currentDashboard.id}`)
+        if (promptsRes.ok) {
+          const promptData = await promptsRes.json()
+          const hasPrompts = (promptData.prompts?.length || 0) > 0
+          tasks[0].completed = hasPrompts
+        }
+        
+        // Check if competitors are tracked
+        const trackedRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`)
+        if (trackedRes.ok) {
+          const trackedData = await trackedRes.json()
+          const hasTracked = (trackedData.tracked?.length || 0) > 0
+          tasks[1].completed = hasTracked
+        }
+        
+        setGettingStartedTasks(tasks)
+        
+        // Hide getting started if all done
+        const allDone = tasks.every(t => t.completed)
+        if (allDone) {
+          const dismissed = localStorage.getItem('harbor-getting-started-dismissed')
+          setShowGettingStarted(!dismissed)
+        }
+        
+      } catch (err) {
+        console.error('Error fetching overview data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [currentDashboard?.id, currentDashboard?.brand_name, currentDashboard?.domain])
+
+  // Fetch recent prompts - using prompts/recent which joins with executions
+  useEffect(() => {
+    async function fetchPrompts() {
+      if (!currentDashboard?.id) {
+        console.log('[Overview] No dashboard ID, skipping prompts fetch')
+        return
+      }
+      
+      console.log('[Overview] Fetching prompts for dashboard:', currentDashboard.id)
+      setPromptsLoading(true)
+      
+      try {
+        const params = new URLSearchParams({ 
+          limit: '12',
+          dashboard_id: currentDashboard.id
+        })
+        if (brandMentionedOnly && currentDashboard?.brand_name) {
+          params.set('brand', currentDashboard.brand_name)
+        }
+
+        const res = await fetch(`/api/prompts/recent?${params}`)
+        if (res.ok) {
+          const data = await res.json()
+          console.log('[Overview] Prompts response:', data)
+          setRecentPrompts(data.prompts || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch prompts:', error)
+      } finally {
+        setPromptsLoading(false)
+      }
+    }
+
+    fetchPrompts()
+  }, [brandMentionedOnly, currentDashboard?.id, currentDashboard?.brand_name])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
+        setModelDropdownOpen(false)
+      }
+      if (tagsDropdownRef.current && !tagsDropdownRef.current.contains(event.target as Node)) {
+        setTagsDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const getSourceTypeColor = (type: string) => {
+    switch (type?.toLowerCase()) {
+      case 'corporate': return '#FF8C42'    // Orange
+      case 'editorial': return '#3B82F6'    // Blue
+      case 'ugc': return '#22D3EE'          // Cyan
+      case 'institutional': return '#4ADE80' // Green
+      case 'reference': return '#A855F7'    // Purple
+      default: return '#9CA3AF'             // Gray (Other)
+    }
+  }
+
+  const brandName = currentDashboard?.brand_name || 'Your Brand'
+  const brandLogo = currentDashboard?.logo_url
+  
+  // Get user's own data from competitors array
   const userData = competitors.find(c => c.isUser)
   const userVisibility = userData?.visibility || 0
   const userSentiment = userData?.sentiment || 'neutral'
-  const userRank = userData?.rank || 1
-  
-  const topCompetitor = competitors.find(c => !c.isUser && c.visibility > userVisibility)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-primary" data-page="overview">
+        <MobileHeader />
+        <div className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-16 bg-card rounded-lg w-full"></div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2 h-96 bg-card rounded-lg"></div>
+              <div className="h-96 bg-card rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Empty state check
+  const hasData = competitors.length > 0
 
   return (
     <div className="min-h-screen bg-primary" data-page="overview">
@@ -395,98 +566,296 @@ export default function OverviewPage() {
         <span className="text-sm text-muted">{totalBrands} brands found in AI responses</span>
       </div>
 
-      {/* User Stats Summary */}
-      <div className="px-6 pb-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Visibility */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
-              <Eye className="w-3.5 h-3.5 text-muted" />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-semibold text-primary">{userVisibility}%</span>
-              <span className="text-xs text-green-500">Top performer</span>
-            </div>
-            <p className="text-xs text-muted mt-1">Top 25% in SaaS</p>
-          </div>
-          
-          {/* Rank */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
-              <Target className="w-3.5 h-3.5 text-muted" />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-semibold text-primary">#{userRank}</span>
-              <span className="text-xs text-green-500">Top 10%</span>
-            </div>
-            <p className="text-xs text-muted mt-1">Out of {totalBrands} brands in SaaS</p>
-          </div>
-          
-          {/* Sentiment */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
-              <MessageSquare className="w-3.5 h-3.5 text-muted" />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-semibold capitalize text-green-500">
-                {userSentiment}
-              </span>
-              <TrendingUp className="w-4 h-4 text-green-500" />
-            </div>
-            <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
-          </div>
-          
-          {/* Sources/Citations */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
-              <Globe className="w-3.5 h-3.5 text-muted" />
-            </div>
-            <div className="text-2xl font-semibold text-primary">{totalCitations}</div>
-            <p className="text-xs text-muted mt-1">Domains cited in responses</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6 space-y-6">
-        {/* Action Items */}
-        <div className="card p-0 overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                <Lightbulb className="w-4 h-4 text-amber-500" />
+      {/* Getting Started Checklist - show for new users */}
+      {showGettingStarted && gettingStartedTasks.length > 0 && !gettingStartedTasks.every(t => t.completed) && (
+        <div className="px-6 pb-4">
+          <div className="card p-0 overflow-hidden border-l-4 border-l-accent">
+            <div className="flex items-center justify-between p-4 border-b border-border bg-secondary/30">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-accent" />
+                <span className="font-semibold text-primary text-sm">Get Started with Harbor</span>
+                <span className="text-xs text-muted ml-2">
+                  {gettingStartedTasks.filter(t => t.completed).length}/{gettingStartedTasks.length} complete
+                </span>
               </div>
-              <div>
-                <h3 className="font-semibold text-primary text-sm">Next Steps</h3>
-                <p className="text-xs text-muted mt-0.5">High-impact actions to improve your AI visibility</p>
-              </div>
-            </div>
-            <Link href="/dashboard/opportunities" className="expand-btn">
-              <ArrowUpRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="divide-y divide-border">
-            {actionItems.map((item) => (
-              <Link 
-                key={item.id}
-                href={item.href || '#'}
-                className="flex items-start gap-3 px-4 py-3 hover:bg-hover transition-colors"
+              <button 
+                onClick={() => {
+                  localStorage.setItem('harbor-getting-started-dismissed', 'true')
+                  setShowGettingStarted(false)
+                }}
+                className="text-xs text-muted hover:text-primary transition-colors"
               >
-                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                  item.impact === 'high' ? 'bg-red-500' : 'bg-amber-500'
-                }`} />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-primary">{item.title}</div>
-                  <div className="text-xs text-muted mt-0.5">{item.description}</div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted flex-shrink-0 mt-1" />
-              </Link>
-            ))}
+                Dismiss
+              </button>
+            </div>
+            <div className="divide-y divide-border">
+              {gettingStartedTasks.map((task) => (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors"
+                >
+                  {task.completed ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  ) : (
+                    <Circle className="w-5 h-5 text-muted flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-sm font-medium ${task.completed ? 'text-muted line-through' : 'text-primary'}`}>
+                      {task.title}
+                    </div>
+                    <div className="text-xs text-muted">{task.description}</div>
+                  </div>
+                  {!task.completed && <ArrowRight className="w-4 h-4 text-muted" />}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
+      )}
+
+      {/* User Stats Summary with Benchmarks */}
+      {hasData && (
+        <div className="px-6 pb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Visibility */}
+            {(() => {
+              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+              const context = getBenchmarkContext(userVisibility, benchmark || null)
+              return (
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
+                    <Eye className="w-3.5 h-3.5 text-muted" />
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-semibold text-primary">{userVisibility}%</span>
+                    {userVisibility > 0 && context.label && (
+                      <span className={`text-xs ${context.color}`}>{context.label}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted mt-1">
+                    {userVisibility > 0 && benchmark
+                      ? context.detail
+                      : userVisibility > 0
+                      ? 'Mentioned in AI responses'
+                      : 'Run prompts to measure visibility'}
+                  </p>
+                </div>
+              )
+            })()}
+            
+            {/* Rank */}
+            {(() => {
+              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+              const context = userRank ? getRankContext(userRank, totalBrands, benchmark || null) : null
+              return (
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
+                    <Target className="w-3.5 h-3.5 text-muted" />
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-semibold text-primary">
+                      {userRank ? `#${userRank}` : '—'}
+                    </span>
+                    {context && (
+                      <span className={`text-xs ${context.color}`}>{context.label}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted mt-1">
+                    {userRank 
+                      ? `Out of ${totalBrands} brands${benchmark ? ` in ${benchmarkData?.user_category || 'your space'}` : ''}`
+                      : 'Not yet ranked'}
+                  </p>
+                </div>
+              )
+            })()}
+            
+            {/* Sentiment */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
+                <MessageSquare className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-2xl font-semibold capitalize ${
+                  userSentiment === 'positive' ? 'text-green-500' : 
+                  userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
+                }`}>
+                  {userSentiment}
+                </span>
+                {userSentiment === 'positive' && <TrendingUp className="w-4 h-4 text-green-500" />}
+                {userSentiment === 'negative' && <TrendingDown className="w-4 h-4 text-red-500" />}
+              </div>
+              <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
+            </div>
+            
+            {/* Sources/Citations */}
+            <div className="card p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
+                <Globe className="w-3.5 h-3.5 text-muted" />
+              </div>
+              <div className="text-2xl font-semibold text-primary">{totalCitations}</div>
+              <p className="text-xs text-muted mt-1">
+                {totalCitations > 0 ? 'Domains cited in responses' : 'Run prompts to track sources'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!hasData ? (
+        /* Improved Empty State - Onboarding Guide */
+        <div className="p-6">
+          <div className="card p-0 overflow-hidden">
+            <div className="p-8 text-center border-b border-border bg-gradient-to-b from-secondary/50 to-transparent">
+              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-accent" />
+              </div>
+              <h2 className="text-xl font-semibold text-primary mb-2">Welcome to Harbor</h2>
+              <p className="text-sm text-muted max-w-md mx-auto">
+                Track how AI models describe your brand. Complete these steps to get started.
+              </p>
+            </div>
+            
+            <div className="divide-y divide-border">
+              {gettingStartedTasks.map((task, idx) => (
+                <Link
+                  key={task.id}
+                  href={task.href}
+                  className="flex items-center gap-4 p-4 hover:bg-hover transition-colors"
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    task.completed 
+                      ? 'bg-green-500/20 text-green-500' 
+                      : 'bg-secondary text-muted'
+                  }`}>
+                    {task.completed ? <Check className="w-4 h-4" /> : idx + 1}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`font-medium ${task.completed ? 'text-muted' : 'text-primary'}`}>
+                      {task.title}
+                    </div>
+                    <div className="text-sm text-muted">{task.description}</div>
+                  </div>
+                  <ArrowRight className={`w-5 h-5 ${task.completed ? 'text-muted opacity-50' : 'text-muted'}`} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+      <div className="p-6 space-y-6">
+        {/* Action Items - Always visible (Quick Wins or Opportunities) */}
+        {actionItems.length > 0 && (
+          <div className="card p-0 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <img src="/icons/lightbulb.png" alt="" className="w-7 h-7" />
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Next Steps</h3>
+                  <p className="text-xs text-muted mt-0.5">High-impact actions to improve your AI visibility</p>
+                </div>
+              </div>
+              <Link href={actionItems[0]?.href || '/dashboard/opportunities'} className="expand-btn">
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="divide-y divide-border">
+              {actionItems.map((item) => (
+                <Link 
+                  key={item.id} 
+                  href={item.href || '/dashboard/opportunities'}
+                  className="px-4 py-3 flex items-start gap-3 hover:bg-hover transition-colors"
+                >
+                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                    item.impact === 'high' ? 'bg-red-500' : item.impact === 'medium' ? 'bg-amber-500' : 'bg-green-500'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-primary">{item.title}</div>
+                    {item.description && (
+                      <div className="text-xs text-muted mt-0.5 line-clamp-1">{item.description}</div>
+                    )}
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Competitor Alert - Show if losing to top competitor */}
+        {topCompetitor && userVisibility < topCompetitor.visibility && !competitorAlertDismissed && (
+          <div className="card p-4 border-l-4 border-l-amber-500 bg-amber-500/5">
+            <div className="flex items-start gap-3">
+              <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="font-medium text-primary text-sm">
+                  {topCompetitor.name} has {topCompetitor.visibility - userVisibility}% higher visibility
+                </div>
+                <p className="text-xs text-muted mt-1">
+                  They appear in more AI responses than you. Track their prompts to see where they're winning.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Link 
+                  href="/dashboard/competitors"
+                  className="text-xs text-accent hover:underline"
+                >
+                  View comparison →
+                </Link>
+                <button
+                  onClick={() => {
+                    setCompetitorAlertDismissed(true)
+                    localStorage.setItem('harbor-competitor-alert-dismissed', JSON.stringify({
+                      competitor: topCompetitor.name,
+                      timestamp: Date.now()
+                    }))
+                  }}
+                  className="p-1 hover:bg-hover rounded transition-colors"
+                  aria-label="Dismiss"
+                >
+                  <X className="w-4 h-4 text-muted" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Wins - Original section, now secondary to Action Items */}
+        {quickWins.length > 0 && actionItems.every(a => a.type !== 'quick-win') && (
+          <div className="card p-0 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <div>
+                <h3 className="font-semibold text-primary text-sm">Quick Wins</h3>
+                <p className="text-xs text-muted mt-0.5">High-impact improvements you can make now</p>
+              </div>
+              <Link href="/dashboard/website" className="expand-btn">
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="divide-y divide-border">
+              {quickWins.map((win) => (
+                <div key={win.id} className="px-4 py-3 flex items-start gap-3 hover:bg-hover transition-colors">
+                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                    win.impact === 'high' ? 'bg-red-500' : 'bg-amber-500'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-primary">{win.title}</div>
+                    <div className="text-xs text-muted mt-0.5 line-clamp-1">{win.description}</div>
+                  </div>
+                  {win.pages_affected && (
+                    <span className="text-xs text-muted flex-shrink-0">
+                      {win.pages_affected} page{win.pages_affected !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Chart + Competitors */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -535,6 +904,7 @@ export default function OverviewPage() {
                 competitors={competitors}
                 metric={activeMetric}
                 history={visibilityHistory}
+                hasHistoricalData={hasHistoricalData}
               />
             </div>
           </div>
@@ -574,32 +944,37 @@ export default function OverviewPage() {
                       src={comp.logo} 
                       alt="" 
                       className="w-5 h-5 rounded flex-shrink-0" 
-                      onError={(e) => { e.currentTarget.style.display = 'none' }}
+                      onError={(e) => { 
+                        const target = e.currentTarget
+                        if (comp.fallbackLogo && target.src !== comp.fallbackLogo) {
+                          target.src = comp.fallbackLogo
+                        } else {
+                          target.style.display = 'none'
+                        }
+                      }} 
                     />
-                    <span className={`truncate text-sm ${comp.isUser ? 'font-medium text-primary' : 'text-secondary'}`}>
-                      {comp.name}
-                      {comp.isUser && <span className="ml-1 text-xs text-accent">(You)</span>}
-                    </span>
+                    <span className="text-sm font-medium text-primary truncate">{comp.name}</span>
+                    {comp.isUser && <span className="text-xs text-muted flex-shrink-0">(you)</span>}
                   </div>
-
+                  
                   {/* Visibility - 3 cols */}
                   <div className="col-span-3 text-center">
-                    <span className="text-sm text-primary">{comp.visibility}%</span>
-                    {comp.visibilityDelta !== null && comp.visibilityDelta !== 0 && (
-                      <span className={`ml-1 text-xs ${comp.visibilityDelta > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {comp.visibilityDelta > 0 ? '+' : ''}{comp.visibilityDelta}
-                      </span>
-                    )}
+                    <span className="text-sm text-secondary">{comp.visibility}%</span>
                   </div>
-
+                  
                   {/* Sentiment - 3 cols */}
                   <div className="col-span-3 flex justify-center">
-                    <span className={`px-2 py-0.5 rounded text-xs capitalize ${
-                      comp.sentiment === 'positive' ? 'bg-green-500/20 text-green-500' :
-                      comp.sentiment === 'negative' ? 'bg-red-500/20 text-red-500' :
-                      'bg-gray-500/20 text-gray-400'
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                      comp.sentiment === 'positive' 
+                        ? 'bg-[#6B8AFD]/15 text-[#6B8AFD]' 
+                        : comp.sentiment === 'negative'
+                        ? 'bg-[#F6C177]/15 text-[#F6C177]'
+                        : 'bg-white/5 text-white/40'
                     }`}>
-                      {comp.sentiment}
+                      {comp.sentiment === 'positive' && '↑'}
+                      {comp.sentiment === 'negative' && '↓'}
+                      {comp.sentiment === 'neutral' && '–'}
+                      <span className="capitalize">{comp.sentiment}</span>
                     </span>
                   </div>
                 </div>
@@ -608,105 +983,267 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* Sources + Prompts */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Sources - 5 columns */}
-          <div className="lg:col-span-5 card p-0 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <div>
-                <h3 className="font-semibold text-primary text-sm">Top Sources</h3>
-                <p className="text-xs text-muted mt-0.5">Domains AI models cite most</p>
-              </div>
-              <Link href="/dashboard/sources" className="expand-btn">
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="divide-y divide-border">
-              {sources.map((source) => (
-                <div key={source.domain} className="flex items-center gap-3 px-4 py-3 hover:bg-hover transition-colors">
-                  <img 
-                    src={source.logo} 
-                    alt="" 
-                    className="w-5 h-5 rounded flex-shrink-0"
-                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+        {/* Recent Prompts Section */}
+        <div className="card p-0 overflow-hidden">
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <h3 className="font-semibold text-primary text-sm flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" />
+              Recent Prompts
+            </h3>
+            
+            {currentDashboard?.brand_name && (
+              <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                <div 
+                  className={`relative w-9 h-5 rounded-full transition-colors cursor-pointer ${
+                    brandMentionedOnly ? 'bg-accent' : 'bg-[#D1D5DB] dark:bg-[#4B5563]'
+                  }`}
+                  onClick={() => setBrandMentionedOnly(!brandMentionedOnly)}
+                >
+                  <div 
+                    className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                      brandMentionedOnly ? 'translate-x-4' : 'translate-x-0.5'
+                    }`}
                   />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-primary truncate">{source.domain}</div>
-                    <div className="text-xs text-muted">{source.type}</div>
-                  </div>
-                  <div className="text-sm text-secondary">{source.citations}</div>
                 </div>
-              ))}
-            </div>
+                <span>{currentDashboard.brand_name} mentioned</span>
+              </label>
+            )}
           </div>
 
-          {/* Recent Prompts - 7 columns */}
-          <div className="lg:col-span-7 card p-0 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <div>
-                <h3 className="font-semibold text-primary text-sm">Recent Prompts</h3>
-                <p className="text-xs text-muted mt-0.5">Latest AI conversations mentioning your brand</p>
+          <div className="p-4 bg-secondary">
+            {promptsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="animate-pulse bg-hover rounded-lg h-36" />
+                ))}
               </div>
-              <Link href="/dashboard/prompts" className="expand-btn">
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
-            </div>
+            ) : recentPrompts.length === 0 ? (
+              <div className="text-center py-12 text-muted">
+                <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                <p>No recent prompts found</p>
+                {brandMentionedOnly && (
+                  <p className="text-sm mt-1">Try turning off the brand filter</p>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentPrompts.map((prompt) => {
+                  const isMentioned = prompt.brands.some(
+                    b => b.toLowerCase() === brandName.toLowerCase()
+                  )
+                  return (
+                  <div 
+                    key={prompt.id}
+                    onClick={() => setSelectedPrompt(prompt)}
+                    className={`bg-card border rounded-lg p-4 transition-all cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                      isMentioned ? 'border-green-500/30 hover:border-green-500/50' : 'border-border hover:border-muted'
+                    }`}
+                  >
+                    {/* Header: Model logo + prompt + mentioned badge */}
+                    <div className="flex items-start gap-3 mb-3">
+                      <img 
+                        src={prompt.modelLogo} 
+                        alt={prompt.modelName}
+                        className="w-6 h-6 rounded-md flex-shrink-0"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/24'
+                        }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          {isMentioned && (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium bg-green-500/10 text-green-500 rounded">
+                              <Check className="w-2.5 h-2.5" />
+                              Mentioned
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="text-sm font-medium text-primary line-clamp-2">
+                          {prompt.prompt}
+                        </h4>
+                      </div>
+                    </div>
 
-            <div className="divide-y divide-border">
-              {recentPrompts.map((prompt) => (
-                <button
-                  key={prompt.id}
-                  onClick={() => setSelectedPrompt(prompt)}
-                  className="w-full flex items-start gap-3 px-4 py-3 hover:bg-hover transition-colors text-left"
-                >
-                  <img 
-                    src={prompt.modelLogo} 
-                    alt={prompt.modelName}
-                    className="w-6 h-6 rounded flex-shrink-0 mt-0.5"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-primary line-clamp-1">{prompt.prompt}</div>
-                    <div className="text-xs text-muted mt-1 line-clamp-1">{prompt.responsePreview}</div>
-                    <div className="flex items-center gap-3 mt-2 text-xs text-muted">
-                      <span>{prompt.timeAgo}</span>
-                      <span>•</span>
-                      <span>{prompt.brandsCount} brands</span>
-                      <span>•</span>
-                      <span>{prompt.citationsCount} sources</span>
+                    {/* Response preview */}
+                    <p className="text-sm text-muted line-clamp-3 mb-4">
+                      {prompt.responsePreview}
+                    </p>
+
+                    {/* Footer: Citations + time */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {prompt.citationFavicons.slice(0, 3).map((favicon, i) => (
+                          <img 
+                            key={i}
+                            src={favicon}
+                            alt=""
+                            className="w-4 h-4 rounded-sm"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none'
+                            }}
+                          />
+                        ))}
+                        {prompt.citationsCount > 3 && (
+                          <span className="text-xs text-muted ml-1">
+                            +{prompt.citationsCount - 3}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted">{prompt.timeAgo}</span>
                     </div>
                   </div>
-                </button>
-              ))}
+                )})}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Sources + Donut */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          <div className="lg:col-span-2 card p-0 overflow-hidden">
+            <div className="flex items-center justify-between px-4 pt-4">
+              <div className="flex items-center gap-4">
+                <button className="pb-2 text-sm font-medium text-primary border-b-2 border-primary">Domains</button>
+                <button className="pb-2 text-sm font-medium text-muted hover:text-secondary">URLs</button>
+              </div>
+              {sources.length > 5 && (
+                <Link href="/dashboard/sources" className="text-xs text-muted hover:text-primary transition-colors">
+                  See all →
+                </Link>
+              )}
             </div>
+
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th className="w-8">#</th>
+                  <th>Domain</th>
+                  <th>Type</th>
+                  <th className="text-right">Citations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sources.length > 0 ? sources.slice(0, 5).map((source, idx) => (
+                  <tr key={source.domain}>
+                    <td className="text-muted">{idx + 1}</td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <img 
+                          src={`https://www.google.com/s2/favicons?domain=${source.domain}&sz=32`} 
+                          alt="" 
+                          className="w-5 h-5 rounded" 
+                        />
+                        <span className="font-medium text-primary">{source.domain}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span 
+                        className="badge text-xs"
+                        style={{ backgroundColor: `${getSourceTypeColor(source.type)}15`, color: getSourceTypeColor(source.type) }}
+                      >
+                        {source.type || 'Other'}
+                      </span>
+                    </td>
+                    <td className="text-right">{source.citations}</td>
+                  </tr>
+                )) : (
+                  <tr>
+                    <td colSpan={4} className="text-center py-8 text-muted">
+                      No sources data yet
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-semibold text-primary text-sm">Source Distribution</h3>
+                <p className="text-xs text-muted mt-0.5">By domain type</p>
+              </div>
+            </div>
+
+            {sourceDistribution.length > 0 ? (
+              <div className="flex flex-col items-center">
+                <div className="relative w-48 h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={sourceDistribution}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={55}
+                        outerRadius={75}
+                        paddingAngle={2}
+                        dataKey="count"
+                      >
+                        {sourceDistribution.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-2xl font-semibold text-primary">{totalCitations}</span>
+                    <span className="text-xs text-muted">Citations</span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap justify-center gap-3 mt-4">
+                  {sourceDistribution.map((item) => (
+                    <div key={item.type} className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
+                      <span className="text-xs text-secondary">{item.type}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-12">
+                <p className="text-sm text-muted">Run more prompts to see source analysis</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
+      )}
 
-      {/* Prompt Modal */}
+      {/* Prompt Detail Modal */}
       {selectedPrompt && (
-        <PromptModal prompt={selectedPrompt} onClose={() => setSelectedPrompt(null)} />
+        <PromptModal 
+          prompt={selectedPrompt} 
+          onClose={() => setSelectedPrompt(null)} 
+        />
       )}
     </div>
   )
 }
 
 // ============================================================================
-// CHART COMPONENT
+// VISIBILITY CHART COMPONENT
 // ============================================================================
 
 function VisibilityChart({ 
   brandName, 
-  competitors, 
+  competitors,
   metric,
-  history
+  history,
+  hasHistoricalData
 }: { 
   brandName: string
   competitors: CompetitorData[]
   metric: 'visibility' | 'sentiment' | 'position'
-  history: typeof DUMMY_VISIBILITY_HISTORY
+  history: { date: string; displayDate: string; visibility: number | null; position: number | null; sentiment: number | null }[]
+  hasHistoricalData: boolean
 }) {
-  const sentimentToNumber = (s: string) => s === 'positive' ? 80 : s === 'negative' ? 30 : 50
+  // Convert sentiment to numeric for chart
+  const sentimentToNumber = (s: string) => {
+    if (s === 'positive') return 100
+    if (s === 'negative') return 0
+    return 50 // neutral
+  }
   
   const getValue = (comp: CompetitorData) => {
     if (metric === 'visibility') return comp.visibility
@@ -714,33 +1251,52 @@ function VisibilityChart({
     return comp.position || 0
   }
   
+  // Get user's brand and top 4 competitors
   const userBrand = competitors.find(c => c.isUser)
   const topCompetitors = competitors.filter(c => !c.isUser).slice(0, 4)
   const charted = [userBrand, ...topCompetitors].filter(Boolean) as CompetitorData[]
 
-  // Generate chart data with slight variations for competitors
-  const chartData = history.map((h, idx) => {
+  // Generate chart data using real history for user brand, flatline for competitors
+  const chartData = history.map(h => {
     const point: Record<string, string | number | null> = { date: h.displayDate }
     
     charted.forEach(comp => {
-      if (comp.isUser) {
+      if (comp.isUser && hasHistoricalData) {
+        // Use real historical data for user's brand
         if (metric === 'visibility') point[comp.name] = h.visibility
         else if (metric === 'sentiment') point[comp.name] = h.sentiment
         else point[comp.name] = h.position
       } else {
-        // Add slight variation to competitor data to make chart interesting
-        const baseValue = getValue(comp)
-        const variation = Math.sin(idx * 0.8) * 5 + (Math.random() - 0.5) * 3
-        point[comp.name] = Math.max(0, Math.min(100, baseValue + variation))
+        // Flatline competitors at current value (no historical data for them yet)
+        point[comp.name] = getValue(comp)
       }
     })
     
     return point
   })
+  
+  // Fallback if no history data - generate last 7 days
+  const fallbackData = () => {
+    const dates = []
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const point: Record<string, string | number> = { 
+        date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) 
+      }
+      charted.forEach(comp => {
+        point[comp.name] = getValue(comp)
+      })
+      dates.push(point)
+    }
+    return dates
+  }
+  
+  const finalChartData = chartData.length > 0 ? chartData : fallbackData()
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+      <LineChart data={finalChartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
         <CartesianGrid 
           strokeDasharray="3 3" 
           vertical={true}
@@ -771,7 +1327,7 @@ function VisibilityChart({
           labelStyle={{ color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}
           itemStyle={{ padding: '2px 0' }}
           formatter={(value: any, name: string) => [
-            value === null ? 'No data' : (metric === 'position' ? Number(value).toFixed(1) : `${Math.round(value)}%`),
+            value === null ? 'No data' : (metric === 'position' ? Number(value).toFixed(1) : `${value}%`),
             name
           ]}
         />
@@ -829,15 +1385,17 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
               <span className="text-sm text-muted">{prompt.topic}</span>
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-2 hover:bg-hover rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-muted" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={onClose}
+              className="p-2 hover:bg-hover rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-muted" />
+            </button>
+          </div>
         </div>
 
-        {/* Content */}
+        {/* Content area */}
         <div className="flex flex-1 overflow-hidden">
           {/* Main content */}
           <div className="flex-1 overflow-y-auto p-6 bg-card">
@@ -858,11 +1416,8 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
                 alt={prompt.modelName}
                 className="w-8 h-8 rounded-lg flex-shrink-0"
               />
-              <div className="flex-1 prose prose-sm max-w-none text-secondary">
-                <div dangerouslySetInnerHTML={{ 
-                  __html: prompt.responseText
-                    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-primary">$1</strong>')
-                }} />
+              <div className="flex-1 prose prose-sm max-w-none">
+                <FormattedResponse text={prompt.responseText} />
               </div>
             </div>
           </div>
@@ -875,16 +1430,22 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
                 <Tag className="w-4 h-4" />
                 Brands
               </h4>
-              <div className="flex flex-wrap gap-1.5">
-                {prompt.brands.map((brand, i) => (
-                  <span 
-                    key={i}
-                    className="text-xs bg-card border border-border rounded-full px-2.5 py-1 text-secondary"
-                  >
-                    {brand}
-                  </span>
-                ))}
-              </div>
+              {prompt.brands.length === 0 ? (
+                <p className="text-sm text-muted flex items-center gap-2">
+                  <span className="opacity-50">∅</span> No Brands
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-1.5">
+                  {prompt.brands.map((brand, i) => (
+                    <span 
+                      key={i}
+                      className="text-xs bg-card border border-border rounded-full px-2.5 py-1 text-secondary"
+                    >
+                      {brand}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Sources section */}
@@ -893,28 +1454,135 @@ function PromptModal({ prompt, onClose }: { prompt: PromptExecution; onClose: ()
                 <Globe className="w-4 h-4" />
                 Sources
               </h4>
-              <div className="space-y-2">
-                {prompt.citationDomains.map((domain, i) => (
-                  <a 
-                    key={i}
-                    href={`https://${domain}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors"
-                  >
-                    <img 
-                      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
-                      alt=""
-                      className="w-4 h-4 rounded-sm"
-                    />
-                    <span className="truncate">{domain}</span>
-                  </a>
-                ))}
-              </div>
+              {prompt.citationDomains.length === 0 ? (
+                <p className="text-sm text-muted">No sources cited</p>
+              ) : (
+                <div className="space-y-2">
+                  {prompt.citationDomains.map((domain, i) => (
+                    <a 
+                      key={i}
+                      href={`https://${domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-secondary hover:text-accent transition-colors"
+                    >
+                      <img 
+                        src={`https://www.google.com/s2/favicons?domain=${domain}&sz=32`}
+                        alt=""
+                        className="w-4 h-4 rounded-sm"
+                      />
+                      <span className="truncate">{domain}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>
   )
+}
+
+// Format AI response - convert markdown to clean HTML
+function FormattedResponse({ text }: { text: string }) {
+  if (!text) return null
+
+  // Check if response contains markdown table
+  const hasTable = text.includes('|') && text.includes('---')
+  
+  if (hasTable) {
+    // Parse markdown tables and other content
+    const sections = text.split(/\n\n+/)
+    
+    return (
+      <div className="space-y-4">
+        {sections.map((section, idx) => {
+          // Check if this section is a table
+          if (section.includes('|') && section.split('\n').length > 2) {
+            return <MarkdownTable key={idx} content={section} />
+          }
+          
+          // Regular text - format it
+          return (
+            <p key={idx} className="text-secondary text-sm leading-relaxed">
+              {formatTextContent(section)}
+            </p>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // No table - just format text
+  return (
+    <div 
+      className="text-secondary text-sm leading-relaxed space-y-3"
+      dangerouslySetInnerHTML={{ 
+        __html: text
+          .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-primary">$1</strong>')
+          .replace(/\n\n/g, '</p><p class="mt-3">')
+          .replace(/\n/g, '<br />')
+          .replace(/\[(\d+)\]/g, '<sup class="text-xs text-accent">$1</sup>')
+      }}
+    />
+  )
+}
+
+// Parse and render markdown table
+function MarkdownTable({ content }: { content: string }) {
+  const lines = content.trim().split('\n').filter(line => line.trim())
+  
+  if (lines.length < 2) return <p className="text-sm text-secondary">{content}</p>
+  
+  // Parse header
+  const headerCells = lines[0].split('|').map(cell => cell.trim()).filter(Boolean)
+  
+  // Skip separator line (index 1)
+  // Parse body rows
+  const bodyRows = lines.slice(2).map(line => 
+    line.split('|').map(cell => cell.trim()).filter(Boolean)
+  )
+
+  return (
+    <div className="overflow-x-auto my-4">
+      <table className="min-w-full text-sm border border-border rounded-lg overflow-hidden">
+        <thead className="bg-secondary">
+          <tr>
+            {headerCells.map((cell, i) => (
+              <th key={i} className="px-3 py-2 text-left font-medium text-primary border-b border-border">
+                {cell.replace(/\*\*/g, '')}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {bodyRows.map((row, rowIdx) => (
+            <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-card' : 'bg-secondary'}>
+              {row.map((cell, cellIdx) => (
+                <td key={cellIdx} className="px-3 py-2 text-secondary border-b border-border">
+                  {cell.replace(/\*\*/g, '')}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function formatTextContent(text: string): React.ReactNode {
+  // Simple formatting - bold and citations
+  const parts = text.split(/(\*\*.*?\*\*|\[\d+\])/g)
+  
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i} className="font-semibold text-primary">{part.slice(2, -2)}</strong>
+    }
+    if (/^\[\d+\]$/.test(part)) {
+      return <sup key={i} className="text-xs text-accent">{part}</sup>
+    }
+    return part
+  })
 }
