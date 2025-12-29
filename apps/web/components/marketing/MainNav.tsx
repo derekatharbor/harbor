@@ -1,4 +1,4 @@
-// components/marketing/StickyNav.tsx
+// components/marketing/MainNav.tsx
 
 'use client'
 
@@ -125,13 +125,12 @@ interface DropdownItems {
 interface NavDropdownProps {
   label: string
   items: DropdownItems
-  isDark: boolean
   isOpen: boolean
   onToggle: () => void
   onClose: () => void
 }
 
-function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDropdownProps) {
+function NavDropdown({ label, items, isOpen, onToggle, onClose }: NavDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -150,15 +149,11 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
     <div ref={dropdownRef} className="relative">
       <button
         onClick={onToggle}
-        className={`flex items-center gap-1 px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
-          isDark 
-            ? 'text-white/80 hover:text-white hover:bg-white/10' 
-            : 'text-black/70 hover:text-black hover:bg-black/5'
-        }`}
+        className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-medium font-source-sans text-black/70 hover:text-black transition-colors rounded hover:bg-black/5"
       >
         {label}
         <svg
-          className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -169,7 +164,7 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
 
       {/* Dropdown Panel */}
       <div
-        className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[580px] bg-white rounded-xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-black/5 transition-all duration-200 ${
+        className={`absolute top-full left-0 mt-2 w-[620px] bg-white rounded-xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-black/5 transition-all duration-200 ${
           isOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-2 pointer-events-none'
@@ -184,7 +179,7 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex items-start gap-3 p-2.5 rounded-lg hover:bg-[#F6F5F3] transition-colors"
+                  className="group flex items-start gap-3 p-3 rounded-lg hover:bg-[#F6F5F3] transition-colors"
                   onClick={onClose}
                 >
                   <div
@@ -192,12 +187,12 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
                     style={{ backgroundColor: item.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[14px] font-semibold font-source-sans text-black">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[15px] font-semibold font-source-sans text-black">
                         {item.title}
                       </span>
                       <svg
-                        className="w-3.5 h-3.5 text-black/30 group-hover:text-black/50 group-hover:translate-x-0.5 transition-all"
+                        className="w-4 h-4 text-black/30 group-hover:text-black/50 group-hover:translate-x-0.5 transition-all"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -205,7 +200,7 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
-                    <p className="text-[12px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+                    <p className="text-[13px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
                       {item.description}
                     </p>
                   </div>
@@ -222,13 +217,13 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group block p-2.5 rounded-lg hover:bg-[#F6F5F3] transition-colors"
+                  className="group block p-3 rounded-lg hover:bg-[#F6F5F3] transition-colors"
                   onClick={onClose}
                 >
-                  <span className="text-[14px] font-semibold font-source-sans text-black">
+                  <span className="text-[15px] font-semibold font-source-sans text-black">
                     {item.title}
                   </span>
-                  <p className="text-[12px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+                  <p className="text-[13px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
                     {item.description}
                   </p>
                 </Link>
@@ -241,118 +236,61 @@ function NavDropdown({ label, items, isDark, isOpen, onToggle, onClose }: NavDro
   )
 }
 
-export default function StickyNav() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isDark, setIsDark] = useState(false)
+export default function MainNav() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(window.scrollY > 100)
-      
-      const darkSection = document.getElementById('dark-section')
-      const lightSection = document.getElementById('light-section')
-      
-      if (darkSection && lightSection) {
-        const darkRect = darkSection.getBoundingClientRect()
-        const lightRect = lightSection.getBoundingClientRect()
-        const overDark = darkRect.top < 80 && lightRect.top > 80
-        setIsDark(overDark)
-      } else if (darkSection) {
-        const darkRect = darkSection.getBoundingClientRect()
-        setIsDark(darkRect.top < 80)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Close dropdowns when scrolling
-  useEffect(() => {
-    const handleScroll = () => setOpenDropdown(null)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <div
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-        isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 -translate-y-4 pointer-events-none'
-      }`}
-    >
-      <div className={`flex items-center justify-between w-[768px] h-14 px-5 rounded-xl transition-all duration-300 backdrop-blur-md ${
-        isDark 
-          ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
-          : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
-      }`}>
-        {/* Left: Logo + Nav Links */}
-        <div className="flex items-center gap-1">
-          <Link href="/" className="flex items-center mr-3">
-            <Image
-              src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
-              alt="Harbor"
-              width={25}
-              height={25}
-              className="transition-opacity duration-300"
-            />
-          </Link>
-
-          {/* Nav Dropdowns */}
-          <NavDropdown
-            label="Product"
-            items={PRODUCT_ITEMS}
-            isDark={isDark}
-            isOpen={openDropdown === 'product'}
-            onToggle={() => setOpenDropdown(openDropdown === 'product' ? null : 'product')}
-            onClose={() => setOpenDropdown(null)}
+    <nav className="flex items-center justify-between px-14 py-6">
+      {/* Left: Logo + Nav Links */}
+      <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center mr-4">
+          <Image
+            src="/images/harbor-logo-black.svg"
+            alt="Harbor"
+            width={140}
+            height={32}
+            className="h-8 w-auto"
           />
-          <NavDropdown
-            label="Solutions"
-            items={SOLUTIONS_ITEMS}
-            isDark={isDark}
-            isOpen={openDropdown === 'solutions'}
-            onToggle={() => setOpenDropdown(openDropdown === 'solutions' ? null : 'solutions')}
-            onClose={() => setOpenDropdown(null)}
-          />
-          <Link
-            href="/pricing"
-            className={`px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
-              isDark 
-                ? 'text-white/80 hover:text-white hover:bg-white/10' 
-                : 'text-black/70 hover:text-black hover:bg-black/5'
-            }`}
-          >
-            Pricing
-          </Link>
-        </div>
+        </Link>
 
-        {/* Right: Buttons */}
-        <div className="flex items-center gap-2">
-          <Link 
-            href="/login"
-            className={`h-9 px-5 rounded-md border text-[13px] font-medium font-space tracking-[0.61px] transition-colors flex items-center ${
-              isDark 
-                ? 'border-[#333] text-white hover:bg-white/10' 
-                : 'border-[#B1B0AF] text-black hover:bg-black/5'
-            }`}
-          >
-            Login
-          </Link>
-          <Link 
-            href="/signup"
-            className={`h-9 px-5 rounded-md text-[13px] font-medium font-space tracking-[0.61px] flex items-center transition-colors ${
-              isDark
-                ? 'bg-white text-black hover:bg-gray-200'
-                : 'btn-black'
-            }`}
-          >
-            Get started
-          </Link>
-        </div>
+        {/* Nav Dropdowns */}
+        <NavDropdown
+          label="Product"
+          items={PRODUCT_ITEMS}
+          isOpen={openDropdown === 'product'}
+          onToggle={() => setOpenDropdown(openDropdown === 'product' ? null : 'product')}
+          onClose={() => setOpenDropdown(null)}
+        />
+        <NavDropdown
+          label="Solutions"
+          items={SOLUTIONS_ITEMS}
+          isOpen={openDropdown === 'solutions'}
+          onToggle={() => setOpenDropdown(openDropdown === 'solutions' ? null : 'solutions')}
+          onClose={() => setOpenDropdown(null)}
+        />
+        <Link
+          href="/pricing"
+          className="px-3 py-2 text-[15px] font-medium font-source-sans text-black/70 hover:text-black transition-colors rounded hover:bg-black/5"
+        >
+          Pricing
+        </Link>
       </div>
-    </div>
+
+      {/* Right: Buttons */}
+      <div className="flex items-center gap-2.5">
+        <Link 
+          href="/login"
+          className="h-[41px] px-6 rounded-[7px] border border-[#B1B0AF] text-[15px] font-medium font-space tracking-[0.69px] text-black hover:bg-black/5 transition-colors flex items-center"
+        >
+          Login
+        </Link>
+        <Link 
+          href="/signup"
+          className="btn-black h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center"
+        >
+          Get started
+        </Link>
+      </div>
+    </nav>
   )
 }
