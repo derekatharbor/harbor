@@ -76,7 +76,7 @@ export default function AudienceTabs() {
         </h2>
 
         {/* Tab Cards Container */}
-        <div className="inline-flex flex-col bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6 w-auto mx-auto">
+        <div className="w-[880px] mx-auto bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6">
           {/* Cards Row */}
           <div className="flex gap-3 mb-8">
             {AUDIENCES.map((audience, index) => {
@@ -94,7 +94,7 @@ export default function AudienceTabs() {
                 >
                   {/* Title */}
                   <span className={`text-[17px] font-medium font-source-sans mb-4 transition-colors ${
-                    isActive ? 'text-black' : 'text-black/50'
+                    showColor ? 'text-black' : 'text-black/50'
                   }`}>
                     {audience.title}
                   </span>
