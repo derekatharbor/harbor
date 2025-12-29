@@ -165,11 +165,66 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Competitor Preview Card */}
-          <div className="max-w-[900px] mx-auto bg-[#161718] rounded-xl border border-white/[0.06] p-8">
-            {/* Placeholder for competitor tracking preview */}
-            <div className="h-[300px] flex items-center justify-center text-white/30 text-sm font-source-code">
-              Competitor tracking preview
+          {/* Dashboard Preview Container */}
+          <div className="relative max-w-5xl mx-auto">
+            {/* Dashboard Screenshot */}
+            <div className="relative aspect-[16/10] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
+              <img 
+                src="/images/dashboard-preview.png"
+                alt="Harbor Dashboard"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Hovering Prompt Card - Left */}
+            <div className="absolute -left-8 top-1/4 animate-float-slow">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/openai.com?c=1id1Fyz-h7an5-5KR_y"
+                    alt="ChatGPT"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">Best CRM for small businesses?</p>
+                  <p className="text-white/40 text-xs mt-1">ChatGPT • 2.4M monthly searches</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hovering Prompt Card - Right */}
+            <div className="absolute -right-8 top-1/3 animate-float-delayed">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[280px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y"
+                    alt="Perplexity"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">Compare HubSpot vs Salesforce</p>
+                  <p className="text-white/40 text-xs mt-1">Perplexity • 1.8M monthly searches</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hovering Prompt Card - Bottom Left */}
+            <div className="absolute -left-4 bottom-1/4 animate-float">
+              <div className="flex items-start gap-3 p-4 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-[0px_4px_20px_rgba(0,0,0,0.4)] max-w-[260px]">
+                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-white/5">
+                  <img
+                    src="https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y"
+                    alt="Claude"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium leading-snug">What's the easiest CRM to use?</p>
+                  <p className="text-white/40 text-xs mt-1">Claude • 890K monthly searches</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -336,6 +391,31 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
+
+      {/* Floating card animations */}
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+        .animate-float-slow {
+          animation: float-slow 5s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+          animation: float-delayed 4.5s ease-in-out infinite 0.5s;
+        }
+      `}</style>
         <div className="max-w-[1200px] mx-auto px-14">
           {/* Footer Content */}
           <div className="flex gap-16 mb-16">
