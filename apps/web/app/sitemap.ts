@@ -6,7 +6,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-export const revalidate = 3600
+export const revalidate = 0
 export const maxDuration = 60
 
 const URLS_PER_SITEMAP = 45000
