@@ -1,14 +1,10 @@
 // app/pitch/page.tsx
 
-import { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
-
-export const metadata: Metadata = {
-  title: 'Pitch Workspaces - Harbor',
-  description: 'Win new business with AI visibility reports. Show prospects their competitive positioning before they sign.',
-}
 
 // Features for the 3-column grid
 const FEATURES = [
