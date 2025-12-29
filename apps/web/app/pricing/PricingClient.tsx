@@ -264,36 +264,40 @@ export default function PricingClient() {
 
                 <ul className="space-y-2.5 mb-6 flex-1">
                   {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
-                      <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
-                        {feature}
-                      </span>
-                    </li>
+                    <>
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
+                        <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
+                          {feature}
+                        </span>
+                      </li>
+                      {/* AI Models tracked - insert after first item */}
+                      {idx === 0 && (
+                        <li className="flex items-center gap-2.5">
+                          <Check className={`w-4 h-4 flex-shrink-0 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
+                          <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
+                            4 AI models
+                          </span>
+                          <div className="flex items-center -space-x-1">
+                            {[
+                              { name: 'ChatGPT', logo: '/logos/chatgpt-dark.svg' },
+                              { name: 'Perplexity', logo: '/logos/perplexity-dark.svg' },
+                              { name: 'Claude', logo: '/logos/claude-dark.svg' },
+                              { name: 'Gemini', logo: '/logos/gemini-dark.svg' },
+                            ].map((ai) => (
+                              <img 
+                                key={ai.name}
+                                src={ai.logo} 
+                                alt={ai.name} 
+                                title={ai.name}
+                                className="w-5 h-5 rounded-full object-cover"
+                              />
+                            ))}
+                          </div>
+                        </li>
+                      )}
+                    </>
                   ))}
-                  {/* AI Models tracked - with logos inline */}
-                  <li className="flex items-center gap-2.5">
-                    <Check className={`w-4 h-4 flex-shrink-0 ${plan.highlight ? 'text-black' : 'text-white/60'}`} />
-                    <span className={`text-[13px] ${plan.highlight ? 'text-black/70' : 'text-white/60'}`}>
-                      4 AI models
-                    </span>
-                    <div className="flex items-center -space-x-1">
-                      {[
-                        { name: 'ChatGPT', logo: '/logos/chatgpt-dark.svg' },
-                        { name: 'Perplexity', logo: '/logos/perplexity-dark.svg' },
-                        { name: 'Claude', logo: '/logos/claude-dark.svg' },
-                        { name: 'Gemini', logo: '/logos/gemini-dark.svg' },
-                      ].map((ai) => (
-                        <img 
-                          key={ai.name}
-                          src={ai.logo} 
-                          alt={ai.name} 
-                          title={ai.name}
-                          className="w-5 h-5 rounded-full object-cover"
-                        />
-                      ))}
-                    </div>
-                  </li>
                 </ul>
 
                 <Link
