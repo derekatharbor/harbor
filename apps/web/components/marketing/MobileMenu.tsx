@@ -21,10 +21,47 @@ const PRODUCT_ITEMS = [
 ]
 
 const SOLUTIONS_ITEMS = [
-  { title: 'For Marketers', description: 'Own your AI narrative', href: '/solutions/marketers' },
-  { title: 'For Agencies', description: 'Add GEO to your service offerings', href: '/solutions/agencies' },
-  { title: 'For E-Commerce', description: 'Get recommended in shopping queries', href: '/solutions/ecommerce' },
-  { title: 'For Enterprise', description: 'Monitor AI mentions at scale', href: '/solutions/enterprise' },
+  { 
+    title: 'For Marketers', 
+    description: 'Own your AI narrative', 
+    href: '/solutions/marketers',
+    subItems: [
+      { title: 'Brand Monitoring', href: '/solutions/marketers/monitoring' },
+      { title: 'Competitive Intel', href: '/solutions/marketers/competitive' },
+      { title: 'Pitch Workspaces', href: '/pitch' },
+      { title: 'Reporting', href: '/solutions/marketers/reporting' },
+    ]
+  },
+  { 
+    title: 'For Agencies', 
+    description: 'Add GEO to your service offerings', 
+    href: '/solutions/agencies',
+    subItems: [
+      { title: 'Pitch Workspaces', href: '/pitch' },
+      { title: 'Client Dashboards', href: '/solutions/agencies/dashboards' },
+      { title: 'Multi-Brand Management', href: '/solutions/agencies/multi-brand' },
+    ]
+  },
+  { 
+    title: 'For E-Commerce', 
+    description: 'Get recommended in shopping queries', 
+    href: '/solutions/ecommerce',
+    subItems: [
+      { title: 'Product Visibility', href: '/solutions/ecommerce/products' },
+      { title: 'Shopping Queries', href: '/solutions/ecommerce/shopping' },
+      { title: 'Category Rankings', href: '/solutions/ecommerce/rankings' },
+    ]
+  },
+  { 
+    title: 'For Enterprise', 
+    description: 'Monitor AI mentions at scale', 
+    href: '/solutions/enterprise',
+    subItems: [
+      { title: 'Multi-Model Tracking', href: '/solutions/enterprise/multi-model' },
+      { title: 'API Access', href: '/solutions/enterprise/api' },
+      { title: 'Custom Reporting', href: '/solutions/enterprise/reporting' },
+    ]
+  },
 ]
 
 export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMenuProps) {
@@ -117,21 +154,42 @@ export default function MobileMenu({ isOpen, onClose, isDark = false }: MobileMe
               } ${isDark ? 'text-white/60' : 'text-black/60'}`} />
             </button>
             {expandedSection === 'solutions' && (
-              <div className="pl-4 pb-4 space-y-3">
+              <div className="pl-4 pb-4 space-y-1">
                 {SOLUTIONS_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onClose}
-                    className="block py-2"
-                  >
-                    <span className={`text-[15px] font-medium ${isDark ? 'text-white/90' : 'text-black/90'}`}>
-                      {item.title}
-                    </span>
-                    <p className={`text-[13px] mt-0.5 ${isDark ? 'text-white/50' : 'text-black/50'}`}>
-                      {item.description}
-                    </p>
-                  </Link>
+                  <div key={item.href}>
+                    <button
+                      onClick={() => toggleSection(`solutions-${item.title}`)}
+                      className="w-full flex items-center justify-between py-2"
+                    >
+                      <div className="text-left">
+                        <span className={`text-[15px] font-medium ${isDark ? 'text-white/90' : 'text-black/90'}`}>
+                          {item.title}
+                        </span>
+                        <p className={`text-[12px] mt-0.5 ${isDark ? 'text-white/40' : 'text-black/40'}`}>
+                          {item.description}
+                        </p>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${
+                        expandedSection === `solutions-${item.title}` ? 'rotate-180' : ''
+                      } ${isDark ? 'text-white/40' : 'text-black/40'}`} />
+                    </button>
+                    {expandedSection === `solutions-${item.title}` && (
+                      <div className="pl-4 pb-2 space-y-1">
+                        {item.subItems.map((subItem) => (
+                          <Link
+                            key={subItem.href}
+                            href={subItem.href}
+                            onClick={onClose}
+                            className={`block py-2 text-[14px] ${
+                              isDark ? 'text-white/70 hover:text-white' : 'text-black/70 hover:text-black'
+                            }`}
+                          >
+                            {subItem.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
