@@ -178,7 +178,7 @@ export default function HomePage() {
 
             {/* Hovering Prompt Card - Left */}
             <div 
-              className="absolute -left-8 top-1/4"
+              className="absolute -left-20 top-1/4"
               style={{ animation: 'float 5s ease-in-out infinite' }}
             >
               <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[280px]">
@@ -198,7 +198,7 @@ export default function HomePage() {
 
             {/* Hovering Prompt Card - Right */}
             <div 
-              className="absolute -right-8 top-1/3"
+              className="absolute -right-20 top-1/3"
               style={{ animation: 'float 4.5s ease-in-out infinite 0.5s' }}
             >
               <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[280px]">
@@ -218,7 +218,7 @@ export default function HomePage() {
 
             {/* Hovering Prompt Card - Bottom Left */}
             <div 
-              className="absolute -left-4 bottom-1/4"
+              className="absolute -left-16 bottom-1/4"
               style={{ animation: 'float 4s ease-in-out infinite 0.25s' }}
             >
               <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[260px]">
