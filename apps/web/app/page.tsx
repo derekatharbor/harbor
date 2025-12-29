@@ -168,11 +168,11 @@ export default function HomePage() {
           {/* Dashboard Preview Container */}
           <div className="relative max-w-5xl mx-auto">
             {/* Dashboard Screenshot */}
-            <div className="relative aspect-[16/11] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
+            <div className="relative h-[680px] bg-[#1a1a1a] rounded-xl border border-white/10 overflow-hidden">
               <img 
                 src="/images/dashboard-preview.png"
                 alt="Harbor Dashboard"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
               />
             </div>
 
