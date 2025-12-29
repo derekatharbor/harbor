@@ -326,6 +326,100 @@ export default function HomePage() {
 
       {/* Audience Tabs Section */}
       <AudienceTabs />
+
+      {/* Features Grid Section */}
+      <section className="w-full bg-[#F6F5F3] py-24">
+        <div className="max-w-[1200px] mx-auto px-14">
+          {/* Section Header */}
+          <h2 className="text-[42px] font-medium font-source-sans tracking-tight text-black leading-tight mb-16 max-w-[500px]">
+            Understand how AI sees your brand
+          </h2>
+
+          {/* 4 Cards Grid */}
+          <div className="grid grid-cols-4 gap-4">
+            {/* Card 1 */}
+            <div className="bg-white rounded-[10px] p-6">
+              <div className="w-4 h-4 bg-blue-400 rotate-45 mb-5" />
+              <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
+                Track AI visibility across platforms
+              </h3>
+              <p className="text-[16px] font-normal font-source-sans text-[#6F6E6E] leading-relaxed">
+                Monitor how ChatGPT, Claude, Perplexity, and Gemini describe your brand in real-time.
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-white rounded-[10px] p-6">
+              <div className="w-4 h-4 bg-red-400 rotate-45 mb-5" />
+              <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
+                Benchmark against competitors
+              </h3>
+              <p className="text-[16px] font-normal font-source-sans text-[#6F6E6E] leading-relaxed">
+                See how you stack up against competitors in AI recommendations and brand perception.
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white rounded-[10px] p-6">
+              <div className="w-4 h-4 bg-amber-400 rotate-45 mb-5" />
+              <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
+                Get actionable insights
+              </h3>
+              <p className="text-[16px] font-normal font-source-sans text-[#6F6E6E] leading-relaxed">
+                Receive recommendations on how to improve your AI visibility and brand positioning.
+              </p>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-white rounded-[10px] p-6">
+              <div className="w-4 h-4 bg-emerald-400 rotate-45 mb-5" />
+              <h3 className="text-[22px] font-medium font-source-sans text-black leading-tight mb-3">
+                Monitor brand sentiment
+              </h3>
+              <p className="text-[16px] font-normal font-source-sans text-[#6F6E6E] leading-relaxed">
+                Track how AI models perceive your brand over time and catch issues before they spread.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="w-full bg-[#111111] py-24">
+        <div className="max-w-[1200px] mx-auto px-14 flex flex-col items-center">
+          {/* Headline - can be replaced with image */}
+          <h2 className="text-center font-source-sans font-black tracking-tight mb-10" style={{ fontSize: '72px', lineHeight: '1' }}>
+            <span className="text-white">UNLOCK YOUR</span>
+            <br />
+            <span 
+              style={{
+                backgroundImage: 'url(/images/holographic-bg.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              AI VISIBILITY
+            </span>
+          </h2>
+
+          {/* Email Capture */}
+          <div className="flex items-center h-[56px] bg-[#1a1a1a] rounded-[10px] border border-[#333]">
+            <input
+              type="email"
+              placeholder="Enter your company email"
+              className="w-[300px] h-full px-5 text-[16px] font-light font-source-sans text-white placeholder:text-[#666] bg-transparent outline-none"
+            />
+            <button className="h-[42px] px-6 mr-2 bg-white rounded-[7px] text-[14px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">
+              Get free trial
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer would go here */}
     </>
   )
 }
