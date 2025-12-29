@@ -17,7 +17,6 @@ const plans = [
     features: [
       '1 brand dashboard',
       '50 prompts/month',
-      '4 AI platforms',
       '3 competitors',
       'Weekly visibility reports',
       'Email support',
@@ -34,7 +33,6 @@ const plans = [
     features: [
       '5 brand dashboards',
       '250 prompts/month',
-      '4 AI platforms',
       '10 competitors per brand',
       'Daily visibility reports',
       'Pitch workspaces',
@@ -44,7 +42,7 @@ const plans = [
     cta: 'Start free trial',
     planId: 'agency',
     highlight: true,
-    badge: 'Most Popular',
+    badge: 'POPULAR',
   },
   {
     name: 'Enterprise',
@@ -54,7 +52,6 @@ const plans = [
     features: [
       'Unlimited dashboards',
       'Unlimited prompts',
-      'All AI platforms',
       'Unlimited competitors',
       'Real-time monitoring',
       'API access',
@@ -227,25 +224,24 @@ export default function PricingClient() {
                     : 'bg-[#1a1a1a] border border-white/10 text-white'
                 }`}
               >
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span 
-                      className="px-3 py-1 text-[11px] font-bold font-source-sans rounded-full text-black"
-                      style={{
-                        backgroundImage: 'url(/images/holographic-bg.png)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    >
-                      {plan.badge}
-                    </span>
-                  </div>
-                )}
-
                 <div className="mb-5">
-                  <h3 className={`text-[17px] font-semibold font-source-sans mb-3 ${plan.highlight ? 'text-black' : 'text-white'}`}>
-                    {plan.name}
-                  </h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className={`text-[17px] font-semibold font-source-sans ${plan.highlight ? 'text-black' : 'text-white'}`}>
+                      {plan.name}
+                    </h3>
+                    {plan.badge && (
+                      <span 
+                        className="px-2 py-0.5 text-[10px] font-bold font-source-code rounded-full text-black uppercase tracking-wide"
+                        style={{
+                          backgroundImage: 'url(/images/holographic-bg.png)',
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }}
+                      >
+                        POPULAR
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-baseline gap-1">
                     <span className={`text-[38px] font-bold font-source-sans leading-none ${plan.highlight ? 'text-black' : 'text-white'}`}>
                       {getPrice(plan)}
@@ -276,6 +272,26 @@ export default function PricingClient() {
                     </li>
                   ))}
                 </ul>
+
+                {/* AI Platform Logos */}
+                <div className="flex items-center gap-2 mb-6">
+                  {[
+                    { name: 'ChatGPT', logo: '/logos/chatgpt-dark.svg' },
+                    { name: 'Perplexity', logo: '/logos/perplexity-dark.svg' },
+                    { name: 'Claude', logo: '/logos/claude-dark.svg' },
+                    { name: 'Gemini', logo: '/logos/gemini-dark.svg' },
+                  ].map((ai) => (
+                    <div 
+                      key={ai.name}
+                      className={`w-7 h-7 rounded-full overflow-hidden flex items-center justify-center ${
+                        plan.highlight ? 'bg-black/5' : 'bg-white/10'
+                      }`}
+                      title={ai.name}
+                    >
+                      <img src={ai.logo} alt={ai.name} className="w-4 h-4 object-contain" />
+                    </div>
+                  ))}
+                </div>
 
                 <Link
                   href={getHref(plan)}
