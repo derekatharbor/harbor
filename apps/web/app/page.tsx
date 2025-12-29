@@ -164,13 +164,13 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-[900px] mx-auto">
             {[
               { icon: 'visibility.png', title: 'Track AI visibility', desc: 'See exactly how often AI models mention your brand in responses.' },
-              { icon: 'benchmark.png', title: 'Benchmark competitors', desc: 'Compare your visibility against competitors across all AI platforms.' },
-              { icon: 'insights.png', title: 'Get actionable insights', desc: 'Receive recommendations to improve how AI describes your brand.' },
-              { icon: 'sentiment.png', title: 'Monitor sentiment', desc: 'Track whether AI portrays your brand positively, neutrally, or negatively.' },
+              { icon: 'user.png', title: 'Benchmark competitors', desc: 'Compare your visibility against competitors across all AI platforms.' },
+              { icon: 'trophy.png', title: 'Get actionable insights', desc: 'Receive recommendations to improve how AI describes your brand.' },
+              { icon: 'mentions.png', title: 'Monitor sentiment', desc: 'Track whether AI portrays your brand positively, neutrally, or negatively.' },
             ].map((f, i) => (
               <div key={i} className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
-                <div className="w-12 h-12 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
-                  <img src={`/icons/${f.icon}`} alt="" className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
+                  <img src={`/icons/${f.icon}`} alt="" className="w-8 h-8" />
                 </div>
                 <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-black mb-2">{f.title}</h3>
                 <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">{f.desc}</p>
@@ -184,7 +184,8 @@ export default function HomePage() {
       <section className="w-full bg-[#111111] py-16 lg:py-24">
         <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
           <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
-            Ready to own your<br />
+            <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>UNLOCK YOUR</span>
+            <br />
             <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>AI VISIBILITY</span>
           </h2>
           <div className="hidden lg:flex items-center justify-center mt-8">

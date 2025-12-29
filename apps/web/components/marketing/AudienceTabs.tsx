@@ -79,16 +79,16 @@ export default function AudienceTabs() {
   const active = AUDIENCES[activeTab]
 
   return (
-    <section className="w-full bg-[#F6F5F3] py-24">
-      <div className="max-w-[1200px] mx-auto px-14">
+    <section className="w-full bg-[#F6F5F3] py-16 lg:py-24">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
         {/* Section Header */}
-        <h2 className="text-center text-[42px] font-medium font-source-sans tracking-tight text-black leading-tight mb-16">
+        <h2 className="text-center text-[28px] lg:text-[42px] font-medium font-source-sans tracking-tight text-black leading-tight mb-10 lg:mb-16">
           Built for teams who want to<br />
           win AI search
         </h2>
 
-        {/* Tab Cards Container */}
-        <div className="w-[880px] mx-auto bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6">
+        {/* Desktop: Tab Cards Container */}
+        <div className="hidden lg:block w-[880px] mx-auto bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-6">
           {/* Cards Row */}
           <div className="flex gap-3 mb-8">
             {AUDIENCES.map((audience, index) => {
@@ -181,6 +181,77 @@ export default function AudienceTabs() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile: Horizontal scroll tabs + stacked content */}
+        <div className="lg:hidden">
+          {/* Horizontal scrolling tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-4 mb-6 -mx-6 px-6 scrollbar-hide">
+            {AUDIENCES.map((audience, index) => {
+              const isActive = activeTab === index
+              return (
+                <button
+                  key={audience.id}
+                  onClick={() => setActiveTab(index)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-full text-[14px] font-medium font-source-sans transition-colors ${
+                    isActive 
+                      ? 'bg-black text-white' 
+                      : 'bg-white border border-[#EFEEED] text-black/60'
+                  }`}
+                >
+                  {audience.title}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Mobile Content Card */}
+          <div className="bg-[#FBFAF9] rounded-[15px] border border-[#EFEEED] p-5">
+            {/* Illustration */}
+            <div className="w-20 h-20 mx-auto mb-4">
+              <img
+                src={active.imageColor}
+                alt=""
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            {/* Headline */}
+            <h3 className="text-[24px] font-medium font-source-sans text-black text-center mb-4">
+              {active.headline}
+            </h3>
+
+            {/* Stats */}
+            <div className="space-y-4">
+              <div>
+                <p className="text-[18px] font-medium font-source-sans text-black">
+                  {active.stat1}
+                </p>
+                <p className="text-[14px] font-normal font-source-sans text-[#6F6E6E] mt-1 leading-relaxed">
+                  {active.desc1}
+                </p>
+              </div>
+
+              <div className="w-full h-px bg-[#EFEEED]" />
+
+              <div>
+                <p className="text-[18px] font-medium font-source-sans text-black">
+                  {active.stat2}
+                </p>
+                <p className="text-[14px] font-normal font-source-sans text-[#6F6E6E] mt-1 leading-relaxed">
+                  {active.desc2}
+                </p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <a 
+              href={active.ctaLink}
+              className="flex items-center justify-center mt-6 h-[44px] w-full rounded-[7px] border border-[#B4B4B3] bg-white text-[15px] font-medium font-source-sans text-black hover:bg-black hover:text-white hover:border-black transition-colors"
+            >
+              {active.cta}
+            </a>
           </div>
         </div>
       </div>
