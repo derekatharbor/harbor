@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import { ThemeProvider } from '@/components/ThemeProvider'
 
 // Force dynamic rendering for all routes
@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   description: 'See how AI sees your brand',
 }
 
+// This enables full-screen content on iOS (extends into notch/Dynamic Island area)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -17,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#F6F5F3]">
         <ThemeProvider>
           {children}
         </ThemeProvider>

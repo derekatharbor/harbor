@@ -54,10 +54,23 @@ export default function HomePage() {
             <button type="submit" className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap">Get started</button>
           </form>
 
-          {/* Mobile CTAs */}
+          {/* Mobile Email Form + Login */}
           <div className="lg:hidden flex flex-col gap-3 mt-6 w-full max-w-[320px]">
-            <Link href="/signup" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">Get started free</Link>
-            <Link href="/login" className="h-12 rounded-[10px] border border-[#B1B0AF] text-[15px] font-medium font-source-sans text-black flex items-center justify-center hover:bg-black/5 transition-colors">Login</Link>
+            <form className="flex flex-col gap-2">
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Enter your company email" 
+                className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
+                required 
+              />
+              <button type="submit" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">
+                Get started free
+              </button>
+            </form>
+            <Link href="/login" className="h-12 rounded-[10px] border border-[#B1B0AF] text-[15px] font-medium font-source-sans text-black flex items-center justify-center hover:bg-black/5 transition-colors">
+              Login
+            </Link>
           </div>
         </div>
       </div>
