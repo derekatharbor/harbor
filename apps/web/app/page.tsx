@@ -278,25 +278,14 @@ export default function HomePage() {
 
           {/* CTA Card */}
           <div className="w-full max-w-[1368px] mx-auto mt-24 rounded-[15px] h-[509px] bg-[#10054D] flex flex-col items-center justify-center relative overflow-hidden">
-            {/* Noise overlay */}
-            <div 
-              className="absolute inset-0 opacity-40 pointer-events-none"
-              style={{
-                backgroundImage: 'url(/images/noise-texture.png)',
-                backgroundSize: '200px 200px',
-                mixBlendMode: 'overlay',
-              }}
-            />
-
             {/* Headline */}
             <h2 
               className="relative z-10 text-center tracking-tight"
               style={{ 
                 fontFamily: 'Source Sans 3, sans-serif',
                 fontWeight: 900,
-                fontSize: '140px', 
-                lineHeight: '0.95',
-                textShadow: '2px 4px 8px rgba(255, 255, 255, 0.25)'
+                fontSize: '90px', 
+                lineHeight: '1.05',
               }}
             >
               <span 
@@ -307,6 +296,7 @@ export default function HomePage() {
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))',
                 }}
               >
                 AI SEARCH
