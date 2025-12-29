@@ -104,11 +104,11 @@ export default function PitchPage() {
             </div>
 
             {/* Right - Hero Image */}
-            <div className="flex-1 w-full">
+            <div className="flex-1 w-full lg:pl-8">
               <img 
                 src="/images/pitch/hero-illustration.png" 
                 alt="Pitch Workspaces"
-                className="w-full h-auto max-w-[500px] mx-auto lg:mx-0"
+                className="w-full h-auto max-w-[500px] mx-auto lg:ml-auto lg:mr-0"
               />
             </div>
           </div>
@@ -246,30 +246,45 @@ export default function PitchPage() {
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
           }
-          .animated-gradient-text {
+          .holographic-text {
             background: linear-gradient(
               90deg,
-              #c9b8d4,
-              #d4b8c9,
-              #e8c4b8,
-              #f0d0b8,
-              #d4b8c9,
-              #c9b8d4
+              #f8c8dc,
+              #e8b4f8,
+              #d4b4f8,
+              #b4c8f8,
+              #8fd8f8,
+              #b4f0f0,
+              #c8e8f8,
+              #f8d8c8,
+              #f8c8dc
             );
-            background-size: 200% auto;
+            background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient-shift 4s ease infinite;
+            animation: gradient-shift 6s ease infinite;
+            position: relative;
+            filter: drop-shadow(0 0 20px rgba(200, 180, 255, 0.5)) drop-shadow(0 0 40px rgba(180, 220, 255, 0.3));
+          }
+          .holographic-text::after {
+            content: 'AI VISIBILITY';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: inherit;
+            opacity: 0.15;
+            filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E#noise");
           }
         `}</style>
-        <div className="max-w-[700px] mx-auto px-6 lg:px-14 text-center">
-          <h2 className="text-[32px] lg:text-[56px] font-bold font-source-sans tracking-tight leading-tight mb-4">
+        <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
+          <h2 className="text-[36px] lg:text-[72px] font-black tracking-tight leading-[0.95] mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             <span className="text-white">UNLOCK YOUR</span>
             <br />
-            <span className="animated-gradient-text">AI SEARCH</span>
-            <br />
-            <span className="animated-gradient-text">SUPERPOWERS</span>
+            <span className="holographic-text">AI VISIBILITY</span>
           </h2>
           <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 mb-8 max-w-[400px] mx-auto">
             Start generating AI visibility reports today.
