@@ -1,262 +1,121 @@
-// DESTINATION: apps/web/app/agencies/page.tsx
-// Agency landing page - Amplemarket-style layout
+// app/agencies/page.tsx
+// Agency Landing Page - Free audit tool for pitching prospects
 
-'use client'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import StickyNav from '@/components/marketing/StickyNav'
+import MainNav from '@/components/marketing/MainNav'
+import AgencyAuditForm from '@/components/marketing/AgencyAuditForm'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { 
-  ArrowRight, 
-  Target, 
-  Zap, 
-  BarChart3, 
-  Send,
-  CheckCircle2,
-  Users,
-  Clock,
-  FileText,
-  ChevronDown
-} from 'lucide-react'
-import Nav from '@/components/landing-new/Nav'
-import Footer from '@/components/landing-new/Footer'
+export const metadata: Metadata = {
+  title: 'Harbor for Agencies - AI Visibility Audits',
+  description: 'Show prospects their AI search gaps. Generate competitive audits in minutes and close deals with data.',
+}
 
 export default function AgenciesPage() {
-  const router = useRouter()
-  const [url, setUrl] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [openFaq, setOpenFaq] = useState<number | null>(0)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    
-    if (!url.trim()) {
-      setError('Please enter a website URL')
-      return
-    }
-
-    let cleanUrl = url.trim()
-    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-      cleanUrl = 'https://' + cleanUrl
-    }
-
-    try {
-      new URL(cleanUrl)
-    } catch {
-      setError('Please enter a valid URL')
-      return
-    }
-
-    setIsLoading(true)
-    router.push(`/agencies/audit?url=${encodeURIComponent(cleanUrl)}`)
-  }
-
-  const faqs = [
-    {
-      q: 'Is the audit tool really free?',
-      a: 'Yes. Run unlimited audits without signing up. We want you to see the value before committing to anything.'
-    },
-    {
-      q: 'What AI models do you scan?',
-      a: 'We query ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews. Results reflect how each model perceives the brand.'
-    },
-    {
-      q: 'Can I white-label reports for clients?',
-      a: 'White-label exports are coming soon on Agency plans. For now, reports are Harbor-branded but fully shareable.'
-    },
-    {
-      q: 'How is this different from SEO tools?',
-      a: 'SEO tools track Google rankings. Harbor tracks how AI models talk about brands — a completely different channel.'
-    },
-    {
-      q: "What's included in Pitch Workspace?",
-      a: 'Prospect pipeline management, historical visibility tracking, one-click report generation, and client portfolio views.'
-    }
-  ]
-
   return (
-    <div className="min-h-screen bg-white">
-      <Nav />
+    <>
+      <StickyNav />
+      
+      {/* Hero Section */}
+      <div className="min-h-screen lg:min-h-[900px] bg-[#F6F5F3] relative overflow-hidden">
+        <img src="/images/hero-noise.png" alt="" className="absolute bottom-0 left-0 w-full pointer-events-none" />
+        <MainNav />
 
-      {/* Hero - White */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-6 bg-white" data-nav-theme="light">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left - Content */}
-            <div>
-              <p className="text-sm text-[#0B0B0C]/50 font-medium mb-4 uppercase tracking-wide">
-                Harbor for Agencies
-              </p>
-              
-              <h1 className="text-4xl md:text-5xl font-semibold text-[#0B0B0C] leading-[1.1] mb-5 font-['Space_Grotesk']">
-                Win more GEO clients with AI visibility audits
-              </h1>
-              
-              <p className="text-lg text-[#0B0B0C]/60 leading-relaxed mb-8">
-                Show prospects their AI search gaps. Generate competitive audits in minutes and close deals with data, not decks.
-              </p>
-
-              {/* Input */}
-              <form onSubmit={handleSubmit} className="mb-4">
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="Enter prospect's website"
-                    className="flex-1 px-4 py-3 bg-[#F5F5F5] border border-[#E5E5E5] rounded-lg text-[#0B0B0C] placeholder-[#0B0B0C]/40 text-sm focus:outline-none focus:border-[#0B0B0C]/20 transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-5 py-3 bg-[#0B0B0C] text-white rounded-lg font-medium text-sm hover:bg-[#0B0B0C]/90 transition-all disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
-                  >
-                    {isLoading ? 'Scanning...' : 'Run Free Audit'}
-                  </button>
-                </div>
-                {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
-              </form>
-
-              <p className="text-xs text-[#0B0B0C]/40">
-                No signup required · Results in under 5 minutes
-              </p>
-            </div>
-
-            {/* Right - Screenshot placeholder */}
-            <div className="hidden lg:block">
-              <div className="relative">
-                <Image
-                  src="/previews/agency-audit-preview.png"
-                  alt="Harbor AI Visibility Audit"
-                  width={600}
-                  height={450}
-                  className="rounded-xl shadow-2xl border border-gray-200"
-                  priority
-                />
-              </div>
-            </div>
+        <div className="flex flex-col items-center pt-12 lg:pt-[100px] px-6 lg:px-0">
+          <div className="flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-6 lg:mb-8">
+            <span className="px-2 py-0.5 bg-black rounded-[3px] text-[11px] lg:text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">AGENCIES</span>
+            <span className="text-[11px] lg:text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">Free prospect audit tool</span>
           </div>
-        </div>
-      </section>
 
-      {/* 4-Column Features - White */}
-      <section className="py-20 px-6 bg-[#FAFAFA] border-t border-gray-100" data-nav-theme="light">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-semibold text-[#0B0B0C] mb-4 font-['Space_Grotesk']">
-            Close deals with data, not decks
-          </h2>
-          <p className="text-[#0B0B0C]/50 mb-12 max-w-2xl">
-            Traditional pitches rely on promises. Harbor shows prospects their actual AI visibility gap.
+          <h1 className="max-w-[340px] lg:max-w-[580px] text-center text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.1] lg:leading-[1.04]">
+            Close deals by showing prospects what they can't see
+          </h1>
+
+          <p className="max-w-[320px] lg:max-w-[500px] mt-4 lg:mt-6 text-center text-[16px] lg:text-[20px] font-normal font-source-code tracking-[0.5px] lg:tracking-[0.69px] text-[#6C6C6B]">
+            Generate AI visibility audits for any brand. Show them the gap, then sell the fix.
           </p>
-          
-          <div className="grid md:grid-cols-4 gap-8">
+
+          {/* Desktop URL Form */}
+          <AgencyAuditForm />
+
+          <p className="mt-4 text-[13px] font-normal font-source-code text-[#9C9C9B]">
+            No signup required · Results in under 5 minutes
+          </p>
+        </div>
+      </div>
+
+      {/* How It Works - Dark Section */}
+      <section className="w-full bg-[#111111]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
+          <div className="text-center mb-10 lg:mb-16">
+            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight">How it works</h2>
+            <p className="mt-3 lg:mt-4 text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 max-w-[500px] mx-auto">
+              Turn AI visibility gaps into signed contracts.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 max-w-[1000px] mx-auto">
             {[
-              {
-                icon: Target,
-                title: 'Enter their URL',
-                description: 'Paste the website of any brand you want to pitch or upsell.'
-              },
-              {
-                icon: Zap,
-                title: 'We scan AI models',
-                description: 'Harbor queries ChatGPT, Claude, Perplexity, and Gemini in real-time.'
-              },
-              {
-                icon: BarChart3,
-                title: 'See the gap',
-                description: 'Get visibility scores, sentiment, and competitor comparisons instantly.'
-              },
-              {
-                icon: Send,
-                title: 'Send the report',
-                description: "Share a branded report showing exactly what they're missing."
-              }
+              { num: '01', title: 'Enter their URL', desc: 'Paste the website of any brand you want to pitch.' },
+              { num: '02', title: 'We scan AI models', desc: 'Harbor queries ChatGPT, Claude, Perplexity, and Gemini.' },
+              { num: '03', title: 'See the gap', desc: 'Get visibility scores, sentiment, and competitor comparisons.' },
+              { num: '04', title: 'Send the report', desc: 'Share a report showing exactly what they\'re missing.' },
             ].map((step, i) => (
-              <div key={i}>
-                <div className="w-10 h-10 rounded-lg bg-[#0B0B0C]/5 flex items-center justify-center mb-4">
-                  <step.icon className="w-5 h-5 text-[#0B0B0C]/70" />
-                </div>
-                <h3 className="text-base font-semibold text-[#0B0B0C] mb-2 font-['Space_Grotesk']">
-                  {step.title}
-                </h3>
-                <p className="text-sm text-[#0B0B0C]/50 leading-relaxed">
-                  {step.description}
-                </p>
+              <div key={i} className="text-center lg:text-left">
+                <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">{step.num}</div>
+                <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">{step.title}</h3>
+                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Feature Section 1 - Text Left, Image Right */}
-      <section className="py-20 px-6 bg-white" data-nav-theme="light">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#0B0B0C] mb-4 font-['Space_Grotesk']">
-                Win pitches with proof, not promises
-              </h2>
-              <p className="text-[#0B0B0C]/60 mb-6 leading-relaxed">
-                Stop competing on price. Show prospects problems they didn't know they had. When you can prove a brand is invisible in AI search, the sale makes itself.
+      {/* Value Props - Light Section */}
+      <section className="w-full bg-[#F6F5F3]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-[1000px] mx-auto">
+            {/* Pitch New Clients */}
+            <div className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
+              <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
+                <img src="/icons/trophy.png" alt="" className="w-8 h-8" />
+              </div>
+              <h3 className="text-[20px] lg:text-[24px] font-semibold font-source-sans text-black mb-3">Pitch new clients</h3>
+              <p className="text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-4">
+                Stop competing on price. Win deals by showing prospects problems they didn't know they had.
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {[
                   'Show prospects their AI visibility gap',
                   'Compare them to competitors they care about',
-                  'Demonstrate the problem before selling the solution',
-                  'Stand out from agencies that only talk SEO'
+                  'Prove the problem before selling the fix'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[#0B0B0C]/70">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                    <span className="text-black mt-0.5">✓</span>
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="hidden lg:block">
-              <Image
-                src="/previews/agency-competitor-compare.png"
-                alt="Competitor comparison"
-                width={550}
-                height={400}
-                className="rounded-xl shadow-xl border border-gray-200"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Feature Section 2 - Image Left, Text Right */}
-      <section className="py-20 px-6 bg-[#FAFAFA]" data-nav-theme="light">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="hidden lg:block order-1">
-              <Image
-                src="/previews/agency-upsell.png"
-                alt="Upsell existing clients"
-                width={550}
-                height={400}
-                className="rounded-xl shadow-xl border border-gray-200"
-              />
-            </div>
-            <div className="order-2">
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#0B0B0C] mb-4 font-['Space_Grotesk']">
-                Upsell existing clients with a new service line
-              </h2>
-              <p className="text-[#0B0B0C]/60 mb-6 leading-relaxed">
-                Add GEO/AEO as a new offering. Create recurring revenue from AI visibility tracking that clients actually understand and value.
+            {/* Upsell Existing Clients */}
+            <div className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
+              <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
+                <img src="/icons/visibility.png" alt="" className="w-8 h-8" />
+              </div>
+              <h3 className="text-[20px] lg:text-[24px] font-semibold font-source-sans text-black mb-3">Upsell existing clients</h3>
+              <p className="text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-4">
+                Add AI visibility as a new service line. Create recurring revenue from monitoring.
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {[
-                  'Add GEO/AEO as a monthly retainer service',
-                  'Bill AI Search Monitoring as a line item',
-                  'Show clients what competitors are doing in AI',
+                  'Add AI Search Optimization as a retainer',
+                  'Show clients what competitors are doing',
                   'Prove ROI with visibility trend reports'
                 ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[#0B0B0C]/70">
-                    <CheckCircle2 className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                    <span className="text-black mt-0.5">✓</span>
                     {item}
                   </li>
                 ))}
@@ -266,136 +125,142 @@ export default function AgenciesPage() {
         </div>
       </section>
 
-      {/* Pitch Workspace Section */}
-      <section className="py-20 px-6 bg-white" data-nav-theme="light">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-sm text-[#0B0B0C]/50 font-medium mb-3 uppercase tracking-wide">
-                Pitch Workspace
-              </p>
-              <h2 className="text-2xl md:text-3xl font-semibold text-[#0B0B0C] mb-4 font-['Space_Grotesk']">
-                Manage your entire GEO pipeline
-              </h2>
-              <p className="text-[#0B0B0C]/60 mb-8 leading-relaxed">
-                Stop juggling spreadsheets. Pitch Workspace gives agencies a dedicated space to track prospects, generate reports, and close deals faster.
-              </p>
-
-              <div className="space-y-5">
-                {[
-                  {
-                    icon: Users,
-                    title: 'Prospect Pipeline',
-                    description: 'Track every prospect from lead to closed-won.'
-                  },
-                  {
-                    icon: Clock,
-                    title: 'Historical Tracking',
-                    description: 'Monitor visibility over time, even before they become clients.'
-                  },
-                  {
-                    icon: FileText,
-                    title: 'One-Click Reports',
-                    description: 'Generate branded audit reports instantly.'
-                  }
-                ].map((feature, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#0B0B0C]/5 flex items-center justify-center flex-shrink-0">
-                      <feature.icon className="w-5 h-5 text-[#0B0B0C]/60" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-[#0B0B0C] mb-0.5">{feature.title}</h4>
-                      <p className="text-sm text-[#0B0B0C]/50">{feature.description}</p>
-                    </div>
-                  </div>
-                ))}
+      {/* Pitch Workspace Teaser - Dark Section */}
+      <section className="w-full bg-[#111111]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
+          <div className="max-w-[800px] mx-auto">
+            <div className="inline-flex items-center gap-2 h-[34px] px-3 bg-[#272625] rounded-[9px] mb-4 lg:mb-6">
+              <div className="flex items-center justify-center w-[44px] h-[22px] rounded-[5px] overflow-hidden" style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <span className="text-[10px] font-bold font-source-code text-black tracking-wider">SOON</span>
               </div>
+              <span className="text-[13px] font-medium font-source-sans text-white/80">Pitch Workspace</span>
             </div>
-            <div className="hidden lg:block">
-              <Image
-                src="/previews/pitch-workspace.png"
-                alt="Pitch Workspace"
-                width={550}
-                height={400}
-                className="rounded-xl shadow-xl border border-gray-200"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dark CTA Banner */}
-      <section className="py-16 px-6 bg-[#0B0B0C]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4 font-['Space_Grotesk']">
-            Start winning GEO clients today
-          </h2>
-          <p className="text-white/50 mb-8">
-            Run your first audit free. No signup, no credit card, no demo calls.
-          </p>
-          
-          <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter prospect's website"
-                className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/30 transition-colors"
-              />
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-5 py-3 bg-white text-[#0B0B0C] rounded-lg font-medium text-sm hover:bg-white/90 transition-all disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
-              >
-                Run Audit
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      {/* FAQ - White */}
-      <section className="py-20 px-6 bg-white" data-nav-theme="light">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-12">
-            <p className="text-sm text-[#0B0B0C]/50 font-medium mb-2 uppercase tracking-wide">
-              Questions & Answers
-            </p>
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#0B0B0C] font-['Space_Grotesk']">
-              Frequently asked questions
+            
+            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
+              Manage your entire pipeline
             </h2>
-          </div>
-          
-          <div className="divide-y divide-gray-200">
-            {faqs.map((faq, i) => (
-              <div key={i} className="py-5">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between text-left"
-                >
-                  <span className="text-[#0B0B0C] font-medium pr-4">{faq.q}</span>
-                  <ChevronDown 
-                    className={`w-5 h-5 text-[#0B0B0C]/40 flex-shrink-0 transition-transform ${
-                      openFaq === i ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-                <div className={`overflow-hidden transition-all duration-200 ${
-                  openFaq === i ? 'max-h-32 opacity-100 mt-3' : 'max-h-0 opacity-0'
-                }`}>
-                  <p className="text-sm text-[#0B0B0C]/60 leading-relaxed">
-                    {faq.a}
-                  </p>
+            <p className="text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 mb-8 max-w-[600px]">
+              Stop juggling spreadsheets. Track prospects, generate reports, and close deals from one workspace.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { title: 'Prospect Pipeline', desc: 'Track every prospect from lead to closed-won.' },
+                { title: 'Historical Tracking', desc: 'Monitor visibility over time, even before they sign.' },
+                { title: 'One-Click Reports', desc: 'Generate branded audits instantly.' },
+              ].map((feature, i) => (
+                <div key={i} className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
+                  <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">{feature.title}</h3>
+                  <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">{feature.desc}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Link href="/auth/signup" className="inline-flex h-12 px-6 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors">
+                Get early access
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <Footer />
-    </div>
+      {/* FAQ - Light Section */}
+      <section className="w-full bg-[#F6F5F3]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
+          <div className="max-w-[700px] mx-auto">
+            <h2 className="text-[28px] lg:text-[36px] font-semibold font-source-sans tracking-tight text-black leading-tight mb-8 lg:mb-12">
+              Questions & Answers
+            </h2>
+            
+            <div className="space-y-0 divide-y divide-[#E0DFDE]">
+              {[
+                { q: 'Is the audit tool really free?', a: 'Yes. Run unlimited audits without signing up. We want you to see the value before committing.' },
+                { q: 'What AI models do you scan?', a: 'ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews. Results show how each model perceives the brand.' },
+                { q: 'Can I white-label reports?', a: 'Coming soon on Agency plans. For now, reports are Harbor-branded but fully shareable.' },
+                { q: 'How is this different from SEO tools?', a: 'SEO tracks Google rankings. Harbor tracks how AI models talk about brands — a different channel entirely.' },
+              ].map((faq, i) => (
+                <div key={i} className="py-5">
+                  <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">{faq.q}</h3>
+                  <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Dark */}
+      <section className="w-full bg-[#111111] py-16 lg:py-24">
+        <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
+          <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
+            <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>START CLOSING</span>
+            <br />
+            <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>WITH DATA</span>
+          </h2>
+          <p className="text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 mb-8">
+            Run your first audit free. No signup required.
+          </p>
+          <Link href="#top" className="inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors">
+            Run free audit
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
+          {/* Footer Links */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-16 mb-12 lg:mb-16">
+            <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start mb-4 lg:mb-0">
+              <img src="/images/Harbor_White_Logo.png" alt="Harbor" className="w-10 h-10" />
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Product</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/features/brand-visibility" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Visibility</Link></li>
+                <li><Link href="/features/shopping" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Shopping Intelligence</Link></li>
+                <li><Link href="/features/conversations" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Conversation Tracking</Link></li>
+                <li><Link href="/features/analytics" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Website Analytics</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Company</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/pricing" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link href="/about" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">About us</Link></li>
+                <li><Link href="/blog" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Resources</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><Link href="/index" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Index</Link></li>
+                <li><Link href="/agencies" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">For Agencies</Link></li>
+                <li><Link href="/docs" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Documentation</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Contact</h4>
+              <ul className="space-y-3 lg:space-y-4">
+                <li><a href="mailto:hello@useharbor.io" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">hello@useharbor.io</a></li>
+                <li><a href="https://twitter.com/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Twitter / X</a></li>
+                <li><a href="https://linkedin.com/company/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">LinkedIn</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="flex flex-col lg:flex-row items-center justify-between pt-8 border-t border-[#222] gap-4">
+            <p className="text-[#666] text-[14px] font-source-sans">© 2025 Harbor</p>
+            <div className="flex items-center gap-6 lg:gap-8">
+              <Link href="/privacy" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Terms of Service</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   )
 }
