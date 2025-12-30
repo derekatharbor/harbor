@@ -134,7 +134,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="h-full">
+    <>
       {/* Desktop Layout - White */}
       <div className="hidden lg:flex min-h-screen bg-white">
         {/* Left side - Form */}
@@ -281,12 +281,9 @@ export default function SignupPage() {
       </div>
 
       {/* Mobile Layout - Dark with Marquee */}
-      <div 
-        className="lg:hidden bg-[#0a0a0a] flex flex-col overflow-hidden"
-        style={{ height: viewportHeight }}
-      >
-        {/* Form Section - takes remaining space */}
-        <div className="flex-1 flex items-center justify-center p-6 overflow-auto">
+      <div className="lg:hidden min-h-screen bg-[#0a0a0a] flex flex-col">
+        {/* Form Section */}
+        <div className="flex-1 flex items-center justify-center p-6">
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="mb-8 flex justify-center">
@@ -447,6 +444,6 @@ export default function SignupPage() {
           animation: marquee-right linear infinite;
         }
       `}</style>
-    </div>
+    </>
   )
 }
