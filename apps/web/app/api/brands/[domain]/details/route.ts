@@ -1,13 +1,13 @@
-// app/api/brands/[domain]/details/route.ts
+// app/api/brands/[slug]/details/route.ts
 // Fetches brand details from Brandfetch API
 
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { domain: string } }
+  { params }: { params: { slug: string } }
 ) {
-  const domain = params.domain
+  const domain = params.slug
 
   if (!domain) {
     return NextResponse.json({ error: 'Domain required' }, { status: 400 })
