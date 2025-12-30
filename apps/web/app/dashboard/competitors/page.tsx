@@ -16,7 +16,8 @@ import {
   X,
   Eye,
   MessageSquare,
-  BarChart3
+  BarChart3,
+  Search
 } from 'lucide-react'
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
@@ -96,6 +97,50 @@ function getSentimentBg(sentiment: string): string {
 }
 
 // ============================================================================
+// BRAND LOGO COMPONENT
+// ============================================================================
+
+function BrandLogo({ 
+  domain, 
+  logoUrl,
+  name, 
+  size = 32,
+  className = ''
+}: { 
+  domain?: string | null
+  logoUrl?: string | null
+  name: string
+  size?: number
+  className?: string
+}) {
+  const [error, setError] = useState(false)
+  
+  // Prefer logoUrl if provided, otherwise construct from domain
+  const url = logoUrl || (domain ? `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y` : null)
+  
+  if (error || !url) {
+    return (
+      <div 
+        className={`rounded-lg bg-secondary flex items-center justify-center text-primary font-semibold flex-shrink-0 ${className}`}
+        style={{ width: size, height: size, fontSize: size * 0.4 }}
+      >
+        {name?.charAt(0)?.toUpperCase() || '?'}
+      </div>
+    )
+  }
+  
+  return (
+    <img
+      src={url}
+      alt={name}
+      className={`rounded-lg bg-secondary flex-shrink-0 ${className}`}
+      style={{ width: size, height: size }}
+      onError={() => setError(true)}
+    />
+  )
+}
+
+// ============================================================================
 // STAT CARD COMPONENT
 // ============================================================================
 
@@ -165,13 +210,11 @@ function TrackedCompetitorRow({
   
   return (
     <div className="group flex items-center gap-3 p-3 rounded-lg hover:bg-secondary/50 transition-colors">
-      <img 
-        src={competitor.logo_url}
-        alt=""
-        className="w-8 h-8 rounded-lg bg-secondary flex-shrink-0"
-        onError={(e) => { 
-          e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(competitor.brand_name)}&background=1a1a1a&color=fff&size=64`
-        }}
+      <BrandLogo 
+        domain={competitor.domain}
+        logoUrl={competitor.logo_url}
+        name={competitor.brand_name}
+        size={32}
       />
       <div className="flex-1 min-w-0">
         <div className="font-medium text-primary text-sm truncate">{competitor.brand_name}</div>
@@ -241,6 +284,19 @@ export default function CompetitorsPage() {
   const [untrackingId, setUntrackingId] = useState<string | null>(null)
   const [trendData, setTrendData] = useState<Array<{ date: string; displayDate: string; you: number | null }>>([])
   const [hasTrendData, setHasTrendData] = useState(false)
+  
+  // Add competitor modal state
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Array<{
+    brand_name: string
+    domain: string
+    logo_url: string | null
+    industry?: string
+    visibility_score?: number
+  }>>([])
+  const [searching, setSearching] = useState(false)
+  const [addingCompetitor, setAddingCompetitor] = useState<string | null>(null)
 
   // Fetch data
   useEffect(() => {
@@ -353,6 +409,69 @@ export default function CompetitorsPage() {
     }
   }
 
+  // Search for brands (for modal)
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setSearchResults([])
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
+        if (response.ok) {
+          const data = await response.json()
+          setSearchResults(data.brands || [])
+        }
+      } catch (err) {
+        console.error('Search error:', err)
+      } finally {
+        setSearching(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Add competitor from modal
+  async function addCompetitorFromModal(brand: { brand_name: string; domain: string; logo_url?: string | null }) {
+    if (!currentDashboard?.id) return
+    if (planLimits && tracked.length >= planLimits.max) return
+    
+    setAddingCompetitor(brand.domain)
+    
+    try {
+      const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand_name: brand.brand_name,
+          domain: brand.domain
+        })
+      })
+      
+      if (response.ok) {
+        // Refresh the data
+        const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
+        if (refreshRes.ok) {
+          const data = await refreshRes.json()
+          setCompetitors(data.competitors || [])
+          setTracked(data.tracked || [])
+          setPlanLimits(data.plan_limits || null)
+        }
+        // Close modal and reset
+        setShowAddModal(false)
+        setSearchQuery('')
+        setSearchResults([])
+      }
+    } catch (err) {
+      console.error('Error adding competitor:', err)
+    } finally {
+      setAddingCompetitor(null)
+    }
+  }
+
   // Loading state
   if (loading) {
     return (
@@ -391,13 +510,24 @@ export default function CompetitorsPage() {
           <h1 className="text-sm font-medium text-secondary">Competitive Intelligence</h1>
         </div>
 
-        <Link 
-          href="/dashboard/competitors/manage"
-          className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-secondary hover:text-primary hover:bg-secondary transition-colors"
-        >
-          Manage
-          <ArrowUpRight className="w-4 h-4" />
-        </Link>
+        <div className="flex items-center gap-2">
+          {canTrackMore && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-black text-white hover:bg-neutral-800 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          )}
+          <Link 
+            href="/dashboard/competitors/manage"
+            className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-secondary hover:text-primary hover:bg-secondary transition-colors"
+          >
+            Manage
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
       {!hasTrackedOrLeaderboard ? (
@@ -416,19 +546,19 @@ export default function CompetitorsPage() {
               Run prompts to see which brands AI mentions alongside yours, or add competitors manually to start tracking.
             </p>
             <div className="flex items-center justify-center gap-3">
+              <button 
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-neutral-800 active:bg-neutral-900 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Competitor
+              </button>
               <Link 
                 href="/dashboard/prompts"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-neutral-800 active:bg-neutral-900 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary border border-border rounded-lg text-sm font-medium text-primary hover:bg-hover active:bg-secondary transition-colors"
               >
                 Run Prompts
                 <ArrowUpRight className="w-4 h-4" />
-              </Link>
-              <Link 
-                href="/dashboard/competitors/manage"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary border border-border rounded-lg text-sm font-medium text-primary hover:bg-hover active:bg-secondary transition-colors"
-              >
-                Add Manually
-                <Plus className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -543,12 +673,12 @@ export default function CompetitorsPage() {
                   </p>
                 </div>
                 {canTrackMore && (
-                  <Link 
-                    href="/dashboard/competitors/manage"
+                  <button 
+                    onClick={() => setShowAddModal(true)}
                     className="p-1.5 rounded-lg text-muted hover:text-primary hover:bg-secondary transition-colors"
                   >
                     <Plus className="w-4 h-4" />
-                  </Link>
+                  </button>
                 )}
               </div>
               
@@ -557,12 +687,12 @@ export default function CompetitorsPage() {
                   <div className="p-6 text-center">
                     <Users className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" />
                     <p className="text-xs text-muted">No competitors tracked</p>
-                    <Link 
-                      href="/dashboard/competitors/manage"
-                      className="inline-flex items-center gap-1 text-xs text-accent hover:underline mt-2"
+                    <button 
+                      onClick={() => setShowAddModal(true)}
+                      className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
                     >
-                      Add one <ArrowUpRight className="w-3 h-3" />
-                    </Link>
+                      Add one <Plus className="w-3 h-3" />
+                    </button>
                   </div>
                 ) : (
                   <div className="p-2">
@@ -639,13 +769,11 @@ export default function CompetitorsPage() {
                         
                         {/* Brand */}
                         <div className="col-span-4 flex items-center gap-3 min-w-0">
-                          <img 
-                            src={comp.logo}
-                            alt=""
-                            className="w-8 h-8 rounded-lg flex-shrink-0 bg-secondary"
-                            onError={(e) => { 
-                              e.currentTarget.src = comp.fallbackLogo
-                            }}
+                          <BrandLogo 
+                            domain={comp.domain}
+                            logoUrl={comp.logo}
+                            name={comp.name}
+                            size={32}
                           />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
@@ -719,6 +847,113 @@ export default function CompetitorsPage() {
             )}
           </div>
 
+        </div>
+      )}
+
+      {/* Add Competitor Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => {
+              setShowAddModal(false)
+              setSearchQuery('')
+              setSearchResults([])
+            }}
+          />
+          <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <div>
+                <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
+                <p className="text-sm text-muted mt-0.5">Search from 60,000+ brands</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowAddModal(false)
+                  setSearchQuery('')
+                  setSearchResults([])
+                }}
+                className="p-2 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 border-b border-border">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by company name or domain..."
+                  className="w-full pl-11 pr-4 py-3 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all"
+                  autoFocus
+                />
+                {searching && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-muted/30 border-t-muted rounded-full animate-spin" />
+                )}
+              </div>
+            </div>
+
+            <div className="max-h-80 overflow-y-auto">
+              {searchResults.length > 0 ? (
+                <div className="p-2">
+                  {searchResults.map((brand) => {
+                    const isAlreadyTracked = tracked.some(t => t.domain === brand.domain)
+                    return (
+                      <button
+                        key={brand.domain}
+                        onClick={() => !isAlreadyTracked && addCompetitorFromModal(brand)}
+                        disabled={addingCompetitor === brand.domain || isAlreadyTracked}
+                        className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left disabled:opacity-50 group"
+                      >
+                        <BrandLogo domain={brand.domain} name={brand.brand_name} size={44} />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-primary truncate">{brand.brand_name}</p>
+                          <p className="text-sm text-muted truncate">{brand.domain}</p>
+                        </div>
+                        {isAlreadyTracked ? (
+                          <span className="text-xs text-green-500 px-2 py-1 bg-green-500/10 rounded">Tracked</span>
+                        ) : addingCompetitor === brand.domain ? (
+                          <div className="w-5 h-5 border-2 border-muted border-t-primary rounded-full animate-spin" />
+                        ) : (
+                          <Plus className="w-5 h-5 text-muted group-hover:text-primary transition-colors" />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              ) : searchQuery.length >= 2 && !searching ? (
+                <div className="p-8 text-center">
+                  <p className="text-sm text-muted mb-4">No brands found for "{searchQuery}"</p>
+                  <button
+                    onClick={() => {
+                      const customDomain = searchQuery.includes('.') 
+                        ? searchQuery.toLowerCase().trim()
+                        : `${searchQuery.toLowerCase().replace(/\s+/g, '').trim()}.com`
+                      addCompetitorFromModal({
+                        brand_name: searchQuery.trim(),
+                        domain: customDomain,
+                        logo_url: null
+                      })
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-hover text-primary transition-colors text-sm font-medium"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add "{searchQuery}" manually
+                  </button>
+                </div>
+              ) : searchQuery.length < 2 ? (
+                <div className="p-10 text-center">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-5 h-5 text-muted" />
+                  </div>
+                  <p className="text-sm text-muted">Type at least 2 characters to search</p>
+                </div>
+              ) : null}
+            </div>
+          </div>
         </div>
       )}
     </div>
