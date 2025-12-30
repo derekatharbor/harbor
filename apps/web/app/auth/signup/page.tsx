@@ -1,7 +1,7 @@
 // app/signup/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -87,6 +87,17 @@ export default function SignupPage() {
   const [showRequirements, setShowRequirements] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [viewportHeight, setViewportHeight] = useState('100vh')
+
+  // Fix iOS viewport height issue
+  useEffect(() => {
+    const updateHeight = () => {
+      setViewportHeight(`${window.innerHeight}px`)
+    }
+    updateHeight()
+    window.addEventListener('resize', updateHeight)
+    return () => window.removeEventListener('resize', updateHeight)
+  }, [])
 
   const hasMinLength = password.length >= 8
   const hasUppercase = /[A-Z]/.test(password)
@@ -270,7 +281,10 @@ export default function SignupPage() {
       </div>
 
       {/* Mobile Layout - Dark with Marquee */}
-      <div className="lg:hidden min-h-[100dvh] bg-[#0a0a0a] flex flex-col">
+      <div 
+        className="lg:hidden bg-[#0a0a0a] flex flex-col"
+        style={{ minHeight: viewportHeight }}
+      >
         {/* Form Section */}
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="w-full max-w-md">
