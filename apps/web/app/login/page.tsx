@@ -217,7 +217,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right side - Image with padding and text overlay */}
+        {/* Right side - Image with padding */}
         <div className="w-1/2 p-4">
           <div className="relative w-full h-full rounded-2xl overflow-hidden">
             <Image
@@ -227,15 +227,6 @@ export default function LoginPage() {
               className="object-cover"
               priority
             />
-            {/* Text overlay at bottom */}
-            <div className="absolute bottom-8 left-8 right-8">
-              <h2 className="text-3xl font-bold text-black mb-2 font-source-sans">
-                AI is talking about you
-              </h2>
-              <p className="text-lg text-black/70 font-source-code">
-                Find out what it's saying
-              </p>
-            </div>
           </div>
         </div>
       </div>
