@@ -409,7 +409,7 @@ export default function CompetitorsPage() {
     }
   }
 
-  // Search for brands (for modal)
+  // Search for brands (for modal) - uses Brandfetch autocomplete
   useEffect(() => {
     if (searchQuery.length < 2) {
       setSearchResults([])
@@ -419,13 +419,41 @@ export default function CompetitorsPage() {
     const timer = setTimeout(async () => {
       setSearching(true)
       try {
-        const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
-        if (response.ok) {
-          const data = await response.json()
-          setSearchResults(data.brands || [])
+        // Use Brandfetch autocomplete - millions of brands, returns logo instantly
+        const brandfetchRes = await fetch(
+          `https://autocomplete.brandfetch.io/v1/search?query=${encodeURIComponent(searchQuery)}`
+        )
+        
+        if (brandfetchRes.ok) {
+          const brandfetchData = await brandfetchRes.json()
+          // Brandfetch returns array of { id, name, domain, icon }
+          const results = (brandfetchData || []).slice(0, 10).map((b: any) => ({
+            brand_name: b.name || b.domain,
+            domain: b.domain,
+            logo_url: b.icon || `https://cdn.brandfetch.io/${b.domain}?c=1id1Fyz-h7an5-5KR_y`,
+            source: 'brandfetch'
+          }))
+          setSearchResults(results)
+        } else {
+          // Fallback to our DB if Brandfetch fails
+          const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
+          if (response.ok) {
+            const data = await response.json()
+            setSearchResults(data.brands || [])
+          }
         }
       } catch (err) {
         console.error('Search error:', err)
+        // Fallback to our DB on any error
+        try {
+          const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
+          if (response.ok) {
+            const data = await response.json()
+            setSearchResults(data.brands || [])
+          }
+        } catch (fallbackErr) {
+          console.error('Fallback search error:', fallbackErr)
+        }
       } finally {
         setSearching(false)
       }
@@ -852,7 +880,7 @@ export default function CompetitorsPage() {
 
       {/* Add Competitor Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div 
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => {
@@ -865,7 +893,7 @@ export default function CompetitorsPage() {
             <div className="flex items-center justify-between p-5 border-b border-border">
               <div>
                 <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
-                <p className="text-sm text-muted mt-0.5">Search from 60,000+ brands</p>
+                <p className="text-sm text-muted mt-0.5">Search millions of brands</p>
               </div>
               <button
                 onClick={() => {
@@ -908,7 +936,12 @@ export default function CompetitorsPage() {
                         disabled={addingCompetitor === brand.domain || isAlreadyTracked}
                         className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left disabled:opacity-50 group"
                       >
-                        <BrandLogo domain={brand.domain} name={brand.brand_name} size={44} />
+                        <BrandLogo 
+                          domain={brand.domain} 
+                          logoUrl={brand.logo_url}
+                          name={brand.brand_name} 
+                          size={44} 
+                        />
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-primary truncate">{brand.brand_name}</p>
                           <p className="text-sm text-muted truncate">{brand.domain}</p>
@@ -926,23 +959,39 @@ export default function CompetitorsPage() {
                 </div>
               ) : searchQuery.length >= 2 && !searching ? (
                 <div className="p-8 text-center">
-                  <p className="text-sm text-muted mb-4">No brands found for "{searchQuery}"</p>
-                  <button
-                    onClick={() => {
-                      const customDomain = searchQuery.includes('.') 
-                        ? searchQuery.toLowerCase().trim()
-                        : `${searchQuery.toLowerCase().replace(/\s+/g, '').trim()}.com`
-                      addCompetitorFromModal({
-                        brand_name: searchQuery.trim(),
-                        domain: customDomain,
-                        logo_url: null
-                      })
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-hover text-primary transition-colors text-sm font-medium"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add "{searchQuery}" manually
-                  </button>
+                  <p className="text-sm text-muted mb-2">No results for "{searchQuery}"</p>
+                  <p className="text-xs text-muted mb-4">Try searching by company name or website</p>
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center gap-3 px-4 py-3 bg-secondary rounded-lg">
+                      <BrandLogo 
+                        domain={searchQuery.includes('.') ? searchQuery.toLowerCase().trim() : `${searchQuery.toLowerCase().replace(/\s+/g, '')}.com`}
+                        name={searchQuery}
+                        size={36}
+                      />
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-primary">{searchQuery}</p>
+                        <p className="text-xs text-muted">
+                          {searchQuery.includes('.') ? searchQuery.toLowerCase().trim() : `${searchQuery.toLowerCase().replace(/\s+/g, '')}.com`}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const customDomain = searchQuery.includes('.') 
+                          ? searchQuery.toLowerCase().trim()
+                          : `${searchQuery.toLowerCase().replace(/\s+/g, '')}.com`
+                        addCompetitorFromModal({
+                          brand_name: searchQuery.trim(),
+                          domain: customDomain,
+                          logo_url: null
+                        })
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-black text-white hover:bg-neutral-800 transition-colors text-sm font-medium"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add
+                    </button>
+                  </div>
                 </div>
               ) : searchQuery.length < 2 ? (
                 <div className="p-10 text-center">
