@@ -18,8 +18,8 @@ import {
   FileText,
   ChevronDown
 } from 'lucide-react'
-import Nav from '@/components/landing/Nav'
-import Footer from '@/components/landing/Footer'
+import Nav from '@/components/landing-new/Nav'
+import Footer from '@/components/landing-new/Footer'
 
 export default function AgenciesPage() {
   const router = useRouter()
