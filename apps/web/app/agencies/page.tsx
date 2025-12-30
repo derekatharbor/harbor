@@ -17,50 +17,61 @@ export default function AgenciesPage() {
       <StickyNav />
       
       {/* Hero Section */}
-      <div className="min-h-screen lg:min-h-[900px] bg-[#F6F5F3] relative overflow-hidden">
-        <img src="/images/hero-noise.png" alt="" className="absolute bottom-0 left-0 w-full pointer-events-none" />
-        <MainNav />
+      <section className="bg-[#F6F5F3]">
+        <MainNav isDark={false} />
 
-        <div className="flex flex-col items-center pt-12 lg:pt-[100px] px-6 lg:px-0">
-          <div className="flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-6 lg:mb-8">
-            <span className="px-2 py-0.5 bg-black rounded-[3px] text-[11px] lg:text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">AGENCIES</span>
-            <span className="text-[11px] lg:text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">Free prospect audit tool</span>
-          </div>
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-14 pt-8 lg:pt-16 pb-16 lg:pb-24">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            {/* Left - Text Content */}
+            <div className="flex-1 text-left">
+              {/* Badge */}
+              <div className="flex mb-6">
+                <span className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[12px] font-semibold font-source-code text-black/60 uppercase tracking-wider">
+                  For Agencies
+                </span>
+              </div>
 
-          <h1 className="max-w-[340px] lg:max-w-[580px] text-center text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.1] lg:leading-[1.04]">
-            Close deals by showing prospects what they can't see
-          </h1>
+              <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
+                Close deals by showing<br />what prospects can't see
+              </h1>
+              <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
+                Generate AI visibility audits for any brand. Show them the gap, then sell the fix.
+              </p>
 
-          <p className="max-w-[320px] lg:max-w-[500px] mt-4 lg:mt-6 text-center text-[16px] lg:text-[20px] font-normal font-source-code tracking-[0.5px] lg:tracking-[0.69px] text-[#6C6C6B]">
-            Generate AI visibility audits for any brand. Show them the gap, then sell the fix.
-          </p>
+              {/* CTA */}
+              <form className="hidden lg:flex items-center h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm max-w-[460px]">
+                <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none" required />
+                <button type="submit" className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap">Get started</button>
+              </form>
 
-          {/* Desktop Email Form */}
-          <form className="hidden lg:flex items-center mt-8 h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm">
-            <input type="email" name="email" placeholder="Enter your company email" className="w-[340px] h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none" required />
-            <button type="submit" className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap">Get started</button>
-          </form>
+              {/* Mobile */}
+              <div className="lg:hidden flex flex-col gap-3 w-full">
+                <form className="flex flex-col gap-2">
+                  <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="Enter your company email" 
+                    className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
+                    required 
+                  />
+                  <button type="submit" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">
+                    Get started free
+                  </button>
+                </form>
+              </div>
+            </div>
 
-          {/* Mobile Email Form + Login */}
-          <div className="lg:hidden flex flex-col gap-3 mt-6 w-full max-w-[320px]">
-            <form className="flex flex-col gap-2">
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Enter your company email" 
-                className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
-                required 
+            {/* Right - Hero Image */}
+            <div className="flex-1 w-full lg:pl-8">
+              <img 
+                src="/images/agencies/hero-illustration.png" 
+                alt="AI Visibility Audit"
+                className="w-full h-auto max-w-[500px] mx-auto lg:ml-auto lg:mr-0"
               />
-              <button type="submit" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">
-                Get started free
-              </button>
-            </form>
-            <Link href="/login" className="h-12 rounded-[10px] border border-[#B1B0AF] text-[15px] font-medium font-source-sans text-black flex items-center justify-center hover:bg-black/5 transition-colors">
-              Login
-            </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How It Works - Dark Section */}
       <section className="w-full bg-[#111111]">
@@ -207,19 +218,48 @@ export default function AgenciesPage() {
         </div>
       </section>
 
-      {/* Final CTA - Dark */}
-      <section className="w-full bg-[#111111] py-16 lg:py-24">
+      {/* Final CTA */}
+      <section className="bg-[#111111] py-16 lg:py-24">
+        <style jsx>{`
+          @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          .holographic-text {
+            background: linear-gradient(
+              90deg,
+              #f8c8dc,
+              #e8b4f8,
+              #d4b4f8,
+              #b4c8f8,
+              #8fd8f8,
+              #b4f0f0,
+              #c8e8f8,
+              #f8d8c8,
+              #f8c8dc
+            );
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 6s ease infinite;
+          }
+        `}</style>
         <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
-          <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
-            <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>START CLOSING</span>
+          <h2 className="text-[36px] lg:text-[72px] font-black tracking-tight leading-[0.95] mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <span className="text-white">START CLOSING</span>
             <br />
-            <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>WITH DATA</span>
+            <span className="holographic-text">WITH DATA</span>
           </h2>
-          <p className="text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 mb-8">
-            Run your first audit free. No signup required.
+          <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 mb-8 max-w-[400px] mx-auto">
+            Generate AI visibility reports for prospects today.
           </p>
-          <Link href="#top" className="inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors">
-            Run free audit
+          <Link
+            href="/signup"
+            className="inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors"
+          >
+            Get started free
           </Link>
         </div>
       </section>
