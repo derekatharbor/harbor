@@ -404,7 +404,7 @@ export default function CompetitorsPage() {
         <div className="p-6">
           <div className="card p-12 text-center">
             {/* Empty state illustration placeholder */}
-            <div className="w-48 h-48 mx-auto mb-6">
+            <div className="w-64 h-64 mx-auto mb-6">
               <img 
                 src="/images/empty-states/competitors.png" 
                 alt="" 
@@ -418,14 +418,14 @@ export default function CompetitorsPage() {
             <div className="flex items-center justify-center gap-3">
               <Link 
                 href="/dashboard/prompts"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-black/90 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-neutral-800 active:bg-neutral-900 transition-colors"
               >
                 Run Prompts
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
               <Link 
                 href="/dashboard/competitors/manage"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-lg text-sm font-medium text-primary hover:bg-hover transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary border border-border rounded-lg text-sm font-medium text-primary hover:bg-hover active:bg-secondary transition-colors"
               >
                 Add Manually
                 <Plus className="w-4 h-4" />
