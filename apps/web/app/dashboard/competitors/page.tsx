@@ -403,7 +403,14 @@ export default function CompetitorsPage() {
       {!hasTrackedOrLeaderboard ? (
         <div className="p-6">
           <div className="card p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4 opacity-40" />
+            {/* Empty state illustration placeholder */}
+            <div className="w-48 h-48 mx-auto mb-6">
+              <img 
+                src="/images/empty-states/competitors.png" 
+                alt="" 
+                className="w-full h-full object-contain"
+              />
+            </div>
             <h2 className="text-lg font-semibold text-primary mb-2">No competitor data yet</h2>
             <p className="text-sm text-muted mb-6 max-w-md mx-auto">
               Run prompts to see which brands AI mentions alongside yours, or add competitors manually to start tracking.
@@ -411,7 +418,7 @@ export default function CompetitorsPage() {
             <div className="flex items-center justify-center gap-3">
               <Link 
                 href="/dashboard/prompts"
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-black/90 transition-colors"
               >
                 Run Prompts
                 <ArrowUpRight className="w-4 h-4" />
