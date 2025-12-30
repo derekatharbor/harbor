@@ -1,15 +1,11 @@
 // app/agencies/page.tsx
 // Agency Landing Page - Free audit tool for pitching prospects
 
-import { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
-
-export const metadata: Metadata = {
-  title: 'Harbor for Agencies - AI Visibility Audits',
-  description: 'Show prospects their AI search gaps. Generate competitive audits in minutes and close deals with data.',
-}
 
 export default function AgenciesPage() {
   return (
