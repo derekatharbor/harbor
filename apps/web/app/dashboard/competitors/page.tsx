@@ -1069,20 +1069,20 @@ export default function CompetitorsPage() {
             }}
           />
           <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            {/* Banner / Header */}
+            {/* Banner - uses brand color or subtle gradient */}
             <div 
               className="h-24 relative"
               style={{ 
                 background: brandDetails?.primaryColor 
-                  ? `linear-gradient(135deg, ${brandDetails.primaryColor}40 0%, ${brandDetails.primaryColor}10 100%)`
-                  : 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%)'
+                  ? `linear-gradient(135deg, ${brandDetails.primaryColor} 0%, ${brandDetails.primaryColor}90 100%)`
+                  : 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)'
               }}
             >
               {brandDetails?.bannerImage && (
                 <img 
                   src={brandDetails.bannerImage} 
                   alt="" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-30"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
               )}
               <button
@@ -1090,87 +1090,77 @@ export default function CompetitorsPage() {
                   setSelectedCompetitor(null)
                   setBrandDetails(null)
                 }}
-                className="absolute top-3 right-3 p-2 rounded-lg bg-black/20 hover:bg-black/40 text-white transition-colors"
+                className="absolute top-3 right-3 p-2 rounded-lg bg-black/30 hover:bg-black/50 text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
             
-            {/* Logo + Name */}
-            <div className="px-5 -mt-8 relative">
-              <div className="flex items-end gap-4">
-                <div 
-                  className="w-16 h-16 rounded-xl border-4 border-card overflow-hidden bg-secondary flex items-center justify-center"
-                  style={{ 
-                    borderColor: brandDetails?.primaryColor ? `${brandDetails.primaryColor}30` : undefined 
-                  }}
-                >
-                  {brandDetails?.logo ? (
-                    <img src={brandDetails.logo} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <BrandLogo 
-                      domain={selectedCompetitor.domain}
-                      name={selectedCompetitor.brand_name}
-                      size={64}
-                    />
-                  )}
-                </div>
-                <div className="pb-1">
-                  <h3 className="text-lg font-semibold text-primary">
-                    {brandDetails?.name || selectedCompetitor.brand_name}
-                  </h3>
-                  <p className="text-sm text-muted">{selectedCompetitor.domain}</p>
-                </div>
+            {/* Logo - overlapping banner */}
+            <div className="px-5 -mt-10 relative">
+              <div 
+                className="w-20 h-20 rounded-xl border-4 border-card overflow-hidden bg-card shadow-lg"
+              >
+                <BrandLogo 
+                  domain={selectedCompetitor.domain}
+                  logoUrl={brandDetails?.logo}
+                  name={selectedCompetitor.brand_name}
+                  size={80}
+                  className="w-full h-full"
+                />
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-5 space-y-5">
+            {/* Name + Domain + Description */}
+            <div className="px-5 pt-3 pb-2">
+              <h3 className="text-xl font-semibold text-primary">
+                {brandDetails?.name || selectedCompetitor.brand_name}
+              </h3>
+              <p className="text-sm text-muted">{selectedCompetitor.domain}</p>
+              
               {/* Description */}
               {loadingDetails ? (
-                <div className="animate-pulse space-y-2">
-                  <div className="h-4 bg-secondary rounded w-full"></div>
-                  <div className="h-4 bg-secondary rounded w-3/4"></div>
+                <div className="mt-3 animate-pulse space-y-2">
+                  <div className="h-3 bg-secondary rounded w-full"></div>
+                  <div className="h-3 bg-secondary rounded w-4/5"></div>
                 </div>
               ) : brandDetails?.description ? (
-                <p className="text-sm text-secondary leading-relaxed">
+                <p className="mt-3 text-sm text-secondary leading-relaxed line-clamp-3">
                   {brandDetails.description}
                 </p>
-              ) : (
-                <p className="text-sm text-muted italic">No company description available</p>
-              )}
+              ) : null}
+            </div>
 
-              {/* Your Intel */}
-              <div>
-                <h4 className="text-xs font-medium text-muted uppercase tracking-wide mb-3">Your Intel</h4>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-secondary rounded-lg p-3 text-center">
-                    <div className="text-xl font-semibold text-primary">
-                      {selectedCompetitor.visibility}%
-                    </div>
-                    <div className="text-xs text-muted mt-0.5">Visibility</div>
+            {/* Your Intel */}
+            <div className="px-5 py-4">
+              <h4 className="text-xs font-medium text-muted uppercase tracking-wide mb-3">Your Intel</h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className="text-xl font-semibold text-primary">
+                    {selectedCompetitor.visibility}%
                   </div>
-                  <div className="bg-secondary rounded-lg p-3 text-center">
-                    <div className={`text-xl font-semibold capitalize ${
-                      selectedCompetitor.sentiment === 'positive' ? 'text-green-500' :
-                      selectedCompetitor.sentiment === 'negative' ? 'text-red-500' : 'text-primary'
-                    }`}>
-                      {selectedCompetitor.sentiment || '—'}
-                    </div>
-                    <div className="text-xs text-muted mt-0.5">Sentiment</div>
+                  <div className="text-xs text-muted mt-0.5">Visibility</div>
+                </div>
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className={`text-xl font-semibold capitalize ${
+                    selectedCompetitor.sentiment === 'positive' ? 'text-green-500' :
+                    selectedCompetitor.sentiment === 'negative' ? 'text-red-500' : 'text-primary'
+                  }`}>
+                    {selectedCompetitor.sentiment || '—'}
                   </div>
-                  <div className="bg-secondary rounded-lg p-3 text-center">
-                    <div className="text-xl font-semibold text-primary">
-                      {selectedCompetitor.mentions || 0}
-                    </div>
-                    <div className="text-xs text-muted mt-0.5">Mentions</div>
+                  <div className="text-xs text-muted mt-0.5">Sentiment</div>
+                </div>
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className="text-xl font-semibold text-primary">
+                    {selectedCompetitor.mentions || 0}
                   </div>
+                  <div className="text-xs text-muted mt-0.5">Mentions</div>
                 </div>
               </div>
-
+              
               {/* Comparison to you */}
               {userData && (
-                <div className="bg-secondary/50 rounded-lg p-4">
+                <div className="mt-3 bg-secondary/50 rounded-lg p-3">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted">vs Your Visibility</span>
                     {(() => {
@@ -1182,27 +1172,10 @@ export default function CompetitorsPage() {
                   </div>
                 </div>
               )}
-
-              {/* Social Links */}
-              {brandDetails?.links && brandDetails.links.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {brandDetails.links.slice(0, 5).map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs px-2.5 py-1.5 bg-secondary rounded-lg text-muted hover:text-primary transition-colors capitalize"
-                    >
-                      {link.type || 'Website'}
-                    </a>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Footer Actions */}
-            <div className="px-5 pb-5 flex items-center justify-between gap-3">
+            <div className="px-5 pb-5 flex items-center justify-between gap-3 border-t border-border pt-4">
               <button
                 onClick={() => {
                   handleUntrackBrand(selectedCompetitor)
