@@ -28,16 +28,16 @@ export default function AgenciesPage() {
               </div>
 
               <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
-                Close deals by showing<br />what prospects can't see
+                AI visibility is the next<br />service your clients need
               </h1>
               <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
-                Generate AI visibility audits for any brand. Show them the gap, then sell the fix.
+                Pitch Workspace lets you run AI audits for any prospect and show them exactly how they appear across ChatGPT, Claude, and Perplexity.
               </p>
 
               {/* CTA */}
               <form className="hidden lg:flex items-center h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm max-w-[460px]">
                 <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none" required />
-                <button type="submit" className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap">Get started</button>
+                <button type="submit" className="h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap bg-black text-white hover:bg-black/90 transition-colors">Get started</button>
               </form>
 
               {/* Mobile */}
@@ -50,7 +50,7 @@ export default function AgenciesPage() {
                     className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
                     required 
                   />
-                  <button type="submit" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">
+                  <button type="submit" className="h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center bg-black text-white hover:bg-black/90 transition-colors">
                     Get started free
                   </button>
                 </form>
@@ -58,10 +58,11 @@ export default function AgenciesPage() {
             </div>
 
             {/* Right - Hero Image */}
+            {/* IMAGE PATH: /public/images/agencies/hero-illustration.png */}
             <div className="flex-1 w-full lg:pl-8">
               <img 
                 src="/images/agencies/hero-illustration.png" 
-                alt="AI Visibility Audit"
+                alt="Pitch Workspace"
                 className="w-full h-auto max-w-[500px] mx-auto lg:ml-auto lg:mr-0"
               />
             </div>
@@ -73,18 +74,15 @@ export default function AgenciesPage() {
       <section className="w-full bg-[#111111]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
           <div className="text-center mb-10 lg:mb-16">
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight">How it works</h2>
-            <p className="mt-3 lg:mt-4 text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 max-w-[500px] mx-auto">
-              Turn AI visibility gaps into signed contracts.
-            </p>
+            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight">How Pitch Workspace works</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 max-w-[1000px] mx-auto">
             {[
-              { num: '01', title: 'Enter their URL', desc: 'Paste the website of any brand you want to pitch.' },
-              { num: '02', title: 'We scan AI models', desc: 'Harbor queries ChatGPT, Claude, Perplexity, and Gemini.' },
-              { num: '03', title: 'See the gap', desc: 'Get visibility scores, sentiment, and competitor comparisons.' },
-              { num: '04', title: 'Send the report', desc: 'Share a report showing exactly what they\'re missing.' },
+              { num: '01', title: 'Add a prospect', desc: 'Drop in any company domain you're pitching or prospecting.' },
+              { num: '02', title: 'Run an AI audit', desc: 'We check their visibility across ChatGPT, Claude, Perplexity, and Gemini.' },
+              { num: '03', title: 'Review the results', desc: 'Visibility score, sentiment breakdown, and how they compare to competitors.' },
+              { num: '04', title: 'Share the report', desc: 'Send a white-label PDF or link — branded to your agency.' },
             ].map((step, i) => (
               <div key={i} className="text-center lg:text-left">
                 <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">{step.num}</div>
@@ -199,9 +197,9 @@ export default function AgenciesPage() {
             
             <div className="space-y-0 divide-y divide-[#E0DFDE]">
               {[
-                { q: 'Is the audit tool really free?', a: 'Yes. Run unlimited audits without signing up. We want you to see the value before committing.' },
-                { q: 'What AI models do you scan?', a: 'ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews. Results show how each model perceives the brand.' },
-                { q: 'Can I white-label reports?', a: 'Coming soon on Agency plans. For now, reports are Harbor-branded but fully shareable.' },
+                { q: 'Is Pitch Workspace free?', a: 'Yes. Pitch Workspace is included on all Agency plans at no extra cost.' },
+                { q: 'What AI models do you check?', a: 'ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews.' },
+                { q: 'Are reports white-labeled?', a: 'Yes. Reports include a small Harbor mention at the bottom, but are otherwise fully branded to your agency.' },
                 { q: 'How is this different from SEO tools?', a: 'SEO tracks Google rankings. Harbor tracks how AI models talk about brands — a different channel entirely.' },
               ].map((faq, i) => (
                 <div key={i} className="py-5">
@@ -215,14 +213,23 @@ export default function AgenciesPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-[#111111] py-16 lg:py-24">
+      <section className="bg-[#111111] py-20 lg:py-32">
         <style jsx>{`
+          @import url('https://fonts.cdnfonts.com/css/uni-sans');
+          
           @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
           }
-          .holographic-text {
+          
+          .cta-heading {
+            font-family: 'Uni Sans', 'Arial Black', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+          }
+          
+          .holographic-glow {
             background: linear-gradient(
               90deg,
               #f8c8dc,
@@ -240,20 +247,44 @@ export default function AgenciesPage() {
             background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: gradient-shift 6s ease infinite;
+            position: relative;
+            filter: drop-shadow(0 0 30px rgba(200, 180, 255, 0.4)) drop-shadow(0 0 60px rgba(180, 220, 255, 0.2));
+          }
+          
+          .noise-overlay {
+            position: relative;
+          }
+          
+          .noise-overlay::after {
+            content: '';
+            position: absolute;
+            inset: -20%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            pointer-events: none;
+            mix-blend-mode: overlay;
           }
         `}</style>
-        <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
-          <h2 className="text-[36px] lg:text-[72px] font-black tracking-tight leading-[0.95] mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            <span className="text-white">START CLOSING</span>
-            <br />
-            <span className="holographic-text">WITH DATA</span>
-          </h2>
-          <p className="text-[15px] lg:text-[17px] font-normal font-source-code text-white/50 mb-8 max-w-[400px] mx-auto">
-            Generate AI visibility reports for prospects today.
-          </p>
+        <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
+          <div className="noise-overlay inline-block mb-8">
+            <h2 className="cta-heading text-[40px] lg:text-[80px] tracking-tight leading-[0.95]">
+              <span className="text-white">UNLOCK YOUR</span>
+              <br />
+              <span className="text-white">AGENCY'S </span>
+              <span className="holographic-glow">AI EDGE</span>
+            </h2>
+          </div>
+          
+          {/* Email Form */}
+          <form className="hidden lg:flex items-center justify-center mx-auto max-w-[500px] h-14 bg-[#1a1a1a] rounded-[10px] border border-[#333]">
+            <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans text-white placeholder:text-[#666] bg-transparent outline-none" required />
+            <button type="submit" className="h-[42px] px-6 mr-1.5 rounded-[7px] text-[14px] font-semibold font-source-sans bg-white text-black hover:bg-gray-100 transition-colors whitespace-nowrap">Get started free</button>
+          </form>
+          
+          {/* Mobile */}
           <Link
             href="/signup"
-            className="inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors"
+            className="lg:hidden inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center"
           >
             Get started free
           </Link>
