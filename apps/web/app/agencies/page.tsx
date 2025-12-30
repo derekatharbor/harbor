@@ -5,7 +5,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
-import AgencyAuditForm from '@/components/marketing/AgencyAuditForm'
 
 export const metadata: Metadata = {
   title: 'Harbor for Agencies - AI Visibility Audits',
@@ -36,12 +35,30 @@ export default function AgenciesPage() {
             Generate AI visibility audits for any brand. Show them the gap, then sell the fix.
           </p>
 
-          {/* Desktop URL Form */}
-          <AgencyAuditForm />
+          {/* Desktop Email Form */}
+          <form className="hidden lg:flex items-center mt-8 h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm">
+            <input type="email" name="email" placeholder="Enter your company email" className="w-[340px] h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none" required />
+            <button type="submit" className="btn-black h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap">Get started</button>
+          </form>
 
-          <p className="mt-4 text-[13px] font-normal font-source-code text-[#9C9C9B]">
-            No signup required · Results in under 5 minutes
-          </p>
+          {/* Mobile Email Form + Login */}
+          <div className="lg:hidden flex flex-col gap-3 mt-6 w-full max-w-[320px]">
+            <form className="flex flex-col gap-2">
+              <input 
+                type="email" 
+                name="email" 
+                placeholder="Enter your company email" 
+                className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
+                required 
+              />
+              <button type="submit" className="btn-black h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center">
+                Get started free
+              </button>
+            </form>
+            <Link href="/login" className="h-12 rounded-[10px] border border-[#B1B0AF] text-[15px] font-medium font-source-sans text-black flex items-center justify-center hover:bg-black/5 transition-colors">
+              Login
+            </Link>
+          </div>
         </div>
       </div>
 
