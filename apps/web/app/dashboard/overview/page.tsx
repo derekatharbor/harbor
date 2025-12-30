@@ -569,10 +569,10 @@ export default function OverviewPage() {
       {/* Getting Started Checklist - show for new users */}
       {showGettingStarted && gettingStartedTasks.length > 0 && !gettingStartedTasks.every(t => t.completed) && (
         <div className="px-6 pb-4">
-          <div className="card p-0 overflow-hidden border-l-4 border-l-accent">
+          <div className="card p-0 overflow-hidden border-l-4 border-l-border">
             <div className="flex items-center justify-between p-4 border-b border-border bg-secondary/30">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-accent" />
+                <Sparkles className="w-4 h-4 text-muted" />
                 <span className="font-semibold text-primary text-sm">Get Started with Harbor</span>
                 <span className="text-xs text-muted ml-2">
                   {gettingStartedTasks.filter(t => t.completed).length}/{gettingStartedTasks.length} complete
@@ -614,139 +614,97 @@ export default function OverviewPage() {
         </div>
       )}
 
-      {/* User Stats Summary with Benchmarks */}
-      {hasData && (
-        <div className="px-6 pb-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Visibility */}
-            {(() => {
-              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
-              const context = getBenchmarkContext(userVisibility, benchmark || null)
-              return (
-                <div className="card p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
-                    <Eye className="w-3.5 h-3.5 text-muted" />
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-semibold text-primary">{userVisibility}%</span>
-                    {userVisibility > 0 && context.label && (
-                      <span className={`text-xs ${context.color}`}>{context.label}</span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted mt-1">
-                    {userVisibility > 0 && benchmark
-                      ? context.detail
-                      : userVisibility > 0
-                      ? 'Mentioned in AI responses'
-                      : 'Run prompts to measure visibility'}
-                  </p>
+      {/* User Stats Summary - Always show, with empty state values */}
+      <div className="px-6 pb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Visibility */}
+          {(() => {
+            const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+            const context = getBenchmarkContext(userVisibility, benchmark || null)
+            return (
+              <div className="card p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-muted uppercase tracking-wide">Visibility</span>
+                  <Eye className="w-3.5 h-3.5 text-muted" />
                 </div>
-              )
-            })()}
-            
-            {/* Rank */}
-            {(() => {
-              const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
-              const context = userRank ? getRankContext(userRank, totalBrands, benchmark || null) : null
-              return (
-                <div className="card p-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
-                    <Target className="w-3.5 h-3.5 text-muted" />
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-semibold text-primary">
-                      {userRank ? `#${userRank}` : '—'}
-                    </span>
-                    {context && (
-                      <span className={`text-xs ${context.color}`}>{context.label}</span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted mt-1">
-                    {userRank 
-                      ? `Out of ${totalBrands} brands${benchmark ? ` in ${benchmarkData?.user_category || 'your space'}` : ''}`
-                      : 'Not yet ranked'}
-                  </p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-primary">{hasData ? `${userVisibility}%` : '—'}</span>
+                  {hasData && userVisibility > 0 && context.label && (
+                    <span className={`text-xs ${context.color}`}>{context.label}</span>
+                  )}
                 </div>
-              )
-            })()}
-            
-            {/* Sentiment */}
-            <div className="card p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
-                <MessageSquare className="w-3.5 h-3.5 text-muted" />
+                <p className="text-xs text-muted mt-1">
+                  {hasData && userVisibility > 0 && benchmark
+                    ? context.detail
+                    : hasData && userVisibility > 0
+                    ? 'Mentioned in AI responses'
+                    : 'Run prompts to measure visibility'}
+                </p>
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className={`text-2xl font-semibold capitalize ${
-                  userSentiment === 'positive' ? 'text-green-500' : 
-                  userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
-                }`}>
-                  {userSentiment}
-                </span>
-                {userSentiment === 'positive' && <TrendingUp className="w-4 h-4 text-green-500" />}
-                {userSentiment === 'negative' && <TrendingDown className="w-4 h-4 text-red-500" />}
+            )
+          })()}
+          
+          {/* Rank */}
+          {(() => {
+            const benchmark = benchmarkData?.user_benchmark || benchmarkData?.global_benchmark
+            const context = userRank ? getRankContext(userRank, totalBrands, benchmark || null) : null
+            return (
+              <div className="card p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-muted uppercase tracking-wide">Rank</span>
+                  <Target className="w-3.5 h-3.5 text-muted" />
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-semibold text-primary">
+                    {userRank ? `#${userRank}` : '—'}
+                  </span>
+                  {context && (
+                    <span className={`text-xs ${context.color}`}>{context.label}</span>
+                  )}
+                </div>
+                <p className="text-xs text-muted mt-1">
+                  {userRank 
+                    ? `Out of ${totalBrands} brands${benchmark ? ` in ${benchmarkData?.user_category || 'your space'}` : ''}`
+                    : 'Not yet ranked'}
+                </p>
               </div>
-              <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
+            )
+          })()}
+          
+          {/* Sentiment */}
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-muted uppercase tracking-wide">Sentiment</span>
+              <MessageSquare className="w-3.5 h-3.5 text-muted" />
             </div>
-            
-            {/* Sources/Citations */}
-            <div className="card p-4">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
-                <Globe className="w-3.5 h-3.5 text-muted" />
-              </div>
-              <div className="text-2xl font-semibold text-primary">{totalCitations}</div>
-              <p className="text-xs text-muted mt-1">
-                {totalCitations > 0 ? 'Domains cited in responses' : 'Run prompts to track sources'}
-              </p>
+            <div className="flex items-baseline gap-2">
+              <span className={`text-2xl font-semibold capitalize ${
+                !hasData ? 'text-primary' :
+                userSentiment === 'positive' ? 'text-green-500' : 
+                userSentiment === 'negative' ? 'text-red-500' : 'text-primary'
+              }`}>
+                {hasData ? userSentiment : '—'}
+              </span>
+              {hasData && userSentiment === 'positive' && <TrendingUp className="w-4 h-4 text-green-500" />}
+              {hasData && userSentiment === 'negative' && <TrendingDown className="w-4 h-4 text-red-500" />}
             </div>
+            <p className="text-xs text-muted mt-1">How AI portrays your brand</p>
+          </div>
+          
+          {/* Sources/Citations */}
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-muted uppercase tracking-wide">Sources</span>
+              <Globe className="w-3.5 h-3.5 text-muted" />
+            </div>
+            <div className="text-2xl font-semibold text-primary">{hasData ? totalCitations : '—'}</div>
+            <p className="text-xs text-muted mt-1">
+              {totalCitations > 0 ? 'Domains cited in responses' : 'Run prompts to track sources'}
+            </p>
           </div>
         </div>
-      )}
+      </div>
 
-      {!hasData ? (
-        /* Improved Empty State - Onboarding Guide */
-        <div className="p-6">
-          <div className="card p-0 overflow-hidden">
-            <div className="p-8 text-center border-b border-border bg-gradient-to-b from-secondary/50 to-transparent">
-              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-8 h-8 text-accent" />
-              </div>
-              <h2 className="text-xl font-semibold text-primary mb-2">Welcome to Harbor</h2>
-              <p className="text-sm text-muted max-w-md mx-auto">
-                Track how AI models describe your brand. Complete these steps to get started.
-              </p>
-            </div>
-            
-            <div className="divide-y divide-border">
-              {gettingStartedTasks.map((task, idx) => (
-                <Link
-                  key={task.id}
-                  href={task.href}
-                  className="flex items-center gap-4 p-4 hover:bg-hover transition-colors"
-                >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    task.completed 
-                      ? 'bg-green-500/20 text-green-500' 
-                      : 'bg-secondary text-muted'
-                  }`}>
-                    {task.completed ? <Check className="w-4 h-4" /> : idx + 1}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`font-medium ${task.completed ? 'text-muted' : 'text-primary'}`}>
-                      {task.title}
-                    </div>
-                    <div className="text-sm text-muted">{task.description}</div>
-                  </div>
-                  <ArrowRight className={`w-5 h-5 ${task.completed ? 'text-muted opacity-50' : 'text-muted'}`} />
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
       <div className="p-6 space-y-6">
         {/* Action Items - Always visible (Quick Wins or Opportunities) */}
         {actionItems.length > 0 && (
@@ -899,13 +857,21 @@ export default function OverviewPage() {
             </div>
 
             <div className="p-4 h-[360px]">
-              <VisibilityChart 
-                brandName={brandName}
-                competitors={competitors}
-                metric={activeMetric}
-                history={visibilityHistory}
-                hasHistoricalData={hasHistoricalData}
-              />
+              {hasData ? (
+                <VisibilityChart 
+                  brandName={brandName}
+                  competitors={competitors}
+                  metric={activeMetric}
+                  history={visibilityHistory}
+                  hasHistoricalData={hasHistoricalData}
+                />
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-center">
+                  <BarChart3 className="w-12 h-12 text-muted/30 mb-3" />
+                  <p className="text-sm text-muted">No visibility data yet</p>
+                  <p className="text-xs text-muted/70 mt-1">Track prompts to see your brand's performance over time</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -928,7 +894,7 @@ export default function OverviewPage() {
             </div>
 
             <div className="max-h-[320px] overflow-y-auto">
-              {competitors.map((comp, idx) => (
+              {competitors.length > 0 ? competitors.map((comp, idx) => (
                 <div 
                   key={comp.name}
                   className={`grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-hover ${comp.isUser ? 'bg-secondary/50' : ''}`}
@@ -978,7 +944,13 @@ export default function OverviewPage() {
                     </span>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Target className="w-10 h-10 text-muted/30 mb-3" />
+                  <p className="text-sm text-muted">No competitors tracked yet</p>
+                  <p className="text-xs text-muted/70 mt-1">Add competitors to compare visibility</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1208,7 +1180,6 @@ export default function OverviewPage() {
           </div>
         </div>
       </div>
-      )}
 
       {/* Prompt Detail Modal */}
       {selectedPrompt && (
