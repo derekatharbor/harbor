@@ -9,7 +9,7 @@ import MainNav from '@/components/marketing/MainNav'
 
 export default function AgenciesPage() {
   return (
-    <>
+    <div className="min-h-screen">
       <StickyNav />
       
       {/* Hero Section */}
@@ -342,6 +342,6 @@ export default function AgenciesPage() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   )
 }
