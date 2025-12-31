@@ -269,32 +269,49 @@ export default function HarborIndexClient() {
 
       {/* Hero - Light */}
       <section className="bg-[#F6F5F3] relative overflow-hidden">
-        <img src="/images/hero-noise.png" alt="" className="absolute bottom-0 left-0 w-full pointer-events-none" />
+        <img 
+          src="/images/index-hero-bg.png" 
+          alt="" 
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none" 
+          style={{ width: '1440px', height: '872px' }}
+        />
         <MainNav />
 
-        <div className="max-w-3xl mx-auto text-center pt-12 lg:pt-20 pb-16 lg:pb-24 px-6">
-          <h1 className="text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-4">
+        <div className="relative z-10 max-w-3xl mx-auto text-center pt-12 lg:pt-20 pb-16 lg:pb-24 px-6">
+          {/* Badge */}
+          <Link href="/brands" className="inline-flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-6 lg:mb-8 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow">
+            <span className="px-2 py-0.5 bg-black rounded-[3px] text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">NEW</span>
+            <span className="text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">Free to claim</span>
+          </Link>
+
+          <h1 className="max-w-[448px] mx-auto text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.04] mb-4">
             Your brand has an AI profile. Claim it.
           </h1>
 
-          <p className="text-[16px] lg:text-[20px] font-normal font-source-code text-[#6C6C6B] max-w-xl mx-auto mb-8 lg:mb-10">
+          <p className="max-w-[456px] mx-auto text-[16px] lg:text-[20px] font-normal font-source-sans tracking-[0.69px] text-[#6C6C6B] mb-8 lg:mb-10">
             Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
-          <div className="relative max-w-lg mx-auto mb-3">
-            <div className="relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#A0A0A0]" />
+          {/* Search Bar with Button */}
+          <div className="relative max-w-[448px] mx-auto mb-4">
+            <div className="relative flex items-center h-12 bg-white rounded-[10px] border border-[#F0F0EF]">
               <input
                 type="text"
-                placeholder="Search for your brand..."
+                placeholder="Search for your brand"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
-                className="w-full pl-14 pr-5 py-4 bg-white border border-[#E8E8E7] rounded-[10px] text-black placeholder:text-[#A0A0A0] focus:outline-none focus:border-black/20 focus:ring-1 focus:ring-black/10 transition-all text-[16px] font-source-sans shadow-sm"
+                className="flex-1 h-full px-5 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
               />
+              <button 
+                type="button"
+                className="h-[38px] px-5 mr-[5px] bg-black text-white text-[15px] font-medium font-source-sans tracking-[0.69px] rounded-[7px] hover:bg-black/90 transition-colors whitespace-nowrap"
+              >
+                Get started
+              </button>
               {searching && (
-                <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                <div className="absolute right-28 top-1/2 -translate-y-1/2">
                   <div className="w-4 h-4 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
                 </div>
               )}
@@ -360,15 +377,16 @@ export default function HarborIndexClient() {
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mt-6">
+          {/* Brands Indexed Container */}
+          <div className="max-w-[450px] mx-auto bg-[#F4F3F2] rounded-[10px] py-5 px-6 flex items-center justify-center gap-3">
             <div className="flex -space-x-2">
               {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                <div key={domain} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 border-[#F6F5F3] bg-white" style={{ zIndex: 5 - idx }}>
+                <div key={domain} className="w-[42px] h-[42px] rounded-full overflow-hidden border-[3px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
                   <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
-            <p className="text-[#6C6C6B] text-xs sm:text-sm font-source-code">100,000+ brands indexed</p>
+            <p className="text-[#3E3E3E] text-[15px] font-medium font-source-sans tracking-[0.69px]">100,000+ brands indexed</p>
           </div>
         </div>
       </section>
