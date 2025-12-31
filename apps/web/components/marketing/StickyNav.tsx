@@ -36,7 +36,7 @@ const PRODUCT_LEFT = [
   },
 ]
 
-const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string }[]> = {
+const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   competitors: [
     { title: 'Visibility Comparison', description: 'See how you stack up across AI models', href: '/features/competitors/visibility' },
     { title: 'Share of Voice', description: 'Track mention frequency vs competitors', href: '/features/competitors/share-of-voice' },
@@ -86,7 +86,7 @@ const SOLUTIONS_LEFT = [
   },
 ]
 
-const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string }[]> = {
+const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   marketers: [
     { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers/monitoring' },
     { title: 'Competitive Intel', description: 'Benchmark against competitors', href: '/solutions/marketers/competitive' },
@@ -97,6 +97,7 @@ const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href
     { title: 'Multi-Brand Management', description: 'Manage all clients in one place', href: '/solutions/agencies/multi-brand' },
   ],
   ecommerce: [
+    { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/solutions/ecommerce/shopify', isNew: true },
     { title: 'Product Visibility', description: 'Track product mentions in AI answers', href: '/solutions/ecommerce/products' },
     { title: 'Shopping Queries', description: 'Monitor "best X under $Y" prompts', href: '/solutions/ecommerce/shopping' },
     { title: 'Category Rankings', description: 'See where you rank in your category', href: '/solutions/ecommerce/rankings' },
@@ -169,8 +170,13 @@ function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: D
               href={item.href}
               className="block px-4 py-2 rounded-lg hover:bg-[#F6F5F3] transition-colors"
             >
-              <span className="text-[13px] font-semibold font-source-sans text-black">
+              <span className="text-[13px] font-semibold font-source-sans text-black flex items-center gap-2">
                 {item.title}
+                {item.isNew && (
+                  <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#22C55E] text-white rounded uppercase">
+                    New
+                  </span>
+                )}
               </span>
               <p className="text-[11px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
                 {item.description}
