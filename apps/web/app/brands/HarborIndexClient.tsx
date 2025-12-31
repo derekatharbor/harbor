@@ -499,7 +499,7 @@ export default function HarborIndexClient() {
       )}
 
       {/* What You Get - Light */}
-      <section id="light-section" className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
+      <section className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 lg:mb-14">
             <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-black mb-3">What claiming gets you</h2>
@@ -537,7 +537,7 @@ export default function HarborIndexClient() {
       </section>
 
       {/* How It Works - Dark */}
-      <section className="bg-[#111111] py-16 lg:py-24 px-6">
+      <section id="dark-section" className="bg-[#111111] py-16 lg:py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10 lg:mb-14">
             <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-white">Three steps to claim</h2>
@@ -562,7 +562,7 @@ export default function HarborIndexClient() {
       </section>
 
       {/* Brand Marquee - Dark */}
-      <section id="dark-section" className="bg-[#111111] py-12 lg:py-16 px-6">
+      <section className="bg-[#111111] py-12 lg:py-16 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-6 lg:mb-8"><p className="text-white/50 text-sm font-source-code">Brands indexed across every industry</p></div>
           <div className="relative">
