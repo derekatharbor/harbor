@@ -17,11 +17,10 @@ export const metadata: Metadata = {
 const AI_PROMPT = encodeURIComponent("I'm researching AI visibility and want to understand how Harbor helps brands track and optimize how they appear in AI search results like ChatGPT, Claude, Perplexity, and Gemini. Summarize what you find from Harbor's website: https://useharbor.io. Start with what stands out about their platform (bullet points), then explain who it's built for and how it works.")
 
 const AI_MODELS = [
-  { name: 'ChatGPT', icon: '/icons/ai-chatgpt.svg', url: `https://chat.openai.com/?q=${AI_PROMPT}` },
-  { name: 'Gemini', icon: '/icons/ai-gemini.svg', url: `https://gemini.google.com/app?q=${AI_PROMPT}` },
-  { name: 'Perplexity', icon: '/icons/ai-perplexity.svg', url: `https://www.perplexity.ai/search?q=${AI_PROMPT}` },
-  { name: 'Claude', icon: '/icons/ai-claude.svg', url: `https://claude.ai/new?q=${AI_PROMPT}` },
-  { name: 'Grok', icon: '/icons/ai-grok.svg', url: `https://grok.x.ai/?q=${AI_PROMPT}` },
+  { name: 'ChatGPT', icon: '/logos/chatgpt.svg', url: `https://chat.openai.com/?q=${AI_PROMPT}` },
+  { name: 'Gemini', icon: '/logos/gemini.svg', url: `https://gemini.google.com/app?q=${AI_PROMPT}` },
+  { name: 'Perplexity', icon: '/logos/perplexity.svg', url: `https://www.perplexity.ai/search?q=${AI_PROMPT}` },
+  { name: 'Claude', icon: '/logos/claude.svg', url: `https://claude.ai/new?q=${AI_PROMPT}` },
 ]
 
 export default function HomePage() {
@@ -107,79 +106,33 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="hidden lg:block absolute -right-20 top-1/3" style={{ animation: 'float 4.5s ease-in-out infinite 0.5s' }}>
-              <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[280px]">
+            <div className="hidden lg:block absolute -right-16 top-1/3" style={{ animation: 'float 5s ease-in-out infinite', animationDelay: '-2.5s' }}>
+              <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[260px]">
                 <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-black/5">
                   <img src="https://cdn.brandfetch.io/perplexity.ai?c=1id1Fyz-h7an5-5KR_y" alt="Perplexity" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                  <p className="text-black text-sm font-medium leading-snug">Compare HubSpot vs Salesforce</p>
-                  <p className="text-black/50 text-xs mt-1">Perplexity • 1.8M monthly searches</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="hidden lg:block absolute -left-16 bottom-1/4" style={{ animation: 'float 4s ease-in-out infinite 0.25s' }}>
-              <div className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-xl rounded-xl border border-white/50 shadow-[0px_4px_20px_rgba(0,0,0,0.15)] max-w-[260px]">
-                <div className="w-8 h-8 rounded-lg flex-shrink-0 overflow-hidden bg-black/5">
-                  <img src="https://cdn.brandfetch.io/anthropic.com?c=1id1Fyz-h7an5-5KR_y" alt="Claude" className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <p className="text-black text-sm font-medium leading-snug">What&apos;s the easiest CRM to use?</p>
-                  <p className="text-black/50 text-xs mt-1">Claude • 890K monthly searches</p>
+                  <p className="text-black text-sm font-medium leading-snug">Compare Notion vs Coda</p>
+                  <p className="text-black/50 text-xs mt-1">Perplexity • 890K monthly</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <PromptsMarquee />
       </section>
 
-      {/* Light Section */}
-      <section id="light-section" className="w-full bg-[#F6F5F3] py-16 lg:py-24">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
-          <div className="text-center mb-10 lg:mb-16">
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-black leading-tight">Track your AI presence</h2>
-            <p className="mt-3 lg:mt-4 text-[15px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] max-w-[500px] mx-auto">Understand how ChatGPT, Claude, Perplexity, and Gemini describe your brand to millions of users.</p>
-          </div>
-          <div className="max-w-[1100px] mx-auto">
-            <img src="/images/competitors-preview.png" alt="Harbor Competitors Dashboard" className="w-full" />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Card Section */}
-      <section className="w-full bg-[#F6F5F3] pb-16 lg:pb-24">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
-          <div className="w-full rounded-[20px] py-12 lg:py-16 px-6 lg:px-12 flex flex-col items-center" style={{ backgroundColor: '#10054D' }}>
-            <h2 className="text-center font-source-sans font-black tracking-tight mb-6 lg:mb-8 text-[40px] lg:text-[90px] leading-[1]">
-              <span style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))' }}>AI SEARCH</span>
-              <br /><span className="text-white">IS THE NEW SEO</span>
-            </h2>
-            <div className="hidden lg:flex items-center h-[52px] bg-[#1a1a3e]/50 rounded-[10px] border border-white/20">
-              <input type="email" placeholder="Enter your company email" className="w-[280px] h-full px-5 text-[15px] font-light font-source-sans text-white placeholder:text-white/50 bg-transparent outline-none" />
-              <button className="h-[38px] px-5 mr-1.5 bg-white rounded-[6px] text-[13px] font-semibold font-source-sans text-black hover:bg-gray-100 transition-colors whitespace-nowrap">Get started</button>
-            </div>
-            <Link href="/signup" className="lg:hidden h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans flex items-center justify-center">Get started free</Link>
-          </div>
-        </div>
-      </section>
-
-      <AudienceTabs />
-
-      {/* Features Grid */}
-      <section className="w-full bg-[#F6F5F3] py-16 lg:py-24">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
-          <div className="text-center mb-10 lg:mb-16">
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-black leading-tight">Understand how AI sees your brand</h2>
-            <p className="mt-3 lg:mt-4 text-[15px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] max-w-[500px] mx-auto">Comprehensive visibility analytics across ChatGPT, Claude, Perplexity, and Gemini.</p>
+      {/* Features Section - Light */}
+      <section className="w-full bg-[#F6F5F3]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
+          <div className="text-center mb-10 lg:mb-12">
+            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-black leading-tight">Everything you need to win</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 max-w-[900px] mx-auto">
             {[
-              { icon: 'visibility.png', title: 'Track AI visibility', desc: 'See exactly how often AI models mention your brand in responses.' },
-              { icon: 'user.png', title: 'Benchmark competitors', desc: 'Compare your visibility against competitors across all AI platforms.' },
-              { icon: 'trophy.png', title: 'Get actionable insights', desc: 'Receive recommendations to improve how AI describes your brand.' },
-              { icon: 'mentions.png', title: 'Monitor sentiment', desc: 'Track whether AI portrays your brand positively, neutrally, or negatively.' },
+              { icon: 'claim-search.png', title: 'Track AI visibility', desc: 'See exactly how often AI models mention your brand in responses.' },
+              { icon: 'claim-verify.png', title: 'Benchmark competitors', desc: 'Compare your visibility against competitors across all AI platforms.' },
+              { icon: 'icon-insights.png', title: 'Get actionable insights', desc: 'Receive recommendations to improve how AI describes your brand.' },
+              { icon: 'icon-sentiment.png', title: 'Monitor sentiment', desc: 'Track whether AI portrays your brand positively, neutrally, or negatively.' },
             ].map((f, i) => (
               <div key={i} className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
                 <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
