@@ -268,16 +268,16 @@ export default function HarborIndexClient() {
       <StickyNav />
 
       {/* Hero - Two-tone background */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden min-h-[700px]">
         {/* Top half - solid color */}
-        <div className="absolute top-0 left-0 right-0 h-1/2 bg-[#FBFAF9]" />
+        <div className="absolute top-0 left-0 right-0 h-[50%] bg-[#FBFAF9]" />
         {/* Bottom half - holographic image */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/2">
+        <div className="absolute top-[50%] left-0 right-0 h-[50%] overflow-hidden">
           <img 
             src="/images/index-hero-bg.png" 
             alt="" 
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none" 
-            style={{ width: '1440px', height: '872px' }}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{ width: '1440px', height: 'auto' }}
           />
         </div>
         
@@ -298,10 +298,18 @@ export default function HarborIndexClient() {
             Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
-          {/* Search Bar + Brands Container - Unified */}
-          <div className="max-w-[450px] mx-auto bg-white rounded-[10px] border border-[#F0F0EF] shadow-sm overflow-hidden">
-            {/* Search Row */}
-            <div className="flex items-center h-14 px-2">
+          {/* Search Bar - Exact specs: 448x48, white bg, 10px radius, 1px #F0F0EF border */}
+          <div className="relative mx-auto mb-0" style={{ width: '448px' }}>
+            <div 
+              className="flex items-center"
+              style={{ 
+                width: '448px', 
+                height: '48px', 
+                background: 'white', 
+                borderRadius: '10px', 
+                border: '1px solid #F0F0EF' 
+              }}
+            >
               <input
                 type="text"
                 placeholder="Search for your brand"
@@ -309,7 +317,14 @@ export default function HarborIndexClient() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
-                className="flex-1 h-full px-4 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
+                className="flex-1 h-full px-4 bg-transparent outline-none"
+                style={{
+                  color: 'black',
+                  fontSize: '15px',
+                  fontFamily: 'Source Sans 3, sans-serif',
+                  fontWeight: '500',
+                  letterSpacing: '0.69px'
+                }}
               />
               {searching && (
                 <div className="mr-2">
@@ -318,30 +333,56 @@ export default function HarborIndexClient() {
               )}
               <button 
                 type="button"
-                className="h-[38px] px-5 bg-black text-white text-[15px] font-medium font-source-sans tracking-[0.69px] rounded-[7px] hover:bg-black/90 transition-colors whitespace-nowrap"
+                className="mr-[5px] flex items-center justify-center"
+                style={{
+                  width: '112px',
+                  height: '38px',
+                  background: 'black',
+                  borderRadius: '7px',
+                  color: 'white',
+                  fontSize: '15px',
+                  fontFamily: 'Source Sans 3, sans-serif',
+                  fontWeight: '500',
+                  letterSpacing: '0.69px'
+                }}
               >
                 Get started
               </button>
             </div>
-            
-            {/* Divider */}
-            <div className="h-px bg-[#F0F0EF]" />
-            
-            {/* Brands Row */}
-            <div className="flex items-center justify-center gap-3 py-4 bg-[#F4F3F2]">
-              <div className="flex -space-x-2">
-                {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[34px] h-[34px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
-                    <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
-              <div className="h-5 w-px bg-[#D9D9D9]" />
-              <p className="text-[#3E3E3E] text-[15px] font-medium font-source-sans tracking-[0.69px]">100,000+ brands indexed</p>
+          </div>
+          
+          {/* Brands Container - Exact specs: 450x88, #F4F3F2 bg, 10px radius */}
+          <div 
+            className="mx-auto flex items-center justify-center gap-3 -mt-[1px]"
+            style={{
+              width: '450px',
+              height: '88px',
+              background: '#F4F3F2',
+              borderRadius: '0 0 10px 10px'
+            }}
+          >
+            <div className="flex -space-x-2">
+              {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
+                <div key={domain} className="w-[34px] h-[34px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
+                  <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
+                </div>
+              ))}
             </div>
+            <div className="h-5 w-px bg-[#D9D9D9]" />
+            <p 
+              style={{
+                color: '#3E3E3E',
+                fontSize: '15px',
+                fontFamily: 'Source Sans 3, sans-serif',
+                fontWeight: '500',
+                letterSpacing: '0.69px'
+              }}
+            >
+              100,000+ brands indexed
+            </p>
           </div>
 
-          {/* Search Dropdown - higher z-index */}
+          {/* Search Dropdown */}
           {showSearchDropdown && searchResults.length > 0 && (
             <div className="absolute left-1/2 -translate-x-1/2 w-[450px] mt-2 bg-white rounded-[10px] border border-[#E8E8E7] shadow-lg overflow-hidden z-[100]">
               {searchResults.map((brand) => (
