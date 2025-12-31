@@ -334,14 +334,18 @@ export default function HarborIndexClient() {
               </button>
             </div>
             
-            {/* Brands Row - left aligned with borders */}
+            {/* Brands Row - left aligned with transparent borders */}
             <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 h-[48px] sm:h-[52px]">
               <div className="flex -space-x-1">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
                   <div 
                     key={domain} 
-                    className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full overflow-hidden bg-white border-2 border-white/80" 
-                    style={{ zIndex: 5 - idx }}
+                    className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full overflow-hidden bg-white" 
+                    style={{ 
+                      zIndex: 5 - idx,
+                      border: '2px solid transparent',
+                      boxShadow: '0 0 0 1px rgba(0,0,0,0.05)'
+                    }}
                   >
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
@@ -417,7 +421,7 @@ export default function HarborIndexClient() {
       </section>
 
       {/* Why This Matters - Light */}
-      <section id="dark-section" className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
+      <section className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-10 lg:mb-14">
             <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-black leading-tight max-w-md">AI is changing how people find brands</h2>
@@ -426,9 +430,9 @@ export default function HarborIndexClient() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { key: 'ai-search', img: '/images/index/card-ai-discovery.png', title: 'People discover brands through AI answers now' },
-              { key: 'not-found', img: '/images/index/card-ai-parsing.png', title: "AI doesn't understand most brand websites" },
-              { key: 'outdated', img: '/images/index/card-third-party.png', title: 'AI pulls brand data from third-party sources' },
+              { key: 'ai-search', imgBw: '/images/index/card-ai-discovery-bw.png', imgColor: '/images/index/card-ai-discovery.png', title: 'People discover brands through AI answers now' },
+              { key: 'not-found', imgBw: '/images/index/card-ai-parsing-bw.png', imgColor: '/images/index/card-ai-parsing.png', title: "AI doesn't understand most brand websites" },
+              { key: 'outdated', imgBw: '/images/index/card-third-party-bw.png', imgColor: '/images/index/card-third-party.png', title: 'AI pulls brand data from third-party sources' },
             ].map((card, i) => (
               <button
                 key={card.key}
@@ -436,7 +440,10 @@ export default function HarborIndexClient() {
                 className={`group relative bg-white border border-[#EFEEED] rounded-[15px] overflow-hidden text-left hover:border-[#D9D9D9] transition-colors ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
               >
                 <div className="aspect-[4/3] relative m-4 sm:m-5 mb-0 rounded-xl overflow-hidden bg-[#F6F5F3]">
-                  <Image src={card.img} alt={card.title} fill className="object-cover" />
+                  {/* BW image - visible by default, hidden on hover */}
+                  <Image src={card.imgBw} alt={card.title} fill className="object-cover transition-opacity duration-300 group-hover:opacity-0" />
+                  {/* Color image - hidden by default, visible on hover */}
+                  <Image src={card.imgColor} alt={card.title} fill className="object-cover transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
                 </div>
                 <div className="p-5 sm:p-7 pt-4 sm:pt-6 flex items-end justify-between">
                   <h3 className="text-black font-medium text-base sm:text-xl leading-snug font-source-sans">{card.title}</h3>
