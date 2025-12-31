@@ -268,7 +268,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <div className="flex gap-4 mb-4">
                   {['chatgpt', 'claude', 'perplexity'].map((model) => {
                     const audit = brand.audit_data?.models?.[model]
-                    const responded = audit && (audit.accuracy_score > 0 || audit.findings.length > 0)
+                    const responded = audit && (audit.accuracy_score > 0 || (audit.findings?.length ?? 0) > 0)
                     const label = model === 'chatgpt' ? 'ChatGPT' : model === 'claude' ? 'Claude' : 'Perplexity'
                     
                     return (
@@ -287,7 +287,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 </div>
 
                 {/* Issues preview */}
-                {brand.audit_data.consensus_issues.length > 0 && (
+                {(brand.audit_data.consensus_issues?.length ?? 0) > 0 && (
                   <div className="space-y-2">
                     <p className="text-[#A0A0A0] text-xs uppercase tracking-wide font-source-code">Issues found:</p>
                     <div className="flex flex-wrap gap-2">
@@ -301,9 +301,9 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                            issue.charAt(0).toUpperCase() + issue.slice(1)}
                         </span>
                       ))}
-                      {brand.audit_data.consensus_issues.length > 3 && (
+                      {(brand.audit_data.consensus_issues?.length ?? 0) > 3 && (
                         <span className="px-3 py-1.5 rounded-lg bg-[#F6F5F3] text-[#6C6C6B] text-sm border border-[#EFEEED]">
-                          +{brand.audit_data.consensus_issues.length - 3} more
+                          +{(brand.audit_data.consensus_issues?.length ?? 0) - 3} more
                         </span>
                       )}
                     </div>
