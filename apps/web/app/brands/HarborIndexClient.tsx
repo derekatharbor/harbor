@@ -308,17 +308,17 @@ export default function HarborIndexClient() {
             style={{
               width: '450px',
               background: '#F4F3F2',
-              borderRadius: '14px',
-              padding: '6px'
+              borderRadius: '12px',
+              padding: '3px'
             }}
           >
             {/* Search Row - white box with full rounded corners */}
             <div 
               className="flex items-center px-3"
               style={{ 
-                height: '55px',
+                height: '44px',
                 background: 'white',
-                borderRadius: '10px'
+                borderRadius: '9px'
               }}
             >
               <input
@@ -344,36 +344,25 @@ export default function HarborIndexClient() {
               )}
               <button 
                 type="button"
-                className="flex items-center justify-center relative overflow-hidden group"
+                className="btn-black flex items-center justify-center"
                 style={{
-                  width: '112px',
-                  height: '42px',
-                  background: 'black',
+                  width: '90px',
+                  height: '34px',
                   borderRadius: '7px',
-                  color: 'white',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontFamily: 'Source Sans 3, sans-serif',
                   fontWeight: '500',
                   letterSpacing: '0.69px'
                 }}
               >
-                <span className="relative z-10">Get started</span>
-                <div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  style={{
-                    background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #d299c2 50%, #fef9d7 75%, #a8edea 100%)',
-                    backgroundSize: '200% 200%',
-                    animation: 'holographic-shift 3s ease infinite'
-                  }}
-                />
-                <span className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 text-black font-semibold transition-opacity duration-200">Get started</span>
+                Search
               </button>
             </div>
             
             {/* Brands Row */}
             <div 
-              className="flex items-center justify-center gap-3 mt-2"
-              style={{ height: '60px' }}
+              className="flex items-center justify-center gap-3"
+              style={{ height: '48px' }}
             >
               <div className="flex -space-x-1.5">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
