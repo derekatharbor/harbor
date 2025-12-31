@@ -430,20 +430,22 @@ export default function HarborIndexClient() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { key: 'ai-search', imgBw: '/images/index/card-ai-discovery-bw.png', imgColor: '/images/index/card-ai-discovery.png', title: 'People discover brands through AI answers now' },
-              { key: 'not-found', imgBw: '/images/index/card-ai-parsing-bw.png', imgColor: '/images/index/card-ai-parsing.png', title: "AI doesn't understand most brand websites" },
-              { key: 'outdated', imgBw: '/images/index/card-third-party-bw.png', imgColor: '/images/index/card-third-party.png', title: 'AI pulls brand data from third-party sources' },
+              { key: 'ai-search', img: '/images/index/card-ai-discovery.png', title: 'People discover brands through AI answers now' },
+              { key: 'not-found', img: '/images/index/card-ai-parsing.png', title: "AI doesn't understand most brand websites" },
+              { key: 'outdated', img: '/images/index/card-third-party.png', title: 'AI pulls brand data from third-party sources' },
             ].map((card, i) => (
               <button
                 key={card.key}
                 onClick={() => setActiveModal(card.key)}
                 className={`group relative bg-white border border-[#EFEEED] rounded-[15px] overflow-hidden text-left hover:border-[#D9D9D9] transition-colors ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
               >
-                <div className="aspect-[4/3] relative m-4 sm:m-5 mb-0 rounded-xl overflow-hidden bg-[#F6F5F3] flex items-center justify-center p-4">
-                  {/* BW image - visible by default, hidden on hover */}
-                  <Image src={card.imgBw} alt={card.title} fill className="object-contain p-4 transition-opacity duration-500 ease-in-out group-hover:opacity-0" />
-                  {/* Color image - hidden by default, visible on hover */}
-                  <Image src={card.imgColor} alt={card.title} fill className="object-contain p-4 transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100" />
+                <div className="aspect-[4/3] relative m-4 sm:m-5 mb-0 rounded-xl overflow-hidden bg-[#F6F5F3]">
+                  <Image 
+                    src={card.img} 
+                    alt={card.title} 
+                    fill 
+                    className="object-contain p-4 transition-all duration-500 ease-in-out grayscale group-hover:grayscale-0" 
+                  />
                 </div>
                 <div className="p-5 sm:p-7 pt-4 sm:pt-6 flex items-end justify-between">
                   <h3 className="text-black font-medium text-base sm:text-xl leading-snug font-source-sans">{card.title}</h3>
