@@ -250,8 +250,11 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
           )}
         </div>
 
-        {/* AI Accuracy Report - Teaser for unclaimed profiles */}
-        {brand.audit_data?.has_issues && !brand.claimed && (
+        {/* AI Accuracy Report - Teaser for unclaimed profiles (only show if we have real data) */}
+        {brand.audit_data?.has_issues && 
+         brand.audit_data?.overall_accuracy != null && 
+         brand.audit_data.overall_accuracy > 0 &&
+         !brand.claimed && (
           <div className="bg-amber-50 rounded-2xl border border-amber-200 p-6 md:p-8 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
               <div className="flex-1">
