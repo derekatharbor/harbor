@@ -1,6 +1,3 @@
-// app/agencies/page.tsx
-// Agency Landing Page - Free audit tool for pitching prospects
-
 'use client'
 
 import Link from 'next/link'
@@ -11,7 +8,7 @@ export default function AgenciesPage() {
   return (
     <div className="min-h-screen">
       <StickyNav />
-      
+
       {/* Hero Section */}
       <section className="bg-[#F6F5F3]">
         <MainNav isDark={false} />
@@ -43,12 +40,12 @@ export default function AgenciesPage() {
               {/* Mobile */}
               <div className="lg:hidden flex flex-col gap-3 w-full">
                 <form className="flex flex-col gap-2">
-                  <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="Enter your company email" 
-                    className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none" 
-                    required 
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your company email"
+                    className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none"
+                    required
                   />
                   <button type="submit" className="h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center bg-black text-white hover:bg-black/90 transition-colors">
                     Get started free
@@ -60,8 +57,8 @@ export default function AgenciesPage() {
             {/* Right - Hero Image */}
             {/* IMAGE PATH: /public/images/agencies/hero-illustration.png */}
             <div className="flex-1 w-full lg:pl-8">
-              <img 
-                src="/images/agencies/hero-illustration.png" 
+              <img
+                src="/images/agencies/hero-illustration.png"
                 alt="Pitch Workspace"
                 className="w-full h-auto max-w-[500px] mx-auto lg:ml-auto lg:mr-0"
               />
@@ -78,18 +75,26 @@ export default function AgenciesPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 max-w-[1000px] mx-auto">
-            {[
-              { num: '01', title: 'Add a prospect', desc: 'Drop in any company domain you're pitching or prospecting.' },
-              { num: '02', title: 'Run an AI audit', desc: 'We check their visibility across ChatGPT, Claude, Perplexity, and Gemini.' },
-              { num: '03', title: 'Review the results', desc: 'Visibility score, sentiment breakdown, and how they compare to competitors.' },
-              { num: '04', title: 'Share the report', desc: 'Send a white-label PDF or link — branded to your agency.' },
-            ].map((step, i) => (
-              <div key={i} className="text-center lg:text-left">
-                <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">{step.num}</div>
-                <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">{step.title}</h3>
-                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
+            <div className="text-center lg:text-left">
+              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">01</div>
+              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Add a prospect</h3>
+              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Drop in any company domain you are pitching or prospecting.</p>
+            </div>
+            <div className="text-center lg:text-left">
+              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">02</div>
+              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Run an AI audit</h3>
+              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">We check their visibility across ChatGPT, Claude, Perplexity, and Gemini.</p>
+            </div>
+            <div className="text-center lg:text-left">
+              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">03</div>
+              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Review the results</h3>
+              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Visibility score, sentiment breakdown, and how they compare to competitors.</p>
+            </div>
+            <div className="text-center lg:text-left">
+              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">04</div>
+              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Share the report</h3>
+              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Send a white-label PDF or link — branded to your agency.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -105,19 +110,21 @@ export default function AgenciesPage() {
               </div>
               <h3 className="text-[20px] lg:text-[24px] font-semibold font-source-sans text-black mb-3">Pitch new clients</h3>
               <p className="text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-4">
-                Stop competing on price. Win deals by showing prospects problems they didn't know they had.
+                Stop competing on price. Win deals by showing prospects problems they did not know they had.
               </p>
               <ul className="space-y-2">
-                {[
-                  'Show prospects their AI visibility gap',
-                  'Compare them to competitors they care about',
-                  'Prove the problem before selling the fix'
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                    <span className="text-black mt-0.5">✓</span>
-                    {item}
-                  </li>
-                ))}
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Show prospects their AI visibility gap
+                </li>
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Compare them to competitors they care about
+                </li>
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Prove the problem before selling the fix
+                </li>
               </ul>
             </div>
 
@@ -131,16 +138,18 @@ export default function AgenciesPage() {
                 Add AI visibility as a new service line. Create recurring revenue from monitoring.
               </p>
               <ul className="space-y-2">
-                {[
-                  'Add AI Search Optimization as a retainer',
-                  'Show clients what competitors are doing',
-                  'Prove ROI with visibility trend reports'
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                    <span className="text-black mt-0.5">✓</span>
-                    {item}
-                  </li>
-                ))}
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Add AI Search Optimization as a retainer
+                </li>
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Show clients what competitors are doing
+                </li>
+                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
+                  <span className="text-black mt-0.5">✓</span>
+                  Prove ROI with visibility trend reports
+                </li>
               </ul>
             </div>
           </div>
@@ -157,7 +166,7 @@ export default function AgenciesPage() {
               </div>
               <span className="text-[13px] font-medium font-source-sans text-white/80">Pitch Workspace</span>
             </div>
-            
+
             <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
               Manage your entire pipeline
             </h2>
@@ -166,16 +175,18 @@ export default function AgenciesPage() {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { title: 'Prospect Pipeline', desc: 'Track every prospect from lead to closed-won.' },
-                { title: 'Historical Tracking', desc: 'Monitor visibility over time, even before they sign.' },
-                { title: 'One-Click Reports', desc: 'Generate branded audits instantly.' },
-              ].map((feature, i) => (
-                <div key={i} className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
-                  <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">{feature.title}</h3>
-                  <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">{feature.desc}</p>
-                </div>
-              ))}
+              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
+                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">Prospect Pipeline</h3>
+                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Track every prospect from lead to closed-won.</p>
+              </div>
+              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
+                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">Historical Tracking</h3>
+                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Monitor visibility over time, even before they sign.</p>
+              </div>
+              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
+                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">One-Click Reports</h3>
+                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Generate branded audits instantly.</p>
+              </div>
             </div>
 
             <div className="mt-8">
@@ -192,21 +203,26 @@ export default function AgenciesPage() {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
           <div className="max-w-[700px] mx-auto">
             <h2 className="text-[28px] lg:text-[36px] font-semibold font-source-sans tracking-tight text-black leading-tight mb-8 lg:mb-12">
-              Questions & Answers
+              Questions and Answers
             </h2>
-            
+
             <div className="space-y-0 divide-y divide-[#E0DFDE]">
-              {[
-                { q: 'Is Pitch Workspace free?', a: 'Yes. Pitch Workspace is included on all Agency plans at no extra cost.' },
-                { q: 'What AI models do you check?', a: 'ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews.' },
-                { q: 'Are reports white-labeled?', a: 'Yes. Reports include a small Harbor mention at the bottom, but are otherwise fully branded to your agency.' },
-                { q: 'How is this different from SEO tools?', a: 'SEO tracks Google rankings. Harbor tracks how AI models talk about brands — a different channel entirely.' },
-              ].map((faq, i) => (
-                <div key={i} className="py-5">
-                  <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">{faq.q}</h3>
-                  <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">{faq.a}</p>
-                </div>
-              ))}
+              <div className="py-5">
+                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">Is Pitch Workspace free?</h3>
+                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">Yes. Pitch Workspace is included on all Agency plans at no extra cost.</p>
+              </div>
+              <div className="py-5">
+                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">What AI models do you check?</h3>
+                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews.</p>
+              </div>
+              <div className="py-5">
+                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">Are reports white-labeled?</h3>
+                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">Yes. Reports include a small Harbor mention at the bottom, but are otherwise fully branded to your agency.</p>
+              </div>
+              <div className="py-5">
+                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">How is this different from SEO tools?</h3>
+                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">SEO tracks Google rankings. Harbor tracks how AI models talk about brands — a different channel entirely.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -216,15 +232,14 @@ export default function AgenciesPage() {
       <section className="bg-[#111111] py-20 lg:py-32">
         <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
           <div className="inline-block mb-8">
-            <h2 
+            <h2
               className="text-[40px] lg:text-[80px] tracking-tight leading-[0.95] font-black uppercase"
-              style={{ fontFamily: "'Arial Black', 'Helvetica Bold', sans-serif" }}
+              style={{ fontFamily: 'Arial Black, Helvetica Bold, sans-serif' }}
             >
               <span className="text-white">UNLOCK YOUR</span>
               <br />
               <span className="text-white">AGENCY&apos;S </span>
-              <span 
-                className="animate-pulse"
+              <span
                 style={{
                   background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
                   backgroundSize: '300% auto',
@@ -238,13 +253,13 @@ export default function AgenciesPage() {
               </span>
             </h2>
           </div>
-          
+
           {/* Email Form */}
           <form className="hidden lg:flex items-center justify-center mx-auto max-w-[500px] h-14 bg-[#1a1a1a] rounded-[10px] border border-[#333]">
             <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans text-white placeholder:text-[#666] bg-transparent outline-none" required />
             <button type="submit" className="h-[42px] px-6 mr-1.5 rounded-[7px] text-[14px] font-semibold font-source-sans bg-white text-black hover:bg-gray-100 transition-colors whitespace-nowrap">Get started free</button>
           </form>
-          
+
           {/* Mobile */}
           <Link
             href="/signup"
