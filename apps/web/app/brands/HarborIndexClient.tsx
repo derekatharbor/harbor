@@ -465,7 +465,7 @@ export default function HarborIndexClient() {
           <div className="bg-white rounded-[15px] max-w-lg w-full overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             {activeModal === 'ai-search' && (
               <>
-                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-discovery.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-discovery.png" alt="" fill className="object-contain p-6" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">People discover brands through AI answers now</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">Instead of scrolling through links, people are asking ChatGPT, Perplexity, and Claude for direct answers.</p>
@@ -475,7 +475,7 @@ export default function HarborIndexClient() {
             )}
             {activeModal === 'not-found' && (
               <>
-                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-parsing.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-parsing.png" alt="" fill className="object-contain p-6" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">AI doesn&apos;t understand most brand websites</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">Your website was built for humans—with animations, carousels, and marketing copy. AI crawlers parse text, not experiences.</p>
@@ -485,7 +485,7 @@ export default function HarborIndexClient() {
             )}
             {activeModal === 'outdated' && (
               <>
-                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-third-party.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-third-party.png" alt="" fill className="object-contain p-6" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">AI pulls brand data from third-party sources</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">When AI answers questions about your company, it often cites third-party sources rather than your own website.</p>
