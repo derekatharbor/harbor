@@ -303,7 +303,7 @@ export default function HarborIndexClient() {
 
           {/* Unified Search Container - Frosted glass */}
           <div 
-            className="mx-auto w-full max-w-[28rem] flex flex-col items-center justify-start rounded-[0.75rem] gap-2 p-[3px]"
+            className="mx-auto w-full max-w-[450px] flex flex-col justify-start rounded-[0.75rem] p-[3px]"
             style={{ 
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -311,9 +311,7 @@ export default function HarborIndexClient() {
             }}
           >
             {/* Search Row - white box */}
-            <div 
-              className="flex items-center px-2 sm:px-3 bg-white rounded-[10px] border border-[#ECECEC] h-[48px] sm:h-[52px]"
-            >
+            <div className="flex items-center px-2 sm:px-3 bg-white rounded-[10px] border border-[#ECECEC] h-[48px] sm:h-[52px]">
               <input
                 type="text"
                 placeholder="Search for your brand"
@@ -330,19 +328,19 @@ export default function HarborIndexClient() {
               )}
               <button 
                 type="button"
-                className="btn-black flex items-center justify-center h-[34px] sm:h-[38px] px-4 sm:px-5 rounded-[7px] text-[13px] sm:text-[14px] font-medium font-source-sans whitespace-nowrap"
+                className="flex items-center justify-center h-[34px] sm:h-[38px] px-4 sm:px-5 rounded-[7px] text-[13px] sm:text-[14px] font-medium font-source-sans whitespace-nowrap bg-black text-white hover:bg-black/80 transition-colors"
               >
                 Search
               </button>
             </div>
             
-            {/* Brands Row - left aligned */}
+            {/* Brands Row - left aligned with borders */}
             <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 h-[48px] sm:h-[52px]">
               <div className="flex -space-x-1">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
                   <div 
                     key={domain} 
-                    className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full overflow-hidden bg-white shadow-sm" 
+                    className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full overflow-hidden bg-white border-2 border-white/80" 
                     style={{ zIndex: 5 - idx }}
                   >
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
@@ -418,32 +416,32 @@ export default function HarborIndexClient() {
         </div>
       </section>
 
-      {/* Why This Matters - Dark */}
-      <section className="bg-[#111111] py-16 lg:py-24 px-6">
+      {/* Why This Matters - Light */}
+      <section id="dark-section" className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-6 mb-10 lg:mb-14">
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-white leading-tight max-w-md">AI is changing how people find brands</h2>
-            <p className="text-white/50 max-w-sm text-[15px] font-source-code leading-relaxed">More people are asking AI for recommendations instead of searching Google. Harbor helps you understand and manage how you appear in those conversations.</p>
+            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-black leading-tight max-w-md">AI is changing how people find brands</h2>
+            <p className="text-[#6C6C6B] max-w-sm text-[15px] font-source-code leading-relaxed">More people are asking AI for recommendations instead of searching Google. Harbor helps you understand and manage how you appear in those conversations.</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { key: 'ai-search', img: '/images/card-ai-search.png', title: 'People discover brands through AI answers now' },
-              { key: 'not-found', img: '/images/card-not-found.png', title: "AI doesn't understand most brand websites" },
-              { key: 'outdated', img: '/images/card-outdated.png', title: 'AI pulls brand data from third-party sources' },
+              { key: 'ai-search', img: '/images/index/card-ai-discovery.png', title: 'People discover brands through AI answers now' },
+              { key: 'not-found', img: '/images/index/card-ai-parsing.png', title: "AI doesn't understand most brand websites" },
+              { key: 'outdated', img: '/images/index/card-third-party.png', title: 'AI pulls brand data from third-party sources' },
             ].map((card, i) => (
               <button
                 key={card.key}
                 onClick={() => setActiveModal(card.key)}
-                className={`group relative bg-[#1a1a1a] border border-white/10 rounded-[15px] overflow-hidden text-left hover:border-white/20 transition-colors ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+                className={`group relative bg-white border border-[#EFEEED] rounded-[15px] overflow-hidden text-left hover:border-[#D9D9D9] transition-colors ${i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
               >
-                <div className="aspect-[4/3] relative m-4 sm:m-5 mb-0 rounded-xl overflow-hidden">
+                <div className="aspect-[4/3] relative m-4 sm:m-5 mb-0 rounded-xl overflow-hidden bg-[#F6F5F3]">
                   <Image src={card.img} alt={card.title} fill className="object-cover" />
                 </div>
                 <div className="p-5 sm:p-7 pt-4 sm:pt-6 flex items-end justify-between">
-                  <h3 className="text-white font-medium text-base sm:text-xl leading-snug font-source-sans">{card.title}</h3>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors flex-shrink-0 ml-3 sm:ml-4">
-                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-white/60" />
+                  <h3 className="text-black font-medium text-base sm:text-xl leading-snug font-source-sans">{card.title}</h3>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#F6F5F3] flex items-center justify-center group-hover:bg-[#EFEEED] transition-colors flex-shrink-0 ml-3 sm:ml-4">
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-[#6C6C6B]" />
                   </div>
                 </div>
               </button>
@@ -458,7 +456,7 @@ export default function HarborIndexClient() {
           <div className="bg-white rounded-[15px] max-w-lg w-full overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             {activeModal === 'ai-search' && (
               <>
-                <div className="aspect-video relative"><Image src="/images/card-ai-search.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-discovery.png" alt="" fill className="object-cover" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">People discover brands through AI answers now</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">Instead of scrolling through links, people are asking ChatGPT, Perplexity, and Claude for direct answers.</p>
@@ -468,7 +466,7 @@ export default function HarborIndexClient() {
             )}
             {activeModal === 'not-found' && (
               <>
-                <div className="aspect-video relative"><Image src="/images/card-not-found.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-ai-parsing.png" alt="" fill className="object-cover" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">AI doesn&apos;t understand most brand websites</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">Your website was built for humans—with animations, carousels, and marketing copy. AI crawlers parse text, not experiences.</p>
@@ -478,7 +476,7 @@ export default function HarborIndexClient() {
             )}
             {activeModal === 'outdated' && (
               <>
-                <div className="aspect-video relative"><Image src="/images/card-outdated.png" alt="" fill className="object-cover" /></div>
+                <div className="aspect-video relative bg-[#F6F5F3]"><Image src="/images/index/card-third-party.png" alt="" fill className="object-cover" /></div>
                 <div className="p-6">
                   <h3 className="text-black font-semibold text-lg mb-3 font-source-sans">AI pulls brand data from third-party sources</h3>
                   <p className="text-[#6F6E6E] text-sm leading-relaxed mb-4 font-source-code">When AI answers questions about your company, it often cites third-party sources rather than your own website.</p>
