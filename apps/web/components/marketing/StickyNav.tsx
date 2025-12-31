@@ -44,14 +44,11 @@ const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: 
     { title: 'Trend Tracking', description: 'Monitor competitive shifts over time', href: '/features/competitors/trends' },
   ],
   analytics: [
-    { title: 'AI Crawler Detection', description: 'See which AI bots visit your site', href: '/features/analytics/crawlers' },
-    { title: 'AI Redirect', description: 'Serve optimized content to AI crawlers', href: '/features/analytics/redirect' },
     { title: 'Crawl Frequency', description: 'Track how often AI indexes your content', href: '/features/analytics/frequency' },
     { title: 'Content Coverage', description: 'See which pages AI models reference', href: '/features/analytics/coverage' },
   ],
   sources: [
     { title: 'Citation Tracking', description: 'See what AI models cite about you', href: '/features/sources/citations' },
-    { title: 'Source Quality', description: 'Analyze the sources AI references', href: '/features/sources/quality' },
     { title: 'Missing Sources', description: 'Find gaps in your AI presence', href: '/features/sources/gaps' },
   ],
   prompts: [
@@ -93,7 +90,6 @@ const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href
   marketers: [
     { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers/monitoring' },
     { title: 'Competitive Intel', description: 'Benchmark against competitors', href: '/solutions/marketers/competitive' },
-    { title: 'Reporting', description: 'Share AI visibility metrics with stakeholders', href: '/solutions/marketers/reporting' },
   ],
   agencies: [
     { title: 'Client Dashboards', description: 'White-label reporting for clients', href: '/solutions/agencies/dashboards' },
@@ -106,7 +102,6 @@ const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href
     { title: 'Category Rankings', description: 'See where you rank in your category', href: '/solutions/ecommerce/rankings' },
   ],
   enterprise: [
-    { title: 'Multi-Model Tracking', description: 'Monitor all major AI platforms', href: '/solutions/enterprise/multi-model' },
     { title: 'API Access', description: 'Integrate visibility data into your stack', href: '/solutions/enterprise/api' },
     { title: 'Custom Reporting', description: 'Enterprise-grade analytics and exports', href: '/solutions/enterprise/reporting' },
   ],
