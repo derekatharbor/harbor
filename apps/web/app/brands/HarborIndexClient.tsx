@@ -307,18 +307,21 @@ export default function HarborIndexClient() {
             className="mx-auto"
             style={{
               width: '450px',
-              background: '#F4F3F2',
+              background: 'rgba(239, 237, 235, 0.7)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
               borderRadius: '12px',
               padding: '3px'
             }}
           >
-            {/* Search Row - white box with full rounded corners */}
+            {/* Search Row - white box */}
             <div 
               className="flex items-center px-3"
               style={{ 
-                height: '44px',
+                height: '52px',
                 background: 'white',
-                borderRadius: '9px'
+                borderRadius: '10px',
+                border: '1px solid #ECECEC'
               }}
             >
               <input
@@ -347,7 +350,7 @@ export default function HarborIndexClient() {
                 className="btn-black flex items-center justify-center"
                 style={{
                   width: '90px',
-                  height: '34px',
+                  height: '38px',
                   borderRadius: '7px',
                   fontSize: '14px',
                   fontFamily: 'Source Sans 3, sans-serif',
@@ -359,14 +362,14 @@ export default function HarborIndexClient() {
               </button>
             </div>
             
-            {/* Brands Row */}
+            {/* Brands Row - left aligned */}
             <div 
-              className="flex items-center justify-center gap-3"
-              style={{ height: '48px' }}
+              className="flex items-center gap-3 px-4"
+              style={{ height: '52px' }}
             >
               <div className="flex -space-x-1.5">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
+                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-[2px] border-[#EFEDEB]/70 bg-white" style={{ zIndex: 5 - idx }}>
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
                 ))}
@@ -381,7 +384,7 @@ export default function HarborIndexClient() {
                   letterSpacing: '0.69px'
                 }}
               >
-                100,000+ brands indexed
+                Over 100,000 brands indexed
               </p>
             </div>
           </div>
