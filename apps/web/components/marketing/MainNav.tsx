@@ -36,7 +36,7 @@ const PRODUCT_LEFT = [
   },
 ]
 
-const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string }[]> = {
+const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   competitors: [
     { title: 'Visibility Comparison', description: 'See how you stack up across AI models', href: '/features/competitors/visibility' },
     { title: 'Share of Voice', description: 'Track mention frequency vs competitors', href: '/features/competitors/share-of-voice' },
@@ -44,14 +44,11 @@ const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: 
     { title: 'Trend Tracking', description: 'Monitor competitive shifts over time', href: '/features/competitors/trends' },
   ],
   analytics: [
-    { title: 'AI Crawler Detection', description: 'See which AI bots visit your site', href: '/features/analytics/crawlers' },
-    { title: 'AI Redirect', description: 'Serve optimized content to AI crawlers', href: '/features/analytics/redirect' },
     { title: 'Crawl Frequency', description: 'Track how often AI indexes your content', href: '/features/analytics/frequency' },
     { title: 'Content Coverage', description: 'See which pages AI models reference', href: '/features/analytics/coverage' },
   ],
   sources: [
     { title: 'Citation Tracking', description: 'See what AI models cite about you', href: '/features/sources/citations' },
-    { title: 'Source Quality', description: 'Analyze the sources AI references', href: '/features/sources/quality' },
     { title: 'Missing Sources', description: 'Find gaps in your AI presence', href: '/features/sources/gaps' },
   ],
   prompts: [
@@ -89,11 +86,10 @@ const SOLUTIONS_LEFT = [
   },
 ]
 
-const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string }[]> = {
+const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   marketers: [
     { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers/monitoring' },
     { title: 'Competitive Intel', description: 'Benchmark against competitors', href: '/solutions/marketers/competitive' },
-    { title: 'Reporting', description: 'Share AI visibility metrics with stakeholders', href: '/solutions/marketers/reporting' },
   ],
   agencies: [
     { title: 'Client Dashboards', description: 'White-label reporting for clients', href: '/solutions/agencies/dashboards' },
@@ -101,12 +97,12 @@ const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href
     { title: 'Multi-Brand Management', description: 'Manage all clients in one place', href: '/solutions/agencies/multi-brand' },
   ],
   ecommerce: [
+    { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/solutions/ecommerce/shopify', isNew: true },
     { title: 'Product Visibility', description: 'Track product mentions in AI answers', href: '/solutions/ecommerce/products' },
     { title: 'Shopping Queries', description: 'Monitor "best X under $Y" prompts', href: '/solutions/ecommerce/shopping' },
     { title: 'Category Rankings', description: 'See where you rank in your category', href: '/solutions/ecommerce/rankings' },
   ],
   enterprise: [
-    { title: 'Multi-Model Tracking', description: 'Monitor all major AI platforms', href: '/solutions/enterprise/multi-model' },
     { title: 'API Access', description: 'Integrate visibility data into your stack', href: '/solutions/enterprise/api' },
     { title: 'Custom Reporting', description: 'Enterprise-grade analytics and exports', href: '/solutions/enterprise/reporting' },
   ],
@@ -116,71 +112,99 @@ interface DropdownProps {
   items: typeof PRODUCT_LEFT
   rightContent: typeof PRODUCT_RIGHT
   defaultActive: string
+  showIndexCTA?: boolean
 }
 
-function DropdownContent({ items, rightContent, defaultActive }: DropdownProps) {
+function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: DropdownProps) {
   const [activeItem, setActiveItem] = useState(defaultActive)
 
   return (
-    <div className="flex">
-      {/* Left Column */}
-      <div className="w-[280px] py-3 px-2">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            onMouseEnter={() => setActiveItem(item.id)}
-            className={`group flex items-start gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${
-              activeItem === item.id ? 'bg-[#F6F5F3]' : 'hover:bg-[#F6F5F3]'
-            }`}
-          >
+    <div className="flex flex-col">
+      <div className="flex">
+        {/* Left Column */}
+        <div className="w-[280px] py-3 px-2">
+          {items.map((item) => (
             <div
-              className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-              style={{ backgroundColor: item.color }}
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-[15px] font-semibold font-source-sans text-black">
-                  {item.title}
-                </span>
-                <svg
-                  className={`w-4 h-4 transition-all ${
-                    activeItem === item.id ? 'text-black/50 translate-x-0.5' : 'text-black/30'
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+              key={item.id}
+              onMouseEnter={() => setActiveItem(item.id)}
+              className={`group flex items-start gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${
+                activeItem === item.id ? 'bg-[#F6F5F3]' : 'hover:bg-[#F6F5F3]'
+              }`}
+            >
+              <div
+                className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                style={{ backgroundColor: item.color }}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[15px] font-semibold font-source-sans text-black">
+                    {item.title}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 transition-all ${
+                      activeItem === item.id ? 'text-black/50 translate-x-0.5' : 'text-black/30'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <p className="text-[13px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+                  {item.description}
+                </p>
               </div>
-              <p className="text-[13px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+            </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="w-px bg-[#EFEEED] my-3" />
+
+        {/* Right Column - Dynamic based on hover */}
+        <div className="w-[280px] py-3 pl-2">
+          {rightContent[activeItem]?.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block px-4 py-2.5 rounded-lg hover:bg-[#F6F5F3] transition-colors"
+            >
+              <span className="text-[14px] font-semibold font-source-sans text-black flex items-center gap-2">
+                {item.title}
+                {item.isNew && (
+                  <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#22C55E] text-white rounded uppercase">
+                    New
+                  </span>
+                )}
+              </span>
+              <p className="text-[12px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
                 {item.description}
               </p>
-            </div>
-          </div>
-        ))}
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* Divider */}
-      <div className="w-px bg-[#EFEEED] my-3" />
-
-      {/* Right Column - Dynamic based on hover */}
-      <div className="w-[280px] py-3 pl-2">
-        {rightContent[activeItem]?.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="block px-4 py-2.5 rounded-lg hover:bg-[#F6F5F3] transition-colors"
+      {/* Index CTA Lip */}
+      {showIndexCTA && (
+        <Link 
+          href="/brands"
+          className="flex items-center justify-between px-5 py-3 bg-[#F6F5F3] rounded-b-xl border-t border-[#EFEEED] hover:bg-[#EFEEED] transition-colors group"
+        >
+          <span className="text-[13px] font-medium font-source-sans text-[#6C6C6B] group-hover:text-black transition-colors">
+            Claim your free AI visibility profile
+          </span>
+          <svg 
+            className="w-4 h-4 text-[#6C6C6B] group-hover:text-black group-hover:translate-x-0.5 transition-all" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
           >
-            <span className="text-[14px] font-semibold font-source-sans text-black">
-              {item.title}
-            </span>
-            <p className="text-[12px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
-              {item.description}
-            </p>
-          </Link>
-        ))}
-      </div>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      )}
     </div>
   )
 }
@@ -230,7 +254,7 @@ function NavDropdown({ label, children, isDark = false }: NavDropdownProps) {
 
       {/* Dropdown Panel - Left aligned */}
       <div
-        className={`absolute top-full left-0 mt-2 bg-white rounded-xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-black/5 transition-all duration-150 ${
+        className={`absolute top-full left-0 mt-2 bg-white rounded-xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-black/5 transition-all duration-150 overflow-hidden ${
           isOpen
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 -translate-y-2 pointer-events-none'
@@ -270,7 +294,8 @@ export default function MainNav({ isDark = false }: MainNavProps) {
               <DropdownContent 
                 items={PRODUCT_LEFT} 
                 rightContent={PRODUCT_RIGHT} 
-                defaultActive="competitors" 
+                defaultActive="competitors"
+                showIndexCTA
               />
             </NavDropdown>
 
@@ -312,7 +337,7 @@ export default function MainNav({ isDark = false }: MainNavProps) {
             className={`h-[41px] px-6 rounded-[7px] text-[15px] font-medium font-space tracking-[0.69px] flex items-center transition-colors ${
               isDark
                 ? 'bg-white text-black hover:bg-gray-100'
-                : 'btn-black'
+                : 'bg-black text-white hover:bg-black/80'
             }`}
           >
             <span>Get started</span>
