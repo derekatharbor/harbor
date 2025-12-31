@@ -304,8 +304,11 @@ export default function HarborIndexClient() {
 
           {/* Unified Search Container - Frosted glass */}
           <div 
-            className="mx-auto backdrop-blur-md bg-[#EFEDEB]/60 rounded-[12px] p-[3px]"
-            style={{ width: '450px' }}
+            className="mx-auto backdrop-blur-xl rounded-[12px] p-[3px]"
+            style={{ 
+              width: '450px',
+              backgroundColor: 'rgba(239, 237, 235, 0.5)'
+            }}
           >
             {/* Search Row - white box */}
             <div 
@@ -350,14 +353,21 @@ export default function HarborIndexClient() {
               </button>
             </div>
             
-            {/* Brands Row - left aligned */}
+            {/* Brands Row - left aligned, no visible borders on logos */}
             <div 
               className="flex items-center gap-3 px-4"
               style={{ height: '52px' }}
             >
               <div className="flex -space-x-1.5">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-2 border-[#EFEDEB]/60 bg-white" style={{ zIndex: 5 - idx }}>
+                  <div 
+                    key={domain} 
+                    className="w-[28px] h-[28px] rounded-full overflow-hidden bg-white" 
+                    style={{ 
+                      zIndex: 5 - idx,
+                      border: '2px solid rgba(239, 237, 235, 0.5)'
+                    }}
+                  >
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
                 ))}
