@@ -178,7 +178,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
       <MainNav />
 
       {/* Profile Content */}
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative">
         
         {/* Back button */}
         <Link 
@@ -310,7 +310,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
               <button
                 onClick={() => setShowClaimModal(true)}
-                className="btn-black px-6 py-3 rounded-xl font-medium flex-shrink-0"
+                className="px-6 py-3 rounded-xl bg-black text-white font-medium hover:bg-black/80 transition-all flex-shrink-0"
               >
                 Claim to fix
               </button>
@@ -345,7 +345,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
               </div>
               <button
                 onClick={() => setShowClaimModal(true)}
-                className="btn-black px-6 py-3 rounded-xl font-medium flex-shrink-0"
+                className="px-6 py-3 rounded-xl bg-black text-white font-medium hover:bg-black/80 transition-all flex-shrink-0"
               >
                 Claim profile
               </button>
@@ -597,7 +597,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleSendCode}
                   disabled={claimLoading || !email}
-                  className="w-full btn-black px-6 py-3 rounded-lg font-medium disabled:opacity-50"
+                  className="w-full px-6 py-3 rounded-lg bg-black text-white font-medium hover:bg-black/80 transition-all disabled:opacity-50"
                 >
                   {claimLoading ? 'Sending...' : 'Send verification code'}
                 </button>
@@ -635,7 +635,7 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
                 <button
                   onClick={handleVerifyCode}
                   disabled={claimLoading || code.length !== 6}
-                  className="w-full btn-black px-6 py-3 rounded-lg font-medium disabled:opacity-50 mb-3"
+                  className="w-full px-6 py-3 rounded-lg bg-black text-white font-medium hover:bg-black/80 transition-all disabled:opacity-50 mb-3"
                 >
                   {claimLoading ? 'Verifying...' : 'Verify'}
                 </button>
