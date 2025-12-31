@@ -499,7 +499,7 @@ export default function HarborIndexClient() {
       )}
 
       {/* What You Get - Light */}
-      <section className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
+      <section id="light-section" className="bg-[#F6F5F3] py-16 lg:py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 lg:mb-14">
             <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans text-black mb-3">What claiming gets you</h2>
@@ -561,13 +561,13 @@ export default function HarborIndexClient() {
         </div>
       </section>
 
-      {/* Brand Marquee - Light */}
-      <section className="bg-[#F6F5F3] py-12 lg:py-16 px-6">
+      {/* Brand Marquee - Dark */}
+      <section id="dark-section" className="bg-[#111111] py-12 lg:py-16 px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-6 lg:mb-8"><p className="text-[#6C6C6B] text-sm font-source-code">Brands indexed across every industry</p></div>
+          <div className="text-center mb-6 lg:mb-8"><p className="text-white/50 text-sm font-source-code">Brands indexed across every industry</p></div>
           <div className="relative">
-            <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#F6F5F3] to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#F6F5F3] to-transparent z-10 pointer-events-none" />
+            <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#111111] to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#111111] to-transparent z-10 pointer-events-none" />
             <div className="space-y-3 opacity-60">
               <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={45} />
               <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={50} />
