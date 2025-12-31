@@ -267,21 +267,27 @@ export default function HarborIndexClient() {
 
       <StickyNav />
 
-      {/* Hero - Light */}
-      <section className="bg-[#F6F5F3] relative overflow-hidden">
-        <img 
-          src="/images/index-hero-bg.png" 
-          alt="" 
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none" 
-          style={{ width: '1440px', height: '872px' }}
-        />
+      {/* Hero - Two-tone background */}
+      <section className="relative overflow-hidden">
+        {/* Top half - solid color */}
+        <div className="absolute top-0 left-0 right-0 h-1/2 bg-[#FBFAF9]" />
+        {/* Bottom half - holographic image */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/2">
+          <img 
+            src="/images/index-hero-bg.png" 
+            alt="" 
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none" 
+            style={{ width: '1440px', height: '872px' }}
+          />
+        </div>
+        
         <MainNav />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center pt-12 lg:pt-20 pb-16 lg:pb-24 px-6">
           {/* Badge */}
           <Link href="/brands" className="inline-flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-6 lg:mb-8 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow">
             <span className="px-2 py-0.5 bg-black rounded-[3px] text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">NEW</span>
-            <span className="text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">Free to claim</span>
+            <span className="text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">AI Visibility Index</span>
           </Link>
 
           <h1 className="max-w-[448px] mx-auto text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.04] mb-4">
@@ -292,9 +298,10 @@ export default function HarborIndexClient() {
             Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
-          {/* Search Bar with Button */}
-          <div className="relative max-w-[448px] mx-auto mb-4">
-            <div className="relative flex items-center h-12 bg-white rounded-[10px] border border-[#F0F0EF]">
+          {/* Search Bar + Brands Container - Unified */}
+          <div className="max-w-[450px] mx-auto bg-white rounded-[10px] border border-[#F0F0EF] shadow-sm overflow-hidden">
+            {/* Search Row */}
+            <div className="flex items-center h-14 px-2">
               <input
                 type="text"
                 placeholder="Search for your brand"
@@ -302,92 +309,97 @@ export default function HarborIndexClient() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
-                className="flex-1 h-full px-5 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
+                className="flex-1 h-full px-4 text-[15px] font-medium font-source-sans tracking-[0.69px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none"
               />
-              <button 
-                type="button"
-                className="h-[38px] px-5 mr-[5px] bg-black text-white text-[15px] font-medium font-source-sans tracking-[0.69px] rounded-[7px] hover:bg-black/90 transition-colors whitespace-nowrap"
-              >
-                Get started
-              </button>
               {searching && (
-                <div className="absolute right-28 top-1/2 -translate-y-1/2">
+                <div className="mr-2">
                   <div className="w-4 h-4 border-2 border-black/20 border-t-black/60 rounded-full animate-spin" />
                 </div>
               )}
+              <button 
+                type="button"
+                className="h-[38px] px-5 bg-black text-white text-[15px] font-medium font-source-sans tracking-[0.69px] rounded-[7px] hover:bg-black/90 transition-colors whitespace-nowrap"
+              >
+                Get started
+              </button>
             </div>
-
-            {showSearchDropdown && searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-[10px] border border-[#E8E8E7] shadow-lg overflow-hidden z-50">
-                {searchResults.map((brand) => (
-                  <Link
-                    key={brand.id}
-                    href={`/brands/${brand.slug}`}
-                    className="flex items-center gap-4 px-5 py-3 hover:bg-[#F6F5F3] transition-colors"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 border border-[#EFEEED]">
-                      <Image
-                        src={brand.logo_url}
-                        alt={brand.brand_name}
-                        width={80}
-                        height={80}
-                        className="w-full h-full object-cover"
-                        onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-logo.svg' }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-black font-medium text-sm truncate">{brand.brand_name}</div>
-                      <div className="text-[#6C6C6B] text-xs truncate">{brand.domain}</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-[#A0A0A0] flex-shrink-0" />
-                  </Link>
+            
+            {/* Divider */}
+            <div className="h-px bg-[#F0F0EF]" />
+            
+            {/* Brands Row */}
+            <div className="flex items-center justify-center gap-3 py-4 bg-[#F4F3F2]">
+              <div className="flex -space-x-2">
+                {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
+                  <div key={domain} className="w-[34px] h-[34px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
+                    <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
+                  </div>
                 ))}
-                <button
-                  onClick={() => {
-                    setShowSearchDropdown(false)
-                    setClaimSearchQuery(searchQuery)
-                    setShowClaimModal(true)
-                    handleStartCreate(searchQuery)
-                  }}
-                  className="w-full border-t border-[#EFEEED] px-5 py-3 text-left hover:bg-[#F6F5F3] transition-colors"
-                >
-                  <span className="text-[#6C6C6B] text-sm">
-                    Can&apos;t find your brand? <span className="text-black underline underline-offset-2">Create your free profile</span>
-                  </span>
-                </button>
               </div>
-            )}
-
-            {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && !searching && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-[10px] border border-[#E8E8E7] shadow-lg p-5 text-center z-50">
-                <p className="text-[#6C6C6B] text-sm mb-3">&quot;{searchQuery}&quot; isn&apos;t in the index yet</p>
-                <button
-                  onClick={() => {
-                    setShowSearchDropdown(false)
-                    setClaimSearchQuery(searchQuery)
-                    setShowClaimModal(true)
-                    handleStartCreate(searchQuery)
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-[7px] bg-black text-white text-sm font-medium hover:bg-black/90 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create free profile
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Brands Indexed Container */}
-          <div className="max-w-[450px] mx-auto bg-[#F4F3F2] rounded-[10px] py-5 px-6 flex items-center justify-center gap-3">
-            <div className="flex -space-x-2">
-              {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                <div key={domain} className="w-[42px] h-[42px] rounded-full overflow-hidden border-[3px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
-                  <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
-                </div>
-              ))}
+              <div className="h-5 w-px bg-[#D9D9D9]" />
+              <p className="text-[#3E3E3E] text-[15px] font-medium font-source-sans tracking-[0.69px]">100,000+ brands indexed</p>
             </div>
-            <p className="text-[#3E3E3E] text-[15px] font-medium font-source-sans tracking-[0.69px]">100,000+ brands indexed</p>
           </div>
+
+          {/* Search Dropdown - higher z-index */}
+          {showSearchDropdown && searchResults.length > 0 && (
+            <div className="absolute left-1/2 -translate-x-1/2 w-[450px] mt-2 bg-white rounded-[10px] border border-[#E8E8E7] shadow-lg overflow-hidden z-[100]">
+              {searchResults.map((brand) => (
+                <Link
+                  key={brand.id}
+                  href={`/brands/${brand.slug}`}
+                  className="flex items-center gap-4 px-5 py-3 hover:bg-[#F6F5F3] transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 border border-[#EFEEED]">
+                    <Image
+                      src={brand.logo_url}
+                      alt={brand.brand_name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder-logo.svg' }}
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-black font-medium text-sm truncate">{brand.brand_name}</div>
+                    <div className="text-[#6C6C6B] text-xs truncate">{brand.domain}</div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-[#A0A0A0] flex-shrink-0" />
+                </Link>
+              ))}
+              <button
+                onClick={() => {
+                  setShowSearchDropdown(false)
+                  setClaimSearchQuery(searchQuery)
+                  setShowClaimModal(true)
+                  handleStartCreate(searchQuery)
+                }}
+                className="w-full border-t border-[#EFEEED] px-5 py-3 text-left hover:bg-[#F6F5F3] transition-colors"
+              >
+                <span className="text-[#6C6C6B] text-sm">
+                  Can&apos;t find your brand? <span className="text-black underline underline-offset-2">Create your free profile</span>
+                </span>
+              </button>
+            </div>
+          )}
+
+          {showSearchDropdown && searchQuery.length >= 2 && searchResults.length === 0 && !searching && (
+            <div className="absolute left-1/2 -translate-x-1/2 w-[450px] mt-2 bg-white rounded-[10px] border border-[#E8E8E7] shadow-lg p-5 text-center z-[100]">
+              <p className="text-[#6C6C6B] text-sm mb-3">&quot;{searchQuery}&quot; isn&apos;t in the index yet</p>
+              <button
+                onClick={() => {
+                  setShowSearchDropdown(false)
+                  setClaimSearchQuery(searchQuery)
+                  setShowClaimModal(true)
+                  handleStartCreate(searchQuery)
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-[7px] bg-black text-white text-sm font-medium hover:bg-black/90 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Create free profile
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
