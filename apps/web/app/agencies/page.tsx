@@ -215,8 +215,6 @@ export default function AgenciesPage() {
       {/* Final CTA */}
       <section className="bg-[#111111] py-20 lg:py-32">
         <style jsx>{`
-          @import url('https://fonts.cdnfonts.com/css/uni-sans');
-          
           @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
@@ -224,7 +222,6 @@ export default function AgenciesPage() {
           }
           
           .cta-heading {
-            font-family: 'Uni Sans', 'Arial Black', sans-serif;
             font-weight: 900;
             text-transform: uppercase;
           }
@@ -267,10 +264,10 @@ export default function AgenciesPage() {
         `}</style>
         <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
           <div className="noise-overlay inline-block mb-8">
-            <h2 className="cta-heading text-[40px] lg:text-[80px] tracking-tight leading-[0.95]">
+            <h2 className="cta-heading text-[40px] lg:text-[80px] tracking-tight leading-[0.95]" style={{ fontFamily: "'Arial Black', 'Helvetica Bold', sans-serif" }}>
               <span className="text-white">UNLOCK YOUR</span>
               <br />
-              <span className="text-white">AGENCY'S </span>
+              <span className="text-white">AGENCY&apos;S </span>
               <span className="holographic-glow">AI EDGE</span>
             </h2>
           </div>
