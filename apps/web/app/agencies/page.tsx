@@ -25,7 +25,7 @@ export default function AgenciesPage() {
               </div>
 
               <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
-                AI visibility is the next service<br className="hidden lg:block" />your clients need
+                Win more clients with AI data
               </h1>
               <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
                 Pitch Workspace lets you run AI audits for any prospect and show them exactly how they appear across ChatGPT, Claude, and Perplexity.
@@ -236,22 +236,7 @@ export default function AgenciesPage() {
               className="text-[32px] lg:text-[56px] tracking-tight leading-[1.1] font-black uppercase text-center"
               style={{ fontFamily: 'Arial Black, Helvetica Bold, sans-serif' }}
             >
-              <span className="text-white">UNLOCK YOUR</span>
-              <br />
-              <span className="text-white">AGENCY&apos;S </span>
-              <span
-                className="inline-block animate-gradient-shift"
-                style={{
-                  background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
-                  backgroundSize: '300% auto',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'gradient-shift 4s ease infinite'
-                }}
-              >
-                AI
-              </span>
+              <span className="text-white">CLOSE FASTER WITH</span>
               <br />
               <span
                 className="inline-block"
@@ -261,22 +246,19 @@ export default function AgenciesPage() {
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  animation: 'gradient-shift 4s ease infinite',
-                  animationDelay: '0.5s'
+                  animation: 'gradient-shift 4s ease infinite'
                 }}
               >
-                EDGE
+                AI INSIGHTS
               </span>
             </h2>
           </div>
 
-          {/* Email Form */}
           <form className="hidden lg:flex items-center justify-center mx-auto max-w-[500px] h-14 bg-[#1a1a1a] rounded-[10px] border border-[#333]">
             <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans text-white placeholder:text-[#666] bg-transparent outline-none" required />
             <button type="submit" className="h-[42px] px-6 mr-1.5 rounded-[7px] text-[14px] font-semibold font-source-sans bg-white text-black hover:bg-gray-100 transition-colors whitespace-nowrap">Get started free</button>
           </form>
 
-          {/* Mobile */}
           <Link
             href="/signup"
             className="lg:hidden inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center"
