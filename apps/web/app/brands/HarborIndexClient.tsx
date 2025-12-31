@@ -303,13 +303,11 @@ export default function HarborIndexClient() {
 
           {/* Unified Search Container - Frosted glass */}
           <div 
-            className="mx-auto rounded-[12px] p-[3px] w-full max-w-[450px]"
+            className="mx-auto w-full max-w-[28rem] flex flex-col items-center justify-start rounded-[0.75rem] gap-2 p-[3px]"
             style={{ 
-              background: 'rgba(255, 255, 255, 0.4)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)'
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              backgroundColor: '#11111108'
             }}
           >
             {/* Search Row - white box */}
