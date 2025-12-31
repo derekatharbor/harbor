@@ -25,7 +25,7 @@ export default function AgenciesPage() {
               </div>
 
               <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
-                AI visibility is the next<br />service your clients need
+                AI visibility is the next service<br className="hidden lg:block" />your clients need
               </h1>
               <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
                 Pitch Workspace lets you run AI audits for any prospect and show them exactly how they appear across ChatGPT, Claude, and Perplexity.
@@ -55,7 +55,7 @@ export default function AgenciesPage() {
             </div>
 
             {/* Right - Hero Image */}
-            {/* IMAGE PATH: /public/images/agencies/hero-illustration.png */}
+            {/* UPLOAD IMAGE TO: /public/images/agencies/hero-illustration.png */}
             <div className="flex-1 w-full lg:pl-8">
               <img
                 src="/images/agencies/hero-illustration.png"
@@ -233,23 +233,39 @@ export default function AgenciesPage() {
         <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
           <div className="inline-block mb-8">
             <h2
-              className="text-[40px] lg:text-[80px] tracking-tight leading-[0.95] font-black uppercase"
+              className="text-[32px] lg:text-[56px] tracking-tight leading-[1.1] font-black uppercase text-center"
               style={{ fontFamily: 'Arial Black, Helvetica Bold, sans-serif' }}
             >
               <span className="text-white">UNLOCK YOUR</span>
               <br />
               <span className="text-white">AGENCY&apos;S </span>
               <span
+                className="inline-block animate-gradient-shift"
                 style={{
                   background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
                   backgroundSize: '300% auto',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  filter: 'drop-shadow(0 0 30px rgba(200, 180, 255, 0.4)) drop-shadow(0 0 60px rgba(180, 220, 255, 0.2))'
+                  animation: 'gradient-shift 4s ease infinite'
                 }}
               >
-                AI EDGE
+                AI
+              </span>
+              <br />
+              <span
+                className="inline-block"
+                style={{
+                  background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
+                  backgroundSize: '300% auto',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'gradient-shift 4s ease infinite',
+                  animationDelay: '0.5s'
+                }}
+              >
+                EDGE
               </span>
             </h2>
           </div>
@@ -268,6 +284,14 @@ export default function AgenciesPage() {
             Get started free
           </Link>
         </div>
+
+        <style jsx global>{`
+          @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
       </section>
 
       {/* Footer */}
