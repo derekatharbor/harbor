@@ -267,20 +267,15 @@ export default function HarborIndexClient() {
 
       <StickyNav />
 
-      {/* Hero - Two-tone background */}
-      <section className="relative overflow-hidden min-h-[700px]">
-        {/* Top half - solid color */}
-        <div className="absolute top-0 left-0 right-0 h-[50%] bg-[#FBFAF9]" />
-        {/* Bottom half - holographic image covering full area */}
-        <div 
-          className="absolute top-[50%] left-0 right-0 h-[50%]"
-          style={{
-            backgroundImage: 'url(/images/index-hero-bg.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top'
-          }}
-        />
-        
+      {/* Hero - Full gradient background */}
+      <section 
+        className="relative overflow-hidden min-h-[700px]"
+        style={{
+          backgroundImage: 'url(/images/index-hero-bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
+      >
         <MainNav />
 
         <div className="relative z-10 max-w-3xl mx-auto text-center pt-12 lg:pt-20 pb-16 lg:pb-24 px-6">
@@ -308,8 +303,11 @@ export default function HarborIndexClient() {
               border: '1px solid #F0F0EF'
             }}
           >
-            {/* Search Row */}
-            <div className="flex items-center px-2" style={{ height: '48px' }}>
+            {/* Search Row - taller, no bottom radius */}
+            <div 
+              className="flex items-center px-2"
+              style={{ height: '55px' }}
+            >
               <input
                 type="text"
                 placeholder="Search for your brand"
@@ -336,7 +334,7 @@ export default function HarborIndexClient() {
                 className="flex items-center justify-center"
                 style={{
                   width: '112px',
-                  height: '38px',
+                  height: '42px',
                   background: 'black',
                   borderRadius: '7px',
                   color: 'white',
@@ -350,17 +348,17 @@ export default function HarborIndexClient() {
               </button>
             </div>
             
-            {/* Brands Row - Gray bg inside same container */}
+            {/* Brands Row - shorter height, smaller logos */}
             <div 
               className="flex items-center justify-center gap-3"
               style={{
-                height: '88px',
+                height: '70px',
                 background: '#F4F3F2'
               }}
             >
               <div className="flex -space-x-2">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[42px] h-[42px] rounded-full overflow-hidden border-[3px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
+                  <div key={domain} className="w-[36px] h-[36px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
                 ))}
