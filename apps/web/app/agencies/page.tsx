@@ -214,61 +214,28 @@ export default function AgenciesPage() {
 
       {/* Final CTA */}
       <section className="bg-[#111111] py-20 lg:py-32">
-        <style jsx>{`
-          @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          
-          .cta-heading {
-            font-weight: 900;
-            text-transform: uppercase;
-          }
-          
-          .holographic-glow {
-            background: linear-gradient(
-              90deg,
-              #f8c8dc,
-              #e8b4f8,
-              #d4b4f8,
-              #b4c8f8,
-              #8fd8f8,
-              #b4f0f0,
-              #c8e8f8,
-              #f8d8c8,
-              #f8c8dc
-            );
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient-shift 6s ease infinite;
-            position: relative;
-            filter: drop-shadow(0 0 30px rgba(200, 180, 255, 0.4)) drop-shadow(0 0 60px rgba(180, 220, 255, 0.2));
-          }
-          
-          .noise-overlay {
-            position: relative;
-          }
-          
-          .noise-overlay::after {
-            content: '';
-            position: absolute;
-            inset: -20%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.08;
-            pointer-events: none;
-            mix-blend-mode: overlay;
-          }
-        `}</style>
         <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
-          <div className="noise-overlay inline-block mb-8">
-            <h2 className="cta-heading text-[40px] lg:text-[80px] tracking-tight leading-[0.95]" style={{ fontFamily: "'Arial Black', 'Helvetica Bold', sans-serif" }}>
+          <div className="inline-block mb-8">
+            <h2 
+              className="text-[40px] lg:text-[80px] tracking-tight leading-[0.95] font-black uppercase"
+              style={{ fontFamily: "'Arial Black', 'Helvetica Bold', sans-serif" }}
+            >
               <span className="text-white">UNLOCK YOUR</span>
               <br />
               <span className="text-white">AGENCY&apos;S </span>
-              <span className="holographic-glow">AI EDGE</span>
+              <span 
+                className="animate-pulse"
+                style={{
+                  background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
+                  backgroundSize: '300% auto',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  filter: 'drop-shadow(0 0 30px rgba(200, 180, 255, 0.4)) drop-shadow(0 0 60px rgba(180, 220, 255, 0.2))'
+                }}
+              >
+                AI EDGE
+              </span>
             </h2>
           </div>
           
