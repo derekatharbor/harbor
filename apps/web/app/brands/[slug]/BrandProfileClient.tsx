@@ -175,10 +175,12 @@ export default function BrandProfileClient({ brand: initialBrand }: Props) {
   return (
     <div className="min-h-screen bg-[#F6F5F3]">
       <StickyNav />
-      <MainNav />
+      <div className="relative z-50">
+        <MainNav />
+      </div>
 
       {/* Profile Content */}
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 relative z-0">
         
         {/* Back button */}
         <Link 
