@@ -302,27 +302,15 @@ export default function HarborIndexClient() {
             Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
-          {/* Unified Search Container */}
+          {/* Unified Search Container - Frosted glass */}
           <div 
-            className="mx-auto"
-            style={{
-              width: '450px',
-              background: 'rgba(239, 237, 235, 0.7)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              borderRadius: '12px',
-              padding: '3px'
-            }}
+            className="mx-auto backdrop-blur-md bg-[#EFEDEB]/60 rounded-[12px] p-[3px]"
+            style={{ width: '450px' }}
           >
             {/* Search Row - white box */}
             <div 
-              className="flex items-center px-3"
-              style={{ 
-                height: '52px',
-                background: 'white',
-                borderRadius: '10px',
-                border: '1px solid #ECECEC'
-              }}
+              className="flex items-center px-3 bg-white rounded-[10px] border border-[#ECECEC]"
+              style={{ height: '52px' }}
             >
               <input
                 type="text"
@@ -369,12 +357,12 @@ export default function HarborIndexClient() {
             >
               <div className="flex -space-x-1.5">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-[2px] border-[#EFEDEB]/70 bg-white" style={{ zIndex: 5 - idx }}>
+                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-2 border-[#EFEDEB]/60 bg-white" style={{ zIndex: 5 - idx }}>
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
-              <div style={{ width: '1px', height: '16px', background: '#D9D9D9' }} />
+              <div className="w-px h-4 bg-[#D9D9D9]" />
               <p 
                 style={{
                   color: '#3E3E3E',
