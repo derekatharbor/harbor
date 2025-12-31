@@ -261,6 +261,12 @@ export default function HarborIndexClient() {
           100% { transform: translateX(0); }
         }
         
+        @keyframes holographic-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
         .animate-marquee-left { animation: marquee-left linear infinite; }
         .animate-marquee-right { animation: marquee-right linear infinite; }
       `}</style>
@@ -269,44 +275,51 @@ export default function HarborIndexClient() {
 
       {/* Hero - Full gradient background */}
       <section 
-        className="relative overflow-hidden min-h-[700px]"
+        className="relative overflow-hidden"
         style={{
           backgroundImage: 'url(/images/index-hero-bg.png)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          minHeight: '100vh'
         }}
       >
-        <MainNav />
+        <div className="relative z-[200]">
+          <MainNav />
+        </div>
 
-        <div className="relative z-10 max-w-3xl mx-auto text-center pt-12 lg:pt-20 pb-16 lg:pb-24 px-6">
+        <div className="relative z-10 max-w-3xl mx-auto text-center pt-12 lg:pt-24 pb-32 lg:pb-48 px-6">
           {/* Badge */}
           <Link href="/brands" className="inline-flex items-center gap-1.5 h-8 px-2 bg-white rounded-[7px] shadow-[0px_2px_2px_rgba(120,120,120,0.25)] mb-6 lg:mb-8 hover:shadow-[0px_3px_6px_rgba(120,120,120,0.3)] transition-shadow">
             <span className="px-2 py-0.5 bg-black rounded-[3px] text-[12px] font-semibold font-source-code tracking-[0.69px] text-white">NEW</span>
             <span className="text-[12px] font-semibold font-source-sans tracking-[0.69px] text-black">AI Visibility Index</span>
           </Link>
 
-          <h1 className="max-w-[448px] mx-auto text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.04] mb-4">
+          <h1 className="max-w-[520px] mx-auto text-[32px] lg:text-[50px] font-semibold font-source-sans tracking-[0.69px] text-black leading-[1.04] mb-4">
             Your brand has an AI profile. Claim it.
           </h1>
 
-          <p className="max-w-[456px] mx-auto text-[16px] lg:text-[20px] font-normal font-source-sans tracking-[0.69px] text-[#6C6C6B] mb-8 lg:mb-10">
+          <p className="max-w-[456px] mx-auto text-[14px] lg:text-[16px] font-normal font-source-sans tracking-[0.69px] text-[#6C6C6B] mb-8 lg:mb-10">
             Create the structured profile AI systems reference when answering questions about your brand.
           </p>
 
           {/* Unified Search Container */}
           <div 
-            className="mx-auto overflow-hidden"
+            className="mx-auto"
             style={{
               width: '450px',
-              background: 'white',
-              borderRadius: '10px',
-              border: '1px solid #F0F0EF'
+              background: '#F4F3F2',
+              borderRadius: '14px',
+              padding: '6px'
             }}
           >
-            {/* Search Row - taller, no bottom radius */}
+            {/* Search Row - white box with full rounded corners */}
             <div 
-              className="flex items-center px-2"
-              style={{ height: '55px' }}
+              className="flex items-center px-3"
+              style={{ 
+                height: '55px',
+                background: 'white',
+                borderRadius: '10px'
+              }}
             >
               <input
                 type="text"
@@ -315,7 +328,7 @@ export default function HarborIndexClient() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.length >= 2 && setShowSearchDropdown(true)}
                 onBlur={() => setTimeout(() => setShowSearchDropdown(false), 300)}
-                className="flex-1 h-full px-3 bg-transparent outline-none"
+                className="flex-1 h-full px-2 bg-transparent outline-none"
                 style={{
                   color: 'black',
                   fontSize: '15px',
@@ -331,7 +344,7 @@ export default function HarborIndexClient() {
               )}
               <button 
                 type="button"
-                className="flex items-center justify-center"
+                className="flex items-center justify-center relative overflow-hidden group"
                 style={{
                   width: '112px',
                   height: '42px',
@@ -344,30 +357,36 @@ export default function HarborIndexClient() {
                   letterSpacing: '0.69px'
                 }}
               >
-                Get started
+                <span className="relative z-10">Get started</span>
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  style={{
+                    background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #d299c2 50%, #fef9d7 75%, #a8edea 100%)',
+                    backgroundSize: '200% 200%',
+                    animation: 'holographic-shift 3s ease infinite'
+                  }}
+                />
+                <span className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 text-black font-semibold transition-opacity duration-200">Get started</span>
               </button>
             </div>
             
-            {/* Brands Row - shorter height, smaller logos */}
+            {/* Brands Row */}
             <div 
-              className="flex items-center justify-center gap-3"
-              style={{
-                height: '70px',
-                background: '#F4F3F2'
-              }}
+              className="flex items-center justify-center gap-3 mt-2"
+              style={{ height: '60px' }}
             >
-              <div className="flex -space-x-2">
+              <div className="flex -space-x-1.5">
                 {['nike.com', 'stripe.com', 'patagonia.com', 'figma.com', 'notion.so'].map((domain, idx) => (
-                  <div key={domain} className="w-[36px] h-[36px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
+                  <div key={domain} className="w-[28px] h-[28px] rounded-full overflow-hidden border-[2px] border-[#F4F3F2] bg-white" style={{ zIndex: 5 - idx }}>
                     <img src={`https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y`} alt={domain} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
-              <div style={{ width: '1px', height: '20px', background: '#D9D9D9' }} />
+              <div style={{ width: '1px', height: '16px', background: '#D9D9D9' }} />
               <p 
                 style={{
                   color: '#3E3E3E',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontFamily: 'Source Sans 3, sans-serif',
                   fontWeight: '500',
                   letterSpacing: '0.69px'
