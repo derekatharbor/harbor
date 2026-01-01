@@ -202,13 +202,12 @@ function Hero() {
 
                 {/* Social proof placeholder */}
                 <div className="flex items-center gap-4 pt-2">
-                  {/* Avatar stack placeholder */}
+                  {/* Avatar stack */}
                   <div className="flex -space-x-2">
-                    {/* TODO: Replace with actual avatar images */}
-                    <div className="w-8 h-8 rounded-full bg-[#E0E0E0] border-2 border-[#F6F5F3]" />
-                    <div className="w-8 h-8 rounded-full bg-[#D0D0D0] border-2 border-[#F6F5F3]" />
-                    <div className="w-8 h-8 rounded-full bg-[#C0C0C0] border-2 border-[#F6F5F3]" />
-                    <div className="w-8 h-8 rounded-full bg-[#B0B0B0] border-2 border-[#F6F5F3]" />
+                    <Image src="/images/shopify/avatar-1.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
+                    <Image src="/images/shopify/avatar-2.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
+                    <Image src="/images/shopify/avatar-3.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
+                    <Image src="/images/shopify/avatar-4.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
                   </div>
                   <div className="h-6 w-px bg-[#E0E0E0]" />
                   <span className="text-sm text-[#6C6C6B] font-source-sans">Join 500+ Shopify merchants on the waitlist</span>
@@ -256,17 +255,15 @@ function Hero() {
             )}
           </div>
 
-          {/* Right - Dashboard Image Placeholder */}
+          {/* Right - Dashboard Image */}
           <div className="relative">
-            {/* TODO: Replace with actual dashboard screenshot */}
-            <div className="aspect-[4/3] bg-white border border-[#EFEEED] rounded-2xl shadow-lg flex items-center justify-center">
-              <div className="text-center p-8">
-                <div className="w-16 h-16 rounded-xl bg-[#95BF47]/10 flex items-center justify-center mx-auto mb-4">
-                  <ShoppingBag className="w-8 h-8 text-[#95BF47]" />
-                </div>
-                <p className="text-[#A0A0A0] text-sm font-source-sans">Dashboard image placeholder</p>
-              </div>
-            </div>
+            <Image 
+              src="/images/shopify/hero-dashboard.png" 
+              alt="Harbor Shopify Dashboard" 
+              width={800} 
+              height={600} 
+              className="w-full h-auto"
+            />
           </div>
         </div>
       </div>
