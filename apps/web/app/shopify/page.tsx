@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, createContext, useContext, ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Check, Copy, ShoppingBag, Code, FileText, BarChart3, RefreshCw, Download, Zap, TrendingUp } from 'lucide-react'
+import { ArrowRight, Check, Copy, ShoppingBag, Code, FileText, BarChart3, RefreshCw } from 'lucide-react'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
 
@@ -152,7 +152,7 @@ function Hero() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-black leading-[1.1] mb-8 font-source-sans">
-              Your products are invisible to AI search
+              Turn AI search into your next sales channel
             </h1>
 
             {/* Bullet points */}
@@ -330,8 +330,7 @@ function Features() {
             Features
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 font-source-sans">
-            Everything you need.{' '}
-            <span className="text-[#6C6C6B]">Nothing you don't.</span>
+            What you get
           </h2>
           <p className="text-[#6C6C6B] text-base max-w-xl mx-auto font-source-sans">
             One install. Zero maintenance. Your products start showing up in AI recommendations.
@@ -366,26 +365,6 @@ function Features() {
             )
           })}
         </div>
-
-        {/* Stats */}
-        <div className={`grid grid-cols-3 gap-6 mt-16 transition-all duration-1000 delay-300 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          {[
-            { value: '40%', label: 'of product searches start with AI' },
-            { value: '73%', label: 'of AI answers cite zero Shopify products' },
-            { value: '<5min', label: 'to install and configure' },
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold text-[#95BF47] mb-1 font-source-sans">
-                {stat.value}
-              </p>
-              <p className="text-[#6C6C6B] text-xs sm:text-sm font-source-sans">
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   )
@@ -395,242 +374,76 @@ function Features() {
 // HOW IT WORKS SECTION
 // =============================================================================
 
-const steps = [
-  {
-    number: '01',
-    icon: Download,
-    title: 'Install the plugin',
-    description: 'One-click install from the Shopify App Store. No code, no developers, no configuration needed.',
-    detail: 'Works with any Shopify theme',
-  },
-  {
-    number: '02',
-    icon: Zap,
-    title: 'Harbor scans your store',
-    description: 'We analyze your products, descriptions, and metadata to generate AI-optimized structured data.',
-    detail: 'Schema, JSON-LD, FAQs auto-generated',
-  },
-  {
-    number: '03',
-    icon: BarChart3,
-    title: 'Track your visibility',
-    description: 'See when ChatGPT, Claude, Gemini, or Perplexity mentions your products and for which queries.',
-    detail: 'Real-time monitoring dashboard',
-  },
-  {
-    number: '04',
-    icon: TrendingUp,
-    title: 'Get recommended',
-    description: 'As AI models crawl your optimized store, your products start appearing in recommendations.',
-    detail: 'Automatic sync keeps data current',
-  },
-]
-
 function HowItWorks() {
-  const [activeStep, setActiveStep] = useState(0)
-
   return (
-    <>
-      {/* Gradient transition bar */}
-      <div 
-        className="w-full h-1"
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, #95BF47 50%, transparent 100%)',
-          opacity: 0.4,
-        }}
-      />
+    <section id="dark-section" className="relative bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
 
-      <section className="relative bg-white py-20 sm:py-28 overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-source-sans">
+            How it works
+          </h2>
+        </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <p className="text-sm font-medium text-[#95BF47] uppercase tracking-wider mb-3 font-source-sans">
-              How It Works
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 font-source-sans">
-              Four steps to AI visibility
-            </h2>
-            <p className="text-[#6C6C6B] text-base max-w-xl mx-auto font-source-sans">
-              Install once. Harbor handles the rest automatically.
-            </p>
+        {/* Content */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left - Image */}
+          <div className="relative">
+            <Image 
+              src="/images/shopify/how-it-works.png" 
+              alt="Harbor Shopify Integration" 
+              width={800} 
+              height={600} 
+              className="w-full h-auto rounded-xl"
+            />
           </div>
 
-          {/* Steps */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-            {/* Left - Step list */}
-            <div className="space-y-2">
-              {steps.map((step, index) => {
-                const Icon = step.icon
-                const isActive = index === activeStep
-                
-                return (
-                  <button
-                    key={index}
-                    onClick={() => setActiveStep(index)}
-                    className={`w-full text-left p-5 rounded-xl border transition-all duration-300 ${
-                      isActive 
-                        ? 'bg-[#F6F5F3] border-[#95BF47]/30' 
-                        : 'bg-white border-[#EFEEED] hover:border-[#D9D9D9]'
-                    }`}
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* Number */}
-                      <span className={`text-sm font-mono transition-colors ${
-                        isActive ? 'text-[#95BF47]' : 'text-[#A0A0A0]'
-                      }`}>
-                        {step.number}
-                      </span>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className={`font-semibold mb-1 transition-colors font-source-sans ${
-                          isActive ? 'text-black' : 'text-[#6C6C6B]'
-                        }`}>
-                          {step.title}
-                        </h3>
-                        <p className={`text-sm transition-colors font-source-sans ${
-                          isActive ? 'text-[#6C6C6B]' : 'text-[#A0A0A0]'
-                        }`}>
-                          {step.description}
-                        </p>
-                      </div>
-
-                      {/* Icon */}
-                      <div className={`p-2 rounded-lg transition-colors ${
-                        isActive ? 'bg-[#95BF47]/10' : 'bg-[#F6F5F3]'
-                      }`}>
-                        <Icon className={`w-5 h-5 transition-colors ${
-                          isActive ? 'text-[#95BF47]' : 'text-[#A0A0A0]'
-                        }`} />
-                      </div>
-                    </div>
-                  </button>
-                )
-              })}
+          {/* Right - Numbered steps */}
+          <div className="space-y-8">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                <span className="text-[#95BF47] text-sm font-semibold font-source-sans">1</span>
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2 font-source-sans">Install the plugin</h3>
+                <p className="text-white/50 font-source-sans">One-click install from the Shopify App Store. No code, no developers, no configuration.</p>
+              </div>
             </div>
 
-            {/* Right - Visual */}
-            <div className="relative">
-              <div className="relative bg-[#F6F5F3] border border-[#EFEEED] rounded-2xl p-6 sm:p-8 min-h-[320px]">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded-lg bg-[#95BF47]/10">
-                    {(() => {
-                      const Icon = steps[activeStep].icon
-                      return <Icon className="w-5 h-5 text-[#95BF47]" />
-                    })()}
-                  </div>
-                  <div>
-                    <p className="text-black font-medium font-source-sans">{steps[activeStep].title}</p>
-                    <p className="text-[#6C6C6B] text-sm font-source-sans">{steps[activeStep].detail}</p>
-                  </div>
-                </div>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                <span className="text-[#95BF47] text-sm font-semibold font-source-sans">2</span>
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2 font-source-sans">Harbor scans your store</h3>
+                <p className="text-white/50 font-source-sans">We analyze your products and generate AI-optimized structured data automatically.</p>
+              </div>
+            </div>
 
-                {/* Step-specific visuals */}
-                {activeStep === 0 && (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-white border border-[#EFEEED] rounded-xl">
-                      <div className="w-12 h-12 bg-[#95BF47]/10 rounded-lg flex items-center justify-center">
-                        <Download className="w-6 h-6 text-[#95BF47]" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-black text-sm font-medium font-source-sans">Harbor for Shopify</p>
-                        <p className="text-[#6C6C6B] text-xs font-source-sans">One-click install</p>
-                      </div>
-                      <div className="px-3 py-1.5 bg-[#95BF47] rounded-lg text-white text-xs font-semibold">
-                        Install
-                      </div>
-                    </div>
-                    <p className="text-[#A0A0A0] text-xs text-center font-source-sans">No code changes required</p>
-                  </div>
-                )}
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                <span className="text-[#95BF47] text-sm font-semibold font-source-sans">3</span>
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2 font-source-sans">Track your visibility</h3>
+                <p className="text-white/50 font-source-sans">See when ChatGPT, Claude, Gemini, or Perplexity mentions your products and for which queries.</p>
+              </div>
+            </div>
 
-                {activeStep === 1 && (
-                  <div className="space-y-3">
-                    {['Products analyzed', 'Schema generated', 'FAQs created', 'Metadata optimized'].map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 bg-white border border-[#EFEEED] rounded-lg">
-                        <div className="w-6 h-6 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full bg-[#95BF47]" />
-                        </div>
-                        <span className="text-[#6C6C6B] text-sm font-source-sans">{item}</span>
-                        <span className="ml-auto text-[#95BF47] text-xs">✓</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeStep === 2 && (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { label: 'ChatGPT', value: '—' },
-                        { label: 'Claude', value: '—' },
-                        { label: 'Perplexity', value: '—' },
-                      ].map((stat, i) => (
-                        <div key={i} className="p-3 bg-white border border-[#EFEEED] rounded-lg text-center">
-                          <p className="text-2xl font-bold text-black font-source-sans">{stat.value}</p>
-                          <p className="text-[#6C6C6B] text-xs font-source-sans">{stat.label}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-[#A0A0A0] text-xs text-center font-source-sans">Mentions tracked in real-time</p>
-                  </div>
-                )}
-
-                {activeStep === 3 && (
-                  <div className="space-y-4">
-                    <div className="relative h-24">
-                      <svg className="w-full h-full" viewBox="0 0 200 80" preserveAspectRatio="none">
-                        <line x1="0" y1="20" x2="200" y2="20" stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
-                        <line x1="0" y1="40" x2="200" y2="40" stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
-                        <line x1="0" y1="60" x2="200" y2="60" stroke="rgba(0,0,0,0.05)" strokeWidth="1" />
-                        <path 
-                          d="M 0 70 L 25 62 L 50 55 L 75 45 L 100 38 L 125 30 L 150 22 L 175 15 L 200 10 L 200 80 L 0 80 Z" 
-                          fill="url(#greenGradientLight)" 
-                        />
-                        <path 
-                          d="M 0 70 L 25 62 L 50 55 L 75 45 L 100 38 L 125 30 L 150 22 L 175 15 L 200 10" 
-                          fill="none" 
-                          stroke="#95BF47" 
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <defs>
-                          <linearGradient id="greenGradientLight" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#95BF47" stopOpacity="0.2" />
-                            <stop offset="100%" stopColor="#95BF47" stopOpacity="0" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-[#6C6C6B] font-source-sans">
-                      <span>Week 1</span>
-                      <span className="text-[#95BF47]">Growing visibility</span>
-                      <span>Week 8</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Progress indicator */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {steps.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveStep(index)}
-                      className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                        index === activeStep ? 'bg-[#95BF47]' : 'bg-[#D9D9D9]'
-                      }`}
-                    />
-                  ))}
-                </div>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
+                <span className="text-[#95BF47] text-sm font-semibold font-source-sans">4</span>
+              </div>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-2 font-source-sans">Get recommended</h3>
+                <p className="text-white/50 font-source-sans">As AI models crawl your optimized store, your products start appearing in recommendations.</p>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }
 
@@ -927,10 +740,8 @@ export default function ShopifyPage() {
           <Hero />
           <Features />
           <HowItWorks />
-          <div id="dark-section">
-            <CTA />
-            <Footer />
-          </div>
+          <CTA />
+          <Footer />
         </div>
       </div>
     </WaitlistProvider>
