@@ -650,7 +650,7 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/solutions/ecommerce/shopify" className="text-white/40 hover:text-white text-sm transition-colors flex items-center gap-2 font-source-sans">
+                <Link href="/shopify" className="text-white/40 hover:text-white text-sm transition-colors flex items-center gap-2 font-source-sans">
                   Shopify Plugin
                   <span className="px-1.5 py-0.5 text-[9px] font-medium uppercase bg-[#95BF47]/20 text-[#95BF47] rounded">
                     Soon

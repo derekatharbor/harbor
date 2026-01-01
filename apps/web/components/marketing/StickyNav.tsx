@@ -97,7 +97,7 @@ const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href
     { title: 'Multi-Brand Management', description: 'Manage all clients in one place', href: '/solutions/agencies/multi-brand' },
   ],
   ecommerce: [
-    { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/solutions/ecommerce/shopify', isNew: true },
+    { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/shopify', isNew: true },
     { title: 'Product Visibility', description: 'Track product mentions in AI answers', href: '/solutions/ecommerce/products' },
     { title: 'Shopping Queries', description: 'Monitor "best X under $Y" prompts', href: '/solutions/ecommerce/shopping' },
     { title: 'Category Rankings', description: 'See where you rank in your category', href: '/solutions/ecommerce/rankings' },
