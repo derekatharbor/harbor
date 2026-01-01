@@ -330,7 +330,7 @@ function Features() {
             Features
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 font-source-sans">
-            What you get
+            Built for Shopify merchants
           </h2>
           <p className="text-[#6C6C6B] text-base max-w-xl mx-auto font-source-sans">
             One install. Zero maintenance. Your products start showing up in AI recommendations.
@@ -376,7 +376,7 @@ function Features() {
 
 function HowItWorks() {
   return (
-    <section id="dark-section" className="relative bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
+    <section id="dark-section" className="relative bg-[#111111] py-20 sm:py-28 overflow-hidden">
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Header */}
