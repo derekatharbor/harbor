@@ -38,23 +38,16 @@ const PRODUCT_LEFT = [
 
 const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   competitors: [
-    { title: 'Visibility Comparison', description: 'See how you stack up across AI models', href: '/features/competitors/visibility' },
-    { title: 'Share of Voice', description: 'Track mention frequency vs competitors', href: '/features/competitors/share-of-voice' },
-    { title: 'Sentiment Analysis', description: 'Compare brand perception side-by-side', href: '/features/competitors/sentiment' },
-    { title: 'Trend Tracking', description: 'Monitor competitive shifts over time', href: '/features/competitors/trends' },
+    { title: 'Competitor Intelligence', description: 'Visibility, share of voice, sentiment, and trends', href: '/features/competitors' },
   ],
   analytics: [
-    { title: 'Crawl Frequency', description: 'Track how often AI indexes your content', href: '/features/analytics/frequency' },
-    { title: 'Content Coverage', description: 'See which pages AI models reference', href: '/features/analytics/coverage' },
+    { title: 'Website Analytics', description: 'Crawl frequency and content coverage', href: '/features/analytics' },
   ],
   sources: [
-    { title: 'Citation Tracking', description: 'See what AI models cite about you', href: '/features/sources/citations' },
-    { title: 'Missing Sources', description: 'Find gaps in your AI presence', href: '/features/sources/gaps' },
+    { title: 'Source Tracking', description: 'Citations and content gaps', href: '/features/sources' },
   ],
   prompts: [
-    { title: 'Query Monitoring', description: 'Track prompts that mention your brand', href: '/features/prompts/monitoring' },
-    { title: 'Category Queries', description: 'See "best of" queries in your space', href: '/features/prompts/categories' },
-    { title: 'Custom Prompts', description: 'Add your own queries to track', href: '/features/prompts/custom' },
+    { title: 'Prompt Monitoring', description: 'Query tracking, categories, and custom prompts', href: '/features/prompts' },
   ],
 }
 
@@ -88,23 +81,17 @@ const SOLUTIONS_LEFT = [
 
 const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   marketers: [
-    { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers/monitoring' },
-    { title: 'Competitive Intel', description: 'Benchmark against competitors', href: '/solutions/marketers/competitive' },
+    { title: 'For Marketers', description: 'Brand monitoring and competitive intelligence', href: '/solutions/marketers' },
   ],
   agencies: [
-    { title: 'Client Dashboards', description: 'White-label reporting for clients', href: '/solutions/agencies/dashboards' },
-    { title: 'Pitch Workspace', description: 'Win new business with AI visibility data', href: '/pitch' },
-    { title: 'Multi-Brand Management', description: 'Manage all clients in one place', href: '/solutions/agencies/multi-brand' },
+    { title: 'For Agencies', description: 'Client dashboards, pitching, and multi-brand management', href: '/solutions/agencies' },
   ],
   ecommerce: [
     { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/shopify', isNew: true },
-    { title: 'Product Visibility', description: 'Track product mentions in AI answers', href: '/solutions/ecommerce/products' },
-    { title: 'Shopping Queries', description: 'Monitor "best X under $Y" prompts', href: '/solutions/ecommerce/shopping' },
-    { title: 'Category Rankings', description: 'See where you rank in your category', href: '/solutions/ecommerce/rankings' },
+    { title: 'For E-Commerce', description: 'Product visibility and shopping queries', href: '/solutions/ecommerce' },
   ],
   enterprise: [
-    { title: 'API Access', description: 'Integrate visibility data into your stack', href: '/solutions/enterprise/api' },
-    { title: 'Custom Reporting', description: 'Enterprise-grade analytics and exports', href: '/solutions/enterprise/reporting' },
+    { title: 'For Enterprise', description: 'API access and custom reporting', href: '/solutions/enterprise' },
   ],
 }
 
