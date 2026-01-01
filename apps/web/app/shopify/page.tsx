@@ -136,133 +136,136 @@ function Hero() {
   } = useWaitlist()
 
   return (
-    <section className="relative min-h-[85vh] flex items-center bg-[#F6F5F3] overflow-hidden">
+    <section className="relative bg-[#F6F5F3] overflow-hidden">
       {/* Subtle gradient orb */}
       <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-[#95BF47]/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 pt-24">
+      <div className="relative max-w-7xl mx-auto px-6 py-20 sm:py-28">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          {/* Left - Content */}
+          {/* Left - Content + Form */}
           <div>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#95BF47]/10 border border-[#95BF47]/30 mb-6">
-              <ShoppingBag className="w-4 h-4 text-[#95BF47]" />
-              <span className="text-sm font-medium text-[#5a7a2a] font-source-sans">Shopify Plugin</span>
-              <span className="text-xs text-[#6C6C6B]">Coming Soon</span>
+            <div className="inline-flex items-center gap-2 mb-6">
+              <div className="w-3 h-3 rounded-sm bg-[#95BF47]" />
+              <span className="text-sm font-medium text-black uppercase tracking-wider font-source-sans">Shopify Plugin</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black leading-[1.1] mb-6 font-source-sans">
-              Your products are invisible to{' '}
-              <span className="text-[#6C6C6B]">AI search.</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-black leading-[1.1] mb-8 font-source-sans">
+              Your products are invisible to AI search
             </h1>
 
-            <p className="text-lg text-[#6C6C6B] leading-relaxed mb-8 max-w-xl font-source-sans">
-              When customers ask ChatGPT, Claude, or Perplexity for product recommendations, 
-              Shopify stores don't show up. Harbor changes that.
-            </p>
+            {/* Bullet points */}
+            <ul className="space-y-4 mb-10">
+              <li className="flex items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
+                <span className="text-[#6C6C6B] text-lg font-source-sans">Auto-generated schema & structured data</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
+                <span className="text-[#6C6C6B] text-lg font-source-sans">Track mentions across ChatGPT, Claude & Perplexity</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
+                <span className="text-[#6C6C6B] text-lg font-source-sans">One-click install, zero maintenance</span>
+              </li>
+            </ul>
 
-            {/* CTA to scroll */}
-            <a 
-              href="#get-early-access" 
-              className="inline-flex items-center gap-2 text-[#5a7a2a] hover:text-[#95BF47] transition-colors font-source-sans font-medium"
-            >
-              <span className="text-sm">Join the waitlist</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
+            {/* Email capture form */}
+            {!isSubmitted ? (
+              <>
+                <form onSubmit={handleSubmit} className="flex gap-3 mb-4">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    className="flex-1 px-4 py-3.5 rounded-lg bg-white border border-[#E0E0E0] text-black placeholder:text-[#A0A0A0] focus:outline-none focus:border-[#95BF47] text-sm transition-colors font-source-sans"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-3.5 rounded-lg bg-black text-white font-semibold text-sm hover:bg-black/80 transition-all flex items-center gap-2 disabled:opacity-50 font-source-sans whitespace-nowrap"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      'Join waitlist'
+                    )}
+                  </button>
+                </form>
+
+                {error && (
+                  <p className="text-red-500 text-sm mb-4">{error}</p>
+                )}
+
+                {/* Social proof placeholder */}
+                <div className="flex items-center gap-4 pt-2">
+                  {/* Avatar stack placeholder */}
+                  <div className="flex -space-x-2">
+                    {/* TODO: Replace with actual avatar images */}
+                    <div className="w-8 h-8 rounded-full bg-[#E0E0E0] border-2 border-[#F6F5F3]" />
+                    <div className="w-8 h-8 rounded-full bg-[#D0D0D0] border-2 border-[#F6F5F3]" />
+                    <div className="w-8 h-8 rounded-full bg-[#C0C0C0] border-2 border-[#F6F5F3]" />
+                    <div className="w-8 h-8 rounded-full bg-[#B0B0B0] border-2 border-[#F6F5F3]" />
+                  </div>
+                  <div className="h-6 w-px bg-[#E0E0E0]" />
+                  <span className="text-sm text-[#6C6C6B] font-source-sans">Join 500+ Shopify merchants on the waitlist</span>
+                </div>
+              </>
+            ) : (
+              <div className="bg-white border border-[#EFEEED] rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-[#95BF47]/10 flex items-center justify-center">
+                    <Check className="w-5 h-5 text-[#95BF47]" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-black font-source-sans">You're on the list!</h3>
+                    <p className="text-[#6C6C6B] text-sm font-source-sans">Position #{position?.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                {/* Referral Link */}
+                <p className="text-sm text-[#6C6C6B] mb-2 font-source-sans">Share to move up:</p>
+                <div className="flex items-center gap-2 bg-[#F6F5F3] rounded-lg p-2">
+                  <input
+                    type="text"
+                    value={referralLink}
+                    readOnly
+                    className="flex-1 bg-transparent text-[#6C6C6B] text-sm truncate outline-none min-w-0 font-source-sans px-2"
+                  />
+                  <button
+                    onClick={copyReferralLink}
+                    className="p-2 rounded-lg hover:bg-[#EFEEED] transition-colors flex-shrink-0"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-[#95BF47]" />
+                    ) : (
+                      <Copy className="w-4 h-4 text-[#6C6C6B]" />
+                    )}
+                  </button>
+                </div>
+
+                {referralCount > 0 && (
+                  <p className="text-sm text-[#95BF47] font-medium mt-3 font-source-sans">
+                    {referralCount} {referralCount === 1 ? 'person' : 'people'} joined through your link!
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Right - Waitlist Form */}
+          {/* Right - Dashboard Image Placeholder */}
           <div className="relative">
-            {/* Card glow */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-[#95BF47]/20 to-transparent rounded-2xl blur-xl opacity-30" />
-            
-            {/* Form Card */}
-            <div className="relative bg-white border border-[#EFEEED] rounded-2xl p-6 sm:p-8 shadow-sm">
-              {!isSubmitted ? (
-                <>
-                  <h3 className="text-xl font-semibold text-black mb-2 font-source-sans">
-                    Get early access
-                  </h3>
-                  <p className="text-[#6C6C6B] text-sm mb-6 font-source-sans">
-                    Be first in line when the plugin launches.
-                  </p>
-
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      required
-                      className="w-full px-4 py-3 rounded-lg bg-[#F6F5F3] border border-[#EFEEED] text-black placeholder:text-[#A0A0A0] focus:outline-none focus:border-[#95BF47] text-sm transition-colors font-source-sans"
-                    />
-
-                    {error && (
-                      <p className="text-red-500 text-sm">{error}</p>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full px-6 py-3 rounded-lg bg-[#95BF47] text-white font-semibold text-sm hover:bg-[#7da33a] transition-all flex items-center justify-center gap-2 disabled:opacity-50 font-source-sans"
-                    >
-                      {isSubmitting ? (
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          Join waitlist
-                          <ArrowRight className="w-4 h-4" />
-                        </>
-                      )}
-                    </button>
-                  </form>
-
-                  <p className="text-xs text-[#A0A0A0] mt-4 text-center font-source-sans">
-                    No spam. Unsubscribe anytime.
-                  </p>
-                </>
-              ) : (
-                <div className="text-center py-4">
-                  <div className="w-14 h-14 rounded-full bg-[#95BF47]/10 flex items-center justify-center mx-auto mb-4">
-                    <Check className="w-7 h-7 text-[#95BF47]" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-black mb-2 font-source-sans">
-                    You're on the list!
-                  </h3>
-                  <p className="text-[#6C6C6B] text-sm mb-6 font-source-sans">
-                    You're #{position?.toLocaleString()} in line. Share to move up.
-                  </p>
-
-                  {/* Referral Link */}
-                  <div className="bg-[#F6F5F3] border border-[#EFEEED] rounded-lg p-3 mb-4">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={referralLink}
-                        readOnly
-                        className="flex-1 bg-transparent text-[#6C6C6B] text-sm truncate outline-none min-w-0 font-source-sans"
-                      />
-                      <button
-                        onClick={copyReferralLink}
-                        className="p-2 rounded-lg hover:bg-[#EFEEED] transition-colors flex-shrink-0"
-                      >
-                        {copied ? (
-                          <Check className="w-4 h-4 text-[#95BF47]" />
-                        ) : (
-                          <Copy className="w-4 h-4 text-[#6C6C6B]" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {referralCount > 0 && (
-                    <p className="text-sm text-[#95BF47] font-medium font-source-sans">
-                      {referralCount} {referralCount === 1 ? 'person' : 'people'} joined through your link!
-                    </p>
-                  )}
+            {/* TODO: Replace with actual dashboard screenshot */}
+            <div className="aspect-[4/3] bg-white border border-[#EFEEED] rounded-2xl shadow-lg flex items-center justify-center">
+              <div className="text-center p-8">
+                <div className="w-16 h-16 rounded-xl bg-[#95BF47]/10 flex items-center justify-center mx-auto mb-4">
+                  <ShoppingBag className="w-8 h-8 text-[#95BF47]" />
                 </div>
-              )}
+                <p className="text-[#A0A0A0] text-sm font-source-sans">Dashboard image placeholder</p>
+              </div>
             </div>
           </div>
         </div>
@@ -916,15 +919,21 @@ export default function ShopifyPage() {
   return (
     <WaitlistProvider>
       <div className="min-h-screen bg-[#F6F5F3]">
-        <StickyNav />
-        <MainNav />
+        {/* Nav with high z-index */}
+        <div className="relative z-50">
+          <StickyNav />
+          <MainNav />
+        </div>
         
-        <Hero />
-        <Features />
-        <HowItWorks />
-        <div id="dark-section">
-          <CTA />
-          <Footer />
+        {/* Content with lower z-index */}
+        <div className="relative z-0">
+          <Hero />
+          <Features />
+          <HowItWorks />
+          <div id="dark-section">
+            <CTA />
+            <Footer />
+          </div>
         </div>
       </div>
     </WaitlistProvider>
