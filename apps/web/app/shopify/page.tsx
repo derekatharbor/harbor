@@ -157,24 +157,24 @@ function Hero() {
 
             {/* Bullet points */}
             <ul className="space-y-4 mb-10">
-              <li className="flex items-center gap-3">
-                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
-                <span className="text-[#6C6C6B] text-lg font-source-sans">Auto-generated schema & structured data</span>
+              <li className="flex items-start sm:items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0 mt-0.5 sm:mt-0" />
+                <span className="text-[#6C6C6B] text-base sm:text-lg font-source-sans">Auto-generated schema & structured data</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
-                <span className="text-[#6C6C6B] text-lg font-source-sans">Track mentions across ChatGPT, Claude & Perplexity</span>
+              <li className="flex items-start sm:items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0 mt-0.5 sm:mt-0" />
+                <span className="text-[#6C6C6B] text-base sm:text-lg font-source-sans">Track mentions across ChatGPT, Claude & Perplexity</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0" />
-                <span className="text-[#6C6C6B] text-lg font-source-sans">One-click install, zero maintenance</span>
+              <li className="flex items-start sm:items-center gap-3">
+                <Check className="w-5 h-5 text-[#95BF47] flex-shrink-0 mt-0.5 sm:mt-0" />
+                <span className="text-[#6C6C6B] text-base sm:text-lg font-source-sans">One-click install, zero maintenance</span>
               </li>
             </ul>
 
             {/* Email capture form */}
             {!isSubmitted ? (
               <>
-                <form onSubmit={handleSubmit} className="flex gap-3 mb-4">
+                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 mb-4">
                   <input
                     type="email"
                     value={email}
@@ -186,7 +186,7 @@ function Hero() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-3.5 rounded-lg bg-black text-white font-semibold text-sm hover:bg-black/80 transition-all flex items-center gap-2 disabled:opacity-50 font-source-sans whitespace-nowrap"
+                    className="px-6 py-3.5 rounded-lg bg-black text-white font-semibold text-sm hover:bg-black/80 transition-all flex items-center justify-center gap-2 disabled:opacity-50 font-source-sans whitespace-nowrap"
                   >
                     {isSubmitting ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -200,8 +200,8 @@ function Hero() {
                   <p className="text-red-500 text-sm mb-4">{error}</p>
                 )}
 
-                {/* Social proof placeholder */}
-                <div className="flex items-center gap-4 pt-2">
+                {/* Social proof */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-2">
                   {/* Avatar stack */}
                   <div className="flex -space-x-2">
                     <Image src="/images/shopify/avatar-1.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
@@ -209,7 +209,7 @@ function Hero() {
                     <Image src="/images/shopify/avatar-3.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
                     <Image src="/images/shopify/avatar-4.png" alt="" width={32} height={32} className="w-8 h-8 rounded-full border-2 border-[#F6F5F3]" />
                   </div>
-                  <div className="h-6 w-px bg-[#E0E0E0]" />
+                  <div className="hidden sm:block h-6 w-px bg-[#E0E0E0]" />
                   <span className="text-sm text-[#6C6C6B] font-source-sans">Join 500+ Shopify merchants on the waitlist</span>
                 </div>
               </>
@@ -388,8 +388,8 @@ function HowItWorks() {
 
         {/* Content */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left - Image */}
-          <div className="relative">
+          {/* Image - shows second on mobile, first on desktop */}
+          <div className="relative order-2 lg:order-1">
             <Image 
               src="/images/shopify/how-it-works.png" 
               alt="Harbor Shopify Integration" 
@@ -399,8 +399,8 @@ function HowItWorks() {
             />
           </div>
 
-          {/* Right - Numbered steps */}
-          <div className="space-y-8">
+          {/* Numbered steps - shows first on mobile, second on desktop */}
+          <div className="space-y-6 sm:space-y-8 order-1 lg:order-2">
             <div className="flex gap-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#95BF47]/20 flex items-center justify-center">
                 <span className="text-[#95BF47] text-sm font-semibold font-source-sans">1</span>
