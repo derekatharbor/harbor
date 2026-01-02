@@ -79,12 +79,14 @@ const SOLUTIONS_LEFT = [
   },
 ]
 
-const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
+const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean; isFree?: boolean }[]> = {
   marketers: [
     { title: 'For Marketers', description: 'Brand monitoring and competitive intelligence', href: '/solutions/marketers' },
   ],
   agencies: [
-    { title: 'For Agencies', description: 'Client dashboards, pitching, and multi-brand management', href: '/solutions/agencies' },
+    { title: 'Free Visibility Audit', description: 'Run a free AI audit for any brand', href: '/agencies/free-audit', isFree: true },
+    { title: 'Pitch Workspaces', description: 'White-label reports for prospects', href: '/pitch' },
+    { title: 'For Agencies', description: 'Add GEO to your service offerings', href: '/agencies' },
   ],
   ecommerce: [
     { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/shopify', isNew: true },
@@ -162,6 +164,11 @@ function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: D
                 {item.isNew && (
                   <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#22C55E] text-white rounded uppercase">
                     New
+                  </span>
+                )}
+                {'isFree' in item && item.isFree && (
+                  <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#3B82F6] text-white rounded uppercase">
+                    Free
                   </span>
                 )}
               </span>
