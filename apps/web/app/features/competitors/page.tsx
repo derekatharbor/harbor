@@ -247,15 +247,15 @@ function AlternatingSections() {
 // =============================================================================
 
 const comparisonFeatures = [
-  { feature: 'Multi-model tracking (ChatGPT, Claude, Gemini, Perplexity)', harbor: true, scrunch: false, profound: true, peec: false },
-  { feature: 'Real-time visibility monitoring', harbor: true, scrunch: true, profound: false, peec: true },
-  { feature: 'Competitor benchmarking', harbor: true, scrunch: true, profound: true, peec: false },
-  { feature: 'Share of voice analytics', harbor: true, scrunch: false, profound: true, peec: false },
-  { feature: 'Sentiment analysis', harbor: true, scrunch: false, profound: false, peec: true },
-  { feature: 'Source citation tracking', harbor: true, scrunch: false, profound: false, peec: false },
-  { feature: 'Custom prompt monitoring', harbor: true, scrunch: false, profound: true, peec: false },
-  { feature: 'API access', harbor: true, scrunch: true, profound: true, peec: false },
-  { feature: 'White-label reporting', harbor: true, scrunch: false, profound: false, peec: false },
+  { feature: 'Starting price', harbor: '$79/mo', scrunch: '$300/mo', profound: '$499/mo', peec: '€89/mo' },
+  { feature: 'AI Visibility Profile', harbor: true, scrunch: false, profound: false, peec: false },
+  { feature: 'Shopify Plugin', harbor: true, scrunch: false, profound: false, peec: false },
+  { feature: 'Pitch Workspaces', harbor: true, scrunch: false, profound: false, peec: true },
+  { feature: 'Custom Prompts', harbor: 'Unlimited', scrunch: 'Limited (350)', profound: 'Limited', peec: 'Limited (25-100)' },
+  { feature: 'Competitor Tracking', harbor: 'Unlimited', scrunch: 'Limited', profound: 'Limited', peec: 'Limited' },
+  { feature: 'API Access', harbor: 'All plans', scrunch: 'All plans', profound: 'Enterprise only', peec: 'Enterprise only' },
+  { feature: 'All AI Models Included', harbor: true, scrunch: true, profound: 'Tier-gated', peec: 'Extra fee' },
+  { feature: 'Free Agency Reports', harbor: true, scrunch: false, profound: false, peec: false },
 ]
 
 function ComparisonTable() {
@@ -269,7 +269,7 @@ function ComparisonTable() {
             How Harbor compares
           </h2>
           <p className="text-[#6C6C6B] text-base max-w-xl mx-auto font-source-sans">
-            See why teams choose Harbor for AI visibility intelligence.
+            Enterprise features at SMB prices. No hidden fees, no tier-gating.
           </p>
         </div>
 
@@ -278,10 +278,12 @@ function ComparisonTable() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[#EFEEED]">
-                <th className="text-left py-4 pr-4 font-source-sans font-semibold text-black">Features</th>
+                <th className="text-left py-4 pr-4 font-source-sans font-semibold text-black"></th>
                 <th className="py-4 px-4 text-center">
                   <div className="flex items-center justify-center gap-2">
-                    <Image src="/images/harbor-logo-black.svg" alt="Harbor" width={24} height={24} className="h-6 w-6" />
+                    <div className="w-6 h-6 rounded-md overflow-hidden flex-shrink-0">
+                      <Image src="/images/harbor-dark-solo.svg" alt="Harbor" width={24} height={24} className="w-full h-full object-contain" />
+                    </div>
                     <span className="font-source-sans font-semibold text-black text-sm">Harbor</span>
                   </div>
                 </th>
@@ -316,31 +318,39 @@ function ComparisonTable() {
                 <tr key={index} className="border-b border-[#EFEEED]">
                   <td className="py-4 pr-4 text-sm text-[#6C6C6B] font-source-sans">{row.feature}</td>
                   <td className="py-4 px-4 text-center">
-                    {row.harbor ? (
+                    {row.harbor === true ? (
                       <Check className="w-5 h-5 text-green-500 mx-auto" />
-                    ) : (
+                    ) : row.harbor === false ? (
                       <span className="text-[#D0D0D0]">—</span>
+                    ) : (
+                      <span className="text-sm font-medium text-black font-source-sans">{row.harbor}</span>
                     )}
                   </td>
                   <td className="py-4 px-4 text-center">
-                    {row.scrunch ? (
+                    {row.scrunch === true ? (
                       <Check className="w-5 h-5 text-green-500 mx-auto" />
-                    ) : (
+                    ) : row.scrunch === false ? (
                       <span className="text-[#D0D0D0]">—</span>
+                    ) : (
+                      <span className="text-sm text-[#6C6C6B] font-source-sans">{row.scrunch}</span>
                     )}
                   </td>
                   <td className="py-4 px-4 text-center">
-                    {row.profound ? (
+                    {row.profound === true ? (
                       <Check className="w-5 h-5 text-green-500 mx-auto" />
-                    ) : (
+                    ) : row.profound === false ? (
                       <span className="text-[#D0D0D0]">—</span>
+                    ) : (
+                      <span className="text-sm text-[#6C6C6B] font-source-sans">{row.profound}</span>
                     )}
                   </td>
                   <td className="py-4 px-4 text-center">
-                    {row.peec ? (
+                    {row.peec === true ? (
                       <Check className="w-5 h-5 text-green-500 mx-auto" />
-                    ) : (
+                    ) : row.peec === false ? (
                       <span className="text-[#D0D0D0]">—</span>
+                    ) : (
+                      <span className="text-sm text-[#6C6C6B] font-source-sans">{row.peec}</span>
                     )}
                   </td>
                 </tr>
