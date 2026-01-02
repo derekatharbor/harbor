@@ -1,6 +1,5 @@
 // apps/web/app/dashboard/competitors/page.tsx
-// Competitive Intelligence - MOCK DATA VERSION FOR SCREENSHOTS
-// Cmd+Z to revert when done
+// Competitive Intelligence - Premium feature for tracking competitors
 
 'use client'
 
@@ -23,160 +22,6 @@ import {
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { useBrand } from '@/contexts/BrandContext'
 import MobileHeader from '@/components/layout/MobileHeader'
-
-// ============================================================================
-// MOCK DATA - DELETE THIS SECTION WHEN DONE
-// ============================================================================
-
-const MOCK_TRACKED: TrackedCompetitor[] = [
-  {
-    id: '1',
-    profile_id: 'peec-1',
-    brand_name: 'Peec',
-    domain: 'peec.ai',
-    logo_url: 'https://cdn.brandfetch.io/peec.ai?c=1id1Fyz-h7an5-5KR_y',
-    mentions: 847,
-    visibility: 72,
-    sentiment: 'positive',
-    avg_position: 2.3
-  },
-  {
-    id: '2',
-    profile_id: 'profound-1',
-    brand_name: 'Profound',
-    domain: 'tryprofound.com',
-    logo_url: 'https://cdn.brandfetch.io/tryprofound.com?c=1id1Fyz-h7an5-5KR_y',
-    mentions: 1243,
-    visibility: 78,
-    sentiment: 'positive',
-    avg_position: 1.8
-  },
-  {
-    id: '3',
-    profile_id: 'otterly-1',
-    brand_name: 'Otterly',
-    domain: 'otterly.ai',
-    logo_url: 'https://cdn.brandfetch.io/otterly.ai?c=1id1Fyz-h7an5-5KR_y',
-    mentions: 312,
-    visibility: 45,
-    sentiment: 'neutral',
-    avg_position: 4.1
-  },
-  {
-    id: '4',
-    profile_id: 'scrunch-1',
-    brand_name: 'Scrunch',
-    domain: 'scrunch.com',
-    logo_url: 'https://cdn.brandfetch.io/scrunch.com?c=1id1Fyz-h7an5-5KR_y',
-    mentions: 956,
-    visibility: 68,
-    sentiment: 'positive',
-    avg_position: 2.7
-  }
-]
-
-const MOCK_USER_DATA = {
-  brand_name: 'Harbor',
-  category: 'AI Visibility',
-  visibility: 64,
-  mentions: 523,
-  sentiment: 'positive' as const,
-  position: 3.2
-}
-
-const MOCK_PLAN_LIMITS = {
-  current: 4,
-  max: 10,
-  plan: 'Agency'
-}
-
-const MOCK_TREND_DATA = [
-  { date: '2025-12-26', displayDate: 'Dec 26', you: 58 },
-  { date: '2025-12-27', displayDate: 'Dec 27', you: 61 },
-  { date: '2025-12-28', displayDate: 'Dec 28', you: 59 },
-  { date: '2025-12-29', displayDate: 'Dec 29', you: 62 },
-  { date: '2025-12-30', displayDate: 'Dec 30', you: 64 },
-  { date: '2025-12-31', displayDate: 'Dec 31', you: 63 },
-  { date: '2026-01-01', displayDate: 'Jan 1', you: 64 },
-]
-
-const MOCK_COMPETITORS: CompetitorData[] = [
-  {
-    rank: 1,
-    name: 'Profound',
-    domain: 'tryprofound.com',
-    logo: 'https://cdn.brandfetch.io/tryprofound.com?c=1id1Fyz-h7an5-5KR_y',
-    fallbackLogo: '',
-    visibility: 78,
-    sentiment: 'positive',
-    position: 1.8,
-    mentions: 1243,
-    isUser: false,
-    isTracked: true,
-    color: '#6366F1',
-    profile_id: 'profound-1'
-  },
-  {
-    rank: 2,
-    name: 'Peec',
-    domain: 'peec.ai',
-    logo: 'https://cdn.brandfetch.io/peec.ai?c=1id1Fyz-h7an5-5KR_y',
-    fallbackLogo: '',
-    visibility: 72,
-    sentiment: 'positive',
-    position: 2.3,
-    mentions: 847,
-    isUser: false,
-    isTracked: true,
-    color: '#10B981',
-    profile_id: 'peec-1'
-  },
-  {
-    rank: 3,
-    name: 'Scrunch',
-    domain: 'scrunch.com',
-    logo: 'https://cdn.brandfetch.io/scrunch.com?c=1id1Fyz-h7an5-5KR_y',
-    fallbackLogo: '',
-    visibility: 68,
-    sentiment: 'positive',
-    position: 2.7,
-    mentions: 956,
-    isUser: false,
-    isTracked: true,
-    color: '#F59E0B',
-    profile_id: 'scrunch-1'
-  },
-  {
-    rank: 4,
-    name: 'Harbor',
-    domain: 'useharbor.io',
-    logo: 'https://cdn.brandfetch.io/useharbor.io?c=1id1Fyz-h7an5-5KR_y',
-    fallbackLogo: '',
-    visibility: 64,
-    sentiment: 'positive',
-    position: 3.2,
-    mentions: 523,
-    isUser: true,
-    isTracked: false,
-    color: '#06B6D4',
-    profile_id: null
-  },
-  {
-    rank: 5,
-    name: 'Otterly',
-    domain: 'otterly.ai',
-    logo: 'https://cdn.brandfetch.io/otterly.ai?c=1id1Fyz-h7an5-5KR_y',
-    fallbackLogo: '',
-    visibility: 45,
-    sentiment: 'neutral',
-    position: 4.1,
-    mentions: 312,
-    isUser: false,
-    isTracked: true,
-    color: '#8B5CF6',
-    profile_id: 'otterly-1'
-  }
-]
 
 // ============================================================================
 // TYPES
@@ -270,6 +115,7 @@ function BrandLogo({
 }) {
   const [error, setError] = useState(false)
   
+  // Prefer logoUrl if provided, otherwise construct from domain
   const url = logoUrl || (domain ? `https://cdn.brandfetch.io/${domain}?c=1id1Fyz-h7an5-5KR_y` : null)
   
   if (error || !url) {
@@ -373,128 +219,349 @@ function TrackedCompetitorRow({
         domain={competitor.domain}
         logoUrl={competitor.logo_url}
         name={competitor.brand_name}
-        size={40}
+        size={32}
       />
-      
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-primary truncate">{competitor.brand_name}</span>
-          <span className={`text-xs px-1.5 py-0.5 rounded capitalize ${getSentimentBg(competitor.sentiment)} ${getSentimentColor(competitor.sentiment)}`}>
-            {competitor.sentiment}
+        <div className="font-medium text-primary text-sm truncate">{competitor.brand_name}</div>
+        <div className="text-xs text-muted">{competitor.visibility}% visibility</div>
+      </div>
+      <div className="flex items-center gap-2">
+        {userData && !isTied && (
+          <span className={`text-xs font-medium ${isWinning ? 'text-green-500' : 'text-red-500'}`}>
+            {isWinning ? '+' : ''}{-visibilityDiff}%
           </span>
-        </div>
-        <div className="text-xs text-muted truncate">{competitor.domain}</div>
-      </div>
-      
-      <div className="text-right">
-        <div className="text-sm font-semibold text-primary tabular-nums">{competitor.visibility}%</div>
-        <div className={`text-xs ${isWinning ? 'text-green-500' : isTied ? 'text-muted' : 'text-red-500'}`}>
-          {isTied ? 'Tied' : isWinning ? `You +${Math.abs(visibilityDiff)}%` : `+${visibilityDiff}%`}
-        </div>
-      </div>
-      
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          onUntrack()
-        }}
-        disabled={isUntracking}
-        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg hover:bg-secondary text-muted hover:text-red-500 transition-all"
-      >
-        {isUntracking ? (
-          <div className="w-4 h-4 border-2 border-muted border-t-primary rounded-full animate-spin" />
-        ) : (
-          <X className="w-4 h-4" />
         )}
-      </button>
-    </div>
-  )
-}
-
-// ============================================================================
-// LEADERBOARD ROW
-// ============================================================================
-
-function LeaderboardRow({ 
-  competitor, 
-  onTrack,
-  isTracking
-}: { 
-  competitor: CompetitorData
-  onTrack: () => void
-  isTracking: boolean
-}) {
-  return (
-    <div className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${competitor.isUser ? 'bg-cyan-500/5 border border-cyan-500/20' : 'hover:bg-secondary/50'}`}>
-      <div className="w-6 text-center">
-        <span className={`text-sm font-semibold ${competitor.isUser ? 'text-cyan-500' : 'text-muted'}`}>
-          #{competitor.rank}
-        </span>
-      </div>
-      
-      <BrandLogo 
-        domain={competitor.domain}
-        logoUrl={competitor.logo}
-        name={competitor.name}
-        size={36}
-      />
-      
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className={`font-medium truncate ${competitor.isUser ? 'text-cyan-500' : 'text-primary'}`}>
-            {competitor.name}
-          </span>
-          {competitor.isUser && (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-500">You</span>
-          )}
-        </div>
-        <div className="text-xs text-muted truncate">{competitor.domain}</div>
-      </div>
-      
-      <div className="text-right">
-        <div className="text-sm font-semibold text-primary tabular-nums">{competitor.visibility}%</div>
-        <div className="text-xs text-muted">{competitor.mentions} mentions</div>
-      </div>
-      
-      {!competitor.isUser && !competitor.isTracked && (
         <button
-          onClick={onTrack}
-          disabled={isTracking}
-          className="px-2 py-1 text-xs rounded bg-secondary hover:bg-hover text-muted hover:text-primary transition-colors"
+          onClick={(e) => { e.stopPropagation(); onUntrack(); }}
+          disabled={isUntracking}
+          className="p-1.5 rounded-lg text-muted opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-500/10 transition-all disabled:opacity-50"
+          title="Stop tracking"
         >
-          {isTracking ? '...' : 'Track'}
+          {isUntracking ? (
+            <div className="w-3.5 h-3.5 border-2 border-muted border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <X className="w-3.5 h-3.5" />
+          )}
         </button>
-      )}
-      
-      {competitor.isTracked && (
-        <span className="text-xs text-green-500 px-2">Tracking</span>
-      )}
+      </div>
     </div>
   )
 }
 
 // ============================================================================
-// MAIN COMPONENT - USING MOCK DATA
+// CUSTOM CHART TOOLTIP
+// ============================================================================
+
+function ChartTooltip({ active, payload, label }: any) {
+  if (!active || !payload) return null
+  
+  return (
+    <div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+      <div className="text-xs text-muted mb-2">{label}</div>
+      {payload.map((entry: any, idx: number) => (
+        <div key={idx} className="flex items-center gap-2 text-sm">
+          <div 
+            className="w-2 h-2 rounded-full" 
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-muted capitalize">{entry.dataKey}:</span>
+          <span className="font-medium text-primary">{entry.value}%</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ============================================================================
+// MAIN COMPONENT
 // ============================================================================
 
 export default function CompetitorsPage() {
   const { currentDashboard } = useBrand()
+  const [loading, setLoading] = useState(true)
+  const [competitors, setCompetitors] = useState<CompetitorData[]>([])
+  const [tracked, setTracked] = useState<TrackedCompetitor[]>([])
+  const [userData, setUserData] = useState<ApiResponse['user_data'] | null>(null)
+  const [planLimits, setPlanLimits] = useState<ApiResponse['plan_limits'] | null>(null)
+  const [totalBrands, setTotalBrands] = useState(0)
+  const [userRank, setUserRank] = useState<number | null>(null)
+  const [trackingBrand, setTrackingBrand] = useState<string | null>(null)
+  const [untrackingId, setUntrackingId] = useState<string | null>(null)
+  const [trendData, setTrendData] = useState<Array<{ date: string; displayDate: string; you: number | null }>>([])
+  const [hasTrendData, setHasTrendData] = useState(false)
   
-  // Use mock data instead of API calls
-  const loading = false
-  const competitors = MOCK_COMPETITORS
-  const tracked = MOCK_TRACKED
-  const userData = MOCK_USER_DATA
-  const planLimits = MOCK_PLAN_LIMITS
-  const totalBrands = 127
-  const userRank = 4
-  const trendData = MOCK_TREND_DATA
-  const hasTrendData = true
-  
-  // Modal states (keep functional for UI)
+  // Add competitor modal state
   const [showAddModal, setShowAddModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Array<{
+    brand_name: string
+    domain: string
+    logo_url: string | null
+    industry?: string
+    visibility_score?: number
+  }>>([])
+  const [searching, setSearching] = useState(false)
+  const [addingCompetitor, setAddingCompetitor] = useState<string | null>(null)
+  
+  // Competitor detail modal state
   const [selectedCompetitor, setSelectedCompetitor] = useState<TrackedCompetitor | null>(null)
+  const [brandDetails, setBrandDetails] = useState<{
+    name: string
+    domain: string
+    description: string | null
+    longDescription: string | null
+    logo: string | null
+    primaryColor: string | null
+    bannerImage: string | null
+    industry: string | null
+    links: Array<{ type: string; url: string }>
+    fallback: boolean
+  } | null>(null)
+  const [loadingDetails, setLoadingDetails] = useState(false)
+
+  // Fetch data
+  useEffect(() => {
+    async function fetchCompetitors() {
+      if (!currentDashboard?.id) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        
+        // Fetch competitors data
+        const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
+        
+        if (!response.ok) throw new Error('Failed to fetch')
+
+        const data: ApiResponse = await response.json()
+        
+        setCompetitors(data.competitors || [])
+        setTracked(data.tracked || [])
+        setUserData(data.user_data || null)
+        setPlanLimits(data.plan_limits || null)
+        setTotalBrands(data.total_brands_found || 0)
+        setUserRank(data.user_rank || null)
+        
+        // Fetch historical visibility data
+        const historyResponse = await fetch(`/api/dashboard/${currentDashboard.id}/visibility-history?days=7`)
+        if (historyResponse.ok) {
+          const historyData = await historyResponse.json()
+          if (historyData.history && historyData.has_data) {
+            setTrendData(historyData.history.map((h: any) => ({
+              date: h.date,
+              displayDate: h.displayDate,
+              you: h.visibility
+            })))
+            setHasTrendData(true)
+          }
+        }
+        
+      } catch (err) {
+        console.error('Error fetching competitors:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCompetitors()
+  }, [currentDashboard?.id])
+
+  // Track a brand
+  async function handleTrackBrand(brand: CompetitorData) {
+    if (!currentDashboard?.id) return
+    if (planLimits && tracked.length >= planLimits.max) return
+    
+    setTrackingBrand(brand.name)
+    
+    try {
+      const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile_id: brand.profile_id,
+          brand_name: brand.name,
+          domain: brand.domain
+        })
+      })
+      
+      if (response.ok) {
+        const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
+        if (refreshRes.ok) {
+          const data = await refreshRes.json()
+          setCompetitors(data.competitors || [])
+          setTracked(data.tracked || [])
+          setPlanLimits(data.plan_limits || null)
+        }
+      }
+    } catch (err) {
+      console.error('Error tracking brand:', err)
+    } finally {
+      setTrackingBrand(null)
+    }
+  }
+
+  // Untrack a brand
+  async function handleUntrackBrand(competitor: TrackedCompetitor) {
+    if (!currentDashboard?.id) return
+    
+    setUntrackingId(competitor.id)
+    
+    try {
+      const response = await fetch(
+        `/api/dashboard/${currentDashboard.id}/competitors?competitor_id=${competitor.id}`,
+        { method: 'DELETE' }
+      )
+      
+      if (response.ok) {
+        const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
+        if (refreshRes.ok) {
+          const data = await refreshRes.json()
+          setCompetitors(data.competitors || [])
+          setTracked(data.tracked || [])
+          setPlanLimits(data.plan_limits || null)
+        }
+      }
+    } catch (err) {
+      console.error('Error untracking brand:', err)
+    } finally {
+      setUntrackingId(null)
+    }
+  }
+
+  // Search for brands (for modal) - uses Brandfetch autocomplete
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setSearchResults([])
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      setSearching(true)
+      try {
+        // Use Brandfetch autocomplete - millions of brands, returns logo instantly
+        const brandfetchRes = await fetch(
+          `https://autocomplete.brandfetch.io/v1/search?query=${encodeURIComponent(searchQuery)}`
+        )
+        
+        if (brandfetchRes.ok) {
+          const brandfetchData = await brandfetchRes.json()
+          // Brandfetch returns array of { id, name, domain, icon }
+          const results = (brandfetchData || []).slice(0, 10).map((b: any) => ({
+            brand_name: b.name || b.domain,
+            domain: b.domain,
+            logo_url: b.icon || `https://cdn.brandfetch.io/${b.domain}?c=1id1Fyz-h7an5-5KR_y`,
+            source: 'brandfetch'
+          }))
+          setSearchResults(results)
+        } else {
+          // Fallback to our DB if Brandfetch fails
+          const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
+          if (response.ok) {
+            const data = await response.json()
+            setSearchResults(data.brands || [])
+          }
+        }
+      } catch (err) {
+        console.error('Search error:', err)
+        // Fallback to our DB on any error
+        try {
+          const response = await fetch(`/api/brands/search?q=${encodeURIComponent(searchQuery)}&limit=10`)
+          if (response.ok) {
+            const data = await response.json()
+            setSearchResults(data.brands || [])
+          }
+        } catch (fallbackErr) {
+          console.error('Fallback search error:', fallbackErr)
+        }
+      } finally {
+        setSearching(false)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  // Add competitor from modal
+  async function addCompetitorFromModal(brand: { brand_name: string; domain: string; logo_url?: string | null }) {
+    if (!currentDashboard?.id) return
+    if (planLimits && tracked.length >= planLimits.max) return
+    
+    setAddingCompetitor(brand.domain)
+    
+    try {
+      const response = await fetch(`/api/dashboard/${currentDashboard.id}/competitors`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand_name: brand.brand_name,
+          domain: brand.domain
+        })
+      })
+      
+      if (response.ok) {
+        // Refresh the data
+        const refreshRes = await fetch(`/api/dashboard/${currentDashboard.id}/competitors?limit=25`)
+        if (refreshRes.ok) {
+          const data = await refreshRes.json()
+          setCompetitors(data.competitors || [])
+          setTracked(data.tracked || [])
+          setPlanLimits(data.plan_limits || null)
+        }
+        // Close modal and reset
+        setShowAddModal(false)
+        setSearchQuery('')
+        setSearchResults([])
+      }
+    } catch (err) {
+      console.error('Error adding competitor:', err)
+    } finally {
+      setAddingCompetitor(null)
+    }
+  }
+
+  // Open competitor detail modal
+  async function openCompetitorDetail(competitor: TrackedCompetitor) {
+    setSelectedCompetitor(competitor)
+    setLoadingDetails(true)
+    setBrandDetails(null)
+    
+    try {
+      const response = await fetch(`/api/brands/${competitor.domain}/details`)
+      if (response.ok) {
+        const data = await response.json()
+        setBrandDetails(data)
+      }
+    } catch (err) {
+      console.error('Error fetching brand details:', err)
+    } finally {
+      setLoadingDetails(false)
+    }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-primary" data-page="competitors">
+        <MobileHeader />
+        <div className="p-6">
+          <div className="animate-pulse space-y-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="h-24 bg-card rounded-xl"></div>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 h-72 bg-card rounded-xl"></div>
+              <div className="h-72 bg-card rounded-xl"></div>
+            </div>
+            <div className="h-96 bg-card rounded-xl"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const hasLeaderboardData = competitors.length > 0
   const hasTrackedOrLeaderboard = tracked.length > 0 || competitors.length > 0
@@ -531,156 +598,606 @@ export default function CompetitorsPage() {
         </div>
       </div>
 
-      <div className="p-6 space-y-6">
-        
-        {/* Stat Cards Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="Your Rank"
-            value={`#${userRank}`}
-            subValue={`of ${totalBrands} brands`}
-            icon="trophy.png"
-          />
-          <StatCard
-            label="Visibility"
-            value={`${userData.visibility}%`}
-            subValue="in AI responses"
-            trend={{ value: 8, positive: true }}
-            icon="visibility.png"
-          />
-          <StatCard
-            label="Tracked"
-            value={tracked.length}
-            subValue={`of ${planLimits.max} slots`}
-            icon="user.png"
-          />
-          <StatCard
-            label="Mentions"
-            value={userData.mentions}
-            subValue="across all prompts"
-            trend={{ value: 12, positive: true }}
-            icon="mentions.png"
-          />
+      {!hasTrackedOrLeaderboard ? (
+        <div className="p-6">
+          <div className="card p-12 text-center">
+            {/* Empty state illustration placeholder */}
+            <div className="w-64 h-64 mx-auto mb-6">
+              <img 
+                src="/images/empty-states/competitors.png" 
+                alt="" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <h2 className="text-lg font-semibold text-primary mb-2">No competitor data yet</h2>
+            <p className="text-sm text-muted mb-6 max-w-md mx-auto">
+              Run prompts to see which brands AI mentions alongside yours, or add competitors manually to start tracking.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <button 
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-black text-white rounded-lg text-sm font-medium hover:bg-neutral-800 active:bg-neutral-900 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Competitor
+              </button>
+              <Link 
+                href="/dashboard/prompts"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary border border-border rounded-lg text-sm font-medium text-primary hover:bg-hover active:bg-secondary transition-colors"
+              >
+                Run Prompts
+                <ArrowUpRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
         </div>
-        
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      ) : (
+        <div className="p-6 space-y-6">
           
-          {/* Visibility Trend Chart */}
-          <div className="lg:col-span-2 card p-0 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <div>
-                <h3 className="font-semibold text-primary text-sm">Visibility Over Time</h3>
-                <p className="text-xs text-muted mt-0.5">Your AI visibility trend</p>
-              </div>
-              <div className="flex items-center gap-4 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' }} />
-                  <span className="text-muted">You</span>
+          {/* Stat Cards Row */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              label="Your Rank"
+              value={userRank ? `#${userRank}` : '—'}
+              subValue={totalBrands ? `of ${totalBrands} brands` : undefined}
+              icon="trophy.png"
+            />
+            <StatCard
+              label="Visibility"
+              value={userData?.visibility ? `${userData.visibility}%` : '—'}
+              subValue="in AI responses"
+              icon="visibility.png"
+            />
+            <StatCard
+              label="Tracked"
+              value={tracked.length}
+              subValue={planLimits ? `of ${planLimits.max} slots` : undefined}
+              icon="user.png"
+            />
+            <StatCard
+              label="Mentions"
+              value={userData?.mentions || 0}
+              subValue="across all prompts"
+              icon="mentions.png"
+            />
+          </div>
+          
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Visibility Trend Chart */}
+            <div className="lg:col-span-2 card p-0 overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Visibility Over Time</h3>
+                  <p className="text-xs text-muted mt-0.5">Your AI visibility trend</p>
                 </div>
+                {hasTrendData && (
+                  <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-1 rounded-full" style={{ background: 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' }} />
+                      <span className="text-muted">You</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-4 h-64">
+                {hasTrendData ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="holoGradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="#06B6D4" />
+                          <stop offset="50%" stopColor="#A855F7" />
+                          <stop offset="100%" stopColor="#EC4899" />
+                        </linearGradient>
+                        <linearGradient id="holoFill" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#A855F7" stopOpacity={0.3} />
+                          <stop offset="100%" stopColor="#A855F7" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis 
+                        dataKey="displayDate" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
+                        domain={[0, 100]}
+                        tickFormatter={(v) => `${v}%`}
+                      />
+                      <Tooltip content={<ChartTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="you"
+                        stroke="url(#holoGradient)"
+                        strokeWidth={3}
+                        fill="url(#holoFill)"
+                        connectNulls
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center">
+                    <BarChart3 className="w-10 h-10 text-muted mb-3 opacity-40" />
+                    <p className="text-sm text-muted mb-1">No trend data yet</p>
+                    <p className="text-xs text-muted">Run prompts daily to build your visibility history</p>
+                  </div>
+                )}
               </div>
             </div>
             
-            <div className="p-4 h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="holoGradient" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#06B6D4" />
-                      <stop offset="50%" stopColor="#A855F7" />
-                      <stop offset="100%" stopColor="#EC4899" />
-                    </linearGradient>
-                    <linearGradient id="holoFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#A855F7" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#A855F7" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey="displayDate" 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: '#666', fontSize: 11 }}
-                    dy={10}
-                  />
-                  <YAxis 
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: '#666', fontSize: 11 }}
-                    domain={[0, 100]}
-                    tickFormatter={(v) => `${v}%`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: '#1a1a1a',
-                      border: '1px solid #333',
-                      borderRadius: '8px',
-                      fontSize: '12px'
-                    }}
-                    formatter={(value: number) => [`${value}%`, 'Visibility']}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="you"
-                    stroke="url(#holoGradient)"
-                    strokeWidth={2}
-                    fill="url(#holoFill)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+            {/* Tracked Competitors Sidebar */}
+            <div className="card p-0 overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <div>
+                  <h3 className="font-semibold text-primary text-sm">Tracked</h3>
+                  <p className="text-xs text-muted mt-0.5">
+                    {planLimits ? `${tracked.length}/${planLimits.max} slots` : `${tracked.length} competitors`}
+                  </p>
+                </div>
+                {canTrackMore && (
+                  <button 
+                    onClick={() => setShowAddModal(true)}
+                    className="p-1.5 rounded-lg text-muted hover:text-primary hover:bg-secondary transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              
+              <div className="max-h-[232px] overflow-y-auto">
+                {tracked.length === 0 ? (
+                  <div className="p-6 text-center">
+                    <Users className="w-8 h-8 text-muted mx-auto mb-2 opacity-40" />
+                    <p className="text-xs text-muted">No competitors tracked</p>
+                    <button 
+                      onClick={() => setShowAddModal(true)}
+                      className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
+                    >
+                      Add one <Plus className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    {tracked.map((comp) => (
+                      <TrackedCompetitorRow
+                        key={comp.id}
+                        competitor={comp}
+                        userData={userData}
+                        onUntrack={() => handleUntrackBrand(comp)}
+                        isUntracking={untrackingId === comp.id}
+                        onClick={() => openCompetitorDetail(comp)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Tracked Competitors */}
+          {/* Full Leaderboard */}
           <div className="card p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <div>
-                <h3 className="font-semibold text-primary text-sm">Tracked Competitors</h3>
-                <p className="text-xs text-muted mt-0.5">{tracked.length} of {planLimits.max} slots used</p>
+                <h3 className="font-semibold text-primary text-sm">All Brands in AI Responses</h3>
+                <p className="text-xs text-muted mt-0.5">
+                  {totalBrands} brands mentioned across your tracked prompts
+                </p>
+              </div>
+            </div>
+
+            {!hasLeaderboardData ? (
+              <div className="p-8 text-center">
+                <BarChart3 className="w-10 h-10 text-muted mx-auto mb-3 opacity-40" />
+                <p className="text-sm text-muted mb-2">No AI response data yet</p>
+                <p className="text-xs text-muted mb-4">Run prompts to discover which brands AI recommends</p>
+                <Link 
+                  href="/dashboard/prompts"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-lg text-xs font-medium text-primary hover:bg-hover transition-colors"
+                >
+                  Go to Prompts
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* Table Header */}
+                <div className="grid grid-cols-12 gap-2 px-4 py-3 text-xs text-muted border-b border-border bg-secondary/50">
+                  <div className="col-span-1">#</div>
+                  <div className="col-span-4">Brand</div>
+                  <div className="col-span-2 text-right">Visibility</div>
+                  <div className="col-span-2 text-right">Mentions</div>
+                  <div className="col-span-2 text-center">Sentiment</div>
+                  <div className="col-span-1"></div>
+                </div>
+
+                {/* Table Body */}
+                <div className="max-h-[400px] overflow-y-auto">
+                  {competitors.map((comp) => {
+                    const isTracking = trackingBrand === comp.name
+                    const isAlreadyTracked = comp.isTracked
+                
+                    return (
+                      <div 
+                        key={comp.name}
+                        className={`
+                          grid grid-cols-12 gap-2 px-4 py-3 items-center border-b border-border
+                          transition-colors
+                          ${comp.isUser ? 'bg-accent/5' : 'hover:bg-secondary/50'}
+                        `}
+                      >
+                        {/* Rank */}
+                        <div className="col-span-1 text-sm text-muted tabular-nums font-medium">
+                          {comp.rank}
+                        </div>
+                        
+                        {/* Brand */}
+                        <div className="col-span-4 flex items-center gap-3 min-w-0">
+                          <BrandLogo 
+                            domain={comp.domain}
+                            logoUrl={comp.logo}
+                            name={comp.name}
+                            size={32}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm truncate ${comp.isUser ? 'font-semibold text-primary' : 'text-primary'}`}>
+                                {comp.name}
+                              </span>
+                              {comp.isUser && (
+                                <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ 
+                                  background: 'linear-gradient(90deg, rgba(6,182,212,0.2), rgba(168,85,247,0.2), rgba(236,72,153,0.2))',
+                                  color: '#A855F7'
+                                }}>YOU</span>
+                              )}
+                              {isAlreadyTracked && !comp.isUser && (
+                                <span className="text-xs bg-green-500/20 text-green-500 px-1.5 py-0.5 rounded">Tracked</span>
+                              )}
+                            </div>
+                            <span className="text-xs text-muted truncate block">{comp.domain}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Visibility */}
+                        <div className="col-span-2 flex items-center justify-end gap-2">
+                          <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
+                            <div 
+                              className="h-full rounded-full transition-all"
+                              style={{ 
+                                width: `${comp.visibility}%`, 
+                                background: comp.isUser 
+                                  ? 'linear-gradient(90deg, #06B6D4, #A855F7, #EC4899)' 
+                                  : comp.color 
+                              }}
+                            />
+                          </div>
+                          <span className="text-sm text-primary tabular-nums w-10 text-right font-medium">{comp.visibility}%</span>
+                        </div>
+                        
+                        {/* Mentions */}
+                        <div className="col-span-2 text-right">
+                          <span className="text-sm text-primary tabular-nums font-medium">{comp.mentions}</span>
+                        </div>
+                        
+                        {/* Sentiment */}
+                        <div className="col-span-2 flex items-center justify-center">
+                          <span className={`text-xs px-2.5 py-1 rounded-full capitalize ${getSentimentBg(comp.sentiment)} ${getSentimentColor(comp.sentiment)}`}>
+                            {comp.sentiment}
+                          </span>
+                        </div>
+                        
+                        {/* Action */}
+                        <div className="col-span-1 flex items-center justify-end">
+                          {!comp.isUser && !isAlreadyTracked && canTrackMore && (
+                            <button
+                              onClick={() => handleTrackBrand(comp)}
+                              disabled={isTracking}
+                              className="p-1.5 text-muted hover:text-primary hover:bg-secondary rounded-lg transition-all disabled:opacity-50"
+                              title="Track competitor"
+                            >
+                              {isTracking ? (
+                                <div className="w-4 h-4 border-2 border-muted border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Plus className="w-4 h-4" />
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+
+        </div>
+      )}
+
+      {/* Add Competitor Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => {
+              setShowAddModal(false)
+              setSearchQuery('')
+              setSearchResults([])
+            }}
+          />
+          <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <div>
+                <h3 className="text-lg font-semibold text-primary">Add Competitor</h3>
+                <p className="text-sm text-muted mt-0.5">Search millions of brands</p>
               </div>
               <button
-                onClick={() => setShowAddModal(true)}
-                className="p-1.5 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors"
+                onClick={() => {
+                  setShowAddModal(false)
+                  setSearchQuery('')
+                  setSearchResults([])
+                }}
+                className="p-2 rounded-lg hover:bg-secondary text-muted hover:text-primary transition-colors"
               >
-                <Plus className="w-4 h-4" />
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 border-b border-border">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by company name or domain..."
+                  className="w-full pl-11 pr-4 py-3 bg-secondary border border-border rounded-lg text-primary placeholder-muted focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all"
+                  autoFocus
+                />
+                {searching && (
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 border-2 border-muted/30 border-t-muted rounded-full animate-spin" />
+                )}
+              </div>
+            </div>
+
+            <div className="max-h-80 overflow-y-auto">
+              {searchResults.length > 0 ? (
+                <div className="p-2">
+                  {searchResults.map((brand) => {
+                    const isAlreadyTracked = tracked.some(t => t.domain === brand.domain)
+                    return (
+                      <button
+                        key={brand.domain}
+                        onClick={() => !isAlreadyTracked && addCompetitorFromModal(brand)}
+                        disabled={addingCompetitor === brand.domain || isAlreadyTracked}
+                        className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left disabled:opacity-50 group"
+                      >
+                        <BrandLogo 
+                          domain={brand.domain} 
+                          logoUrl={brand.logo_url}
+                          name={brand.brand_name} 
+                          size={44} 
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-primary truncate">{brand.brand_name}</p>
+                          <p className="text-sm text-muted truncate">{brand.domain}</p>
+                        </div>
+                        {isAlreadyTracked ? (
+                          <span className="text-xs text-green-500 px-2 py-1 bg-green-500/10 rounded">Tracked</span>
+                        ) : addingCompetitor === brand.domain ? (
+                          <div className="w-5 h-5 border-2 border-muted border-t-primary rounded-full animate-spin" />
+                        ) : (
+                          <span className="px-3 py-1.5 text-xs font-medium bg-black text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                            Add
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              ) : searchQuery.length >= 2 && !searching ? (
+                <div className="p-2">
+                  {/* Fallback - show as a normal result row */}
+                  {(() => {
+                    const guessedDomain = searchQuery.includes('.') 
+                      ? searchQuery.toLowerCase().trim()
+                      : `${searchQuery.toLowerCase().replace(/\s+/g, '')}.com`
+                    const isAlreadyTracked = tracked.some(t => t.domain === guessedDomain)
+                    
+                    return (
+                      <button
+                        onClick={() => !isAlreadyTracked && addCompetitorFromModal({
+                          brand_name: searchQuery.trim(),
+                          domain: guessedDomain,
+                          logo_url: null
+                        })}
+                        disabled={addingCompetitor === guessedDomain || isAlreadyTracked}
+                        className="w-full flex items-center gap-4 p-3 rounded-lg hover:bg-secondary transition-colors text-left disabled:opacity-50 group"
+                      >
+                        <BrandLogo 
+                          domain={guessedDomain}
+                          name={searchQuery}
+                          size={44}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-primary truncate">{searchQuery}</p>
+                          <p className="text-sm text-muted truncate">{guessedDomain}</p>
+                        </div>
+                        {isAlreadyTracked ? (
+                          <span className="text-xs text-green-500 px-2 py-1 bg-green-500/10 rounded">Tracked</span>
+                        ) : addingCompetitor === guessedDomain ? (
+                          <div className="w-5 h-5 border-2 border-muted border-t-primary rounded-full animate-spin" />
+                        ) : (
+                          <span className="px-3 py-1.5 text-xs font-medium bg-black text-white rounded-lg group-hover:bg-neutral-800 transition-colors">
+                            Add
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })()}
+                  <p className="text-xs text-muted text-center mt-3 px-4">
+                    Don't see your competitor? Type their website domain for best results.
+                  </p>
+                </div>
+              ) : searchQuery.length < 2 ? (
+                <div className="p-10 text-center">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-5 h-5 text-muted" />
+                  </div>
+                  <p className="text-sm text-muted">Search by company name or domain</p>
+                  <p className="text-xs text-muted mt-1">e.g. "HubSpot" or "hubspot.com"</p>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Competitor Detail Modal */}
+      {selectedCompetitor && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => {
+              setSelectedCompetitor(null)
+              setBrandDetails(null)
+            }}
+          />
+          <div className="relative bg-card border border-border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+            {/* Banner - uses brand color or subtle gradient */}
+            <div 
+              className="h-24 relative"
+              style={{ 
+                background: brandDetails?.primaryColor 
+                  ? `linear-gradient(135deg, ${brandDetails.primaryColor} 0%, ${brandDetails.primaryColor}90 100%)`
+                  : 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)'
+              }}
+            >
+              {brandDetails?.bannerImage && (
+                <img 
+                  src={brandDetails.bannerImage} 
+                  alt="" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              )}
+              <button
+                onClick={() => {
+                  setSelectedCompetitor(null)
+                  setBrandDetails(null)
+                }}
+                className="absolute top-3 right-3 p-2 rounded-lg bg-black/30 hover:bg-black/50 text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
             
-            <div className="divide-y divide-border max-h-[320px] overflow-y-auto">
-              {tracked.map((competitor) => (
-                <TrackedCompetitorRow
-                  key={competitor.id}
-                  competitor={competitor}
-                  userData={userData}
-                  onUntrack={() => {}}
-                  isUntracking={false}
-                  onClick={() => setSelectedCompetitor(competitor)}
+            {/* Logo - overlapping banner */}
+            <div className="px-5 -mt-10 relative">
+              <div 
+                className="w-20 h-20 rounded-xl border-4 border-card overflow-hidden bg-card shadow-lg"
+              >
+                <BrandLogo 
+                  domain={selectedCompetitor.domain}
+                  logoUrl={brandDetails?.logo}
+                  name={selectedCompetitor.brand_name}
+                  size={80}
+                  className="w-full h-full"
                 />
-              ))}
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Category Leaderboard */}
-        <div className="card p-0 overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <div>
-              <h3 className="font-semibold text-primary text-sm">AI Visibility Leaderboard</h3>
-              <p className="text-xs text-muted mt-0.5">{totalBrands} brands in your category</p>
+            {/* Name + Domain + Description */}
+            <div className="px-5 pt-3 pb-2">
+              <h3 className="text-xl font-semibold text-primary">
+                {brandDetails?.name || selectedCompetitor.brand_name}
+              </h3>
+              <p className="text-sm text-muted">{selectedCompetitor.domain}</p>
+              
+              {/* Description */}
+              {loadingDetails ? (
+                <div className="mt-3 animate-pulse space-y-2">
+                  <div className="h-3 bg-secondary rounded w-full"></div>
+                  <div className="h-3 bg-secondary rounded w-4/5"></div>
+                </div>
+              ) : brandDetails?.description ? (
+                <p className="mt-3 text-sm text-secondary leading-relaxed line-clamp-3">
+                  {brandDetails.description}
+                </p>
+              ) : null}
+            </div>
+
+            {/* Your Intel */}
+            <div className="px-5 py-4">
+              <h4 className="text-xs font-medium text-muted uppercase tracking-wide mb-3">Your Intel</h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className="text-xl font-semibold text-primary">
+                    {selectedCompetitor.visibility}%
+                  </div>
+                  <div className="text-xs text-muted mt-0.5">Visibility</div>
+                </div>
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className={`text-xl font-semibold capitalize ${
+                    selectedCompetitor.sentiment === 'positive' ? 'text-green-500' :
+                    selectedCompetitor.sentiment === 'negative' ? 'text-red-500' : 'text-primary'
+                  }`}>
+                    {selectedCompetitor.sentiment || '—'}
+                  </div>
+                  <div className="text-xs text-muted mt-0.5">Sentiment</div>
+                </div>
+                <div className="bg-secondary rounded-lg p-3 text-center">
+                  <div className="text-xl font-semibold text-primary">
+                    {selectedCompetitor.mentions || 0}
+                  </div>
+                  <div className="text-xs text-muted mt-0.5">Mentions</div>
+                </div>
+              </div>
+              
+              {/* Comparison to you */}
+              {userData && (
+                <div className="mt-3 bg-secondary/50 rounded-lg p-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted">vs Your Visibility</span>
+                    {(() => {
+                      const diff = selectedCompetitor.visibility - userData.visibility
+                      if (diff === 0) return <span className="text-muted font-medium">Tied</span>
+                      if (diff > 0) return <span className="text-red-500 font-medium">They're +{diff}% ahead</span>
+                      return <span className="text-green-500 font-medium">You're +{Math.abs(diff)}% ahead</span>
+                    })()}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer Actions */}
+            <div className="px-5 pb-5 flex items-center justify-between gap-3 border-t border-border pt-4">
+              <button
+                onClick={() => {
+                  handleUntrackBrand(selectedCompetitor)
+                  setSelectedCompetitor(null)
+                  setBrandDetails(null)
+                }}
+                className="px-4 py-2 text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                Remove
+              </button>
+              <a
+                href={`https://${selectedCompetitor.domain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 text-sm bg-black text-white rounded-lg hover:bg-neutral-800 transition-colors"
+              >
+                Visit Website
+              </a>
             </div>
           </div>
-          
-          <div className="divide-y divide-border">
-            {competitors.map((competitor) => (
-              <LeaderboardRow
-                key={competitor.domain}
-                competitor={competitor}
-                onTrack={() => {}}
-                isTracking={false}
-              />
-            ))}
-          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
