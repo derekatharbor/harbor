@@ -36,7 +36,7 @@ const PRODUCT_LEFT = [
   },
 ]
 
-const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean; isFree?: boolean }[]> = {
+const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   competitors: [
     { title: 'Competitor Intelligence', description: 'Visibility, share of voice, sentiment, and trends', href: '/features/competitors' },
   ],
@@ -79,21 +79,22 @@ const SOLUTIONS_LEFT = [
   },
 ]
 
-const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean; isFree?: boolean }[]> = {
+const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
   marketers: [
-    { title: 'For Marketers', description: 'Brand monitoring and competitive intelligence', href: '/solutions/marketers' },
+    { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers' },
+    { title: 'Competitive Intel', description: 'See who AI recommends instead of you', href: '/features/competitors' },
   ],
   agencies: [
-    { title: 'Free Visibility Audit', description: 'Run a free AI audit for any brand', href: '/agencies/free-audit', isFree: true },
+    { title: 'Free Visibility Audit', description: 'Run a free AI audit for any brand', href: '/agencies/free-audit' },
     { title: 'Pitch Workspaces', description: 'White-label reports for prospects', href: '/pitch' },
-    { title: 'For Agencies', description: 'Add GEO to your service offerings', href: '/agencies' },
   ],
   ecommerce: [
     { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/shopify', isNew: true },
-    { title: 'For E-Commerce', description: 'Product visibility and shopping queries', href: '/solutions/ecommerce' },
+    { title: 'Shopping Queries', description: 'Track product recommendations', href: '/solutions/ecommerce' },
   ],
   enterprise: [
-    { title: 'For Enterprise', description: 'API access and custom reporting', href: '/solutions/enterprise' },
+    { title: 'API Access', description: 'Integrate Harbor into your stack', href: '/solutions/enterprise' },
+    { title: 'Custom Reporting', description: 'Tailored dashboards and exports', href: '/solutions/enterprise' },
   ],
 }
 
@@ -164,11 +165,6 @@ function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: D
                 {item.isNew && (
                   <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#22C55E] text-white rounded uppercase">
                     New
-                  </span>
-                )}
-                {item.isFree && (
-                  <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#3B82F6] text-white rounded uppercase">
-                    Free
                   </span>
                 )}
               </span>

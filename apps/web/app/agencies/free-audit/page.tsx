@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, BarChart3, Users, FileText, Zap } from 'lucide-react'
+import { ArrowRight, BarChart3, Users, FileText } from 'lucide-react'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
 
@@ -46,13 +46,7 @@ export default function FreeAuditPage() {
       <section className="bg-[#F6F5F3]">
         <MainNav isDark={false} />
 
-        <div className="max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-20 sm:pb-32 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
-            <Zap className="w-4 h-4 text-emerald-600" />
-            <span className="text-sm font-medium text-emerald-700 font-source-sans">100% Free</span>
-          </div>
-
+        <div className="max-w-4xl mx-auto px-6 pt-16 sm:pt-24 pb-20 sm:pb-32 text-center relative z-0">
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-black leading-[1.1] mb-6 font-source-sans">
             Free AI Visibility Audit
           </h1>
