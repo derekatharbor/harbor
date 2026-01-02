@@ -371,8 +371,14 @@ function TipsCallout() {
   return (
     <section className="relative bg-[#F6F5F3] py-20 sm:py-28">
       <div className="max-w-4xl mx-auto px-6">
-        <div className="bg-blue-500 rounded-2xl p-8 sm:p-12">
-          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+        <div className="relative bg-blue-500 rounded-2xl p-8 sm:p-12 overflow-hidden">
+          {/* Background image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+            style={{ backgroundImage: 'url(/images/competitors/tips-bg.png)' }}
+          />
+          
+          <div className="relative z-10 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
             <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
               <Lightbulb className="w-6 h-6 text-white" />
             </div>
@@ -439,9 +445,16 @@ function BrandMarquee() {
         </p>
       </div>
       
-      <div className="space-y-2">
-        <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={40} />
-        <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={45} />
+      <div className="relative">
+        {/* Left fade gradient */}
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+        {/* Right fade gradient */}
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+        
+        <div className="space-y-2">
+          <MarqueeRow domains={MARQUEE_BRANDS[0]} direction="left" speed={40} />
+          <MarqueeRow domains={MARQUEE_BRANDS[1]} direction="right" speed={45} />
+        </div>
       </div>
 
       {/* Marquee CSS */}
