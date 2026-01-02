@@ -36,7 +36,7 @@ const PRODUCT_LEFT = [
   },
 ]
 
-const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
+const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean; isFree?: boolean }[]> = {
   competitors: [
     { title: 'Competitor Intelligence', description: 'Visibility, share of voice, sentiment, and trends', href: '/features/competitors' },
   ],
