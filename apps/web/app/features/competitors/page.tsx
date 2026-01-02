@@ -724,4 +724,4 @@ export default function CompetitorsPage() {
       </div>
     </div>
   )
-}
+}w

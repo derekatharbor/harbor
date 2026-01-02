@@ -166,7 +166,7 @@ function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: D
                     New
                   </span>
                 )}
-                {'isFree' in item && item.isFree && (
+                {item.isFree && (
                   <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#3B82F6] text-white rounded uppercase">
                     Free
                   </span>
