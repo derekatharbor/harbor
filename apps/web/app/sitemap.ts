@@ -100,48 +100,11 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
   }
   
   // Sitemap 9: Alternatives and compare pages
+  // DISABLED - matching logic is broken (fuzzy category match returns unrelated brands)
+  // Re-enable once alternatives actually show real competitors
+  // TODO: Fix /alternatives/[slug]/page.tsx to use exact category match or proper competitor mapping
   if (id === 9) {
-    const { data: enriched } = await supabase
-      .from('ai_profiles')
-      .select('slug, category, updated_at')
-      .not('enriched_at', 'is', null)
-      .not('feed_data', 'is', null)
-      .order('visibility_score', { ascending: false })
-      .limit(30000)
-    
-    const alternativesUrls: MetadataRoute.Sitemap = (enriched || []).map(p => ({
-      url: `${baseUrl}/alternatives/${p.slug}`,
-      lastModified: p.updated_at || now,
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }))
-    
-    // Compare pages
-    const compareUrls: MetadataRoute.Sitemap = []
-    const groups: Record<string, Array<{ slug: string; category: string | null; updated_at: string | null }>> = {}
-    
-    for (const p of enriched || []) {
-      const cat = p.category?.toLowerCase() || 'other'
-      if (!groups[cat]) groups[cat] = []
-      if (groups[cat].length < 20) groups[cat].push(p)
-    }
-    
-    for (const profiles of Object.values(groups)) {
-      for (let i = 0; i < Math.min(5, profiles.length); i++) {
-        for (let j = i + 1; j < Math.min(10, profiles.length); j++) {
-          if (compareUrls.length < 5000) {
-            compareUrls.push({
-              url: `${baseUrl}/compare/${profiles[i].slug}-vs-${profiles[j].slug}`,
-              lastModified: now,
-              changeFrequency: 'weekly' as const,
-              priority: 0.7,
-            })
-          }
-        }
-      }
-    }
-    
-    return [...alternativesUrls, ...compareUrls]
+    return []
   }
   
   // Sitemaps 1-8: Brand pages

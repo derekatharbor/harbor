@@ -1,332 +1,531 @@
-'use client'
+// app/page.tsx
+// Scout Homepage - Marketing landing page
 
+import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import StickyNav from '@/components/marketing/StickyNav'
 import MainNav from '@/components/marketing/MainNav'
 
-export default function AgenciesPage() {
+export const metadata: Metadata = {
+  title: 'Scout - Find Brands. Win More Deals.',
+  description: 'The brand database built for creators. Find brands actively working with creators. Direct contacts. Real rates. Stop guessing, start pitching.',
+}
+
+// Features for the "Everything you need" section
+const FEATURES = [
+  {
+    icon: '🔍',
+    title: 'Brand Database',
+    description: 'Browse 700+ verified brands actively working with creators. Filter by niche, budget, and audience size.',
+  },
+  {
+    icon: '✉️',
+    title: 'AI Pitch Generator',
+    description: 'Generate personalized outreach emails in seconds. Sound like you, not a robot.',
+  },
+  {
+    icon: '📊',
+    title: 'Deal Tracker',
+    description: 'Track every brand from first pitch to payment. Never lose a deal in your DMs again.',
+  },
+  {
+    icon: '💰',
+    title: 'Rate Intelligence',
+    description: 'See what brands typically pay creators like you. Stop undercharging.',
+  },
+]
+
+// FAQ items
+const FAQS = [
+  {
+    question: 'How is Scout different from other creator tools?',
+    answer: 'Most creator tools help brands find you. Scout flips the script—we give you a database of brands actively working with creators, with direct contacts and real rate data. Think of it as Apollo or LinkedIn Sales Navigator, but built for creators.',
+  },
+  {
+    question: 'What brands are in the database?',
+    answer: 'We have 700+ brands across fashion, beauty, food, lifestyle, tech, and more. Every brand has been verified as actively running creator partnerships. No wasted pitches to brands that don\'t work with influencers.',
+  },
+  {
+    question: 'How does the 7-day free trial work?',
+    answer: 'You get full access to everything—the brand database, AI pitch generator, and deal tracker. No credit card required to start. If you love it, you can upgrade to keep access.',
+  },
+  {
+    question: 'Can I cancel anytime?',
+    answer: 'Yes. No contracts, no commitments. Cancel with one click whenever you want.',
+  },
+  {
+    question: 'What if I\'m a small creator?',
+    answer: 'Scout works for creators of all sizes. We include filters to find brands specifically looking for micro and nano creators. Many brands prefer working with smaller, more engaged audiences.',
+  },
+]
+
+export default function HomePage() {
   return (
     <div className="min-h-screen">
       <StickyNav />
-
-      {/* Hero Section */}
-      <section className="bg-[#F6F5F3]">
-        <MainNav isDark={false} />
+      
+      {/* Hero Section - Light */}
+      <section id="light-section" className="bg-[#F6F5F3]">
+        <MainNav />
 
         <div className="max-w-[1200px] mx-auto px-6 lg:px-14 pt-8 lg:pt-16 pb-16 lg:pb-24">
-          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-            {/* Left - Text Content */}
-            <div className="flex-1 text-left">
-              {/* Badge */}
-              <div className="flex mb-6">
-                <span className="px-3 py-1 bg-black/5 border border-black/10 rounded-full text-[12px] font-semibold font-source-code text-black/60 uppercase tracking-wider">
-                  For Agencies
-                </span>
-              </div>
+          <div className="flex flex-col items-center text-center">
+            {/* Badge - Clickable */}
+            <Link 
+              href="/signup"
+              className="flex items-center gap-2 h-8 px-3 bg-white rounded-lg shadow-sm border border-black/5 mb-6 lg:mb-8 hover:shadow-md hover:border-black/10 transition-all"
+            >
+              <span className="px-2 py-0.5 bg-[#111827] rounded text-[11px] font-semibold tracking-wide text-white">
+                NEW
+              </span>
+              <span 
+                className="text-[12px] font-medium text-[#111827]"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                700+ verified brands in database
+              </span>
+            </Link>
 
-              <h1 className="text-[36px] lg:text-[52px] font-semibold font-source-sans tracking-tight text-black leading-[1.1] mb-5">
-                Win more clients with AI data
-              </h1>
-              <p className="text-[16px] lg:text-[18px] font-normal font-source-code text-[#6F6E6E] mb-8 max-w-[480px]">
-                Pitch Workspace lets you run AI audits for any prospect and show them exactly how they appear across ChatGPT, Claude, and Perplexity.
-              </p>
+            {/* Headline */}
+            <h1 
+              className="max-w-[600px] text-[36px] lg:text-[56px] font-semibold text-[#111827] leading-[1.1] mb-5"
+              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+            >
+              Find brands. Win more deals.
+            </h1>
 
-              {/* CTA */}
-              <form className="hidden lg:flex items-center h-14 bg-white rounded-[10px] border border-[#E8E8E7] shadow-sm max-w-[460px]">
-                <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans tracking-[0.5px] text-black placeholder:text-[#A0A0A0] bg-transparent outline-none" required />
-                <button type="submit" className="h-[42px] px-7 mr-1.5 rounded-[7px] text-[15px] font-medium font-source-sans tracking-[0.69px] whitespace-nowrap bg-black text-white hover:bg-black/90 transition-colors">Get started</button>
-              </form>
-
-              {/* Mobile */}
-              <div className="lg:hidden flex flex-col gap-3 w-full">
-                <form className="flex flex-col gap-2">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your company email"
-                    className="h-12 px-4 rounded-[10px] border border-[#E8E8E7] bg-white text-[15px] font-normal font-source-sans text-black placeholder:text-[#A0A0A0] outline-none"
-                    required
-                  />
-                  <button type="submit" className="h-12 rounded-[10px] text-[15px] font-semibold font-source-sans flex items-center justify-center bg-black text-white hover:bg-black/90 transition-colors">
-                    Get started free
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {/* Right - Hero Image */}
-            {/* UPLOAD IMAGE TO: /public/images/agencies/hero-illustration.png */}
-            <div className="flex-1 w-full lg:pl-8">
-              <img
-                src="/images/agencies/hero-illustration.png"
-                alt="Pitch Workspace"
-                className="w-full h-auto max-w-[500px] mx-auto lg:ml-auto lg:mr-0"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works - Dark Section */}
-      <section className="w-full bg-[#111111]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
-          <div className="text-center mb-10 lg:mb-16">
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight">How Pitch Workspace works</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 max-w-[1000px] mx-auto">
-            <div className="text-center lg:text-left">
-              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">01</div>
-              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Add a prospect</h3>
-              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Drop in any company domain you are pitching or prospecting.</p>
-            </div>
-            <div className="text-center lg:text-left">
-              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">02</div>
-              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Run an AI audit</h3>
-              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">We check their visibility across ChatGPT, Claude, Perplexity, and Gemini.</p>
-            </div>
-            <div className="text-center lg:text-left">
-              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">03</div>
-              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Review the results</h3>
-              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Visibility score, sentiment breakdown, and how they compare to competitors.</p>
-            </div>
-            <div className="text-center lg:text-left">
-              <div className="text-[42px] lg:text-[56px] font-semibold font-source-sans text-white/10 leading-none mb-2">04</div>
-              <h3 className="text-[18px] lg:text-[20px] font-semibold font-source-sans text-white mb-2">Share the report</h3>
-              <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-white/50 leading-relaxed">Send a white-label PDF or link — branded to your agency.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Props - Light Section */}
-      <section className="w-full bg-[#F6F5F3]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 max-w-[1000px] mx-auto">
-            {/* Pitch New Clients */}
-            <div className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
-              <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
-                <img src="/icons/trophy.png" alt="" className="w-8 h-8" />
-              </div>
-              <h3 className="text-[20px] lg:text-[24px] font-semibold font-source-sans text-black mb-3">Pitch new clients</h3>
-              <p className="text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-4">
-                Stop competing on price. Win deals by showing prospects problems they did not know they had.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Show prospects their AI visibility gap
-                </li>
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Compare them to competitors they care about
-                </li>
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Prove the problem before selling the fix
-                </li>
-              </ul>
-            </div>
-
-            {/* Upsell Existing Clients */}
-            <div className="bg-white rounded-[15px] border border-[#EFEEED] p-6 lg:p-8">
-              <div className="w-14 h-14 rounded-xl bg-[#F6F5F3] flex items-center justify-center mb-4">
-                <img src="/icons/visibility.png" alt="" className="w-8 h-8" />
-              </div>
-              <h3 className="text-[20px] lg:text-[24px] font-semibold font-source-sans text-black mb-3">Upsell existing clients</h3>
-              <p className="text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed mb-4">
-                Add AI visibility as a new service line. Create recurring revenue from monitoring.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Add AI Search Optimization as a retainer
-                </li>
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Show clients what competitors are doing
-                </li>
-                <li className="flex items-start gap-2 text-[14px] font-normal font-source-code text-[#6F6E6E]">
-                  <span className="text-black mt-0.5">✓</span>
-                  Prove ROI with visibility trend reports
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pitch Workspace Teaser - Dark Section */}
-      <section className="w-full bg-[#111111]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
-          <div className="max-w-[800px] mx-auto">
-            <div className="inline-flex items-center gap-2 h-[34px] px-3 bg-[#272625] rounded-[9px] mb-4 lg:mb-6">
-              <div className="flex items-center justify-center w-[44px] h-[22px] rounded-[5px] overflow-hidden" style={{ backgroundImage: 'url(/images/holographic-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                <span className="text-[10px] font-bold font-source-code text-black tracking-wider">SOON</span>
-              </div>
-              <span className="text-[13px] font-medium font-source-sans text-white/80">Pitch Workspace</span>
-            </div>
-
-            <h2 className="text-[28px] lg:text-[42px] font-semibold font-source-sans tracking-tight text-white leading-tight mb-4">
-              Manage your entire pipeline
-            </h2>
-            <p className="text-[15px] lg:text-[18px] font-normal font-source-code text-white/50 mb-8 max-w-[600px]">
-              Stop juggling spreadsheets. Track prospects, generate reports, and close deals from one workspace.
+            {/* Subheadline */}
+            <p 
+              className="max-w-[480px] text-[16px] lg:text-[18px] text-[#6B7280] leading-relaxed mb-8"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              The brand database built for creators. Direct contacts. Real rates. Stop guessing, start pitching.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
-                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">Prospect Pipeline</h3>
-                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Track every prospect from lead to closed-won.</p>
-              </div>
-              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
-                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">Historical Tracking</h3>
-                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Monitor visibility over time, even before they sign.</p>
-              </div>
-              <div className="bg-[#1a1a1a] rounded-[10px] border border-[#333] p-5">
-                <h3 className="text-[16px] font-semibold font-source-sans text-white mb-2">One-Click Reports</h3>
-                <p className="text-[14px] font-normal font-source-code text-white/50 leading-relaxed">Generate branded audits instantly.</p>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <Link href="/auth/signup" className="inline-flex h-12 px-6 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center hover:bg-gray-100 transition-colors">
-                Get early access
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
+              <Link 
+                href="/signup"
+                className="h-12 px-8 rounded-lg bg-[#111827] text-[15px] font-semibold text-white flex items-center hover:bg-black/80 transition-colors"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                Start for free
+              </Link>
+              <Link 
+                href="#how-it-works"
+                className="h-12 px-8 rounded-lg border border-black/20 bg-white text-[15px] font-medium text-[#111827] flex items-center hover:bg-black/5 transition-colors"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                See how it works
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* FAQ - Light Section */}
-      <section className="w-full bg-[#F6F5F3]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-14 py-16 lg:py-24">
-          <div className="max-w-[700px] mx-auto">
-            <h2 className="text-[28px] lg:text-[36px] font-semibold font-source-sans tracking-tight text-black leading-tight mb-8 lg:mb-12">
-              Questions and Answers
-            </h2>
+            <p 
+              className="text-[13px] text-[#9CA3AF]"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              No credit card required
+            </p>
 
-            <div className="space-y-0 divide-y divide-[#E0DFDE]">
-              <div className="py-5">
-                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">Is Pitch Workspace free?</h3>
-                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">Yes. Pitch Workspace is included on all Agency plans at no extra cost.</p>
-              </div>
-              <div className="py-5">
-                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">What AI models do you check?</h3>
-                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">ChatGPT, Claude, Perplexity, Gemini, and Google AI Overviews.</p>
-              </div>
-              <div className="py-5">
-                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">Are reports white-labeled?</h3>
-                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">Yes. Reports include a small Harbor mention at the bottom, but are otherwise fully branded to your agency.</p>
-              </div>
-              <div className="py-5">
-                <h3 className="text-[16px] lg:text-[18px] font-semibold font-source-sans text-black mb-2">How is this different from SEO tools?</h3>
-                <p className="text-[14px] lg:text-[15px] font-normal font-source-code text-[#6F6E6E] leading-relaxed">SEO tracks Google rankings. Harbor tracks how AI models talk about brands — a different channel entirely.</p>
+            {/* Hero Image */}
+            <div className="mt-12 lg:mt-16 w-full max-w-[1000px]">
+              <div className="relative rounded-xl lg:rounded-2xl overflow-hidden border border-black/10 shadow-2xl bg-white">
+                {/* Replace with actual screenshot */}
+                <div className="aspect-[16/10] bg-gradient-to-br from-[#F8F9FB] to-[#E5E7EB] flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-[#9CA3AF] text-sm mb-2">Hero image</p>
+                    <p className="text-[#6B7280] text-xs">/public/marketing/hero-scout.png</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="bg-[#111111] py-20 lg:py-32">
-        <div className="max-w-[900px] mx-auto px-6 lg:px-14 text-center">
-          <div className="inline-block mb-8">
-            <h2
-              className="text-[32px] lg:text-[56px] tracking-tight leading-[1.1] font-black uppercase text-center"
-              style={{ fontFamily: 'Arial Black, Helvetica Bold, sans-serif' }}
+      {/* Stats Strip */}
+      <section className="w-full bg-white border-y border-black/5 py-12">
+        <div className="max-w-[900px] mx-auto px-6">
+          <div className="grid grid-cols-3 gap-8">
+            {[
+              { stat: '700+', label: 'Verified brands' },
+              { stat: '50+', label: 'Categories' },
+              { stat: '100%', label: 'Direct contacts' },
+            ].map((item, i) => (
+              <div key={i} className="text-center">
+                <p 
+                  className="text-[32px] lg:text-[40px] font-semibold text-[#111827]"
+                  style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+                >
+                  {item.stat}
+                </p>
+                <p 
+                  className="text-[13px] lg:text-[14px] text-[#6B7280]"
+                  style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                >
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Dark Section - "Everything you need" */}
+      <section id="dark-section" className="bg-[#111111] py-16 lg:py-24">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-14">
+          {/* Section Header */}
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 
+              className="text-[28px] lg:text-[40px] font-semibold text-white leading-tight mb-4"
+              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
             >
-              <span className="text-white">CLOSE FASTER WITH</span>
-              <br />
-              <span
-                className="inline-block"
-                style={{
-                  background: 'linear-gradient(90deg, #f8c8dc, #e8b4f8, #d4b4f8, #b4c8f8, #8fd8f8, #b4f0f0, #c8e8f8, #f8d8c8, #f8c8dc)',
-                  backgroundSize: '300% auto',
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'gradient-shift 4s ease infinite'
-                }}
+              Everything you need to land brand deals
+            </h2>
+            <p 
+              className="text-[16px] text-white/50 max-w-[500px] mx-auto"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              Stop juggling spreadsheets, DMs, and email threads. One workspace for your entire brand partnership workflow.
+            </p>
+          </div>
+
+          {/* 4-Column Feature Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {FEATURES.map((feature, idx) => (
+              <div 
+                key={idx}
+                className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-6"
               >
-                AI INSIGHTS
-              </span>
+                <div className="text-3xl mb-4">{feature.icon}</div>
+                <h3 
+                  className="text-[16px] font-semibold text-white mb-2"
+                  style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+                >
+                  {feature.title}
+                </h3>
+                <p 
+                  className="text-[13px] text-white/50 leading-relaxed"
+                  style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                >
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Light */}
+      <section className="w-full bg-[#F6F5F3] py-16 lg:py-24">
+        <div id="how-it-works" className="max-w-[1200px] mx-auto px-6 lg:px-14 scroll-mt-24">
+          {/* Section Header */}
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 
+              className="text-[28px] lg:text-[40px] font-semibold text-[#111827] leading-tight mb-4"
+              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+            >
+              Built to turn your content into consistent income
+            </h2>
+            <p 
+              className="text-[16px] text-[#6B7280] max-w-[500px] mx-auto"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              Three steps. That's all it takes.
+            </p>
+          </div>
+
+          {/* Three Steps */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                step: '01',
+                title: 'Find brands',
+                description: 'Search our database of verified brands by niche, budget, and audience size. Every brand is confirmed as actively working with creators.',
+              },
+              {
+                step: '02',
+                title: 'Pitch with AI',
+                description: 'Generate personalized outreach in seconds. Our AI learns your voice and crafts pitches that sound like you—not a template.',
+              },
+              {
+                step: '03',
+                title: 'Close deals',
+                description: 'Track every conversation from first pitch to payment. See your pipeline value, follow-up reminders, and close more deals.',
+              },
+            ].map((step, i) => (
+              <div 
+                key={i}
+                className="bg-white rounded-2xl border border-black/5 p-6 lg:p-8"
+              >
+                <span 
+                  className="text-[12px] font-semibold text-[#9CA3AF] tracking-wider"
+                  style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                >
+                  STEP {step.step}
+                </span>
+                <h3 
+                  className="text-[20px] font-semibold text-[#111827] mt-3 mb-3"
+                  style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+                >
+                  {step.title}
+                </h3>
+                <p 
+                  className="text-[14px] text-[#6B7280] leading-relaxed"
+                  style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                >
+                  {step.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof / Logos */}
+      <section className="w-full bg-white py-12">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <p 
+            className="text-center text-[13px] font-medium text-[#9CA3AF] mb-8"
+            style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+          >
+            Creators using Scout pitch brands like
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-8 opacity-40 grayscale hover:opacity-60 hover:grayscale-0 transition-all">
+                <Image
+                  src={`/marketing/brand-logo-${i}.png`}
+                  alt={`Brand ${i}`}
+                  width={100}
+                  height={32}
+                  className="h-full w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-[#F6F5F3] py-16 lg:py-24">
+        <div className="max-w-[700px] mx-auto px-6 lg:px-14">
+          <div className="text-center mb-10">
+            <h2 
+              className="text-[26px] lg:text-[32px] font-semibold text-[#111827] mb-3"
+              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+            >
+              Frequently asked questions
             </h2>
           </div>
 
-          <form className="hidden lg:flex items-center justify-center mx-auto max-w-[500px] h-14 bg-[#1a1a1a] rounded-[10px] border border-[#333]">
-            <input type="email" name="email" placeholder="Enter your company email" className="flex-1 h-full px-5 text-[16px] font-normal font-source-sans text-white placeholder:text-[#666] bg-transparent outline-none" required />
-            <button type="submit" className="h-[42px] px-6 mr-1.5 rounded-[7px] text-[14px] font-semibold font-source-sans bg-white text-black hover:bg-gray-100 transition-colors whitespace-nowrap">Get started free</button>
-          </form>
-
-          <Link
-            href="/signup"
-            className="lg:hidden inline-flex h-12 px-8 rounded-[10px] bg-white text-black text-[15px] font-semibold font-source-sans items-center justify-center"
-          >
-            Get started free
-          </Link>
+          <div className="space-y-3">
+            {FAQS.map((faq, idx) => (
+              <details
+                key={idx}
+                className="group bg-white rounded-xl border border-black/5 overflow-hidden"
+              >
+                <summary className="flex items-center justify-between p-5 cursor-pointer list-none">
+                  <span 
+                    className="text-[15px] lg:text-[16px] font-medium text-[#111827] pr-4"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    {faq.question}
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-black/40 flex-shrink-0 transition-transform group-open:rotate-180"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <div className="px-5 pb-5">
+                  <p 
+                    className="text-[14px] text-[#6B7280] leading-relaxed"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    {faq.answer}
+                  </p>
+                </div>
+              </details>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <style jsx global>{`
-          @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}</style>
+      {/* Final CTA - Dark with style */}
+      <section className="bg-[#111111] py-20 lg:py-28">
+        <div className="max-w-[800px] mx-auto px-6 lg:px-14 text-center">
+          <h2 
+            className="text-[32px] lg:text-[48px] font-semibold text-white leading-tight mb-4"
+            style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+          >
+            Ready to land more brand deals?
+          </h2>
+          <p 
+            className="text-[16px] lg:text-[18px] text-white/50 mb-8 max-w-[450px] mx-auto"
+            style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+          >
+            Join creators who are finding, pitching, and closing brand partnerships faster with Scout.
+          </p>
+          
+          {/* Price */}
+          <div className="inline-flex items-baseline gap-1 mb-8">
+            <span 
+              className="text-[48px] lg:text-[56px] font-semibold text-white"
+              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+            >
+              $39
+            </span>
+            <span 
+              className="text-[16px] text-white/50"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              /month
+            </span>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link 
+              href="/signup"
+              className="w-full sm:w-auto h-12 px-8 rounded-lg bg-white text-[15px] font-semibold text-[#111827] flex items-center justify-center hover:bg-gray-100 transition-colors"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              Start for free
+            </Link>
+          </div>
+          
+          <p 
+            className="mt-4 text-[13px] text-white/40"
+            style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+          >
+            7-day free trial • No credit card required
+          </p>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-[#222]">
+      <footer className="w-full bg-[#111111] pt-16 pb-8 border-t border-white/10">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-14">
-          {/* Footer Links */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-16 mb-12 lg:mb-16">
-            <div className="col-span-2 lg:col-span-1 flex justify-center lg:justify-start mb-4 lg:mb-0">
-              <img src="/images/Harbor_White_Logo.png" alt="Harbor" className="w-10 h-10" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-16 mb-12">
+            {/* Logo */}
+            <div className="col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2 mb-4">
+                <Image
+                  src="/white-logo.png"
+                  alt="Scout"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
+                <span 
+                  className="text-xl font-semibold text-white"
+                  style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
+                >
+                  scout
+                </span>
+              </div>
+              <p 
+                className="text-[14px] text-white/40"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                The brand database for creators.
+              </p>
             </div>
+
+            {/* Product */}
             <div>
-              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Product</h4>
-              <ul className="space-y-3 lg:space-y-4">
-                <li><Link href="/features/brand-visibility" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Visibility</Link></li>
-                <li><Link href="/features/shopping" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Shopping Intelligence</Link></li>
-                <li><Link href="/features/conversations" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Conversation Tracking</Link></li>
-                <li><Link href="/features/analytics" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Website Analytics</Link></li>
+              <h4 
+                className="text-white text-[14px] font-semibold mb-4"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                Product
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link 
+                    href="#how-it-works" 
+                    className="text-white/50 text-[14px] hover:text-white transition-colors"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    How it works
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/pricing" 
+                    className="text-white/50 text-[14px] hover:text-white transition-colors"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    Pricing
+                  </Link>
+                </li>
               </ul>
             </div>
+
+            {/* Company */}
             <div>
-              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Company</h4>
-              <ul className="space-y-3 lg:space-y-4">
-                <li><Link href="/pricing" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Pricing</Link></li>
-                <li><Link href="/about" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">About us</Link></li>
-                <li><Link href="/blog" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Blog</Link></li>
-                <li><Link href="/contact" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Contact</Link></li>
+              <h4 
+                className="text-white text-[14px] font-semibold mb-4"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                Company
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link 
+                    href="/contact" 
+                    className="text-white/50 text-[14px] hover:text-white transition-colors"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
+
+            {/* Legal */}
             <div>
-              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Resources</h4>
-              <ul className="space-y-3 lg:space-y-4">
-                <li><Link href="/index" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Brand Index</Link></li>
-                <li><Link href="/agencies" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">For Agencies</Link></li>
-                <li><Link href="/docs" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Documentation</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white text-[16px] lg:text-[18px] font-semibold font-source-sans mb-4 lg:mb-6">Contact</h4>
-              <ul className="space-y-3 lg:space-y-4">
-                <li><a href="mailto:hello@useharbor.io" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">hello@useharbor.io</a></li>
-                <li><a href="https://twitter.com/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">Twitter / X</a></li>
-                <li><a href="https://linkedin.com/company/useharbor" target="_blank" rel="noopener noreferrer" className="text-[#888] text-[14px] lg:text-[15px] font-source-sans hover:text-white transition-colors">LinkedIn</a></li>
+              <h4 
+                className="text-white text-[14px] font-semibold mb-4"
+                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+              >
+                Legal
+              </h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link 
+                    href="/privacy" 
+                    className="text-white/50 text-[14px] hover:text-white transition-colors"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/terms" 
+                    className="text-white/50 text-[14px] hover:text-white transition-colors"
+                    style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
 
-          {/* Bottom Bar */}
-          <div className="flex flex-col lg:flex-row items-center justify-between pt-8 border-t border-[#222] gap-4">
-            <p className="text-[#666] text-[14px] font-source-sans">© 2025 Harbor</p>
-            <div className="flex items-center gap-6 lg:gap-8">
-              <Link href="/privacy" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="text-[#666] text-[14px] font-source-sans hover:text-white transition-colors">Terms of Service</Link>
-            </div>
+          {/* Bottom */}
+          <div className="pt-8 border-t border-white/10 flex flex-col lg:flex-row items-center justify-between gap-4">
+            <p 
+              className="text-[13px] text-white/30"
+              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
+            >
+              © {new Date().getFullYear()} Scout. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
