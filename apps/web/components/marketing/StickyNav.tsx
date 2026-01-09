@@ -2,10 +2,259 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
+import MobileMenu from './MobileMenu'
+
+// Product dropdown - left items control right content
+const PRODUCT_LEFT = [
+  {
+    id: 'competitors',
+    color: '#3B82F6',
+    title: 'Competitors',
+    description: 'Benchmark against your competition',
+  },
+  {
+    id: 'analytics',
+    color: '#F97316',
+    title: 'Website Analytics',
+    description: 'Understand how AI crawlers access your site',
+  },
+  {
+    id: 'sources',
+    color: '#22C55E',
+    title: 'Sources',
+    description: 'See where AI gets info about you',
+  },
+  {
+    id: 'prompts',
+    color: '#EAB308',
+    title: 'Prompts',
+    description: 'Track the queries mentioning your brand',
+  },
+]
+
+const PRODUCT_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
+  competitors: [
+    { title: 'Competitor Intelligence', description: 'Visibility, share of voice, sentiment, and trends', href: '/features/competitors' },
+  ],
+  analytics: [
+    { title: 'Website Analytics', description: 'Crawl frequency and content coverage', href: '/features/analytics' },
+  ],
+  sources: [
+    { title: 'Source Tracking', description: 'Citations and content gaps', href: '/features/sources' },
+  ],
+  prompts: [
+    { title: 'Prompt Monitoring', description: 'Query tracking, categories, and custom prompts', href: '/features/prompts' },
+  ],
+}
+
+// Solutions dropdown - left items control right content
+const SOLUTIONS_LEFT = [
+  {
+    id: 'marketers',
+    color: '#3B82F6',
+    title: 'For Marketers',
+    description: 'Own your AI narrative',
+  },
+  {
+    id: 'agencies',
+    color: '#F97316',
+    title: 'For Agencies',
+    description: 'Add GEO to your service offerings',
+  },
+  {
+    id: 'ecommerce',
+    color: '#EAB308',
+    title: 'For E-Commerce',
+    description: 'Get recommended in shopping queries',
+  },
+  {
+    id: 'enterprise',
+    color: '#22C55E',
+    title: 'For Enterprise',
+    description: 'Monitor AI mentions at scale',
+  },
+]
+
+const SOLUTIONS_RIGHT: Record<string, { title: string; description: string; href: string; isNew?: boolean }[]> = {
+  marketers: [
+    { title: 'Brand Monitoring', description: 'Track how AI describes your brand', href: '/solutions/marketers' },
+    { title: 'Competitive Intel', description: 'See who AI recommends instead of you', href: '/features/competitors' },
+  ],
+  agencies: [
+    { title: 'Free Visibility Audit', description: 'Run a free AI audit for any brand', href: '/agencies/free-audit' },
+    { title: 'Pitch Workspaces', description: 'White-label reports for prospects', href: '/pitch' },
+  ],
+  ecommerce: [
+    { title: 'Shopify Plugin', description: 'Add AI visibility to your store', href: '/shopify', isNew: true },
+    { title: 'Shopping Queries', description: 'Track product recommendations', href: '/solutions/ecommerce' },
+  ],
+  enterprise: [
+    { title: 'API Access', description: 'Integrate Harbor into your stack', href: '/solutions/enterprise' },
+    { title: 'Custom Reporting', description: 'Tailored dashboards and exports', href: '/solutions/enterprise' },
+  ],
+}
+
+interface DropdownProps {
+  items: typeof PRODUCT_LEFT
+  rightContent: typeof PRODUCT_RIGHT
+  defaultActive: string
+  showIndexCTA?: boolean
+}
+
+function DropdownContent({ items, rightContent, defaultActive, showIndexCTA }: DropdownProps) {
+  const [activeItem, setActiveItem] = useState(defaultActive)
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex">
+        {/* Left Column */}
+        <div className="w-[260px] py-3 px-2">
+          {items.map((item) => (
+            <div
+              key={item.id}
+              onMouseEnter={() => setActiveItem(item.id)}
+              className={`group flex items-start gap-3 px-4 py-2.5 rounded-lg cursor-pointer transition-colors ${
+                activeItem === item.id ? 'bg-[#F6F5F3]' : 'hover:bg-[#F6F5F3]'
+              }`}
+            >
+              <div
+                className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                style={{ backgroundColor: item.color }}
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[14px] font-semibold font-source-sans text-black">
+                    {item.title}
+                  </span>
+                  <svg
+                    className={`w-3.5 h-3.5 transition-all ${
+                      activeItem === item.id ? 'text-black/50 translate-x-0.5' : 'text-black/30'
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <p className="text-[12px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="w-px bg-[#EFEEED] my-3" />
+
+        {/* Right Column - Dynamic based on hover */}
+        <div className="w-[260px] py-3 pl-2">
+          {rightContent[activeItem]?.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="block px-4 py-2 rounded-lg hover:bg-[#F6F5F3] transition-colors"
+            >
+              <span className="text-[13px] font-semibold font-source-sans text-black flex items-center gap-2">
+                {item.title}
+                {item.isNew && (
+                  <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-[#22C55E] text-white rounded uppercase">
+                    New
+                  </span>
+                )}
+              </span>
+              <p className="text-[11px] font-normal font-source-sans text-[#6F6E6E] mt-0.5">
+                {item.description}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
+      
+      {/* Index CTA Lip */}
+      {showIndexCTA && (
+        <Link 
+          href="/brands"
+          className="flex items-center justify-between px-5 py-3 bg-[#F6F5F3] rounded-b-xl border-t border-[#EFEEED] hover:bg-[#EFEEED] transition-colors group"
+        >
+          <span className="text-[13px] font-medium font-source-sans text-[#6C6C6B] group-hover:text-black transition-colors">
+            Claim your free AI visibility profile
+          </span>
+          <svg 
+            className="w-4 h-4 text-[#6C6C6B] group-hover:text-black group-hover:translate-x-0.5 transition-all" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      )}
+    </div>
+  )
+}
+
+interface NavDropdownProps {
+  label: string
+  children: React.ReactNode
+  isDark: boolean
+}
+
+function NavDropdown({ label, children, isDark }: NavDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setIsOpen(true)
+  }
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 150)
+  }
+
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        className={`flex items-center gap-1 px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
+          isDark 
+            ? isOpen ? 'text-white bg-white/10' : 'text-white/80 hover:text-white hover:bg-white/10'
+            : isOpen ? 'text-black bg-black/5' : 'text-black/70 hover:text-black hover:bg-black/5'
+        }`}
+      >
+        {label}
+        <svg
+          className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Dropdown Panel - Left aligned */}
+      <div
+        className={`absolute top-full left-0 mt-3 bg-white rounded-xl shadow-[0px_8px_30px_rgba(0,0,0,0.12)] border border-black/5 transition-all duration-150 overflow-hidden ${
+          isOpen
+            ? 'opacity-100 translate-y-0 pointer-events-auto'
+            : 'opacity-0 -translate-y-2 pointer-events-none'
+        }`}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
 
 export default function StickyNav() {
   const [isVisible, setIsVisible] = useState(false)
@@ -26,7 +275,7 @@ export default function StickyNav() {
         setIsDark(overDark)
       } else if (darkSection) {
         const darkRect = darkSection.getBoundingClientRect()
-        setIsDark(darkRect.top < 80 && darkRect.bottom > 80)
+        setIsDark(darkRect.top < 80)
       }
     }
 
@@ -45,50 +294,48 @@ export default function StickyNav() {
         style={{ top: 'calc(16px + env(safe-area-inset-top, 0px))' }}
       >
         {/* Desktop Nav */}
-        <div className={`hidden lg:flex items-center justify-between w-[620px] h-14 px-5 rounded-xl transition-all duration-300 backdrop-blur-md ${
+        <div className={`hidden lg:flex items-center justify-between w-[768px] h-14 px-5 rounded-xl transition-all duration-300 backdrop-blur-md ${
           isDark 
             ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
             : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
         }`}>
           {/* Left: Logo + Nav Links */}
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 mr-2">
+          <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center mr-3">
               <Image
-                src={isDark ? "/white-logo.png" : "/logo.png"}
-                alt="Scout"
-                width={28}
-                height={28}
-                className="w-7 h-7 transition-all duration-300"
+                src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
+                alt="Harbor"
+                width={25}
+                height={25}
+                className="transition-opacity duration-300"
               />
-              <span 
-                className={`text-xl font-semibold transition-colors duration-300 ${
-                  isDark ? 'text-white' : 'text-[#111827]'
-                }`}
-                style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
-              >
-                scout
-              </span>
             </Link>
 
-            <Link
-              href="#how-it-works"
-              className={`px-3 py-1.5 text-[13px] font-medium rounded-md transition-colors ${
-                isDark 
-                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
-                  : 'text-black/70 hover:text-black hover:bg-black/5'
-              }`}
-              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
-            >
-              How it works
-            </Link>
+            {/* Nav Dropdowns */}
+            <NavDropdown label="Product" isDark={isDark}>
+              <DropdownContent 
+                items={PRODUCT_LEFT} 
+                rightContent={PRODUCT_RIGHT} 
+                defaultActive="competitors"
+                showIndexCTA
+              />
+            </NavDropdown>
+
+            <NavDropdown label="Solutions" isDark={isDark}>
+              <DropdownContent 
+                items={SOLUTIONS_LEFT} 
+                rightContent={SOLUTIONS_RIGHT} 
+                defaultActive="marketers" 
+              />
+            </NavDropdown>
+
             <Link
               href="/pricing"
-              className={`px-3 py-1.5 text-[13px] font-medium rounded-md transition-colors ${
+              className={`px-2 py-1.5 text-[13px] font-medium font-source-sans transition-colors rounded ${
                 isDark 
-                  ? 'text-white/70 hover:text-white hover:bg-white/10' 
+                  ? 'text-white/80 hover:text-white hover:bg-white/10' 
                   : 'text-black/70 hover:text-black hover:bg-black/5'
               }`}
-              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
             >
               Pricing
             </Link>
@@ -98,25 +345,23 @@ export default function StickyNav() {
           <div className="flex items-center gap-2">
             <Link 
               href="/login"
-              className={`h-9 px-5 rounded-md border text-[13px] font-medium transition-colors flex items-center ${
+              className={`h-9 px-5 rounded-md border text-[13px] font-medium font-space tracking-[0.61px] transition-colors flex items-center ${
                 isDark 
                   ? 'border-[#333] text-white hover:bg-white/10' 
                   : 'border-[#B1B0AF] text-black hover:bg-black/5'
               }`}
-              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
             >
               Login
             </Link>
             <Link 
               href="/signup"
-              className={`h-9 px-5 rounded-md text-[13px] font-medium flex items-center transition-colors ${
+              className={`h-9 px-5 rounded-md text-[13px] font-medium font-space tracking-[0.61px] flex items-center transition-colors ${
                 isDark
                   ? 'bg-white text-black hover:bg-gray-200'
-                  : 'bg-black text-white hover:bg-black/80'
+                  : 'btn-black'
               }`}
-              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
             >
-              Start free trial
+              Get started
             </Link>
           </div>
         </div>
@@ -127,35 +372,26 @@ export default function StickyNav() {
             ? 'bg-[#111111]/80 shadow-[0px_4px_12px_2px_rgba(0,0,0,0.5)] border border-white/10' 
             : 'bg-[#FBFAF8]/80 shadow-[0px_4px_4px_1px_rgba(120,120,120,0.25)] border border-black/5'
         }`}>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src={isDark ? "/white-logo.png" : "/logo.png"}
-              alt="Scout"
+              src={isDark ? '/images/Harbor_White_Logo.png' : '/images/harbor-dark-solo.svg'}
+              alt="Harbor"
               width={24}
               height={24}
-              className="w-6 h-6 transition-all duration-300"
+              className="transition-opacity duration-300"
             />
-            <span 
-              className={`text-lg font-semibold transition-colors duration-300 ${
-                isDark ? 'text-white' : 'text-[#111827]'
-              }`}
-              style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
-            >
-              scout
-            </span>
           </Link>
 
           <div className="flex items-center gap-2">
             <Link 
               href="/signup"
-              className={`h-8 px-4 rounded-md text-[12px] font-medium flex items-center transition-colors ${
+              className={`h-8 px-4 rounded-md text-[12px] font-medium font-space tracking-[0.5px] flex items-center transition-colors ${
                 isDark
                   ? 'bg-white text-black hover:bg-gray-200'
-                  : 'bg-black text-white hover:bg-black/80'
+                  : 'btn-black'
               }`}
-              style={{ fontFamily: 'var(--font-libre), sans-serif' }}
             >
-              Start free trial
+              Get started
             </Link>
             <button 
               onClick={() => setMobileMenuOpen(true)}
@@ -169,67 +405,12 @@ export default function StickyNav() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden">
-          <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          <div className="absolute top-0 right-0 w-[280px] h-full bg-white shadow-xl">
-            <div className="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
-              <span 
-                className="text-lg font-semibold text-[#111827]"
-                style={{ fontFamily: 'var(--font-bricolage), sans-serif' }}
-              >
-                Menu
-              </span>
-              <button 
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 -mr-2 rounded-lg hover:bg-black/5"
-              >
-                <X className="w-5 h-5 text-[#111827]" />
-              </button>
-            </div>
-            <div className="p-4 space-y-2">
-              <Link
-                href="#how-it-works"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-[15px] font-medium text-[#111827] hover:bg-[#F3F4F6]"
-                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
-              >
-                How it works
-              </Link>
-              <Link
-                href="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-[15px] font-medium text-[#111827] hover:bg-[#F3F4F6]"
-                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
-              >
-                Pricing
-              </Link>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#E5E7EB] space-y-2">
-              <Link 
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full h-11 rounded-lg border border-[#E5E7EB] text-[14px] font-medium text-[#111827] flex items-center justify-center hover:bg-black/5"
-                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
-              >
-                Login
-              </Link>
-              <Link 
-                href="/signup"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full h-11 rounded-lg bg-[#111827] text-[14px] font-medium text-white flex items-center justify-center hover:bg-[#111827]/90"
-                style={{ fontFamily: 'var(--font-libre), sans-serif' }}
-              >
-                Start free trial
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        isDark={isDark}
+      />
     </>
   )
 }
